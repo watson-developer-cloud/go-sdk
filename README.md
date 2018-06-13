@@ -4,4 +4,4 @@ Golang client library to quickly get started with the various Watson APIs servic
 
 ## Installation
 
-![gopher](https://pbs.twimg.com/profile_images/554798224154701824/mWd3laxO_400x400.png)
+![gopher](https://www.spreadshirt.com/image-server/v1/mp/designs/1005862415,width=178,height=178/golang-gopher.png)
