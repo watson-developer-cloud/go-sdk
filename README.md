@@ -27,7 +27,7 @@ Golang client library to quickly get started with the various [Watson APIs](http
 ## Installation
 
 ```
-go get 
+go get github.com/watson-developer-cloud/golang-sdk
 ```
 
 ## Examples
@@ -45,7 +45,7 @@ Watson services are migrating to token-based Identity and Access Management (IAM
 * With some service instances, you authenticate to the API by using [IAM](#iam).
 * In other instances, you authenticate by providing the [username and password](#username-and-password) for the service instance.
 
-###### Getting credentials
+### Getting credentials
 
 To find out which authentication to use, view the service credentials. You find the service credentials for authentication the same way for all Watson services:
 
@@ -54,7 +54,7 @@ To find out which authentication to use, view the service credentials. You find 
 3. Click **Show** to view your service credentials.
 4. Copy the ```url``` and either ```apikey``` or ```username``` and ```password```.
 
-###### IAM
+### IAM
 IBM Cloud is migrating to token-based Identity and Access Management (IAM) authentication. IAM authentication uses a service API key to get an access token that is passed with the call. Access tokens are valid for approximately one hour and must be regenerated.
 
 You supply either an IAM service **API key** or an **access token**:
@@ -88,7 +88,7 @@ discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
 })
 ```
 
-##### Username and password
+### Username and password
 
 ```
 // In the constructor
