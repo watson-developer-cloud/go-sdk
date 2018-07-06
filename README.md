@@ -26,8 +26,16 @@ Golang client library to quickly get started with the various [Watson APIs](http
 
 ## Installation
 
-```
+Get SDK package:
+```bash
 go get github.com/watson-developer-cloud/golang-sdk
+```
+
+Import SDK package in your Go program:
+```go
+import (
+  watson "github.com/watson-developer-cloud/golang-sdk"
+)
 ```
 
 ## Examples
@@ -65,10 +73,7 @@ You supply either an IAM service **API key** or an **access token**:
 
 **Supplying the IAM API key**
 
-```
-import (
-  watson "golang-sdk"
-)
+```go
 // In the constructor, letting the SDK manage the IAM token
 discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
   ServiceURL: "<service_url>",
@@ -79,7 +84,7 @@ discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
 
 **Supplying the access token**
 
-```
+```go
 // In the constructor, assuming control of managing IAM token
 discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
   ServiceURL: "<service_url>",
@@ -90,7 +95,7 @@ discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
 
 ### Username and password
 
-```
+```go
 // In the constructor
 discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
   ServiceURL: "<service_url>",
