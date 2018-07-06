@@ -1,10 +1,10 @@
 package assistantV1
 
 import (
-	"bytes"
 	"fmt"
-	req "github.com/parnurzeal/gorequest"
+	"bytes"
 	watson "golang-sdk"
+	req "github.com/parnurzeal/gorequest"
 )
 
 // AssistantV1 :
@@ -20,7 +20,7 @@ func NewAssistantV1(creds watson.Credentials) (*AssistantV1, error) {
 		return nil, clientErr
 	}
 
-	return &AssistantV1{client: client}, nil
+	return &AssistantV1{ client: client }, nil
 }
 
 func (assistant *AssistantV1) ListWorkspaces(params *ListWorkspacesRequest) (*ListWorkspacesResponse, []error) {
@@ -29,7 +29,7 @@ func (assistant *AssistantV1) ListWorkspaces(params *ListWorkspacesRequest) (*Li
 	useTM := assistant.client.UseTM()
 	tokenManager := assistant.client.TokenManager()
 
-	request := req.New().Get(creds.ServiceURL+path).
+	request := req.New().Get(creds.ServiceURL + path).
 		Set("Accept", "application/json").
 		Query("version=" + creds.Version).
 		Query(*params)
@@ -41,7 +41,7 @@ func (assistant *AssistantV1) ListWorkspaces(params *ListWorkspacesRequest) (*Li
 			return nil, tokenErr
 		}
 
-		request.Set("Authorization", "Bearer "+token)
+		request.Set("Authorization", "Bearer " + token)
 	} else {
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
@@ -70,7 +70,7 @@ func (assistant *AssistantV1) GetWorkspace(workspaceID string, params *GetWorksp
 	useTM := assistant.client.UseTM()
 	tokenManager := assistant.client.TokenManager()
 
-	request := req.New().Get(creds.ServiceURL+path).
+	request := req.New().Get(creds.ServiceURL + path).
 		Set("Accept", "application/json").
 		Query("version=" + creds.Version).
 		Query(*params)
@@ -82,7 +82,7 @@ func (assistant *AssistantV1) GetWorkspace(workspaceID string, params *GetWorksp
 			return nil, tokenErr
 		}
 
-		request.Set("Authorization", "Bearer "+token)
+		request.Set("Authorization", "Bearer " + token)
 	} else {
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
@@ -111,7 +111,7 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) []error {
 	useTM := assistant.client.UseTM()
 	tokenManager := assistant.client.TokenManager()
 
-	request := req.New().Delete(creds.ServiceURL+path).
+	request := req.New().Delete(creds.ServiceURL + path).
 		Set("Accept", "application/json").
 		Query("version=" + creds.Version)
 
@@ -122,7 +122,7 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) []error {
 			return tokenErr
 		}
 
-		request.Set("Authorization", "Bearer "+token)
+		request.Set("Authorization", "Bearer " + token)
 	} else {
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
@@ -150,7 +150,7 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*Workspace
 	useTM := assistant.client.UseTM()
 	tokenManager := assistant.client.TokenManager()
 
-	request := req.New().Post(creds.ServiceURL+path).
+	request := req.New().Post(creds.ServiceURL + path).
 		Set("Accept", "application/json").
 		Query("version=" + creds.Version).
 		Send(body)
@@ -162,7 +162,7 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*Workspace
 			return nil, tokenErr
 		}
 
-		request.Set("Authorization", "Bearer "+token)
+		request.Set("Authorization", "Bearer " + token)
 	} else {
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
@@ -191,7 +191,7 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *CreateWo
 	useTM := assistant.client.UseTM()
 	tokenManager := assistant.client.TokenManager()
 
-	request := req.New().Post(creds.ServiceURL+path).
+	request := req.New().Post(creds.ServiceURL + path).
 		Set("Accept", "application/json").
 		Query("version=" + creds.Version).
 		Query(*params).
@@ -204,7 +204,7 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *CreateWo
 			return nil, tokenErr
 		}
 
-		request.Set("Authorization", "Bearer "+token)
+		request.Set("Authorization", "Bearer " + token)
 	} else {
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
