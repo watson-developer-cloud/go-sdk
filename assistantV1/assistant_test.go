@@ -2,10 +2,10 @@ package assistantV1
 
 import (
 	"fmt"
+	watson "golang-sdk"
+	"io/ioutil"
 	"strings"
 	"testing"
-	"io/ioutil"
-	watson "golang-sdk"
 )
 
 func TestWorkspace(t *testing.T) {
@@ -19,10 +19,10 @@ func TestWorkspace(t *testing.T) {
 	creds := strings.Split(string(readCreds), "\n")
 
 	assistant, assistantErr := NewAssistantV1(watson.Credentials{
-		ServiceURL: "https://gateway.watsonplatform.net/assistant/api",
-		Version: "2018-02-16",
-		Username: creds[0],
-		Password: creds[1],
+		ServiceURL: creds[0],
+		Version:    "2018-02-16",
+		Username:   creds[1],
+		Password:   creds[2],
 	})
 
 	if assistantErr != nil {
@@ -113,7 +113,7 @@ func testUpdate(assistant *AssistantV1, list *ListWorkspacesResponse) {
 		workspaceID := workspace.WorkspaceID
 
 		updateReq := CreateWorkspace{
-			Name: fmt.Sprintf("create%v", i * 10),
+			Name: fmt.Sprintf("create%v", i*10),
 		}
 
 		update, updateErr := assistant.UpdateWorkspace(workspaceID, &updateReq, new(UpdateWorkspaceRequest))
