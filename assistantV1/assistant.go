@@ -23,7 +23,7 @@ func NewAssistantV1(creds watson.Credentials) (*AssistantV1, error) {
 	return &AssistantV1{ client: client }, nil
 }
 
-func (assistant *AssistantV1) ListWorkspaces(params *ListWorkspacesRequest) (*ListWorkspacesResponse, []error) {
+func (assistant *AssistantV1) ListWorkspaces(params *ListWorkspacesRequest) (*WatsonResponse, []error) {
 	path := "/v1/workspaces"
 	creds := assistant.client.Creds()
 	useTM := assistant.client.UseTM()
@@ -46,8 +46,12 @@ func (assistant *AssistantV1) ListWorkspaces(params *ListWorkspacesRequest) (*Li
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
 
-	response := new(ListWorkspacesResponse)
-	res, _, err := request.EndStruct(&response)
+	response := new(WatsonResponse)
+	response.Result = new(ListWorkspacesResponse)
+	res, _, err := request.EndStruct(&response.Result)
+
+	response.Headers = res.Header
+	response.StatusCode = res.StatusCode
 
 	if err != nil {
 		return nil, err
@@ -64,7 +68,7 @@ func (assistant *AssistantV1) ListWorkspaces(params *ListWorkspacesRequest) (*Li
 	return response, nil
 }
 
-func (assistant *AssistantV1) GetWorkspace(workspaceID string, params *GetWorkspaceRequest) (*GetWorkspaceResponse, []error) {
+func (assistant *AssistantV1) GetWorkspace(workspaceID string, params *GetWorkspaceRequest) (*WatsonResponse, []error) {
 	path := "/v1/workspaces/" + workspaceID
 	creds := assistant.client.Creds()
 	useTM := assistant.client.UseTM()
@@ -87,8 +91,12 @@ func (assistant *AssistantV1) GetWorkspace(workspaceID string, params *GetWorksp
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
 
-	response := new(GetWorkspaceResponse)
-	res, _, err := request.EndStruct(&response)
+	response := new(WatsonResponse)
+	response.Result = new(GetWorkspaceResponse)
+	res, _, err := request.EndStruct(&response.Result)
+
+	response.Headers = res.Header
+	response.StatusCode = res.StatusCode
 
 	if err != nil {
 		return nil, err
@@ -105,7 +113,7 @@ func (assistant *AssistantV1) GetWorkspace(workspaceID string, params *GetWorksp
 	return response, nil
 }
 
-func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) []error {
+func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) (*WatsonResponse, []error) {
 	path := "/v1/workspaces/" + workspaceID
 	creds := assistant.client.Creds()
 	useTM := assistant.client.UseTM()
@@ -119,7 +127,7 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) []error {
 		token, tokenErr := tokenManager.GetToken()
 
 		if tokenErr != nil {
-			return tokenErr
+			return nil, tokenErr
 		}
 
 		request.Set("Authorization", "Bearer " + token)
@@ -129,8 +137,12 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) []error {
 
 	res, _, err := request.End()
 
+	response := new(WatsonResponse)
+	response.Headers = res.Header
+	response.StatusCode = res.StatusCode
+
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
@@ -138,13 +150,13 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) []error {
 		buff.ReadFrom(res.Body)
 		errStr := buff.String()
 		err = append(err, fmt.Errorf(errStr))
-		return err
+		return response, err
 	}
 
-	return nil
+	return response, nil
 }
 
-func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*Workspace, []error) {
+func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*WatsonResponse, []error) {
 	path := "/v1/workspaces"
 	creds := assistant.client.Creds()
 	useTM := assistant.client.UseTM()
@@ -167,8 +179,12 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*Workspace
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
 
-	response := new(Workspace)
-	res, _, err := request.EndStruct(&response)
+	response := new(WatsonResponse)
+	response.Result = new(Workspace)
+	res, _, err := request.EndStruct(&response.Result)
+
+	response.Headers = res.Header
+	response.StatusCode = res.StatusCode
 
 	if err != nil {
 		return nil, err
@@ -185,7 +201,7 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*Workspace
 	return response, nil
 }
 
-func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *CreateWorkspace, params *UpdateWorkspaceRequest) (*Workspace, []error) {
+func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *CreateWorkspace, params *UpdateWorkspaceRequest) (*WatsonResponse, []error) {
 	path := "/v1/workspaces/" + workspaceID
 	creds := assistant.client.Creds()
 	useTM := assistant.client.UseTM()
@@ -209,8 +225,12 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *CreateWo
 		request.SetBasicAuth(creds.Username, creds.Password)
 	}
 
-	response := new(Workspace)
-	res, _, err := request.EndStruct(&response)
+	response := new(WatsonResponse)
+	response.Result = new(Workspace)
+	res, _, err := request.EndStruct(&response.Result)
+
+	response.Headers = res.Header
+	response.StatusCode = res.StatusCode
 
 	if err != nil {
 		return nil, err

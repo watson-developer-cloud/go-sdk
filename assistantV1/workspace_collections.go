@@ -2,7 +2,14 @@ package assistantV1
 
 import (
 	"time"
+	"net/http"
 )
+
+type WatsonResponse struct {
+	StatusCode int
+	Headers http.Header
+	Result interface{}
+}
 
 type DialogNodeAction struct {
 
