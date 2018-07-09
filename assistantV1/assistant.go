@@ -246,3 +246,43 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *CreateWo
 
 	return response, nil
 }
+
+func (response *WatsonResponse) ListWorkspacesResponse() *ListWorkspacesResponse {
+	result, ok := response.Result.(*ListWorkspacesResponse)
+
+	if ok {
+		return result
+	}
+
+	return nil
+}
+
+func (response *WatsonResponse) GetWorkspaceResponse() *GetWorkspaceResponse {
+	result, ok := response.Result.(*GetWorkspaceResponse)
+
+	if ok {
+		return result
+	}
+
+	return nil
+}
+
+func (response *WatsonResponse) CreateWorkspaceResponse() *Workspace {
+	result, ok := response.Result.(*Workspace)
+
+	if ok {
+		return result
+	}
+
+	return nil
+}
+
+func (response *WatsonResponse) UpdateWorkspaceResponse() *Workspace {
+	result, ok := response.Result.(*Workspace)
+
+	if ok {
+		return result
+	}
+
+	return nil
+}

@@ -57,9 +57,9 @@ func testList(assistant *AssistantV1) *ListWorkspacesResponse {
 		return nil
 	}
 
-	result, resultOK := list.Result.(*ListWorkspacesResponse)
+	result := list.ListWorkspacesResponse()
 
-	if resultOK {
+	if result != nil {
 		fmt.Printf("FOUND %v WORKSPACES\n", len(result.Workspaces))
 		return result
 	}
@@ -78,9 +78,9 @@ func testGet(assistant *AssistantV1, list *ListWorkspacesResponse) {
 			return
 		}
 
-		result, resultOK := get.Result.(*GetWorkspaceResponse)
+		result := get.GetWorkspaceResponse()
 
-		if resultOK {
+		if result != nil {
 			fmt.Printf("WORKSPACE %v: %+v\n", i, result)
 		}
 	}
@@ -114,9 +114,9 @@ func testCreate(assistant *AssistantV1) {
 			return
 		}
 
-		result, resultOK := create.Result.(*Workspace)
+		result := create.CreateWorkspaceResponse()
 
-		if resultOK {
+		if result != nil {
 			fmt.Printf("CREATED WORKSPACE %v: %v\n", i, result.Name)
 		}
 	}
@@ -137,9 +137,9 @@ func testUpdate(assistant *AssistantV1, list *ListWorkspacesResponse) {
 			return
 		}
 
-		result, resultOK := update.Result.(*Workspace)
+		result := update.UpdateWorkspaceResponse()
 
-		if resultOK {
+		if result != nil {
 			fmt.Printf("UPDATED WORKSPACE %v: %v\n", i, result.Name)
 		}
 	}
