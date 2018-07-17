@@ -45,12 +45,8 @@ func TestWorkspace(t *testing.T) {
 	testUpdate(assistant, list)
 }
 
-func testList(assistant *AssistantV1) *ListWorkspacesResponse {
-	listReq := ListWorkspacesRequest{
-		IncludeCount: true,
-	}
-
-	list, listErr := assistant.ListWorkspaces(&listReq)
+func testList(assistant *AssistantV1) *WorkspaceCollection {
+	list, listErr := assistant.ListWorkspaces(0, true, "", "", false)
 
 	if listErr != nil {
 		fmt.Println(listErr)
@@ -67,11 +63,11 @@ func testList(assistant *AssistantV1) *ListWorkspacesResponse {
 	return nil
 }
 
-func testGet(assistant *AssistantV1, list *ListWorkspacesResponse) {
+func testGet(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
-		workspaceID := workspace.WorkspaceID
+		workspaceID := workspace.WorkspaceId
 
-		get, getErr := assistant.GetWorkspace(workspaceID, new(GetWorkspaceRequest))
+		get, getErr := assistant.GetWorkspace(workspaceID, false, false)
 
 		if getErr != nil {
 			fmt.Println(getErr)
@@ -86,9 +82,9 @@ func testGet(assistant *AssistantV1, list *ListWorkspacesResponse) {
 	}
 }
 
-func testDelete(assistant *AssistantV1, list *ListWorkspacesResponse) {
+func testDelete(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
-		workspaceID := workspace.WorkspaceID
+		workspaceID := workspace.WorkspaceId
 
 		_, delErr := assistant.DeleteWorkspace(workspaceID)
 
@@ -122,15 +118,15 @@ func testCreate(assistant *AssistantV1) {
 	}
 }
 
-func testUpdate(assistant *AssistantV1, list *ListWorkspacesResponse) {
+func testUpdate(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
-		workspaceID := workspace.WorkspaceID
+		workspaceID := workspace.WorkspaceId
 
-		updateReq := CreateWorkspace{
+		updateReq := UpdateWorkspace{
 			Name: fmt.Sprintf("create%v", i * 10),
 		}
 
-		update, updateErr := assistant.UpdateWorkspace(workspaceID, &updateReq, new(UpdateWorkspaceRequest))
+		update, updateErr := assistant.UpdateWorkspace(workspaceID, &updateReq, false)
 
 		if updateErr != nil {
 			fmt.Println(updateErr)
