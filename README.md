@@ -38,6 +38,13 @@ import (
 )
 ```
 
+Import the specific service package you want:
+```go
+import (
+  "github.com/watson-developer-cloud/golang-sdk/discoveryV1"
+)
+```
+
 ## Examples
 
 The examples folder has basic and advanced examples. The examples within each service assume that you already have service credentials.
@@ -75,9 +82,9 @@ You supply either an IAM service **API key** or an **access token**:
 
 ```go
 // In the constructor, letting the SDK manage the IAM token
-discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
+discovery, discoveryErr := discoveryV1.NewDiscoveryV1(watson.Credentials{
   ServiceURL: "<service_url>",
-  Version: "<2018-02-16>",
+  Version: "2018-02-16",
   APIkey: "<api_key>",
 })
 ```
@@ -86,7 +93,7 @@ discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
 
 ```go
 // In the constructor, assuming control of managing IAM token
-discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
+discovery, discoveryErr := discoveryV1.NewDiscoveryV1(watson.Credentials{
   ServiceURL: "<service_url>",
   Version: "2018-02-16",
   IAMtoken: "<iam_token>",
@@ -97,7 +104,7 @@ discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
 
 ```go
 // In the constructor
-discovery, discoveryErr := NewDiscoveryV1(watson.Credentials{
+discovery, discoveryErr := discoveryV1.NewDiscoveryV1(watson.Credentials{
   ServiceURL: "<service_url>",
   Version: "2018-02-16",
   Username: "<username>",
