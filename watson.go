@@ -15,16 +15,16 @@ type Credentials struct {
 }
 
 type Client struct {
-	creds Credentials
-	useTM bool
-	tokenManager *TokenManager
+	Creds Credentials
+	UseTM bool
+	TokenManager *TokenManager
 }
 
 func NewClient(creds Credentials, serviceName string) (*Client, error) {
 	client := Client{
-		creds: creds,
-		useTM: false,
-		tokenManager: NewTokenManager(),
+		Creds: creds,
+		UseTM: false,
+		TokenManager: NewTokenManager(),
 	}
 
 	if creds.ServiceURL == "" {
@@ -39,12 +39,12 @@ func NewClient(creds Credentials, serviceName string) (*Client, error) {
 
 	if creds.APIkey != "" {
 		// SDK manages IAM token
-		client.useTM = true
-		client.tokenManager.SetKey(creds.APIkey)
+		client.UseTM = true
+		client.TokenManager.SetKey(creds.APIkey)
 	} else if creds.IAMtoken != "" {
 		// User manages IAM token
-		client.useTM = true
-		client.tokenManager.SetToken(creds.IAMtoken)
+		client.UseTM = true
+		client.TokenManager.SetToken(creds.IAMtoken)
 	} else if creds.Username == "" || creds.Password == "" {
 		// Try accessing VCAP_SERVICES env variable
 		err := accessVCAP(&client, serviceName)
@@ -77,28 +77,16 @@ func accessVCAP(client *Client, serviceName string) error {
 	APIkey, keyOK := creds["apikey"]
 
 	if keyOK {
-		client.useTM = true
-		client.tokenManager.SetKey(fmt.Sprint(APIkey))
+		client.UseTM = true
+		client.TokenManager.SetKey(fmt.Sprint(APIkey))
 		return nil
 	}
 
 	if userOK && passOK {
-		client.creds.Username = fmt.Sprint(username)
-		client.creds.Password = fmt.Sprint(password)
+		client.Creds.Username = fmt.Sprint(username)
+		client.Creds.Password = fmt.Sprint(password)
 		return nil
 	}
 
 	return fmt.Errorf("you must specify an IAM API key or username and password service credentials")
-}
-
-func (client *Client) Creds() *Credentials {
-	return &client.creds
-}
-
-func (client *Client) UseTM() bool {
-	return client.useTM
-}
-
-func (client *Client) TokenManager() *TokenManager {
-	return client.tokenManager
 }
