@@ -30,9 +30,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by ListWorkspacesResponse
-	// NOTE: other than DELETE requests, every method has a corresponding <methodName>Response() function
-	result := list.ListWorkspacesResponse()
+	// Cast response from call to the specific struct returned by GetListWorkspacesResult
+	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
+	result := assistantV1.GetListWorkspacesResult(list)
 
 	// Check successful casting
 	if result != nil {

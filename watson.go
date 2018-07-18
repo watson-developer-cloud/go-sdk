@@ -2,8 +2,15 @@ package golang_sdk
 
 import (
 	"fmt"
+	"net/http"
 	"github.com/cloudfoundry-community/go-cfenv"
 )
+
+type WatsonResponse struct {
+	StatusCode int
+	Headers http.Header
+	Result interface{}
+}
 
 type Credentials struct {
 	ServiceURL string

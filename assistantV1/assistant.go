@@ -19,17 +19,10 @@ import (
     "fmt"
     "bytes"
     "strings"
-    "net/http"
     "github.com/go-openapi/strfmt"
     req "github.com/parnurzeal/gorequest"
     watson "golang-sdk"
 )
-
-type WatsonResponse struct {
-    StatusCode int
-    Headers http.Header
-    Result interface{}
-}
 
 type AssistantV1 struct {
 	client *watson.Client
@@ -46,7 +39,7 @@ func NewAssistantV1(creds watson.Credentials) (*AssistantV1, error) {
 }
 
 // Get response to user input
-func (assistant *AssistantV1) Message(workspaceID string, body *MessageRequest, nodesVisitedDetails bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) Message(workspaceID string, body *MessageRequest, nodesVisitedDetails bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/message"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -73,7 +66,7 @@ func (assistant *AssistantV1) Message(workspaceID string, body *MessageRequest, 
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(MessageResponse)
     res, _, err := request.EndStruct(&response.Result)
@@ -96,7 +89,7 @@ func (assistant *AssistantV1) Message(workspaceID string, body *MessageRequest, 
     return response, nil
 }
 
-func (response *WatsonResponse) MessageResponse() *MessageResponse {
+func GetMessageResult(response *watson.WatsonResponse) *MessageResponse {
     result, ok := response.Result.(*MessageResponse)
 
     if ok {
@@ -107,7 +100,7 @@ func (response *WatsonResponse) MessageResponse() *MessageResponse {
 }
 
 // Create workspace
-func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -132,7 +125,7 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*WatsonRes
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Workspace)
     res, _, err := request.EndStruct(&response.Result)
@@ -155,7 +148,7 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*WatsonRes
     return response, nil
 }
 
-func (response *WatsonResponse) CreateWorkspaceResponse() *Workspace {
+func GetCreateWorkspaceResult(response *watson.WatsonResponse) *Workspace {
     result, ok := response.Result.(*Workspace)
 
     if ok {
@@ -166,7 +159,7 @@ func (response *WatsonResponse) CreateWorkspaceResponse() *Workspace {
 }
 
 // Delete workspace
-func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -191,7 +184,7 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) (*WatsonRespon
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
@@ -215,7 +208,7 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) (*WatsonRespon
 
 
 // Get information about a workspace
-func (assistant *AssistantV1) GetWorkspace(workspaceID string, export bool, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) GetWorkspace(workspaceID string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -242,7 +235,7 @@ func (assistant *AssistantV1) GetWorkspace(workspaceID string, export bool, incl
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(WorkspaceExport)
     res, _, err := request.EndStruct(&response.Result)
@@ -265,7 +258,7 @@ func (assistant *AssistantV1) GetWorkspace(workspaceID string, export bool, incl
     return response, nil
 }
 
-func (response *WatsonResponse) GetWorkspaceResponse() *WorkspaceExport {
+func GetGetWorkspaceResult(response *watson.WatsonResponse) *WorkspaceExport {
     result, ok := response.Result.(*WorkspaceExport)
 
     if ok {
@@ -276,7 +269,7 @@ func (response *WatsonResponse) GetWorkspaceResponse() *WorkspaceExport {
 }
 
 // List workspaces
-func (assistant *AssistantV1) ListWorkspaces(pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListWorkspaces(pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -305,7 +298,7 @@ func (assistant *AssistantV1) ListWorkspaces(pageLimit int64, includeCount bool,
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(WorkspaceCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -328,7 +321,7 @@ func (assistant *AssistantV1) ListWorkspaces(pageLimit int64, includeCount bool,
     return response, nil
 }
 
-func (response *WatsonResponse) ListWorkspacesResponse() *WorkspaceCollection {
+func GetListWorkspacesResult(response *watson.WatsonResponse) *WorkspaceCollection {
     result, ok := response.Result.(*WorkspaceCollection)
 
     if ok {
@@ -339,7 +332,7 @@ func (response *WatsonResponse) ListWorkspacesResponse() *WorkspaceCollection {
 }
 
 // Update workspace
-func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *UpdateWorkspace, appendVar bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *UpdateWorkspace, appendVar bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -366,7 +359,7 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *UpdateWo
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Workspace)
     res, _, err := request.EndStruct(&response.Result)
@@ -389,7 +382,7 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *UpdateWo
     return response, nil
 }
 
-func (response *WatsonResponse) UpdateWorkspaceResponse() *Workspace {
+func GetUpdateWorkspaceResult(response *watson.WatsonResponse) *Workspace {
     result, ok := response.Result.(*Workspace)
 
     if ok {
@@ -400,7 +393,7 @@ func (response *WatsonResponse) UpdateWorkspaceResponse() *Workspace {
 }
 
 // Create intent
-func (assistant *AssistantV1) CreateIntent(workspaceID string, body *CreateIntent) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) CreateIntent(workspaceID string, body *CreateIntent) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -426,7 +419,7 @@ func (assistant *AssistantV1) CreateIntent(workspaceID string, body *CreateInten
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Intent)
     res, _, err := request.EndStruct(&response.Result)
@@ -449,7 +442,7 @@ func (assistant *AssistantV1) CreateIntent(workspaceID string, body *CreateInten
     return response, nil
 }
 
-func (response *WatsonResponse) CreateIntentResponse() *Intent {
+func GetCreateIntentResult(response *watson.WatsonResponse) *Intent {
     result, ok := response.Result.(*Intent)
 
     if ok {
@@ -460,7 +453,7 @@ func (response *WatsonResponse) CreateIntentResponse() *Intent {
 }
 
 // Delete intent
-func (assistant *AssistantV1) DeleteIntent(workspaceID string, intent string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteIntent(workspaceID string, intent string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -486,7 +479,7 @@ func (assistant *AssistantV1) DeleteIntent(workspaceID string, intent string) (*
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
@@ -510,7 +503,7 @@ func (assistant *AssistantV1) DeleteIntent(workspaceID string, intent string) (*
 
 
 // Get intent
-func (assistant *AssistantV1) GetIntent(workspaceID string, intent string, export bool, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) GetIntent(workspaceID string, intent string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -538,7 +531,7 @@ func (assistant *AssistantV1) GetIntent(workspaceID string, intent string, expor
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(IntentExport)
     res, _, err := request.EndStruct(&response.Result)
@@ -561,7 +554,7 @@ func (assistant *AssistantV1) GetIntent(workspaceID string, intent string, expor
     return response, nil
 }
 
-func (response *WatsonResponse) GetIntentResponse() *IntentExport {
+func GetGetIntentResult(response *watson.WatsonResponse) *IntentExport {
     result, ok := response.Result.(*IntentExport)
 
     if ok {
@@ -572,7 +565,7 @@ func (response *WatsonResponse) GetIntentResponse() *IntentExport {
 }
 
 // List intents
-func (assistant *AssistantV1) ListIntents(workspaceID string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListIntents(workspaceID string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -603,7 +596,7 @@ func (assistant *AssistantV1) ListIntents(workspaceID string, export bool, pageL
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(IntentCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -626,7 +619,7 @@ func (assistant *AssistantV1) ListIntents(workspaceID string, export bool, pageL
     return response, nil
 }
 
-func (response *WatsonResponse) ListIntentsResponse() *IntentCollection {
+func GetListIntentsResult(response *watson.WatsonResponse) *IntentCollection {
     result, ok := response.Result.(*IntentCollection)
 
     if ok {
@@ -637,7 +630,7 @@ func (response *WatsonResponse) ListIntentsResponse() *IntentCollection {
 }
 
 // Update intent
-func (assistant *AssistantV1) UpdateIntent(workspaceID string, intent string, body *UpdateIntent) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) UpdateIntent(workspaceID string, intent string, body *UpdateIntent) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -664,7 +657,7 @@ func (assistant *AssistantV1) UpdateIntent(workspaceID string, intent string, bo
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Intent)
     res, _, err := request.EndStruct(&response.Result)
@@ -687,7 +680,7 @@ func (assistant *AssistantV1) UpdateIntent(workspaceID string, intent string, bo
     return response, nil
 }
 
-func (response *WatsonResponse) UpdateIntentResponse() *Intent {
+func GetUpdateIntentResult(response *watson.WatsonResponse) *Intent {
     result, ok := response.Result.(*Intent)
 
     if ok {
@@ -698,7 +691,7 @@ func (response *WatsonResponse) UpdateIntentResponse() *Intent {
 }
 
 // Create user input example
-func (assistant *AssistantV1) CreateExample(workspaceID string, intent string, body *CreateExample) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) CreateExample(workspaceID string, intent string, body *CreateExample) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -725,7 +718,7 @@ func (assistant *AssistantV1) CreateExample(workspaceID string, intent string, b
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Example)
     res, _, err := request.EndStruct(&response.Result)
@@ -748,7 +741,7 @@ func (assistant *AssistantV1) CreateExample(workspaceID string, intent string, b
     return response, nil
 }
 
-func (response *WatsonResponse) CreateExampleResponse() *Example {
+func GetCreateExampleResult(response *watson.WatsonResponse) *Example {
     result, ok := response.Result.(*Example)
 
     if ok {
@@ -759,7 +752,7 @@ func (response *WatsonResponse) CreateExampleResponse() *Example {
 }
 
 // Delete user input example
-func (assistant *AssistantV1) DeleteExample(workspaceID string, intent string, text string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteExample(workspaceID string, intent string, text string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -786,7 +779,7 @@ func (assistant *AssistantV1) DeleteExample(workspaceID string, intent string, t
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
@@ -810,7 +803,7 @@ func (assistant *AssistantV1) DeleteExample(workspaceID string, intent string, t
 
 
 // Get user input example
-func (assistant *AssistantV1) GetExample(workspaceID string, intent string, text string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) GetExample(workspaceID string, intent string, text string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -838,7 +831,7 @@ func (assistant *AssistantV1) GetExample(workspaceID string, intent string, text
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Example)
     res, _, err := request.EndStruct(&response.Result)
@@ -861,7 +854,7 @@ func (assistant *AssistantV1) GetExample(workspaceID string, intent string, text
     return response, nil
 }
 
-func (response *WatsonResponse) GetExampleResponse() *Example {
+func GetGetExampleResult(response *watson.WatsonResponse) *Example {
     result, ok := response.Result.(*Example)
 
     if ok {
@@ -872,7 +865,7 @@ func (response *WatsonResponse) GetExampleResponse() *Example {
 }
 
 // List user input examples
-func (assistant *AssistantV1) ListExamples(workspaceID string, intent string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListExamples(workspaceID string, intent string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -903,7 +896,7 @@ func (assistant *AssistantV1) ListExamples(workspaceID string, intent string, pa
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(ExampleCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -926,7 +919,7 @@ func (assistant *AssistantV1) ListExamples(workspaceID string, intent string, pa
     return response, nil
 }
 
-func (response *WatsonResponse) ListExamplesResponse() *ExampleCollection {
+func GetListExamplesResult(response *watson.WatsonResponse) *ExampleCollection {
     result, ok := response.Result.(*ExampleCollection)
 
     if ok {
@@ -937,7 +930,7 @@ func (response *WatsonResponse) ListExamplesResponse() *ExampleCollection {
 }
 
 // Update user input example
-func (assistant *AssistantV1) UpdateExample(workspaceID string, intent string, text string, body *UpdateExample) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) UpdateExample(workspaceID string, intent string, text string, body *UpdateExample) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -965,7 +958,7 @@ func (assistant *AssistantV1) UpdateExample(workspaceID string, intent string, t
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Example)
     res, _, err := request.EndStruct(&response.Result)
@@ -988,7 +981,7 @@ func (assistant *AssistantV1) UpdateExample(workspaceID string, intent string, t
     return response, nil
 }
 
-func (response *WatsonResponse) UpdateExampleResponse() *Example {
+func GetUpdateExampleResult(response *watson.WatsonResponse) *Example {
     result, ok := response.Result.(*Example)
 
     if ok {
@@ -999,7 +992,7 @@ func (response *WatsonResponse) UpdateExampleResponse() *Example {
 }
 
 // Create counterexample
-func (assistant *AssistantV1) CreateCounterexample(workspaceID string, body *CreateCounterexample) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) CreateCounterexample(workspaceID string, body *CreateCounterexample) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1025,7 +1018,7 @@ func (assistant *AssistantV1) CreateCounterexample(workspaceID string, body *Cre
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Counterexample)
     res, _, err := request.EndStruct(&response.Result)
@@ -1048,7 +1041,7 @@ func (assistant *AssistantV1) CreateCounterexample(workspaceID string, body *Cre
     return response, nil
 }
 
-func (response *WatsonResponse) CreateCounterexampleResponse() *Counterexample {
+func GetCreateCounterexampleResult(response *watson.WatsonResponse) *Counterexample {
     result, ok := response.Result.(*Counterexample)
 
     if ok {
@@ -1059,7 +1052,7 @@ func (response *WatsonResponse) CreateCounterexampleResponse() *Counterexample {
 }
 
 // Delete counterexample
-func (assistant *AssistantV1) DeleteCounterexample(workspaceID string, text string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteCounterexample(workspaceID string, text string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1085,7 +1078,7 @@ func (assistant *AssistantV1) DeleteCounterexample(workspaceID string, text stri
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
@@ -1109,7 +1102,7 @@ func (assistant *AssistantV1) DeleteCounterexample(workspaceID string, text stri
 
 
 // Get counterexample
-func (assistant *AssistantV1) GetCounterexample(workspaceID string, text string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) GetCounterexample(workspaceID string, text string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1136,7 +1129,7 @@ func (assistant *AssistantV1) GetCounterexample(workspaceID string, text string,
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Counterexample)
     res, _, err := request.EndStruct(&response.Result)
@@ -1159,7 +1152,7 @@ func (assistant *AssistantV1) GetCounterexample(workspaceID string, text string,
     return response, nil
 }
 
-func (response *WatsonResponse) GetCounterexampleResponse() *Counterexample {
+func GetGetCounterexampleResult(response *watson.WatsonResponse) *Counterexample {
     result, ok := response.Result.(*Counterexample)
 
     if ok {
@@ -1170,7 +1163,7 @@ func (response *WatsonResponse) GetCounterexampleResponse() *Counterexample {
 }
 
 // List counterexamples
-func (assistant *AssistantV1) ListCounterexamples(workspaceID string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListCounterexamples(workspaceID string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1200,7 +1193,7 @@ func (assistant *AssistantV1) ListCounterexamples(workspaceID string, pageLimit 
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(CounterexampleCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -1223,7 +1216,7 @@ func (assistant *AssistantV1) ListCounterexamples(workspaceID string, pageLimit 
     return response, nil
 }
 
-func (response *WatsonResponse) ListCounterexamplesResponse() *CounterexampleCollection {
+func GetListCounterexamplesResult(response *watson.WatsonResponse) *CounterexampleCollection {
     result, ok := response.Result.(*CounterexampleCollection)
 
     if ok {
@@ -1234,7 +1227,7 @@ func (response *WatsonResponse) ListCounterexamplesResponse() *CounterexampleCol
 }
 
 // Update counterexample
-func (assistant *AssistantV1) UpdateCounterexample(workspaceID string, text string, body *UpdateCounterexample) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) UpdateCounterexample(workspaceID string, text string, body *UpdateCounterexample) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1261,7 +1254,7 @@ func (assistant *AssistantV1) UpdateCounterexample(workspaceID string, text stri
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Counterexample)
     res, _, err := request.EndStruct(&response.Result)
@@ -1284,7 +1277,7 @@ func (assistant *AssistantV1) UpdateCounterexample(workspaceID string, text stri
     return response, nil
 }
 
-func (response *WatsonResponse) UpdateCounterexampleResponse() *Counterexample {
+func GetUpdateCounterexampleResult(response *watson.WatsonResponse) *Counterexample {
     result, ok := response.Result.(*Counterexample)
 
     if ok {
@@ -1295,7 +1288,7 @@ func (response *WatsonResponse) UpdateCounterexampleResponse() *Counterexample {
 }
 
 // Create entity
-func (assistant *AssistantV1) CreateEntity(workspaceID string, body *CreateEntity) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) CreateEntity(workspaceID string, body *CreateEntity) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1321,7 +1314,7 @@ func (assistant *AssistantV1) CreateEntity(workspaceID string, body *CreateEntit
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Entity)
     res, _, err := request.EndStruct(&response.Result)
@@ -1344,7 +1337,7 @@ func (assistant *AssistantV1) CreateEntity(workspaceID string, body *CreateEntit
     return response, nil
 }
 
-func (response *WatsonResponse) CreateEntityResponse() *Entity {
+func GetCreateEntityResult(response *watson.WatsonResponse) *Entity {
     result, ok := response.Result.(*Entity)
 
     if ok {
@@ -1355,7 +1348,7 @@ func (response *WatsonResponse) CreateEntityResponse() *Entity {
 }
 
 // Delete entity
-func (assistant *AssistantV1) DeleteEntity(workspaceID string, entity string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteEntity(workspaceID string, entity string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1381,7 +1374,7 @@ func (assistant *AssistantV1) DeleteEntity(workspaceID string, entity string) (*
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
@@ -1405,7 +1398,7 @@ func (assistant *AssistantV1) DeleteEntity(workspaceID string, entity string) (*
 
 
 // Get entity
-func (assistant *AssistantV1) GetEntity(workspaceID string, entity string, export bool, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) GetEntity(workspaceID string, entity string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1433,7 +1426,7 @@ func (assistant *AssistantV1) GetEntity(workspaceID string, entity string, expor
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(EntityExport)
     res, _, err := request.EndStruct(&response.Result)
@@ -1456,7 +1449,7 @@ func (assistant *AssistantV1) GetEntity(workspaceID string, entity string, expor
     return response, nil
 }
 
-func (response *WatsonResponse) GetEntityResponse() *EntityExport {
+func GetGetEntityResult(response *watson.WatsonResponse) *EntityExport {
     result, ok := response.Result.(*EntityExport)
 
     if ok {
@@ -1467,7 +1460,7 @@ func (response *WatsonResponse) GetEntityResponse() *EntityExport {
 }
 
 // List entities
-func (assistant *AssistantV1) ListEntities(workspaceID string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListEntities(workspaceID string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1498,7 +1491,7 @@ func (assistant *AssistantV1) ListEntities(workspaceID string, export bool, page
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(EntityCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -1521,7 +1514,7 @@ func (assistant *AssistantV1) ListEntities(workspaceID string, export bool, page
     return response, nil
 }
 
-func (response *WatsonResponse) ListEntitiesResponse() *EntityCollection {
+func GetListEntitiesResult(response *watson.WatsonResponse) *EntityCollection {
     result, ok := response.Result.(*EntityCollection)
 
     if ok {
@@ -1532,7 +1525,7 @@ func (response *WatsonResponse) ListEntitiesResponse() *EntityCollection {
 }
 
 // Update entity
-func (assistant *AssistantV1) UpdateEntity(workspaceID string, entity string, body *UpdateEntity) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) UpdateEntity(workspaceID string, entity string, body *UpdateEntity) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1559,7 +1552,7 @@ func (assistant *AssistantV1) UpdateEntity(workspaceID string, entity string, bo
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Entity)
     res, _, err := request.EndStruct(&response.Result)
@@ -1582,7 +1575,7 @@ func (assistant *AssistantV1) UpdateEntity(workspaceID string, entity string, bo
     return response, nil
 }
 
-func (response *WatsonResponse) UpdateEntityResponse() *Entity {
+func GetUpdateEntityResult(response *watson.WatsonResponse) *Entity {
     result, ok := response.Result.(*Entity)
 
     if ok {
@@ -1593,7 +1586,7 @@ func (response *WatsonResponse) UpdateEntityResponse() *Entity {
 }
 
 // List entity mentions
-func (assistant *AssistantV1) ListEntityMentions(workspaceID string, entity string, export bool, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListEntityMentions(workspaceID string, entity string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/mentions"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1621,7 +1614,7 @@ func (assistant *AssistantV1) ListEntityMentions(workspaceID string, entity stri
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(EntityMentionCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -1644,7 +1637,7 @@ func (assistant *AssistantV1) ListEntityMentions(workspaceID string, entity stri
     return response, nil
 }
 
-func (response *WatsonResponse) ListEntityMentionsResponse() *EntityMentionCollection {
+func GetListEntityMentionsResult(response *watson.WatsonResponse) *EntityMentionCollection {
     result, ok := response.Result.(*EntityMentionCollection)
 
     if ok {
@@ -1655,7 +1648,7 @@ func (response *WatsonResponse) ListEntityMentionsResponse() *EntityMentionColle
 }
 
 // Add entity value
-func (assistant *AssistantV1) CreateValue(workspaceID string, entity string, body *CreateValue) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) CreateValue(workspaceID string, entity string, body *CreateValue) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1682,7 +1675,7 @@ func (assistant *AssistantV1) CreateValue(workspaceID string, entity string, bod
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Value)
     res, _, err := request.EndStruct(&response.Result)
@@ -1705,7 +1698,7 @@ func (assistant *AssistantV1) CreateValue(workspaceID string, entity string, bod
     return response, nil
 }
 
-func (response *WatsonResponse) CreateValueResponse() *Value {
+func GetCreateValueResult(response *watson.WatsonResponse) *Value {
     result, ok := response.Result.(*Value)
 
     if ok {
@@ -1716,7 +1709,7 @@ func (response *WatsonResponse) CreateValueResponse() *Value {
 }
 
 // Delete entity value
-func (assistant *AssistantV1) DeleteValue(workspaceID string, entity string, value string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteValue(workspaceID string, entity string, value string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1743,7 +1736,7 @@ func (assistant *AssistantV1) DeleteValue(workspaceID string, entity string, val
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
@@ -1767,7 +1760,7 @@ func (assistant *AssistantV1) DeleteValue(workspaceID string, entity string, val
 
 
 // Get entity value
-func (assistant *AssistantV1) GetValue(workspaceID string, entity string, value string, export bool, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) GetValue(workspaceID string, entity string, value string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1796,7 +1789,7 @@ func (assistant *AssistantV1) GetValue(workspaceID string, entity string, value 
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(ValueExport)
     res, _, err := request.EndStruct(&response.Result)
@@ -1819,7 +1812,7 @@ func (assistant *AssistantV1) GetValue(workspaceID string, entity string, value 
     return response, nil
 }
 
-func (response *WatsonResponse) GetValueResponse() *ValueExport {
+func GetGetValueResult(response *watson.WatsonResponse) *ValueExport {
     result, ok := response.Result.(*ValueExport)
 
     if ok {
@@ -1830,7 +1823,7 @@ func (response *WatsonResponse) GetValueResponse() *ValueExport {
 }
 
 // List entity values
-func (assistant *AssistantV1) ListValues(workspaceID string, entity string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListValues(workspaceID string, entity string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1862,7 +1855,7 @@ func (assistant *AssistantV1) ListValues(workspaceID string, entity string, expo
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(ValueCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -1885,7 +1878,7 @@ func (assistant *AssistantV1) ListValues(workspaceID string, entity string, expo
     return response, nil
 }
 
-func (response *WatsonResponse) ListValuesResponse() *ValueCollection {
+func GetListValuesResult(response *watson.WatsonResponse) *ValueCollection {
     result, ok := response.Result.(*ValueCollection)
 
     if ok {
@@ -1896,7 +1889,7 @@ func (response *WatsonResponse) ListValuesResponse() *ValueCollection {
 }
 
 // Update entity value
-func (assistant *AssistantV1) UpdateValue(workspaceID string, entity string, value string, body *UpdateValue) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) UpdateValue(workspaceID string, entity string, value string, body *UpdateValue) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1924,7 +1917,7 @@ func (assistant *AssistantV1) UpdateValue(workspaceID string, entity string, val
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Value)
     res, _, err := request.EndStruct(&response.Result)
@@ -1947,7 +1940,7 @@ func (assistant *AssistantV1) UpdateValue(workspaceID string, entity string, val
     return response, nil
 }
 
-func (response *WatsonResponse) UpdateValueResponse() *Value {
+func GetUpdateValueResult(response *watson.WatsonResponse) *Value {
     result, ok := response.Result.(*Value)
 
     if ok {
@@ -1958,7 +1951,7 @@ func (response *WatsonResponse) UpdateValueResponse() *Value {
 }
 
 // Add entity value synonym
-func (assistant *AssistantV1) CreateSynonym(workspaceID string, entity string, value string, body *CreateSynonym) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) CreateSynonym(workspaceID string, entity string, value string, body *CreateSynonym) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -1986,7 +1979,7 @@ func (assistant *AssistantV1) CreateSynonym(workspaceID string, entity string, v
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Synonym)
     res, _, err := request.EndStruct(&response.Result)
@@ -2009,7 +2002,7 @@ func (assistant *AssistantV1) CreateSynonym(workspaceID string, entity string, v
     return response, nil
 }
 
-func (response *WatsonResponse) CreateSynonymResponse() *Synonym {
+func GetCreateSynonymResult(response *watson.WatsonResponse) *Synonym {
     result, ok := response.Result.(*Synonym)
 
     if ok {
@@ -2020,7 +2013,7 @@ func (response *WatsonResponse) CreateSynonymResponse() *Synonym {
 }
 
 // Delete entity value synonym
-func (assistant *AssistantV1) DeleteSynonym(workspaceID string, entity string, value string, synonym string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteSynonym(workspaceID string, entity string, value string, synonym string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2048,7 +2041,7 @@ func (assistant *AssistantV1) DeleteSynonym(workspaceID string, entity string, v
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
@@ -2072,7 +2065,7 @@ func (assistant *AssistantV1) DeleteSynonym(workspaceID string, entity string, v
 
 
 // Get entity value synonym
-func (assistant *AssistantV1) GetSynonym(workspaceID string, entity string, value string, synonym string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) GetSynonym(workspaceID string, entity string, value string, synonym string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2101,7 +2094,7 @@ func (assistant *AssistantV1) GetSynonym(workspaceID string, entity string, valu
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Synonym)
     res, _, err := request.EndStruct(&response.Result)
@@ -2124,7 +2117,7 @@ func (assistant *AssistantV1) GetSynonym(workspaceID string, entity string, valu
     return response, nil
 }
 
-func (response *WatsonResponse) GetSynonymResponse() *Synonym {
+func GetGetSynonymResult(response *watson.WatsonResponse) *Synonym {
     result, ok := response.Result.(*Synonym)
 
     if ok {
@@ -2135,7 +2128,7 @@ func (response *WatsonResponse) GetSynonymResponse() *Synonym {
 }
 
 // List entity value synonyms
-func (assistant *AssistantV1) ListSynonyms(workspaceID string, entity string, value string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListSynonyms(workspaceID string, entity string, value string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2167,7 +2160,7 @@ func (assistant *AssistantV1) ListSynonyms(workspaceID string, entity string, va
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(SynonymCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -2190,7 +2183,7 @@ func (assistant *AssistantV1) ListSynonyms(workspaceID string, entity string, va
     return response, nil
 }
 
-func (response *WatsonResponse) ListSynonymsResponse() *SynonymCollection {
+func GetListSynonymsResult(response *watson.WatsonResponse) *SynonymCollection {
     result, ok := response.Result.(*SynonymCollection)
 
     if ok {
@@ -2201,7 +2194,7 @@ func (response *WatsonResponse) ListSynonymsResponse() *SynonymCollection {
 }
 
 // Update entity value synonym
-func (assistant *AssistantV1) UpdateSynonym(workspaceID string, entity string, value string, synonym string, body *UpdateSynonym) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) UpdateSynonym(workspaceID string, entity string, value string, synonym string, body *UpdateSynonym) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2230,7 +2223,7 @@ func (assistant *AssistantV1) UpdateSynonym(workspaceID string, entity string, v
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(Synonym)
     res, _, err := request.EndStruct(&response.Result)
@@ -2253,7 +2246,7 @@ func (assistant *AssistantV1) UpdateSynonym(workspaceID string, entity string, v
     return response, nil
 }
 
-func (response *WatsonResponse) UpdateSynonymResponse() *Synonym {
+func GetUpdateSynonymResult(response *watson.WatsonResponse) *Synonym {
     result, ok := response.Result.(*Synonym)
 
     if ok {
@@ -2264,7 +2257,7 @@ func (response *WatsonResponse) UpdateSynonymResponse() *Synonym {
 }
 
 // Create dialog node
-func (assistant *AssistantV1) CreateDialogNode(workspaceID string, body *CreateDialogNode) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) CreateDialogNode(workspaceID string, body *CreateDialogNode) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2290,7 +2283,7 @@ func (assistant *AssistantV1) CreateDialogNode(workspaceID string, body *CreateD
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(DialogNode)
     res, _, err := request.EndStruct(&response.Result)
@@ -2313,7 +2306,7 @@ func (assistant *AssistantV1) CreateDialogNode(workspaceID string, body *CreateD
     return response, nil
 }
 
-func (response *WatsonResponse) CreateDialogNodeResponse() *DialogNode {
+func GetCreateDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     result, ok := response.Result.(*DialogNode)
 
     if ok {
@@ -2324,7 +2317,7 @@ func (response *WatsonResponse) CreateDialogNodeResponse() *DialogNode {
 }
 
 // Delete dialog node
-func (assistant *AssistantV1) DeleteDialogNode(workspaceID string, dialogNode string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteDialogNode(workspaceID string, dialogNode string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2350,7 +2343,7 @@ func (assistant *AssistantV1) DeleteDialogNode(workspaceID string, dialogNode st
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
@@ -2374,7 +2367,7 @@ func (assistant *AssistantV1) DeleteDialogNode(workspaceID string, dialogNode st
 
 
 // Get dialog node
-func (assistant *AssistantV1) GetDialogNode(workspaceID string, dialogNode string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) GetDialogNode(workspaceID string, dialogNode string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2401,7 +2394,7 @@ func (assistant *AssistantV1) GetDialogNode(workspaceID string, dialogNode strin
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(DialogNode)
     res, _, err := request.EndStruct(&response.Result)
@@ -2424,7 +2417,7 @@ func (assistant *AssistantV1) GetDialogNode(workspaceID string, dialogNode strin
     return response, nil
 }
 
-func (response *WatsonResponse) GetDialogNodeResponse() *DialogNode {
+func GetGetDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     result, ok := response.Result.(*DialogNode)
 
     if ok {
@@ -2435,7 +2428,7 @@ func (response *WatsonResponse) GetDialogNodeResponse() *DialogNode {
 }
 
 // List dialog nodes
-func (assistant *AssistantV1) ListDialogNodes(workspaceID string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListDialogNodes(workspaceID string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2465,7 +2458,7 @@ func (assistant *AssistantV1) ListDialogNodes(workspaceID string, pageLimit int6
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(DialogNodeCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -2488,7 +2481,7 @@ func (assistant *AssistantV1) ListDialogNodes(workspaceID string, pageLimit int6
     return response, nil
 }
 
-func (response *WatsonResponse) ListDialogNodesResponse() *DialogNodeCollection {
+func GetListDialogNodesResult(response *watson.WatsonResponse) *DialogNodeCollection {
     result, ok := response.Result.(*DialogNodeCollection)
 
     if ok {
@@ -2499,7 +2492,7 @@ func (response *WatsonResponse) ListDialogNodesResponse() *DialogNodeCollection 
 }
 
 // Update dialog node
-func (assistant *AssistantV1) UpdateDialogNode(workspaceID string, dialogNode string, body *UpdateDialogNode) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) UpdateDialogNode(workspaceID string, dialogNode string, body *UpdateDialogNode) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2526,7 +2519,7 @@ func (assistant *AssistantV1) UpdateDialogNode(workspaceID string, dialogNode st
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(DialogNode)
     res, _, err := request.EndStruct(&response.Result)
@@ -2549,7 +2542,7 @@ func (assistant *AssistantV1) UpdateDialogNode(workspaceID string, dialogNode st
     return response, nil
 }
 
-func (response *WatsonResponse) UpdateDialogNodeResponse() *DialogNode {
+func GetUpdateDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     result, ok := response.Result.(*DialogNode)
 
     if ok {
@@ -2560,7 +2553,7 @@ func (response *WatsonResponse) UpdateDialogNodeResponse() *DialogNode {
 }
 
 // List log events in all workspaces
-func (assistant *AssistantV1) ListAllLogs(filter string, sort string, pageLimit int64, cursor string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListAllLogs(filter string, sort string, pageLimit int64, cursor string) (*watson.WatsonResponse, []error) {
     path := "/v1/logs"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2588,7 +2581,7 @@ func (assistant *AssistantV1) ListAllLogs(filter string, sort string, pageLimit 
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(LogCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -2611,7 +2604,7 @@ func (assistant *AssistantV1) ListAllLogs(filter string, sort string, pageLimit 
     return response, nil
 }
 
-func (response *WatsonResponse) ListAllLogsResponse() *LogCollection {
+func GetListAllLogsResult(response *watson.WatsonResponse) *LogCollection {
     result, ok := response.Result.(*LogCollection)
 
     if ok {
@@ -2622,7 +2615,7 @@ func (response *WatsonResponse) ListAllLogsResponse() *LogCollection {
 }
 
 // List log events in a workspace
-func (assistant *AssistantV1) ListLogs(workspaceID string, sort string, filter string, pageLimit int64, cursor string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) ListLogs(workspaceID string, sort string, filter string, pageLimit int64, cursor string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/logs"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2651,7 +2644,7 @@ func (assistant *AssistantV1) ListLogs(workspaceID string, sort string, filter s
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     response.Result = new(LogCollection)
     res, _, err := request.EndStruct(&response.Result)
@@ -2674,7 +2667,7 @@ func (assistant *AssistantV1) ListLogs(workspaceID string, sort string, filter s
     return response, nil
 }
 
-func (response *WatsonResponse) ListLogsResponse() *LogCollection {
+func GetListLogsResult(response *watson.WatsonResponse) *LogCollection {
     result, ok := response.Result.(*LogCollection)
 
     if ok {
@@ -2685,7 +2678,7 @@ func (response *WatsonResponse) ListLogsResponse() *LogCollection {
 }
 
 // Delete labeled data
-func (assistant *AssistantV1) DeleteUserData(customerID string) (*WatsonResponse, []error) {
+func (assistant *AssistantV1) DeleteUserData(customerID string) (*watson.WatsonResponse, []error) {
     path := "/v1/user_data"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2710,7 +2703,7 @@ func (assistant *AssistantV1) DeleteUserData(customerID string) (*WatsonResponse
         request.SetBasicAuth(creds.Username, creds.Password)
     }
 
-    response := new(WatsonResponse)
+    response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
 
