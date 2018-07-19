@@ -20,6 +20,36 @@ func main() {
 		return
 	}
 
+
+	/* TRANSLATE */
+
+	entryTranslate := languageTranslatorV3.TranslateRequest{
+		Text: []string {"YOUR STRING TO TRANSLATE"},
+		ModelId: "YOUR MODEL ID",
+		Source:  "YOUR SOURCE LANGUAGE",
+		Target:  "YOUR TARGET LANGUAGE",
+	}
+
+	// Call the languageTranslator List Identifiable Languages method
+	translate, translateErr := languageTranslator.Translate(&entryTranslate)
+
+	// Check successful call
+	if translateErr != nil {
+		fmt.Println(translateErr)
+		return
+	}
+
+	// Cast response from call to the specific struct returned by GetListIdentifiableLanguagesResult
+	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
+	translateResult := languageTranslatorV3.GetTranslateResult(translate)
+
+	// Check successful casting
+	if translateResult != nil {
+		// Print result
+		fmt.Println(translateResult)
+	}
+
+
 	/* LIST IDENTIFIABLE LANGUAGES */
 
 	// Call the languageTranslator List Identifiable Languages method
@@ -41,13 +71,14 @@ func main() {
 		fmt.Println(listResult)
 	}
 
+
 	/* IDENTIFY */
 
-	var entry string
-	entry = "YOUR STRING TO IDENTIFY"
+	var entryIdentify string
+	entryIdentify = "YOUR STRING TO IDENTIFY"
 
 	// Call the languageTranslator Identify method
-	identify, identifyErr := languageTranslator.Identify(&entry)
+	identify, identifyErr := languageTranslator.Identify(&entryIdentify)
 
 	// Check successful call
 	if identifyErr != nil {
