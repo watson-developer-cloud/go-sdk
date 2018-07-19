@@ -21,6 +21,8 @@ func main() {
 		return
 	}
 
+	/* LIST WORKSPACES */
+
 	// Call the assistant ListWorkspaces method
 	list, listErr := assistant.ListWorkspaces(0, true, "", "", false)
 
