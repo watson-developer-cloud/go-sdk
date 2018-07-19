@@ -23,22 +23,22 @@ func main() {
 	/* LIST IDENTIFIABLE LANGUAGES */
 
 	// Call the languageTranslator List Identifiable Languages method
-	language, languageErr := languageTranslator.ListIdentifiableLanguages()
+	list, listErr := languageTranslator.ListIdentifiableLanguages()
 
 	// Check successful call
-	if languageErr != nil {
-		fmt.Println(languageErr)
+	if listErr != nil {
+		fmt.Println(listErr)
 		return
 	}
 
 	// Cast response from call to the specific struct returned by GetListIdentifiableLanguagesResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	resultLanguage := languageTranslatorV3.GetListIdentifiableLanguagesResult(language)
+	listResult := languageTranslatorV3.GetListIdentifiableLanguagesResult(list)
 
 	// Check successful casting
-	if resultLanguage != nil {
+	if listResult != nil {
 		// Print result
-		fmt.Println(resultLanguage)
+		fmt.Println(listResult)
 	}
 
 	/* IDENTIFY */
@@ -57,11 +57,11 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetIdentifyResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	resultIdentify := languageTranslatorV3.GetIdentifyResult(identify)
+	identifyResult := languageTranslatorV3.GetIdentifyResult(identify)
 
 	// Check successful casting
-	if resultIdentify != nil {
+	if identifyResult != nil {
 		// Print result
-		fmt.Println(resultIdentify)
+		fmt.Println(identifyResult)
 	}
 }

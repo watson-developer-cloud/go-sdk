@@ -34,12 +34,12 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetListWorkspacesResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	result := assistantV1.GetListWorkspacesResult(list)
+	listResult := assistantV1.GetListWorkspacesResult(list)
 
 	// Check successful casting
-	if result != nil {
+	if listResult != nil {
 		// Print result
-		fmt.Printf("FOUND %v WORKSPACES\n", len(result.Workspaces))
-		fmt.Println(result)
+		fmt.Printf("FOUND %v WORKSPACES\n", len(listResult.Workspaces))
+		fmt.Println(listResult)
 	}
 }
