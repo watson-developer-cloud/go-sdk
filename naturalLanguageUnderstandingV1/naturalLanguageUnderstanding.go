@@ -124,7 +124,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 
     response := new(watson.WatsonResponse)
 
-    response.Result = new(InlineResponse200)
+    response.Result = new(DeleteModelResults)
     res, _, err := request.EndStruct(&response.Result)
 
     response.Headers = res.Header
@@ -145,8 +145,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
     return response, nil
 }
 
-func GetDeleteModelResult(response *watson.WatsonResponse) *InlineResponse200 {
-    result, ok := response.Result.(*InlineResponse200)
+func GetDeleteModelResult(response *watson.WatsonResponse) *DeleteModelResults {
+    result, ok := response.Result.(*DeleteModelResults)
 
     if ok {
         return result
