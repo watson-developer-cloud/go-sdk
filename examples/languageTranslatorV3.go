@@ -53,22 +53,22 @@ func main() {
 	/* LIST IDENTIFIABLE LANGUAGES */
 
 	// Call the languageTranslator List Identifiable Languages method
-	list, listErr := languageTranslator.ListIdentifiableLanguages()
+	listLanguage, listLanguageErr := languageTranslator.ListIdentifiableLanguages()
 
 	// Check successful call
-	if listErr != nil {
-		fmt.Println(listErr)
+	if listLanguageErr != nil {
+		fmt.Println(listLanguageErr)
 		return
 	}
 
 	// Cast response from call to the specific struct returned by GetListIdentifiableLanguagesResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	listResult := languageTranslatorV3.GetListIdentifiableLanguagesResult(list)
+	listLanguageResult := languageTranslatorV3.GetListIdentifiableLanguagesResult(listLanguage)
 
 	// Check successful casting
-	if listResult != nil {
+	if listLanguageResult != nil {
 		// Print result
-		fmt.Println(listResult)
+		fmt.Println(listLanguageResult)
 	}
 
 
@@ -94,5 +94,71 @@ func main() {
 	if identifyResult != nil {
 		// Print result
 		fmt.Println(identifyResult)
+	}
+
+
+	/* LIST MODELS */
+
+	// Call the languageTranslator List Models method
+	listModel, listModelErr := languageTranslator.ListModels("YOUR SOURCE LANGUAGE", "YOUR TARGET LANGUAGE", true)
+
+	// Check successful call
+	if listModelErr != nil {
+		fmt.Println(listModelErr)
+		return
+	}
+
+	// Cast response from call to the specific struct returned by GetListModelsResult
+	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
+	listModelResult := languageTranslatorV3.GetListModelsResult(listModel)
+
+	// Check successful casting
+	if listModelResult != nil {
+		// Print result
+		fmt.Println(listModelResult)
+	}
+
+	//
+	///* CREATE MODEL */
+	//
+	//// Call the languageTranslator Create method
+	//createModel, createModelErr := languageTranslator.CreateModel("YOUR MODEL ID", "YOUR MODEL NAME", "YOUR FORCED GLOSSARY", "YOUR PARALLEL CORPUS")
+	//
+	//// Check successful call
+	//if createModelErr != nil {
+	//	fmt.Println(createModelErr)
+	//	return
+	//}
+	//
+	//// Cast response from call to the specific struct returned by GetCreateModelsResult
+	//// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
+	//createModelResult := languageTranslatorV3.GetIdentifyResult(createModel)
+	//
+	//// Check successful casting
+	//if createModelResult != nil {
+	//	// Print result
+	//	fmt.Println(createModelResult)
+	//}
+	//
+
+	/* DELETE MODEL */
+
+	// Call the languageTranslator Delete method
+	deleteModel, deleteModelErr := languageTranslator.ListModels("YOUR SOURCE LANGUAGE", "YOUR TARGET LANGUAGE", true)
+
+	// Check successful call
+	if deleteModelErr != nil {
+		fmt.Println(deleteModelErr)
+		return
+	}
+
+	// Cast response from call to the specific struct returned by GetIdentifyResult
+	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
+	deleteModelResult := languageTranslatorV3.GetDeleteModelResult(deleteModel)
+
+	// Check successful casting
+	if deleteModelResult != nil {
+		// Print result
+		fmt.Println(deleteModelResult)
 	}
 }
