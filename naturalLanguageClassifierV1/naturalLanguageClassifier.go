@@ -47,11 +47,10 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifie
     tokenManager := naturalLanguageClassifier.client.TokenManager
 
     path = strings.Replace(path, "{classifier_id}", classifierID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -107,11 +106,10 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
     tokenManager := naturalLanguageClassifier.client.TokenManager
 
     path = strings.Replace(path, "{classifier_id}", classifierID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -166,11 +164,10 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(m
     useTM := naturalLanguageClassifier.client.UseTM
     tokenManager := naturalLanguageClassifier.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -225,11 +222,10 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(c
     tokenManager := naturalLanguageClassifier.client.TokenManager
 
     path = strings.Replace(path, "{classifier_id}", classifierID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -274,11 +270,10 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(clas
     tokenManager := naturalLanguageClassifier.client.TokenManager
 
     path = strings.Replace(path, "{classifier_id}", classifierID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -332,11 +327,10 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers() 
     useTM := naturalLanguageClassifier.client.UseTM
     tokenManager := naturalLanguageClassifier.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()

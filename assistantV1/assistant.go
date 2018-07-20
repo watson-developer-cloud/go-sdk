@@ -16,10 +16,10 @@
 package assistantV1
 
 import (
-    "fmt"
     "bytes"
-    "strings"
+    "fmt"
     "github.com/go-openapi/strfmt"
+    "strings"
     req "github.com/parnurzeal/gorequest"
     watson "golang-sdk"
 )
@@ -46,11 +46,10 @@ func (assistant *AssistantV1) Message(workspaceID string, body *MessageRequest, 
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("nodes_visited_details=" + fmt.Sprint(nodesVisitedDetails))
     request.Send(body)
 
@@ -106,11 +105,10 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*watson.Wa
     useTM := assistant.client.UseTM
     tokenManager := assistant.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -166,11 +164,10 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) (*watson.Watso
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -215,11 +212,10 @@ func (assistant *AssistantV1) GetWorkspace(workspaceID string, export bool, incl
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("export=" + fmt.Sprint(export))
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
@@ -275,11 +271,10 @@ func (assistant *AssistantV1) ListWorkspaces(pageLimit int64, includeCount bool,
     useTM := assistant.client.UseTM
     tokenManager := assistant.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
     request.Query("include_count=" + fmt.Sprint(includeCount))
     request.Query("sort=" + fmt.Sprint(sort))
@@ -339,11 +334,10 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *UpdateWo
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("append=" + fmt.Sprint(appendVar))
     request.Send(body)
 
@@ -400,11 +394,10 @@ func (assistant *AssistantV1) CreateIntent(workspaceID string, body *CreateInten
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -461,11 +454,10 @@ func (assistant *AssistantV1) DeleteIntent(workspaceID string, intent string) (*
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{intent}", intent, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -511,11 +503,10 @@ func (assistant *AssistantV1) GetIntent(workspaceID string, intent string, expor
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{intent}", intent, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("export=" + fmt.Sprint(export))
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
@@ -572,11 +563,10 @@ func (assistant *AssistantV1) ListIntents(workspaceID string, export bool, pageL
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("export=" + fmt.Sprint(export))
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
     request.Query("include_count=" + fmt.Sprint(includeCount))
@@ -638,11 +628,10 @@ func (assistant *AssistantV1) UpdateIntent(workspaceID string, intent string, bo
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{intent}", intent, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -699,11 +688,10 @@ func (assistant *AssistantV1) CreateExample(workspaceID string, intent string, b
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{intent}", intent, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -761,11 +749,10 @@ func (assistant *AssistantV1) DeleteExample(workspaceID string, intent string, t
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{intent}", intent, 1)
     path = strings.Replace(path, "{text}", text, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -812,11 +799,10 @@ func (assistant *AssistantV1) GetExample(workspaceID string, intent string, text
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{intent}", intent, 1)
     path = strings.Replace(path, "{text}", text, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
     if useTM {
@@ -873,11 +859,10 @@ func (assistant *AssistantV1) ListExamples(workspaceID string, intent string, pa
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{intent}", intent, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
     request.Query("include_count=" + fmt.Sprint(includeCount))
     request.Query("sort=" + fmt.Sprint(sort))
@@ -939,11 +924,10 @@ func (assistant *AssistantV1) UpdateExample(workspaceID string, intent string, t
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{intent}", intent, 1)
     path = strings.Replace(path, "{text}", text, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -999,11 +983,10 @@ func (assistant *AssistantV1) CreateCounterexample(workspaceID string, body *Cre
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1060,11 +1043,10 @@ func (assistant *AssistantV1) DeleteCounterexample(workspaceID string, text stri
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{text}", text, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1110,11 +1092,10 @@ func (assistant *AssistantV1) GetCounterexample(workspaceID string, text string,
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{text}", text, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
     if useTM {
@@ -1170,11 +1151,10 @@ func (assistant *AssistantV1) ListCounterexamples(workspaceID string, pageLimit 
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
     request.Query("include_count=" + fmt.Sprint(includeCount))
     request.Query("sort=" + fmt.Sprint(sort))
@@ -1235,11 +1215,10 @@ func (assistant *AssistantV1) UpdateCounterexample(workspaceID string, text stri
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{text}", text, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1295,11 +1274,10 @@ func (assistant *AssistantV1) CreateEntity(workspaceID string, body *CreateEntit
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1356,11 +1334,10 @@ func (assistant *AssistantV1) DeleteEntity(workspaceID string, entity string) (*
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1406,11 +1383,10 @@ func (assistant *AssistantV1) GetEntity(workspaceID string, entity string, expor
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("export=" + fmt.Sprint(export))
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
@@ -1467,11 +1443,10 @@ func (assistant *AssistantV1) ListEntities(workspaceID string, export bool, page
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("export=" + fmt.Sprint(export))
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
     request.Query("include_count=" + fmt.Sprint(includeCount))
@@ -1533,11 +1508,10 @@ func (assistant *AssistantV1) UpdateEntity(workspaceID string, entity string, bo
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1594,11 +1568,10 @@ func (assistant *AssistantV1) ListEntityMentions(workspaceID string, entity stri
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("export=" + fmt.Sprint(export))
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
@@ -1656,11 +1629,10 @@ func (assistant *AssistantV1) CreateValue(workspaceID string, entity string, bod
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1718,11 +1690,10 @@ func (assistant *AssistantV1) DeleteValue(workspaceID string, entity string, val
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
     path = strings.Replace(path, "{value}", value, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1769,11 +1740,10 @@ func (assistant *AssistantV1) GetValue(workspaceID string, entity string, value 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
     path = strings.Replace(path, "{value}", value, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("export=" + fmt.Sprint(export))
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
@@ -1831,11 +1801,10 @@ func (assistant *AssistantV1) ListValues(workspaceID string, entity string, expo
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("export=" + fmt.Sprint(export))
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
     request.Query("include_count=" + fmt.Sprint(includeCount))
@@ -1898,11 +1867,10 @@ func (assistant *AssistantV1) UpdateValue(workspaceID string, entity string, val
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
     path = strings.Replace(path, "{value}", value, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1960,11 +1928,10 @@ func (assistant *AssistantV1) CreateSynonym(workspaceID string, entity string, v
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
     path = strings.Replace(path, "{value}", value, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -2023,11 +1990,10 @@ func (assistant *AssistantV1) DeleteSynonym(workspaceID string, entity string, v
     path = strings.Replace(path, "{entity}", entity, 1)
     path = strings.Replace(path, "{value}", value, 1)
     path = strings.Replace(path, "{synonym}", synonym, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2075,11 +2041,10 @@ func (assistant *AssistantV1) GetSynonym(workspaceID string, entity string, valu
     path = strings.Replace(path, "{entity}", entity, 1)
     path = strings.Replace(path, "{value}", value, 1)
     path = strings.Replace(path, "{synonym}", synonym, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
     if useTM {
@@ -2137,11 +2102,10 @@ func (assistant *AssistantV1) ListSynonyms(workspaceID string, entity string, va
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{entity}", entity, 1)
     path = strings.Replace(path, "{value}", value, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
     request.Query("include_count=" + fmt.Sprint(includeCount))
     request.Query("sort=" + fmt.Sprint(sort))
@@ -2204,11 +2168,10 @@ func (assistant *AssistantV1) UpdateSynonym(workspaceID string, entity string, v
     path = strings.Replace(path, "{entity}", entity, 1)
     path = strings.Replace(path, "{value}", value, 1)
     path = strings.Replace(path, "{synonym}", synonym, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -2264,11 +2227,10 @@ func (assistant *AssistantV1) CreateDialogNode(workspaceID string, body *CreateD
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -2325,11 +2287,10 @@ func (assistant *AssistantV1) DeleteDialogNode(workspaceID string, dialogNode st
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{dialog_node}", dialogNode, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2375,11 +2336,10 @@ func (assistant *AssistantV1) GetDialogNode(workspaceID string, dialogNode strin
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{dialog_node}", dialogNode, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("include_audit=" + fmt.Sprint(includeAudit))
 
     if useTM {
@@ -2435,11 +2395,10 @@ func (assistant *AssistantV1) ListDialogNodes(workspaceID string, pageLimit int6
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
     request.Query("include_count=" + fmt.Sprint(includeCount))
     request.Query("sort=" + fmt.Sprint(sort))
@@ -2500,11 +2459,10 @@ func (assistant *AssistantV1) UpdateDialogNode(workspaceID string, dialogNode st
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
     path = strings.Replace(path, "{dialog_node}", dialogNode, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -2559,11 +2517,10 @@ func (assistant *AssistantV1) ListAllLogs(filter string, sort string, pageLimit 
     useTM := assistant.client.UseTM
     tokenManager := assistant.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("filter=" + fmt.Sprint(filter))
     request.Query("sort=" + fmt.Sprint(sort))
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
@@ -2622,11 +2579,10 @@ func (assistant *AssistantV1) ListLogs(workspaceID string, sort string, filter s
     tokenManager := assistant.client.TokenManager
 
     path = strings.Replace(path, "{workspace_id}", workspaceID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("sort=" + fmt.Sprint(sort))
     request.Query("filter=" + fmt.Sprint(filter))
     request.Query("page_limit=" + fmt.Sprint(pageLimit))
@@ -2684,11 +2640,10 @@ func (assistant *AssistantV1) DeleteUserData(customerID string) (*watson.WatsonR
     useTM := assistant.client.UseTM
     tokenManager := assistant.client.TokenManager
 
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("customer_id=" + fmt.Sprint(customerID))
 
     if useTM {

@@ -45,11 +45,10 @@ func (languageTranslator *LanguageTranslatorV3) Translate(body *TranslateRequest
     useTM := languageTranslator.client.UseTM
     tokenManager := languageTranslator.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -104,11 +103,10 @@ func (languageTranslator *LanguageTranslatorV3) Identify(body *string) (*watson.
     useTM := languageTranslator.client.UseTM
     tokenManager := languageTranslator.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -163,11 +161,10 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages() (*wa
     useTM := languageTranslator.client.UseTM
     tokenManager := languageTranslator.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -221,11 +218,10 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(baseModelID string, 
     useTM := languageTranslator.client.UseTM
     tokenManager := languageTranslator.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("base_model_id=" + fmt.Sprint(baseModelID))
     request.Query("name=" + fmt.Sprint(name))
 
@@ -282,11 +278,10 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(modelID string) (*wa
     tokenManager := languageTranslator.client.TokenManager
 
     path = strings.Replace(path, "{model_id}", modelID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -341,11 +336,10 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(modelID string) (*watso
     tokenManager := languageTranslator.client.TokenManager
 
     path = strings.Replace(path, "{model_id}", modelID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -399,11 +393,10 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(source string, target
     useTM := languageTranslator.client.UseTM
     tokenManager := languageTranslator.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("source=" + fmt.Sprint(source))
     request.Query("target=" + fmt.Sprint(target))
     request.Query("default=" + fmt.Sprint(defaultModels))

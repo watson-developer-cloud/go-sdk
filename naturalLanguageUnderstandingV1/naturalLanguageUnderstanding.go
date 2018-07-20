@@ -44,11 +44,10 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(body
     useTM := naturalLanguageUnderstanding.client.UseTM
     tokenManager := naturalLanguageUnderstanding.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -104,11 +103,10 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
     tokenManager := naturalLanguageUnderstanding.client.TokenManager
 
     path = strings.Replace(path, "{model_id}", modelID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -162,11 +160,10 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels()
     useTM := naturalLanguageUnderstanding.client.UseTM
     tokenManager := naturalLanguageUnderstanding.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()

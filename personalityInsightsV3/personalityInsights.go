@@ -44,11 +44,13 @@ func (personalityInsights *PersonalityInsightsV3) Profile(body *Content, content
     useTM := personalityInsights.client.UseTM
     tokenManager := personalityInsights.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", fmt.Sprint(contentType))
+    request.Set("Content-Language", fmt.Sprint(contentLanguage))
+    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    request.Query("version=" + creds.Version)
     request.Query("raw_scores=" + fmt.Sprint(rawScores))
     request.Query("csv_headers=" + fmt.Sprint(csvHeaders))
     request.Query("consumption_preferences=" + fmt.Sprint(consumptionPreferences))
@@ -106,11 +108,13 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(body *Content, co
     useTM := personalityInsights.client.UseTM
     tokenManager := personalityInsights.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", fmt.Sprint(contentType))
+    request.Set("Content-Language", fmt.Sprint(contentLanguage))
+    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    request.Query("version=" + creds.Version)
     request.Query("raw_scores=" + fmt.Sprint(rawScores))
     request.Query("csv_headers=" + fmt.Sprint(csvHeaders))
     request.Query("consumption_preferences=" + fmt.Sprint(consumptionPreferences))

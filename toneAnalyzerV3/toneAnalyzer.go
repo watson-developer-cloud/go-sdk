@@ -43,11 +43,13 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(body *ToneInput, contentType string, se
     useTM := toneAnalyzer.client.UseTM
     tokenManager := toneAnalyzer.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", fmt.Sprint(contentType))
+    request.Set("Content-Language", fmt.Sprint(contentLanguage))
+    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    request.Query("version=" + creds.Version)
     request.Query("sentences=" + fmt.Sprint(sentences))
     request.Query("tones=" + fmt.Sprint(tones))
     request.Send(body)
@@ -104,11 +106,12 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(body *ToneChatInput, contentLanguag
     useTM := toneAnalyzer.client.UseTM
     tokenManager := toneAnalyzer.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Set("Content-Language", fmt.Sprint(contentLanguage))
+    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {

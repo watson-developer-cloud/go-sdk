@@ -16,11 +16,11 @@
 package discoveryV1
 
 import (
-    "os"
-    "fmt"
     "bytes"
-    "strings"
+    "fmt"
     "github.com/go-openapi/strfmt"
+    "os"
+    "strings"
     req "github.com/parnurzeal/gorequest"
     watson "golang-sdk"
 )
@@ -46,11 +46,10 @@ func (discovery *DiscoveryV1) CreateEnvironment(body *CreateEnvironmentRequest) 
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -106,11 +105,10 @@ func (discovery *DiscoveryV1) DeleteEnvironment(environmentID string) (*watson.W
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -165,11 +163,10 @@ func (discovery *DiscoveryV1) GetEnvironment(environmentID string) (*watson.Wats
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -223,11 +220,10 @@ func (discovery *DiscoveryV1) ListEnvironments(name string) (*watson.WatsonRespo
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("name=" + fmt.Sprint(name))
 
     if useTM {
@@ -283,11 +279,10 @@ func (discovery *DiscoveryV1) ListFields(environmentID string, collectionIds []s
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("collection_ids=" + fmt.Sprint(collectionIds))
 
     if useTM {
@@ -343,11 +338,10 @@ func (discovery *DiscoveryV1) UpdateEnvironment(environmentID string, body *Upda
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Put(creds.ServiceURL + path)
 
-    request := req.New().Put(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -403,11 +397,10 @@ func (discovery *DiscoveryV1) CreateConfiguration(environmentID string, body *Co
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -464,11 +457,10 @@ func (discovery *DiscoveryV1) DeleteConfiguration(environmentID string, configur
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{configuration_id}", configurationID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -524,11 +516,10 @@ func (discovery *DiscoveryV1) GetConfiguration(environmentID string, configurati
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{configuration_id}", configurationID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -583,11 +574,10 @@ func (discovery *DiscoveryV1) ListConfigurations(environmentID string, name stri
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("name=" + fmt.Sprint(name))
 
     if useTM {
@@ -644,11 +634,10 @@ func (discovery *DiscoveryV1) UpdateConfiguration(environmentID string, configur
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{configuration_id}", configurationID, 1)
+    request := req.New().Put(creds.ServiceURL + path)
 
-    request := req.New().Put(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -704,11 +693,10 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(environmentID strin
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("step=" + fmt.Sprint(step))
     request.Query("configuration_id=" + fmt.Sprint(configurationID))
 
@@ -765,11 +753,10 @@ func (discovery *DiscoveryV1) CreateCollection(environmentID string, body *Creat
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -826,11 +813,10 @@ func (discovery *DiscoveryV1) DeleteCollection(environmentID string, collectionI
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -886,11 +872,10 @@ func (discovery *DiscoveryV1) GetCollection(environmentID string, collectionID s
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -946,11 +931,10 @@ func (discovery *DiscoveryV1) ListCollectionFields(environmentID string, collect
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1005,11 +989,10 @@ func (discovery *DiscoveryV1) ListCollections(environmentID string, name string)
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("name=" + fmt.Sprint(name))
 
     if useTM {
@@ -1066,11 +1049,10 @@ func (discovery *DiscoveryV1) UpdateCollection(environmentID string, collectionI
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Put(creds.ServiceURL + path)
 
-    request := req.New().Put(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1127,11 +1109,10 @@ func (discovery *DiscoveryV1) CreateExpansions(environmentID string, collectionI
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1188,11 +1169,10 @@ func (discovery *DiscoveryV1) DeleteExpansions(environmentID string, collectionI
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1238,11 +1218,10 @@ func (discovery *DiscoveryV1) ListExpansions(environmentID string, collectionID 
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1298,11 +1277,10 @@ func (discovery *DiscoveryV1) AddDocument(environmentID string, collectionID str
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1359,11 +1337,10 @@ func (discovery *DiscoveryV1) DeleteDocument(environmentID string, collectionID 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{document_id}", documentID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1420,11 +1397,10 @@ func (discovery *DiscoveryV1) GetDocumentStatus(environmentID string, collection
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{document_id}", documentID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1481,11 +1457,10 @@ func (discovery *DiscoveryV1) UpdateDocument(environmentID string, collectionID 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{document_id}", documentID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1540,11 +1515,10 @@ func (discovery *DiscoveryV1) FederatedQuery(environmentID string, collectionIds
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("collection_ids=" + fmt.Sprint(collectionIds))
     request.Query("filter=" + fmt.Sprint(filter))
     request.Query("query=" + fmt.Sprint(query))
@@ -1618,11 +1592,10 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(environmentID string, collec
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("collection_ids=" + fmt.Sprint(collectionIds))
     request.Query("filter=" + fmt.Sprint(filter))
     request.Query("query=" + fmt.Sprint(query))
@@ -1692,11 +1665,10 @@ func (discovery *DiscoveryV1) Query(environmentID string, collectionID string, f
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("filter=" + fmt.Sprint(filter))
     request.Query("query=" + fmt.Sprint(query))
     request.Query("natural_language_query=" + fmt.Sprint(naturalLanguageQuery))
@@ -1770,11 +1742,10 @@ func (discovery *DiscoveryV1) QueryEntities(environmentID string, collectionID s
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1831,11 +1802,10 @@ func (discovery *DiscoveryV1) QueryNotices(environmentID string, collectionID st
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("filter=" + fmt.Sprint(filter))
     request.Query("query=" + fmt.Sprint(query))
     request.Query("natural_language_query=" + fmt.Sprint(naturalLanguageQuery))
@@ -1908,11 +1878,10 @@ func (discovery *DiscoveryV1) QueryRelations(environmentID string, collectionID 
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1969,11 +1938,10 @@ func (discovery *DiscoveryV1) AddTrainingData(environmentID string, collectionID
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -2031,11 +1999,10 @@ func (discovery *DiscoveryV1) CreateTrainingExample(environmentID string, collec
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{query_id}", queryID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -2092,11 +2059,10 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(environmentID string, collec
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2143,11 +2109,10 @@ func (discovery *DiscoveryV1) DeleteTrainingData(environmentID string, collectio
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{query_id}", queryID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2195,11 +2160,10 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(environmentID string, collec
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{query_id}", queryID, 1)
     path = strings.Replace(path, "{example_id}", exampleID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2246,11 +2210,10 @@ func (discovery *DiscoveryV1) GetTrainingData(environmentID string, collectionID
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{query_id}", queryID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2308,11 +2271,10 @@ func (discovery *DiscoveryV1) GetTrainingExample(environmentID string, collectio
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{query_id}", queryID, 1)
     path = strings.Replace(path, "{example_id}", exampleID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2368,11 +2330,10 @@ func (discovery *DiscoveryV1) ListTrainingData(environmentID string, collectionI
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2429,11 +2390,10 @@ func (discovery *DiscoveryV1) ListTrainingExamples(environmentID string, collect
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{query_id}", queryID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2491,11 +2451,10 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(environmentID string, collec
     path = strings.Replace(path, "{collection_id}", collectionID, 1)
     path = strings.Replace(path, "{query_id}", queryID, 1)
     path = strings.Replace(path, "{example_id}", exampleID, 1)
+    request := req.New().Put(creds.ServiceURL + path)
 
-    request := req.New().Put(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -2550,11 +2509,10 @@ func (discovery *DiscoveryV1) DeleteUserData(customerID string) (*watson.WatsonR
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("customer_id=" + fmt.Sprint(customerID))
 
     if useTM {
@@ -2600,11 +2558,10 @@ func (discovery *DiscoveryV1) CreateCredentials(environmentID string, body *Cred
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -2661,11 +2618,10 @@ func (discovery *DiscoveryV1) DeleteCredentials(environmentID string, credential
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{credential_id}", credentialID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2721,11 +2677,10 @@ func (discovery *DiscoveryV1) GetCredentials(environmentID string, credentialID 
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{credential_id}", credentialID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2780,11 +2735,10 @@ func (discovery *DiscoveryV1) ListCredentials(environmentID string) (*watson.Wat
     tokenManager := discovery.client.TokenManager
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2840,11 +2794,10 @@ func (discovery *DiscoveryV1) UpdateCredentials(environmentID string, credential
 
     path = strings.Replace(path, "{environment_id}", environmentID, 1)
     path = strings.Replace(path, "{credential_id}", credentialID, 1)
+    request := req.New().Put(creds.ServiceURL + path)
 
-    request := req.New().Put(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {

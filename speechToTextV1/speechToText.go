@@ -47,11 +47,10 @@ func (speechToText *SpeechToTextV1) GetModel(modelID string) (*watson.WatsonResp
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{model_id}", modelID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -105,11 +104,10 @@ func (speechToText *SpeechToTextV1) ListModels() (*watson.WatsonResponse, []erro
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -163,11 +161,11 @@ func (speechToText *SpeechToTextV1) RecognizeSessionless(body *io.ReadCloser, co
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", fmt.Sprint(contentType))
+    request.Query("version=" + creds.Version)
     request.Query("model=" + fmt.Sprint(model))
     request.Query("customization_id=" + fmt.Sprint(customizationID))
     request.Query("acoustic_customization_id=" + fmt.Sprint(acousticCustomizationID))
@@ -238,11 +236,10 @@ func (speechToText *SpeechToTextV1) CheckJob(id string) (*watson.WatsonResponse,
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{id}", id, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -296,11 +293,10 @@ func (speechToText *SpeechToTextV1) CheckJobs() (*watson.WatsonResponse, []error
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -354,11 +350,11 @@ func (speechToText *SpeechToTextV1) CreateJob(body *io.ReadCloser, contentType s
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", fmt.Sprint(contentType))
+    request.Query("version=" + creds.Version)
     request.Query("model=" + fmt.Sprint(model))
     request.Query("callback_url=" + fmt.Sprint(callbackUrl))
     request.Query("events=" + fmt.Sprint(events))
@@ -433,11 +429,10 @@ func (speechToText *SpeechToTextV1) DeleteJob(id string) (*watson.WatsonResponse
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{id}", id, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -481,11 +476,10 @@ func (speechToText *SpeechToTextV1) RegisterCallback(callbackUrl string, userSec
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("callback_url=" + fmt.Sprint(callbackUrl))
     request.Query("user_secret=" + fmt.Sprint(userSecret))
 
@@ -541,11 +535,10 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(callbackUrl string) (*wat
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("callback_url=" + fmt.Sprint(callbackUrl))
 
     if useTM {
@@ -590,11 +583,10 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(body *CreateLanguageMode
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -650,11 +642,10 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(customizationID string) 
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -699,11 +690,10 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(customizationID string) (*w
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -757,11 +747,10 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(language string) (*watson
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("language=" + fmt.Sprint(language))
 
     if useTM {
@@ -817,11 +806,10 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(customizationID string) (
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -866,11 +854,10 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(customizationID string, w
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("word_type_to_add=" + fmt.Sprint(wordTypeToAdd))
     request.Query("customization_weight=" + fmt.Sprint(customizationWeight))
 
@@ -917,11 +904,10 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(customizationID string)
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -967,11 +953,10 @@ func (speechToText *SpeechToTextV1) AddCorpus(customizationID string, corpusName
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{corpus_name}", corpusName, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("allow_overwrite=" + fmt.Sprint(allowOverwrite))
 
     if useTM {
@@ -1018,11 +1003,10 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(customizationID string, corpusN
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{corpus_name}", corpusName, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1068,11 +1052,10 @@ func (speechToText *SpeechToTextV1) GetCorpus(customizationID string, corpusName
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{corpus_name}", corpusName, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1127,11 +1110,10 @@ func (speechToText *SpeechToTextV1) ListCorpora(customizationID string) (*watson
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1187,11 +1169,10 @@ func (speechToText *SpeechToTextV1) AddWord(customizationID string, wordName str
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{word_name}", wordName, 1)
+    request := req.New().Put(creds.ServiceURL + path)
 
-    request := req.New().Put(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1237,11 +1218,10 @@ func (speechToText *SpeechToTextV1) AddWords(customizationID string, body *Custo
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1288,11 +1268,10 @@ func (speechToText *SpeechToTextV1) DeleteWord(customizationID string, wordName 
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{word_name}", wordName, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1338,11 +1317,10 @@ func (speechToText *SpeechToTextV1) GetWord(customizationID string, wordName str
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{word_name}", wordName, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1397,11 +1375,10 @@ func (speechToText *SpeechToTextV1) ListWords(customizationID string, wordType s
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("word_type=" + fmt.Sprint(wordType))
     request.Query("sort=" + fmt.Sprint(sort))
 
@@ -1457,11 +1434,10 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(body *CreateAcousticMode
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Send(body)
 
     if useTM {
@@ -1517,11 +1493,10 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(customizationID string) 
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1566,11 +1541,10 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(customizationID string) (*w
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1624,11 +1598,10 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(language string) (*watson
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("language=" + fmt.Sprint(language))
 
     if useTM {
@@ -1684,11 +1657,10 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(customizationID string) (
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1733,11 +1705,10 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(customizationID string, c
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("custom_language_model_id=" + fmt.Sprint(customLanguageModelID))
 
     if useTM {
@@ -1783,11 +1754,10 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(customizationID string,
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("custom_language_model_id=" + fmt.Sprint(customLanguageModelID))
 
     if useTM {
@@ -1834,11 +1804,12 @@ func (speechToText *SpeechToTextV1) AddAudio(customizationID string, audioName s
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{audio_name}", audioName, 1)
+    request := req.New().Post(creds.ServiceURL + path)
 
-    request := req.New().Post(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", fmt.Sprint(contentType))
+    request.Set("Contained-Content-Type", fmt.Sprint(containedContentType))
+    request.Query("version=" + creds.Version)
     request.Query("allow_overwrite=" + fmt.Sprint(allowOverwrite))
     request.Send(body)
 
@@ -1886,11 +1857,10 @@ func (speechToText *SpeechToTextV1) DeleteAudio(customizationID string, audioNam
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{audio_name}", audioName, 1)
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1936,11 +1906,10 @@ func (speechToText *SpeechToTextV1) GetAudio(customizationID string, audioName s
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     path = strings.Replace(path, "{audio_name}", audioName, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1995,11 +1964,10 @@ func (speechToText *SpeechToTextV1) ListAudio(customizationID string) (*watson.W
     tokenManager := speechToText.client.TokenManager
 
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    request := req.New().Get(creds.ServiceURL + path)
 
-    request := req.New().Get(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2053,11 +2021,10 @@ func (speechToText *SpeechToTextV1) DeleteUserData(customerID string) (*watson.W
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
+    request := req.New().Delete(creds.ServiceURL + path)
 
-    request := req.New().Delete(creds.ServiceURL + path).
-        Set("Accept", "application/json").
-        Query("version=" + creds.Version)
-
+    request.Set("Accept", "application/json")
+    request.Query("version=" + creds.Version)
     request.Query("customer_id=" + fmt.Sprint(customerID))
 
     if useTM {
