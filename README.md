@@ -47,7 +47,7 @@ import (
 
 ## Examples
 
-The examples folder has basic and advanced examples. The examples within each service assume that you already have service credentials.
+The [examples](https://github.ibm.com/arf/golang-sdk/tree/master/examples) folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
 
 ## Running in IBM Cloud
 
