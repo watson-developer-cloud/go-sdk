@@ -29,6 +29,10 @@ type LanguageTranslatorV3 struct {
 }
 
 func NewLanguageTranslatorV3(creds watson.Credentials) (*LanguageTranslatorV3, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://gateway.watsonplatform.net/language-translator/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "language_translator")
 
 	if clientErr != nil {

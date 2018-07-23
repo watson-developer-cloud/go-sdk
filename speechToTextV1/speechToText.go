@@ -30,6 +30,10 @@ type SpeechToTextV1 struct {
 }
 
 func NewSpeechToTextV1(creds watson.Credentials) (*SpeechToTextV1, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://stream.watsonplatform.net/speech-to-text/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "speech_to_text")
 
 	if clientErr != nil {

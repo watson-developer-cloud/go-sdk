@@ -27,6 +27,10 @@ type ToneAnalyzerV3 struct {
 }
 
 func NewToneAnalyzerV3(creds watson.Credentials) (*ToneAnalyzerV3, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://gateway.watsonplatform.net/tone-analyzer/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "tone_analyzer")
 
 	if clientErr != nil {

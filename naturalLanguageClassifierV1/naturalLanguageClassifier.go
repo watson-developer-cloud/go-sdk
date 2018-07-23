@@ -30,6 +30,10 @@ type NaturalLanguageClassifierV1 struct {
 }
 
 func NewNaturalLanguageClassifierV1(creds watson.Credentials) (*NaturalLanguageClassifierV1, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "natural_language_classifier")
 
 	if clientErr != nil {

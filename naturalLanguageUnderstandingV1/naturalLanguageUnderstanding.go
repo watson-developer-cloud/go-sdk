@@ -28,6 +28,10 @@ type NaturalLanguageUnderstandingV1 struct {
 }
 
 func NewNaturalLanguageUnderstandingV1(creds watson.Credentials) (*NaturalLanguageUnderstandingV1, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "natural-language-understanding")
 
 	if clientErr != nil {

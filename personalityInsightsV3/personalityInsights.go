@@ -28,6 +28,10 @@ type PersonalityInsightsV3 struct {
 }
 
 func NewPersonalityInsightsV3(creds watson.Credentials) (*PersonalityInsightsV3, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "personality_insights")
 
 	if clientErr != nil {

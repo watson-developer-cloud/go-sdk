@@ -29,6 +29,10 @@ type AssistantV1 struct {
 }
 
 func NewAssistantV1(creds watson.Credentials) (*AssistantV1, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://gateway.watsonplatform.net/assistant/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "conversation")
 
 	if clientErr != nil {

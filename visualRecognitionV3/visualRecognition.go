@@ -30,6 +30,10 @@ type VisualRecognitionV3 struct {
 }
 
 func NewVisualRecognitionV3(creds watson.Credentials) (*VisualRecognitionV3, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "watson_vision_combined")
 
 	if clientErr != nil {

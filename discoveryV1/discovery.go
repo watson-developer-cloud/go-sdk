@@ -30,6 +30,10 @@ type DiscoveryV1 struct {
 }
 
 func NewDiscoveryV1(creds watson.Credentials) (*DiscoveryV1, error) {
+    if creds.ServiceURL == "" {
+        creds.ServiceURL = "https://gateway.watsonplatform.net/discovery/api"
+    }
+
 	client, clientErr := watson.NewClient(creds, "discovery")
 
 	if clientErr != nil {
