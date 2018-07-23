@@ -49,6 +49,7 @@ func (discovery *DiscoveryV1) CreateEnvironment(body *CreateEnvironmentRequest) 
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -108,6 +109,7 @@ func (discovery *DiscoveryV1) DeleteEnvironment(environmentID string) (*watson.W
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -166,6 +168,7 @@ func (discovery *DiscoveryV1) GetEnvironment(environmentID string) (*watson.Wats
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -223,6 +226,7 @@ func (discovery *DiscoveryV1) ListEnvironments(name string) (*watson.WatsonRespo
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("name=" + fmt.Sprint(name))
 
@@ -282,6 +286,7 @@ func (discovery *DiscoveryV1) ListFields(environmentID string, collectionIds []s
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("collection_ids=" + fmt.Sprint(collectionIds))
 
@@ -341,6 +346,7 @@ func (discovery *DiscoveryV1) UpdateEnvironment(environmentID string, body *Upda
     request := req.New().Put(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -400,6 +406,7 @@ func (discovery *DiscoveryV1) CreateConfiguration(environmentID string, body *Co
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -460,6 +467,7 @@ func (discovery *DiscoveryV1) DeleteConfiguration(environmentID string, configur
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -519,6 +527,7 @@ func (discovery *DiscoveryV1) GetConfiguration(environmentID string, configurati
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -577,6 +586,7 @@ func (discovery *DiscoveryV1) ListConfigurations(environmentID string, name stri
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("name=" + fmt.Sprint(name))
 
@@ -637,6 +647,7 @@ func (discovery *DiscoveryV1) UpdateConfiguration(environmentID string, configur
     request := req.New().Put(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -696,9 +707,12 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(environmentID strin
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Query("step=" + fmt.Sprint(step))
     request.Query("configuration_id=" + fmt.Sprint(configurationID))
+    request.Type("multipart")
+    request.SendFile(file)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -756,6 +770,7 @@ func (discovery *DiscoveryV1) CreateCollection(environmentID string, body *Creat
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -816,6 +831,7 @@ func (discovery *DiscoveryV1) DeleteCollection(environmentID string, collectionI
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -875,6 +891,7 @@ func (discovery *DiscoveryV1) GetCollection(environmentID string, collectionID s
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -934,6 +951,7 @@ func (discovery *DiscoveryV1) ListCollectionFields(environmentID string, collect
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -992,6 +1010,7 @@ func (discovery *DiscoveryV1) ListCollections(environmentID string, name string)
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("name=" + fmt.Sprint(name))
 
@@ -1052,6 +1071,7 @@ func (discovery *DiscoveryV1) UpdateCollection(environmentID string, collectionI
     request := req.New().Put(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1112,6 +1132,7 @@ func (discovery *DiscoveryV1) CreateExpansions(environmentID string, collectionI
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1172,6 +1193,7 @@ func (discovery *DiscoveryV1) DeleteExpansions(environmentID string, collectionI
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -1221,6 +1243,7 @@ func (discovery *DiscoveryV1) ListExpansions(environmentID string, collectionID 
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -1280,7 +1303,10 @@ func (discovery *DiscoveryV1) AddDocument(environmentID string, collectionID str
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
+    request.Type("multipart")
+    request.SendFile(file)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1340,6 +1366,7 @@ func (discovery *DiscoveryV1) DeleteDocument(environmentID string, collectionID 
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -1400,6 +1427,7 @@ func (discovery *DiscoveryV1) GetDocumentStatus(environmentID string, collection
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -1460,7 +1488,10 @@ func (discovery *DiscoveryV1) UpdateDocument(environmentID string, collectionID 
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
+    request.Type("multipart")
+    request.SendFile(file)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1518,6 +1549,7 @@ func (discovery *DiscoveryV1) FederatedQuery(environmentID string, collectionIds
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("collection_ids=" + fmt.Sprint(collectionIds))
     request.Query("filter=" + fmt.Sprint(filter))
@@ -1595,6 +1627,7 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(environmentID string, collec
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("collection_ids=" + fmt.Sprint(collectionIds))
     request.Query("filter=" + fmt.Sprint(filter))
@@ -1668,6 +1701,7 @@ func (discovery *DiscoveryV1) Query(environmentID string, collectionID string, f
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("filter=" + fmt.Sprint(filter))
     request.Query("query=" + fmt.Sprint(query))
@@ -1745,6 +1779,7 @@ func (discovery *DiscoveryV1) QueryEntities(environmentID string, collectionID s
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1805,6 +1840,7 @@ func (discovery *DiscoveryV1) QueryNotices(environmentID string, collectionID st
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("filter=" + fmt.Sprint(filter))
     request.Query("query=" + fmt.Sprint(query))
@@ -1881,6 +1917,7 @@ func (discovery *DiscoveryV1) QueryRelations(environmentID string, collectionID 
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1941,6 +1978,7 @@ func (discovery *DiscoveryV1) AddTrainingData(environmentID string, collectionID
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -2002,6 +2040,7 @@ func (discovery *DiscoveryV1) CreateTrainingExample(environmentID string, collec
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -2062,6 +2101,7 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(environmentID string, collec
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2112,6 +2152,7 @@ func (discovery *DiscoveryV1) DeleteTrainingData(environmentID string, collectio
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2163,6 +2204,7 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(environmentID string, collec
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2213,6 +2255,7 @@ func (discovery *DiscoveryV1) GetTrainingData(environmentID string, collectionID
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2274,6 +2317,7 @@ func (discovery *DiscoveryV1) GetTrainingExample(environmentID string, collectio
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2333,6 +2377,7 @@ func (discovery *DiscoveryV1) ListTrainingData(environmentID string, collectionI
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2393,6 +2438,7 @@ func (discovery *DiscoveryV1) ListTrainingExamples(environmentID string, collect
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2454,6 +2500,7 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(environmentID string, collec
     request := req.New().Put(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -2512,6 +2559,7 @@ func (discovery *DiscoveryV1) DeleteUserData(customerID string) (*watson.WatsonR
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("customer_id=" + fmt.Sprint(customerID))
 
@@ -2561,6 +2609,7 @@ func (discovery *DiscoveryV1) CreateCredentials(environmentID string, body *Cred
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -2621,6 +2670,7 @@ func (discovery *DiscoveryV1) DeleteCredentials(environmentID string, credential
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2680,6 +2730,7 @@ func (discovery *DiscoveryV1) GetCredentials(environmentID string, credentialID 
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2738,6 +2789,7 @@ func (discovery *DiscoveryV1) ListCredentials(environmentID string) (*watson.Wat
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -2797,6 +2849,7 @@ func (discovery *DiscoveryV1) UpdateCredentials(environmentID string, credential
     request := req.New().Put(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 

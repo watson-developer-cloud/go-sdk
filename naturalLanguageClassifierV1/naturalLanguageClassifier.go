@@ -50,7 +50,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifie
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
     request.Send(body)
 
     if useTM {
@@ -109,7 +109,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
     request.Send(body)
 
     if useTM {
@@ -167,7 +167,10 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(m
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "multipart/form-data")
+    request.Type("multipart")
+    request.SendFile(metadata)
+    request.SendFile(trainingData)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -225,7 +228,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(c
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -273,7 +276,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(clas
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -330,7 +333,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers() 
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()

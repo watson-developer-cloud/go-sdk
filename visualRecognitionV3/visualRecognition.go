@@ -49,8 +49,11 @@ func (visualRecognition *VisualRecognitionV3) Classify(imagesFile os.File, accep
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "multipart/form-data")
     request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
     request.Query("version=" + creds.Version)
+    request.Type("multipart")
+    request.SendFile(imagesFile)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -107,7 +110,10 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(imagesFile os.File, ur
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
+    request.Type("multipart")
+    request.SendFile(imagesFile)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -164,7 +170,11 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(name string, clas
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
+    request.Type("multipart")
+    request.SendFile(classnamePositiveExamples)
+    request.SendFile(negativeExamples)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -222,6 +232,7 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(classifierID stri
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -270,6 +281,7 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(classifierID string)
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -327,6 +339,7 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(verbose bool) (*wa
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("verbose=" + fmt.Sprint(verbose))
 
@@ -386,7 +399,11 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(classifierID stri
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
+    request.Type("multipart")
+    request.SendFile(classnamePositiveExamples)
+    request.SendFile(negativeExamples)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -443,7 +460,8 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(classifierID string
     path = strings.Replace(path, "{classifier_id}", classifierID, 1)
     request := req.New().Get(creds.ServiceURL + path)
 
-    request.Set("Accept", "application/json")
+    request.Set("Accept", "application/octet-stream")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -501,6 +519,7 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(customerID string) 
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("customer_id=" + fmt.Sprint(customerID))
 

@@ -49,7 +49,6 @@ func (textToSpeech *TextToSpeechV1) GetVoice(voice string, customizationID strin
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
     request.Query("customization_id=" + fmt.Sprint(customizationID))
 
     if useTM {
@@ -107,7 +106,6 @@ func (textToSpeech *TextToSpeechV1) ListVoices() (*watson.WatsonResponse, []erro
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -163,9 +161,9 @@ func (textToSpeech *TextToSpeechV1) Synthesize(body *Text, accept string, voice 
 
     request := req.New().Post(creds.ServiceURL + path)
 
-    request.Set("Accept", "application/json")
+    request.Set("Accept", "audio/basic")
+    request.Set("Content-Type", "application/json")
     request.Set("Accept", fmt.Sprint(accept))
-    request.Query("version=" + creds.Version)
     request.Query("voice=" + fmt.Sprint(voice))
     request.Query("customization_id=" + fmt.Sprint(customizationID))
     request.Send(body)
@@ -225,7 +223,6 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(text string, voice string, 
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
     request.Query("text=" + fmt.Sprint(text))
     request.Query("voice=" + fmt.Sprint(voice))
     request.Query("format=" + fmt.Sprint(format))
@@ -286,7 +283,7 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(body *CreateVoiceModel) (*w
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
     request.Send(body)
 
     if useTM {
@@ -344,8 +341,6 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(customizationID string) (*w
     path = strings.Replace(path, "{customization_id}", customizationID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
 
-    request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -393,7 +388,6 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(customizationID string) (*wats
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -450,7 +444,6 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(language string) (*watson.Wa
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
     request.Query("language=" + fmt.Sprint(language))
 
     if useTM {
@@ -509,7 +502,7 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(customizationID string, bod
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
     request.Send(body)
 
     if useTM {
@@ -558,8 +551,7 @@ func (textToSpeech *TextToSpeechV1) AddWord(customizationID string, word string,
     path = strings.Replace(path, "{word}", word, 1)
     request := req.New().Put(creds.ServiceURL + path)
 
-    request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
     request.Send(body)
 
     if useTM {
@@ -608,7 +600,7 @@ func (textToSpeech *TextToSpeechV1) AddWords(customizationID string, body *Words
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
+    request.Set("Content-Type", "application/json")
     request.Send(body)
 
     if useTM {
@@ -657,8 +649,6 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(customizationID string, word stri
     path = strings.Replace(path, "{word}", word, 1)
     request := req.New().Delete(creds.ServiceURL + path)
 
-    request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -707,7 +697,6 @@ func (textToSpeech *TextToSpeechV1) GetWord(customizationID string, word string)
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -765,7 +754,6 @@ func (textToSpeech *TextToSpeechV1) ListWords(customizationID string) (*watson.W
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -821,8 +809,6 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(customerID string) (*watson.W
 
     request := req.New().Delete(creds.ServiceURL + path)
 
-    request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
     request.Query("customer_id=" + fmt.Sprint(customerID))
 
     if useTM {

@@ -49,6 +49,7 @@ func (assistant *AssistantV1) Message(workspaceID string, body *MessageRequest, 
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("nodes_visited_details=" + fmt.Sprint(nodesVisitedDetails))
     request.Send(body)
@@ -108,6 +109,7 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*watson.Wa
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -337,6 +339,7 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *UpdateWo
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("append=" + fmt.Sprint(appendVar))
     request.Send(body)
@@ -397,6 +400,7 @@ func (assistant *AssistantV1) CreateIntent(workspaceID string, body *CreateInten
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -631,6 +635,7 @@ func (assistant *AssistantV1) UpdateIntent(workspaceID string, intent string, bo
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -691,6 +696,7 @@ func (assistant *AssistantV1) CreateExample(workspaceID string, intent string, b
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -927,6 +933,7 @@ func (assistant *AssistantV1) UpdateExample(workspaceID string, intent string, t
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -986,6 +993,7 @@ func (assistant *AssistantV1) CreateCounterexample(workspaceID string, body *Cre
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1218,6 +1226,7 @@ func (assistant *AssistantV1) UpdateCounterexample(workspaceID string, text stri
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1277,6 +1286,7 @@ func (assistant *AssistantV1) CreateEntity(workspaceID string, body *CreateEntit
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1511,6 +1521,7 @@ func (assistant *AssistantV1) UpdateEntity(workspaceID string, entity string, bo
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1632,6 +1643,7 @@ func (assistant *AssistantV1) CreateValue(workspaceID string, entity string, bod
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1870,6 +1882,7 @@ func (assistant *AssistantV1) UpdateValue(workspaceID string, entity string, val
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -1931,6 +1944,7 @@ func (assistant *AssistantV1) CreateSynonym(workspaceID string, entity string, v
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -2171,6 +2185,7 @@ func (assistant *AssistantV1) UpdateSynonym(workspaceID string, entity string, v
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -2230,6 +2245,7 @@ func (assistant *AssistantV1) CreateDialogNode(workspaceID string, body *CreateD
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -2462,6 +2478,7 @@ func (assistant *AssistantV1) UpdateDialogNode(workspaceID string, dialogNode st
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 

@@ -48,6 +48,7 @@ func (languageTranslator *LanguageTranslatorV3) Translate(body *TranslateRequest
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -106,6 +107,7 @@ func (languageTranslator *LanguageTranslatorV3) Identify(body *string) (*watson.
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "text/plain")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -221,9 +223,13 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(baseModelID string, 
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Query("base_model_id=" + fmt.Sprint(baseModelID))
     request.Query("name=" + fmt.Sprint(name))
+    request.Type("multipart")
+    request.SendFile(forcedGlossary)
+    request.SendFile(parallelCorpus)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()

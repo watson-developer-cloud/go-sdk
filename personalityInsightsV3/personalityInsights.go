@@ -47,6 +47,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(body *Content, content
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Set("Content-Type", fmt.Sprint(contentType))
     request.Set("Content-Language", fmt.Sprint(contentLanguage))
     request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
@@ -110,7 +111,8 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(body *Content, co
 
     request := req.New().Post(creds.ServiceURL + path)
 
-    request.Set("Accept", "application/json")
+    request.Set("Accept", "text/csv")
+    request.Set("Content-Type", "application/json")
     request.Set("Content-Type", fmt.Sprint(contentType))
     request.Set("Content-Language", fmt.Sprint(contentLanguage))
     request.Set("Accept-Language", fmt.Sprint(acceptLanguage))

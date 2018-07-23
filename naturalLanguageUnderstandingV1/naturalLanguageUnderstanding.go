@@ -47,6 +47,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(body
     request := req.New().Post(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
     request.Send(body)
 
@@ -106,6 +107,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
     request := req.New().Delete(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -163,6 +165,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels()
     request := req.New().Get(creds.ServiceURL + path)
 
     request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
 
     if useTM {
@@ -287,6 +290,12 @@ type ConceptsResult struct {
 
 	// Link to the corresponding DBpedia resource.
 	DbpediaResource string `json:"dbpedia_resource,omitempty"`
+}
+
+type DeleteModelResults struct {
+
+	// model_id of the deleted model.
+	Deleted string `json:"deleted,omitempty"`
 }
 
 type DisambiguationResult struct {
@@ -446,12 +455,6 @@ type Feed struct {
 
 	// URL of the RSS or ATOM feed.
 	Link string `json:"link,omitempty"`
-}
-
-type inline_response_200 struct {
-
-	// model_id of the deleted model.
-	Deleted string `json:"deleted,omitempty"`
 }
 
 type KeywordsOptions struct {
