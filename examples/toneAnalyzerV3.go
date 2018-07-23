@@ -20,8 +20,6 @@ func main() {
 		return
 	}
 
-
-	//Tone Analyzer
 	/* TONE CHAT */
 
 	utterances := toneAnalyzerV3.ToneChatInput{
@@ -40,7 +38,7 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetLToneChatResult
+	// Cast response from call to the specific struct returned by GetToneChatResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
 	toneChatResult := toneAnalyzerV3.GetToneChatResult(toneChat)
 
