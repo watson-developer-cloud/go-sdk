@@ -4,7 +4,6 @@ import (
 	"fmt"
 	watson "golang-sdk"
 	"golang-sdk/languageTranslatorV3"
-	"golang-sdk/resources"
 )
 
 func main() {
@@ -98,7 +97,7 @@ func main() {
 	/* LIST MODELS */
 
 	// Call the languageTranslator List Models method
-	listModel, listModelErr := languageTranslator.ListModels("YOUR SOURCE LANGUAGE", "YOUR TARGET LANGUAGE", true)
+	listModel, listModelErr := languageTranslator.ListModels("es", "en", true)
 
 	// Check successful call
 	if listModelErr != nil {
@@ -114,28 +113,6 @@ func main() {
 	if listModelResult != nil {
 		// Print result
 		fmt.Println(listModelResult)
-	}
-
-
-	/* CREATE MODEL */
-
-	// Call the languageTranslator Create Model method
-	createModel, createModelErr := languageTranslator.CreateModel("YOUR MODEL ID", "YOUR MODEL NAME", "YOUR FORCED GLOSSARY", "YOUR PARALLEL CORPUS")
-
-	// Check successful call
-	if createModelErr != nil {
-		fmt.Println(createModelErr)
-		return
-	}
-
-	// Cast response from call to the specific struct returned by GetCreateModelsResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	createModelResult := languageTranslatorV3.GetIdentifyResult(createModel)
-
-	// Check successful casting
-	if createModelResult != nil {
-		// Print result
-		fmt.Println(createModelResult)
 	}
 
 

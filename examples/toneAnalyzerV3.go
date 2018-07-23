@@ -11,7 +11,8 @@ func main() {
 	toneAnalyzer, toneAnalyzerErr := toneAnalyzerV3.NewToneAnalyzerV3(watson.Credentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2017-09-21",
-		APIkey: "YOUR API KEY",
+		Username: "YOUR SERVICE USERNAME",
+		Password: "YOUR SERVICE PASSWORD",
 	})
 
 	// Check successful instantiation
