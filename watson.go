@@ -1,4 +1,4 @@
-package golang_sdk
+package golangsdk
 
 import (
 	"fmt"
@@ -6,12 +6,14 @@ import (
 	"github.com/cloudfoundry-community/go-cfenv"
 )
 
+// WatsonResponse : Generic response for Watson API
 type WatsonResponse struct {
 	StatusCode int
 	Headers http.Header
 	Result interface{}
 }
 
+// Credentials : Service credentials
 type Credentials struct {
 	ServiceURL string
 	Version string
@@ -21,12 +23,14 @@ type Credentials struct {
 	IAMtoken string
 }
 
+// Client : Base Client struct
 type Client struct {
 	Creds Credentials
 	UseTM bool
 	TokenManager *TokenManager
 }
 
+// NewClient : Instantiate Client
 func NewClient(creds Credentials, serviceName string) (*Client, error) {
 	client := Client{
 		Creds: creds,

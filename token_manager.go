@@ -1,4 +1,4 @@
-package golang_sdk
+package golangsdk
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	req "github.com/parnurzeal/gorequest"
 )
 
+// TokenInfo : Response struct from token request
 type TokenInfo struct {
 	AccessToken string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
@@ -14,6 +15,7 @@ type TokenInfo struct {
 	Expiration int64 `json:"expiration"`
 }
 
+// TokenManager : IAM token information
 type TokenManager struct {
 	userToken string
 	iamAPIkey string
@@ -21,6 +23,7 @@ type TokenManager struct {
 	tokenInfo TokenInfo
 }
 
+// NewTokenManager : Instantiate TokenManager
 func NewTokenManager() *TokenManager {
 	return &TokenManager{
 		iamURL: "https://iam.bluemix.net/identity/token",
@@ -28,6 +31,7 @@ func NewTokenManager() *TokenManager {
 	}
 }
 
+// GetToken : Return token set by user or fresh token
 func (tm *TokenManager) GetToken() (string, []error) {
 	if tm.userToken != "" {
 		return tm.userToken, nil
@@ -36,14 +40,14 @@ func (tm *TokenManager) GetToken() (string, []error) {
 	var err []error
 
 	if tm.tokenInfo.AccessToken == "" {
-		err = tm.PostToken(tm.RequestTokenBody())
+		err = tm.postToken(tm.requestTokenBody())
 	}
 
-	if tm.IsTokenExpired() {
-		if tm.IsRefreshTokenExpired() {
-			err = tm.PostToken(tm.RequestTokenBody())
+	if tm.isTokenExpired() {
+		if tm.isRefreshTokenExpired() {
+			err = tm.postToken(tm.requestTokenBody())
 		} else {
-			err = tm.PostToken(tm.RefreshTokenBody())
+			err = tm.postToken(tm.refreshTokenBody())
 		}
 	}
 
@@ -54,7 +58,7 @@ func (tm *TokenManager) GetToken() (string, []error) {
 	return tm.tokenInfo.AccessToken, nil
 }
 
-func (tm *TokenManager) RequestTokenBody() map[string]string {
+func (tm *TokenManager) requestTokenBody() map[string]string {
 	return map[string]string {
 		"grant_type": "urn:ibm:params:oauth:grant-type:apikey",
 		"apikey": tm.iamAPIkey,
@@ -62,14 +66,14 @@ func (tm *TokenManager) RequestTokenBody() map[string]string {
 	}
 }
 
-func (tm *TokenManager) RefreshTokenBody() map[string]string {
+func (tm *TokenManager) refreshTokenBody() map[string]string {
 	return map[string]string {
 		"grant_type": "refresh_token",
 		"refresh_token": tm.tokenInfo.RefreshToken,
 	}
 }
 
-func (tm *TokenManager) PostToken(body map[string]string) []error {
+func (tm *TokenManager) postToken(body map[string]string) []error {
 	res, _, err := req.New().Post(tm.iamURL).
 		Set("Accept", "application/json").
 		Set("Content-Type", "application/x-www-form-urlencoded").
@@ -89,15 +93,17 @@ func (tm *TokenManager) PostToken(body map[string]string) []error {
 	return nil
 }
 
+// SetToken : Set token so that user manages token
 func (tm *TokenManager) SetToken(token string) {
 	tm.userToken = token
 }
 
+// SetKey : Set API key so that SDK manages token
 func (tm *TokenManager) SetKey(key string) {
 	tm.iamAPIkey = key
 }
 
-func (tm *TokenManager) IsTokenExpired() bool {
+func (tm *TokenManager) isTokenExpired() bool {
 	buffer := 0.8
 	expiresIn := tm.tokenInfo.ExpiresIn
 	expireTime := tm.tokenInfo.Expiration
@@ -108,7 +114,7 @@ func (tm *TokenManager) IsTokenExpired() bool {
 	return refreshTime < currTime
 }
 
-func (tm *TokenManager) IsRefreshTokenExpired() bool {
+func (tm *TokenManager) isRefreshTokenExpired() bool {
 	expiresIn := int64(7 * 24 * 3600)
 	refreshTime := tm.tokenInfo.Expiration + expiresIn
 
