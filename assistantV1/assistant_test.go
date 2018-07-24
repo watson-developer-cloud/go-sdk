@@ -1,4 +1,4 @@
-package assistantV1
+package assistantv1
 
 import (
 	"fmt"
@@ -65,7 +65,7 @@ func testList(assistant *AssistantV1) *WorkspaceCollection {
 
 func testGet(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
-		workspaceID := workspace.WorkspaceId
+		workspaceID := workspace.WorkspaceID
 
 		get, getErr := assistant.GetWorkspace(workspaceID, false, false)
 
@@ -84,7 +84,7 @@ func testGet(assistant *AssistantV1, list *WorkspaceCollection) {
 
 func testDelete(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
-		workspaceID := workspace.WorkspaceId
+		workspaceID := workspace.WorkspaceID
 
 		_, delErr := assistant.DeleteWorkspace(workspaceID)
 
@@ -120,7 +120,7 @@ func testCreate(assistant *AssistantV1) {
 
 func testUpdate(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
-		workspaceID := workspace.WorkspaceId
+		workspaceID := workspace.WorkspaceID
 
 		updateReq := UpdateWorkspace{
 			Name: fmt.Sprintf("create%v", i * 10),

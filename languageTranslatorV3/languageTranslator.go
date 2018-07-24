@@ -1,3 +1,5 @@
+// Package languagetranslatorv3 : Operations and models for the LanguageTranslatorV3 service
+package languagetranslatorv3
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package languageTranslatorV3
 
 import (
     "bytes"
@@ -24,10 +25,12 @@ import (
     watson "golang-sdk"
 )
 
+// LanguageTranslatorV3 : The LanguageTranslatorV3 service
 type LanguageTranslatorV3 struct {
 	client *watson.Client
 }
 
+// NewLanguageTranslatorV3 : Instantiate LanguageTranslatorV3
 func NewLanguageTranslatorV3(creds watson.Credentials) (*LanguageTranslatorV3, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://gateway.watsonplatform.net/language-translator/api"
@@ -42,7 +45,7 @@ func NewLanguageTranslatorV3(creds watson.Credentials) (*LanguageTranslatorV3, e
 	return &LanguageTranslatorV3{ client: client }, nil
 }
 
-// Translate
+// Translate : Translate
 func (languageTranslator *LanguageTranslatorV3) Translate(body *TranslateRequest) (*watson.WatsonResponse, []error) {
     path := "/v3/translate"
     creds := languageTranslator.client.Creds
@@ -91,6 +94,7 @@ func (languageTranslator *LanguageTranslatorV3) Translate(body *TranslateRequest
     return response, nil
 }
 
+// GetTranslateResult : Cast result of Translate operation
 func GetTranslateResult(response *watson.WatsonResponse) *TranslationResult {
     result, ok := response.Result.(*TranslationResult)
 
@@ -101,7 +105,7 @@ func GetTranslateResult(response *watson.WatsonResponse) *TranslationResult {
     return nil
 }
 
-// Identify language
+// Identify : Identify language
 func (languageTranslator *LanguageTranslatorV3) Identify(body *string) (*watson.WatsonResponse, []error) {
     path := "/v3/identify"
     creds := languageTranslator.client.Creds
@@ -150,6 +154,7 @@ func (languageTranslator *LanguageTranslatorV3) Identify(body *string) (*watson.
     return response, nil
 }
 
+// GetIdentifyResult : Cast result of Identify operation
 func GetIdentifyResult(response *watson.WatsonResponse) *IdentifiedLanguages {
     result, ok := response.Result.(*IdentifiedLanguages)
 
@@ -160,7 +165,7 @@ func GetIdentifyResult(response *watson.WatsonResponse) *IdentifiedLanguages {
     return nil
 }
 
-// List identifiable languages
+// ListIdentifiableLanguages : List identifiable languages
 func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages() (*watson.WatsonResponse, []error) {
     path := "/v3/identifiable_languages"
     creds := languageTranslator.client.Creds
@@ -207,6 +212,7 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages() (*wa
     return response, nil
 }
 
+// GetListIdentifiableLanguagesResult : Cast result of ListIdentifiableLanguages operation
 func GetListIdentifiableLanguagesResult(response *watson.WatsonResponse) *IdentifiableLanguages {
     result, ok := response.Result.(*IdentifiableLanguages)
 
@@ -217,7 +223,7 @@ func GetListIdentifiableLanguagesResult(response *watson.WatsonResponse) *Identi
     return nil
 }
 
-// Create model
+// CreateModel : Create model
 func (languageTranslator *LanguageTranslatorV3) CreateModel(baseModelID string, name string, forcedGlossary os.File, parallelCorpus os.File) (*watson.WatsonResponse, []error) {
     path := "/v3/models"
     creds := languageTranslator.client.Creds
@@ -270,6 +276,7 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(baseModelID string, 
     return response, nil
 }
 
+// GetCreateModelResult : Cast result of CreateModel operation
 func GetCreateModelResult(response *watson.WatsonResponse) *TranslationModel {
     result, ok := response.Result.(*TranslationModel)
 
@@ -280,7 +287,7 @@ func GetCreateModelResult(response *watson.WatsonResponse) *TranslationModel {
     return nil
 }
 
-// Delete model
+// DeleteModel : Delete model
 func (languageTranslator *LanguageTranslatorV3) DeleteModel(modelID string) (*watson.WatsonResponse, []error) {
     path := "/v3/models/{model_id}"
     creds := languageTranslator.client.Creds
@@ -328,6 +335,7 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(modelID string) (*wa
     return response, nil
 }
 
+// GetDeleteModelResult : Cast result of DeleteModel operation
 func GetDeleteModelResult(response *watson.WatsonResponse) *DeleteModelResult {
     result, ok := response.Result.(*DeleteModelResult)
 
@@ -338,7 +346,7 @@ func GetDeleteModelResult(response *watson.WatsonResponse) *DeleteModelResult {
     return nil
 }
 
-// Get model details
+// GetModel : Get model details
 func (languageTranslator *LanguageTranslatorV3) GetModel(modelID string) (*watson.WatsonResponse, []error) {
     path := "/v3/models/{model_id}"
     creds := languageTranslator.client.Creds
@@ -386,6 +394,7 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(modelID string) (*watso
     return response, nil
 }
 
+// GetGetModelResult : Cast result of GetModel operation
 func GetGetModelResult(response *watson.WatsonResponse) *TranslationModel {
     result, ok := response.Result.(*TranslationModel)
 
@@ -396,7 +405,7 @@ func GetGetModelResult(response *watson.WatsonResponse) *TranslationModel {
     return nil
 }
 
-// List models
+// ListModels : List models
 func (languageTranslator *LanguageTranslatorV3) ListModels(source string, target string, defaultModels bool) (*watson.WatsonResponse, []error) {
     path := "/v3/models"
     creds := languageTranslator.client.Creds
@@ -446,6 +455,7 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(source string, target
     return response, nil
 }
 
+// GetListModelsResult : Cast result of ListModels operation
 func GetListModelsResult(response *watson.WatsonResponse) *TranslationModels {
     result, ok := response.Result.(*TranslationModels)
 
@@ -457,12 +467,14 @@ func GetListModelsResult(response *watson.WatsonResponse) *TranslationModels {
 }
 
 
+// DeleteModelResult : DeleteModelResult struct
 type DeleteModelResult struct {
 
 	// "OK" indicates that the model was successfully deleted.
 	Status string `json:"status"`
 }
 
+// IdentifiableLanguage : IdentifiableLanguage struct
 type IdentifiableLanguage struct {
 
 	// The language code for an identifiable language.
@@ -472,12 +484,14 @@ type IdentifiableLanguage struct {
 	Name string `json:"name"`
 }
 
+// IdentifiableLanguages : IdentifiableLanguages struct
 type IdentifiableLanguages struct {
 
 	// A list of all languages that the service can identify.
 	Languages []IdentifiableLanguage `json:"languages"`
 }
 
+// IdentifiedLanguage : IdentifiedLanguage struct
 type IdentifiedLanguage struct {
 
 	// The language code for an identified language.
@@ -487,19 +501,21 @@ type IdentifiedLanguage struct {
 	Confidence float64 `json:"confidence"`
 }
 
+// IdentifiedLanguages : IdentifiedLanguages struct
 type IdentifiedLanguages struct {
 
 	// A ranking of identified languages with confidence scores.
 	Languages []IdentifiedLanguage `json:"languages"`
 }
 
+// TranslateRequest : TranslateRequest struct
 type TranslateRequest struct {
 
 	// Input text in UTF-8 encoding. Multiple entries will result in multiple translations in the response.
 	Text []string `json:"text"`
 
 	// Model ID of the translation model to use. If this is specified, the **source** and **target** parameters will be ignored. The method requires either a model ID or both the **source** and **target** parameters.
-	ModelId string `json:"model_id,omitempty"`
+	ModelID string `json:"model_id,omitempty"`
 
 	// Language code of the source text language. Use with `target` as an alternative way to select a translation model. When `source` and `target` are set, and a model ID is not set, the system chooses a default model for the language pair (usually the model based on the news domain).
 	Source string `json:"source,omitempty"`
@@ -508,16 +524,18 @@ type TranslateRequest struct {
 	Target string `json:"target,omitempty"`
 }
 
+// Translation : Translation struct
 type Translation struct {
 
 	// Translation output in UTF-8.
 	TranslationOutput string `json:"translation_output"`
 }
 
+// TranslationModel : Response payload for models.
 type TranslationModel struct {
 
 	// A globally unique string that identifies the underlying model that is used for translation.
-	ModelId string `json:"model_id"`
+	ModelID string `json:"model_id"`
 
 	// Optional name that can be specified when the model is created.
 	Name string `json:"name,omitempty"`
@@ -529,7 +547,7 @@ type TranslationModel struct {
 	Target string `json:"target,omitempty"`
 
 	// Model ID of the base model that was used to customize the model. If the model is not a custom model, this will be an empty string.
-	BaseModelId string `json:"base_model_id,omitempty"`
+	BaseModelID string `json:"base_model_id,omitempty"`
 
 	// The domain of the translation model.
 	Domain string `json:"domain,omitempty"`
@@ -547,12 +565,14 @@ type TranslationModel struct {
 	Status string `json:"status,omitempty"`
 }
 
+// TranslationModels : The response type for listing existing translation models.
 type TranslationModels struct {
 
 	// An array of available models.
 	Models []TranslationModel `json:"models"`
 }
 
+// TranslationResult : TranslationResult struct
 type TranslationResult struct {
 
 	// Number of words in the input text.

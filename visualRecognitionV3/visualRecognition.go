@@ -1,3 +1,5 @@
+// Package visualrecognitionv3 : Operations and models for the VisualRecognitionV3 service
+package visualrecognitionv3
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package visualRecognitionV3
 
 import (
     "bytes"
@@ -25,10 +26,12 @@ import (
     watson "golang-sdk"
 )
 
+// VisualRecognitionV3 : The VisualRecognitionV3 service
 type VisualRecognitionV3 struct {
 	client *watson.Client
 }
 
+// NewVisualRecognitionV3 : Instantiate VisualRecognitionV3
 func NewVisualRecognitionV3(creds watson.Credentials) (*VisualRecognitionV3, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
@@ -43,7 +46,7 @@ func NewVisualRecognitionV3(creds watson.Credentials) (*VisualRecognitionV3, err
 	return &VisualRecognitionV3{ client: client }, nil
 }
 
-// Classify images
+// Classify : Classify images
 func (visualRecognition *VisualRecognitionV3) Classify(imagesFile os.File, acceptLanguage string, url string, threshold float32, owners []string, classifierIds []string, imagesFileContentType string) (*watson.WatsonResponse, []error) {
     path := "/v3/classify"
     creds := visualRecognition.client.Creds
@@ -94,6 +97,7 @@ func (visualRecognition *VisualRecognitionV3) Classify(imagesFile os.File, accep
     return response, nil
 }
 
+// GetClassifyResult : Cast result of Classify operation
 func GetClassifyResult(response *watson.WatsonResponse) *ClassifiedImages {
     result, ok := response.Result.(*ClassifiedImages)
 
@@ -104,7 +108,7 @@ func GetClassifyResult(response *watson.WatsonResponse) *ClassifiedImages {
     return nil
 }
 
-// Detect faces in images
+// DetectFaces : Detect faces in images
 func (visualRecognition *VisualRecognitionV3) DetectFaces(imagesFile os.File, url string, imagesFileContentType string) (*watson.WatsonResponse, []error) {
     path := "/v3/detect_faces"
     creds := visualRecognition.client.Creds
@@ -154,6 +158,7 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(imagesFile os.File, ur
     return response, nil
 }
 
+// GetDetectFacesResult : Cast result of DetectFaces operation
 func GetDetectFacesResult(response *watson.WatsonResponse) *DetectedFaces {
     result, ok := response.Result.(*DetectedFaces)
 
@@ -164,7 +169,7 @@ func GetDetectFacesResult(response *watson.WatsonResponse) *DetectedFaces {
     return nil
 }
 
-// Create a classifier
+// CreateClassifier : Create a classifier
 func (visualRecognition *VisualRecognitionV3) CreateClassifier(name string, classnamePositiveExamples os.File, negativeExamples os.File) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers"
     creds := visualRecognition.client.Creds
@@ -215,6 +220,7 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(name string, clas
     return response, nil
 }
 
+// GetCreateClassifierResult : Cast result of CreateClassifier operation
 func GetCreateClassifierResult(response *watson.WatsonResponse) *Classifier {
     result, ok := response.Result.(*Classifier)
 
@@ -225,7 +231,7 @@ func GetCreateClassifierResult(response *watson.WatsonResponse) *Classifier {
     return nil
 }
 
-// Delete a classifier
+// DeleteClassifier : Delete a classifier
 func (visualRecognition *VisualRecognitionV3) DeleteClassifier(classifierID string) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers/{classifier_id}"
     creds := visualRecognition.client.Creds
@@ -274,7 +280,7 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(classifierID stri
 }
 
 
-// Retrieve classifier details
+// GetClassifier : Retrieve classifier details
 func (visualRecognition *VisualRecognitionV3) GetClassifier(classifierID string) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers/{classifier_id}"
     creds := visualRecognition.client.Creds
@@ -323,6 +329,7 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(classifierID string)
     return response, nil
 }
 
+// GetGetClassifierResult : Cast result of GetClassifier operation
 func GetGetClassifierResult(response *watson.WatsonResponse) *Classifier {
     result, ok := response.Result.(*Classifier)
 
@@ -333,7 +340,7 @@ func GetGetClassifierResult(response *watson.WatsonResponse) *Classifier {
     return nil
 }
 
-// Retrieve a list of classifiers
+// ListClassifiers : Retrieve a list of classifiers
 func (visualRecognition *VisualRecognitionV3) ListClassifiers(verbose bool) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers"
     creds := visualRecognition.client.Creds
@@ -382,6 +389,7 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(verbose bool) (*wa
     return response, nil
 }
 
+// GetListClassifiersResult : Cast result of ListClassifiers operation
 func GetListClassifiersResult(response *watson.WatsonResponse) *Classifiers {
     result, ok := response.Result.(*Classifiers)
 
@@ -392,7 +400,7 @@ func GetListClassifiersResult(response *watson.WatsonResponse) *Classifiers {
     return nil
 }
 
-// Update a classifier
+// UpdateClassifier : Update a classifier
 func (visualRecognition *VisualRecognitionV3) UpdateClassifier(classifierID string, classnamePositiveExamples os.File, negativeExamples os.File) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers/{classifier_id}"
     creds := visualRecognition.client.Creds
@@ -444,6 +452,7 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(classifierID stri
     return response, nil
 }
 
+// GetUpdateClassifierResult : Cast result of UpdateClassifier operation
 func GetUpdateClassifierResult(response *watson.WatsonResponse) *Classifier {
     result, ok := response.Result.(*Classifier)
 
@@ -454,7 +463,7 @@ func GetUpdateClassifierResult(response *watson.WatsonResponse) *Classifier {
     return nil
 }
 
-// Retrieve a Core ML model of a classifier
+// GetCoreMlModel : Retrieve a Core ML model of a classifier
 func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(classifierID string) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers/{classifier_id}/core_ml_model"
     creds := visualRecognition.client.Creds
@@ -503,6 +512,7 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(classifierID string
     return response, nil
 }
 
+// GetGetCoreMlModelResult : Cast result of GetCoreMlModel operation
 func GetGetCoreMlModelResult(response *watson.WatsonResponse) *os.File {
     result, ok := response.Result.(*os.File)
 
@@ -513,7 +523,7 @@ func GetGetCoreMlModelResult(response *watson.WatsonResponse) *os.File {
     return nil
 }
 
-// Delete labeled data
+// DeleteUserData : Delete labeled data
 func (visualRecognition *VisualRecognitionV3) DeleteUserData(customerID string) (*watson.WatsonResponse, []error) {
     path := "/v3/user_data"
     creds := visualRecognition.client.Creds
@@ -563,12 +573,14 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(customerID string) 
 
 
 
+// Class : A category within a classifier.
 type Class struct {
 
 	// The name of the class.
 	ClassName string `json:"class_name"`
 }
 
+// ClassResult : Result of a class within a classifier.
 type ClassResult struct {
 
 	// Name of the class.
@@ -581,13 +593,14 @@ type ClassResult struct {
 	TypeHierarchy string `json:"type_hierarchy,omitempty"`
 }
 
+// ClassifiedImage : Results for one image.
 type ClassifiedImage struct {
 
 	// Source of the image before any redirects. Not returned when the image is uploaded.
-	SourceUrl string `json:"source_url,omitempty"`
+	SourceURL string `json:"source_url,omitempty"`
 
 	// Fully resolved URL of the image after redirects are followed. Not returned when the image is uploaded.
-	ResolvedUrl string `json:"resolved_url,omitempty"`
+	ResolvedURL string `json:"resolved_url,omitempty"`
 
 	// Relative path of the image file if uploaded directly. Not returned when the image is passed by URL.
 	Image string `json:"image,omitempty"`
@@ -599,6 +612,7 @@ type ClassifiedImage struct {
 	Classifiers []ClassifierResult `json:"classifiers"`
 }
 
+// ClassifiedImages : Results for all images.
 type ClassifiedImages struct {
 
 	// Number of custom classes identified in the images.
@@ -614,10 +628,11 @@ type ClassifiedImages struct {
 	Warnings []WarningInfo `json:"warnings,omitempty"`
 }
 
+// Classifier : Information about a classifier.
 type Classifier struct {
 
 	// ID of a classifier identified in the image.
-	ClassifierId string `json:"classifier_id"`
+	ClassifierID string `json:"classifier_id"`
 
 	// Name of the classifier.
 	Name string `json:"name"`
@@ -647,24 +662,27 @@ type Classifier struct {
 	Updated strfmt.DateTime `json:"updated,omitempty"`
 }
 
+// ClassifierResult : Classifier and score combination.
 type ClassifierResult struct {
 
 	// Name of the classifier.
 	Name string `json:"name"`
 
 	// ID of a classifier identified in the image.
-	ClassifierId string `json:"classifier_id"`
+	ClassifierID string `json:"classifier_id"`
 
 	// Classes within the classifier.
 	Classes []ClassResult `json:"classes"`
 }
 
+// Classifiers : A container for the list of classifiers.
 type Classifiers struct {
 
 	// List of classifiers.
 	Classifiers []Classifier `json:"classifiers"`
 }
 
+// DetectedFaces : Results for all faces.
 type DetectedFaces struct {
 
 	// Number of images processed for the API call.
@@ -677,6 +695,7 @@ type DetectedFaces struct {
 	Warnings []WarningInfo `json:"warnings,omitempty"`
 }
 
+// ErrorInfo : Information about what might have caused a failure, such as an image that is too large. Not returned when there is no error.
 type ErrorInfo struct {
 
 	// HTTP status code.
@@ -686,9 +705,10 @@ type ErrorInfo struct {
 	Description string `json:"description"`
 
 	// Codified error string. For example, `limit_exceeded`.
-	ErrorId string `json:"error_id"`
+	ErrorID string `json:"error_id"`
 }
 
+// Face : Information about the face.
 type Face struct {
 
 	// Age information about a face.
@@ -701,6 +721,7 @@ type Face struct {
 	FaceLocation FaceLocation `json:"face_location,omitempty"`
 }
 
+// FaceAge : Age information about a face.
 type FaceAge struct {
 
 	// Estimated minimum age.
@@ -713,6 +734,7 @@ type FaceAge struct {
 	Score float32 `json:"score,omitempty"`
 }
 
+// FaceGender : Information about the gender of the face.
 type FaceGender struct {
 
 	// Gender identified by the face. For example, `MALE` or `FEMALE`.
@@ -722,6 +744,7 @@ type FaceGender struct {
 	Score float32 `json:"score,omitempty"`
 }
 
+// FaceLocation : The location of the bounding box around the face.
 type FaceLocation struct {
 
 	// Width in pixels of face region.
@@ -737,6 +760,7 @@ type FaceLocation struct {
 	Top float64 `json:"top"`
 }
 
+// ImageWithFaces : Information about faces in the image.
 type ImageWithFaces struct {
 
 	// Faces detected in the images.
@@ -746,19 +770,20 @@ type ImageWithFaces struct {
 	Image string `json:"image,omitempty"`
 
 	// Source of the image before any redirects. Not returned when the image is uploaded.
-	SourceUrl string `json:"source_url,omitempty"`
+	SourceURL string `json:"source_url,omitempty"`
 
 	// Fully resolved URL of the image after redirects are followed. Not returned when the image is uploaded.
-	ResolvedUrl string `json:"resolved_url,omitempty"`
+	ResolvedURL string `json:"resolved_url,omitempty"`
 
 	// Information about what might have caused a failure, such as an image that is too large. Not returned when there is no error.
 	Error ErrorInfo `json:"error,omitempty"`
 }
 
+// WarningInfo : Information about something that went wrong.
 type WarningInfo struct {
 
 	// Codified warning string, such as `limit_reached`.
-	WarningId string `json:"warning_id"`
+	WarningID string `json:"warning_id"`
 
 	// Information about the error.
 	Description string `json:"description"`

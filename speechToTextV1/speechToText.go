@@ -1,3 +1,5 @@
+// Package speechtotextv1 : Operations and models for the SpeechToTextV1 service
+package speechtotextv1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package speechToTextV1
 
 import (
     "bytes"
@@ -25,10 +26,12 @@ import (
     watson "golang-sdk"
 )
 
+// SpeechToTextV1 : The SpeechToTextV1 service
 type SpeechToTextV1 struct {
 	client *watson.Client
 }
 
+// NewSpeechToTextV1 : Instantiate SpeechToTextV1
 func NewSpeechToTextV1(creds watson.Credentials) (*SpeechToTextV1, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://stream.watsonplatform.net/speech-to-text/api"
@@ -43,7 +46,7 @@ func NewSpeechToTextV1(creds watson.Credentials) (*SpeechToTextV1, error) {
 	return &SpeechToTextV1{ client: client }, nil
 }
 
-// Get a model
+// GetModel : Get a model
 func (speechToText *SpeechToTextV1) GetModel(modelID string) (*watson.WatsonResponse, []error) {
     path := "/v1/models/{model_id}"
     creds := speechToText.client.Creds
@@ -91,6 +94,7 @@ func (speechToText *SpeechToTextV1) GetModel(modelID string) (*watson.WatsonResp
     return response, nil
 }
 
+// GetGetModelResult : Cast result of GetModel operation
 func GetGetModelResult(response *watson.WatsonResponse) *SpeechModel {
     result, ok := response.Result.(*SpeechModel)
 
@@ -101,7 +105,7 @@ func GetGetModelResult(response *watson.WatsonResponse) *SpeechModel {
     return nil
 }
 
-// List models
+// ListModels : List models
 func (speechToText *SpeechToTextV1) ListModels() (*watson.WatsonResponse, []error) {
     path := "/v1/models"
     creds := speechToText.client.Creds
@@ -148,6 +152,7 @@ func (speechToText *SpeechToTextV1) ListModels() (*watson.WatsonResponse, []erro
     return response, nil
 }
 
+// GetListModelsResult : Cast result of ListModels operation
 func GetListModelsResult(response *watson.WatsonResponse) *SpeechModels {
     result, ok := response.Result.(*SpeechModels)
 
@@ -158,8 +163,8 @@ func GetListModelsResult(response *watson.WatsonResponse) *SpeechModels {
     return nil
 }
 
-// Recognize audio
-func (speechToText *SpeechToTextV1) RecognizeSessionless(body *io.ReadCloser, contentType string, model string, customizationID string, acousticCustomizationID string, baseModelVersion string, customizationWeight float64, inactivityTimeout int64, keywords []string, keywordsThreshold float32, maxAlternatives int64, wordAlternativesThreshold float32, wordConfidence bool, timestamps bool, profanityFilter bool, smartFormatting bool, speakerLabels bool) (*watson.WatsonResponse, []error) {
+// Recognize : Recognize audio
+func (speechToText *SpeechToTextV1) Recognize(body *io.ReadCloser, contentType string, model string, customizationID string, acousticCustomizationID string, baseModelVersion string, customizationWeight float64, inactivityTimeout int64, keywords []string, keywordsThreshold float32, maxAlternatives int64, wordAlternativesThreshold float32, wordConfidence bool, timestamps bool, profanityFilter bool, smartFormatting bool, speakerLabels bool) (*watson.WatsonResponse, []error) {
     path := "/v1/recognize"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -222,7 +227,8 @@ func (speechToText *SpeechToTextV1) RecognizeSessionless(body *io.ReadCloser, co
     return response, nil
 }
 
-func GetRecognizeSessionlessResult(response *watson.WatsonResponse) *SpeechRecognitionResults {
+// GetRecognizeResult : Cast result of Recognize operation
+func GetRecognizeResult(response *watson.WatsonResponse) *SpeechRecognitionResults {
     result, ok := response.Result.(*SpeechRecognitionResults)
 
     if ok {
@@ -232,7 +238,7 @@ func GetRecognizeSessionlessResult(response *watson.WatsonResponse) *SpeechRecog
     return nil
 }
 
-// Check a job
+// CheckJob : Check a job
 func (speechToText *SpeechToTextV1) CheckJob(id string) (*watson.WatsonResponse, []error) {
     path := "/v1/recognitions/{id}"
     creds := speechToText.client.Creds
@@ -280,6 +286,7 @@ func (speechToText *SpeechToTextV1) CheckJob(id string) (*watson.WatsonResponse,
     return response, nil
 }
 
+// GetCheckJobResult : Cast result of CheckJob operation
 func GetCheckJobResult(response *watson.WatsonResponse) *RecognitionJob {
     result, ok := response.Result.(*RecognitionJob)
 
@@ -290,7 +297,7 @@ func GetCheckJobResult(response *watson.WatsonResponse) *RecognitionJob {
     return nil
 }
 
-// Check jobs
+// CheckJobs : Check jobs
 func (speechToText *SpeechToTextV1) CheckJobs() (*watson.WatsonResponse, []error) {
     path := "/v1/recognitions"
     creds := speechToText.client.Creds
@@ -337,6 +344,7 @@ func (speechToText *SpeechToTextV1) CheckJobs() (*watson.WatsonResponse, []error
     return response, nil
 }
 
+// GetCheckJobsResult : Cast result of CheckJobs operation
 func GetCheckJobsResult(response *watson.WatsonResponse) *RecognitionJobs {
     result, ok := response.Result.(*RecognitionJobs)
 
@@ -347,8 +355,8 @@ func GetCheckJobsResult(response *watson.WatsonResponse) *RecognitionJobs {
     return nil
 }
 
-// Create a job
-func (speechToText *SpeechToTextV1) CreateJob(body *io.ReadCloser, contentType string, model string, callbackUrl string, events string, userToken string, resultsTtl int64, customizationID string, acousticCustomizationID string, baseModelVersion string, customizationWeight float64, inactivityTimeout int64, keywords []string, keywordsThreshold float32, maxAlternatives int64, wordAlternativesThreshold float32, wordConfidence bool, timestamps bool, profanityFilter bool, smartFormatting bool, speakerLabels bool) (*watson.WatsonResponse, []error) {
+// CreateJob : Create a job
+func (speechToText *SpeechToTextV1) CreateJob(body *io.ReadCloser, contentType string, model string, callbackURL string, events string, userToken string, resultsTTL int64, customizationID string, acousticCustomizationID string, baseModelVersion string, customizationWeight float64, inactivityTimeout int64, keywords []string, keywordsThreshold float32, maxAlternatives int64, wordAlternativesThreshold float32, wordConfidence bool, timestamps bool, profanityFilter bool, smartFormatting bool, speakerLabels bool) (*watson.WatsonResponse, []error) {
     path := "/v1/recognitions"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -360,10 +368,10 @@ func (speechToText *SpeechToTextV1) CreateJob(body *io.ReadCloser, contentType s
     request.Set("Content-Type", "audio/basic")
     request.Set("Content-Type", fmt.Sprint(contentType))
     request.Query("model=" + fmt.Sprint(model))
-    request.Query("callback_url=" + fmt.Sprint(callbackUrl))
+    request.Query("callback_url=" + fmt.Sprint(callbackURL))
     request.Query("events=" + fmt.Sprint(events))
     request.Query("user_token=" + fmt.Sprint(userToken))
-    request.Query("results_ttl=" + fmt.Sprint(resultsTtl))
+    request.Query("results_ttl=" + fmt.Sprint(resultsTTL))
     request.Query("customization_id=" + fmt.Sprint(customizationID))
     request.Query("acoustic_customization_id=" + fmt.Sprint(acousticCustomizationID))
     request.Query("base_model_version=" + fmt.Sprint(baseModelVersion))
@@ -415,6 +423,7 @@ func (speechToText *SpeechToTextV1) CreateJob(body *io.ReadCloser, contentType s
     return response, nil
 }
 
+// GetCreateJobResult : Cast result of CreateJob operation
 func GetCreateJobResult(response *watson.WatsonResponse) *RecognitionJob {
     result, ok := response.Result.(*RecognitionJob)
 
@@ -425,7 +434,7 @@ func GetCreateJobResult(response *watson.WatsonResponse) *RecognitionJob {
     return nil
 }
 
-// Delete a job
+// DeleteJob : Delete a job
 func (speechToText *SpeechToTextV1) DeleteJob(id string) (*watson.WatsonResponse, []error) {
     path := "/v1/recognitions/{id}"
     creds := speechToText.client.Creds
@@ -473,8 +482,8 @@ func (speechToText *SpeechToTextV1) DeleteJob(id string) (*watson.WatsonResponse
 }
 
 
-// Register a callback
-func (speechToText *SpeechToTextV1) RegisterCallback(callbackUrl string, userSecret string) (*watson.WatsonResponse, []error) {
+// RegisterCallback : Register a callback
+func (speechToText *SpeechToTextV1) RegisterCallback(callbackURL string, userSecret string) (*watson.WatsonResponse, []error) {
     path := "/v1/register_callback"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -484,7 +493,7 @@ func (speechToText *SpeechToTextV1) RegisterCallback(callbackUrl string, userSec
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("callback_url=" + fmt.Sprint(callbackUrl))
+    request.Query("callback_url=" + fmt.Sprint(callbackURL))
     request.Query("user_secret=" + fmt.Sprint(userSecret))
 
     if useTM {
@@ -522,6 +531,7 @@ func (speechToText *SpeechToTextV1) RegisterCallback(callbackUrl string, userSec
     return response, nil
 }
 
+// GetRegisterCallbackResult : Cast result of RegisterCallback operation
 func GetRegisterCallbackResult(response *watson.WatsonResponse) *RegisterStatus {
     result, ok := response.Result.(*RegisterStatus)
 
@@ -532,8 +542,8 @@ func GetRegisterCallbackResult(response *watson.WatsonResponse) *RegisterStatus 
     return nil
 }
 
-// Unregister a callback
-func (speechToText *SpeechToTextV1) UnregisterCallback(callbackUrl string) (*watson.WatsonResponse, []error) {
+// UnregisterCallback : Unregister a callback
+func (speechToText *SpeechToTextV1) UnregisterCallback(callbackURL string) (*watson.WatsonResponse, []error) {
     path := "/v1/unregister_callback"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -543,7 +553,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(callbackUrl string) (*wat
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("callback_url=" + fmt.Sprint(callbackUrl))
+    request.Query("callback_url=" + fmt.Sprint(callbackURL))
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -580,7 +590,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(callbackUrl string) (*wat
 }
 
 
-// Create a custom language model
+// CreateLanguageModel : Create a custom language model
 func (speechToText *SpeechToTextV1) CreateLanguageModel(body *CreateLanguageModel) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations"
     creds := speechToText.client.Creds
@@ -628,6 +638,7 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(body *CreateLanguageMode
     return response, nil
 }
 
+// GetCreateLanguageModelResult : Cast result of CreateLanguageModel operation
 func GetCreateLanguageModelResult(response *watson.WatsonResponse) *LanguageModel {
     result, ok := response.Result.(*LanguageModel)
 
@@ -638,7 +649,7 @@ func GetCreateLanguageModelResult(response *watson.WatsonResponse) *LanguageMode
     return nil
 }
 
-// Delete a custom language model
+// DeleteLanguageModel : Delete a custom language model
 func (speechToText *SpeechToTextV1) DeleteLanguageModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}"
     creds := speechToText.client.Creds
@@ -686,7 +697,7 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(customizationID string) 
 }
 
 
-// Get a custom language model
+// GetLanguageModel : Get a custom language model
 func (speechToText *SpeechToTextV1) GetLanguageModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}"
     creds := speechToText.client.Creds
@@ -734,6 +745,7 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(customizationID string) (*w
     return response, nil
 }
 
+// GetGetLanguageModelResult : Cast result of GetLanguageModel operation
 func GetGetLanguageModelResult(response *watson.WatsonResponse) *LanguageModel {
     result, ok := response.Result.(*LanguageModel)
 
@@ -744,7 +756,7 @@ func GetGetLanguageModelResult(response *watson.WatsonResponse) *LanguageModel {
     return nil
 }
 
-// List custom language models
+// ListLanguageModels : List custom language models
 func (speechToText *SpeechToTextV1) ListLanguageModels(language string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations"
     creds := speechToText.client.Creds
@@ -792,6 +804,7 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(language string) (*watson
     return response, nil
 }
 
+// GetListLanguageModelsResult : Cast result of ListLanguageModels operation
 func GetListLanguageModelsResult(response *watson.WatsonResponse) *LanguageModels {
     result, ok := response.Result.(*LanguageModels)
 
@@ -802,7 +815,7 @@ func GetListLanguageModelsResult(response *watson.WatsonResponse) *LanguageModel
     return nil
 }
 
-// Reset a custom language model
+// ResetLanguageModel : Reset a custom language model
 func (speechToText *SpeechToTextV1) ResetLanguageModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/reset"
     creds := speechToText.client.Creds
@@ -850,7 +863,7 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(customizationID string) (
 }
 
 
-// Train a custom language model
+// TrainLanguageModel : Train a custom language model
 func (speechToText *SpeechToTextV1) TrainLanguageModel(customizationID string, wordTypeToAdd string, customizationWeight float64) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/train"
     creds := speechToText.client.Creds
@@ -900,7 +913,7 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(customizationID string, w
 }
 
 
-// Upgrade a custom language model
+// UpgradeLanguageModel : Upgrade a custom language model
 func (speechToText *SpeechToTextV1) UpgradeLanguageModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/upgrade_model"
     creds := speechToText.client.Creds
@@ -948,7 +961,7 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(customizationID string)
 }
 
 
-// Add a corpus
+// AddCorpus : Add a corpus
 func (speechToText *SpeechToTextV1) AddCorpus(customizationID string, corpusName string, corpusFile os.File, allowOverwrite bool) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/corpora/{corpus_name}"
     creds := speechToText.client.Creds
@@ -1000,7 +1013,7 @@ func (speechToText *SpeechToTextV1) AddCorpus(customizationID string, corpusName
 }
 
 
-// Delete a corpus
+// DeleteCorpus : Delete a corpus
 func (speechToText *SpeechToTextV1) DeleteCorpus(customizationID string, corpusName string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/corpora/{corpus_name}"
     creds := speechToText.client.Creds
@@ -1049,7 +1062,7 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(customizationID string, corpusN
 }
 
 
-// Get a corpus
+// GetCorpus : Get a corpus
 func (speechToText *SpeechToTextV1) GetCorpus(customizationID string, corpusName string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/corpora/{corpus_name}"
     creds := speechToText.client.Creds
@@ -1098,6 +1111,7 @@ func (speechToText *SpeechToTextV1) GetCorpus(customizationID string, corpusName
     return response, nil
 }
 
+// GetGetCorpusResult : Cast result of GetCorpus operation
 func GetGetCorpusResult(response *watson.WatsonResponse) *Corpus {
     result, ok := response.Result.(*Corpus)
 
@@ -1108,7 +1122,7 @@ func GetGetCorpusResult(response *watson.WatsonResponse) *Corpus {
     return nil
 }
 
-// List corpora
+// ListCorpora : List corpora
 func (speechToText *SpeechToTextV1) ListCorpora(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/corpora"
     creds := speechToText.client.Creds
@@ -1156,6 +1170,7 @@ func (speechToText *SpeechToTextV1) ListCorpora(customizationID string) (*watson
     return response, nil
 }
 
+// GetListCorporaResult : Cast result of ListCorpora operation
 func GetListCorporaResult(response *watson.WatsonResponse) *Corpora {
     result, ok := response.Result.(*Corpora)
 
@@ -1166,7 +1181,7 @@ func GetListCorporaResult(response *watson.WatsonResponse) *Corpora {
     return nil
 }
 
-// Add a custom word
+// AddWord : Add a custom word
 func (speechToText *SpeechToTextV1) AddWord(customizationID string, wordName string, body *CustomWord) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word_name}"
     creds := speechToText.client.Creds
@@ -1216,7 +1231,7 @@ func (speechToText *SpeechToTextV1) AddWord(customizationID string, wordName str
 }
 
 
-// Add custom words
+// AddWords : Add custom words
 func (speechToText *SpeechToTextV1) AddWords(customizationID string, body *CustomWords) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words"
     creds := speechToText.client.Creds
@@ -1265,7 +1280,7 @@ func (speechToText *SpeechToTextV1) AddWords(customizationID string, body *Custo
 }
 
 
-// Delete a custom word
+// DeleteWord : Delete a custom word
 func (speechToText *SpeechToTextV1) DeleteWord(customizationID string, wordName string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word_name}"
     creds := speechToText.client.Creds
@@ -1314,7 +1329,7 @@ func (speechToText *SpeechToTextV1) DeleteWord(customizationID string, wordName 
 }
 
 
-// Get a custom word
+// GetWord : Get a custom word
 func (speechToText *SpeechToTextV1) GetWord(customizationID string, wordName string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word_name}"
     creds := speechToText.client.Creds
@@ -1363,6 +1378,7 @@ func (speechToText *SpeechToTextV1) GetWord(customizationID string, wordName str
     return response, nil
 }
 
+// GetGetWordResult : Cast result of GetWord operation
 func GetGetWordResult(response *watson.WatsonResponse) *Word {
     result, ok := response.Result.(*Word)
 
@@ -1373,7 +1389,7 @@ func GetGetWordResult(response *watson.WatsonResponse) *Word {
     return nil
 }
 
-// List custom words
+// ListWords : List custom words
 func (speechToText *SpeechToTextV1) ListWords(customizationID string, wordType string, sort string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words"
     creds := speechToText.client.Creds
@@ -1423,6 +1439,7 @@ func (speechToText *SpeechToTextV1) ListWords(customizationID string, wordType s
     return response, nil
 }
 
+// GetListWordsResult : Cast result of ListWords operation
 func GetListWordsResult(response *watson.WatsonResponse) *Words {
     result, ok := response.Result.(*Words)
 
@@ -1433,7 +1450,7 @@ func GetListWordsResult(response *watson.WatsonResponse) *Words {
     return nil
 }
 
-// Create a custom acoustic model
+// CreateAcousticModel : Create a custom acoustic model
 func (speechToText *SpeechToTextV1) CreateAcousticModel(body *CreateAcousticModel) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations"
     creds := speechToText.client.Creds
@@ -1481,6 +1498,7 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(body *CreateAcousticMode
     return response, nil
 }
 
+// GetCreateAcousticModelResult : Cast result of CreateAcousticModel operation
 func GetCreateAcousticModelResult(response *watson.WatsonResponse) *AcousticModel {
     result, ok := response.Result.(*AcousticModel)
 
@@ -1491,7 +1509,7 @@ func GetCreateAcousticModelResult(response *watson.WatsonResponse) *AcousticMode
     return nil
 }
 
-// Delete a custom acoustic model
+// DeleteAcousticModel : Delete a custom acoustic model
 func (speechToText *SpeechToTextV1) DeleteAcousticModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}"
     creds := speechToText.client.Creds
@@ -1539,7 +1557,7 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(customizationID string) 
 }
 
 
-// Get a custom acoustic model
+// GetAcousticModel : Get a custom acoustic model
 func (speechToText *SpeechToTextV1) GetAcousticModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}"
     creds := speechToText.client.Creds
@@ -1587,6 +1605,7 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(customizationID string) (*w
     return response, nil
 }
 
+// GetGetAcousticModelResult : Cast result of GetAcousticModel operation
 func GetGetAcousticModelResult(response *watson.WatsonResponse) *AcousticModel {
     result, ok := response.Result.(*AcousticModel)
 
@@ -1597,7 +1616,7 @@ func GetGetAcousticModelResult(response *watson.WatsonResponse) *AcousticModel {
     return nil
 }
 
-// List custom acoustic models
+// ListAcousticModels : List custom acoustic models
 func (speechToText *SpeechToTextV1) ListAcousticModels(language string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations"
     creds := speechToText.client.Creds
@@ -1645,6 +1664,7 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(language string) (*watson
     return response, nil
 }
 
+// GetListAcousticModelsResult : Cast result of ListAcousticModels operation
 func GetListAcousticModelsResult(response *watson.WatsonResponse) *AcousticModels {
     result, ok := response.Result.(*AcousticModels)
 
@@ -1655,7 +1675,7 @@ func GetListAcousticModelsResult(response *watson.WatsonResponse) *AcousticModel
     return nil
 }
 
-// Reset a custom acoustic model
+// ResetAcousticModel : Reset a custom acoustic model
 func (speechToText *SpeechToTextV1) ResetAcousticModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/reset"
     creds := speechToText.client.Creds
@@ -1703,7 +1723,7 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(customizationID string) (
 }
 
 
-// Train a custom acoustic model
+// TrainAcousticModel : Train a custom acoustic model
 func (speechToText *SpeechToTextV1) TrainAcousticModel(customizationID string, customLanguageModelID string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/train"
     creds := speechToText.client.Creds
@@ -1752,7 +1772,7 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(customizationID string, c
 }
 
 
-// Upgrade a custom acoustic model
+// UpgradeAcousticModel : Upgrade a custom acoustic model
 func (speechToText *SpeechToTextV1) UpgradeAcousticModel(customizationID string, customLanguageModelID string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/upgrade_model"
     creds := speechToText.client.Creds
@@ -1801,7 +1821,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(customizationID string,
 }
 
 
-// Add an audio resource
+// AddAudio : Add an audio resource
 func (speechToText *SpeechToTextV1) AddAudio(customizationID string, audioName string, body *[][]byte, contentType string, containedContentType string, allowOverwrite bool) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/audio/{audio_name}"
     creds := speechToText.client.Creds
@@ -1854,7 +1874,7 @@ func (speechToText *SpeechToTextV1) AddAudio(customizationID string, audioName s
 }
 
 
-// Delete an audio resource
+// DeleteAudio : Delete an audio resource
 func (speechToText *SpeechToTextV1) DeleteAudio(customizationID string, audioName string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/audio/{audio_name}"
     creds := speechToText.client.Creds
@@ -1903,7 +1923,7 @@ func (speechToText *SpeechToTextV1) DeleteAudio(customizationID string, audioNam
 }
 
 
-// Get an audio resource
+// GetAudio : Get an audio resource
 func (speechToText *SpeechToTextV1) GetAudio(customizationID string, audioName string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/audio/{audio_name}"
     creds := speechToText.client.Creds
@@ -1952,6 +1972,7 @@ func (speechToText *SpeechToTextV1) GetAudio(customizationID string, audioName s
     return response, nil
 }
 
+// GetGetAudioResult : Cast result of GetAudio operation
 func GetGetAudioResult(response *watson.WatsonResponse) *AudioListing {
     result, ok := response.Result.(*AudioListing)
 
@@ -1962,7 +1983,7 @@ func GetGetAudioResult(response *watson.WatsonResponse) *AudioListing {
     return nil
 }
 
-// List audio resources
+// ListAudio : List audio resources
 func (speechToText *SpeechToTextV1) ListAudio(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/audio"
     creds := speechToText.client.Creds
@@ -2010,6 +2031,7 @@ func (speechToText *SpeechToTextV1) ListAudio(customizationID string) (*watson.W
     return response, nil
 }
 
+// GetListAudioResult : Cast result of ListAudio operation
 func GetListAudioResult(response *watson.WatsonResponse) *AudioResources {
     result, ok := response.Result.(*AudioResources)
 
@@ -2020,7 +2042,7 @@ func GetListAudioResult(response *watson.WatsonResponse) *AudioResources {
     return nil
 }
 
-// Delete labeled data
+// DeleteUserData : Delete labeled data
 func (speechToText *SpeechToTextV1) DeleteUserData(customerID string) (*watson.WatsonResponse, []error) {
     path := "/v1/user_data"
     creds := speechToText.client.Creds
@@ -2069,10 +2091,11 @@ func (speechToText *SpeechToTextV1) DeleteUserData(customerID string) (*watson.W
 
 
 
+// AcousticModel : AcousticModel struct
 type AcousticModel struct {
 
 	// The customization ID (GUID) of the custom acoustic model. The **Create a custom acoustic model** method returns only this field of the object; it does not return the other fields.
-	CustomizationId string `json:"customization_id"`
+	CustomizationID string `json:"customization_id"`
 
 	// The date and time in Coordinated Universal Time (UTC) at which the custom acoustic model was created. The value is provided in full ISO 8601 format (`YYYY-MM-DDThh:mm:ss.sTZD`).
 	Created string `json:"created,omitempty"`
@@ -2105,12 +2128,14 @@ type AcousticModel struct {
 	Warnings string `json:"warnings,omitempty"`
 }
 
+// AcousticModels : AcousticModels struct
 type AcousticModels struct {
 
 	// An array of objects that provides information about each available custom acoustic model. The array is empty if the requesting service credentials own no custom acoustic models (if no language is specified) or own no custom acoustic models for the specified language.
 	Customizations []AcousticModel `json:"customizations"`
 }
 
+// AudioDetails : AudioDetails struct
 type AudioDetails struct {
 
 	// The type of the audio resource: * `audio` for an individual audio file * `archive` for an archive (**.zip** or **.tar.gz**) file that contains audio files * `undetermined` for a resource that the service cannot validate (for example, if the user mistakenly passes a file that does not contain audio, such as a JPEG file).
@@ -2126,6 +2151,7 @@ type AudioDetails struct {
 	Compression string `json:"compression,omitempty"`
 }
 
+// AudioListing : AudioListing struct
 type AudioListing struct {
 
 	// **For an audio-type resource,**  the total seconds of audio in the resource. The value is always a whole number. Omitted for an archive-type resource.
@@ -2147,6 +2173,7 @@ type AudioListing struct {
 	Audio []AudioResource `json:"audio,omitempty"`
 }
 
+// AudioResource : AudioResource struct
 type AudioResource struct {
 
 	// The total seconds of audio in the audio resource. The value is always a whole number.
@@ -2162,6 +2189,7 @@ type AudioResource struct {
 	Status string `json:"status"`
 }
 
+// AudioResources : AudioResources struct
 type AudioResources struct {
 
 	// The total minutes of accumulated audio summed over all of the valid audio resources for the custom acoustic model. You can use this value to determine whether the custom model has too little or too much audio to begin training.
@@ -2171,12 +2199,14 @@ type AudioResources struct {
 	Audio []AudioResource `json:"audio"`
 }
 
+// Corpora : Corpora struct
 type Corpora struct {
 
 	// An array of objects that provides information about the corpora for the custom model. The array is empty if the custom model has no corpora.
 	Corpora []Corpus `json:"corpora"`
 }
 
+// Corpus : Corpus struct
 type Corpus struct {
 
 	// The name of the corpus.
@@ -2195,6 +2225,7 @@ type Corpus struct {
 	Error string `json:"error,omitempty"`
 }
 
+// CreateAcousticModel : CreateAcousticModel struct
 type CreateAcousticModel struct {
 
 	// A user-defined name for the new custom acoustic model. Use a name that is unique among all custom acoustic models that you own. Use a localized name that matches the language of the custom model. Use a name that describes the acoustic environment of the custom model, such as `Mobile custom model` or `Noisy car custom model`.
@@ -2207,6 +2238,7 @@ type CreateAcousticModel struct {
 	Description string `json:"description,omitempty"`
 }
 
+// CreateLanguageModel : CreateLanguageModel struct
 type CreateLanguageModel struct {
 
 	// A user-defined name for the new custom language model. Use a name that is unique among all custom language models that you own. Use a localized name that matches the language of the custom model. Use a name that describes the domain of the custom model, such as `Medical custom model` or `Legal custom model`.
@@ -2222,6 +2254,7 @@ type CreateLanguageModel struct {
 	Description string `json:"description,omitempty"`
 }
 
+// CustomWord : CustomWord struct
 type CustomWord struct {
 
 	// For the **Add custom words** method, you must specify the custom word that is to be added to or updated in the custom model. Do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of compound words. Omit this field for the **Add a custom word** method.
@@ -2234,12 +2267,14 @@ type CustomWord struct {
 	DisplayAs string `json:"display_as,omitempty"`
 }
 
+// CustomWords : CustomWords struct
 type CustomWords struct {
 
 	// An array of objects that provides information about each custom word that is to be added to or updated in the custom language model.
 	Words []CustomWord `json:"words"`
 }
 
+// KeywordResult : KeywordResult struct
 type KeywordResult struct {
 
 	// A specified keyword normalized to the spoken phrase that matched in the audio input.
@@ -2255,10 +2290,11 @@ type KeywordResult struct {
 	Confidence float64 `json:"confidence"`
 }
 
+// LanguageModel : LanguageModel struct
 type LanguageModel struct {
 
 	// The customization ID (GUID) of the custom language model. The **Create a custom language model** method returns only this field of the object; it does not return the other fields.
-	CustomizationId string `json:"customization_id"`
+	CustomizationID string `json:"customization_id"`
 
 	// The date and time in Coordinated Universal Time (UTC) at which the custom language model was created. The value is provided in full ISO 8601 format (`YYYY-MM-DDThh:mm:ss.sTZD`).
 	Created string `json:"created,omitempty"`
@@ -2294,16 +2330,18 @@ type LanguageModel struct {
 	Warnings string `json:"warnings,omitempty"`
 }
 
+// LanguageModels : LanguageModels struct
 type LanguageModels struct {
 
 	// An array of objects that provides information about each available custom language model. The array is empty if the requesting service credentials own no custom language models (if no language is specified) or own no custom language models for the specified language.
 	Customizations []LanguageModel `json:"customizations"`
 }
 
+// RecognitionJob : RecognitionJob struct
 type RecognitionJob struct {
 
 	// The ID of the asynchronous job.
-	Id string `json:"id"`
+	ID string `json:"id"`
 
 	// The current status of the job: * `waiting`: The service is preparing the job for processing. The service returns this status when the job is initially created or when it is waiting for capacity to process the job. The job remains in this state until the service has the capacity to begin processing it. * `processing`: The service is actively processing the job. * `completed`: The service has finished processing the job. If the job specified a callback URL and the event `recognitions.completed_with_results`, the service sent the results with the callback notification; otherwise, you must retrieve the results by checking the individual job. * `failed`: The job failed.
 	Status string `json:"status"`
@@ -2315,7 +2353,7 @@ type RecognitionJob struct {
 	Updated string `json:"updated,omitempty"`
 
 	// The URL to use to request information about the job with the **Check a job** method. This field is returned only by the **Create a job** method.
-	Url string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 
 	// The user token associated with a job that was created with a callback URL and a user token. This field can be returned only by the **Check jobs** method.
 	UserToken string `json:"user_token,omitempty"`
@@ -2327,21 +2365,24 @@ type RecognitionJob struct {
 	Warnings []string `json:"warnings,omitempty"`
 }
 
+// RecognitionJobs : RecognitionJobs struct
 type RecognitionJobs struct {
 
 	// An array of objects that provides the status for each of the user's current jobs. The array is empty if the user has no current jobs.
 	Recognitions []RecognitionJob `json:"recognitions"`
 }
 
+// RegisterStatus : RegisterStatus struct
 type RegisterStatus struct {
 
 	// The current status of the job: * `created` if the callback URL was successfully white-listed as a result of the call. * `already created` if the URL was already white-listed.
 	Status string `json:"status"`
 
 	// The callback URL that is successfully registered.
-	Url string `json:"url"`
+	URL string `json:"url"`
 }
 
+// SpeakerLabelsResult : SpeakerLabelsResult struct
 type SpeakerLabelsResult struct {
 
 	// The start time of a word from the transcript. The value matches the start time of a word from the `timestamps` array.
@@ -2360,6 +2401,7 @@ type SpeakerLabelsResult struct {
 	FinalResults bool `json:"final_results"`
 }
 
+// SpeechModel : SpeechModel struct
 type SpeechModel struct {
 
 	// The name of the model for use as an identifier in calls to the service (for example, `en-US_BroadbandModel`).
@@ -2372,24 +2414,23 @@ type SpeechModel struct {
 	Rate int64 `json:"rate"`
 
 	// The URI for the model.
-	Url string `json:"url"`
+	URL string `json:"url"`
 
 	// Describes the additional service features supported with the model.
 	SupportedFeatures SupportedFeatures `json:"supported_features"`
 
 	// Brief description of the model.
 	Description string `json:"description"`
-
-	// The URI for the model for use with the **Create a session** method. This field is returned only by the **Get a model** method.
-	Sessions string `json:"sessions,omitempty"`
 }
 
+// SpeechModels : SpeechModels struct
 type SpeechModels struct {
 
 	// An array of objects that provides information about each available model.
 	Models []SpeechModel `json:"models"`
 }
 
+// SpeechRecognitionAlternative : SpeechRecognitionAlternative struct
 type SpeechRecognitionAlternative struct {
 
 	// A transcription of the audio.
@@ -2405,6 +2446,7 @@ type SpeechRecognitionAlternative struct {
 	WordConfidence []string `json:"word_confidence,omitempty"`
 }
 
+// SpeechRecognitionResult : SpeechRecognitionResult struct
 type SpeechRecognitionResult struct {
 
 	// An indication of whether the transcription results are final. If `true`, the results for this utterance are not updated further; no additional results are sent for a `result_index` once its results are indicated as final.
@@ -2420,6 +2462,7 @@ type SpeechRecognitionResult struct {
 	WordAlternatives []WordAlternativeResults `json:"word_alternatives,omitempty"`
 }
 
+// SpeechRecognitionResults : SpeechRecognitionResults struct
 type SpeechRecognitionResults struct {
 
 	// An array that can include interim and final results (interim results are returned only if supported by the method). Final results are guaranteed not to change; interim results might be replaced by further interim results and final results. The service periodically sends updates to the results list; the `result_index` is set to the lowest index in the array that has changed; it is incremented for new results.
@@ -2435,6 +2478,7 @@ type SpeechRecognitionResults struct {
 	Warnings []string `json:"warnings,omitempty"`
 }
 
+// SupportedFeatures : SupportedFeatures struct
 type SupportedFeatures struct {
 
 	// Indicates whether the customization interface can be used to create a custom language model based on the language model.
@@ -2444,6 +2488,7 @@ type SupportedFeatures struct {
 	SpeakerLabels bool `json:"speaker_labels"`
 }
 
+// Word : Word struct
 type Word struct {
 
 	// A word from the custom model's words resource. The spelling of the word is used to train the model.
@@ -2465,6 +2510,7 @@ type Word struct {
 	Error []WordError `json:"error,omitempty"`
 }
 
+// WordAlternativeResult : WordAlternativeResult struct
 type WordAlternativeResult struct {
 
 	// A confidence score for the word alternative hypothesis in the range of 0.0 to 1.0.
@@ -2474,6 +2520,7 @@ type WordAlternativeResult struct {
 	Word string `json:"word"`
 }
 
+// WordAlternativeResults : WordAlternativeResults struct
 type WordAlternativeResults struct {
 
 	// The start time in seconds of the word from the input audio that corresponds to the word alternatives.
@@ -2486,12 +2533,14 @@ type WordAlternativeResults struct {
 	Alternatives []WordAlternativeResult `json:"alternatives"`
 }
 
+// WordError : WordError struct
 type WordError struct {
 
 	// A key-value pair that describes an error associated with the definition of a word in the words resource. Each pair has the format `"element": "message"`, where `element` is the aspect of the definition that caused the problem and `message` describes the problem. The following example describes a problem with one of the word's sounds-like definitions: `"{sounds_like_string}": "Numbers are not allowed in sounds-like. You can try for example '{suggested_string}'."` You must correct the error before you can train the model.
 	Element string `json:"element"`
 }
 
+// Words : Words struct
 type Words struct {
 
 	// An array of objects that provides information about each word in the custom model's words resource. The array is empty if the custom model has no words.

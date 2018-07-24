@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	watson "golang-sdk"
-	"golang-sdk/discoveryV1"
+	"golang-sdk/discoveryv1"
 )
 
 func main() {
 	// Instantiate the Watson Discovery service
-	discovery, discoveryV1Err := discoveryV1.NewDiscoveryV1(watson.Credentials{
+	discovery, discoveryV1Err := discoveryv1.NewDiscoveryV1(watson.Credentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-03-05",
 		Username: "YOUR SERVICE USERNAME",
@@ -35,7 +35,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetListEnvironmentsResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	listEnvironmentResult := discoveryV1.GetListEnvironmentsResult(listEnvironment)
+	listEnvironmentResult := discoveryv1.GetListEnvironmentsResult(listEnvironment)
 
 	// Check successful casting
 	if listEnvironmentResult != nil {

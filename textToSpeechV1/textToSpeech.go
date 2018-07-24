@@ -1,3 +1,5 @@
+// Package texttospeechv1 : Operations and models for the TextToSpeechV1 service
+package texttospeechv1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package textToSpeechV1
 
 import (
     "bytes"
@@ -24,10 +25,12 @@ import (
     watson "golang-sdk"
 )
 
+// TextToSpeechV1 : The TextToSpeechV1 service
 type TextToSpeechV1 struct {
 	client *watson.Client
 }
 
+// NewTextToSpeechV1 : Instantiate TextToSpeechV1
 func NewTextToSpeechV1(creds watson.Credentials) (*TextToSpeechV1, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://stream.watsonplatform.net/text-to-speech/api"
@@ -42,7 +45,7 @@ func NewTextToSpeechV1(creds watson.Credentials) (*TextToSpeechV1, error) {
 	return &TextToSpeechV1{ client: client }, nil
 }
 
-// Get a voice
+// GetVoice : Get a voice
 func (textToSpeech *TextToSpeechV1) GetVoice(voice string, customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/voices/{voice}"
     creds := textToSpeech.client.Creds
@@ -90,6 +93,7 @@ func (textToSpeech *TextToSpeechV1) GetVoice(voice string, customizationID strin
     return response, nil
 }
 
+// GetGetVoiceResult : Cast result of GetVoice operation
 func GetGetVoiceResult(response *watson.WatsonResponse) *Voice {
     result, ok := response.Result.(*Voice)
 
@@ -100,7 +104,7 @@ func GetGetVoiceResult(response *watson.WatsonResponse) *Voice {
     return nil
 }
 
-// List voices
+// ListVoices : List voices
 func (textToSpeech *TextToSpeechV1) ListVoices() (*watson.WatsonResponse, []error) {
     path := "/v1/voices"
     creds := textToSpeech.client.Creds
@@ -146,6 +150,7 @@ func (textToSpeech *TextToSpeechV1) ListVoices() (*watson.WatsonResponse, []erro
     return response, nil
 }
 
+// GetListVoicesResult : Cast result of ListVoices operation
 func GetListVoicesResult(response *watson.WatsonResponse) *Voices {
     result, ok := response.Result.(*Voices)
 
@@ -156,7 +161,7 @@ func GetListVoicesResult(response *watson.WatsonResponse) *Voices {
     return nil
 }
 
-// Synthesize audio
+// Synthesize : Synthesize audio
 func (textToSpeech *TextToSpeechV1) Synthesize(body *Text, accept string, voice string, customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/synthesize"
     creds := textToSpeech.client.Creds
@@ -207,6 +212,7 @@ func (textToSpeech *TextToSpeechV1) Synthesize(body *Text, accept string, voice 
     return response, nil
 }
 
+// GetSynthesizeResult : Cast result of Synthesize operation
 func GetSynthesizeResult(response *watson.WatsonResponse) *os.File {
     result, ok := response.Result.(*os.File)
 
@@ -217,7 +223,7 @@ func GetSynthesizeResult(response *watson.WatsonResponse) *os.File {
     return nil
 }
 
-// Get pronunciation
+// GetPronunciation : Get pronunciation
 func (textToSpeech *TextToSpeechV1) GetPronunciation(text string, voice string, format string, customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/pronunciation"
     creds := textToSpeech.client.Creds
@@ -267,6 +273,7 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(text string, voice string, 
     return response, nil
 }
 
+// GetGetPronunciationResult : Cast result of GetPronunciation operation
 func GetGetPronunciationResult(response *watson.WatsonResponse) *Pronunciation {
     result, ok := response.Result.(*Pronunciation)
 
@@ -277,7 +284,7 @@ func GetGetPronunciationResult(response *watson.WatsonResponse) *Pronunciation {
     return nil
 }
 
-// Create a custom model
+// CreateVoiceModel : Create a custom model
 func (textToSpeech *TextToSpeechV1) CreateVoiceModel(body *CreateVoiceModel) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations"
     creds := textToSpeech.client.Creds
@@ -325,6 +332,7 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(body *CreateVoiceModel) (*w
     return response, nil
 }
 
+// GetCreateVoiceModelResult : Cast result of CreateVoiceModel operation
 func GetCreateVoiceModelResult(response *watson.WatsonResponse) *VoiceModel {
     result, ok := response.Result.(*VoiceModel)
 
@@ -335,7 +343,7 @@ func GetCreateVoiceModelResult(response *watson.WatsonResponse) *VoiceModel {
     return nil
 }
 
-// Delete a custom model
+// DeleteVoiceModel : Delete a custom model
 func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}"
     creds := textToSpeech.client.Creds
@@ -381,7 +389,7 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(customizationID string) (*w
 }
 
 
-// Get a custom model
+// GetVoiceModel : Get a custom model
 func (textToSpeech *TextToSpeechV1) GetVoiceModel(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}"
     creds := textToSpeech.client.Creds
@@ -428,6 +436,7 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(customizationID string) (*wats
     return response, nil
 }
 
+// GetGetVoiceModelResult : Cast result of GetVoiceModel operation
 func GetGetVoiceModelResult(response *watson.WatsonResponse) *VoiceModel {
     result, ok := response.Result.(*VoiceModel)
 
@@ -438,7 +447,7 @@ func GetGetVoiceModelResult(response *watson.WatsonResponse) *VoiceModel {
     return nil
 }
 
-// List custom models
+// ListVoiceModels : List custom models
 func (textToSpeech *TextToSpeechV1) ListVoiceModels(language string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations"
     creds := textToSpeech.client.Creds
@@ -485,6 +494,7 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(language string) (*watson.Wa
     return response, nil
 }
 
+// GetListVoiceModelsResult : Cast result of ListVoiceModels operation
 func GetListVoiceModelsResult(response *watson.WatsonResponse) *VoiceModels {
     result, ok := response.Result.(*VoiceModels)
 
@@ -495,7 +505,7 @@ func GetListVoiceModelsResult(response *watson.WatsonResponse) *VoiceModels {
     return nil
 }
 
-// Update a custom model
+// UpdateVoiceModel : Update a custom model
 func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(customizationID string, body *UpdateVoiceModel) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}"
     creds := textToSpeech.client.Creds
@@ -544,7 +554,7 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(customizationID string, bod
 }
 
 
-// Add a custom word
+// AddWord : Add a custom word
 func (textToSpeech *TextToSpeechV1) AddWord(customizationID string, word string, body *Translation) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word}"
     creds := textToSpeech.client.Creds
@@ -593,7 +603,7 @@ func (textToSpeech *TextToSpeechV1) AddWord(customizationID string, word string,
 }
 
 
-// Add custom words
+// AddWords : Add custom words
 func (textToSpeech *TextToSpeechV1) AddWords(customizationID string, body *Words) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words"
     creds := textToSpeech.client.Creds
@@ -642,7 +652,7 @@ func (textToSpeech *TextToSpeechV1) AddWords(customizationID string, body *Words
 }
 
 
-// Delete a custom word
+// DeleteWord : Delete a custom word
 func (textToSpeech *TextToSpeechV1) DeleteWord(customizationID string, word string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word}"
     creds := textToSpeech.client.Creds
@@ -689,7 +699,7 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(customizationID string, word stri
 }
 
 
-// Get a custom word
+// GetWord : Get a custom word
 func (textToSpeech *TextToSpeechV1) GetWord(customizationID string, word string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word}"
     creds := textToSpeech.client.Creds
@@ -737,6 +747,7 @@ func (textToSpeech *TextToSpeechV1) GetWord(customizationID string, word string)
     return response, nil
 }
 
+// GetGetWordResult : Cast result of GetWord operation
 func GetGetWordResult(response *watson.WatsonResponse) *Translation {
     result, ok := response.Result.(*Translation)
 
@@ -747,7 +758,7 @@ func GetGetWordResult(response *watson.WatsonResponse) *Translation {
     return nil
 }
 
-// List custom words
+// ListWords : List custom words
 func (textToSpeech *TextToSpeechV1) ListWords(customizationID string) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words"
     creds := textToSpeech.client.Creds
@@ -794,6 +805,7 @@ func (textToSpeech *TextToSpeechV1) ListWords(customizationID string) (*watson.W
     return response, nil
 }
 
+// GetListWordsResult : Cast result of ListWords operation
 func GetListWordsResult(response *watson.WatsonResponse) *Words {
     result, ok := response.Result.(*Words)
 
@@ -804,7 +816,7 @@ func GetListWordsResult(response *watson.WatsonResponse) *Words {
     return nil
 }
 
-// Delete labeled data
+// DeleteUserData : Delete labeled data
 func (textToSpeech *TextToSpeechV1) DeleteUserData(customerID string) (*watson.WatsonResponse, []error) {
     path := "/v1/user_data"
     creds := textToSpeech.client.Creds
@@ -851,6 +863,7 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(customerID string) (*watson.W
 
 
 
+// CreateVoiceModel : CreateVoiceModel struct
 type CreateVoiceModel struct {
 
 	// The name of the new custom voice model.
@@ -863,12 +876,14 @@ type CreateVoiceModel struct {
 	Description string `json:"description,omitempty"`
 }
 
+// Pronunciation : Pronunciation struct
 type Pronunciation struct {
 
 	// The pronunciation of the specified text in the requested voice and format. If a custom voice model is specified, the pronunciation also reflects that custom voice.
 	Pronunciation string `json:"pronunciation"`
 }
 
+// SupportedFeatures : SupportedFeatures struct
 type SupportedFeatures struct {
 
 	// If `true`, the voice can be customized; if `false`, the voice cannot be customized. (Same as `customizable`.).
@@ -878,12 +893,14 @@ type SupportedFeatures struct {
 	VoiceTransformation bool `json:"voice_transformation"`
 }
 
+// Text : Text struct
 type Text struct {
 
 	// The text to synthesize.
 	Text string `json:"text"`
 }
 
+// Translation : Translation struct
 type Translation struct {
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. A sounds-like is one or more words that, when combined, sound like the word.
@@ -893,6 +910,7 @@ type Translation struct {
 	PartOfSpeech string `json:"part_of_speech,omitempty"`
 }
 
+// UpdateVoiceModel : UpdateVoiceModel struct
 type UpdateVoiceModel struct {
 
 	// A new name for the custom voice model.
@@ -905,10 +923,11 @@ type UpdateVoiceModel struct {
 	Words []Word `json:"words,omitempty"`
 }
 
+// Voice : Voice struct
 type Voice struct {
 
 	// The URI of the voice.
-	Url string `json:"url"`
+	URL string `json:"url"`
 
 	// The gender of the voice: `male` or `female`.
 	Gender string `json:"gender"`
@@ -932,10 +951,11 @@ type Voice struct {
 	Customization VoiceModel `json:"customization,omitempty"`
 }
 
+// VoiceModel : VoiceModel struct
 type VoiceModel struct {
 
 	// The customization ID (GUID) of the custom voice model. The **Create a custom model** method returns only this field. It does not not return the other fields of this object.
-	CustomizationId string `json:"customization_id"`
+	CustomizationID string `json:"customization_id"`
 
 	// The name of the custom voice model.
 	Name string `json:"name,omitempty"`
@@ -959,18 +979,21 @@ type VoiceModel struct {
 	Words []Word `json:"words,omitempty"`
 }
 
+// VoiceModels : VoiceModels struct
 type VoiceModels struct {
 
 	// An array of `VoiceModel` objects that provides information about each available custom voice model. The array is empty if the requesting service credentials own no custom voice models (if no language is specified) or own no custom voice models for the specified language.
 	Customizations []VoiceModel `json:"customizations"`
 }
 
+// Voices : Voices struct
 type Voices struct {
 
 	// A list of available voices.
 	Voices []Voice `json:"voices"`
 }
 
+// Word : Word struct
 type Word struct {
 
 	// A word from the custom voice model.
@@ -983,6 +1006,7 @@ type Word struct {
 	PartOfSpeech string `json:"part_of_speech,omitempty"`
 }
 
+// Words : Words struct
 type Words struct {
 
 	// The **Add custom words** method accepts an array of `Word` objects. Each object provides a word that is to be added or updated for the custom voice model and the word's translation. The **List custom words** method returns an array of `Word` objects. Each object shows a word and its translation from the custom voice model. The words are listed in alphabetical order, with uppercase letters listed before lowercase letters. The array is empty if the custom model contains no words.

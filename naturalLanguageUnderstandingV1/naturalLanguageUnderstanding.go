@@ -1,3 +1,5 @@
+// Package naturallanguageunderstandingv1 : Operations and models for the NaturalLanguageUnderstandingV1 service
+package naturallanguageunderstandingv1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package naturalLanguageUnderstandingV1
 
 import (
     "bytes"
@@ -23,10 +24,12 @@ import (
     watson "golang-sdk"
 )
 
+// NaturalLanguageUnderstandingV1 : The NaturalLanguageUnderstandingV1 service
 type NaturalLanguageUnderstandingV1 struct {
 	client *watson.Client
 }
 
+// NewNaturalLanguageUnderstandingV1 : Instantiate NaturalLanguageUnderstandingV1
 func NewNaturalLanguageUnderstandingV1(creds watson.Credentials) (*NaturalLanguageUnderstandingV1, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
@@ -41,7 +44,7 @@ func NewNaturalLanguageUnderstandingV1(creds watson.Credentials) (*NaturalLangua
 	return &NaturalLanguageUnderstandingV1{ client: client }, nil
 }
 
-// Analyze text, HTML, or a public webpage
+// Analyze : Analyze text, HTML, or a public webpage
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(body *Parameters) (*watson.WatsonResponse, []error) {
     path := "/v1/analyze"
     creds := naturalLanguageUnderstanding.client.Creds
@@ -90,6 +93,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(body
     return response, nil
 }
 
+// GetAnalyzeResult : Cast result of Analyze operation
 func GetAnalyzeResult(response *watson.WatsonResponse) *AnalysisResults {
     result, ok := response.Result.(*AnalysisResults)
 
@@ -100,7 +104,7 @@ func GetAnalyzeResult(response *watson.WatsonResponse) *AnalysisResults {
     return nil
 }
 
-// Delete model
+// DeleteModel : Delete model
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(modelID string) (*watson.WatsonResponse, []error) {
     path := "/v1/models/{model_id}"
     creds := naturalLanguageUnderstanding.client.Creds
@@ -149,6 +153,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
     return response, nil
 }
 
+// GetDeleteModelResult : Cast result of DeleteModel operation
 func GetDeleteModelResult(response *watson.WatsonResponse) *DeleteModelResults {
     result, ok := response.Result.(*DeleteModelResults)
 
@@ -159,7 +164,7 @@ func GetDeleteModelResult(response *watson.WatsonResponse) *DeleteModelResults {
     return nil
 }
 
-// List models
+// ListModels : List models
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels() (*watson.WatsonResponse, []error) {
     path := "/v1/models"
     creds := naturalLanguageUnderstanding.client.Creds
@@ -207,6 +212,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels()
     return response, nil
 }
 
+// GetListModelsResult : Cast result of ListModels operation
 func GetListModelsResult(response *watson.WatsonResponse) *ListModelsResults {
     result, ok := response.Result.(*ListModelsResults)
 
@@ -218,6 +224,7 @@ func GetListModelsResult(response *watson.WatsonResponse) *ListModelsResults {
 }
 
 
+// AnalysisResults : Results of the analysis, organized by feature.
 type AnalysisResults struct {
 
 	// Language used to analyze the text.
@@ -227,7 +234,7 @@ type AnalysisResults struct {
 	AnalyzedText string `json:"analyzed_text,omitempty"`
 
 	// URL that was used to retrieve HTML content.
-	RetrievedUrl string `json:"retrieved_url,omitempty"`
+	RetrievedURL string `json:"retrieved_url,omitempty"`
 
 	// API usage information for the request.
 	Usage Usage `json:"usage,omitempty"`
@@ -260,15 +267,18 @@ type AnalysisResults struct {
 	Sentiment SentimentResult `json:"sentiment,omitempty"`
 }
 
+// Author : The author of the analyzed content.
 type Author struct {
 
 	// Name of the author.
 	Name string `json:"name,omitempty"`
 }
 
+// CategoriesOptions : The hierarchical 5-level taxonomy the content is categorized into.
 type CategoriesOptions struct {
 }
 
+// CategoriesResult : The hierarchical 5-level taxonomy the content is categorized into.
 type CategoriesResult struct {
 
 	// The path to the category through the taxonomy hierarchy.
@@ -278,12 +288,14 @@ type CategoriesResult struct {
 	Score float64 `json:"score,omitempty"`
 }
 
+// ConceptsOptions : Whether or not to analyze content for general concepts that are referenced or alluded to.
 type ConceptsOptions struct {
 
 	// Maximum number of concepts to return.
 	Limit int64 `json:"limit,omitempty"`
 }
 
+// ConceptsResult : The general concepts referenced or alluded to in the specified content.
 type ConceptsResult struct {
 
 	// Name of the concept.
@@ -296,12 +308,14 @@ type ConceptsResult struct {
 	DbpediaResource string `json:"dbpedia_resource,omitempty"`
 }
 
+// DeleteModelResults : Delete model results.
 type DeleteModelResults struct {
 
 	// model_id of the deleted model.
 	Deleted string `json:"deleted,omitempty"`
 }
 
+// DisambiguationResult : Disambiguation information for the entity.
 type DisambiguationResult struct {
 
 	// Common entity name.
@@ -314,12 +328,14 @@ type DisambiguationResult struct {
 	Subtype []string `json:"subtype,omitempty"`
 }
 
+// DocumentEmotionResults : An object containing the emotion results of a document.
 type DocumentEmotionResults struct {
 
 	// An object containing the emotion results for the document.
 	Emotion EmotionScores `json:"emotion,omitempty"`
 }
 
+// DocumentSentimentResults : DocumentSentimentResults struct
 type DocumentSentimentResults struct {
 
 	// Indicates whether the sentiment is positive, neutral, or negative.
@@ -329,6 +345,7 @@ type DocumentSentimentResults struct {
 	Score float64 `json:"score,omitempty"`
 }
 
+// EmotionOptions : Whether or not to return emotion analysis of the content.
 type EmotionOptions struct {
 
 	// Set this to false to hide document-level emotion results.
@@ -338,6 +355,7 @@ type EmotionOptions struct {
 	Targets []string `json:"targets,omitempty"`
 }
 
+// EmotionResult : The detected anger, disgust, fear, joy, or sadness that is conveyed by the content. Emotion information can be returned for detected entities, keywords, or user-specified target phrases found in the text.
 type EmotionResult struct {
 
 	// The returned emotion results across the document.
@@ -347,6 +365,7 @@ type EmotionResult struct {
 	Targets []TargetedEmotionResults `json:"targets,omitempty"`
 }
 
+// EmotionScores : EmotionScores struct
 type EmotionScores struct {
 
 	// Anger score from 0 to 1. A higher score means that the text is more likely to convey anger.
@@ -365,6 +384,7 @@ type EmotionScores struct {
 	Sadness float64 `json:"sadness,omitempty"`
 }
 
+// EntitiesOptions : Whether or not to return important people, places, geopolitical, and other entities detected in the analyzed content.
 type EntitiesOptions struct {
 
 	// Maximum number of entities to return.
@@ -383,6 +403,7 @@ type EntitiesOptions struct {
 	Emotion bool `json:"emotion,omitempty"`
 }
 
+// EntitiesResult : The important people, places, geopolitical entities and other types of entities in your content.
 type EntitiesResult struct {
 
 	// Entity type.
@@ -410,6 +431,7 @@ type EntitiesResult struct {
 	Disambiguation DisambiguationResult `json:"disambiguation,omitempty"`
 }
 
+// EntityMention : EntityMention struct
 type EntityMention struct {
 
 	// Entity mention text.
@@ -419,12 +441,14 @@ type EntityMention struct {
 	Location []int64 `json:"location,omitempty"`
 }
 
+// FeatureSentimentResults : FeatureSentimentResults struct
 type FeatureSentimentResults struct {
 
 	// Sentiment score from -1 (negative) to 1 (positive).
 	Score float64 `json:"score,omitempty"`
 }
 
+// Features : Analysis features and options.
 type Features struct {
 
 	// Whether or not to return the concepts that are mentioned in the analyzed text.
@@ -455,12 +479,14 @@ type Features struct {
 	Categories CategoriesOptions `json:"categories,omitempty"`
 }
 
+// Feed : RSS or ATOM feed found on the webpage.
 type Feed struct {
 
 	// URL of the RSS or ATOM feed.
 	Link string `json:"link,omitempty"`
 }
 
+// KeywordsOptions : An option indicating whether or not important keywords from the analyzed content should be returned.
 type KeywordsOptions struct {
 
 	// Maximum number of keywords to return.
@@ -473,6 +499,7 @@ type KeywordsOptions struct {
 	Emotion bool `json:"emotion,omitempty"`
 }
 
+// KeywordsResult : The most important keywords in the content, organized by relevance.
 type KeywordsResult struct {
 
 	// Relevance score from 0 to 1. Higher values indicate greater relevance.
@@ -488,14 +515,17 @@ type KeywordsResult struct {
 	Sentiment FeatureSentimentResults `json:"sentiment,omitempty"`
 }
 
+// ListModelsResults : Models available for Relations and Entities features.
 type ListModelsResults struct {
 
 	Models []Model `json:"models,omitempty"`
 }
 
+// MetadataOptions : The Authors, Publication Date, and Title of the document. Supports URL and HTML input types.
 type MetadataOptions struct {
 }
 
+// MetadataResult : The Authors, Publication Date, and Title of the document. Supports URL and HTML input types.
 type MetadataResult struct {
 
 	// The authors of the document.
@@ -514,13 +544,14 @@ type MetadataResult struct {
 	Feeds []Feed `json:"feeds,omitempty"`
 }
 
+// Model : Model struct
 type Model struct {
 
 	// Shows as available if the model is ready for use.
 	Status string `json:"status,omitempty"`
 
 	// Unique model ID.
-	ModelId string `json:"model_id,omitempty"`
+	ModelID string `json:"model_id,omitempty"`
 
 	// ISO 639-1 code indicating the language of the model.
 	Language string `json:"language,omitempty"`
@@ -529,16 +560,17 @@ type Model struct {
 	Description string `json:"description,omitempty"`
 }
 
+// Parameters : An object containing request parameters.
 type Parameters struct {
 
 	// The plain text to analyze.
 	Text string `json:"text,omitempty"`
 
 	// The HTML file to analyze.
-	Html string `json:"html,omitempty"`
+	HTML string `json:"html,omitempty"`
 
 	// The web page to analyze.
-	Url string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 
 	// Specific features to analyze the document for.
 	Features Features `json:"features"`
@@ -562,6 +594,7 @@ type Parameters struct {
 	LimitTextCharacters int64 `json:"limit_text_characters,omitempty"`
 }
 
+// RelationArgument : RelationArgument struct
 type RelationArgument struct {
 
 	Entities []RelationEntity `json:"entities,omitempty"`
@@ -573,6 +606,7 @@ type RelationArgument struct {
 	Text string `json:"text,omitempty"`
 }
 
+// RelationEntity : An entity that corresponds with an argument in a relation.
 type RelationEntity struct {
 
 	// Text that corresponds to the entity.
@@ -582,12 +616,14 @@ type RelationEntity struct {
 	TypeVar string `json:"type_var,omitempty"`
 }
 
+// RelationsOptions : An option specifying if the relationships found between entities in the analyzed content should be returned.
 type RelationsOptions struct {
 
 	// Enter a custom model ID to override the default model.
 	Model string `json:"model,omitempty"`
 }
 
+// RelationsResult : The relations between entities found in the content.
 type RelationsResult struct {
 
 	// Confidence score for the relation. Higher values indicate greater confidence.
@@ -603,6 +639,7 @@ type RelationsResult struct {
 	Arguments []RelationArgument `json:"arguments,omitempty"`
 }
 
+// SemanticRolesAction : SemanticRolesAction struct
 type SemanticRolesAction struct {
 
 	// Analyzed text that corresponds to the action.
@@ -614,6 +651,7 @@ type SemanticRolesAction struct {
 	Verb SemanticRolesVerb `json:"verb,omitempty"`
 }
 
+// SemanticRolesEntity : SemanticRolesEntity struct
 type SemanticRolesEntity struct {
 
 	// Entity type.
@@ -623,12 +661,14 @@ type SemanticRolesEntity struct {
 	Text string `json:"text,omitempty"`
 }
 
+// SemanticRolesKeyword : SemanticRolesKeyword struct
 type SemanticRolesKeyword struct {
 
 	// The keyword text.
 	Text string `json:"text,omitempty"`
 }
 
+// SemanticRolesObject : SemanticRolesObject struct
 type SemanticRolesObject struct {
 
 	// Object text.
@@ -637,6 +677,7 @@ type SemanticRolesObject struct {
 	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
 }
 
+// SemanticRolesOptions : An option specifying whether or not to identify the subjects, actions, and verbs in the analyzed content.
 type SemanticRolesOptions struct {
 
 	// Maximum number of semantic_roles results to return.
@@ -649,6 +690,7 @@ type SemanticRolesOptions struct {
 	Entities bool `json:"entities,omitempty"`
 }
 
+// SemanticRolesResult : The object containing the actions and the objects the actions act upon.
 type SemanticRolesResult struct {
 
 	// Sentence from the source that contains the subject, action, and object.
@@ -664,6 +706,7 @@ type SemanticRolesResult struct {
 	Object SemanticRolesObject `json:"object,omitempty"`
 }
 
+// SemanticRolesSubject : SemanticRolesSubject struct
 type SemanticRolesSubject struct {
 
 	// Text that corresponds to the subject role.
@@ -674,6 +717,7 @@ type SemanticRolesSubject struct {
 	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
 }
 
+// SemanticRolesVerb : SemanticRolesVerb struct
 type SemanticRolesVerb struct {
 
 	// The keyword text.
@@ -683,6 +727,7 @@ type SemanticRolesVerb struct {
 	Tense string `json:"tense,omitempty"`
 }
 
+// SentimentOptions : An option specifying if sentiment of detected entities, keywords, or phrases should be returned.
 type SentimentOptions struct {
 
 	// Set this to false to hide document-level sentiment results.
@@ -692,6 +737,7 @@ type SentimentOptions struct {
 	Targets []string `json:"targets,omitempty"`
 }
 
+// SentimentResult : The sentiment of the content.
 type SentimentResult struct {
 
 	// The document level sentiment.
@@ -701,6 +747,7 @@ type SentimentResult struct {
 	Targets []TargetedSentimentResults `json:"targets,omitempty"`
 }
 
+// TargetedEmotionResults : An object containing the emotion results for the target.
 type TargetedEmotionResults struct {
 
 	// Targeted text.
@@ -710,6 +757,7 @@ type TargetedEmotionResults struct {
 	Emotion EmotionScores `json:"emotion,omitempty"`
 }
 
+// TargetedSentimentResults : TargetedSentimentResults struct
 type TargetedSentimentResults struct {
 
 	// Targeted text.
@@ -719,6 +767,7 @@ type TargetedSentimentResults struct {
 	Score float64 `json:"score,omitempty"`
 }
 
+// Usage : Usage information.
 type Usage struct {
 
 	// Number of features used in the API call.

@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	watson "golang-sdk"
-	"golang-sdk/languageTranslatorV3"
+	"golang-sdk/languagetranslatorv3"
 )
 
 func main() {
 	// Instantiate the Watson Language Translator service
-	languageTranslator, languageTranslatorErr := languageTranslatorV3.NewLanguageTranslatorV3(watson.Credentials{
+	languageTranslator, languageTranslatorErr := languagetranslatorv3.NewLanguageTranslatorV3(watson.Credentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-02-16",
 		APIkey: "YOUR API KEY",
@@ -20,12 +20,11 @@ func main() {
 		return
 	}
 
-
 	/* TRANSLATE */
 
-	entryTranslate := languageTranslatorV3.TranslateRequest{
+	entryTranslate := languagetranslatorv3.TranslateRequest{
 		Text: []string {"Let's translate this message"},
-		ModelId: "es-en",
+		ModelID: "es-en",
 	}
 
 	// Call the languageTranslator Translate method
@@ -39,7 +38,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetTranslateResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	translateResult := languageTranslatorV3.GetTranslateResult(translate)
+	translateResult := languagetranslatorv3.GetTranslateResult(translate)
 
 	// Check successful casting
 	if translateResult != nil {
@@ -61,7 +60,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetListIdentifiableLanguagesResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	listLanguageResult := languageTranslatorV3.GetListIdentifiableLanguagesResult(listLanguage)
+	listLanguageResult := languagetranslatorv3.GetListIdentifiableLanguagesResult(listLanguage)
 
 	// Check successful casting
 	if listLanguageResult != nil {
@@ -85,7 +84,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetIdentifyResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	identifyResult := languageTranslatorV3.GetIdentifyResult(identify)
+	identifyResult := languagetranslatorv3.GetIdentifyResult(identify)
 
 	// Check successful casting
 	if identifyResult != nil {
@@ -107,7 +106,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetListModelsResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	listModelResult := languageTranslatorV3.GetListModelsResult(listModel)
+	listModelResult := languagetranslatorv3.GetListModelsResult(listModel)
 
 	// Check successful casting
 	if listModelResult != nil {
@@ -129,7 +128,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetDeleteModelResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	deleteModelResult := languageTranslatorV3.GetDeleteModelResult(deleteModel)
+	deleteModelResult := languagetranslatorv3.GetDeleteModelResult(deleteModel)
 
 	// Check successful casting
 	if deleteModelResult != nil {
@@ -151,7 +150,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetGetModelResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	getModelResult := languageTranslatorV3.GetGetModelResult(getModel)
+	getModelResult := languagetranslatorv3.GetGetModelResult(getModel)
 
 	// Check successful casting
 	if getModelResult != nil {

@@ -6,12 +6,12 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	watson "golang-sdk"
-	"golang-sdk/personalityInsightsV3"
+	"golang-sdk/personalityinsightsv3"
 )
 
 func main() {
 	// Instantiate the Watson Personality Insights service
-	piV3, piV3Err := personalityInsightsV3.NewPersonalityInsightsV3(watson.Credentials{
+	piV3, piV3Err := personalityinsightsv3.NewPersonalityInsightsV3(watson.Credentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2017-10-13",
 		APIkey: "YOUR SERVICE API KEY",
@@ -34,8 +34,8 @@ func main() {
 	}
 
 	// Create request for Profile method
-	profileReq := personalityInsightsV3.Content{
-		ContentItems: []personalityInsightsV3.ContentItem{
+	profileReq := personalityinsightsv3.Content{
+		ContentItems: []personalityinsightsv3.ContentItem{
 			{
 				Content: string(speech),
 			},
@@ -53,7 +53,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetProfileResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	profResult := personalityInsightsV3.GetProfileResult(prof)
+	profResult := personalityinsightsv3.GetProfileResult(prof)
 
 	// Check successful casting
 	if profResult != nil {

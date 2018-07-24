@@ -1,3 +1,5 @@
+// Package naturallanguageclassifierv1 : Operations and models for the NaturalLanguageClassifierV1 service
+package naturallanguageclassifierv1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package naturalLanguageClassifierV1
 
 import (
     "bytes"
@@ -25,10 +26,12 @@ import (
     watson "golang-sdk"
 )
 
+// NaturalLanguageClassifierV1 : The NaturalLanguageClassifierV1 service
 type NaturalLanguageClassifierV1 struct {
 	client *watson.Client
 }
 
+// NewNaturalLanguageClassifierV1 : Instantiate NaturalLanguageClassifierV1
 func NewNaturalLanguageClassifierV1(creds watson.Credentials) (*NaturalLanguageClassifierV1, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
@@ -43,7 +46,7 @@ func NewNaturalLanguageClassifierV1(creds watson.Credentials) (*NaturalLanguageC
 	return &NaturalLanguageClassifierV1{ client: client }, nil
 }
 
-// Classify a phrase
+// Classify : Classify a phrase
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifierID string, body *ClassifyInput) (*watson.WatsonResponse, []error) {
     path := "/v1/classifiers/{classifier_id}/classify"
     creds := naturalLanguageClassifier.client.Creds
@@ -92,6 +95,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifie
     return response, nil
 }
 
+// GetClassifyResult : Cast result of Classify operation
 func GetClassifyResult(response *watson.WatsonResponse) *Classification {
     result, ok := response.Result.(*Classification)
 
@@ -102,7 +106,7 @@ func GetClassifyResult(response *watson.WatsonResponse) *Classification {
     return nil
 }
 
-// Classify multiple phrases
+// ClassifyCollection : Classify multiple phrases
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection(classifierID string, body *ClassifyCollectionInput) (*watson.WatsonResponse, []error) {
     path := "/v1/classifiers/{classifier_id}/classify_collection"
     creds := naturalLanguageClassifier.client.Creds
@@ -151,6 +155,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
     return response, nil
 }
 
+// GetClassifyCollectionResult : Cast result of ClassifyCollection operation
 func GetClassifyCollectionResult(response *watson.WatsonResponse) *ClassificationCollection {
     result, ok := response.Result.(*ClassificationCollection)
 
@@ -161,7 +166,7 @@ func GetClassifyCollectionResult(response *watson.WatsonResponse) *Classificatio
     return nil
 }
 
-// Create classifier
+// CreateClassifier : Create classifier
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(metadata os.File, trainingData os.File) (*watson.WatsonResponse, []error) {
     path := "/v1/classifiers"
     creds := naturalLanguageClassifier.client.Creds
@@ -211,6 +216,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(m
     return response, nil
 }
 
+// GetCreateClassifierResult : Cast result of CreateClassifier operation
 func GetCreateClassifierResult(response *watson.WatsonResponse) *Classifier {
     result, ok := response.Result.(*Classifier)
 
@@ -221,7 +227,7 @@ func GetCreateClassifierResult(response *watson.WatsonResponse) *Classifier {
     return nil
 }
 
-// Delete classifier
+// DeleteClassifier : Delete classifier
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(classifierID string) (*watson.WatsonResponse, []error) {
     path := "/v1/classifiers/{classifier_id}"
     creds := naturalLanguageClassifier.client.Creds
@@ -269,7 +275,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(c
 }
 
 
-// Get information about a classifier
+// GetClassifier : Get information about a classifier
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(classifierID string) (*watson.WatsonResponse, []error) {
     path := "/v1/classifiers/{classifier_id}"
     creds := naturalLanguageClassifier.client.Creds
@@ -317,6 +323,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(clas
     return response, nil
 }
 
+// GetGetClassifierResult : Cast result of GetClassifier operation
 func GetGetClassifierResult(response *watson.WatsonResponse) *Classifier {
     result, ok := response.Result.(*Classifier)
 
@@ -327,7 +334,7 @@ func GetGetClassifierResult(response *watson.WatsonResponse) *Classifier {
     return nil
 }
 
-// List classifiers
+// ListClassifiers : List classifiers
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers() (*watson.WatsonResponse, []error) {
     path := "/v1/classifiers"
     creds := naturalLanguageClassifier.client.Creds
@@ -374,6 +381,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers() 
     return response, nil
 }
 
+// GetListClassifiersResult : Cast result of ListClassifiers operation
 func GetListClassifiersResult(response *watson.WatsonResponse) *ClassifierList {
     result, ok := response.Result.(*ClassifierList)
 
@@ -385,13 +393,14 @@ func GetListClassifiersResult(response *watson.WatsonResponse) *ClassifierList {
 }
 
 
+// Classification : Response from the classifier for a phrase.
 type Classification struct {
 
 	// Unique identifier for this classifier.
-	ClassifierId string `json:"classifier_id,omitempty"`
+	ClassifierID string `json:"classifier_id,omitempty"`
 
 	// Link to the classifier.
-	Url string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 
 	// The submitted phrase.
 	Text string `json:"text,omitempty"`
@@ -403,18 +412,20 @@ type Classification struct {
 	Classes []ClassifiedClass `json:"classes,omitempty"`
 }
 
+// ClassificationCollection : Response from the classifier for multiple phrases.
 type ClassificationCollection struct {
 
 	// Unique identifier for this classifier.
-	ClassifierId string `json:"classifier_id,omitempty"`
+	ClassifierID string `json:"classifier_id,omitempty"`
 
 	// Link to the classifier.
-	Url string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 
 	// An array of classifier responses for each submitted phrase.
 	Collection []CollectionItem `json:"collection,omitempty"`
 }
 
+// ClassifiedClass : Class and confidence.
 type ClassifiedClass struct {
 
 	// A decimal percentage that represents the confidence that Watson has in this class. Higher values represent higher confidences.
@@ -424,19 +435,20 @@ type ClassifiedClass struct {
 	ClassName string `json:"class_name,omitempty"`
 }
 
+// Classifier : A classifier for natural language phrases.
 type Classifier struct {
 
 	// User-supplied name for the classifier.
 	Name string `json:"name,omitempty"`
 
 	// Link to the classifier.
-	Url string `json:"url"`
+	URL string `json:"url"`
 
 	// The state of the classifier.
 	Status string `json:"status,omitempty"`
 
 	// Unique identifier for this classifier.
-	ClassifierId string `json:"classifier_id"`
+	ClassifierID string `json:"classifier_id"`
 
 	// Date and time (UTC) the classifier was created.
 	Created strfmt.DateTime `json:"created,omitempty"`
@@ -448,24 +460,28 @@ type Classifier struct {
 	Language string `json:"language,omitempty"`
 }
 
+// ClassifierList : List of available classifiers.
 type ClassifierList struct {
 
 	// The classifiers available to the user. Returns an empty array if no classifiers are available.
 	Classifiers []Classifier `json:"classifiers"`
 }
 
+// ClassifyCollectionInput : Request payload to classify.
 type ClassifyCollectionInput struct {
 
 	// The submitted phrases.
 	Collection []ClassifyInput `json:"collection"`
 }
 
+// ClassifyInput : Request payload to classify.
 type ClassifyInput struct {
 
 	// The submitted phrase.
 	Text string `json:"text"`
 }
 
+// CollectionItem : Response from the classifier for a phrase in a collection.
 type CollectionItem struct {
 
 	// The submitted phrase.

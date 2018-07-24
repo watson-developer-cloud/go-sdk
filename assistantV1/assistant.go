@@ -1,3 +1,5 @@
+// Package assistantv1 : Operations and models for the AssistantV1 service
+package assistantv1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package assistantV1
 
 import (
     "bytes"
@@ -24,10 +25,12 @@ import (
     watson "golang-sdk"
 )
 
+// AssistantV1 : The AssistantV1 service
 type AssistantV1 struct {
 	client *watson.Client
 }
 
+// NewAssistantV1 : Instantiate AssistantV1
 func NewAssistantV1(creds watson.Credentials) (*AssistantV1, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://gateway.watsonplatform.net/assistant/api"
@@ -42,7 +45,7 @@ func NewAssistantV1(creds watson.Credentials) (*AssistantV1, error) {
 	return &AssistantV1{ client: client }, nil
 }
 
-// Get response to user input
+// Message : Get response to user input
 func (assistant *AssistantV1) Message(workspaceID string, body *MessageRequest, nodesVisitedDetails bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/message"
     creds := assistant.client.Creds
@@ -93,6 +96,7 @@ func (assistant *AssistantV1) Message(workspaceID string, body *MessageRequest, 
     return response, nil
 }
 
+// GetMessageResult : Cast result of Message operation
 func GetMessageResult(response *watson.WatsonResponse) *MessageResponse {
     result, ok := response.Result.(*MessageResponse)
 
@@ -103,7 +107,7 @@ func GetMessageResult(response *watson.WatsonResponse) *MessageResponse {
     return nil
 }
 
-// Create workspace
+// CreateWorkspace : Create workspace
 func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces"
     creds := assistant.client.Creds
@@ -152,6 +156,7 @@ func (assistant *AssistantV1) CreateWorkspace(body *CreateWorkspace) (*watson.Wa
     return response, nil
 }
 
+// GetCreateWorkspaceResult : Cast result of CreateWorkspace operation
 func GetCreateWorkspaceResult(response *watson.WatsonResponse) *Workspace {
     result, ok := response.Result.(*Workspace)
 
@@ -162,7 +167,7 @@ func GetCreateWorkspaceResult(response *watson.WatsonResponse) *Workspace {
     return nil
 }
 
-// Delete workspace
+// DeleteWorkspace : Delete workspace
 func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}"
     creds := assistant.client.Creds
@@ -210,7 +215,7 @@ func (assistant *AssistantV1) DeleteWorkspace(workspaceID string) (*watson.Watso
 }
 
 
-// Get information about a workspace
+// GetWorkspace : Get information about a workspace
 func (assistant *AssistantV1) GetWorkspace(workspaceID string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}"
     creds := assistant.client.Creds
@@ -260,6 +265,7 @@ func (assistant *AssistantV1) GetWorkspace(workspaceID string, export bool, incl
     return response, nil
 }
 
+// GetGetWorkspaceResult : Cast result of GetWorkspace operation
 func GetGetWorkspaceResult(response *watson.WatsonResponse) *WorkspaceExport {
     result, ok := response.Result.(*WorkspaceExport)
 
@@ -270,7 +276,7 @@ func GetGetWorkspaceResult(response *watson.WatsonResponse) *WorkspaceExport {
     return nil
 }
 
-// List workspaces
+// ListWorkspaces : List workspaces
 func (assistant *AssistantV1) ListWorkspaces(pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces"
     creds := assistant.client.Creds
@@ -322,6 +328,7 @@ func (assistant *AssistantV1) ListWorkspaces(pageLimit int64, includeCount bool,
     return response, nil
 }
 
+// GetListWorkspacesResult : Cast result of ListWorkspaces operation
 func GetListWorkspacesResult(response *watson.WatsonResponse) *WorkspaceCollection {
     result, ok := response.Result.(*WorkspaceCollection)
 
@@ -332,7 +339,7 @@ func GetListWorkspacesResult(response *watson.WatsonResponse) *WorkspaceCollecti
     return nil
 }
 
-// Update workspace
+// UpdateWorkspace : Update workspace
 func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *UpdateWorkspace, appendVar bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}"
     creds := assistant.client.Creds
@@ -383,6 +390,7 @@ func (assistant *AssistantV1) UpdateWorkspace(workspaceID string, body *UpdateWo
     return response, nil
 }
 
+// GetUpdateWorkspaceResult : Cast result of UpdateWorkspace operation
 func GetUpdateWorkspaceResult(response *watson.WatsonResponse) *Workspace {
     result, ok := response.Result.(*Workspace)
 
@@ -393,7 +401,7 @@ func GetUpdateWorkspaceResult(response *watson.WatsonResponse) *Workspace {
     return nil
 }
 
-// Create intent
+// CreateIntent : Create intent
 func (assistant *AssistantV1) CreateIntent(workspaceID string, body *CreateIntent) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents"
     creds := assistant.client.Creds
@@ -443,6 +451,7 @@ func (assistant *AssistantV1) CreateIntent(workspaceID string, body *CreateInten
     return response, nil
 }
 
+// GetCreateIntentResult : Cast result of CreateIntent operation
 func GetCreateIntentResult(response *watson.WatsonResponse) *Intent {
     result, ok := response.Result.(*Intent)
 
@@ -453,7 +462,7 @@ func GetCreateIntentResult(response *watson.WatsonResponse) *Intent {
     return nil
 }
 
-// Delete intent
+// DeleteIntent : Delete intent
 func (assistant *AssistantV1) DeleteIntent(workspaceID string, intent string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}"
     creds := assistant.client.Creds
@@ -502,7 +511,7 @@ func (assistant *AssistantV1) DeleteIntent(workspaceID string, intent string) (*
 }
 
 
-// Get intent
+// GetIntent : Get intent
 func (assistant *AssistantV1) GetIntent(workspaceID string, intent string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}"
     creds := assistant.client.Creds
@@ -553,6 +562,7 @@ func (assistant *AssistantV1) GetIntent(workspaceID string, intent string, expor
     return response, nil
 }
 
+// GetGetIntentResult : Cast result of GetIntent operation
 func GetGetIntentResult(response *watson.WatsonResponse) *IntentExport {
     result, ok := response.Result.(*IntentExport)
 
@@ -563,7 +573,7 @@ func GetGetIntentResult(response *watson.WatsonResponse) *IntentExport {
     return nil
 }
 
-// List intents
+// ListIntents : List intents
 func (assistant *AssistantV1) ListIntents(workspaceID string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents"
     creds := assistant.client.Creds
@@ -617,6 +627,7 @@ func (assistant *AssistantV1) ListIntents(workspaceID string, export bool, pageL
     return response, nil
 }
 
+// GetListIntentsResult : Cast result of ListIntents operation
 func GetListIntentsResult(response *watson.WatsonResponse) *IntentCollection {
     result, ok := response.Result.(*IntentCollection)
 
@@ -627,7 +638,7 @@ func GetListIntentsResult(response *watson.WatsonResponse) *IntentCollection {
     return nil
 }
 
-// Update intent
+// UpdateIntent : Update intent
 func (assistant *AssistantV1) UpdateIntent(workspaceID string, intent string, body *UpdateIntent) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}"
     creds := assistant.client.Creds
@@ -678,6 +689,7 @@ func (assistant *AssistantV1) UpdateIntent(workspaceID string, intent string, bo
     return response, nil
 }
 
+// GetUpdateIntentResult : Cast result of UpdateIntent operation
 func GetUpdateIntentResult(response *watson.WatsonResponse) *Intent {
     result, ok := response.Result.(*Intent)
 
@@ -688,7 +700,7 @@ func GetUpdateIntentResult(response *watson.WatsonResponse) *Intent {
     return nil
 }
 
-// Create user input example
+// CreateExample : Create user input example
 func (assistant *AssistantV1) CreateExample(workspaceID string, intent string, body *CreateExample) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples"
     creds := assistant.client.Creds
@@ -739,6 +751,7 @@ func (assistant *AssistantV1) CreateExample(workspaceID string, intent string, b
     return response, nil
 }
 
+// GetCreateExampleResult : Cast result of CreateExample operation
 func GetCreateExampleResult(response *watson.WatsonResponse) *Example {
     result, ok := response.Result.(*Example)
 
@@ -749,7 +762,7 @@ func GetCreateExampleResult(response *watson.WatsonResponse) *Example {
     return nil
 }
 
-// Delete user input example
+// DeleteExample : Delete user input example
 func (assistant *AssistantV1) DeleteExample(workspaceID string, intent string, text string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
     creds := assistant.client.Creds
@@ -799,7 +812,7 @@ func (assistant *AssistantV1) DeleteExample(workspaceID string, intent string, t
 }
 
 
-// Get user input example
+// GetExample : Get user input example
 func (assistant *AssistantV1) GetExample(workspaceID string, intent string, text string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
     creds := assistant.client.Creds
@@ -850,6 +863,7 @@ func (assistant *AssistantV1) GetExample(workspaceID string, intent string, text
     return response, nil
 }
 
+// GetGetExampleResult : Cast result of GetExample operation
 func GetGetExampleResult(response *watson.WatsonResponse) *Example {
     result, ok := response.Result.(*Example)
 
@@ -860,7 +874,7 @@ func GetGetExampleResult(response *watson.WatsonResponse) *Example {
     return nil
 }
 
-// List user input examples
+// ListExamples : List user input examples
 func (assistant *AssistantV1) ListExamples(workspaceID string, intent string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples"
     creds := assistant.client.Creds
@@ -914,6 +928,7 @@ func (assistant *AssistantV1) ListExamples(workspaceID string, intent string, pa
     return response, nil
 }
 
+// GetListExamplesResult : Cast result of ListExamples operation
 func GetListExamplesResult(response *watson.WatsonResponse) *ExampleCollection {
     result, ok := response.Result.(*ExampleCollection)
 
@@ -924,7 +939,7 @@ func GetListExamplesResult(response *watson.WatsonResponse) *ExampleCollection {
     return nil
 }
 
-// Update user input example
+// UpdateExample : Update user input example
 func (assistant *AssistantV1) UpdateExample(workspaceID string, intent string, text string, body *UpdateExample) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
     creds := assistant.client.Creds
@@ -976,6 +991,7 @@ func (assistant *AssistantV1) UpdateExample(workspaceID string, intent string, t
     return response, nil
 }
 
+// GetUpdateExampleResult : Cast result of UpdateExample operation
 func GetUpdateExampleResult(response *watson.WatsonResponse) *Example {
     result, ok := response.Result.(*Example)
 
@@ -986,7 +1002,7 @@ func GetUpdateExampleResult(response *watson.WatsonResponse) *Example {
     return nil
 }
 
-// Create counterexample
+// CreateCounterexample : Create counterexample
 func (assistant *AssistantV1) CreateCounterexample(workspaceID string, body *CreateCounterexample) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples"
     creds := assistant.client.Creds
@@ -1036,6 +1052,7 @@ func (assistant *AssistantV1) CreateCounterexample(workspaceID string, body *Cre
     return response, nil
 }
 
+// GetCreateCounterexampleResult : Cast result of CreateCounterexample operation
 func GetCreateCounterexampleResult(response *watson.WatsonResponse) *Counterexample {
     result, ok := response.Result.(*Counterexample)
 
@@ -1046,7 +1063,7 @@ func GetCreateCounterexampleResult(response *watson.WatsonResponse) *Counterexam
     return nil
 }
 
-// Delete counterexample
+// DeleteCounterexample : Delete counterexample
 func (assistant *AssistantV1) DeleteCounterexample(workspaceID string, text string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
     creds := assistant.client.Creds
@@ -1095,7 +1112,7 @@ func (assistant *AssistantV1) DeleteCounterexample(workspaceID string, text stri
 }
 
 
-// Get counterexample
+// GetCounterexample : Get counterexample
 func (assistant *AssistantV1) GetCounterexample(workspaceID string, text string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
     creds := assistant.client.Creds
@@ -1145,6 +1162,7 @@ func (assistant *AssistantV1) GetCounterexample(workspaceID string, text string,
     return response, nil
 }
 
+// GetGetCounterexampleResult : Cast result of GetCounterexample operation
 func GetGetCounterexampleResult(response *watson.WatsonResponse) *Counterexample {
     result, ok := response.Result.(*Counterexample)
 
@@ -1155,7 +1173,7 @@ func GetGetCounterexampleResult(response *watson.WatsonResponse) *Counterexample
     return nil
 }
 
-// List counterexamples
+// ListCounterexamples : List counterexamples
 func (assistant *AssistantV1) ListCounterexamples(workspaceID string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples"
     creds := assistant.client.Creds
@@ -1208,6 +1226,7 @@ func (assistant *AssistantV1) ListCounterexamples(workspaceID string, pageLimit 
     return response, nil
 }
 
+// GetListCounterexamplesResult : Cast result of ListCounterexamples operation
 func GetListCounterexamplesResult(response *watson.WatsonResponse) *CounterexampleCollection {
     result, ok := response.Result.(*CounterexampleCollection)
 
@@ -1218,7 +1237,7 @@ func GetListCounterexamplesResult(response *watson.WatsonResponse) *Counterexamp
     return nil
 }
 
-// Update counterexample
+// UpdateCounterexample : Update counterexample
 func (assistant *AssistantV1) UpdateCounterexample(workspaceID string, text string, body *UpdateCounterexample) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
     creds := assistant.client.Creds
@@ -1269,6 +1288,7 @@ func (assistant *AssistantV1) UpdateCounterexample(workspaceID string, text stri
     return response, nil
 }
 
+// GetUpdateCounterexampleResult : Cast result of UpdateCounterexample operation
 func GetUpdateCounterexampleResult(response *watson.WatsonResponse) *Counterexample {
     result, ok := response.Result.(*Counterexample)
 
@@ -1279,7 +1299,7 @@ func GetUpdateCounterexampleResult(response *watson.WatsonResponse) *Counterexam
     return nil
 }
 
-// Create entity
+// CreateEntity : Create entity
 func (assistant *AssistantV1) CreateEntity(workspaceID string, body *CreateEntity) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities"
     creds := assistant.client.Creds
@@ -1329,6 +1349,7 @@ func (assistant *AssistantV1) CreateEntity(workspaceID string, body *CreateEntit
     return response, nil
 }
 
+// GetCreateEntityResult : Cast result of CreateEntity operation
 func GetCreateEntityResult(response *watson.WatsonResponse) *Entity {
     result, ok := response.Result.(*Entity)
 
@@ -1339,7 +1360,7 @@ func GetCreateEntityResult(response *watson.WatsonResponse) *Entity {
     return nil
 }
 
-// Delete entity
+// DeleteEntity : Delete entity
 func (assistant *AssistantV1) DeleteEntity(workspaceID string, entity string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}"
     creds := assistant.client.Creds
@@ -1388,7 +1409,7 @@ func (assistant *AssistantV1) DeleteEntity(workspaceID string, entity string) (*
 }
 
 
-// Get entity
+// GetEntity : Get entity
 func (assistant *AssistantV1) GetEntity(workspaceID string, entity string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}"
     creds := assistant.client.Creds
@@ -1439,6 +1460,7 @@ func (assistant *AssistantV1) GetEntity(workspaceID string, entity string, expor
     return response, nil
 }
 
+// GetGetEntityResult : Cast result of GetEntity operation
 func GetGetEntityResult(response *watson.WatsonResponse) *EntityExport {
     result, ok := response.Result.(*EntityExport)
 
@@ -1449,7 +1471,7 @@ func GetGetEntityResult(response *watson.WatsonResponse) *EntityExport {
     return nil
 }
 
-// List entities
+// ListEntities : List entities
 func (assistant *AssistantV1) ListEntities(workspaceID string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities"
     creds := assistant.client.Creds
@@ -1503,6 +1525,7 @@ func (assistant *AssistantV1) ListEntities(workspaceID string, export bool, page
     return response, nil
 }
 
+// GetListEntitiesResult : Cast result of ListEntities operation
 func GetListEntitiesResult(response *watson.WatsonResponse) *EntityCollection {
     result, ok := response.Result.(*EntityCollection)
 
@@ -1513,7 +1536,7 @@ func GetListEntitiesResult(response *watson.WatsonResponse) *EntityCollection {
     return nil
 }
 
-// Update entity
+// UpdateEntity : Update entity
 func (assistant *AssistantV1) UpdateEntity(workspaceID string, entity string, body *UpdateEntity) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}"
     creds := assistant.client.Creds
@@ -1564,6 +1587,7 @@ func (assistant *AssistantV1) UpdateEntity(workspaceID string, entity string, bo
     return response, nil
 }
 
+// GetUpdateEntityResult : Cast result of UpdateEntity operation
 func GetUpdateEntityResult(response *watson.WatsonResponse) *Entity {
     result, ok := response.Result.(*Entity)
 
@@ -1574,7 +1598,7 @@ func GetUpdateEntityResult(response *watson.WatsonResponse) *Entity {
     return nil
 }
 
-// List entity mentions
+// ListEntityMentions : List entity mentions
 func (assistant *AssistantV1) ListEntityMentions(workspaceID string, entity string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/mentions"
     creds := assistant.client.Creds
@@ -1625,6 +1649,7 @@ func (assistant *AssistantV1) ListEntityMentions(workspaceID string, entity stri
     return response, nil
 }
 
+// GetListEntityMentionsResult : Cast result of ListEntityMentions operation
 func GetListEntityMentionsResult(response *watson.WatsonResponse) *EntityMentionCollection {
     result, ok := response.Result.(*EntityMentionCollection)
 
@@ -1635,7 +1660,7 @@ func GetListEntityMentionsResult(response *watson.WatsonResponse) *EntityMention
     return nil
 }
 
-// Add entity value
+// CreateValue : Add entity value
 func (assistant *AssistantV1) CreateValue(workspaceID string, entity string, body *CreateValue) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values"
     creds := assistant.client.Creds
@@ -1686,6 +1711,7 @@ func (assistant *AssistantV1) CreateValue(workspaceID string, entity string, bod
     return response, nil
 }
 
+// GetCreateValueResult : Cast result of CreateValue operation
 func GetCreateValueResult(response *watson.WatsonResponse) *Value {
     result, ok := response.Result.(*Value)
 
@@ -1696,7 +1722,7 @@ func GetCreateValueResult(response *watson.WatsonResponse) *Value {
     return nil
 }
 
-// Delete entity value
+// DeleteValue : Delete entity value
 func (assistant *AssistantV1) DeleteValue(workspaceID string, entity string, value string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
     creds := assistant.client.Creds
@@ -1746,7 +1772,7 @@ func (assistant *AssistantV1) DeleteValue(workspaceID string, entity string, val
 }
 
 
-// Get entity value
+// GetValue : Get entity value
 func (assistant *AssistantV1) GetValue(workspaceID string, entity string, value string, export bool, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
     creds := assistant.client.Creds
@@ -1798,6 +1824,7 @@ func (assistant *AssistantV1) GetValue(workspaceID string, entity string, value 
     return response, nil
 }
 
+// GetGetValueResult : Cast result of GetValue operation
 func GetGetValueResult(response *watson.WatsonResponse) *ValueExport {
     result, ok := response.Result.(*ValueExport)
 
@@ -1808,7 +1835,7 @@ func GetGetValueResult(response *watson.WatsonResponse) *ValueExport {
     return nil
 }
 
-// List entity values
+// ListValues : List entity values
 func (assistant *AssistantV1) ListValues(workspaceID string, entity string, export bool, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values"
     creds := assistant.client.Creds
@@ -1863,6 +1890,7 @@ func (assistant *AssistantV1) ListValues(workspaceID string, entity string, expo
     return response, nil
 }
 
+// GetListValuesResult : Cast result of ListValues operation
 func GetListValuesResult(response *watson.WatsonResponse) *ValueCollection {
     result, ok := response.Result.(*ValueCollection)
 
@@ -1873,7 +1901,7 @@ func GetListValuesResult(response *watson.WatsonResponse) *ValueCollection {
     return nil
 }
 
-// Update entity value
+// UpdateValue : Update entity value
 func (assistant *AssistantV1) UpdateValue(workspaceID string, entity string, value string, body *UpdateValue) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
     creds := assistant.client.Creds
@@ -1925,6 +1953,7 @@ func (assistant *AssistantV1) UpdateValue(workspaceID string, entity string, val
     return response, nil
 }
 
+// GetUpdateValueResult : Cast result of UpdateValue operation
 func GetUpdateValueResult(response *watson.WatsonResponse) *Value {
     result, ok := response.Result.(*Value)
 
@@ -1935,7 +1964,7 @@ func GetUpdateValueResult(response *watson.WatsonResponse) *Value {
     return nil
 }
 
-// Add entity value synonym
+// CreateSynonym : Add entity value synonym
 func (assistant *AssistantV1) CreateSynonym(workspaceID string, entity string, value string, body *CreateSynonym) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms"
     creds := assistant.client.Creds
@@ -1987,6 +2016,7 @@ func (assistant *AssistantV1) CreateSynonym(workspaceID string, entity string, v
     return response, nil
 }
 
+// GetCreateSynonymResult : Cast result of CreateSynonym operation
 func GetCreateSynonymResult(response *watson.WatsonResponse) *Synonym {
     result, ok := response.Result.(*Synonym)
 
@@ -1997,7 +2027,7 @@ func GetCreateSynonymResult(response *watson.WatsonResponse) *Synonym {
     return nil
 }
 
-// Delete entity value synonym
+// DeleteSynonym : Delete entity value synonym
 func (assistant *AssistantV1) DeleteSynonym(workspaceID string, entity string, value string, synonym string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
     creds := assistant.client.Creds
@@ -2048,7 +2078,7 @@ func (assistant *AssistantV1) DeleteSynonym(workspaceID string, entity string, v
 }
 
 
-// Get entity value synonym
+// GetSynonym : Get entity value synonym
 func (assistant *AssistantV1) GetSynonym(workspaceID string, entity string, value string, synonym string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
     creds := assistant.client.Creds
@@ -2100,6 +2130,7 @@ func (assistant *AssistantV1) GetSynonym(workspaceID string, entity string, valu
     return response, nil
 }
 
+// GetGetSynonymResult : Cast result of GetSynonym operation
 func GetGetSynonymResult(response *watson.WatsonResponse) *Synonym {
     result, ok := response.Result.(*Synonym)
 
@@ -2110,7 +2141,7 @@ func GetGetSynonymResult(response *watson.WatsonResponse) *Synonym {
     return nil
 }
 
-// List entity value synonyms
+// ListSynonyms : List entity value synonyms
 func (assistant *AssistantV1) ListSynonyms(workspaceID string, entity string, value string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms"
     creds := assistant.client.Creds
@@ -2165,6 +2196,7 @@ func (assistant *AssistantV1) ListSynonyms(workspaceID string, entity string, va
     return response, nil
 }
 
+// GetListSynonymsResult : Cast result of ListSynonyms operation
 func GetListSynonymsResult(response *watson.WatsonResponse) *SynonymCollection {
     result, ok := response.Result.(*SynonymCollection)
 
@@ -2175,7 +2207,7 @@ func GetListSynonymsResult(response *watson.WatsonResponse) *SynonymCollection {
     return nil
 }
 
-// Update entity value synonym
+// UpdateSynonym : Update entity value synonym
 func (assistant *AssistantV1) UpdateSynonym(workspaceID string, entity string, value string, synonym string, body *UpdateSynonym) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
     creds := assistant.client.Creds
@@ -2228,6 +2260,7 @@ func (assistant *AssistantV1) UpdateSynonym(workspaceID string, entity string, v
     return response, nil
 }
 
+// GetUpdateSynonymResult : Cast result of UpdateSynonym operation
 func GetUpdateSynonymResult(response *watson.WatsonResponse) *Synonym {
     result, ok := response.Result.(*Synonym)
 
@@ -2238,7 +2271,7 @@ func GetUpdateSynonymResult(response *watson.WatsonResponse) *Synonym {
     return nil
 }
 
-// Create dialog node
+// CreateDialogNode : Create dialog node
 func (assistant *AssistantV1) CreateDialogNode(workspaceID string, body *CreateDialogNode) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes"
     creds := assistant.client.Creds
@@ -2288,6 +2321,7 @@ func (assistant *AssistantV1) CreateDialogNode(workspaceID string, body *CreateD
     return response, nil
 }
 
+// GetCreateDialogNodeResult : Cast result of CreateDialogNode operation
 func GetCreateDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     result, ok := response.Result.(*DialogNode)
 
@@ -2298,7 +2332,7 @@ func GetCreateDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     return nil
 }
 
-// Delete dialog node
+// DeleteDialogNode : Delete dialog node
 func (assistant *AssistantV1) DeleteDialogNode(workspaceID string, dialogNode string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
     creds := assistant.client.Creds
@@ -2347,7 +2381,7 @@ func (assistant *AssistantV1) DeleteDialogNode(workspaceID string, dialogNode st
 }
 
 
-// Get dialog node
+// GetDialogNode : Get dialog node
 func (assistant *AssistantV1) GetDialogNode(workspaceID string, dialogNode string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
     creds := assistant.client.Creds
@@ -2397,6 +2431,7 @@ func (assistant *AssistantV1) GetDialogNode(workspaceID string, dialogNode strin
     return response, nil
 }
 
+// GetGetDialogNodeResult : Cast result of GetDialogNode operation
 func GetGetDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     result, ok := response.Result.(*DialogNode)
 
@@ -2407,7 +2442,7 @@ func GetGetDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     return nil
 }
 
-// List dialog nodes
+// ListDialogNodes : List dialog nodes
 func (assistant *AssistantV1) ListDialogNodes(workspaceID string, pageLimit int64, includeCount bool, sort string, cursor string, includeAudit bool) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes"
     creds := assistant.client.Creds
@@ -2460,6 +2495,7 @@ func (assistant *AssistantV1) ListDialogNodes(workspaceID string, pageLimit int6
     return response, nil
 }
 
+// GetListDialogNodesResult : Cast result of ListDialogNodes operation
 func GetListDialogNodesResult(response *watson.WatsonResponse) *DialogNodeCollection {
     result, ok := response.Result.(*DialogNodeCollection)
 
@@ -2470,7 +2506,7 @@ func GetListDialogNodesResult(response *watson.WatsonResponse) *DialogNodeCollec
     return nil
 }
 
-// Update dialog node
+// UpdateDialogNode : Update dialog node
 func (assistant *AssistantV1) UpdateDialogNode(workspaceID string, dialogNode string, body *UpdateDialogNode) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
     creds := assistant.client.Creds
@@ -2521,6 +2557,7 @@ func (assistant *AssistantV1) UpdateDialogNode(workspaceID string, dialogNode st
     return response, nil
 }
 
+// GetUpdateDialogNodeResult : Cast result of UpdateDialogNode operation
 func GetUpdateDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     result, ok := response.Result.(*DialogNode)
 
@@ -2531,7 +2568,7 @@ func GetUpdateDialogNodeResult(response *watson.WatsonResponse) *DialogNode {
     return nil
 }
 
-// List log events in all workspaces
+// ListAllLogs : List log events in all workspaces
 func (assistant *AssistantV1) ListAllLogs(filter string, sort string, pageLimit int64, cursor string) (*watson.WatsonResponse, []error) {
     path := "/v1/logs"
     creds := assistant.client.Creds
@@ -2582,6 +2619,7 @@ func (assistant *AssistantV1) ListAllLogs(filter string, sort string, pageLimit 
     return response, nil
 }
 
+// GetListAllLogsResult : Cast result of ListAllLogs operation
 func GetListAllLogsResult(response *watson.WatsonResponse) *LogCollection {
     result, ok := response.Result.(*LogCollection)
 
@@ -2592,7 +2630,7 @@ func GetListAllLogsResult(response *watson.WatsonResponse) *LogCollection {
     return nil
 }
 
-// List log events in a workspace
+// ListLogs : List log events in a workspace
 func (assistant *AssistantV1) ListLogs(workspaceID string, sort string, filter string, pageLimit int64, cursor string) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/logs"
     creds := assistant.client.Creds
@@ -2644,6 +2682,7 @@ func (assistant *AssistantV1) ListLogs(workspaceID string, sort string, filter s
     return response, nil
 }
 
+// GetListLogsResult : Cast result of ListLogs operation
 func GetListLogsResult(response *watson.WatsonResponse) *LogCollection {
     result, ok := response.Result.(*LogCollection)
 
@@ -2654,7 +2693,7 @@ func GetListLogsResult(response *watson.WatsonResponse) *LogCollection {
     return nil
 }
 
-// Delete labeled data
+// DeleteUserData : Delete labeled data
 func (assistant *AssistantV1) DeleteUserData(customerID string) (*watson.WatsonResponse, []error) {
     path := "/v1/user_data"
     creds := assistant.client.Creds
@@ -2703,6 +2742,7 @@ func (assistant *AssistantV1) DeleteUserData(customerID string) (*watson.WatsonR
 
 
 
+// CaptureGroup : CaptureGroup struct
 type CaptureGroup struct {
 
 	// A recognized capture group for the entity.
@@ -2712,15 +2752,17 @@ type CaptureGroup struct {
 	Location []int64 `json:"location,omitempty"`
 }
 
+// Context : State information for the conversation. To maintain state, include the context from the previous response.
 type Context struct {
 
 	// The unique identifier of the conversation.
-	ConversationId string `json:"conversation_id,omitempty"`
+	ConversationID string `json:"conversation_id,omitempty"`
 
 	// For internal use only.
 	System SystemResponse `json:"system,omitempty"`
 }
 
+// Counterexample : Counterexample struct
 type Counterexample struct {
 
 	// The text of the counterexample.
@@ -2733,6 +2775,7 @@ type Counterexample struct {
 	Updated strfmt.DateTime `json:"updated,omitempty"`
 }
 
+// CounterexampleCollection : CounterexampleCollection struct
 type CounterexampleCollection struct {
 
 	// An array of objects describing the examples marked as irrelevant input.
@@ -2742,12 +2785,14 @@ type CounterexampleCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// CreateCounterexample : CreateCounterexample struct
 type CreateCounterexample struct {
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters - It cannot consist of only whitespace characters - It must be no longer than 1024 characters.
 	Text string `json:"text"`
 }
 
+// CreateDialogNode : CreateDialogNode struct
 type CreateDialogNode struct {
 
 	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
@@ -2805,6 +2850,7 @@ type CreateDialogNode struct {
 	UserLabel string `json:"user_label,omitempty"`
 }
 
+// CreateEntity : CreateEntity struct
 type CreateEntity struct {
 
 	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
@@ -2823,6 +2869,7 @@ type CreateEntity struct {
 	FuzzyMatch bool `json:"fuzzy_match,omitempty"`
 }
 
+// CreateExample : CreateExample struct
 type CreateExample struct {
 
 	// The text of a user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
@@ -2832,6 +2879,7 @@ type CreateExample struct {
 	Mentions []Mentions `json:"mentions,omitempty"`
 }
 
+// CreateIntent : CreateIntent struct
 type CreateIntent struct {
 
 	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
@@ -2844,12 +2892,14 @@ type CreateIntent struct {
 	Examples []CreateExample `json:"examples,omitempty"`
 }
 
+// CreateSynonym : CreateSynonym struct
 type CreateSynonym struct {
 
 	// The text of the synonym. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
 	Synonym string `json:"synonym"`
 }
 
+// CreateValue : CreateValue struct
 type CreateValue struct {
 
 	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
@@ -2868,6 +2918,7 @@ type CreateValue struct {
 	ValueType string `json:"value_type,omitempty"`
 }
 
+// CreateWorkspace : CreateWorkspace struct
 type CreateWorkspace struct {
 
 	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 64 characters.
@@ -2901,10 +2952,11 @@ type CreateWorkspace struct {
 	SystemSettings WorkspaceSystemSettings `json:"system_settings,omitempty"`
 }
 
+// DialogNode : DialogNode struct
 type DialogNode struct {
 
 	// The dialog node ID.
-	DialogNodeId string `json:"dialog_node_id"`
+	DialogNodeID string `json:"dialog_node_id"`
 
 	// The description of the dialog node.
 	Description string `json:"description,omitempty"`
@@ -2964,6 +3016,7 @@ type DialogNode struct {
 	UserLabel string `json:"user_label,omitempty"`
 }
 
+// DialogNodeAction : DialogNodeAction struct
 type DialogNodeAction struct {
 
 	// The name of the action.
@@ -2982,6 +3035,7 @@ type DialogNodeAction struct {
 	Credentials string `json:"credentials,omitempty"`
 }
 
+// DialogNodeCollection : An array of dialog nodes.
 type DialogNodeCollection struct {
 
 	// An array of objects describing the dialog nodes defined for the workspace.
@@ -2991,6 +3045,7 @@ type DialogNodeCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// DialogNodeNextStep : The next step to execute following this dialog node.
 type DialogNodeNextStep struct {
 
 	// What happens after the dialog node completes. The valid values depend on the node type: - The following values are valid for any node: - `get_user_input` - `skip_user_input` - `jump_to` - If the node is of type `event_handler` and its parent node is of type `slot` or `frame`, additional values are also valid: - if **event_name**=`filled` and the type of the parent node is `slot`: - `reprompt` - `skip_all_slots` - if **event_name**=`nomatch` and the type of the parent node is `slot`: - `reprompt` - `skip_slot` - `skip_all_slots` - if **event_name**=`generic` and the type of the parent node is `frame`: - `reprompt` - `skip_slot` - `skip_all_slots` If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
@@ -3003,6 +3058,7 @@ type DialogNodeNextStep struct {
 	Selector string `json:"selector,omitempty"`
 }
 
+// DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
 type DialogNodeOutput struct {
 
 	// An array of objects describing the output defined for the dialog node.
@@ -3015,6 +3071,7 @@ type DialogNodeOutput struct {
 	Text interface{} `json:"text,omitempty"`
 }
 
+// DialogNodeOutputGeneric : DialogNodeOutputGeneric struct
 type DialogNodeOutputGeneric struct {
 
 	// The type of response returned by the dialog node. The specified response type must be supported by the client application or channel.
@@ -3054,12 +3111,14 @@ type DialogNodeOutputGeneric struct {
 	MessageToHumanAgent string `json:"message_to_human_agent,omitempty"`
 }
 
+// DialogNodeOutputModifiers : Options that modify how specified output is handled.
 type DialogNodeOutputModifiers struct {
 
 	// Whether values in the output will overwrite output values in an array specified by previously executed dialog nodes. If this option is set to **false**, new values will be appended to previously specified values.
 	Overwrite bool `json:"overwrite,omitempty"`
 }
 
+// DialogNodeOutputOptionsElement : DialogNodeOutputOptionsElement struct
 type DialogNodeOutputOptionsElement struct {
 
 	// The user-facing label for the option.
@@ -3069,18 +3128,21 @@ type DialogNodeOutputOptionsElement struct {
 	Value DialogNodeOutputOptionsElementValue `json:"value"`
 }
 
+// DialogNodeOutputOptionsElementValue : An object defining the message input to be sent to the Watson Assistant service if the user selects the corresponding option.
 type DialogNodeOutputOptionsElementValue struct {
 
 	// The user input.
 	Input InputData `json:"input,omitempty"`
 }
 
+// DialogNodeOutputTextValuesElement : DialogNodeOutputTextValuesElement struct
 type DialogNodeOutputTextValuesElement struct {
 
 	// The text of a response. This can include newline characters (` `), Markdown tagging, or other special characters, if supported by the channel.
 	Text string `json:"text,omitempty"`
 }
 
+// DialogNodeVisitedDetails : DialogNodeVisitedDetails struct
 type DialogNodeVisitedDetails struct {
 
 	// A dialog node that was triggered during processing of the input message.
@@ -3093,6 +3155,7 @@ type DialogNodeVisitedDetails struct {
 	Conditions string `json:"conditions,omitempty"`
 }
 
+// DialogRuntimeResponseGeneric : DialogRuntimeResponseGeneric struct
 type DialogRuntimeResponseGeneric struct {
 
 	// The type of response returned by the dialog node. The specified response type must be supported by the client application or channel.
@@ -3129,6 +3192,7 @@ type DialogRuntimeResponseGeneric struct {
 	Topic string `json:"topic,omitempty"`
 }
 
+// Entity : Entity struct
 type Entity struct {
 
 	// The name of the entity.
@@ -3150,6 +3214,7 @@ type Entity struct {
 	FuzzyMatch bool `json:"fuzzy_match,omitempty"`
 }
 
+// EntityCollection : An array of entities.
 type EntityCollection struct {
 
 	// An array of objects describing the entities defined for the workspace.
@@ -3159,6 +3224,7 @@ type EntityCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// EntityExport : EntityExport struct
 type EntityExport struct {
 
 	// The name of the entity.
@@ -3183,6 +3249,7 @@ type EntityExport struct {
 	Values []ValueExport `json:"values,omitempty"`
 }
 
+// EntityMention : An object describing a contextual entity mention.
 type EntityMention struct {
 
 	// The text of the user input example.
@@ -3195,6 +3262,7 @@ type EntityMention struct {
 	Location []int64 `json:"location"`
 }
 
+// EntityMentionCollection : EntityMentionCollection struct
 type EntityMentionCollection struct {
 
 	// An array of objects describing the entity mentions defined for an entity.
@@ -3204,6 +3272,7 @@ type EntityMentionCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// Example : Example struct
 type Example struct {
 
 	// The text of the user input example.
@@ -3219,6 +3288,7 @@ type Example struct {
 	Mentions []Mentions `json:"mentions,omitempty"`
 }
 
+// ExampleCollection : ExampleCollection struct
 type ExampleCollection struct {
 
 	// An array of objects describing the examples defined for the intent.
@@ -3228,12 +3298,14 @@ type ExampleCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// InputData : The user input.
 type InputData struct {
 
 	// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
 	Text string `json:"text"`
 }
 
+// Intent : Intent struct
 type Intent struct {
 
 	// The name of the intent.
@@ -3249,6 +3321,7 @@ type Intent struct {
 	Description string `json:"description,omitempty"`
 }
 
+// IntentCollection : IntentCollection struct
 type IntentCollection struct {
 
 	// An array of objects describing the intents defined for the workspace.
@@ -3258,6 +3331,7 @@ type IntentCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// IntentExport : IntentExport struct
 type IntentExport struct {
 
 	// The name of the intent.
@@ -3276,6 +3350,7 @@ type IntentExport struct {
 	Examples []Example `json:"examples,omitempty"`
 }
 
+// LogCollection : LogCollection struct
 type LogCollection struct {
 
 	// An array of objects describing log events.
@@ -3285,6 +3360,7 @@ type LogCollection struct {
 	Pagination LogPagination `json:"pagination"`
 }
 
+// LogExport : LogExport struct
 type LogExport struct {
 
 	// A request received by the workspace, including the user input and context.
@@ -3294,7 +3370,7 @@ type LogExport struct {
 	Response MessageResponse `json:"response"`
 
 	// A unique identifier for the logged event.
-	LogId string `json:"log_id"`
+	LogID string `json:"log_id"`
 
 	// The timestamp for receipt of the message.
 	RequestTimestamp string `json:"request_timestamp"`
@@ -3303,12 +3379,13 @@ type LogExport struct {
 	ResponseTimestamp string `json:"response_timestamp"`
 
 	// The unique identifier of the workspace where the request was made.
-	WorkspaceId string `json:"workspace_id"`
+	WorkspaceID string `json:"workspace_id"`
 
 	// The language of the workspace where the message request was made.
 	Language string `json:"language"`
 }
 
+// LogMessage : Log message details.
 type LogMessage struct {
 
 	// The severity of the log message.
@@ -3318,10 +3395,11 @@ type LogMessage struct {
 	Msg string `json:"msg"`
 }
 
+// LogPagination : The pagination data for the returned objects.
 type LogPagination struct {
 
 	// The URL that will return the next page of results, if any.
-	NextUrl string `json:"next_url,omitempty"`
+	NextURL string `json:"next_url,omitempty"`
 
 	// Reserved for future use.
 	Matched int64 `json:"matched,omitempty"`
@@ -3330,6 +3408,7 @@ type LogPagination struct {
 	NextCursor string `json:"next_cursor,omitempty"`
 }
 
+// Mentions : A mention of a contextual entity.
 type Mentions struct {
 
 	// The name of the entity.
@@ -3339,12 +3418,14 @@ type Mentions struct {
 	Location []int64 `json:"location"`
 }
 
+// MessageInput : The text of the user input.
 type MessageInput struct {
 
 	// The user's input.
 	Text string `json:"text,omitempty"`
 }
 
+// MessageRequest : A message request formatted for the Watson Assistant service.
 type MessageRequest struct {
 
 	// An input object that includes the input text.
@@ -3366,6 +3447,7 @@ type MessageRequest struct {
 	Output OutputData `json:"output,omitempty"`
 }
 
+// MessageResponse : A response from the Watson Assistant service.
 type MessageResponse struct {
 
 	// The user input from the request.
@@ -3387,6 +3469,7 @@ type MessageResponse struct {
 	Output OutputData `json:"output"`
 }
 
+// OutputData : An output object that includes the response to the user, the nodes that were hit, and messages from the log.
 type OutputData struct {
 
 	// An array of up to 50 messages logged with the request.
@@ -3405,13 +3488,14 @@ type OutputData struct {
 	NodesVisitedDetails []DialogNodeVisitedDetails `json:"nodes_visited_details,omitempty"`
 }
 
+// Pagination : The pagination data for the returned objects.
 type Pagination struct {
 
 	// The URL that will return the same page of results.
-	RefreshUrl string `json:"refresh_url"`
+	RefreshURL string `json:"refresh_url"`
 
 	// The URL that will return the next page of results.
-	NextUrl string `json:"next_url,omitempty"`
+	NextURL string `json:"next_url,omitempty"`
 
 	// Reserved for future use.
 	Total int64 `json:"total,omitempty"`
@@ -3426,6 +3510,7 @@ type Pagination struct {
 	NextCursor string `json:"next_cursor,omitempty"`
 }
 
+// RuntimeEntity : A term from the request that was identified as an entity.
 type RuntimeEntity struct {
 
 	// An entity detected in the input.
@@ -3447,6 +3532,7 @@ type RuntimeEntity struct {
 	Groups []CaptureGroup `json:"groups,omitempty"`
 }
 
+// RuntimeIntent : An intent identified in the user input.
 type RuntimeIntent struct {
 
 	// The name of the recognized intent.
@@ -3456,6 +3542,7 @@ type RuntimeIntent struct {
 	Confidence float64 `json:"confidence"`
 }
 
+// Synonym : Synonym struct
 type Synonym struct {
 
 	// The text of the synonym.
@@ -3468,6 +3555,7 @@ type Synonym struct {
 	Updated strfmt.DateTime `json:"updated,omitempty"`
 }
 
+// SynonymCollection : SynonymCollection struct
 type SynonymCollection struct {
 
 	// An array of synonyms.
@@ -3477,15 +3565,18 @@ type SynonymCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// SystemResponse : For internal use only.
 type SystemResponse struct {
 }
 
+// UpdateCounterexample : UpdateCounterexample struct
 type UpdateCounterexample struct {
 
 	// The text of a user input counterexample.
 	Text string `json:"text,omitempty"`
 }
 
+// UpdateDialogNode : UpdateDialogNode struct
 type UpdateDialogNode struct {
 
 	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
@@ -3543,6 +3634,7 @@ type UpdateDialogNode struct {
 	UserLabel string `json:"user_label,omitempty"`
 }
 
+// UpdateEntity : UpdateEntity struct
 type UpdateEntity struct {
 
 	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
@@ -3561,6 +3653,7 @@ type UpdateEntity struct {
 	Values []CreateValue `json:"values,omitempty"`
 }
 
+// UpdateExample : UpdateExample struct
 type UpdateExample struct {
 
 	// The text of the user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
@@ -3570,6 +3663,7 @@ type UpdateExample struct {
 	Mentions []Mentions `json:"mentions,omitempty"`
 }
 
+// UpdateIntent : UpdateIntent struct
 type UpdateIntent struct {
 
 	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
@@ -3582,12 +3676,14 @@ type UpdateIntent struct {
 	Examples []CreateExample `json:"examples,omitempty"`
 }
 
+// UpdateSynonym : UpdateSynonym struct
 type UpdateSynonym struct {
 
 	// The text of the synonym. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
 	Synonym string `json:"synonym,omitempty"`
 }
 
+// UpdateValue : UpdateValue struct
 type UpdateValue struct {
 
 	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
@@ -3606,6 +3702,7 @@ type UpdateValue struct {
 	Patterns []string `json:"patterns,omitempty"`
 }
 
+// UpdateWorkspace : UpdateWorkspace struct
 type UpdateWorkspace struct {
 
 	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 64 characters.
@@ -3639,6 +3736,7 @@ type UpdateWorkspace struct {
 	SystemSettings WorkspaceSystemSettings `json:"system_settings,omitempty"`
 }
 
+// Value : Value struct
 type Value struct {
 
 	// The text of the entity value.
@@ -3663,6 +3761,7 @@ type Value struct {
 	ValueType string `json:"value_type"`
 }
 
+// ValueCollection : ValueCollection struct
 type ValueCollection struct {
 
 	// An array of entity values.
@@ -3672,6 +3771,7 @@ type ValueCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// ValueExport : ValueExport struct
 type ValueExport struct {
 
 	// The text of the entity value.
@@ -3696,6 +3796,7 @@ type ValueExport struct {
 	ValueType string `json:"value_type"`
 }
 
+// Workspace : Workspace struct
 type Workspace struct {
 
 	// The name of the workspace.
@@ -3711,7 +3812,7 @@ type Workspace struct {
 	Updated strfmt.DateTime `json:"updated,omitempty"`
 
 	// The workspace ID.
-	WorkspaceId string `json:"workspace_id"`
+	WorkspaceID string `json:"workspace_id"`
 
 	// The description of the workspace.
 	Description string `json:"description,omitempty"`
@@ -3726,6 +3827,7 @@ type Workspace struct {
 	SystemSettings WorkspaceSystemSettings `json:"system_settings,omitempty"`
 }
 
+// WorkspaceCollection : WorkspaceCollection struct
 type WorkspaceCollection struct {
 
 	// An array of objects describing the workspaces associated with the service instance.
@@ -3735,6 +3837,7 @@ type WorkspaceCollection struct {
 	Pagination Pagination `json:"pagination"`
 }
 
+// WorkspaceExport : WorkspaceExport struct
 type WorkspaceExport struct {
 
 	// The name of the workspace.
@@ -3756,7 +3859,7 @@ type WorkspaceExport struct {
 	Updated strfmt.DateTime `json:"updated,omitempty"`
 
 	// The workspace ID.
-	WorkspaceId string `json:"workspace_id"`
+	WorkspaceID string `json:"workspace_id"`
 
 	// The current status of the workspace.
 	Status string `json:"status"`
@@ -3780,6 +3883,7 @@ type WorkspaceExport struct {
 	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
 }
 
+// WorkspaceSystemSettings : WorkspaceSystemSettings struct
 type WorkspaceSystemSettings struct {
 
 	// Workspace settings related to the Watson Assistant tool.
@@ -3792,6 +3896,7 @@ type WorkspaceSystemSettings struct {
 	HumanAgentAssist interface{} `json:"human_agent_assist,omitempty"`
 }
 
+// WorkspaceSystemSettingsTooling : WorkspaceSystemSettingsTooling struct
 type WorkspaceSystemSettingsTooling struct {
 
 	// Whether the dialog JSON editor displays text responses within the `output.generic` object.

@@ -1,3 +1,5 @@
+// Package toneanalyzerv3 : Operations and models for the ToneAnalyzerV3 service
+package toneanalyzerv3
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package toneAnalyzerV3
 
 import (
     "bytes"
@@ -22,10 +23,12 @@ import (
     watson "golang-sdk"
 )
 
+// ToneAnalyzerV3 : The ToneAnalyzerV3 service
 type ToneAnalyzerV3 struct {
 	client *watson.Client
 }
 
+// NewToneAnalyzerV3 : Instantiate ToneAnalyzerV3
 func NewToneAnalyzerV3(creds watson.Credentials) (*ToneAnalyzerV3, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://gateway.watsonplatform.net/tone-analyzer/api"
@@ -40,7 +43,7 @@ func NewToneAnalyzerV3(creds watson.Credentials) (*ToneAnalyzerV3, error) {
 	return &ToneAnalyzerV3{ client: client }, nil
 }
 
-// Analyze general tone
+// Tone : Analyze general tone
 func (toneAnalyzer *ToneAnalyzerV3) Tone(body *ToneInput, contentType string, sentences bool, tones []string, contentLanguage string, acceptLanguage string) (*watson.WatsonResponse, []error) {
     path := "/v3/tone"
     creds := toneAnalyzer.client.Creds
@@ -94,6 +97,7 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(body *ToneInput, contentType string, se
     return response, nil
 }
 
+// GetToneResult : Cast result of Tone operation
 func GetToneResult(response *watson.WatsonResponse) *ToneAnalysis {
     result, ok := response.Result.(*ToneAnalysis)
 
@@ -104,7 +108,7 @@ func GetToneResult(response *watson.WatsonResponse) *ToneAnalysis {
     return nil
 }
 
-// Analyze customer engagement tone
+// ToneChat : Analyze customer engagement tone
 func (toneAnalyzer *ToneAnalyzerV3) ToneChat(body *ToneChatInput, contentLanguage string, acceptLanguage string) (*watson.WatsonResponse, []error) {
     path := "/v3/tone_chat"
     creds := toneAnalyzer.client.Creds
@@ -155,6 +159,7 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(body *ToneChatInput, contentLanguag
     return response, nil
 }
 
+// GetToneChatResult : Cast result of ToneChat operation
 func GetToneChatResult(response *watson.WatsonResponse) *UtteranceAnalyses {
     result, ok := response.Result.(*UtteranceAnalyses)
 
@@ -166,6 +171,7 @@ func GetToneChatResult(response *watson.WatsonResponse) *UtteranceAnalyses {
 }
 
 
+// DocumentAnalysis : DocumentAnalysis struct
 type DocumentAnalysis struct {
 
 	// **`2017-09-21`:** An array of `ToneScore` objects that provides the results of the analysis for each qualifying tone of the document. The array includes results for any tone whose score is at least 0.5. The array is empty if no tone has a score that meets this threshold. **`2016-05-19`:** Not returned.
@@ -178,10 +184,11 @@ type DocumentAnalysis struct {
 	Warning string `json:"warning,omitempty"`
 }
 
+// SentenceAnalysis : SentenceAnalysis struct
 type SentenceAnalysis struct {
 
 	// The unique identifier of a sentence of the input content. The first sentence has ID 0, and the ID of each subsequent sentence is incremented by one.
-	SentenceId int64 `json:"sentence_id"`
+	SentenceID int64 `json:"sentence_id"`
 
 	// The text of the input sentence.
 	Text string `json:"text"`
@@ -199,6 +206,7 @@ type SentenceAnalysis struct {
 	InputTo int64 `json:"input_to,omitempty"`
 }
 
+// ToneAnalysis : ToneAnalysis struct
 type ToneAnalysis struct {
 
 	// An object of type `DocumentAnalysis` that provides the results of the analysis for the full input document.
@@ -208,54 +216,60 @@ type ToneAnalysis struct {
 	SentencesTone []SentenceAnalysis `json:"sentences_tone,omitempty"`
 }
 
+// ToneCategory : ToneCategory struct
 type ToneCategory struct {
 
 	// An array of `ToneScore` objects that provides the results for the tones of the category.
 	Tones []ToneScore `json:"tones"`
 
 	// The unique, non-localized identifier of the category for the results. The service can return results for the following category IDs: `emotion_tone`, `language_tone`, and `social_tone`.
-	CategoryId string `json:"category_id"`
+	CategoryID string `json:"category_id"`
 
 	// The user-visible, localized name of the category.
 	CategoryName string `json:"category_name"`
 }
 
+// ToneChatInput : ToneChatInput struct
 type ToneChatInput struct {
 
 	// An array of `Utterance` objects that provides the input content that the service is to analyze.
 	Utterances []Utterance `json:"utterances"`
 }
 
+// ToneChatScore : ToneChatScore struct
 type ToneChatScore struct {
 
 	// The score for the tone in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone is perceived in the utterance.
 	Score float64 `json:"score"`
 
 	// The unique, non-localized identifier of the tone for the results. The service can return results for the following tone IDs: `sad`, `frustrated`, `satisfied`, `excited`, `polite`, `impolite`, and `sympathetic`. The service returns results only for tones whose scores meet a minimum threshold of 0.5.
-	ToneId string `json:"tone_id"`
+	ToneID string `json:"tone_id"`
 
 	// The user-visible, localized name of the tone.
 	ToneName string `json:"tone_name"`
 }
 
+// ToneInput : ToneInput struct
 type ToneInput struct {
 
 	// The input content that the service is to analyze.
 	Text string `json:"text"`
 }
 
+// ToneScore : ToneScore struct
 type ToneScore struct {
 
 	// The score for the tone. * **`2017-09-21`:** The score that is returned lies in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone is perceived in the content. * **`2016-05-19`:** The score that is returned lies in the range of 0 to 1. A score less than 0.5 indicates that the tone is unlikely to be perceived in the content; a score greater than 0.75 indicates a high likelihood that the tone is perceived.
 	Score float64 `json:"score"`
 
 	// The unique, non-localized identifier of the tone. * **`2017-09-21`:** The service can return results for the following tone IDs: `anger`, `fear`, `joy`, and `sadness` (emotional tones); `analytical`, `confident`, and `tentative` (language tones). The service returns results only for tones whose scores meet a minimum threshold of 0.5. * **`2016-05-19`:** The service can return results for the following tone IDs of the different categories: for the `emotion` category: `anger`, `disgust`, `fear`, `joy`, and `sadness`; for the `language` category: `analytical`, `confident`, and `tentative`; for the `social` category: `openness_big5`, `conscientiousness_big5`, `extraversion_big5`, `agreeableness_big5`, and `emotional_range_big5`. The service returns scores for all tones of a category, regardless of their values.
-	ToneId string `json:"tone_id"`
+	ToneID string `json:"tone_id"`
 
 	// The user-visible, localized name of the tone.
 	ToneName string `json:"tone_name"`
 }
 
+// Utterance : Utterance struct
 type Utterance struct {
 
 	// An utterance contributed by a user in the conversation that is to be analyzed. The utterance can contain multiple sentences.
@@ -265,6 +279,7 @@ type Utterance struct {
 	User string `json:"user,omitempty"`
 }
 
+// UtteranceAnalyses : UtteranceAnalyses struct
 type UtteranceAnalyses struct {
 
 	// An array of `UtteranceAnalysis` objects that provides the results for each utterance of the input.
@@ -274,10 +289,11 @@ type UtteranceAnalyses struct {
 	Warning string `json:"warning,omitempty"`
 }
 
+// UtteranceAnalysis : UtteranceAnalysis struct
 type UtteranceAnalysis struct {
 
 	// The unique identifier of the utterance. The first utterance has ID 0, and the ID of each subsequent utterance is incremented by one.
-	UtteranceId int64 `json:"utterance_id"`
+	UtteranceID int64 `json:"utterance_id"`
 
 	// The text of the utterance.
 	UtteranceText string `json:"utterance_text"`

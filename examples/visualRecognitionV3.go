@@ -1,15 +1,15 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	watson "golang-sdk"
-	"golang-sdk/visualRecognitionV3"
-	"os"
+	"golang-sdk/visualrecognitionv3"
 )
 
 func main() {
 	// Instantiate the Watson Visual Recognition service
-	visualRecognition, visualRecognitionErr := visualRecognitionV3.NewVisualRecognitionV3(watson.Credentials{
+	visualRecognition, visualRecognitionErr := visualrecognitionv3.NewVisualRecognitionV3(watson.Credentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-03-19",
 		APIkey: "YOUR SERVICE API KEY",
@@ -20,7 +20,7 @@ func main() {
 		fmt.Println(visualRecognition)
 		return
 	}
-	
+
 	/* CLASSIFY */
 
 	// Read file with image to classify
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// Call the visual recognition Classify  method
-	classify, classifyErr := visualRecognition.Classify(*imageFile, "en", "https://www.readersdigest.ca/wp-content/uploads/2011/01/4-ways-cheer-up-depressed-cat.jpg", 0.5, []string {"IBM"}, []string{"default"}, "JPEG")
+	classify, classifyErr := visualRecognition.Classify(*imageFile, "en", "https://www.readersdigest.ca/wp-content/uploads/2011/01/4-ways-cheer-up-depressed-cat.jpg", 0.5, []string{"IBM"}, []string{"default"}, "JPEG")
 
 	// Check successful call
 	if classifyErr != nil {
@@ -44,7 +44,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetClassifyResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	classifyResult := visualRecognitionV3.GetClassifyResult(classify)
+	classifyResult := visualrecognitionv3.GetClassifyResult(classify)
 
 	// Check successful casting
 	if classifyResult != nil {

@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	watson "golang-sdk"
-	"golang-sdk/assistantV1"
+	"golang-sdk/assistantv1"
 )
 
 func main() {
 	// Instantiate the Watson Assistant service
-	assistant, assistantErr := assistantV1.NewAssistantV1(watson.Credentials{
+	assistant, assistantErr := assistantv1.NewAssistantV1(watson.Credentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-07-10",
 		Username: "YOUR SERVICE USERNAME",
@@ -35,7 +35,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetListWorkspacesResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	listResult := assistantV1.GetListWorkspacesResult(list)
+	listResult := assistantv1.GetListWorkspacesResult(list)
 
 	// Check successful casting
 	if listResult != nil {
@@ -58,7 +58,7 @@ func main() {
 
 	// Cast response from call to the specific struct returned by GetGetWorkspaceResult
 	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	getResult := assistantV1.GetGetWorkspaceResult(get)
+	getResult := assistantv1.GetGetWorkspaceResult(get)
 
 	// Check successful casting
 	if getResult != nil {

@@ -1,3 +1,5 @@
+// Package personalityinsightsv3 : Operations and models for the PersonalityInsightsV3 service
+package personalityinsightsv3
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package personalityInsightsV3
 
 import (
     "bytes"
@@ -23,10 +24,12 @@ import (
     watson "golang-sdk"
 )
 
+// PersonalityInsightsV3 : The PersonalityInsightsV3 service
 type PersonalityInsightsV3 struct {
 	client *watson.Client
 }
 
+// NewPersonalityInsightsV3 : Instantiate PersonalityInsightsV3
 func NewPersonalityInsightsV3(creds watson.Credentials) (*PersonalityInsightsV3, error) {
     if creds.ServiceURL == "" {
         creds.ServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
@@ -41,7 +44,7 @@ func NewPersonalityInsightsV3(creds watson.Credentials) (*PersonalityInsightsV3,
 	return &PersonalityInsightsV3{ client: client }, nil
 }
 
-// Get profile
+// Profile : Get profile
 func (personalityInsights *PersonalityInsightsV3) Profile(body *Content, contentType string, contentLanguage string, acceptLanguage string, rawScores bool, csvHeaders bool, consumptionPreferences bool) (*watson.WatsonResponse, []error) {
     path := "/v3/profile"
     creds := personalityInsights.client.Creds
@@ -96,6 +99,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(body *Content, content
     return response, nil
 }
 
+// GetProfileResult : Cast result of Profile operation
 func GetProfileResult(response *watson.WatsonResponse) *Profile {
     result, ok := response.Result.(*Profile)
 
@@ -106,7 +110,7 @@ func GetProfileResult(response *watson.WatsonResponse) *Profile {
     return nil
 }
 
-// Get profile as csv
+// ProfileAsCsv : Get profile as csv
 func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(body *Content, contentType string, contentLanguage string, acceptLanguage string, rawScores bool, csvHeaders bool, consumptionPreferences bool) (*watson.WatsonResponse, []error) {
     path := "/v3/profile"
     creds := personalityInsights.client.Creds
@@ -161,6 +165,7 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(body *Content, co
     return response, nil
 }
 
+// GetProfileAsCsvResult : Cast result of ProfileAsCsv operation
 func GetProfileAsCsvResult(response *watson.WatsonResponse) *os.File {
     result, ok := response.Result.(*os.File)
 
@@ -172,10 +177,11 @@ func GetProfileAsCsvResult(response *watson.WatsonResponse) *os.File {
 }
 
 
+// Behavior : Behavior struct
 type Behavior struct {
 
 	// The unique, non-localized identifier of the characteristic to which the results pertain. IDs have the form `behavior_{value}`.
-	TraitId string `json:"trait_id"`
+	TraitID string `json:"trait_id"`
 
 	// The user-visible, localized name of the characteristic.
 	Name string `json:"name"`
@@ -187,10 +193,11 @@ type Behavior struct {
 	Percentage float64 `json:"percentage"`
 }
 
+// ConsumptionPreferences : ConsumptionPreferences struct
 type ConsumptionPreferences struct {
 
 	// The unique, non-localized identifier of the consumption preference to which the results pertain. IDs have the form `consumption_preferences_{preference}`.
-	ConsumptionPreferenceId string `json:"consumption_preference_id"`
+	ConsumptionPreferenceID string `json:"consumption_preference_id"`
 
 	// The user-visible, localized name of the consumption preference.
 	Name string `json:"name"`
@@ -199,10 +206,11 @@ type ConsumptionPreferences struct {
 	Score float64 `json:"score"`
 }
 
+// ConsumptionPreferencesCategory : ConsumptionPreferencesCategory struct
 type ConsumptionPreferencesCategory struct {
 
 	// The unique, non-localized identifier of the consumption preferences category to which the results pertain. IDs have the form `consumption_preferences_{category}`.
-	ConsumptionPreferenceCategoryId string `json:"consumption_preference_category_id"`
+	ConsumptionPreferenceCategoryID string `json:"consumption_preference_category_id"`
 
 	// The user-visible name of the consumption preferences category.
 	Name string `json:"name"`
@@ -211,19 +219,21 @@ type ConsumptionPreferencesCategory struct {
 	ConsumptionPreferences []ConsumptionPreferences `json:"consumption_preferences"`
 }
 
+// Content : Content struct
 type Content struct {
 
 	// An array of `ContentItem` objects that provides the text that is to be analyzed.
 	ContentItems []ContentItem `json:"content_items"`
 }
 
+// ContentItem : ContentItem struct
 type ContentItem struct {
 
 	// The content that is to be analyzed. The service supports up to 20 MB of content for all `ContentItem` objects combined.
 	Content string `json:"content"`
 
 	// A unique identifier for this content item.
-	Id string `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	// A timestamp that identifies when this content was created. Specify a value in milliseconds since the UNIX Epoch (January 1, 1970, at 0:00 UTC). Required only for results that include temporal behavior data.
 	Created int64 `json:"created,omitempty"`
@@ -247,6 +257,7 @@ type ContentItem struct {
 	Forward bool `json:"forward,omitempty"`
 }
 
+// Profile : Profile struct
 type Profile struct {
 
 	// The language model that was used to process the input.
@@ -277,10 +288,11 @@ type Profile struct {
 	Warnings []Warning `json:"warnings"`
 }
 
+// Trait : Trait struct
 type Trait struct {
 
 	// The unique, non-localized identifier of the characteristic to which the results pertain. IDs have the form * `big5_{characteristic}` for Big Five personality dimensions * `facet_{characteristic}` for Big Five personality facets * `need_{characteristic}` for Needs *`value_{characteristic}` for Values.
-	TraitId string `json:"trait_id"`
+	TraitID string `json:"trait_id"`
 
 	// The user-visible, localized name of the characteristic.
 	Name string `json:"name"`
@@ -301,10 +313,11 @@ type Trait struct {
 	Children []Trait `json:"children,omitempty"`
 }
 
+// Warning : Warning struct
 type Warning struct {
 
 	// The identifier of the warning message.
-	WarningId string `json:"warning_id"`
+	WarningID string `json:"warning_id"`
 
 	// The message associated with the `warning_id`: * `WORD_COUNT_MESSAGE`: "There were {number} words in the input. We need a minimum of 600, preferably 1,200 or more, to compute statistically significant estimates." * `JSON_AS_TEXT`: "Request input was processed as text/plain as indicated, however detected a JSON input. Did you mean application/json?" * `CONTENT_TRUNCATED`: "For maximum accuracy while also optimizing processing time, only the first 250KB of input text (excluding markup) was analyzed. Accuracy levels off at approximately 3,000 words so this did not affect the accuracy of the profile." * `PARTIAL_TEXT_USED`, "The text provided to compute the profile was trimmed for performance reasons. This action does not affect the accuracy of the output, as not all of the input text was required." Applies only when Arabic input text exceeds a threshold at which additional words do not contribute to the accuracy of the profile.
 	Message string `json:"message"`
