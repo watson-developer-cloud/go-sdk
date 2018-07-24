@@ -23,6 +23,9 @@ func main() {
 		return
 	}
 
+
+	/* PROFILE */
+
 	// Read file with example speech
 	pwd, _ := os.Getwd()
 	speech, speechErr := ioutil.ReadFile(pwd + "/resources/personality-v3.txt")

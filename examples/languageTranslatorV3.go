@@ -4,6 +4,7 @@ import (
 	"fmt"
 	watson "golang-sdk"
 	"golang-sdk/languagetranslatorv3"
+	"os"
 )
 
 func main() {
@@ -11,7 +12,7 @@ func main() {
 	languageTranslator, languageTranslatorErr := languagetranslatorv3.NewLanguageTranslatorV3(watson.Credentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-02-16",
-		APIkey: "YOUR API KEY",
+		APIkey: "YOUR SERVICE API KEY",
 	})
 
 	// Check successful instantiation
@@ -112,6 +113,40 @@ func main() {
 	if listModelResult != nil {
 		// Print result
 		fmt.Println(listModelResult)
+	}
+
+
+	/* CREATE MODEL */
+
+	pwd, _ := os.Getwd()
+
+	glossary, glossaryErr := os.Open(pwd+ "/resources/glossary.tmx")
+	if glossaryErr != nil {
+		fmt.Println(glossaryErr)
+	}
+
+	corpus, corpusErr := os.Open(pwd+ "/resources/corpus.tmx")
+	if corpusErr != nil {
+		fmt.Println(corpusErr)
+	}
+
+	// Call the languageTranslator Create Model method
+	createModel, createModelErr := languageTranslator.CreateModel("en-fr", "custom-en-fr", *glossary, *corpus)
+
+	// Check successful call
+	if createModelErr != nil {
+		fmt.Println(createModelErr)
+		return
+	}
+
+	// Cast response from call to the specific struct returned by GetCreateModelResult
+	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
+	createModelResult := languagetranslatorv3.GetCreateModelResult(createModel)
+
+	// Check successful casting
+	if createModelResult != nil {
+		// Print result
+		fmt.Println(createModelResult)
 	}
 
 
