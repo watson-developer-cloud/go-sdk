@@ -46,7 +46,7 @@ func TestWorkspace(t *testing.T) {
 }
 
 func testList(assistant *AssistantV1) *WorkspaceCollection {
-	list, listErr := assistant.ListWorkspaces(0, true, "", "", false)
+	list, listErr := assistant.ListWorkspaces(NewListWorkspacesOptions())
 
 	if listErr != nil {
 		fmt.Println(listErr)
@@ -67,7 +67,7 @@ func testGet(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
 		workspaceID := workspace.WorkspaceID
 
-		get, getErr := assistant.GetWorkspace(workspaceID, false, false)
+		get, getErr := assistant.GetWorkspace(NewGetWorkspaceOptions(workspaceID))
 
 		if getErr != nil {
 			fmt.Println(getErr)
@@ -86,7 +86,7 @@ func testDelete(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
 		workspaceID := workspace.WorkspaceID
 
-		_, delErr := assistant.DeleteWorkspace(workspaceID)
+		_, delErr := assistant.DeleteWorkspace(NewDeleteWorkspaceOptions(workspaceID))
 
 		if delErr != nil {
 			fmt.Println(delErr)
@@ -99,11 +99,10 @@ func testDelete(assistant *AssistantV1, list *WorkspaceCollection) {
 
 func testCreate(assistant *AssistantV1) {
 	for i := 0; i < 3; i++ {
-		createReq := CreateWorkspace{
-			Name: fmt.Sprintf("create%v", i),
-		}
+		createReq := NewCreateWorkspaceOptions().
+			SetName(fmt.Sprintf("create%v", i))
 
-		create, createErr := assistant.CreateWorkspace(&createReq)
+		create, createErr := assistant.CreateWorkspace(createReq)
 
 		if createErr != nil {
 			fmt.Println(createErr)
@@ -122,11 +121,10 @@ func testUpdate(assistant *AssistantV1, list *WorkspaceCollection) {
 	for i, workspace := range list.Workspaces {
 		workspaceID := workspace.WorkspaceID
 
-		updateReq := UpdateWorkspace{
-			Name: fmt.Sprintf("create%v", i * 10),
-		}
+		updateReq := NewUpdateWorkspaceOptions(workspaceID).
+			SetName(fmt.Sprintf("create%v", i * 10))
 
-		update, updateErr := assistant.UpdateWorkspace(workspaceID, &updateReq, false)
+		update, updateErr := assistant.UpdateWorkspace(updateReq)
 
 		if updateErr != nil {
 			fmt.Println(updateErr)
