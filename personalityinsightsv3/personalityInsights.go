@@ -45,7 +45,7 @@ func NewPersonalityInsightsV3(creds watson.Credentials) (*PersonalityInsightsV3,
 }
 
 // Profile : Get profile
-func (personalityInsights *PersonalityInsightsV3) Profile(body *Content, contentType string, contentLanguage string, acceptLanguage string, rawScores bool, csvHeaders bool, consumptionPreferences bool) (*watson.WatsonResponse, []error) {
+func (personalityInsights *PersonalityInsightsV3) Profile(options *ProfileOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/profile"
     creds := personalityInsights.client.Creds
     useTM := personalityInsights.client.UseTM
@@ -53,16 +53,33 @@ func (personalityInsights *PersonalityInsightsV3) Profile(body *Content, content
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Set("Content-Type", fmt.Sprint(contentType))
-    request.Set("Content-Language", fmt.Sprint(contentLanguage))
-    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    request.Set("Content-Type", fmt.Sprint(options.ContentType))
+    if options.IsContentLanguageSet {
+        request.Set("Content-Language", fmt.Sprint(options.ContentLanguage))
+    }
+    if options.IsAcceptLanguageSet {
+        request.Set("Accept-Language", fmt.Sprint(options.AcceptLanguage))
+    }
     request.Query("version=" + creds.Version)
-    request.Query("raw_scores=" + fmt.Sprint(rawScores))
-    request.Query("csv_headers=" + fmt.Sprint(csvHeaders))
-    request.Query("consumption_preferences=" + fmt.Sprint(consumptionPreferences))
-    request.Send(body)
+    if options.IsRawScoresSet {
+        request.Query("raw_scores=" + fmt.Sprint(options.RawScores))
+    }
+    if options.IsCsvHeadersSet {
+        request.Query("csv_headers=" + fmt.Sprint(options.CsvHeaders))
+    }
+    if options.IsConsumptionPreferencesSet {
+        request.Query("consumption_preferences=" + fmt.Sprint(options.ConsumptionPreferences))
+    }
+    if options.ContentType == "application/json" {
+        request.Send(options.Content)
+    } else {
+        request.SendString(options.Body)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -111,7 +128,7 @@ func GetProfileResult(response *watson.WatsonResponse) *Profile {
 }
 
 // ProfileAsCsv : Get profile as csv
-func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(body *Content, contentType string, contentLanguage string, acceptLanguage string, rawScores bool, csvHeaders bool, consumptionPreferences bool) (*watson.WatsonResponse, []error) {
+func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(options *ProfileOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/profile"
     creds := personalityInsights.client.Creds
     useTM := personalityInsights.client.UseTM
@@ -119,16 +136,33 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(body *Content, co
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "text/csv")
-    request.Set("Content-Type", "application/json")
-    request.Set("Content-Type", fmt.Sprint(contentType))
-    request.Set("Content-Language", fmt.Sprint(contentLanguage))
-    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    request.Set("Content-Type", fmt.Sprint(options.ContentType))
+    if options.IsContentLanguageSet {
+        request.Set("Content-Language", fmt.Sprint(options.ContentLanguage))
+    }
+    if options.IsAcceptLanguageSet {
+        request.Set("Accept-Language", fmt.Sprint(options.AcceptLanguage))
+    }
     request.Query("version=" + creds.Version)
-    request.Query("raw_scores=" + fmt.Sprint(rawScores))
-    request.Query("csv_headers=" + fmt.Sprint(csvHeaders))
-    request.Query("consumption_preferences=" + fmt.Sprint(consumptionPreferences))
-    request.Send(body)
+    if options.IsRawScoresSet {
+        request.Query("raw_scores=" + fmt.Sprint(options.RawScores))
+    }
+    if options.IsCsvHeadersSet {
+        request.Query("csv_headers=" + fmt.Sprint(options.CsvHeaders))
+    }
+    if options.IsConsumptionPreferencesSet {
+        request.Query("consumption_preferences=" + fmt.Sprint(options.ConsumptionPreferences))
+    }
+    if options.ContentType == "application/json" {
+        request.Send(options.Content)
+    } else {
+        request.SendString(options.Body)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -286,6 +320,144 @@ type Profile struct {
 
 	// Warning messages associated with the input text submitted with the request. The array is empty if the input generated no warnings.
 	Warnings []Warning `json:"warnings"`
+}
+
+// ProfileOptions : The profile options.
+type ProfileOptions struct {
+
+	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see [Providing sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an object of type `Content`.
+	Content Content `json:"content,omitempty"`
+
+    // Indicates whether user set optional parameter Content
+    IsContentSet bool
+
+	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see [Providing sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an object of type `Content`.
+	Body string `json:"body,omitempty"`
+
+    // Indicates whether user set optional parameter Body
+    IsBodySet bool
+
+	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example, 'text/html;charset=utf-8'.
+	ContentType string `json:"content_type"`
+
+	// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The effect of the **Content-Language** parameter depends on the **Content-Type** parameter. When **Content-Type** is `text/plain` or `text/html`, **Content-Language** is the only way to specify the language. When **Content-Type** is `application/json`, **Content-Language** overrides a language specified with the `language` parameter of a `ContentItem` object, and content items that specify a different language are ignored; omit this parameter to base the language on the specification of the content items. You can specify any combination of languages for **Content-Language** and **Accept-Language**.
+	ContentLanguage string `json:"content_language,omitempty"`
+
+    // Indicates whether user set optional parameter ContentLanguage
+    IsContentLanguageSet bool
+
+	// The desired language of the response. For two-character arguments, regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input and response content.
+	AcceptLanguage string `json:"accept_language,omitempty"`
+
+    // Indicates whether user set optional parameter AcceptLanguage
+    IsAcceptLanguageSet bool
+
+	// Indicates whether a raw score in addition to a normalized percentile is returned for each characteristic; raw scores are not compared with a sample population. By default, only normalized percentiles are returned.
+	RawScores bool `json:"raw_scores,omitempty"`
+
+    // Indicates whether user set optional parameter RawScores
+    IsRawScoresSet bool
+
+	// Indicates whether column labels are returned with a CSV response. By default, no column labels are returned. Applies only when the **Accept** parameter is set to `text/csv`.
+	CsvHeaders bool `json:"csv_headers,omitempty"`
+
+    // Indicates whether user set optional parameter CsvHeaders
+    IsCsvHeadersSet bool
+
+	// Indicates whether consumption preferences are returned with the results. By default, no consumption preferences are returned.
+	ConsumptionPreferences bool `json:"consumption_preferences,omitempty"`
+
+    // Indicates whether user set optional parameter ConsumptionPreferences
+    IsConsumptionPreferencesSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewProfileOptionsForContent : Instantiate ProfileOptionsForContent
+func NewProfileOptionsForContent(content Content) *ProfileOptions {
+    return &ProfileOptions{
+        Content: content,
+        ContentType: "application/json",
+    }
+}
+
+// SetContent : Allow user to set Content
+func (options *ProfileOptions) SetContent(content Content) *ProfileOptions {
+    options.Content = content
+    options.ContentType = "application/json"
+    return options
+}
+
+// NewProfileOptionsForHTML : Instantiate ProfileOptionsForHTML
+func NewProfileOptionsForHTML(content string) *ProfileOptions {
+    return &ProfileOptions{
+        Body: content,
+        ContentType: "text/html",
+    }
+}
+
+// SetHTML : Allow user to set HTML
+func (options *ProfileOptions) SetHTML(content string) *ProfileOptions {
+    options.Body = content
+    options.ContentType = "text/html"
+    return options
+}
+
+// NewProfileOptionsForPlain : Instantiate ProfileOptionsForPlain
+func NewProfileOptionsForPlain(content string) *ProfileOptions {
+    return &ProfileOptions{
+        Body: content,
+        ContentType: "text/plain",
+    }
+}
+
+// SetPlain : Allow user to set Plain
+func (options *ProfileOptions) SetPlain(content string) *ProfileOptions {
+    options.Body = content
+    options.ContentType = "text/plain"
+    return options
+}
+
+// SetContentLanguage : Allow user to set ContentLanguage
+func (options *ProfileOptions) SetContentLanguage(param string) *ProfileOptions {
+    options.ContentLanguage = param
+    options.IsContentLanguageSet = true
+    return options
+}
+
+// SetAcceptLanguage : Allow user to set AcceptLanguage
+func (options *ProfileOptions) SetAcceptLanguage(param string) *ProfileOptions {
+    options.AcceptLanguage = param
+    options.IsAcceptLanguageSet = true
+    return options
+}
+
+// SetRawScores : Allow user to set RawScores
+func (options *ProfileOptions) SetRawScores(param bool) *ProfileOptions {
+    options.RawScores = param
+    options.IsRawScoresSet = true
+    return options
+}
+
+// SetCsvHeaders : Allow user to set CsvHeaders
+func (options *ProfileOptions) SetCsvHeaders(param bool) *ProfileOptions {
+    options.CsvHeaders = param
+    options.IsCsvHeadersSet = true
+    return options
+}
+
+// SetConsumptionPreferences : Allow user to set ConsumptionPreferences
+func (options *ProfileOptions) SetConsumptionPreferences(param bool) *ProfileOptions {
+    options.ConsumptionPreferences = param
+    options.IsConsumptionPreferencesSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ProfileOptions) SetHeaders(param map[string]string) *ProfileOptions {
+    options.Headers = param
+    return options
 }
 
 // Trait : Trait struct

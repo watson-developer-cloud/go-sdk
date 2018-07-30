@@ -47,14 +47,18 @@ func NewSpeechToTextV1(creds watson.Credentials) (*SpeechToTextV1, error) {
 }
 
 // GetModel : Get a model
-func (speechToText *SpeechToTextV1) GetModel(modelID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) GetModel(options *GetModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/models/{model_id}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{model_id}", modelID, 1)
+    path = strings.Replace(path, "{model_id}", options.ModelID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -106,13 +110,17 @@ func GetGetModelResult(response *watson.WatsonResponse) *SpeechModel {
 }
 
 // ListModels : List models
-func (speechToText *SpeechToTextV1) ListModels() (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) ListModels(options *ListModelsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/models"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -164,7 +172,7 @@ func GetListModelsResult(response *watson.WatsonResponse) *SpeechModels {
 }
 
 // Recognize : Recognize audio
-func (speechToText *SpeechToTextV1) Recognize(body *io.ReadCloser, contentType string, model string, customizationID string, acousticCustomizationID string, baseModelVersion string, customizationWeight float64, inactivityTimeout int64, keywords []string, keywordsThreshold float32, maxAlternatives int64, wordAlternativesThreshold float32, wordConfidence bool, timestamps bool, profanityFilter bool, smartFormatting bool, speakerLabels bool) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) Recognize(options *RecognizeOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/recognize"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -172,25 +180,58 @@ func (speechToText *SpeechToTextV1) Recognize(body *io.ReadCloser, contentType s
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "audio/basic")
-    request.Set("Content-Type", fmt.Sprint(contentType))
-    request.Query("model=" + fmt.Sprint(model))
-    request.Query("customization_id=" + fmt.Sprint(customizationID))
-    request.Query("acoustic_customization_id=" + fmt.Sprint(acousticCustomizationID))
-    request.Query("base_model_version=" + fmt.Sprint(baseModelVersion))
-    request.Query("customization_weight=" + fmt.Sprint(customizationWeight))
-    request.Query("inactivity_timeout=" + fmt.Sprint(inactivityTimeout))
-    request.Query("keywords=" + fmt.Sprint(keywords))
-    request.Query("keywords_threshold=" + fmt.Sprint(keywordsThreshold))
-    request.Query("max_alternatives=" + fmt.Sprint(maxAlternatives))
-    request.Query("word_alternatives_threshold=" + fmt.Sprint(wordAlternativesThreshold))
-    request.Query("word_confidence=" + fmt.Sprint(wordConfidence))
-    request.Query("timestamps=" + fmt.Sprint(timestamps))
-    request.Query("profanity_filter=" + fmt.Sprint(profanityFilter))
-    request.Query("smart_formatting=" + fmt.Sprint(smartFormatting))
-    request.Query("speaker_labels=" + fmt.Sprint(speakerLabels))
-    request.Send(body)
+    request.Set("Content-Type", fmt.Sprint(options.ContentType))
+    if options.IsModelSet {
+        request.Query("model=" + fmt.Sprint(options.Model))
+    }
+    if options.IsCustomizationIDSet {
+        request.Query("customization_id=" + fmt.Sprint(options.CustomizationID))
+    }
+    if options.IsAcousticCustomizationIDSet {
+        request.Query("acoustic_customization_id=" + fmt.Sprint(options.AcousticCustomizationID))
+    }
+    if options.IsBaseModelVersionSet {
+        request.Query("base_model_version=" + fmt.Sprint(options.BaseModelVersion))
+    }
+    if options.IsCustomizationWeightSet {
+        request.Query("customization_weight=" + fmt.Sprint(options.CustomizationWeight))
+    }
+    if options.IsInactivityTimeoutSet {
+        request.Query("inactivity_timeout=" + fmt.Sprint(options.InactivityTimeout))
+    }
+    if options.IsKeywordsSet {
+        request.Query("keywords=" + fmt.Sprint(options.Keywords))
+    }
+    if options.IsKeywordsThresholdSet {
+        request.Query("keywords_threshold=" + fmt.Sprint(options.KeywordsThreshold))
+    }
+    if options.IsMaxAlternativesSet {
+        request.Query("max_alternatives=" + fmt.Sprint(options.MaxAlternatives))
+    }
+    if options.IsWordAlternativesThresholdSet {
+        request.Query("word_alternatives_threshold=" + fmt.Sprint(options.WordAlternativesThreshold))
+    }
+    if options.IsWordConfidenceSet {
+        request.Query("word_confidence=" + fmt.Sprint(options.WordConfidence))
+    }
+    if options.IsTimestampsSet {
+        request.Query("timestamps=" + fmt.Sprint(options.Timestamps))
+    }
+    if options.IsProfanityFilterSet {
+        request.Query("profanity_filter=" + fmt.Sprint(options.ProfanityFilter))
+    }
+    if options.IsSmartFormattingSet {
+        request.Query("smart_formatting=" + fmt.Sprint(options.SmartFormatting))
+    }
+    if options.IsSpeakerLabelsSet {
+        request.Query("speaker_labels=" + fmt.Sprint(options.SpeakerLabels))
+    }
+    request.SendFile(options.Audio)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -239,14 +280,18 @@ func GetRecognizeResult(response *watson.WatsonResponse) *SpeechRecognitionResul
 }
 
 // CheckJob : Check a job
-func (speechToText *SpeechToTextV1) CheckJob(id string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) CheckJob(options *CheckJobOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/recognitions/{id}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{id}", id, 1)
+    path = strings.Replace(path, "{id}", options.ID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -298,13 +343,17 @@ func GetCheckJobResult(response *watson.WatsonResponse) *RecognitionJob {
 }
 
 // CheckJobs : Check jobs
-func (speechToText *SpeechToTextV1) CheckJobs() (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) CheckJobs(options *CheckJobsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/recognitions"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -356,7 +405,7 @@ func GetCheckJobsResult(response *watson.WatsonResponse) *RecognitionJobs {
 }
 
 // CreateJob : Create a job
-func (speechToText *SpeechToTextV1) CreateJob(body *io.ReadCloser, contentType string, model string, callbackURL string, events string, userToken string, resultsTTL int64, customizationID string, acousticCustomizationID string, baseModelVersion string, customizationWeight float64, inactivityTimeout int64, keywords []string, keywordsThreshold float32, maxAlternatives int64, wordAlternativesThreshold float32, wordConfidence bool, timestamps bool, profanityFilter bool, smartFormatting bool, speakerLabels bool) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) CreateJob(options *CreateJobOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/recognitions"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -364,29 +413,70 @@ func (speechToText *SpeechToTextV1) CreateJob(body *io.ReadCloser, contentType s
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "audio/basic")
-    request.Set("Content-Type", fmt.Sprint(contentType))
-    request.Query("model=" + fmt.Sprint(model))
-    request.Query("callback_url=" + fmt.Sprint(callbackURL))
-    request.Query("events=" + fmt.Sprint(events))
-    request.Query("user_token=" + fmt.Sprint(userToken))
-    request.Query("results_ttl=" + fmt.Sprint(resultsTTL))
-    request.Query("customization_id=" + fmt.Sprint(customizationID))
-    request.Query("acoustic_customization_id=" + fmt.Sprint(acousticCustomizationID))
-    request.Query("base_model_version=" + fmt.Sprint(baseModelVersion))
-    request.Query("customization_weight=" + fmt.Sprint(customizationWeight))
-    request.Query("inactivity_timeout=" + fmt.Sprint(inactivityTimeout))
-    request.Query("keywords=" + fmt.Sprint(keywords))
-    request.Query("keywords_threshold=" + fmt.Sprint(keywordsThreshold))
-    request.Query("max_alternatives=" + fmt.Sprint(maxAlternatives))
-    request.Query("word_alternatives_threshold=" + fmt.Sprint(wordAlternativesThreshold))
-    request.Query("word_confidence=" + fmt.Sprint(wordConfidence))
-    request.Query("timestamps=" + fmt.Sprint(timestamps))
-    request.Query("profanity_filter=" + fmt.Sprint(profanityFilter))
-    request.Query("smart_formatting=" + fmt.Sprint(smartFormatting))
-    request.Query("speaker_labels=" + fmt.Sprint(speakerLabels))
-    request.Send(body)
+    request.Set("Content-Type", fmt.Sprint(options.ContentType))
+    if options.IsModelSet {
+        request.Query("model=" + fmt.Sprint(options.Model))
+    }
+    if options.IsCallbackURLSet {
+        request.Query("callback_url=" + fmt.Sprint(options.CallbackURL))
+    }
+    if options.IsEventsSet {
+        request.Query("events=" + fmt.Sprint(options.Events))
+    }
+    if options.IsUserTokenSet {
+        request.Query("user_token=" + fmt.Sprint(options.UserToken))
+    }
+    if options.IsResultsTTLSet {
+        request.Query("results_ttl=" + fmt.Sprint(options.ResultsTTL))
+    }
+    if options.IsCustomizationIDSet {
+        request.Query("customization_id=" + fmt.Sprint(options.CustomizationID))
+    }
+    if options.IsAcousticCustomizationIDSet {
+        request.Query("acoustic_customization_id=" + fmt.Sprint(options.AcousticCustomizationID))
+    }
+    if options.IsBaseModelVersionSet {
+        request.Query("base_model_version=" + fmt.Sprint(options.BaseModelVersion))
+    }
+    if options.IsCustomizationWeightSet {
+        request.Query("customization_weight=" + fmt.Sprint(options.CustomizationWeight))
+    }
+    if options.IsInactivityTimeoutSet {
+        request.Query("inactivity_timeout=" + fmt.Sprint(options.InactivityTimeout))
+    }
+    if options.IsKeywordsSet {
+        request.Query("keywords=" + fmt.Sprint(options.Keywords))
+    }
+    if options.IsKeywordsThresholdSet {
+        request.Query("keywords_threshold=" + fmt.Sprint(options.KeywordsThreshold))
+    }
+    if options.IsMaxAlternativesSet {
+        request.Query("max_alternatives=" + fmt.Sprint(options.MaxAlternatives))
+    }
+    if options.IsWordAlternativesThresholdSet {
+        request.Query("word_alternatives_threshold=" + fmt.Sprint(options.WordAlternativesThreshold))
+    }
+    if options.IsWordConfidenceSet {
+        request.Query("word_confidence=" + fmt.Sprint(options.WordConfidence))
+    }
+    if options.IsTimestampsSet {
+        request.Query("timestamps=" + fmt.Sprint(options.Timestamps))
+    }
+    if options.IsProfanityFilterSet {
+        request.Query("profanity_filter=" + fmt.Sprint(options.ProfanityFilter))
+    }
+    if options.IsSmartFormattingSet {
+        request.Query("smart_formatting=" + fmt.Sprint(options.SmartFormatting))
+    }
+    if options.IsSpeakerLabelsSet {
+        request.Query("speaker_labels=" + fmt.Sprint(options.SpeakerLabels))
+    }
+    request.SendFile(options.Audio)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -435,14 +525,18 @@ func GetCreateJobResult(response *watson.WatsonResponse) *RecognitionJob {
 }
 
 // DeleteJob : Delete a job
-func (speechToText *SpeechToTextV1) DeleteJob(id string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) DeleteJob(options *DeleteJobOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/recognitions/{id}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{id}", id, 1)
+    path = strings.Replace(path, "{id}", options.ID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -483,7 +577,7 @@ func (speechToText *SpeechToTextV1) DeleteJob(id string) (*watson.WatsonResponse
 
 
 // RegisterCallback : Register a callback
-func (speechToText *SpeechToTextV1) RegisterCallback(callbackURL string, userSecret string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) RegisterCallback(options *RegisterCallbackOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/register_callback"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -491,10 +585,16 @@ func (speechToText *SpeechToTextV1) RegisterCallback(callbackURL string, userSec
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("callback_url=" + fmt.Sprint(callbackURL))
-    request.Query("user_secret=" + fmt.Sprint(userSecret))
+    request.Query("callback_url=" + fmt.Sprint(options.CallbackURL))
+    if options.IsUserSecretSet {
+        request.Query("user_secret=" + fmt.Sprint(options.UserSecret))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -543,7 +643,7 @@ func GetRegisterCallbackResult(response *watson.WatsonResponse) *RegisterStatus 
 }
 
 // UnregisterCallback : Unregister a callback
-func (speechToText *SpeechToTextV1) UnregisterCallback(callbackURL string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) UnregisterCallback(options *UnregisterCallbackOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/unregister_callback"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -551,9 +651,13 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(callbackURL string) (*wat
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("callback_url=" + fmt.Sprint(callbackURL))
+    request.Query("callback_url=" + fmt.Sprint(options.CallbackURL))
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -591,7 +695,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(callbackURL string) (*wat
 
 
 // CreateLanguageModel : Create a custom language model
-func (speechToText *SpeechToTextV1) CreateLanguageModel(body *CreateLanguageModel) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) CreateLanguageModel(options *CreateLanguageModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -599,8 +703,21 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(body *CreateLanguageMode
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
+    body := map[string]interface{}{}
+    body["name"] = options.Name
+    body["base_model_name"] = options.BaseModelName
+    if options.IsDialectSet {
+        body["dialect"] = options.Dialect
+    }
+    if options.IsDescriptionSet {
+        body["description"] = options.Description
+    }
     request.Send(body)
 
     if useTM {
@@ -650,14 +767,18 @@ func GetCreateLanguageModelResult(response *watson.WatsonResponse) *LanguageMode
 }
 
 // DeleteLanguageModel : Delete a custom language model
-func (speechToText *SpeechToTextV1) DeleteLanguageModel(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) DeleteLanguageModel(options *DeleteLanguageModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -698,14 +819,18 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(customizationID string) 
 
 
 // GetLanguageModel : Get a custom language model
-func (speechToText *SpeechToTextV1) GetLanguageModel(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) GetLanguageModel(options *GetLanguageModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -757,7 +882,7 @@ func GetGetLanguageModelResult(response *watson.WatsonResponse) *LanguageModel {
 }
 
 // ListLanguageModels : List custom language models
-func (speechToText *SpeechToTextV1) ListLanguageModels(language string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) ListLanguageModels(options *ListLanguageModelsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -765,9 +890,15 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(language string) (*watson
 
     request := req.New().Get(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("language=" + fmt.Sprint(language))
+    if options.IsLanguageSet {
+        request.Query("language=" + fmt.Sprint(options.Language))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -816,14 +947,18 @@ func GetListLanguageModelsResult(response *watson.WatsonResponse) *LanguageModel
 }
 
 // ResetLanguageModel : Reset a custom language model
-func (speechToText *SpeechToTextV1) ResetLanguageModel(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) ResetLanguageModel(options *ResetLanguageModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/reset"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -864,19 +999,27 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(customizationID string) (
 
 
 // TrainLanguageModel : Train a custom language model
-func (speechToText *SpeechToTextV1) TrainLanguageModel(customizationID string, wordTypeToAdd string, customizationWeight float64) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) TrainLanguageModel(options *TrainLanguageModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/train"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("word_type_to_add=" + fmt.Sprint(wordTypeToAdd))
-    request.Query("customization_weight=" + fmt.Sprint(customizationWeight))
+    if options.IsWordTypeToAddSet {
+        request.Query("word_type_to_add=" + fmt.Sprint(options.WordTypeToAdd))
+    }
+    if options.IsCustomizationWeightSet {
+        request.Query("customization_weight=" + fmt.Sprint(options.CustomizationWeight))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -914,14 +1057,18 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(customizationID string, w
 
 
 // UpgradeLanguageModel : Upgrade a custom language model
-func (speechToText *SpeechToTextV1) UpgradeLanguageModel(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) UpgradeLanguageModel(options *UpgradeLanguageModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/upgrade_model"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -962,21 +1109,27 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(customizationID string)
 
 
 // AddCorpus : Add a corpus
-func (speechToText *SpeechToTextV1) AddCorpus(customizationID string, corpusName string, corpusFile os.File, allowOverwrite bool) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) AddCorpus(options *AddCorpusOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/corpora/{corpus_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{corpus_name}", corpusName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{corpus_name}", options.CorpusName, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "multipart/form-data")
-    request.Query("allow_overwrite=" + fmt.Sprint(allowOverwrite))
+    if options.IsAllowOverwriteSet {
+        request.Query("allow_overwrite=" + fmt.Sprint(options.AllowOverwrite))
+    }
     request.Type("multipart")
-    request.SendFile(corpusFile)
+    request.SendFile(options.CorpusFile)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1014,15 +1167,19 @@ func (speechToText *SpeechToTextV1) AddCorpus(customizationID string, corpusName
 
 
 // DeleteCorpus : Delete a corpus
-func (speechToText *SpeechToTextV1) DeleteCorpus(customizationID string, corpusName string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) DeleteCorpus(options *DeleteCorpusOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/corpora/{corpus_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{corpus_name}", corpusName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{corpus_name}", options.CorpusName, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1063,15 +1220,19 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(customizationID string, corpusN
 
 
 // GetCorpus : Get a corpus
-func (speechToText *SpeechToTextV1) GetCorpus(customizationID string, corpusName string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) GetCorpus(options *GetCorpusOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/corpora/{corpus_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{corpus_name}", corpusName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{corpus_name}", options.CorpusName, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1123,14 +1284,18 @@ func GetGetCorpusResult(response *watson.WatsonResponse) *Corpus {
 }
 
 // ListCorpora : List corpora
-func (speechToText *SpeechToTextV1) ListCorpora(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) ListCorpora(options *ListCorporaOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/corpora"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1182,18 +1347,32 @@ func GetListCorporaResult(response *watson.WatsonResponse) *Corpora {
 }
 
 // AddWord : Add a custom word
-func (speechToText *SpeechToTextV1) AddWord(customizationID string, wordName string, body *CustomWord) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) AddWord(options *AddWordOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{word_name}", wordName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{word_name}", options.WordName, 1)
     request := req.New().Put(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
+    body := map[string]interface{}{}
+    if options.IsWordSet {
+        body["word"] = options.Word
+    }
+    if options.IsSoundsLikeSet {
+        body["sounds_like"] = options.SoundsLike
+    }
+    if options.IsDisplayAsSet {
+        body["display_as"] = options.DisplayAs
+    }
     request.Send(body)
 
     if useTM {
@@ -1232,17 +1411,23 @@ func (speechToText *SpeechToTextV1) AddWord(customizationID string, wordName str
 
 
 // AddWords : Add custom words
-func (speechToText *SpeechToTextV1) AddWords(customizationID string, body *CustomWords) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) AddWords(options *AddWordsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
+    body := map[string]interface{}{}
+    body["words"] = options.Words
     request.Send(body)
 
     if useTM {
@@ -1281,15 +1466,19 @@ func (speechToText *SpeechToTextV1) AddWords(customizationID string, body *Custo
 
 
 // DeleteWord : Delete a custom word
-func (speechToText *SpeechToTextV1) DeleteWord(customizationID string, wordName string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) DeleteWord(options *DeleteWordOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{word_name}", wordName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{word_name}", options.WordName, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1330,15 +1519,19 @@ func (speechToText *SpeechToTextV1) DeleteWord(customizationID string, wordName 
 
 
 // GetWord : Get a custom word
-func (speechToText *SpeechToTextV1) GetWord(customizationID string, wordName string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) GetWord(options *GetWordOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words/{word_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{word_name}", wordName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{word_name}", options.WordName, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1390,19 +1583,27 @@ func GetGetWordResult(response *watson.WatsonResponse) *Word {
 }
 
 // ListWords : List custom words
-func (speechToText *SpeechToTextV1) ListWords(customizationID string, wordType string, sort string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) ListWords(options *ListWordsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/customizations/{customization_id}/words"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("word_type=" + fmt.Sprint(wordType))
-    request.Query("sort=" + fmt.Sprint(sort))
+    if options.IsWordTypeSet {
+        request.Query("word_type=" + fmt.Sprint(options.WordType))
+    }
+    if options.IsSortSet {
+        request.Query("sort=" + fmt.Sprint(options.Sort))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1451,7 +1652,7 @@ func GetListWordsResult(response *watson.WatsonResponse) *Words {
 }
 
 // CreateAcousticModel : Create a custom acoustic model
-func (speechToText *SpeechToTextV1) CreateAcousticModel(body *CreateAcousticModel) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) CreateAcousticModel(options *CreateAcousticModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -1459,8 +1660,18 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(body *CreateAcousticMode
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
+    body := map[string]interface{}{}
+    body["name"] = options.Name
+    body["base_model_name"] = options.BaseModelName
+    if options.IsDescriptionSet {
+        body["description"] = options.Description
+    }
     request.Send(body)
 
     if useTM {
@@ -1510,14 +1721,18 @@ func GetCreateAcousticModelResult(response *watson.WatsonResponse) *AcousticMode
 }
 
 // DeleteAcousticModel : Delete a custom acoustic model
-func (speechToText *SpeechToTextV1) DeleteAcousticModel(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) DeleteAcousticModel(options *DeleteAcousticModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1558,14 +1773,18 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(customizationID string) 
 
 
 // GetAcousticModel : Get a custom acoustic model
-func (speechToText *SpeechToTextV1) GetAcousticModel(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) GetAcousticModel(options *GetAcousticModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1617,7 +1836,7 @@ func GetGetAcousticModelResult(response *watson.WatsonResponse) *AcousticModel {
 }
 
 // ListAcousticModels : List custom acoustic models
-func (speechToText *SpeechToTextV1) ListAcousticModels(language string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) ListAcousticModels(options *ListAcousticModelsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -1625,9 +1844,15 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(language string) (*watson
 
     request := req.New().Get(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("language=" + fmt.Sprint(language))
+    if options.IsLanguageSet {
+        request.Query("language=" + fmt.Sprint(options.Language))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1676,14 +1901,18 @@ func GetListAcousticModelsResult(response *watson.WatsonResponse) *AcousticModel
 }
 
 // ResetAcousticModel : Reset a custom acoustic model
-func (speechToText *SpeechToTextV1) ResetAcousticModel(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) ResetAcousticModel(options *ResetAcousticModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/reset"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1724,18 +1953,24 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(customizationID string) (
 
 
 // TrainAcousticModel : Train a custom acoustic model
-func (speechToText *SpeechToTextV1) TrainAcousticModel(customizationID string, customLanguageModelID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) TrainAcousticModel(options *TrainAcousticModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/train"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("custom_language_model_id=" + fmt.Sprint(customLanguageModelID))
+    if options.IsCustomLanguageModelIDSet {
+        request.Query("custom_language_model_id=" + fmt.Sprint(options.CustomLanguageModelID))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1773,18 +2008,24 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(customizationID string, c
 
 
 // UpgradeAcousticModel : Upgrade a custom acoustic model
-func (speechToText *SpeechToTextV1) UpgradeAcousticModel(customizationID string, customLanguageModelID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) UpgradeAcousticModel(options *UpgradeAcousticModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/upgrade_model"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("custom_language_model_id=" + fmt.Sprint(customLanguageModelID))
+    if options.IsCustomLanguageModelIDSet {
+        request.Query("custom_language_model_id=" + fmt.Sprint(options.CustomLanguageModelID))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1822,22 +2063,29 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(customizationID string,
 
 
 // AddAudio : Add an audio resource
-func (speechToText *SpeechToTextV1) AddAudio(customizationID string, audioName string, body *[][]byte, contentType string, containedContentType string, allowOverwrite bool) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) AddAudio(options *AddAudioOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/audio/{audio_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{audio_name}", audioName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{audio_name}", options.AudioName, 1)
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/zip")
-    request.Set("Content-Type", fmt.Sprint(contentType))
-    request.Set("Contained-Content-Type", fmt.Sprint(containedContentType))
-    request.Query("allow_overwrite=" + fmt.Sprint(allowOverwrite))
-    request.Send(body)
+    request.Set("Content-Type", fmt.Sprint(options.ContentType))
+    if options.IsContainedContentTypeSet {
+        request.Set("Contained-Content-Type", fmt.Sprint(options.ContainedContentType))
+    }
+    if options.IsAllowOverwriteSet {
+        request.Query("allow_overwrite=" + fmt.Sprint(options.AllowOverwrite))
+    }
+    request.SendFile(options.AudioResource)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1875,15 +2123,19 @@ func (speechToText *SpeechToTextV1) AddAudio(customizationID string, audioName s
 
 
 // DeleteAudio : Delete an audio resource
-func (speechToText *SpeechToTextV1) DeleteAudio(customizationID string, audioName string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) DeleteAudio(options *DeleteAudioOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/audio/{audio_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{audio_name}", audioName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{audio_name}", options.AudioName, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1924,15 +2176,19 @@ func (speechToText *SpeechToTextV1) DeleteAudio(customizationID string, audioNam
 
 
 // GetAudio : Get an audio resource
-func (speechToText *SpeechToTextV1) GetAudio(customizationID string, audioName string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) GetAudio(options *GetAudioOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/audio/{audio_name}"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
-    path = strings.Replace(path, "{audio_name}", audioName, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
+    path = strings.Replace(path, "{audio_name}", options.AudioName, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1984,14 +2240,18 @@ func GetGetAudioResult(response *watson.WatsonResponse) *AudioListing {
 }
 
 // ListAudio : List audio resources
-func (speechToText *SpeechToTextV1) ListAudio(customizationID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) ListAudio(options *ListAudioOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/acoustic_customizations/{customization_id}/audio"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
     tokenManager := speechToText.client.TokenManager
 
-    path = strings.Replace(path, "{customization_id}", customizationID, 1)
+    path = strings.Replace(path, "{customization_id}", options.CustomizationID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2043,7 +2303,7 @@ func GetListAudioResult(response *watson.WatsonResponse) *AudioResources {
 }
 
 // DeleteUserData : Delete labeled data
-func (speechToText *SpeechToTextV1) DeleteUserData(customerID string) (*watson.WatsonResponse, []error) {
+func (speechToText *SpeechToTextV1) DeleteUserData(options *DeleteUserDataOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/user_data"
     creds := speechToText.client.Creds
     useTM := speechToText.client.UseTM
@@ -2051,9 +2311,13 @@ func (speechToText *SpeechToTextV1) DeleteUserData(customerID string) (*watson.W
 
     request := req.New().Delete(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Query("customer_id=" + fmt.Sprint(customerID))
+    request.Query("customer_id=" + fmt.Sprint(options.CustomerID))
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2135,6 +2399,374 @@ type AcousticModels struct {
 	Customizations []AcousticModel `json:"customizations"`
 }
 
+// AddAudioOptions : The addAudio options.
+type AddAudioOptions struct {
+
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The name of the audio resource for the custom acoustic model. When adding an audio resource, do not include spaces in the name; use a localized name that matches the language of the custom model.
+	AudioName string `json:"audio_name"`
+
+	AudioResource io.ReadCloser `json:"audio_resource"`
+
+	// The type of the input.
+	ContentType string `json:"content_type"`
+
+	// For an archive-type resource, specifies the format of the audio files contained in the archive file. The parameter accepts all of the audio formats supported for use with speech recognition, including the `rate`, `channels`, and `endianness` parameters that are used with some formats. For a complete list of supported audio formats, see [Audio formats](/docs/services/speech-to-text/input.html#formats).
+	ContainedContentType string `json:"contained_content_type,omitempty"`
+
+    // Indicates whether user set optional parameter ContainedContentType
+    IsContainedContentTypeSet bool
+
+	// If `true`, the specified corpus or audio resource overwrites an existing corpus or audio resource with the same name. If `false`, the request fails if a corpus or audio resource with the same name already exists. The parameter has no effect if a corpus or audio resource with the same name does not already exist.
+	AllowOverwrite bool `json:"allow_overwrite,omitempty"`
+
+    // Indicates whether user set optional parameter AllowOverwrite
+    IsAllowOverwriteSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewAddAudioOptionsForZip : Instantiate AddAudioOptionsForZip
+func NewAddAudioOptionsForZip(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "application/zip",
+    }
+}
+
+// NewAddAudioOptionsForGzip : Instantiate AddAudioOptionsForGzip
+func NewAddAudioOptionsForGzip(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "application/gzip",
+    }
+}
+
+// NewAddAudioOptionsForBasic : Instantiate AddAudioOptionsForBasic
+func NewAddAudioOptionsForBasic(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/basic",
+    }
+}
+
+// NewAddAudioOptionsForFlac : Instantiate AddAudioOptionsForFlac
+func NewAddAudioOptionsForFlac(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/flac",
+    }
+}
+
+// NewAddAudioOptionsForL16 : Instantiate AddAudioOptionsForL16
+func NewAddAudioOptionsForL16(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/l16",
+    }
+}
+
+// NewAddAudioOptionsForMp3 : Instantiate AddAudioOptionsForMp3
+func NewAddAudioOptionsForMp3(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/mp3",
+    }
+}
+
+// NewAddAudioOptionsForMpeg : Instantiate AddAudioOptionsForMpeg
+func NewAddAudioOptionsForMpeg(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/mpeg",
+    }
+}
+
+// NewAddAudioOptionsForMulaw : Instantiate AddAudioOptionsForMulaw
+func NewAddAudioOptionsForMulaw(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/mulaw",
+    }
+}
+
+// NewAddAudioOptionsForOgg : Instantiate AddAudioOptionsForOgg
+func NewAddAudioOptionsForOgg(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/ogg",
+    }
+}
+
+// NewAddAudioOptionsForOggcodecsopus : Instantiate AddAudioOptionsForOggcodecsopus
+func NewAddAudioOptionsForOggcodecsopus(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/ogg;codecs=opus",
+    }
+}
+
+// NewAddAudioOptionsForOggcodecsvorbis : Instantiate AddAudioOptionsForOggcodecsvorbis
+func NewAddAudioOptionsForOggcodecsvorbis(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/ogg;codecs=vorbis",
+    }
+}
+
+// NewAddAudioOptionsForWav : Instantiate AddAudioOptionsForWav
+func NewAddAudioOptionsForWav(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/wav",
+    }
+}
+
+// NewAddAudioOptionsForWebm : Instantiate AddAudioOptionsForWebm
+func NewAddAudioOptionsForWebm(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/webm",
+    }
+}
+
+// NewAddAudioOptionsForWebmcodecsopus : Instantiate AddAudioOptionsForWebmcodecsopus
+func NewAddAudioOptionsForWebmcodecsopus(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/webm;codecs=opus",
+    }
+}
+
+// NewAddAudioOptionsForWebmcodecsvorbis : Instantiate AddAudioOptionsForWebmcodecsvorbis
+func NewAddAudioOptionsForWebmcodecsvorbis(audioResource io.ReadCloser) *AddAudioOptions {
+    return &AddAudioOptions{
+        AudioResource: audioResource,
+        ContentType: "audio/webm;codecs=vorbis",
+    }
+}
+
+// SetAudioResource : Allow user to set AudioResource with specified ContentType
+func (options *AddAudioOptions) SetAudioResource(audioResource io.ReadCloser, contentType string) *AddAudioOptions {
+    options.AudioResource = audioResource
+    options.ContentType = contentType
+    return options
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *AddAudioOptions) SetCustomizationID(param string) *AddAudioOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetAudioName : Allow user to set AudioName
+func (options *AddAudioOptions) SetAudioName(param string) *AddAudioOptions {
+    options.AudioName = param
+    return options
+}
+
+// SetContainedContentType : Allow user to set ContainedContentType
+func (options *AddAudioOptions) SetContainedContentType(param string) *AddAudioOptions {
+    options.ContainedContentType = param
+    options.IsContainedContentTypeSet = true
+    return options
+}
+
+// SetAllowOverwrite : Allow user to set AllowOverwrite
+func (options *AddAudioOptions) SetAllowOverwrite(param bool) *AddAudioOptions {
+    options.AllowOverwrite = param
+    options.IsAllowOverwriteSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *AddAudioOptions) SetHeaders(param map[string]string) *AddAudioOptions {
+    options.Headers = param
+    return options
+}
+
+// AddCorpusOptions : The addCorpus options.
+type AddCorpusOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The name of the corpus for the custom language model. When adding a corpus, do not include spaces in the name; use a localized name that matches the language of the custom model; and do not use the name `user`, which is reserved by the service to denote custom words added or modified by the user.
+	CorpusName string `json:"corpus_name"`
+
+	// A plain text file that contains the training data for the corpus. Encode the file in UTF-8 if it contains non-ASCII characters; the service assumes UTF-8 encoding if it encounters non-ASCII characters. With cURL, use the `--data-binary` option to upload the file for the request.
+	CorpusFile os.File `json:"corpus_file"`
+
+	// If `true`, the specified corpus or audio resource overwrites an existing corpus or audio resource with the same name. If `false`, the request fails if a corpus or audio resource with the same name already exists. The parameter has no effect if a corpus or audio resource with the same name does not already exist.
+	AllowOverwrite bool `json:"allow_overwrite,omitempty"`
+
+    // Indicates whether user set optional parameter AllowOverwrite
+    IsAllowOverwriteSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewAddCorpusOptions : Instantiate AddCorpusOptions
+func NewAddCorpusOptions(customizationID string, corpusName string, corpusFile os.File) *AddCorpusOptions {
+    return &AddCorpusOptions{
+        CustomizationID: customizationID,
+        CorpusName: corpusName,
+        CorpusFile: corpusFile,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *AddCorpusOptions) SetCustomizationID(param string) *AddCorpusOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetCorpusName : Allow user to set CorpusName
+func (options *AddCorpusOptions) SetCorpusName(param string) *AddCorpusOptions {
+    options.CorpusName = param
+    return options
+}
+
+// SetCorpusFile : Allow user to set CorpusFile
+func (options *AddCorpusOptions) SetCorpusFile(param os.File) *AddCorpusOptions {
+    options.CorpusFile = param
+    return options
+}
+
+// SetAllowOverwrite : Allow user to set AllowOverwrite
+func (options *AddCorpusOptions) SetAllowOverwrite(param bool) *AddCorpusOptions {
+    options.AllowOverwrite = param
+    options.IsAllowOverwriteSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *AddCorpusOptions) SetHeaders(param map[string]string) *AddCorpusOptions {
+    options.Headers = param
+    return options
+}
+
+// AddWordOptions : The addWord options.
+type AddWordOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The custom word for the custom language model. When you add or update a custom word with the **Add a custom word** method, do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of compound words.
+	WordName string `json:"word_name"`
+
+	// For the **Add custom words** method, you must specify the custom word that is to be added to or updated in the custom model. Do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of compound words. Omit this field for the **Add a custom word** method.
+	Word string `json:"word,omitempty"`
+
+    // Indicates whether user set optional parameter Word
+    IsWordSet bool
+
+	// An array of sounds-like pronunciations for the custom word. Specify how words that are difficult to pronounce, foreign words, acronyms, and so on can be pronounced by users. For a word that is not in the service's base vocabulary, omit the parameter to have the service automatically generate a sounds-like pronunciation for the word. For a word that is in the service's base vocabulary, use the parameter to specify additional pronunciations for the word. You cannot override the default pronunciation of a word; pronunciations you add augment the pronunciation from the base vocabulary. A word can have at most five sounds-like pronunciations, and a pronunciation can include at most 40 characters not including spaces.
+	SoundsLike []string `json:"sounds_like,omitempty"`
+
+    // Indicates whether user set optional parameter SoundsLike
+    IsSoundsLikeSet bool
+
+	// An alternative spelling for the custom word when it appears in a transcript. Use the parameter when you want the word to have a spelling that is different from its usual representation or from its spelling in corpora training data.
+	DisplayAs string `json:"display_as,omitempty"`
+
+    // Indicates whether user set optional parameter DisplayAs
+    IsDisplayAsSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewAddWordOptions : Instantiate AddWordOptions
+func NewAddWordOptions(customizationID string, wordName string) *AddWordOptions {
+    return &AddWordOptions{
+        CustomizationID: customizationID,
+        WordName: wordName,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *AddWordOptions) SetCustomizationID(param string) *AddWordOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetWordName : Allow user to set WordName
+func (options *AddWordOptions) SetWordName(param string) *AddWordOptions {
+    options.WordName = param
+    return options
+}
+
+// SetWord : Allow user to set Word
+func (options *AddWordOptions) SetWord(param string) *AddWordOptions {
+    options.Word = param
+    options.IsWordSet = true
+    return options
+}
+
+// SetSoundsLike : Allow user to set SoundsLike
+func (options *AddWordOptions) SetSoundsLike(param []string) *AddWordOptions {
+    options.SoundsLike = param
+    options.IsSoundsLikeSet = true
+    return options
+}
+
+// SetDisplayAs : Allow user to set DisplayAs
+func (options *AddWordOptions) SetDisplayAs(param string) *AddWordOptions {
+    options.DisplayAs = param
+    options.IsDisplayAsSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *AddWordOptions) SetHeaders(param map[string]string) *AddWordOptions {
+    options.Headers = param
+    return options
+}
+
+// AddWordsOptions : The addWords options.
+type AddWordsOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// An array of objects that provides information about each custom word that is to be added to or updated in the custom language model.
+	Words []CustomWord `json:"words"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewAddWordsOptions : Instantiate AddWordsOptions
+func NewAddWordsOptions(customizationID string, words []CustomWord) *AddWordsOptions {
+    return &AddWordsOptions{
+        CustomizationID: customizationID,
+        Words: words,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *AddWordsOptions) SetCustomizationID(param string) *AddWordsOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetWords : Allow user to set Words
+func (options *AddWordsOptions) SetWords(param []CustomWord) *AddWordsOptions {
+    options.Words = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *AddWordsOptions) SetHeaders(param map[string]string) *AddWordsOptions {
+    options.Headers = param
+    return options
+}
+
 // AudioDetails : AudioDetails struct
 type AudioDetails struct {
 
@@ -2199,6 +2831,53 @@ type AudioResources struct {
 	Audio []AudioResource `json:"audio"`
 }
 
+// CheckJobOptions : The checkJob options.
+type CheckJobOptions struct {
+
+	// The ID of the asynchronous job.
+	ID string `json:"id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCheckJobOptions : Instantiate CheckJobOptions
+func NewCheckJobOptions(id string) *CheckJobOptions {
+    return &CheckJobOptions{
+        ID: id,
+    }
+}
+
+// SetID : Allow user to set ID
+func (options *CheckJobOptions) SetID(param string) *CheckJobOptions {
+    options.ID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CheckJobOptions) SetHeaders(param map[string]string) *CheckJobOptions {
+    options.Headers = param
+    return options
+}
+
+// CheckJobsOptions : The checkJobs options.
+type CheckJobsOptions struct {
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCheckJobsOptions : Instantiate CheckJobsOptions
+func NewCheckJobsOptions() *CheckJobsOptions {
+    return &CheckJobsOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CheckJobsOptions) SetHeaders(param map[string]string) *CheckJobsOptions {
+    options.Headers = param
+    return options
+}
+
 // Corpora : Corpora struct
 type Corpora struct {
 
@@ -2225,8 +2904,8 @@ type Corpus struct {
 	Error string `json:"error,omitempty"`
 }
 
-// CreateAcousticModel : CreateAcousticModel struct
-type CreateAcousticModel struct {
+// CreateAcousticModelOptions : The createAcousticModel options.
+type CreateAcousticModelOptions struct {
 
 	// A user-defined name for the new custom acoustic model. Use a name that is unique among all custom acoustic models that you own. Use a localized name that matches the language of the custom model. Use a name that describes the acoustic environment of the custom model, such as `Mobile custom model` or `Noisy car custom model`.
 	Name string `json:"name"`
@@ -2236,10 +2915,425 @@ type CreateAcousticModel struct {
 
 	// A description of the new custom acoustic model. Use a localized description that matches the language of the custom model.
 	Description string `json:"description,omitempty"`
+
+    // Indicates whether user set optional parameter Description
+    IsDescriptionSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
 }
 
-// CreateLanguageModel : CreateLanguageModel struct
-type CreateLanguageModel struct {
+// NewCreateAcousticModelOptions : Instantiate CreateAcousticModelOptions
+func NewCreateAcousticModelOptions(name string, baseModelName string) *CreateAcousticModelOptions {
+    return &CreateAcousticModelOptions{
+        Name: name,
+        BaseModelName: baseModelName,
+    }
+}
+
+// SetName : Allow user to set Name
+func (options *CreateAcousticModelOptions) SetName(param string) *CreateAcousticModelOptions {
+    options.Name = param
+    return options
+}
+
+// SetBaseModelName : Allow user to set BaseModelName
+func (options *CreateAcousticModelOptions) SetBaseModelName(param string) *CreateAcousticModelOptions {
+    options.BaseModelName = param
+    return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateAcousticModelOptions) SetDescription(param string) *CreateAcousticModelOptions {
+    options.Description = param
+    options.IsDescriptionSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateAcousticModelOptions) SetHeaders(param map[string]string) *CreateAcousticModelOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateJobOptions : The createJob options.
+type CreateJobOptions struct {
+
+	Audio io.ReadCloser `json:"audio,omitempty"`
+
+	// The type of the input.
+	ContentType string `json:"content_type"`
+
+	// The identifier of the model that is to be used for the recognition request or, for the **Create a session** method, with the new session.
+	Model string `json:"model,omitempty"`
+
+    // Indicates whether user set optional parameter Model
+    IsModelSet bool
+
+	// A URL to which callback notifications are to be sent. The URL must already be successfully white-listed by using the **Register a callback** method. You can include the same callback URL with any number of job creation requests. Omit the parameter to poll the service for job completion and results. Use the `user_token` parameter to specify a unique user-specified string with each job to differentiate the callback notifications for the jobs.
+	CallbackURL string `json:"callback_url,omitempty"`
+
+    // Indicates whether user set optional parameter CallbackURL
+    IsCallbackURLSet bool
+
+	// If the job includes a callback URL, a comma-separated list of notification events to which to subscribe. Valid events are * `recognitions.started` generates a callback notification when the service begins to process the job. * `recognitions.completed` generates a callback notification when the job is complete. You must use the **Check a job** method to retrieve the results before they time out or are deleted. * `recognitions.completed_with_results` generates a callback notification when the job is complete. The notification includes the results of the request. * `recognitions.failed` generates a callback notification if the service experiences an error while processing the job. Omit the parameter to subscribe to the default events: `recognitions.started`, `recognitions.completed`, and `recognitions.failed`. The `recognitions.completed` and `recognitions.completed_with_results` events are incompatible; you can specify only of the two events. If the job does not include a callback URL, omit the parameter.
+	Events string `json:"events,omitempty"`
+
+    // Indicates whether user set optional parameter Events
+    IsEventsSet bool
+
+	// If the job includes a callback URL, a user-specified string that the service is to include with each callback notification for the job; the token allows the user to maintain an internal mapping between jobs and notification events. If the job does not include a callback URL, omit the parameter.
+	UserToken string `json:"user_token,omitempty"`
+
+    // Indicates whether user set optional parameter UserToken
+    IsUserTokenSet bool
+
+	// The number of minutes for which the results are to be available after the job has finished. If not delivered via a callback, the results must be retrieved within this time. Omit the parameter to use a time to live of one week. The parameter is valid with or without a callback URL.
+	ResultsTTL int64 `json:"results_ttl,omitempty"`
+
+    // Indicates whether user set optional parameter ResultsTTL
+    IsResultsTTLSet bool
+
+	// The customization ID (GUID) of a custom language model that is to be used with the recognition request or, for the **Create a session** method, with the new session. The base model of the specified custom language model must match the model specified with the `model` parameter. You must make the request with service credentials created for the instance of the service that owns the custom model. By default, no custom language model is used.
+	CustomizationID string `json:"customization_id,omitempty"`
+
+    // Indicates whether user set optional parameter CustomizationID
+    IsCustomizationIDSet bool
+
+	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request or, for the **Create a session** method, with the new session. The base model of the specified custom acoustic model must match the model specified with the `model` parameter. You must make the request with service credentials created for the instance of the service that owns the custom model. By default, no custom acoustic model is used.
+	AcousticCustomizationID string `json:"acoustic_customization_id,omitempty"`
+
+    // Indicates whether user set optional parameter AcousticCustomizationID
+    IsAcousticCustomizationIDSet bool
+
+	// The version of the specified base model that is to be used with recognition request or, for the **Create a session** method, with the new session. Multiple versions of a base model can exist when a model is updated for internal improvements. The parameter is intended primarily for use with custom models that have been upgraded for a new base model. The default value depends on whether the parameter is used with or without a custom model. For more information, see [Base model version](https://console.bluemix.net/docs/services/speech-to-text/input.html#version).
+	BaseModelVersion string `json:"base_model_version,omitempty"`
+
+    // Indicates whether user set optional parameter BaseModelVersion
+    IsBaseModelVersionSet bool
+
+	// If you specify the customization ID (GUID) of a custom language model with the recognition request or, for sessions, with the **Create a session** method, the customization weight tells the service how much weight to give to words from the custom language model compared to those from the base model for the current request. Specify a value between 0.0 and 1.0. Unless a different customization weight was specified for the custom model when it was trained, the default value is 0.3. A customization weight that you specify overrides a weight that was specified when the custom model was trained. The default value yields the best performance in general. Assign a higher value if your audio makes frequent use of OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
+	CustomizationWeight float64 `json:"customization_weight,omitempty"`
+
+    // Indicates whether user set optional parameter CustomizationWeight
+    IsCustomizationWeightSet bool
+
+	// The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user simply walks away. Use `-1` for infinity.
+	InactivityTimeout int64 `json:"inactivity_timeout,omitempty"`
+
+    // Indicates whether user set optional parameter InactivityTimeout
+    IsInactivityTimeoutSet bool
+
+	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens. Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must also specify a keywords threshold. You can spot a maximum of 1000 keywords. Omit the parameter or specify an empty array if you do not need to spot keywords.
+	Keywords []string `json:"keywords,omitempty"`
+
+    // Indicates whether user set optional parameter Keywords
+    IsKeywordsSet bool
+
+	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. No keyword spotting is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords.
+	KeywordsThreshold float32 `json:"keywords_threshold,omitempty"`
+
+    // Indicates whether user set optional parameter KeywordsThreshold
+    IsKeywordsThresholdSet bool
+
+	// The maximum number of alternative transcripts that the service is to return. By default, a single transcription is returned.
+	MaxAlternatives int64 `json:"max_alternatives,omitempty"`
+
+    // Indicates whether user set optional parameter MaxAlternatives
+    IsMaxAlternativesSet bool
+
+	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. No alternative words are computed if you omit the parameter.
+	WordAlternativesThreshold float32 `json:"word_alternatives_threshold,omitempty"`
+
+    // Indicates whether user set optional parameter WordAlternativesThreshold
+    IsWordAlternativesThresholdSet bool
+
+	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, no word confidence measures are returned.
+	WordConfidence bool `json:"word_confidence,omitempty"`
+
+    // Indicates whether user set optional parameter WordConfidence
+    IsWordConfidenceSet bool
+
+	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned.
+	Timestamps bool `json:"timestamps,omitempty"`
+
+    // Indicates whether user set optional parameter Timestamps
+    IsTimestampsSet bool
+
+	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English transcription only.
+	ProfanityFilter bool `json:"profanity_filter,omitempty"`
+
+    // Indicates whether user set optional parameter ProfanityFilter
+    IsProfanityFilterSet bool
+
+	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and internet addresses into more readable, conventional representations in the final transcript of a recognition request. For US English, the service also converts certain keyword strings to punctuation symbols. By default, no smart formatting is performed. Applies to US English and Spanish transcription only.
+	SmartFormatting bool `json:"smart_formatting,omitempty"`
+
+    // Indicates whether user set optional parameter SmartFormatting
+    IsSmartFormattingSet bool
+
+	// If `true`, the response includes labels that identify which words were spoken by which participants in a multi-person exchange. By default, no speaker labels are returned. Setting `speaker_labels` to `true` forces the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter. To determine whether a language model supports speaker labels, use the **Get models** method and check that the attribute `speaker_labels` is set to `true`. You can also refer to [Speaker labels](https://console.bluemix.net/docs/services/speech-to-text/output.html#speaker_labels).
+	SpeakerLabels bool `json:"speaker_labels,omitempty"`
+
+    // Indicates whether user set optional parameter SpeakerLabels
+    IsSpeakerLabelsSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateJobOptionsForBasic : Instantiate CreateJobOptionsForBasic
+func NewCreateJobOptionsForBasic(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/basic",
+    }
+}
+
+// NewCreateJobOptionsForFlac : Instantiate CreateJobOptionsForFlac
+func NewCreateJobOptionsForFlac(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/flac",
+    }
+}
+
+// NewCreateJobOptionsForL16 : Instantiate CreateJobOptionsForL16
+func NewCreateJobOptionsForL16(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/l16",
+    }
+}
+
+// NewCreateJobOptionsForMp3 : Instantiate CreateJobOptionsForMp3
+func NewCreateJobOptionsForMp3(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/mp3",
+    }
+}
+
+// NewCreateJobOptionsForMpeg : Instantiate CreateJobOptionsForMpeg
+func NewCreateJobOptionsForMpeg(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/mpeg",
+    }
+}
+
+// NewCreateJobOptionsForMulaw : Instantiate CreateJobOptionsForMulaw
+func NewCreateJobOptionsForMulaw(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/mulaw",
+    }
+}
+
+// NewCreateJobOptionsForOgg : Instantiate CreateJobOptionsForOgg
+func NewCreateJobOptionsForOgg(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/ogg",
+    }
+}
+
+// NewCreateJobOptionsForOggcodecsopus : Instantiate CreateJobOptionsForOggcodecsopus
+func NewCreateJobOptionsForOggcodecsopus(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/ogg;codecs=opus",
+    }
+}
+
+// NewCreateJobOptionsForOggcodecsvorbis : Instantiate CreateJobOptionsForOggcodecsvorbis
+func NewCreateJobOptionsForOggcodecsvorbis(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/ogg;codecs=vorbis",
+    }
+}
+
+// NewCreateJobOptionsForWav : Instantiate CreateJobOptionsForWav
+func NewCreateJobOptionsForWav(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/wav",
+    }
+}
+
+// NewCreateJobOptionsForWebm : Instantiate CreateJobOptionsForWebm
+func NewCreateJobOptionsForWebm(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/webm",
+    }
+}
+
+// NewCreateJobOptionsForWebmcodecsopus : Instantiate CreateJobOptionsForWebmcodecsopus
+func NewCreateJobOptionsForWebmcodecsopus(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/webm;codecs=opus",
+    }
+}
+
+// NewCreateJobOptionsForWebmcodecsvorbis : Instantiate CreateJobOptionsForWebmcodecsvorbis
+func NewCreateJobOptionsForWebmcodecsvorbis(audio io.ReadCloser) *CreateJobOptions {
+    return &CreateJobOptions{
+        Audio: audio,
+        ContentType: "audio/webm;codecs=vorbis",
+    }
+}
+
+// SetAudio : Allow user to set Audio with specified ContentType
+func (options *CreateJobOptions) SetAudio(audio io.ReadCloser, contentType string) *CreateJobOptions {
+    options.Audio = audio
+    options.ContentType = contentType
+    return options
+}
+
+// SetModel : Allow user to set Model
+func (options *CreateJobOptions) SetModel(param string) *CreateJobOptions {
+    options.Model = param
+    options.IsModelSet = true
+    return options
+}
+
+// SetCallbackURL : Allow user to set CallbackURL
+func (options *CreateJobOptions) SetCallbackURL(param string) *CreateJobOptions {
+    options.CallbackURL = param
+    options.IsCallbackURLSet = true
+    return options
+}
+
+// SetEvents : Allow user to set Events
+func (options *CreateJobOptions) SetEvents(param string) *CreateJobOptions {
+    options.Events = param
+    options.IsEventsSet = true
+    return options
+}
+
+// SetUserToken : Allow user to set UserToken
+func (options *CreateJobOptions) SetUserToken(param string) *CreateJobOptions {
+    options.UserToken = param
+    options.IsUserTokenSet = true
+    return options
+}
+
+// SetResultsTTL : Allow user to set ResultsTTL
+func (options *CreateJobOptions) SetResultsTTL(param int64) *CreateJobOptions {
+    options.ResultsTTL = param
+    options.IsResultsTTLSet = true
+    return options
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *CreateJobOptions) SetCustomizationID(param string) *CreateJobOptions {
+    options.CustomizationID = param
+    options.IsCustomizationIDSet = true
+    return options
+}
+
+// SetAcousticCustomizationID : Allow user to set AcousticCustomizationID
+func (options *CreateJobOptions) SetAcousticCustomizationID(param string) *CreateJobOptions {
+    options.AcousticCustomizationID = param
+    options.IsAcousticCustomizationIDSet = true
+    return options
+}
+
+// SetBaseModelVersion : Allow user to set BaseModelVersion
+func (options *CreateJobOptions) SetBaseModelVersion(param string) *CreateJobOptions {
+    options.BaseModelVersion = param
+    options.IsBaseModelVersionSet = true
+    return options
+}
+
+// SetCustomizationWeight : Allow user to set CustomizationWeight
+func (options *CreateJobOptions) SetCustomizationWeight(param float64) *CreateJobOptions {
+    options.CustomizationWeight = param
+    options.IsCustomizationWeightSet = true
+    return options
+}
+
+// SetInactivityTimeout : Allow user to set InactivityTimeout
+func (options *CreateJobOptions) SetInactivityTimeout(param int64) *CreateJobOptions {
+    options.InactivityTimeout = param
+    options.IsInactivityTimeoutSet = true
+    return options
+}
+
+// SetKeywords : Allow user to set Keywords
+func (options *CreateJobOptions) SetKeywords(param []string) *CreateJobOptions {
+    options.Keywords = param
+    options.IsKeywordsSet = true
+    return options
+}
+
+// SetKeywordsThreshold : Allow user to set KeywordsThreshold
+func (options *CreateJobOptions) SetKeywordsThreshold(param float32) *CreateJobOptions {
+    options.KeywordsThreshold = param
+    options.IsKeywordsThresholdSet = true
+    return options
+}
+
+// SetMaxAlternatives : Allow user to set MaxAlternatives
+func (options *CreateJobOptions) SetMaxAlternatives(param int64) *CreateJobOptions {
+    options.MaxAlternatives = param
+    options.IsMaxAlternativesSet = true
+    return options
+}
+
+// SetWordAlternativesThreshold : Allow user to set WordAlternativesThreshold
+func (options *CreateJobOptions) SetWordAlternativesThreshold(param float32) *CreateJobOptions {
+    options.WordAlternativesThreshold = param
+    options.IsWordAlternativesThresholdSet = true
+    return options
+}
+
+// SetWordConfidence : Allow user to set WordConfidence
+func (options *CreateJobOptions) SetWordConfidence(param bool) *CreateJobOptions {
+    options.WordConfidence = param
+    options.IsWordConfidenceSet = true
+    return options
+}
+
+// SetTimestamps : Allow user to set Timestamps
+func (options *CreateJobOptions) SetTimestamps(param bool) *CreateJobOptions {
+    options.Timestamps = param
+    options.IsTimestampsSet = true
+    return options
+}
+
+// SetProfanityFilter : Allow user to set ProfanityFilter
+func (options *CreateJobOptions) SetProfanityFilter(param bool) *CreateJobOptions {
+    options.ProfanityFilter = param
+    options.IsProfanityFilterSet = true
+    return options
+}
+
+// SetSmartFormatting : Allow user to set SmartFormatting
+func (options *CreateJobOptions) SetSmartFormatting(param bool) *CreateJobOptions {
+    options.SmartFormatting = param
+    options.IsSmartFormattingSet = true
+    return options
+}
+
+// SetSpeakerLabels : Allow user to set SpeakerLabels
+func (options *CreateJobOptions) SetSpeakerLabels(param bool) *CreateJobOptions {
+    options.SpeakerLabels = param
+    options.IsSpeakerLabelsSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateJobOptions) SetHeaders(param map[string]string) *CreateJobOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateLanguageModelOptions : The createLanguageModel options.
+type CreateLanguageModelOptions struct {
 
 	// A user-defined name for the new custom language model. Use a name that is unique among all custom language models that you own. Use a localized name that matches the language of the custom model. Use a name that describes the domain of the custom model, such as `Medical custom model` or `Legal custom model`.
 	Name string `json:"name"`
@@ -2250,8 +3344,57 @@ type CreateLanguageModel struct {
 	// The dialect of the specified language that is to be used with the custom language model. The parameter is meaningful only for Spanish models, for which the service creates a custom language model that is suited for speech in one of the following dialects: * `es-ES` for Castilian Spanish (the default) * `es-LA` for Latin American Spanish * `es-US` for North American (Mexican) Spanish A specified dialect must be valid for the base model. By default, the dialect matches the language of the base model; for example, `en-US` for either of the US English language models.
 	Dialect string `json:"dialect,omitempty"`
 
+    // Indicates whether user set optional parameter Dialect
+    IsDialectSet bool
+
 	// A description of the new custom language model. Use a localized description that matches the language of the custom model.
 	Description string `json:"description,omitempty"`
+
+    // Indicates whether user set optional parameter Description
+    IsDescriptionSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateLanguageModelOptions : Instantiate CreateLanguageModelOptions
+func NewCreateLanguageModelOptions(name string, baseModelName string) *CreateLanguageModelOptions {
+    return &CreateLanguageModelOptions{
+        Name: name,
+        BaseModelName: baseModelName,
+    }
+}
+
+// SetName : Allow user to set Name
+func (options *CreateLanguageModelOptions) SetName(param string) *CreateLanguageModelOptions {
+    options.Name = param
+    return options
+}
+
+// SetBaseModelName : Allow user to set BaseModelName
+func (options *CreateLanguageModelOptions) SetBaseModelName(param string) *CreateLanguageModelOptions {
+    options.BaseModelName = param
+    return options
+}
+
+// SetDialect : Allow user to set Dialect
+func (options *CreateLanguageModelOptions) SetDialect(param string) *CreateLanguageModelOptions {
+    options.Dialect = param
+    options.IsDialectSet = true
+    return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateLanguageModelOptions) SetDescription(param string) *CreateLanguageModelOptions {
+    options.Description = param
+    options.IsDescriptionSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateLanguageModelOptions) SetHeaders(param map[string]string) *CreateLanguageModelOptions {
+    options.Headers = param
+    return options
 }
 
 // CustomWord : CustomWord struct
@@ -2267,11 +3410,441 @@ type CustomWord struct {
 	DisplayAs string `json:"display_as,omitempty"`
 }
 
-// CustomWords : CustomWords struct
-type CustomWords struct {
+// DeleteAcousticModelOptions : The deleteAcousticModel options.
+type DeleteAcousticModelOptions struct {
 
-	// An array of objects that provides information about each custom word that is to be added to or updated in the custom language model.
-	Words []CustomWord `json:"words"`
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteAcousticModelOptions : Instantiate DeleteAcousticModelOptions
+func NewDeleteAcousticModelOptions(customizationID string) *DeleteAcousticModelOptions {
+    return &DeleteAcousticModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *DeleteAcousticModelOptions) SetCustomizationID(param string) *DeleteAcousticModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteAcousticModelOptions) SetHeaders(param map[string]string) *DeleteAcousticModelOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteAudioOptions : The deleteAudio options.
+type DeleteAudioOptions struct {
+
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The name of the audio resource for the custom acoustic model. When adding an audio resource, do not include spaces in the name; use a localized name that matches the language of the custom model.
+	AudioName string `json:"audio_name"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteAudioOptions : Instantiate DeleteAudioOptions
+func NewDeleteAudioOptions(customizationID string, audioName string) *DeleteAudioOptions {
+    return &DeleteAudioOptions{
+        CustomizationID: customizationID,
+        AudioName: audioName,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *DeleteAudioOptions) SetCustomizationID(param string) *DeleteAudioOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetAudioName : Allow user to set AudioName
+func (options *DeleteAudioOptions) SetAudioName(param string) *DeleteAudioOptions {
+    options.AudioName = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteAudioOptions) SetHeaders(param map[string]string) *DeleteAudioOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteCorpusOptions : The deleteCorpus options.
+type DeleteCorpusOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The name of the corpus for the custom language model. When adding a corpus, do not include spaces in the name; use a localized name that matches the language of the custom model; and do not use the name `user`, which is reserved by the service to denote custom words added or modified by the user.
+	CorpusName string `json:"corpus_name"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteCorpusOptions : Instantiate DeleteCorpusOptions
+func NewDeleteCorpusOptions(customizationID string, corpusName string) *DeleteCorpusOptions {
+    return &DeleteCorpusOptions{
+        CustomizationID: customizationID,
+        CorpusName: corpusName,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *DeleteCorpusOptions) SetCustomizationID(param string) *DeleteCorpusOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetCorpusName : Allow user to set CorpusName
+func (options *DeleteCorpusOptions) SetCorpusName(param string) *DeleteCorpusOptions {
+    options.CorpusName = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteCorpusOptions) SetHeaders(param map[string]string) *DeleteCorpusOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteJobOptions : The deleteJob options.
+type DeleteJobOptions struct {
+
+	// The ID of the asynchronous job.
+	ID string `json:"id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteJobOptions : Instantiate DeleteJobOptions
+func NewDeleteJobOptions(id string) *DeleteJobOptions {
+    return &DeleteJobOptions{
+        ID: id,
+    }
+}
+
+// SetID : Allow user to set ID
+func (options *DeleteJobOptions) SetID(param string) *DeleteJobOptions {
+    options.ID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteJobOptions) SetHeaders(param map[string]string) *DeleteJobOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteLanguageModelOptions : The deleteLanguageModel options.
+type DeleteLanguageModelOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteLanguageModelOptions : Instantiate DeleteLanguageModelOptions
+func NewDeleteLanguageModelOptions(customizationID string) *DeleteLanguageModelOptions {
+    return &DeleteLanguageModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *DeleteLanguageModelOptions) SetCustomizationID(param string) *DeleteLanguageModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteLanguageModelOptions) SetHeaders(param map[string]string) *DeleteLanguageModelOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteUserDataOptions : The deleteUserData options.
+type DeleteUserDataOptions struct {
+
+	// The customer ID for which all data is to be deleted.
+	CustomerID string `json:"customer_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
+func NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+    return &DeleteUserDataOptions{
+        CustomerID: customerID,
+    }
+}
+
+// SetCustomerID : Allow user to set CustomerID
+func (options *DeleteUserDataOptions) SetCustomerID(param string) *DeleteUserDataOptions {
+    options.CustomerID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *DeleteUserDataOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteWordOptions : The deleteWord options.
+type DeleteWordOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The custom word for the custom language model. When you add or update a custom word with the **Add a custom word** method, do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of compound words.
+	WordName string `json:"word_name"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteWordOptions : Instantiate DeleteWordOptions
+func NewDeleteWordOptions(customizationID string, wordName string) *DeleteWordOptions {
+    return &DeleteWordOptions{
+        CustomizationID: customizationID,
+        WordName: wordName,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *DeleteWordOptions) SetCustomizationID(param string) *DeleteWordOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetWordName : Allow user to set WordName
+func (options *DeleteWordOptions) SetWordName(param string) *DeleteWordOptions {
+    options.WordName = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteWordOptions) SetHeaders(param map[string]string) *DeleteWordOptions {
+    options.Headers = param
+    return options
+}
+
+// GetAcousticModelOptions : The getAcousticModel options.
+type GetAcousticModelOptions struct {
+
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetAcousticModelOptions : Instantiate GetAcousticModelOptions
+func NewGetAcousticModelOptions(customizationID string) *GetAcousticModelOptions {
+    return &GetAcousticModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *GetAcousticModelOptions) SetCustomizationID(param string) *GetAcousticModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetAcousticModelOptions) SetHeaders(param map[string]string) *GetAcousticModelOptions {
+    options.Headers = param
+    return options
+}
+
+// GetAudioOptions : The getAudio options.
+type GetAudioOptions struct {
+
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The name of the audio resource for the custom acoustic model. When adding an audio resource, do not include spaces in the name; use a localized name that matches the language of the custom model.
+	AudioName string `json:"audio_name"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetAudioOptions : Instantiate GetAudioOptions
+func NewGetAudioOptions(customizationID string, audioName string) *GetAudioOptions {
+    return &GetAudioOptions{
+        CustomizationID: customizationID,
+        AudioName: audioName,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *GetAudioOptions) SetCustomizationID(param string) *GetAudioOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetAudioName : Allow user to set AudioName
+func (options *GetAudioOptions) SetAudioName(param string) *GetAudioOptions {
+    options.AudioName = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetAudioOptions) SetHeaders(param map[string]string) *GetAudioOptions {
+    options.Headers = param
+    return options
+}
+
+// GetCorpusOptions : The getCorpus options.
+type GetCorpusOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The name of the corpus for the custom language model. When adding a corpus, do not include spaces in the name; use a localized name that matches the language of the custom model; and do not use the name `user`, which is reserved by the service to denote custom words added or modified by the user.
+	CorpusName string `json:"corpus_name"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetCorpusOptions : Instantiate GetCorpusOptions
+func NewGetCorpusOptions(customizationID string, corpusName string) *GetCorpusOptions {
+    return &GetCorpusOptions{
+        CustomizationID: customizationID,
+        CorpusName: corpusName,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *GetCorpusOptions) SetCustomizationID(param string) *GetCorpusOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetCorpusName : Allow user to set CorpusName
+func (options *GetCorpusOptions) SetCorpusName(param string) *GetCorpusOptions {
+    options.CorpusName = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetCorpusOptions) SetHeaders(param map[string]string) *GetCorpusOptions {
+    options.Headers = param
+    return options
+}
+
+// GetLanguageModelOptions : The getLanguageModel options.
+type GetLanguageModelOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetLanguageModelOptions : Instantiate GetLanguageModelOptions
+func NewGetLanguageModelOptions(customizationID string) *GetLanguageModelOptions {
+    return &GetLanguageModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *GetLanguageModelOptions) SetCustomizationID(param string) *GetLanguageModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetLanguageModelOptions) SetHeaders(param map[string]string) *GetLanguageModelOptions {
+    options.Headers = param
+    return options
+}
+
+// GetModelOptions : The getModel options.
+type GetModelOptions struct {
+
+	// The identifier of the model in the form of its name from the output of the **Get models** method.
+	ModelID string `json:"model_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetModelOptions : Instantiate GetModelOptions
+func NewGetModelOptions(modelID string) *GetModelOptions {
+    return &GetModelOptions{
+        ModelID: modelID,
+    }
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *GetModelOptions) SetModelID(param string) *GetModelOptions {
+    options.ModelID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetModelOptions) SetHeaders(param map[string]string) *GetModelOptions {
+    options.Headers = param
+    return options
+}
+
+// GetWordOptions : The getWord options.
+type GetWordOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The custom word for the custom language model. When you add or update a custom word with the **Add a custom word** method, do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of compound words.
+	WordName string `json:"word_name"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetWordOptions : Instantiate GetWordOptions
+func NewGetWordOptions(customizationID string, wordName string) *GetWordOptions {
+    return &GetWordOptions{
+        CustomizationID: customizationID,
+        WordName: wordName,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *GetWordOptions) SetCustomizationID(param string) *GetWordOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetWordName : Allow user to set WordName
+func (options *GetWordOptions) SetWordName(param string) *GetWordOptions {
+    options.WordName = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetWordOptions) SetHeaders(param map[string]string) *GetWordOptions {
+    options.Headers = param
+    return options
 }
 
 // KeywordResult : KeywordResult struct
@@ -2337,6 +3910,199 @@ type LanguageModels struct {
 	Customizations []LanguageModel `json:"customizations"`
 }
 
+// ListAcousticModelsOptions : The listAcousticModels options.
+type ListAcousticModelsOptions struct {
+
+	// The identifier of the language for which custom language or custom acoustic models are to be returned (for example, `en-US`). Omit the parameter to see all custom language or custom acoustic models owned by the requesting service credentials.
+	Language string `json:"language,omitempty"`
+
+    // Indicates whether user set optional parameter Language
+    IsLanguageSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListAcousticModelsOptions : Instantiate ListAcousticModelsOptions
+func NewListAcousticModelsOptions() *ListAcousticModelsOptions {
+    return &ListAcousticModelsOptions{}
+}
+
+// SetLanguage : Allow user to set Language
+func (options *ListAcousticModelsOptions) SetLanguage(param string) *ListAcousticModelsOptions {
+    options.Language = param
+    options.IsLanguageSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListAcousticModelsOptions) SetHeaders(param map[string]string) *ListAcousticModelsOptions {
+    options.Headers = param
+    return options
+}
+
+// ListAudioOptions : The listAudio options.
+type ListAudioOptions struct {
+
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListAudioOptions : Instantiate ListAudioOptions
+func NewListAudioOptions(customizationID string) *ListAudioOptions {
+    return &ListAudioOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *ListAudioOptions) SetCustomizationID(param string) *ListAudioOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListAudioOptions) SetHeaders(param map[string]string) *ListAudioOptions {
+    options.Headers = param
+    return options
+}
+
+// ListCorporaOptions : The listCorpora options.
+type ListCorporaOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListCorporaOptions : Instantiate ListCorporaOptions
+func NewListCorporaOptions(customizationID string) *ListCorporaOptions {
+    return &ListCorporaOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *ListCorporaOptions) SetCustomizationID(param string) *ListCorporaOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListCorporaOptions) SetHeaders(param map[string]string) *ListCorporaOptions {
+    options.Headers = param
+    return options
+}
+
+// ListLanguageModelsOptions : The listLanguageModels options.
+type ListLanguageModelsOptions struct {
+
+	// The identifier of the language for which custom language or custom acoustic models are to be returned (for example, `en-US`). Omit the parameter to see all custom language or custom acoustic models owned by the requesting service credentials.
+	Language string `json:"language,omitempty"`
+
+    // Indicates whether user set optional parameter Language
+    IsLanguageSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListLanguageModelsOptions : Instantiate ListLanguageModelsOptions
+func NewListLanguageModelsOptions() *ListLanguageModelsOptions {
+    return &ListLanguageModelsOptions{}
+}
+
+// SetLanguage : Allow user to set Language
+func (options *ListLanguageModelsOptions) SetLanguage(param string) *ListLanguageModelsOptions {
+    options.Language = param
+    options.IsLanguageSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListLanguageModelsOptions) SetHeaders(param map[string]string) *ListLanguageModelsOptions {
+    options.Headers = param
+    return options
+}
+
+// ListModelsOptions : The listModels options.
+type ListModelsOptions struct {
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListModelsOptions : Instantiate ListModelsOptions
+func NewListModelsOptions() *ListModelsOptions {
+    return &ListModelsOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModelsOptions {
+    options.Headers = param
+    return options
+}
+
+// ListWordsOptions : The listWords options.
+type ListWordsOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The type of words to be listed from the custom language model's words resource: * `all` (the default) shows all words. * `user` shows only custom words that were added or modified by the user. * `corpora` shows only OOV that were extracted from corpora.
+	WordType string `json:"word_type,omitempty"`
+
+    // Indicates whether user set optional parameter WordType
+    IsWordTypeSet bool
+
+	// Indicates the order in which the words are to be listed, `alphabetical` or by `count`. You can prepend an optional `+` or `-` to an argument to indicate whether the results are to be sorted in ascending or descending order. By default, words are sorted in ascending alphabetical order. For alphabetical ordering, the lexicographical precedence is numeric values, uppercase letters, and lowercase letters. For count ordering, values with the same count are ordered alphabetically. With cURL, URL encode the `+` symbol as `%2B`.
+	Sort string `json:"sort,omitempty"`
+
+    // Indicates whether user set optional parameter Sort
+    IsSortSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListWordsOptions : Instantiate ListWordsOptions
+func NewListWordsOptions(customizationID string) *ListWordsOptions {
+    return &ListWordsOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *ListWordsOptions) SetCustomizationID(param string) *ListWordsOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetWordType : Allow user to set WordType
+func (options *ListWordsOptions) SetWordType(param string) *ListWordsOptions {
+    options.WordType = param
+    options.IsWordTypeSet = true
+    return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *ListWordsOptions) SetSort(param string) *ListWordsOptions {
+    options.Sort = param
+    options.IsSortSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListWordsOptions) SetHeaders(param map[string]string) *ListWordsOptions {
+    options.Headers = param
+    return options
+}
+
 // RecognitionJob : RecognitionJob struct
 type RecognitionJob struct {
 
@@ -2372,6 +4138,372 @@ type RecognitionJobs struct {
 	Recognitions []RecognitionJob `json:"recognitions"`
 }
 
+// RecognizeOptions : The recognize options.
+type RecognizeOptions struct {
+
+	Audio io.ReadCloser `json:"audio,omitempty"`
+
+	// The type of the input.
+	ContentType string `json:"content_type"`
+
+	// The identifier of the model that is to be used for the recognition request or, for the **Create a session** method, with the new session.
+	Model string `json:"model,omitempty"`
+
+    // Indicates whether user set optional parameter Model
+    IsModelSet bool
+
+	// The customization ID (GUID) of a custom language model that is to be used with the recognition request or, for the **Create a session** method, with the new session. The base model of the specified custom language model must match the model specified with the `model` parameter. You must make the request with service credentials created for the instance of the service that owns the custom model. By default, no custom language model is used.
+	CustomizationID string `json:"customization_id,omitempty"`
+
+    // Indicates whether user set optional parameter CustomizationID
+    IsCustomizationIDSet bool
+
+	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request or, for the **Create a session** method, with the new session. The base model of the specified custom acoustic model must match the model specified with the `model` parameter. You must make the request with service credentials created for the instance of the service that owns the custom model. By default, no custom acoustic model is used.
+	AcousticCustomizationID string `json:"acoustic_customization_id,omitempty"`
+
+    // Indicates whether user set optional parameter AcousticCustomizationID
+    IsAcousticCustomizationIDSet bool
+
+	// The version of the specified base model that is to be used with recognition request or, for the **Create a session** method, with the new session. Multiple versions of a base model can exist when a model is updated for internal improvements. The parameter is intended primarily for use with custom models that have been upgraded for a new base model. The default value depends on whether the parameter is used with or without a custom model. For more information, see [Base model version](https://console.bluemix.net/docs/services/speech-to-text/input.html#version).
+	BaseModelVersion string `json:"base_model_version,omitempty"`
+
+    // Indicates whether user set optional parameter BaseModelVersion
+    IsBaseModelVersionSet bool
+
+	// If you specify the customization ID (GUID) of a custom language model with the recognition request or, for sessions, with the **Create a session** method, the customization weight tells the service how much weight to give to words from the custom language model compared to those from the base model for the current request. Specify a value between 0.0 and 1.0. Unless a different customization weight was specified for the custom model when it was trained, the default value is 0.3. A customization weight that you specify overrides a weight that was specified when the custom model was trained. The default value yields the best performance in general. Assign a higher value if your audio makes frequent use of OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
+	CustomizationWeight float64 `json:"customization_weight,omitempty"`
+
+    // Indicates whether user set optional parameter CustomizationWeight
+    IsCustomizationWeightSet bool
+
+	// The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user simply walks away. Use `-1` for infinity.
+	InactivityTimeout int64 `json:"inactivity_timeout,omitempty"`
+
+    // Indicates whether user set optional parameter InactivityTimeout
+    IsInactivityTimeoutSet bool
+
+	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens. Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must also specify a keywords threshold. You can spot a maximum of 1000 keywords. Omit the parameter or specify an empty array if you do not need to spot keywords.
+	Keywords []string `json:"keywords,omitempty"`
+
+    // Indicates whether user set optional parameter Keywords
+    IsKeywordsSet bool
+
+	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. No keyword spotting is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords.
+	KeywordsThreshold float32 `json:"keywords_threshold,omitempty"`
+
+    // Indicates whether user set optional parameter KeywordsThreshold
+    IsKeywordsThresholdSet bool
+
+	// The maximum number of alternative transcripts that the service is to return. By default, a single transcription is returned.
+	MaxAlternatives int64 `json:"max_alternatives,omitempty"`
+
+    // Indicates whether user set optional parameter MaxAlternatives
+    IsMaxAlternativesSet bool
+
+	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. No alternative words are computed if you omit the parameter.
+	WordAlternativesThreshold float32 `json:"word_alternatives_threshold,omitempty"`
+
+    // Indicates whether user set optional parameter WordAlternativesThreshold
+    IsWordAlternativesThresholdSet bool
+
+	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, no word confidence measures are returned.
+	WordConfidence bool `json:"word_confidence,omitempty"`
+
+    // Indicates whether user set optional parameter WordConfidence
+    IsWordConfidenceSet bool
+
+	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned.
+	Timestamps bool `json:"timestamps,omitempty"`
+
+    // Indicates whether user set optional parameter Timestamps
+    IsTimestampsSet bool
+
+	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English transcription only.
+	ProfanityFilter bool `json:"profanity_filter,omitempty"`
+
+    // Indicates whether user set optional parameter ProfanityFilter
+    IsProfanityFilterSet bool
+
+	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and internet addresses into more readable, conventional representations in the final transcript of a recognition request. For US English, the service also converts certain keyword strings to punctuation symbols. By default, no smart formatting is performed. Applies to US English and Spanish transcription only.
+	SmartFormatting bool `json:"smart_formatting,omitempty"`
+
+    // Indicates whether user set optional parameter SmartFormatting
+    IsSmartFormattingSet bool
+
+	// If `true`, the response includes labels that identify which words were spoken by which participants in a multi-person exchange. By default, no speaker labels are returned. Setting `speaker_labels` to `true` forces the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter. To determine whether a language model supports speaker labels, use the **Get models** method and check that the attribute `speaker_labels` is set to `true`. You can also refer to [Speaker labels](https://console.bluemix.net/docs/services/speech-to-text/output.html#speaker_labels).
+	SpeakerLabels bool `json:"speaker_labels,omitempty"`
+
+    // Indicates whether user set optional parameter SpeakerLabels
+    IsSpeakerLabelsSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewRecognizeOptionsForBasic : Instantiate RecognizeOptionsForBasic
+func NewRecognizeOptionsForBasic(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/basic",
+    }
+}
+
+// NewRecognizeOptionsForFlac : Instantiate RecognizeOptionsForFlac
+func NewRecognizeOptionsForFlac(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/flac",
+    }
+}
+
+// NewRecognizeOptionsForL16 : Instantiate RecognizeOptionsForL16
+func NewRecognizeOptionsForL16(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/l16",
+    }
+}
+
+// NewRecognizeOptionsForMp3 : Instantiate RecognizeOptionsForMp3
+func NewRecognizeOptionsForMp3(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/mp3",
+    }
+}
+
+// NewRecognizeOptionsForMpeg : Instantiate RecognizeOptionsForMpeg
+func NewRecognizeOptionsForMpeg(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/mpeg",
+    }
+}
+
+// NewRecognizeOptionsForMulaw : Instantiate RecognizeOptionsForMulaw
+func NewRecognizeOptionsForMulaw(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/mulaw",
+    }
+}
+
+// NewRecognizeOptionsForOgg : Instantiate RecognizeOptionsForOgg
+func NewRecognizeOptionsForOgg(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/ogg",
+    }
+}
+
+// NewRecognizeOptionsForOggcodecsopus : Instantiate RecognizeOptionsForOggcodecsopus
+func NewRecognizeOptionsForOggcodecsopus(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/ogg;codecs=opus",
+    }
+}
+
+// NewRecognizeOptionsForOggcodecsvorbis : Instantiate RecognizeOptionsForOggcodecsvorbis
+func NewRecognizeOptionsForOggcodecsvorbis(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/ogg;codecs=vorbis",
+    }
+}
+
+// NewRecognizeOptionsForWav : Instantiate RecognizeOptionsForWav
+func NewRecognizeOptionsForWav(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/wav",
+    }
+}
+
+// NewRecognizeOptionsForWebm : Instantiate RecognizeOptionsForWebm
+func NewRecognizeOptionsForWebm(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/webm",
+    }
+}
+
+// NewRecognizeOptionsForWebmcodecsopus : Instantiate RecognizeOptionsForWebmcodecsopus
+func NewRecognizeOptionsForWebmcodecsopus(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/webm;codecs=opus",
+    }
+}
+
+// NewRecognizeOptionsForWebmcodecsvorbis : Instantiate RecognizeOptionsForWebmcodecsvorbis
+func NewRecognizeOptionsForWebmcodecsvorbis(audio io.ReadCloser) *RecognizeOptions {
+    return &RecognizeOptions{
+        Audio: audio,
+        ContentType: "audio/webm;codecs=vorbis",
+    }
+}
+
+// SetAudio : Allow user to set Audio with specified ContentType
+func (options *RecognizeOptions) SetAudio(audio io.ReadCloser, contentType string) *RecognizeOptions {
+    options.Audio = audio
+    options.ContentType = contentType
+    return options
+}
+
+// SetModel : Allow user to set Model
+func (options *RecognizeOptions) SetModel(param string) *RecognizeOptions {
+    options.Model = param
+    options.IsModelSet = true
+    return options
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *RecognizeOptions) SetCustomizationID(param string) *RecognizeOptions {
+    options.CustomizationID = param
+    options.IsCustomizationIDSet = true
+    return options
+}
+
+// SetAcousticCustomizationID : Allow user to set AcousticCustomizationID
+func (options *RecognizeOptions) SetAcousticCustomizationID(param string) *RecognizeOptions {
+    options.AcousticCustomizationID = param
+    options.IsAcousticCustomizationIDSet = true
+    return options
+}
+
+// SetBaseModelVersion : Allow user to set BaseModelVersion
+func (options *RecognizeOptions) SetBaseModelVersion(param string) *RecognizeOptions {
+    options.BaseModelVersion = param
+    options.IsBaseModelVersionSet = true
+    return options
+}
+
+// SetCustomizationWeight : Allow user to set CustomizationWeight
+func (options *RecognizeOptions) SetCustomizationWeight(param float64) *RecognizeOptions {
+    options.CustomizationWeight = param
+    options.IsCustomizationWeightSet = true
+    return options
+}
+
+// SetInactivityTimeout : Allow user to set InactivityTimeout
+func (options *RecognizeOptions) SetInactivityTimeout(param int64) *RecognizeOptions {
+    options.InactivityTimeout = param
+    options.IsInactivityTimeoutSet = true
+    return options
+}
+
+// SetKeywords : Allow user to set Keywords
+func (options *RecognizeOptions) SetKeywords(param []string) *RecognizeOptions {
+    options.Keywords = param
+    options.IsKeywordsSet = true
+    return options
+}
+
+// SetKeywordsThreshold : Allow user to set KeywordsThreshold
+func (options *RecognizeOptions) SetKeywordsThreshold(param float32) *RecognizeOptions {
+    options.KeywordsThreshold = param
+    options.IsKeywordsThresholdSet = true
+    return options
+}
+
+// SetMaxAlternatives : Allow user to set MaxAlternatives
+func (options *RecognizeOptions) SetMaxAlternatives(param int64) *RecognizeOptions {
+    options.MaxAlternatives = param
+    options.IsMaxAlternativesSet = true
+    return options
+}
+
+// SetWordAlternativesThreshold : Allow user to set WordAlternativesThreshold
+func (options *RecognizeOptions) SetWordAlternativesThreshold(param float32) *RecognizeOptions {
+    options.WordAlternativesThreshold = param
+    options.IsWordAlternativesThresholdSet = true
+    return options
+}
+
+// SetWordConfidence : Allow user to set WordConfidence
+func (options *RecognizeOptions) SetWordConfidence(param bool) *RecognizeOptions {
+    options.WordConfidence = param
+    options.IsWordConfidenceSet = true
+    return options
+}
+
+// SetTimestamps : Allow user to set Timestamps
+func (options *RecognizeOptions) SetTimestamps(param bool) *RecognizeOptions {
+    options.Timestamps = param
+    options.IsTimestampsSet = true
+    return options
+}
+
+// SetProfanityFilter : Allow user to set ProfanityFilter
+func (options *RecognizeOptions) SetProfanityFilter(param bool) *RecognizeOptions {
+    options.ProfanityFilter = param
+    options.IsProfanityFilterSet = true
+    return options
+}
+
+// SetSmartFormatting : Allow user to set SmartFormatting
+func (options *RecognizeOptions) SetSmartFormatting(param bool) *RecognizeOptions {
+    options.SmartFormatting = param
+    options.IsSmartFormattingSet = true
+    return options
+}
+
+// SetSpeakerLabels : Allow user to set SpeakerLabels
+func (options *RecognizeOptions) SetSpeakerLabels(param bool) *RecognizeOptions {
+    options.SpeakerLabels = param
+    options.IsSpeakerLabelsSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeOptions {
+    options.Headers = param
+    return options
+}
+
+// RegisterCallbackOptions : The registerCallback options.
+type RegisterCallbackOptions struct {
+
+	// An HTTP or HTTPS URL to which callback notifications are to be sent. To be white-listed, the URL must successfully echo the challenge string during URL verification. During verification, the client can also check the signature that the service sends in the `X-Callback-Signature` header to verify the origin of the request.
+	CallbackURL string `json:"callback_url"`
+
+	// A user-specified string that the service uses to generate the HMAC-SHA1 signature that it sends via the `X-Callback-Signature` header. The service includes the header during URL verification and with every notification sent to the callback URL. It calculates the signature over the payload of the notification. If you omit the parameter, the service does not send the header.
+	UserSecret string `json:"user_secret,omitempty"`
+
+    // Indicates whether user set optional parameter UserSecret
+    IsUserSecretSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewRegisterCallbackOptions : Instantiate RegisterCallbackOptions
+func NewRegisterCallbackOptions(callbackURL string) *RegisterCallbackOptions {
+    return &RegisterCallbackOptions{
+        CallbackURL: callbackURL,
+    }
+}
+
+// SetCallbackURL : Allow user to set CallbackURL
+func (options *RegisterCallbackOptions) SetCallbackURL(param string) *RegisterCallbackOptions {
+    options.CallbackURL = param
+    return options
+}
+
+// SetUserSecret : Allow user to set UserSecret
+func (options *RegisterCallbackOptions) SetUserSecret(param string) *RegisterCallbackOptions {
+    options.UserSecret = param
+    options.IsUserSecretSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *RegisterCallbackOptions) SetHeaders(param map[string]string) *RegisterCallbackOptions {
+    options.Headers = param
+    return options
+}
+
 // RegisterStatus : RegisterStatus struct
 type RegisterStatus struct {
 
@@ -2380,6 +4512,64 @@ type RegisterStatus struct {
 
 	// The callback URL that is successfully registered.
 	URL string `json:"url"`
+}
+
+// ResetAcousticModelOptions : The resetAcousticModel options.
+type ResetAcousticModelOptions struct {
+
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewResetAcousticModelOptions : Instantiate ResetAcousticModelOptions
+func NewResetAcousticModelOptions(customizationID string) *ResetAcousticModelOptions {
+    return &ResetAcousticModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *ResetAcousticModelOptions) SetCustomizationID(param string) *ResetAcousticModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ResetAcousticModelOptions) SetHeaders(param map[string]string) *ResetAcousticModelOptions {
+    options.Headers = param
+    return options
+}
+
+// ResetLanguageModelOptions : The resetLanguageModel options.
+type ResetLanguageModelOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewResetLanguageModelOptions : Instantiate ResetLanguageModelOptions
+func NewResetLanguageModelOptions(customizationID string) *ResetLanguageModelOptions {
+    return &ResetLanguageModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *ResetLanguageModelOptions) SetCustomizationID(param string) *ResetLanguageModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ResetLanguageModelOptions) SetHeaders(param map[string]string) *ResetLanguageModelOptions {
+    options.Headers = param
+    return options
 }
 
 // SpeakerLabelsResult : SpeakerLabelsResult struct
@@ -2486,6 +4676,203 @@ type SupportedFeatures struct {
 
 	// Indicates whether the `speaker_labels` parameter can be used with the language model.
 	SpeakerLabels bool `json:"speaker_labels"`
+}
+
+// TrainAcousticModelOptions : The trainAcousticModel options.
+type TrainAcousticModelOptions struct {
+
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The customization ID (GUID) of a custom language model that is to be used during training of the custom acoustic model. Specify a custom language model that has been trained with verbatim transcriptions of the audio resources or that contains words that are relevant to the contents of the audio resources.
+	CustomLanguageModelID string `json:"custom_language_model_id,omitempty"`
+
+    // Indicates whether user set optional parameter CustomLanguageModelID
+    IsCustomLanguageModelIDSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewTrainAcousticModelOptions : Instantiate TrainAcousticModelOptions
+func NewTrainAcousticModelOptions(customizationID string) *TrainAcousticModelOptions {
+    return &TrainAcousticModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *TrainAcousticModelOptions) SetCustomizationID(param string) *TrainAcousticModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetCustomLanguageModelID : Allow user to set CustomLanguageModelID
+func (options *TrainAcousticModelOptions) SetCustomLanguageModelID(param string) *TrainAcousticModelOptions {
+    options.CustomLanguageModelID = param
+    options.IsCustomLanguageModelIDSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *TrainAcousticModelOptions) SetHeaders(param map[string]string) *TrainAcousticModelOptions {
+    options.Headers = param
+    return options
+}
+
+// TrainLanguageModelOptions : The trainLanguageModel options.
+type TrainLanguageModelOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// The type of words from the custom language model's words resource on which to train the model: * `all` (the default) trains the model on all new words, regardless of whether they were extracted from corpora or were added or modified by the user. * `user` trains the model only on new words that were added or modified by the user; the model is not trained on new words extracted from corpora.
+	WordTypeToAdd string `json:"word_type_to_add,omitempty"`
+
+    // Indicates whether user set optional parameter WordTypeToAdd
+    IsWordTypeToAddSet bool
+
+	// Specifies a customization weight for the custom language model. The customization weight tells the service how much weight to give to words from the custom language model compared to those from the base model for speech recognition. Specify a value between 0.0 and 1.0; the default is 0.3. The default value yields the best performance in general. Assign a higher value if your audio makes frequent use of OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases. The value that you assign is used for all recognition requests that use the model. You can override it for any recognition request by specifying a customization weight for that request.
+	CustomizationWeight float64 `json:"customization_weight,omitempty"`
+
+    // Indicates whether user set optional parameter CustomizationWeight
+    IsCustomizationWeightSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewTrainLanguageModelOptions : Instantiate TrainLanguageModelOptions
+func NewTrainLanguageModelOptions(customizationID string) *TrainLanguageModelOptions {
+    return &TrainLanguageModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *TrainLanguageModelOptions) SetCustomizationID(param string) *TrainLanguageModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetWordTypeToAdd : Allow user to set WordTypeToAdd
+func (options *TrainLanguageModelOptions) SetWordTypeToAdd(param string) *TrainLanguageModelOptions {
+    options.WordTypeToAdd = param
+    options.IsWordTypeToAddSet = true
+    return options
+}
+
+// SetCustomizationWeight : Allow user to set CustomizationWeight
+func (options *TrainLanguageModelOptions) SetCustomizationWeight(param float64) *TrainLanguageModelOptions {
+    options.CustomizationWeight = param
+    options.IsCustomizationWeightSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *TrainLanguageModelOptions) SetHeaders(param map[string]string) *TrainLanguageModelOptions {
+    options.Headers = param
+    return options
+}
+
+// UnregisterCallbackOptions : The unregisterCallback options.
+type UnregisterCallbackOptions struct {
+
+	// The callback URL that is to be unregistered.
+	CallbackURL string `json:"callback_url"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUnregisterCallbackOptions : Instantiate UnregisterCallbackOptions
+func NewUnregisterCallbackOptions(callbackURL string) *UnregisterCallbackOptions {
+    return &UnregisterCallbackOptions{
+        CallbackURL: callbackURL,
+    }
+}
+
+// SetCallbackURL : Allow user to set CallbackURL
+func (options *UnregisterCallbackOptions) SetCallbackURL(param string) *UnregisterCallbackOptions {
+    options.CallbackURL = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UnregisterCallbackOptions) SetHeaders(param map[string]string) *UnregisterCallbackOptions {
+    options.Headers = param
+    return options
+}
+
+// UpgradeAcousticModelOptions : The upgradeAcousticModel options.
+type UpgradeAcousticModelOptions struct {
+
+	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+	// If the custom acoustic model was trained with a custom language model, the customization ID (GUID) of that custom language model. The custom language model must be upgraded before the custom acoustic model can be upgraded.
+	CustomLanguageModelID string `json:"custom_language_model_id,omitempty"`
+
+    // Indicates whether user set optional parameter CustomLanguageModelID
+    IsCustomLanguageModelIDSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUpgradeAcousticModelOptions : Instantiate UpgradeAcousticModelOptions
+func NewUpgradeAcousticModelOptions(customizationID string) *UpgradeAcousticModelOptions {
+    return &UpgradeAcousticModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *UpgradeAcousticModelOptions) SetCustomizationID(param string) *UpgradeAcousticModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetCustomLanguageModelID : Allow user to set CustomLanguageModelID
+func (options *UpgradeAcousticModelOptions) SetCustomLanguageModelID(param string) *UpgradeAcousticModelOptions {
+    options.CustomLanguageModelID = param
+    options.IsCustomLanguageModelIDSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpgradeAcousticModelOptions) SetHeaders(param map[string]string) *UpgradeAcousticModelOptions {
+    options.Headers = param
+    return options
+}
+
+// UpgradeLanguageModelOptions : The upgradeLanguageModel options.
+type UpgradeLanguageModelOptions struct {
+
+	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created for the instance of the service that owns the custom model.
+	CustomizationID string `json:"customization_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUpgradeLanguageModelOptions : Instantiate UpgradeLanguageModelOptions
+func NewUpgradeLanguageModelOptions(customizationID string) *UpgradeLanguageModelOptions {
+    return &UpgradeLanguageModelOptions{
+        CustomizationID: customizationID,
+    }
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *UpgradeLanguageModelOptions) SetCustomizationID(param string) *UpgradeLanguageModelOptions {
+    options.CustomizationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpgradeLanguageModelOptions) SetHeaders(param map[string]string) *UpgradeLanguageModelOptions {
+    options.Headers = param
+    return options
 }
 
 // Word : Word struct

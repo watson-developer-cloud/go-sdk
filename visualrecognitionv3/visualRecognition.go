@@ -47,7 +47,7 @@ func NewVisualRecognitionV3(creds watson.Credentials) (*VisualRecognitionV3, err
 }
 
 // Classify : Classify images
-func (visualRecognition *VisualRecognitionV3) Classify(imagesFile os.File, acceptLanguage string, url string, threshold float32, owners []string, classifierIds []string, imagesFileContentType string) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) Classify(options *ClassifyOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/classify"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
@@ -55,12 +55,20 @@ func (visualRecognition *VisualRecognitionV3) Classify(imagesFile os.File, accep
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "multipart/form-data")
-    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    if options.IsAcceptLanguageSet {
+        request.Set("Accept-Language", fmt.Sprint(options.AcceptLanguage))
+    }
     request.Query("version=" + creds.Version)
     request.Type("multipart")
-    request.SendFile(imagesFile)
+    if options.IsImagesFileSet {
+        request.SendFile(options.ImagesFile)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -109,7 +117,7 @@ func GetClassifyResult(response *watson.WatsonResponse) *ClassifiedImages {
 }
 
 // DetectFaces : Detect faces in images
-func (visualRecognition *VisualRecognitionV3) DetectFaces(imagesFile os.File, url string, imagesFileContentType string) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) DetectFaces(options *DetectFacesOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/detect_faces"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
@@ -117,11 +125,17 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(imagesFile os.File, ur
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
-    request.SendFile(imagesFile)
+    if options.IsImagesFileSet {
+        request.SendFile(options.ImagesFile)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -170,7 +184,7 @@ func GetDetectFacesResult(response *watson.WatsonResponse) *DetectedFaces {
 }
 
 // CreateClassifier : Create a classifier
-func (visualRecognition *VisualRecognitionV3) CreateClassifier(name string, classnamePositiveExamples os.File, negativeExamples os.File) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) CreateClassifier(options *CreateClassifierOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
@@ -178,12 +192,18 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(name string, clas
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
-    request.SendFile(classnamePositiveExamples)
-    request.SendFile(negativeExamples)
+    request.SendFile(options.ClassnamePositiveExamples)
+    if options.IsNegativeExamplesSet {
+        request.SendFile(options.NegativeExamples)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -232,14 +252,18 @@ func GetCreateClassifierResult(response *watson.WatsonResponse) *Classifier {
 }
 
 // DeleteClassifier : Delete a classifier
-func (visualRecognition *VisualRecognitionV3) DeleteClassifier(classifierID string) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) DeleteClassifier(options *DeleteClassifierOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers/{classifier_id}"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
     tokenManager := visualRecognition.client.TokenManager
 
-    path = strings.Replace(path, "{classifier_id}", classifierID, 1)
+    path = strings.Replace(path, "{classifier_id}", options.ClassifierID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -281,14 +305,18 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(classifierID stri
 
 
 // GetClassifier : Retrieve classifier details
-func (visualRecognition *VisualRecognitionV3) GetClassifier(classifierID string) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) GetClassifier(options *GetClassifierOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers/{classifier_id}"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
     tokenManager := visualRecognition.client.TokenManager
 
-    path = strings.Replace(path, "{classifier_id}", classifierID, 1)
+    path = strings.Replace(path, "{classifier_id}", options.ClassifierID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -341,7 +369,7 @@ func GetGetClassifierResult(response *watson.WatsonResponse) *Classifier {
 }
 
 // ListClassifiers : Retrieve a list of classifiers
-func (visualRecognition *VisualRecognitionV3) ListClassifiers(verbose bool) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) ListClassifiers(options *ListClassifiersOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
@@ -349,10 +377,16 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(verbose bool) (*wa
 
     request := req.New().Get(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("verbose=" + fmt.Sprint(verbose))
+    if options.IsVerboseSet {
+        request.Query("verbose=" + fmt.Sprint(options.Verbose))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -401,21 +435,29 @@ func GetListClassifiersResult(response *watson.WatsonResponse) *Classifiers {
 }
 
 // UpdateClassifier : Update a classifier
-func (visualRecognition *VisualRecognitionV3) UpdateClassifier(classifierID string, classnamePositiveExamples os.File, negativeExamples os.File) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) UpdateClassifier(options *UpdateClassifierOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers/{classifier_id}"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
     tokenManager := visualRecognition.client.TokenManager
 
-    path = strings.Replace(path, "{classifier_id}", classifierID, 1)
+    path = strings.Replace(path, "{classifier_id}", options.ClassifierID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
-    request.SendFile(classnamePositiveExamples)
-    request.SendFile(negativeExamples)
+    if options.IsClassnamePositiveExamplesSet {
+        request.SendFile(options.ClassnamePositiveExamples)
+    }
+    if options.IsNegativeExamplesSet {
+        request.SendFile(options.NegativeExamples)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -464,14 +506,18 @@ func GetUpdateClassifierResult(response *watson.WatsonResponse) *Classifier {
 }
 
 // GetCoreMlModel : Retrieve a Core ML model of a classifier
-func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(classifierID string) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(options *GetCoreMlModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/classifiers/{classifier_id}/core_ml_model"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
     tokenManager := visualRecognition.client.TokenManager
 
-    path = strings.Replace(path, "{classifier_id}", classifierID, 1)
+    path = strings.Replace(path, "{classifier_id}", options.ClassifierID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/octet-stream")
     request.Set("Content-Type", "application/json")
@@ -524,7 +570,7 @@ func GetGetCoreMlModelResult(response *watson.WatsonResponse) *os.File {
 }
 
 // DeleteUserData : Delete labeled data
-func (visualRecognition *VisualRecognitionV3) DeleteUserData(customerID string) (*watson.WatsonResponse, []error) {
+func (visualRecognition *VisualRecognitionV3) DeleteUserData(options *DeleteUserDataOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/user_data"
     creds := visualRecognition.client.Creds
     useTM := visualRecognition.client.UseTM
@@ -532,10 +578,14 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(customerID string) 
 
     request := req.New().Delete(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("customer_id=" + fmt.Sprint(customerID))
+    request.Query("customer_id=" + fmt.Sprint(options.CustomerID))
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -682,6 +732,282 @@ type Classifiers struct {
 	Classifiers []Classifier `json:"classifiers"`
 }
 
+// ClassifyOptions : The classify options.
+type ClassifyOptions struct {
+
+	// An image file (.jpg, .png) or .zip file with images. Maximum image size is 10 MB. Include no more than 20 images and limit the .zip file to 100 MB. Encode the image and .zip file names in UTF-8 if they contain non-ASCII characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters. You can also include an image with the **url** parameter.
+	ImagesFile os.File `json:"images_file,omitempty"`
+
+    // Indicates whether user set optional parameter ImagesFile
+    IsImagesFileSet bool
+
+	// The language of the output class names. The full set of languages is supported for the built-in classifier IDs: `default`, `food`, and `explicit`. The class names of custom classifiers are not translated. The response might not be in the specified language when the requested language is not supported or when there is no translation for the class name.
+	AcceptLanguage string `json:"accept_language,omitempty"`
+
+    // Indicates whether user set optional parameter AcceptLanguage
+    IsAcceptLanguageSet bool
+
+	// The URL of an image to analyze. Must be in .jpg, or .png format. The minimum recommended pixel density is 32X32 pixels per inch, and the maximum image size is 10 MB. You can also include images with the **images_file** parameter.
+	URL string `json:"url,omitempty"`
+
+    // Indicates whether user set optional parameter URL
+    IsURLSet bool
+
+	// The minimum score a class must have to be displayed in the response. Set the threshold to `0.0` to ignore the classification score and return all values.
+	Threshold float32 `json:"threshold,omitempty"`
+
+    // Indicates whether user set optional parameter Threshold
+    IsThresholdSet bool
+
+	// The categories of classifiers to apply. Use `IBM` to classify against the `default` general classifier, and use `me` to classify against your custom classifiers. To analyze the image against both classifier categories, set the value to both `IBM` and `me`. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty. The **classifier_ids** parameter overrides **owners**, so make sure that **classifier_ids** is empty.
+	Owners []string `json:"owners,omitempty"`
+
+    // Indicates whether user set optional parameter Owners
+    IsOwnersSet bool
+
+	// Which classifiers to apply. Overrides the **owners** parameter. You can specify both custom and built-in classifier IDs. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty. The following built-in classifier IDs require no training: - `default`: Returns classes from thousands of general tags. - `food`: (Beta) Enhances specificity and accuracy for images of food items. - `explicit`: (Beta) Evaluates whether the image might be pornographic.
+	ClassifierIds []string `json:"classifier_ids,omitempty"`
+
+    // Indicates whether user set optional parameter ClassifierIds
+    IsClassifierIdsSet bool
+
+	// The content type of ImagesFile.
+	ImagesFileContentType string `json:"images_file_content_type,omitempty"`
+
+    // Indicates whether user set optional parameter ImagesFileContentType
+    IsImagesFileContentTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewClassifyOptions : Instantiate ClassifyOptions
+func NewClassifyOptions() *ClassifyOptions {
+    return &ClassifyOptions{}
+}
+
+// SetImagesFile : Allow user to set ImagesFile
+func (options *ClassifyOptions) SetImagesFile(param os.File) *ClassifyOptions {
+    options.ImagesFile = param
+    options.IsImagesFileSet = true
+    return options
+}
+
+// SetAcceptLanguage : Allow user to set AcceptLanguage
+func (options *ClassifyOptions) SetAcceptLanguage(param string) *ClassifyOptions {
+    options.AcceptLanguage = param
+    options.IsAcceptLanguageSet = true
+    return options
+}
+
+// SetURL : Allow user to set URL
+func (options *ClassifyOptions) SetURL(param string) *ClassifyOptions {
+    options.URL = param
+    options.IsURLSet = true
+    return options
+}
+
+// SetThreshold : Allow user to set Threshold
+func (options *ClassifyOptions) SetThreshold(param float32) *ClassifyOptions {
+    options.Threshold = param
+    options.IsThresholdSet = true
+    return options
+}
+
+// SetOwners : Allow user to set Owners
+func (options *ClassifyOptions) SetOwners(param []string) *ClassifyOptions {
+    options.Owners = param
+    options.IsOwnersSet = true
+    return options
+}
+
+// SetClassifierIds : Allow user to set ClassifierIds
+func (options *ClassifyOptions) SetClassifierIds(param []string) *ClassifyOptions {
+    options.ClassifierIds = param
+    options.IsClassifierIdsSet = true
+    return options
+}
+
+// SetImagesFileContentType : Allow user to set ImagesFileContentType
+func (options *ClassifyOptions) SetImagesFileContentType(param string) *ClassifyOptions {
+    options.ImagesFileContentType = param
+    options.IsImagesFileContentTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ClassifyOptions) SetHeaders(param map[string]string) *ClassifyOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateClassifierOptions : The createClassifier options.
+type CreateClassifierOptions struct {
+
+	// The name of the new classifier. Encode special characters in UTF-8.
+	Name string `json:"name"`
+
+	// A .zip file of images that depict the visual subject of a class in the new classifier. You can include more than one positive example file in a call. Specify the parameter name by appending `_positive_examples` to the class name. For example, `goldenretriever_positive_examples` creates the class **goldenretriever**. Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The maximum number of images is 10,000 images or 100 MB per .zip file. Encode special characters in the file name in UTF-8.
+	ClassnamePositiveExamples os.File `json:"classname_positive_examples"`
+
+	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must contain a minimum of 10 images. Encode special characters in the file name in UTF-8.
+	NegativeExamples os.File `json:"negative_examples,omitempty"`
+
+    // Indicates whether user set optional parameter NegativeExamples
+    IsNegativeExamplesSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateClassifierOptions : Instantiate CreateClassifierOptions
+func NewCreateClassifierOptions(name string, classnamePositiveExamples os.File) *CreateClassifierOptions {
+    return &CreateClassifierOptions{
+        Name: name,
+        ClassnamePositiveExamples: classnamePositiveExamples,
+    }
+}
+
+// SetName : Allow user to set Name
+func (options *CreateClassifierOptions) SetName(param string) *CreateClassifierOptions {
+    options.Name = param
+    return options
+}
+
+// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *CreateClassifierOptions) SetClassnamePositiveExamples(param os.File) *CreateClassifierOptions {
+    options.ClassnamePositiveExamples = param
+    return options
+}
+
+// SetNegativeExamples : Allow user to set NegativeExamples
+func (options *CreateClassifierOptions) SetNegativeExamples(param os.File) *CreateClassifierOptions {
+    options.NegativeExamples = param
+    options.IsNegativeExamplesSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateClassifierOptions) SetHeaders(param map[string]string) *CreateClassifierOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteClassifierOptions : The deleteClassifier options.
+type DeleteClassifierOptions struct {
+
+	// The ID of the classifier.
+	ClassifierID string `json:"classifier_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteClassifierOptions : Instantiate DeleteClassifierOptions
+func NewDeleteClassifierOptions(classifierID string) *DeleteClassifierOptions {
+    return &DeleteClassifierOptions{
+        ClassifierID: classifierID,
+    }
+}
+
+// SetClassifierID : Allow user to set ClassifierID
+func (options *DeleteClassifierOptions) SetClassifierID(param string) *DeleteClassifierOptions {
+    options.ClassifierID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteClassifierOptions) SetHeaders(param map[string]string) *DeleteClassifierOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteUserDataOptions : The deleteUserData options.
+type DeleteUserDataOptions struct {
+
+	// The customer ID for which all data is to be deleted.
+	CustomerID string `json:"customer_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
+func NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+    return &DeleteUserDataOptions{
+        CustomerID: customerID,
+    }
+}
+
+// SetCustomerID : Allow user to set CustomerID
+func (options *DeleteUserDataOptions) SetCustomerID(param string) *DeleteUserDataOptions {
+    options.CustomerID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *DeleteUserDataOptions {
+    options.Headers = param
+    return options
+}
+
+// DetectFacesOptions : The detectFaces options.
+type DetectFacesOptions struct {
+
+	// An image file (gif, .jpg, .png, .tif.) or .zip file with images. Limit the .zip file to 100 MB. You can include a maximum of 15 images in a request. Encode the image and .zip file names in UTF-8 if they contain non-ASCII characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters. You can also include an image with the **url** parameter.
+	ImagesFile os.File `json:"images_file,omitempty"`
+
+    // Indicates whether user set optional parameter ImagesFile
+    IsImagesFileSet bool
+
+	// The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum recommended pixel density is 32X32 pixels per inch, and the maximum image size is 10 MB. Redirects are followed, so you can use a shortened URL. You can also include images with the **images_file** parameter.
+	URL string `json:"url,omitempty"`
+
+    // Indicates whether user set optional parameter URL
+    IsURLSet bool
+
+	// The content type of ImagesFile.
+	ImagesFileContentType string `json:"images_file_content_type,omitempty"`
+
+    // Indicates whether user set optional parameter ImagesFileContentType
+    IsImagesFileContentTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDetectFacesOptions : Instantiate DetectFacesOptions
+func NewDetectFacesOptions() *DetectFacesOptions {
+    return &DetectFacesOptions{}
+}
+
+// SetImagesFile : Allow user to set ImagesFile
+func (options *DetectFacesOptions) SetImagesFile(param os.File) *DetectFacesOptions {
+    options.ImagesFile = param
+    options.IsImagesFileSet = true
+    return options
+}
+
+// SetURL : Allow user to set URL
+func (options *DetectFacesOptions) SetURL(param string) *DetectFacesOptions {
+    options.URL = param
+    options.IsURLSet = true
+    return options
+}
+
+// SetImagesFileContentType : Allow user to set ImagesFileContentType
+func (options *DetectFacesOptions) SetImagesFileContentType(param string) *DetectFacesOptions {
+    options.ImagesFileContentType = param
+    options.IsImagesFileContentTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DetectFacesOptions) SetHeaders(param map[string]string) *DetectFacesOptions {
+    options.Headers = param
+    return options
+}
+
 // DetectedFaces : Results for all faces.
 type DetectedFaces struct {
 
@@ -760,6 +1086,64 @@ type FaceLocation struct {
 	Top float64 `json:"top"`
 }
 
+// GetClassifierOptions : The getClassifier options.
+type GetClassifierOptions struct {
+
+	// The ID of the classifier.
+	ClassifierID string `json:"classifier_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetClassifierOptions : Instantiate GetClassifierOptions
+func NewGetClassifierOptions(classifierID string) *GetClassifierOptions {
+    return &GetClassifierOptions{
+        ClassifierID: classifierID,
+    }
+}
+
+// SetClassifierID : Allow user to set ClassifierID
+func (options *GetClassifierOptions) SetClassifierID(param string) *GetClassifierOptions {
+    options.ClassifierID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetClassifierOptions) SetHeaders(param map[string]string) *GetClassifierOptions {
+    options.Headers = param
+    return options
+}
+
+// GetCoreMlModelOptions : The getCoreMlModel options.
+type GetCoreMlModelOptions struct {
+
+	// The ID of the classifier.
+	ClassifierID string `json:"classifier_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetCoreMlModelOptions : Instantiate GetCoreMlModelOptions
+func NewGetCoreMlModelOptions(classifierID string) *GetCoreMlModelOptions {
+    return &GetCoreMlModelOptions{
+        ClassifierID: classifierID,
+    }
+}
+
+// SetClassifierID : Allow user to set ClassifierID
+func (options *GetCoreMlModelOptions) SetClassifierID(param string) *GetCoreMlModelOptions {
+    options.ClassifierID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetCoreMlModelOptions) SetHeaders(param map[string]string) *GetCoreMlModelOptions {
+    options.Headers = param
+    return options
+}
+
 // ImageWithFaces : Information about faces in the image.
 type ImageWithFaces struct {
 
@@ -777,6 +1161,92 @@ type ImageWithFaces struct {
 
 	// Information about what might have caused a failure, such as an image that is too large. Not returned when there is no error.
 	Error ErrorInfo `json:"error,omitempty"`
+}
+
+// ListClassifiersOptions : The listClassifiers options.
+type ListClassifiersOptions struct {
+
+	// Specify `true` to return details about the classifiers. Omit this parameter to return a brief list of classifiers.
+	Verbose bool `json:"verbose,omitempty"`
+
+    // Indicates whether user set optional parameter Verbose
+    IsVerboseSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListClassifiersOptions : Instantiate ListClassifiersOptions
+func NewListClassifiersOptions() *ListClassifiersOptions {
+    return &ListClassifiersOptions{}
+}
+
+// SetVerbose : Allow user to set Verbose
+func (options *ListClassifiersOptions) SetVerbose(param bool) *ListClassifiersOptions {
+    options.Verbose = param
+    options.IsVerboseSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListClassifiersOptions) SetHeaders(param map[string]string) *ListClassifiersOptions {
+    options.Headers = param
+    return options
+}
+
+// UpdateClassifierOptions : The updateClassifier options.
+type UpdateClassifierOptions struct {
+
+	// The ID of the classifier.
+	ClassifierID string `json:"classifier_id"`
+
+	// A .zip file of images that depict the visual subject of a class in the classifier. The positive examples create or update classes in the classifier. You can include more than one positive example file in a call. Specify the parameter name by appending `_positive_examples` to the class name. For example, `goldenretriever_positive_examples` creates the class `goldenretriever`. Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The maximum number of images is 10,000 images or 100 MB per .zip file. Encode special characters in the file name in UTF-8.
+	ClassnamePositiveExamples os.File `json:"classname_positive_examples,omitempty"`
+
+    // Indicates whether user set optional parameter ClassnamePositiveExamples
+    IsClassnamePositiveExamplesSet bool
+
+	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must contain a minimum of 10 images. Encode special characters in the file name in UTF-8.
+	NegativeExamples os.File `json:"negative_examples,omitempty"`
+
+    // Indicates whether user set optional parameter NegativeExamples
+    IsNegativeExamplesSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUpdateClassifierOptions : Instantiate UpdateClassifierOptions
+func NewUpdateClassifierOptions(classifierID string) *UpdateClassifierOptions {
+    return &UpdateClassifierOptions{
+        ClassifierID: classifierID,
+    }
+}
+
+// SetClassifierID : Allow user to set ClassifierID
+func (options *UpdateClassifierOptions) SetClassifierID(param string) *UpdateClassifierOptions {
+    options.ClassifierID = param
+    return options
+}
+
+// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *UpdateClassifierOptions) SetClassnamePositiveExamples(param os.File) *UpdateClassifierOptions {
+    options.ClassnamePositiveExamples = param
+    options.IsClassnamePositiveExamplesSet = true
+    return options
+}
+
+// SetNegativeExamples : Allow user to set NegativeExamples
+func (options *UpdateClassifierOptions) SetNegativeExamples(param os.File) *UpdateClassifierOptions {
+    options.NegativeExamples = param
+    options.IsNegativeExamplesSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateClassifierOptions) SetHeaders(param map[string]string) *UpdateClassifierOptions {
+    options.Headers = param
+    return options
 }
 
 // WarningInfo : Information about something that went wrong.

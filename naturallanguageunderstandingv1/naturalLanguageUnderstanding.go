@@ -45,7 +45,7 @@ func NewNaturalLanguageUnderstandingV1(creds watson.Credentials) (*NaturalLangua
 }
 
 // Analyze : Analyze text, HTML, or a public webpage
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(body *Parameters) (*watson.WatsonResponse, []error) {
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(options *AnalyzeOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/analyze"
     creds := naturalLanguageUnderstanding.client.Creds
     useTM := naturalLanguageUnderstanding.client.UseTM
@@ -53,9 +53,42 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(body
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsTextSet {
+        body["text"] = options.Text
+    }
+    if options.IsHTMLSet {
+        body["html"] = options.HTML
+    }
+    if options.IsURLSet {
+        body["url"] = options.URL
+    }
+    body["features"] = options.Features
+    if options.IsCleanSet {
+        body["clean"] = options.Clean
+    }
+    if options.IsXpathSet {
+        body["xpath"] = options.Xpath
+    }
+    if options.IsFallbackToRawSet {
+        body["fallback_to_raw"] = options.FallbackToRaw
+    }
+    if options.IsReturnAnalyzedTextSet {
+        body["return_analyzed_text"] = options.ReturnAnalyzedText
+    }
+    if options.IsLanguageSet {
+        body["language"] = options.Language
+    }
+    if options.IsLimitTextCharactersSet {
+        body["limit_text_characters"] = options.LimitTextCharacters
+    }
     request.Send(body)
 
     if useTM {
@@ -105,14 +138,18 @@ func GetAnalyzeResult(response *watson.WatsonResponse) *AnalysisResults {
 }
 
 // DeleteModel : Delete model
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(modelID string) (*watson.WatsonResponse, []error) {
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(options *DeleteModelOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/models/{model_id}"
     creds := naturalLanguageUnderstanding.client.Creds
     useTM := naturalLanguageUnderstanding.client.UseTM
     tokenManager := naturalLanguageUnderstanding.client.TokenManager
 
-    path = strings.Replace(path, "{model_id}", modelID, 1)
+    path = strings.Replace(path, "{model_id}", options.ModelID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -165,13 +202,17 @@ func GetDeleteModelResult(response *watson.WatsonResponse) *DeleteModelResults {
 }
 
 // ListModels : List models
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels() (*watson.WatsonResponse, []error) {
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(options *ListModelsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/models"
     creds := naturalLanguageUnderstanding.client.Creds
     useTM := naturalLanguageUnderstanding.client.UseTM
     tokenManager := naturalLanguageUnderstanding.client.TokenManager
 
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -267,6 +308,152 @@ type AnalysisResults struct {
 	Sentiment SentimentResult `json:"sentiment,omitempty"`
 }
 
+// AnalyzeOptions : The analyze options.
+type AnalyzeOptions struct {
+
+	// The plain text to analyze.
+	Text string `json:"text,omitempty"`
+
+    // Indicates whether user set optional parameter Text
+    IsTextSet bool
+
+	// The HTML file to analyze.
+	HTML string `json:"html,omitempty"`
+
+    // Indicates whether user set optional parameter HTML
+    IsHTMLSet bool
+
+	// The web page to analyze.
+	URL string `json:"url,omitempty"`
+
+    // Indicates whether user set optional parameter URL
+    IsURLSet bool
+
+	// Specific features to analyze the document for.
+	Features Features `json:"features"`
+
+	// Remove website elements, such as links, ads, etc.
+	Clean bool `json:"clean,omitempty"`
+
+    // Indicates whether user set optional parameter Clean
+    IsCleanSet bool
+
+	// XPath query for targeting nodes in HTML.
+	Xpath string `json:"xpath,omitempty"`
+
+    // Indicates whether user set optional parameter Xpath
+    IsXpathSet bool
+
+	// Whether to use raw HTML content if text cleaning fails.
+	FallbackToRaw bool `json:"fallback_to_raw,omitempty"`
+
+    // Indicates whether user set optional parameter FallbackToRaw
+    IsFallbackToRawSet bool
+
+	// Whether or not to return the analyzed text.
+	ReturnAnalyzedText bool `json:"return_analyzed_text,omitempty"`
+
+    // Indicates whether user set optional parameter ReturnAnalyzedText
+    IsReturnAnalyzedTextSet bool
+
+	// ISO 639-1 code indicating the language to use in the analysis.
+	Language string `json:"language,omitempty"`
+
+    // Indicates whether user set optional parameter Language
+    IsLanguageSet bool
+
+	// Sets the maximum number of characters that are processed by the service.
+	LimitTextCharacters int64 `json:"limit_text_characters,omitempty"`
+
+    // Indicates whether user set optional parameter LimitTextCharacters
+    IsLimitTextCharactersSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewAnalyzeOptions : Instantiate AnalyzeOptions
+func NewAnalyzeOptions(features Features) *AnalyzeOptions {
+    return &AnalyzeOptions{
+        Features: features,
+    }
+}
+
+// SetText : Allow user to set Text
+func (options *AnalyzeOptions) SetText(param string) *AnalyzeOptions {
+    options.Text = param
+    options.IsTextSet = true
+    return options
+}
+
+// SetHTML : Allow user to set HTML
+func (options *AnalyzeOptions) SetHTML(param string) *AnalyzeOptions {
+    options.HTML = param
+    options.IsHTMLSet = true
+    return options
+}
+
+// SetURL : Allow user to set URL
+func (options *AnalyzeOptions) SetURL(param string) *AnalyzeOptions {
+    options.URL = param
+    options.IsURLSet = true
+    return options
+}
+
+// SetFeatures : Allow user to set Features
+func (options *AnalyzeOptions) SetFeatures(param Features) *AnalyzeOptions {
+    options.Features = param
+    return options
+}
+
+// SetClean : Allow user to set Clean
+func (options *AnalyzeOptions) SetClean(param bool) *AnalyzeOptions {
+    options.Clean = param
+    options.IsCleanSet = true
+    return options
+}
+
+// SetXpath : Allow user to set Xpath
+func (options *AnalyzeOptions) SetXpath(param string) *AnalyzeOptions {
+    options.Xpath = param
+    options.IsXpathSet = true
+    return options
+}
+
+// SetFallbackToRaw : Allow user to set FallbackToRaw
+func (options *AnalyzeOptions) SetFallbackToRaw(param bool) *AnalyzeOptions {
+    options.FallbackToRaw = param
+    options.IsFallbackToRawSet = true
+    return options
+}
+
+// SetReturnAnalyzedText : Allow user to set ReturnAnalyzedText
+func (options *AnalyzeOptions) SetReturnAnalyzedText(param bool) *AnalyzeOptions {
+    options.ReturnAnalyzedText = param
+    options.IsReturnAnalyzedTextSet = true
+    return options
+}
+
+// SetLanguage : Allow user to set Language
+func (options *AnalyzeOptions) SetLanguage(param string) *AnalyzeOptions {
+    options.Language = param
+    options.IsLanguageSet = true
+    return options
+}
+
+// SetLimitTextCharacters : Allow user to set LimitTextCharacters
+func (options *AnalyzeOptions) SetLimitTextCharacters(param int64) *AnalyzeOptions {
+    options.LimitTextCharacters = param
+    options.IsLimitTextCharactersSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *AnalyzeOptions) SetHeaders(param map[string]string) *AnalyzeOptions {
+    options.Headers = param
+    return options
+}
+
 // Author : The author of the analyzed content.
 type Author struct {
 
@@ -306,6 +493,35 @@ type ConceptsResult struct {
 
 	// Link to the corresponding DBpedia resource.
 	DbpediaResource string `json:"dbpedia_resource,omitempty"`
+}
+
+// DeleteModelOptions : The deleteModel options.
+type DeleteModelOptions struct {
+
+	// model_id of the model to delete.
+	ModelID string `json:"model_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteModelOptions : Instantiate DeleteModelOptions
+func NewDeleteModelOptions(modelID string) *DeleteModelOptions {
+    return &DeleteModelOptions{
+        ModelID: modelID,
+    }
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *DeleteModelOptions) SetModelID(param string) *DeleteModelOptions {
+    options.ModelID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteModelOptions) SetHeaders(param map[string]string) *DeleteModelOptions {
+    options.Headers = param
+    return options
 }
 
 // DeleteModelResults : Delete model results.
@@ -515,6 +731,24 @@ type KeywordsResult struct {
 	Sentiment FeatureSentimentResults `json:"sentiment,omitempty"`
 }
 
+// ListModelsOptions : The listModels options.
+type ListModelsOptions struct {
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListModelsOptions : Instantiate ListModelsOptions
+func NewListModelsOptions() *ListModelsOptions {
+    return &ListModelsOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModelsOptions {
+    options.Headers = param
+    return options
+}
+
 // ListModelsResults : Models available for Relations and Entities features.
 type ListModelsResults struct {
 
@@ -558,40 +792,6 @@ type Model struct {
 
 	// Model description.
 	Description string `json:"description,omitempty"`
-}
-
-// Parameters : An object containing request parameters.
-type Parameters struct {
-
-	// The plain text to analyze.
-	Text string `json:"text,omitempty"`
-
-	// The HTML file to analyze.
-	HTML string `json:"html,omitempty"`
-
-	// The web page to analyze.
-	URL string `json:"url,omitempty"`
-
-	// Specific features to analyze the document for.
-	Features Features `json:"features"`
-
-	// Remove website elements, such as links, ads, etc.
-	Clean bool `json:"clean,omitempty"`
-
-	// XPath query for targeting nodes in HTML.
-	Xpath string `json:"xpath,omitempty"`
-
-	// Whether to use raw HTML content if text cleaning fails.
-	FallbackToRaw bool `json:"fallback_to_raw,omitempty"`
-
-	// Whether or not to return the analyzed text.
-	ReturnAnalyzedText bool `json:"return_analyzed_text,omitempty"`
-
-	// ISO 639-1 code indicating the language to use in the analysis.
-	Language string `json:"language,omitempty"`
-
-	// Sets the maximum number of characters that are processed by the service.
-	LimitTextCharacters int64 `json:"limit_text_characters,omitempty"`
 }
 
 // RelationArgument : RelationArgument struct

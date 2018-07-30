@@ -47,7 +47,7 @@ func NewDiscoveryV1(creds watson.Credentials) (*DiscoveryV1, error) {
 }
 
 // CreateEnvironment : Create an environment
-func (discovery *DiscoveryV1) CreateEnvironment(body *CreateEnvironmentRequest) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) CreateEnvironment(options *CreateEnvironmentOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
@@ -55,9 +55,21 @@ func (discovery *DiscoveryV1) CreateEnvironment(body *CreateEnvironmentRequest) 
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    body["name"] = options.Name
+    if options.IsDescriptionSet {
+        body["description"] = options.Description
+    }
+    if options.IsSizeSet {
+        body["size"] = options.Size
+    }
     request.Send(body)
 
     if useTM {
@@ -107,14 +119,18 @@ func GetCreateEnvironmentResult(response *watson.WatsonResponse) *Environment {
 }
 
 // DeleteEnvironment : Delete environment
-func (discovery *DiscoveryV1) DeleteEnvironment(environmentID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteEnvironment(options *DeleteEnvironmentOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -167,14 +183,18 @@ func GetDeleteEnvironmentResult(response *watson.WatsonResponse) *DeleteEnvironm
 }
 
 // GetEnvironment : Get environment info
-func (discovery *DiscoveryV1) GetEnvironment(environmentID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) GetEnvironment(options *GetEnvironmentOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -227,7 +247,7 @@ func GetGetEnvironmentResult(response *watson.WatsonResponse) *Environment {
 }
 
 // ListEnvironments : List environments
-func (discovery *DiscoveryV1) ListEnvironments(name string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListEnvironments(options *ListEnvironmentsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
@@ -235,10 +255,16 @@ func (discovery *DiscoveryV1) ListEnvironments(name string) (*watson.WatsonRespo
 
     request := req.New().Get(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("name=" + fmt.Sprint(name))
+    if options.IsNameSet {
+        request.Query("name=" + fmt.Sprint(options.Name))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -287,19 +313,23 @@ func GetListEnvironmentsResult(response *watson.WatsonResponse) *ListEnvironment
 }
 
 // ListFields : List fields across collections
-func (discovery *DiscoveryV1) ListFields(environmentID string, collectionIds []string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListFields(options *ListFieldsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/fields"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("collection_ids=" + fmt.Sprint(collectionIds))
+    request.Query("collection_ids=" + fmt.Sprint(options.CollectionIds))
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -348,18 +378,29 @@ func GetListFieldsResult(response *watson.WatsonResponse) *ListCollectionFieldsR
 }
 
 // UpdateEnvironment : Update an environment
-func (discovery *DiscoveryV1) UpdateEnvironment(environmentID string, body *UpdateEnvironmentRequest) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) UpdateEnvironment(options *UpdateEnvironmentOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Put(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsNameSet {
+        body["name"] = options.Name
+    }
+    if options.IsDescriptionSet {
+        body["description"] = options.Description
+    }
     request.Send(body)
 
     if useTM {
@@ -409,18 +450,41 @@ func GetUpdateEnvironmentResult(response *watson.WatsonResponse) *Environment {
 }
 
 // CreateConfiguration : Add configuration
-func (discovery *DiscoveryV1) CreateConfiguration(environmentID string, body *Configuration) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) CreateConfiguration(options *CreateConfigurationOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/configurations"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsNameSet {
+        body["name"] = options.Name
+    }
+    if options.IsDescriptionSet {
+        body["description"] = options.Description
+    }
+    if options.IsConversionsSet {
+        body["conversions"] = options.Conversions
+    }
+    if options.IsEnrichmentsSet {
+        body["enrichments"] = options.Enrichments
+    }
+    if options.IsNormalizationsSet {
+        body["normalizations"] = options.Normalizations
+    }
+    if options.IsSourceSet {
+        body["source"] = options.Source
+    }
     request.Send(body)
 
     if useTM {
@@ -470,15 +534,19 @@ func GetCreateConfigurationResult(response *watson.WatsonResponse) *Configuratio
 }
 
 // DeleteConfiguration : Delete a configuration
-func (discovery *DiscoveryV1) DeleteConfiguration(environmentID string, configurationID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteConfiguration(options *DeleteConfigurationOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/configurations/{configuration_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{configuration_id}", configurationID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{configuration_id}", options.ConfigurationID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -531,15 +599,19 @@ func GetDeleteConfigurationResult(response *watson.WatsonResponse) *DeleteConfig
 }
 
 // GetConfiguration : Get configuration details
-func (discovery *DiscoveryV1) GetConfiguration(environmentID string, configurationID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) GetConfiguration(options *GetConfigurationOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/configurations/{configuration_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{configuration_id}", configurationID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{configuration_id}", options.ConfigurationID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -592,19 +664,25 @@ func GetGetConfigurationResult(response *watson.WatsonResponse) *Configuration {
 }
 
 // ListConfigurations : List configurations
-func (discovery *DiscoveryV1) ListConfigurations(environmentID string, name string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListConfigurations(options *ListConfigurationsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/configurations"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("name=" + fmt.Sprint(name))
+    if options.IsNameSet {
+        request.Query("name=" + fmt.Sprint(options.Name))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -653,19 +731,42 @@ func GetListConfigurationsResult(response *watson.WatsonResponse) *ListConfigura
 }
 
 // UpdateConfiguration : Update a configuration
-func (discovery *DiscoveryV1) UpdateConfiguration(environmentID string, configurationID string, body *Configuration) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) UpdateConfiguration(options *UpdateConfigurationOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/configurations/{configuration_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{configuration_id}", configurationID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{configuration_id}", options.ConfigurationID, 1)
     request := req.New().Put(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsNameSet {
+        body["name"] = options.Name
+    }
+    if options.IsDescriptionSet {
+        body["description"] = options.Description
+    }
+    if options.IsConversionsSet {
+        body["conversions"] = options.Conversions
+    }
+    if options.IsEnrichmentsSet {
+        body["enrichments"] = options.Enrichments
+    }
+    if options.IsNormalizationsSet {
+        body["normalizations"] = options.Normalizations
+    }
+    if options.IsSourceSet {
+        body["source"] = options.Source
+    }
     request.Send(body)
 
     if useTM {
@@ -715,22 +816,32 @@ func GetUpdateConfigurationResult(response *watson.WatsonResponse) *Configuratio
 }
 
 // TestConfigurationInEnvironment : Test configuration
-func (discovery *DiscoveryV1) TestConfigurationInEnvironment(environmentID string, configuration string, step string, configurationID string, file os.File, metadata string, fileContentType string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) TestConfigurationInEnvironment(options *TestConfigurationInEnvironmentOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/preview"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
-    request.Query("step=" + fmt.Sprint(step))
-    request.Query("configuration_id=" + fmt.Sprint(configurationID))
+    if options.IsStepSet {
+        request.Query("step=" + fmt.Sprint(options.Step))
+    }
+    if options.IsConfigurationIDSet {
+        request.Query("configuration_id=" + fmt.Sprint(options.ConfigurationID))
+    }
     request.Type("multipart")
-    request.SendFile(file)
+    if options.IsFileSet {
+        request.SendFile(options.File)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -779,18 +890,33 @@ func GetTestConfigurationInEnvironmentResult(response *watson.WatsonResponse) *T
 }
 
 // CreateCollection : Create a collection
-func (discovery *DiscoveryV1) CreateCollection(environmentID string, body *CreateCollectionRequest) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) CreateCollection(options *CreateCollectionOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    body["name"] = options.Name
+    if options.IsDescriptionSet {
+        body["description"] = options.Description
+    }
+    if options.IsConfigurationIDSet {
+        body["configuration_id"] = options.ConfigurationID
+    }
+    if options.IsLanguageSet {
+        body["language"] = options.Language
+    }
     request.Send(body)
 
     if useTM {
@@ -840,15 +966,19 @@ func GetCreateCollectionResult(response *watson.WatsonResponse) *Collection {
 }
 
 // DeleteCollection : Delete a collection
-func (discovery *DiscoveryV1) DeleteCollection(environmentID string, collectionID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteCollection(options *DeleteCollectionOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -901,15 +1031,19 @@ func GetDeleteCollectionResult(response *watson.WatsonResponse) *DeleteCollectio
 }
 
 // GetCollection : Get collection details
-func (discovery *DiscoveryV1) GetCollection(environmentID string, collectionID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) GetCollection(options *GetCollectionOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -962,15 +1096,19 @@ func GetGetCollectionResult(response *watson.WatsonResponse) *Collection {
 }
 
 // ListCollectionFields : List collection fields
-func (discovery *DiscoveryV1) ListCollectionFields(environmentID string, collectionID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListCollectionFields(options *ListCollectionFieldsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/fields"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1023,19 +1161,25 @@ func GetListCollectionFieldsResult(response *watson.WatsonResponse) *ListCollect
 }
 
 // ListCollections : List collections
-func (discovery *DiscoveryV1) ListCollections(environmentID string, name string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListCollections(options *ListCollectionsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("name=" + fmt.Sprint(name))
+    if options.IsNameSet {
+        request.Query("name=" + fmt.Sprint(options.Name))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1084,19 +1228,33 @@ func GetListCollectionsResult(response *watson.WatsonResponse) *ListCollectionsR
 }
 
 // UpdateCollection : Update a collection
-func (discovery *DiscoveryV1) UpdateCollection(environmentID string, collectionID string, body *UpdateCollectionRequest) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) UpdateCollection(options *UpdateCollectionOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Put(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsNameSet {
+        body["name"] = options.Name
+    }
+    if options.IsDescriptionSet {
+        body["description"] = options.Description
+    }
+    if options.IsConfigurationIDSet {
+        body["configuration_id"] = options.ConfigurationID
+    }
     request.Send(body)
 
     if useTM {
@@ -1146,19 +1304,27 @@ func GetUpdateCollectionResult(response *watson.WatsonResponse) *Collection {
 }
 
 // CreateExpansions : Create or update expansion list
-func (discovery *DiscoveryV1) CreateExpansions(environmentID string, collectionID string, body *Expansions) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) CreateExpansions(options *CreateExpansionsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsExpansionsSet {
+        body["expansions"] = options.Expansions
+    }
     request.Send(body)
 
     if useTM {
@@ -1208,15 +1374,19 @@ func GetCreateExpansionsResult(response *watson.WatsonResponse) *Expansions {
 }
 
 // DeleteExpansions : Delete the expansion list
-func (discovery *DiscoveryV1) DeleteExpansions(environmentID string, collectionID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteExpansions(options *DeleteExpansionsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1258,15 +1428,19 @@ func (discovery *DiscoveryV1) DeleteExpansions(environmentID string, collectionI
 
 
 // ListExpansions : Get the expansion list
-func (discovery *DiscoveryV1) ListExpansions(environmentID string, collectionID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListExpansions(options *ListExpansionsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1319,21 +1493,27 @@ func GetListExpansionsResult(response *watson.WatsonResponse) *Expansions {
 }
 
 // AddDocument : Add a document
-func (discovery *DiscoveryV1) AddDocument(environmentID string, collectionID string, file os.File, metadata string, fileContentType string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) AddDocument(options *AddDocumentOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/documents"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
-    request.SendFile(file)
+    if options.IsFileSet {
+        request.SendFile(options.File)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1382,16 +1562,20 @@ func GetAddDocumentResult(response *watson.WatsonResponse) *DocumentAccepted {
 }
 
 // DeleteDocument : Delete a document
-func (discovery *DiscoveryV1) DeleteDocument(environmentID string, collectionID string, documentID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteDocument(options *DeleteDocumentOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{document_id}", documentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{document_id}", options.DocumentID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1444,16 +1628,20 @@ func GetDeleteDocumentResult(response *watson.WatsonResponse) *DeleteDocumentRes
 }
 
 // GetDocumentStatus : Get document details
-func (discovery *DiscoveryV1) GetDocumentStatus(environmentID string, collectionID string, documentID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) GetDocumentStatus(options *GetDocumentStatusOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{document_id}", documentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{document_id}", options.DocumentID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1506,22 +1694,28 @@ func GetGetDocumentStatusResult(response *watson.WatsonResponse) *DocumentStatus
 }
 
 // UpdateDocument : Update a document
-func (discovery *DiscoveryV1) UpdateDocument(environmentID string, collectionID string, documentID string, file os.File, metadata string, fileContentType string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) UpdateDocument(options *UpdateDocumentOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{document_id}", documentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{document_id}", options.DocumentID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
-    request.SendFile(file)
+    if options.IsFileSet {
+        request.SendFile(options.File)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1570,37 +1764,77 @@ func GetUpdateDocumentResult(response *watson.WatsonResponse) *DocumentAccepted 
 }
 
 // FederatedQuery : Query documents in multiple collections
-func (discovery *DiscoveryV1) FederatedQuery(environmentID string, collectionIds []string, filter string, query string, naturalLanguageQuery string, aggregation string, count int64, returnFields []string, offset int64, sort []string, highlight bool, deduplicate bool, deduplicateField string, similar bool, similarDocumentIds []string, similarFields []string, passages bool, passagesFields []string, passagesCount int64, passagesCharacters int64) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) FederatedQuery(options *FederatedQueryOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/query"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("collection_ids=" + fmt.Sprint(collectionIds))
-    request.Query("filter=" + fmt.Sprint(filter))
-    request.Query("query=" + fmt.Sprint(query))
-    request.Query("natural_language_query=" + fmt.Sprint(naturalLanguageQuery))
-    request.Query("aggregation=" + fmt.Sprint(aggregation))
-    request.Query("count=" + fmt.Sprint(count))
-    request.Query("return=" + fmt.Sprint(returnFields))
-    request.Query("offset=" + fmt.Sprint(offset))
-    request.Query("sort=" + fmt.Sprint(sort))
-    request.Query("highlight=" + fmt.Sprint(highlight))
-    request.Query("deduplicate=" + fmt.Sprint(deduplicate))
-    request.Query("deduplicate.field=" + fmt.Sprint(deduplicateField))
-    request.Query("similar=" + fmt.Sprint(similar))
-    request.Query("similar.document_ids=" + fmt.Sprint(similarDocumentIds))
-    request.Query("similar.fields=" + fmt.Sprint(similarFields))
-    request.Query("passages=" + fmt.Sprint(passages))
-    request.Query("passages.fields=" + fmt.Sprint(passagesFields))
-    request.Query("passages.count=" + fmt.Sprint(passagesCount))
-    request.Query("passages.characters=" + fmt.Sprint(passagesCharacters))
+    request.Query("collection_ids=" + fmt.Sprint(options.CollectionIds))
+    if options.IsFilterSet {
+        request.Query("filter=" + fmt.Sprint(options.Filter))
+    }
+    if options.IsQuerySet {
+        request.Query("query=" + fmt.Sprint(options.Query))
+    }
+    if options.IsNaturalLanguageQuerySet {
+        request.Query("natural_language_query=" + fmt.Sprint(options.NaturalLanguageQuery))
+    }
+    if options.IsAggregationSet {
+        request.Query("aggregation=" + fmt.Sprint(options.Aggregation))
+    }
+    if options.IsCountSet {
+        request.Query("count=" + fmt.Sprint(options.Count))
+    }
+    if options.IsReturnFieldsSet {
+        request.Query("return=" + fmt.Sprint(options.ReturnFields))
+    }
+    if options.IsOffsetSet {
+        request.Query("offset=" + fmt.Sprint(options.Offset))
+    }
+    if options.IsSortSet {
+        request.Query("sort=" + fmt.Sprint(options.Sort))
+    }
+    if options.IsHighlightSet {
+        request.Query("highlight=" + fmt.Sprint(options.Highlight))
+    }
+    if options.IsDeduplicateSet {
+        request.Query("deduplicate=" + fmt.Sprint(options.Deduplicate))
+    }
+    if options.IsDeduplicateFieldSet {
+        request.Query("deduplicate.field=" + fmt.Sprint(options.DeduplicateField))
+    }
+    if options.IsSimilarSet {
+        request.Query("similar=" + fmt.Sprint(options.Similar))
+    }
+    if options.IsSimilarDocumentIdsSet {
+        request.Query("similar.document_ids=" + fmt.Sprint(options.SimilarDocumentIds))
+    }
+    if options.IsSimilarFieldsSet {
+        request.Query("similar.fields=" + fmt.Sprint(options.SimilarFields))
+    }
+    if options.IsPassagesSet {
+        request.Query("passages=" + fmt.Sprint(options.Passages))
+    }
+    if options.IsPassagesFieldsSet {
+        request.Query("passages.fields=" + fmt.Sprint(options.PassagesFields))
+    }
+    if options.IsPassagesCountSet {
+        request.Query("passages.count=" + fmt.Sprint(options.PassagesCount))
+    }
+    if options.IsPassagesCharactersSet {
+        request.Query("passages.characters=" + fmt.Sprint(options.PassagesCharacters))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1649,32 +1883,62 @@ func GetFederatedQueryResult(response *watson.WatsonResponse) *QueryResponse {
 }
 
 // FederatedQueryNotices : Query multiple collection system notices
-func (discovery *DiscoveryV1) FederatedQueryNotices(environmentID string, collectionIds []string, filter string, query string, naturalLanguageQuery string, aggregation string, count int64, returnFields []string, offset int64, sort []string, highlight bool, deduplicateField string, similar bool, similarDocumentIds []string, similarFields []string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) FederatedQueryNotices(options *FederatedQueryNoticesOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/notices"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("collection_ids=" + fmt.Sprint(collectionIds))
-    request.Query("filter=" + fmt.Sprint(filter))
-    request.Query("query=" + fmt.Sprint(query))
-    request.Query("natural_language_query=" + fmt.Sprint(naturalLanguageQuery))
-    request.Query("aggregation=" + fmt.Sprint(aggregation))
-    request.Query("count=" + fmt.Sprint(count))
-    request.Query("return=" + fmt.Sprint(returnFields))
-    request.Query("offset=" + fmt.Sprint(offset))
-    request.Query("sort=" + fmt.Sprint(sort))
-    request.Query("highlight=" + fmt.Sprint(highlight))
-    request.Query("deduplicate.field=" + fmt.Sprint(deduplicateField))
-    request.Query("similar=" + fmt.Sprint(similar))
-    request.Query("similar.document_ids=" + fmt.Sprint(similarDocumentIds))
-    request.Query("similar.fields=" + fmt.Sprint(similarFields))
+    request.Query("collection_ids=" + fmt.Sprint(options.CollectionIds))
+    if options.IsFilterSet {
+        request.Query("filter=" + fmt.Sprint(options.Filter))
+    }
+    if options.IsQuerySet {
+        request.Query("query=" + fmt.Sprint(options.Query))
+    }
+    if options.IsNaturalLanguageQuerySet {
+        request.Query("natural_language_query=" + fmt.Sprint(options.NaturalLanguageQuery))
+    }
+    if options.IsAggregationSet {
+        request.Query("aggregation=" + fmt.Sprint(options.Aggregation))
+    }
+    if options.IsCountSet {
+        request.Query("count=" + fmt.Sprint(options.Count))
+    }
+    if options.IsReturnFieldsSet {
+        request.Query("return=" + fmt.Sprint(options.ReturnFields))
+    }
+    if options.IsOffsetSet {
+        request.Query("offset=" + fmt.Sprint(options.Offset))
+    }
+    if options.IsSortSet {
+        request.Query("sort=" + fmt.Sprint(options.Sort))
+    }
+    if options.IsHighlightSet {
+        request.Query("highlight=" + fmt.Sprint(options.Highlight))
+    }
+    if options.IsDeduplicateFieldSet {
+        request.Query("deduplicate.field=" + fmt.Sprint(options.DeduplicateField))
+    }
+    if options.IsSimilarSet {
+        request.Query("similar=" + fmt.Sprint(options.Similar))
+    }
+    if options.IsSimilarDocumentIdsSet {
+        request.Query("similar.document_ids=" + fmt.Sprint(options.SimilarDocumentIds))
+    }
+    if options.IsSimilarFieldsSet {
+        request.Query("similar.fields=" + fmt.Sprint(options.SimilarFields))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1723,37 +1987,80 @@ func GetFederatedQueryNoticesResult(response *watson.WatsonResponse) *QueryNotic
 }
 
 // Query : Query your collection
-func (discovery *DiscoveryV1) Query(environmentID string, collectionID string, filter string, query string, naturalLanguageQuery string, passages bool, aggregation string, count int64, returnFields []string, offset int64, sort []string, highlight bool, passagesFields []string, passagesCount int64, passagesCharacters int64, deduplicate bool, deduplicateField string, similar bool, similarDocumentIds []string, similarFields []string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) Query(options *QueryOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/query"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
+    if options.IsLoggingOptOutSet {
+        request.Set("X-Watson-Logging-Opt-Out", fmt.Sprint(options.LoggingOptOut))
+    }
     request.Query("version=" + creds.Version)
-    request.Query("filter=" + fmt.Sprint(filter))
-    request.Query("query=" + fmt.Sprint(query))
-    request.Query("natural_language_query=" + fmt.Sprint(naturalLanguageQuery))
-    request.Query("passages=" + fmt.Sprint(passages))
-    request.Query("aggregation=" + fmt.Sprint(aggregation))
-    request.Query("count=" + fmt.Sprint(count))
-    request.Query("return=" + fmt.Sprint(returnFields))
-    request.Query("offset=" + fmt.Sprint(offset))
-    request.Query("sort=" + fmt.Sprint(sort))
-    request.Query("highlight=" + fmt.Sprint(highlight))
-    request.Query("passages.fields=" + fmt.Sprint(passagesFields))
-    request.Query("passages.count=" + fmt.Sprint(passagesCount))
-    request.Query("passages.characters=" + fmt.Sprint(passagesCharacters))
-    request.Query("deduplicate=" + fmt.Sprint(deduplicate))
-    request.Query("deduplicate.field=" + fmt.Sprint(deduplicateField))
-    request.Query("similar=" + fmt.Sprint(similar))
-    request.Query("similar.document_ids=" + fmt.Sprint(similarDocumentIds))
-    request.Query("similar.fields=" + fmt.Sprint(similarFields))
+    if options.IsFilterSet {
+        request.Query("filter=" + fmt.Sprint(options.Filter))
+    }
+    if options.IsQuerySet {
+        request.Query("query=" + fmt.Sprint(options.Query))
+    }
+    if options.IsNaturalLanguageQuerySet {
+        request.Query("natural_language_query=" + fmt.Sprint(options.NaturalLanguageQuery))
+    }
+    if options.IsPassagesSet {
+        request.Query("passages=" + fmt.Sprint(options.Passages))
+    }
+    if options.IsAggregationSet {
+        request.Query("aggregation=" + fmt.Sprint(options.Aggregation))
+    }
+    if options.IsCountSet {
+        request.Query("count=" + fmt.Sprint(options.Count))
+    }
+    if options.IsReturnFieldsSet {
+        request.Query("return=" + fmt.Sprint(options.ReturnFields))
+    }
+    if options.IsOffsetSet {
+        request.Query("offset=" + fmt.Sprint(options.Offset))
+    }
+    if options.IsSortSet {
+        request.Query("sort=" + fmt.Sprint(options.Sort))
+    }
+    if options.IsHighlightSet {
+        request.Query("highlight=" + fmt.Sprint(options.Highlight))
+    }
+    if options.IsPassagesFieldsSet {
+        request.Query("passages.fields=" + fmt.Sprint(options.PassagesFields))
+    }
+    if options.IsPassagesCountSet {
+        request.Query("passages.count=" + fmt.Sprint(options.PassagesCount))
+    }
+    if options.IsPassagesCharactersSet {
+        request.Query("passages.characters=" + fmt.Sprint(options.PassagesCharacters))
+    }
+    if options.IsDeduplicateSet {
+        request.Query("deduplicate=" + fmt.Sprint(options.Deduplicate))
+    }
+    if options.IsDeduplicateFieldSet {
+        request.Query("deduplicate.field=" + fmt.Sprint(options.DeduplicateField))
+    }
+    if options.IsSimilarSet {
+        request.Query("similar=" + fmt.Sprint(options.Similar))
+    }
+    if options.IsSimilarDocumentIdsSet {
+        request.Query("similar.document_ids=" + fmt.Sprint(options.SimilarDocumentIds))
+    }
+    if options.IsSimilarFieldsSet {
+        request.Query("similar.fields=" + fmt.Sprint(options.SimilarFields))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1802,19 +2109,39 @@ func GetQueryResult(response *watson.WatsonResponse) *QueryResponse {
 }
 
 // QueryEntities : Knowledge Graph entity query
-func (discovery *DiscoveryV1) QueryEntities(environmentID string, collectionID string, body *QueryEntities) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) QueryEntities(options *QueryEntitiesOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/query_entities"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsFeatureSet {
+        body["feature"] = options.Feature
+    }
+    if options.IsEntitySet {
+        body["entity"] = options.Entity
+    }
+    if options.IsContextSet {
+        body["context"] = options.Context
+    }
+    if options.IsCountSet {
+        body["count"] = options.Count
+    }
+    if options.IsEvidenceCountSet {
+        body["evidence_count"] = options.EvidenceCount
+    }
     request.Send(body)
 
     if useTM {
@@ -1864,36 +2191,74 @@ func GetQueryEntitiesResult(response *watson.WatsonResponse) *QueryEntitiesRespo
 }
 
 // QueryNotices : Query system notices
-func (discovery *DiscoveryV1) QueryNotices(environmentID string, collectionID string, filter string, query string, naturalLanguageQuery string, passages bool, aggregation string, count int64, returnFields []string, offset int64, sort []string, highlight bool, passagesFields []string, passagesCount int64, passagesCharacters int64, deduplicateField string, similar bool, similarDocumentIds []string, similarFields []string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) QueryNotices(options *QueryNoticesOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/notices"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("filter=" + fmt.Sprint(filter))
-    request.Query("query=" + fmt.Sprint(query))
-    request.Query("natural_language_query=" + fmt.Sprint(naturalLanguageQuery))
-    request.Query("passages=" + fmt.Sprint(passages))
-    request.Query("aggregation=" + fmt.Sprint(aggregation))
-    request.Query("count=" + fmt.Sprint(count))
-    request.Query("return=" + fmt.Sprint(returnFields))
-    request.Query("offset=" + fmt.Sprint(offset))
-    request.Query("sort=" + fmt.Sprint(sort))
-    request.Query("highlight=" + fmt.Sprint(highlight))
-    request.Query("passages.fields=" + fmt.Sprint(passagesFields))
-    request.Query("passages.count=" + fmt.Sprint(passagesCount))
-    request.Query("passages.characters=" + fmt.Sprint(passagesCharacters))
-    request.Query("deduplicate.field=" + fmt.Sprint(deduplicateField))
-    request.Query("similar=" + fmt.Sprint(similar))
-    request.Query("similar.document_ids=" + fmt.Sprint(similarDocumentIds))
-    request.Query("similar.fields=" + fmt.Sprint(similarFields))
+    if options.IsFilterSet {
+        request.Query("filter=" + fmt.Sprint(options.Filter))
+    }
+    if options.IsQuerySet {
+        request.Query("query=" + fmt.Sprint(options.Query))
+    }
+    if options.IsNaturalLanguageQuerySet {
+        request.Query("natural_language_query=" + fmt.Sprint(options.NaturalLanguageQuery))
+    }
+    if options.IsPassagesSet {
+        request.Query("passages=" + fmt.Sprint(options.Passages))
+    }
+    if options.IsAggregationSet {
+        request.Query("aggregation=" + fmt.Sprint(options.Aggregation))
+    }
+    if options.IsCountSet {
+        request.Query("count=" + fmt.Sprint(options.Count))
+    }
+    if options.IsReturnFieldsSet {
+        request.Query("return=" + fmt.Sprint(options.ReturnFields))
+    }
+    if options.IsOffsetSet {
+        request.Query("offset=" + fmt.Sprint(options.Offset))
+    }
+    if options.IsSortSet {
+        request.Query("sort=" + fmt.Sprint(options.Sort))
+    }
+    if options.IsHighlightSet {
+        request.Query("highlight=" + fmt.Sprint(options.Highlight))
+    }
+    if options.IsPassagesFieldsSet {
+        request.Query("passages.fields=" + fmt.Sprint(options.PassagesFields))
+    }
+    if options.IsPassagesCountSet {
+        request.Query("passages.count=" + fmt.Sprint(options.PassagesCount))
+    }
+    if options.IsPassagesCharactersSet {
+        request.Query("passages.characters=" + fmt.Sprint(options.PassagesCharacters))
+    }
+    if options.IsDeduplicateFieldSet {
+        request.Query("deduplicate.field=" + fmt.Sprint(options.DeduplicateField))
+    }
+    if options.IsSimilarSet {
+        request.Query("similar=" + fmt.Sprint(options.Similar))
+    }
+    if options.IsSimilarDocumentIdsSet {
+        request.Query("similar.document_ids=" + fmt.Sprint(options.SimilarDocumentIds))
+    }
+    if options.IsSimilarFieldsSet {
+        request.Query("similar.fields=" + fmt.Sprint(options.SimilarFields))
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1942,19 +2307,42 @@ func GetQueryNoticesResult(response *watson.WatsonResponse) *QueryNoticesRespons
 }
 
 // QueryRelations : Knowledge Graph relationship query
-func (discovery *DiscoveryV1) QueryRelations(environmentID string, collectionID string, body *QueryRelations) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) QueryRelations(options *QueryRelationsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/query_relations"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsEntitiesSet {
+        body["entities"] = options.Entities
+    }
+    if options.IsContextSet {
+        body["context"] = options.Context
+    }
+    if options.IsSortSet {
+        body["sort"] = options.Sort
+    }
+    if options.IsFilterSet {
+        body["filter"] = options.Filter
+    }
+    if options.IsCountSet {
+        body["count"] = options.Count
+    }
+    if options.IsEvidenceCountSet {
+        body["evidence_count"] = options.EvidenceCount
+    }
     request.Send(body)
 
     if useTM {
@@ -2004,19 +2392,33 @@ func GetQueryRelationsResult(response *watson.WatsonResponse) *QueryRelationsRes
 }
 
 // AddTrainingData : Add query to training data
-func (discovery *DiscoveryV1) AddTrainingData(environmentID string, collectionID string, body *NewTrainingQuery) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) AddTrainingData(options *AddTrainingDataOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsNaturalLanguageQuerySet {
+        body["natural_language_query"] = options.NaturalLanguageQuery
+    }
+    if options.IsFilterSet {
+        body["filter"] = options.Filter
+    }
+    if options.IsExamplesSet {
+        body["examples"] = options.Examples
+    }
     request.Send(body)
 
     if useTM {
@@ -2066,20 +2468,34 @@ func GetAddTrainingDataResult(response *watson.WatsonResponse) *TrainingQuery {
 }
 
 // CreateTrainingExample : Add example to training data query
-func (discovery *DiscoveryV1) CreateTrainingExample(environmentID string, collectionID string, queryID string, body *TrainingExample) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) CreateTrainingExample(options *CreateTrainingExampleOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{query_id}", queryID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsDocumentIDSet {
+        body["document_id"] = options.DocumentID
+    }
+    if options.IsCrossReferenceSet {
+        body["cross_reference"] = options.CrossReference
+    }
+    if options.IsRelevanceSet {
+        body["relevance"] = options.Relevance
+    }
     request.Send(body)
 
     if useTM {
@@ -2129,15 +2545,19 @@ func GetCreateTrainingExampleResult(response *watson.WatsonResponse) *TrainingEx
 }
 
 // DeleteAllTrainingData : Delete all training data
-func (discovery *DiscoveryV1) DeleteAllTrainingData(environmentID string, collectionID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteAllTrainingData(options *DeleteAllTrainingDataOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2179,16 +2599,20 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(environmentID string, collec
 
 
 // DeleteTrainingData : Delete a training data query
-func (discovery *DiscoveryV1) DeleteTrainingData(environmentID string, collectionID string, queryID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteTrainingData(options *DeleteTrainingDataOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{query_id}", queryID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2230,17 +2654,21 @@ func (discovery *DiscoveryV1) DeleteTrainingData(environmentID string, collectio
 
 
 // DeleteTrainingExample : Delete example for training data query
-func (discovery *DiscoveryV1) DeleteTrainingExample(environmentID string, collectionID string, queryID string, exampleID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteTrainingExample(options *DeleteTrainingExampleOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{query_id}", queryID, 1)
-    path = strings.Replace(path, "{example_id}", exampleID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
+    path = strings.Replace(path, "{example_id}", options.ExampleID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2282,16 +2710,20 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(environmentID string, collec
 
 
 // GetTrainingData : Get details about a query
-func (discovery *DiscoveryV1) GetTrainingData(environmentID string, collectionID string, queryID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) GetTrainingData(options *GetTrainingDataOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{query_id}", queryID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2344,17 +2776,21 @@ func GetGetTrainingDataResult(response *watson.WatsonResponse) *TrainingQuery {
 }
 
 // GetTrainingExample : Get details for training data example
-func (discovery *DiscoveryV1) GetTrainingExample(environmentID string, collectionID string, queryID string, exampleID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) GetTrainingExample(options *GetTrainingExampleOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{query_id}", queryID, 1)
-    path = strings.Replace(path, "{example_id}", exampleID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
+    path = strings.Replace(path, "{example_id}", options.ExampleID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2407,15 +2843,19 @@ func GetGetTrainingExampleResult(response *watson.WatsonResponse) *TrainingExamp
 }
 
 // ListTrainingData : List training data
-func (discovery *DiscoveryV1) ListTrainingData(environmentID string, collectionID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListTrainingData(options *ListTrainingDataOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2468,16 +2908,20 @@ func GetListTrainingDataResult(response *watson.WatsonResponse) *TrainingDataSet
 }
 
 // ListTrainingExamples : List examples for a training data query
-func (discovery *DiscoveryV1) ListTrainingExamples(environmentID string, collectionID string, queryID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListTrainingExamples(options *ListTrainingExamplesOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{query_id}", queryID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2530,21 +2974,32 @@ func GetListTrainingExamplesResult(response *watson.WatsonResponse) *TrainingExa
 }
 
 // UpdateTrainingExample : Change label or cross reference for example
-func (discovery *DiscoveryV1) UpdateTrainingExample(environmentID string, collectionID string, queryID string, exampleID string, body *TrainingExamplePatch) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) UpdateTrainingExample(options *UpdateTrainingExampleOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{collection_id}", collectionID, 1)
-    path = strings.Replace(path, "{query_id}", queryID, 1)
-    path = strings.Replace(path, "{example_id}", exampleID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
+    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
+    path = strings.Replace(path, "{example_id}", options.ExampleID, 1)
     request := req.New().Put(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsCrossReferenceSet {
+        body["cross_reference"] = options.CrossReference
+    }
+    if options.IsRelevanceSet {
+        body["relevance"] = options.Relevance
+    }
     request.Send(body)
 
     if useTM {
@@ -2594,7 +3049,7 @@ func GetUpdateTrainingExampleResult(response *watson.WatsonResponse) *TrainingEx
 }
 
 // DeleteUserData : Delete labeled data
-func (discovery *DiscoveryV1) DeleteUserData(customerID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteUserData(options *DeleteUserDataOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/user_data"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
@@ -2602,10 +3057,14 @@ func (discovery *DiscoveryV1) DeleteUserData(customerID string) (*watson.WatsonR
 
     request := req.New().Delete(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
-    request.Query("customer_id=" + fmt.Sprint(customerID))
+    request.Query("customer_id=" + fmt.Sprint(options.CustomerID))
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2643,18 +3102,29 @@ func (discovery *DiscoveryV1) DeleteUserData(customerID string) (*watson.WatsonR
 
 
 // CreateCredentials : Create credentials
-func (discovery *DiscoveryV1) CreateCredentials(environmentID string, body *Credentials) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) CreateCredentials(options *CreateCredentialsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/credentials"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsSourceTypeSet {
+        body["source_type"] = options.SourceType
+    }
+    if options.IsCredentialDetailsSet {
+        body["credential_details"] = options.CredentialDetails
+    }
     request.Send(body)
 
     if useTM {
@@ -2704,15 +3174,19 @@ func GetCreateCredentialsResult(response *watson.WatsonResponse) *Credentials {
 }
 
 // DeleteCredentials : Delete credentials
-func (discovery *DiscoveryV1) DeleteCredentials(environmentID string, credentialID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) DeleteCredentials(options *DeleteCredentialsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/credentials/{credential_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{credential_id}", credentialID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{credential_id}", options.CredentialID, 1)
     request := req.New().Delete(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2765,15 +3239,19 @@ func GetDeleteCredentialsResult(response *watson.WatsonResponse) *DeleteCredenti
 }
 
 // GetCredentials : View Credentials
-func (discovery *DiscoveryV1) GetCredentials(environmentID string, credentialID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) GetCredentials(options *GetCredentialsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/credentials/{credential_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{credential_id}", credentialID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{credential_id}", options.CredentialID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2826,14 +3304,18 @@ func GetGetCredentialsResult(response *watson.WatsonResponse) *Credentials {
 }
 
 // ListCredentials : List credentials
-func (discovery *DiscoveryV1) ListCredentials(environmentID string) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) ListCredentials(options *ListCredentialsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/credentials"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
     request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2886,19 +3368,30 @@ func GetListCredentialsResult(response *watson.WatsonResponse) *CredentialsList 
 }
 
 // UpdateCredentials : Update credentials
-func (discovery *DiscoveryV1) UpdateCredentials(environmentID string, credentialID string, body *Credentials) (*watson.WatsonResponse, []error) {
+func (discovery *DiscoveryV1) UpdateCredentials(options *UpdateCredentialsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/credentials/{credential_id}"
     creds := discovery.client.Creds
     useTM := discovery.client.UseTM
     tokenManager := discovery.client.TokenManager
 
-    path = strings.Replace(path, "{environment_id}", environmentID, 1)
-    path = strings.Replace(path, "{credential_id}", credentialID, 1)
+    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
+    path = strings.Replace(path, "{credential_id}", options.CredentialID, 1)
     request := req.New().Put(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    if options.IsSourceTypeSet {
+        body["source_type"] = options.SourceType
+    }
+    if options.IsCredentialDetailsSet {
+        body["credential_details"] = options.CredentialDetails
+    }
     request.Send(body)
 
     if useTM {
@@ -2947,6 +3440,159 @@ func GetUpdateCredentialsResult(response *watson.WatsonResponse) *Credentials {
     return nil
 }
 
+
+// AddDocumentOptions : The addDocument options.
+type AddDocumentOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50 megabytes is rejected.
+	File os.File `json:"file,omitempty"`
+
+    // Indicates whether user set optional parameter File
+    IsFileSet bool
+
+	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` { "Creator": "Johnny Appleseed", "Subject": "Apples" } ```.
+	Metadata string `json:"metadata,omitempty"`
+
+    // Indicates whether user set optional parameter Metadata
+    IsMetadataSet bool
+
+	// The content type of File.
+	FileContentType string `json:"file_content_type,omitempty"`
+
+    // Indicates whether user set optional parameter FileContentType
+    IsFileContentTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewAddDocumentOptions : Instantiate AddDocumentOptions
+func NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
+    return &AddDocumentOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *AddDocumentOptions) SetEnvironmentID(param string) *AddDocumentOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *AddDocumentOptions) SetCollectionID(param string) *AddDocumentOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetFile : Allow user to set File
+func (options *AddDocumentOptions) SetFile(param os.File) *AddDocumentOptions {
+    options.File = param
+    options.IsFileSet = true
+    return options
+}
+
+// SetMetadata : Allow user to set Metadata
+func (options *AddDocumentOptions) SetMetadata(param string) *AddDocumentOptions {
+    options.Metadata = param
+    options.IsMetadataSet = true
+    return options
+}
+
+// SetFileContentType : Allow user to set FileContentType
+func (options *AddDocumentOptions) SetFileContentType(param string) *AddDocumentOptions {
+    options.FileContentType = param
+    options.IsFileContentTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *AddDocumentOptions) SetHeaders(param map[string]string) *AddDocumentOptions {
+    options.Headers = param
+    return options
+}
+
+// AddTrainingDataOptions : The addTrainingData options.
+type AddTrainingDataOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
+
+    // Indicates whether user set optional parameter NaturalLanguageQuery
+    IsNaturalLanguageQuerySet bool
+
+	Filter string `json:"filter,omitempty"`
+
+    // Indicates whether user set optional parameter Filter
+    IsFilterSet bool
+
+	Examples []TrainingExample `json:"examples,omitempty"`
+
+    // Indicates whether user set optional parameter Examples
+    IsExamplesSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewAddTrainingDataOptions : Instantiate AddTrainingDataOptions
+func NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
+    return &AddTrainingDataOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *AddTrainingDataOptions) SetEnvironmentID(param string) *AddTrainingDataOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *AddTrainingDataOptions) SetCollectionID(param string) *AddTrainingDataOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
+func (options *AddTrainingDataOptions) SetNaturalLanguageQuery(param string) *AddTrainingDataOptions {
+    options.NaturalLanguageQuery = param
+    options.IsNaturalLanguageQuerySet = true
+    return options
+}
+
+// SetFilter : Allow user to set Filter
+func (options *AddTrainingDataOptions) SetFilter(param string) *AddTrainingDataOptions {
+    options.Filter = param
+    options.IsFilterSet = true
+    return options
+}
+
+// SetExamples : Allow user to set Examples
+func (options *AddTrainingDataOptions) SetExamples(param []TrainingExample) *AddTrainingDataOptions {
+    options.Examples = param
+    options.IsExamplesSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *AddTrainingDataOptions) SetHeaders(param map[string]string) *AddTrainingDataOptions {
+    options.Headers = param
+    return options
+}
 
 // AggregationResult : AggregationResult struct
 type AggregationResult struct {
@@ -3025,7 +3671,7 @@ type Configuration struct {
 	ConfigurationID string `json:"configuration_id,omitempty"`
 
 	// The name of the configuration.
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 
 	// The creation date of the configuration in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
 	Created strfmt.DateTime `json:"created,omitempty"`
@@ -3068,8 +3714,11 @@ type Conversions struct {
 	JSONNormalizations []NormalizationOperation `json:"json_normalizations,omitempty"`
 }
 
-// CreateCollectionRequest : CreateCollectionRequest struct
-type CreateCollectionRequest struct {
+// CreateCollectionOptions : The createCollection options.
+type CreateCollectionOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
 
 	// The name of the collection to be created.
 	Name string `json:"name"`
@@ -3077,15 +3726,236 @@ type CreateCollectionRequest struct {
 	// A description of the collection.
 	Description string `json:"description,omitempty"`
 
+    // Indicates whether user set optional parameter Description
+    IsDescriptionSet bool
+
 	// The ID of the configuration in which the collection is to be created.
 	ConfigurationID string `json:"configuration_id,omitempty"`
 
+    // Indicates whether user set optional parameter ConfigurationID
+    IsConfigurationIDSet bool
+
 	// The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
 	Language string `json:"language,omitempty"`
+
+    // Indicates whether user set optional parameter Language
+    IsLanguageSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
 }
 
-// CreateEnvironmentRequest : CreateEnvironmentRequest struct
-type CreateEnvironmentRequest struct {
+// NewCreateCollectionOptions : Instantiate CreateCollectionOptions
+func NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
+    return &CreateCollectionOptions{
+        EnvironmentID: environmentID,
+        Name: name,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *CreateCollectionOptions) SetEnvironmentID(param string) *CreateCollectionOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetName : Allow user to set Name
+func (options *CreateCollectionOptions) SetName(param string) *CreateCollectionOptions {
+    options.Name = param
+    return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateCollectionOptions) SetDescription(param string) *CreateCollectionOptions {
+    options.Description = param
+    options.IsDescriptionSet = true
+    return options
+}
+
+// SetConfigurationID : Allow user to set ConfigurationID
+func (options *CreateCollectionOptions) SetConfigurationID(param string) *CreateCollectionOptions {
+    options.ConfigurationID = param
+    options.IsConfigurationIDSet = true
+    return options
+}
+
+// SetLanguage : Allow user to set Language
+func (options *CreateCollectionOptions) SetLanguage(param string) *CreateCollectionOptions {
+    options.Language = param
+    options.IsLanguageSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *CreateCollectionOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateConfigurationOptions : The createConfiguration options.
+type CreateConfigurationOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The name of the configuration.
+	Name string `json:"name,omitempty"`
+
+    // Indicates whether user set optional parameter Name
+    IsNameSet bool
+
+	// The description of the configuration, if available.
+	Description string `json:"description,omitempty"`
+
+    // Indicates whether user set optional parameter Description
+    IsDescriptionSet bool
+
+	// The document conversion settings for the configuration.
+	Conversions Conversions `json:"conversions,omitempty"`
+
+    // Indicates whether user set optional parameter Conversions
+    IsConversionsSet bool
+
+	// An array of document enrichment settings for the configuration.
+	Enrichments []Enrichment `json:"enrichments,omitempty"`
+
+    // Indicates whether user set optional parameter Enrichments
+    IsEnrichmentsSet bool
+
+	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are executed in the order that they appear in the array.
+	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
+
+    // Indicates whether user set optional parameter Normalizations
+    IsNormalizationsSet bool
+
+	// Object containing source parameters for the configuration.
+	Source Source `json:"source,omitempty"`
+
+    // Indicates whether user set optional parameter Source
+    IsSourceSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateConfigurationOptions : Instantiate CreateConfigurationOptions
+func NewCreateConfigurationOptions(environmentID string) *CreateConfigurationOptions {
+    return &CreateConfigurationOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *CreateConfigurationOptions) SetEnvironmentID(param string) *CreateConfigurationOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetName : Allow user to set Name
+func (options *CreateConfigurationOptions) SetName(param string) *CreateConfigurationOptions {
+    options.Name = param
+    options.IsNameSet = true
+    return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateConfigurationOptions) SetDescription(param string) *CreateConfigurationOptions {
+    options.Description = param
+    options.IsDescriptionSet = true
+    return options
+}
+
+// SetConversions : Allow user to set Conversions
+func (options *CreateConfigurationOptions) SetConversions(param Conversions) *CreateConfigurationOptions {
+    options.Conversions = param
+    options.IsConversionsSet = true
+    return options
+}
+
+// SetEnrichments : Allow user to set Enrichments
+func (options *CreateConfigurationOptions) SetEnrichments(param []Enrichment) *CreateConfigurationOptions {
+    options.Enrichments = param
+    options.IsEnrichmentsSet = true
+    return options
+}
+
+// SetNormalizations : Allow user to set Normalizations
+func (options *CreateConfigurationOptions) SetNormalizations(param []NormalizationOperation) *CreateConfigurationOptions {
+    options.Normalizations = param
+    options.IsNormalizationsSet = true
+    return options
+}
+
+// SetSource : Allow user to set Source
+func (options *CreateConfigurationOptions) SetSource(param Source) *CreateConfigurationOptions {
+    options.Source = param
+    options.IsSourceSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateConfigurationOptions) SetHeaders(param map[string]string) *CreateConfigurationOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateCredentialsOptions : The createCredentials options.
+type CreateCredentialsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The source that this credentials object connects to. -  `box` indicates the credentials are used to connect an instance of Enterprise Box. -  `salesforce` indicates the credentials are used to connect to Salesforce. -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+	SourceType string `json:"source_type,omitempty"`
+
+    // Indicates whether user set optional parameter SourceType
+    IsSourceTypeSet bool
+
+	// Object containing details of the stored credentials. Obtain credentials for your source from the administrator of the source.
+	CredentialDetails CredentialDetails `json:"credential_details,omitempty"`
+
+    // Indicates whether user set optional parameter CredentialDetails
+    IsCredentialDetailsSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
+func NewCreateCredentialsOptions(environmentID string) *CreateCredentialsOptions {
+    return &CreateCredentialsOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *CreateCredentialsOptions) SetEnvironmentID(param string) *CreateCredentialsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetSourceType : Allow user to set SourceType
+func (options *CreateCredentialsOptions) SetSourceType(param string) *CreateCredentialsOptions {
+    options.SourceType = param
+    options.IsSourceTypeSet = true
+    return options
+}
+
+// SetCredentialDetails : Allow user to set CredentialDetails
+func (options *CreateCredentialsOptions) SetCredentialDetails(param CredentialDetails) *CreateCredentialsOptions {
+    options.CredentialDetails = param
+    options.IsCredentialDetailsSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateCredentialsOptions) SetHeaders(param map[string]string) *CreateCredentialsOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateEnvironmentOptions : The createEnvironment options.
+type CreateEnvironmentOptions struct {
 
 	// Name that identifies the environment.
 	Name string `json:"name"`
@@ -3093,8 +3963,187 @@ type CreateEnvironmentRequest struct {
 	// Description of the environment.
 	Description string `json:"description,omitempty"`
 
+    // Indicates whether user set optional parameter Description
+    IsDescriptionSet bool
+
 	// **Deprecated**: Size of the environment.
 	Size int64 `json:"size,omitempty"`
+
+    // Indicates whether user set optional parameter Size
+    IsSizeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateEnvironmentOptions : Instantiate CreateEnvironmentOptions
+func NewCreateEnvironmentOptions(name string) *CreateEnvironmentOptions {
+    return &CreateEnvironmentOptions{
+        Name: name,
+    }
+}
+
+// SetName : Allow user to set Name
+func (options *CreateEnvironmentOptions) SetName(param string) *CreateEnvironmentOptions {
+    options.Name = param
+    return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateEnvironmentOptions) SetDescription(param string) *CreateEnvironmentOptions {
+    options.Description = param
+    options.IsDescriptionSet = true
+    return options
+}
+
+// SetSize : Allow user to set Size
+func (options *CreateEnvironmentOptions) SetSize(param int64) *CreateEnvironmentOptions {
+    options.Size = param
+    options.IsSizeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateEnvironmentOptions) SetHeaders(param map[string]string) *CreateEnvironmentOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateExpansionsOptions : The createExpansions options.
+type CreateExpansionsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// An array of query expansion definitions. Each object in the **expansions** array represents a term or set of terms that will be expanded into other terms. Each expansion object can be configured as bidirectional or unidirectional. Bidirectional means that all terms are expanded to all other terms in the object. Unidirectional means that a set list of terms can be expanded into a second list of terms. To create a bi-directional expansion specify an **expanded_terms** array. When found in a query, all items in the **expanded_terms** array are then expanded to the other items in the same array. To create a uni-directional expansion, specify both an array of **input_terms** and an array of **expanded_terms**. When items in the **input_terms** array are present in a query, they are expanded using the items listed in the **expanded_terms** array.
+	Expansions []Expansion `json:"expansions,omitempty"`
+
+    // Indicates whether user set optional parameter Expansions
+    IsExpansionsSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateExpansionsOptions : Instantiate CreateExpansionsOptions
+func NewCreateExpansionsOptions(environmentID string, collectionID string) *CreateExpansionsOptions {
+    return &CreateExpansionsOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *CreateExpansionsOptions) SetEnvironmentID(param string) *CreateExpansionsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *CreateExpansionsOptions) SetCollectionID(param string) *CreateExpansionsOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetExpansions : Allow user to set Expansions
+func (options *CreateExpansionsOptions) SetExpansions(param []Expansion) *CreateExpansionsOptions {
+    options.Expansions = param
+    options.IsExpansionsSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateExpansionsOptions) SetHeaders(param map[string]string) *CreateExpansionsOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateTrainingExampleOptions : The createTrainingExample options.
+type CreateTrainingExampleOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the query used for training.
+	QueryID string `json:"query_id"`
+
+	DocumentID string `json:"document_id,omitempty"`
+
+    // Indicates whether user set optional parameter DocumentID
+    IsDocumentIDSet bool
+
+	CrossReference string `json:"cross_reference,omitempty"`
+
+    // Indicates whether user set optional parameter CrossReference
+    IsCrossReferenceSet bool
+
+	Relevance int64 `json:"relevance,omitempty"`
+
+    // Indicates whether user set optional parameter Relevance
+    IsRelevanceSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateTrainingExampleOptions : Instantiate CreateTrainingExampleOptions
+func NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
+    return &CreateTrainingExampleOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        QueryID: queryID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *CreateTrainingExampleOptions) SetEnvironmentID(param string) *CreateTrainingExampleOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *CreateTrainingExampleOptions) SetCollectionID(param string) *CreateTrainingExampleOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetQueryID : Allow user to set QueryID
+func (options *CreateTrainingExampleOptions) SetQueryID(param string) *CreateTrainingExampleOptions {
+    options.QueryID = param
+    return options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (options *CreateTrainingExampleOptions) SetDocumentID(param string) *CreateTrainingExampleOptions {
+    options.DocumentID = param
+    options.IsDocumentIDSet = true
+    return options
+}
+
+// SetCrossReference : Allow user to set CrossReference
+func (options *CreateTrainingExampleOptions) SetCrossReference(param string) *CreateTrainingExampleOptions {
+    options.CrossReference = param
+    options.IsCrossReferenceSet = true
+    return options
+}
+
+// SetRelevance : Allow user to set Relevance
+func (options *CreateTrainingExampleOptions) SetRelevance(param int64) *CreateTrainingExampleOptions {
+    options.Relevance = param
+    options.IsRelevanceSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateTrainingExampleOptions) SetHeaders(param map[string]string) *CreateTrainingExampleOptions {
+    options.Headers = param
+    return options
 }
 
 // CredentialDetails : Object containing details of the stored credentials. Obtain credentials for your source from the administrator of the source.
@@ -3157,6 +4206,84 @@ type CredentialsList struct {
 	Credentials []Credentials `json:"credentials,omitempty"`
 }
 
+// DeleteAllTrainingDataOptions : The deleteAllTrainingData options.
+type DeleteAllTrainingDataOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteAllTrainingDataOptions : Instantiate DeleteAllTrainingDataOptions
+func NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
+    return &DeleteAllTrainingDataOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteAllTrainingDataOptions) SetEnvironmentID(param string) *DeleteAllTrainingDataOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteAllTrainingDataOptions) SetCollectionID(param string) *DeleteAllTrainingDataOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteAllTrainingDataOptions) SetHeaders(param map[string]string) *DeleteAllTrainingDataOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteCollectionOptions : The deleteCollection options.
+type DeleteCollectionOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteCollectionOptions : Instantiate DeleteCollectionOptions
+func NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
+    return &DeleteCollectionOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteCollectionOptions) SetEnvironmentID(param string) *DeleteCollectionOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteCollectionOptions) SetCollectionID(param string) *DeleteCollectionOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteCollectionOptions) SetHeaders(param map[string]string) *DeleteCollectionOptions {
+    options.Headers = param
+    return options
+}
+
 // DeleteCollectionResponse : DeleteCollectionResponse struct
 type DeleteCollectionResponse struct {
 
@@ -3165,6 +4292,45 @@ type DeleteCollectionResponse struct {
 
 	// The status of the collection. The status of a successful deletion operation is `deleted`.
 	Status string `json:"status"`
+}
+
+// DeleteConfigurationOptions : The deleteConfiguration options.
+type DeleteConfigurationOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the configuration.
+	ConfigurationID string `json:"configuration_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteConfigurationOptions : Instantiate DeleteConfigurationOptions
+func NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
+    return &DeleteConfigurationOptions{
+        EnvironmentID: environmentID,
+        ConfigurationID: configurationID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteConfigurationOptions) SetEnvironmentID(param string) *DeleteConfigurationOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetConfigurationID : Allow user to set ConfigurationID
+func (options *DeleteConfigurationOptions) SetConfigurationID(param string) *DeleteConfigurationOptions {
+    options.ConfigurationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteConfigurationOptions) SetHeaders(param map[string]string) *DeleteConfigurationOptions {
+    options.Headers = param
+    return options
 }
 
 // DeleteConfigurationResponse : DeleteConfigurationResponse struct
@@ -3190,6 +4356,94 @@ type DeleteCredentials struct {
 	Status string `json:"status,omitempty"`
 }
 
+// DeleteCredentialsOptions : The deleteCredentials options.
+type DeleteCredentialsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The unique identifier for a set of source credentials.
+	CredentialID string `json:"credential_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteCredentialsOptions : Instantiate DeleteCredentialsOptions
+func NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
+    return &DeleteCredentialsOptions{
+        EnvironmentID: environmentID,
+        CredentialID: credentialID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteCredentialsOptions) SetEnvironmentID(param string) *DeleteCredentialsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCredentialID : Allow user to set CredentialID
+func (options *DeleteCredentialsOptions) SetCredentialID(param string) *DeleteCredentialsOptions {
+    options.CredentialID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteCredentialsOptions) SetHeaders(param map[string]string) *DeleteCredentialsOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteDocumentOptions : The deleteDocument options.
+type DeleteDocumentOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the document.
+	DocumentID string `json:"document_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteDocumentOptions : Instantiate DeleteDocumentOptions
+func NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
+    return &DeleteDocumentOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        DocumentID: documentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteDocumentOptions) SetEnvironmentID(param string) *DeleteDocumentOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteDocumentOptions) SetCollectionID(param string) *DeleteDocumentOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (options *DeleteDocumentOptions) SetDocumentID(param string) *DeleteDocumentOptions {
+    options.DocumentID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteDocumentOptions) SetHeaders(param map[string]string) *DeleteDocumentOptions {
+    options.Headers = param
+    return options
+}
+
 // DeleteDocumentResponse : DeleteDocumentResponse struct
 type DeleteDocumentResponse struct {
 
@@ -3200,6 +4454,35 @@ type DeleteDocumentResponse struct {
 	Status string `json:"status,omitempty"`
 }
 
+// DeleteEnvironmentOptions : The deleteEnvironment options.
+type DeleteEnvironmentOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteEnvironmentOptions : Instantiate DeleteEnvironmentOptions
+func NewDeleteEnvironmentOptions(environmentID string) *DeleteEnvironmentOptions {
+    return &DeleteEnvironmentOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteEnvironmentOptions) SetEnvironmentID(param string) *DeleteEnvironmentOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteEnvironmentOptions) SetHeaders(param map[string]string) *DeleteEnvironmentOptions {
+    options.Headers = param
+    return options
+}
+
 // DeleteEnvironmentResponse : DeleteEnvironmentResponse struct
 type DeleteEnvironmentResponse struct {
 
@@ -3208,6 +4491,182 @@ type DeleteEnvironmentResponse struct {
 
 	// Status of the environment.
 	Status string `json:"status"`
+}
+
+// DeleteExpansionsOptions : The deleteExpansions options.
+type DeleteExpansionsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteExpansionsOptions : Instantiate DeleteExpansionsOptions
+func NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
+    return &DeleteExpansionsOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteExpansionsOptions) SetEnvironmentID(param string) *DeleteExpansionsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteExpansionsOptions) SetCollectionID(param string) *DeleteExpansionsOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteExpansionsOptions) SetHeaders(param map[string]string) *DeleteExpansionsOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteTrainingDataOptions : The deleteTrainingData options.
+type DeleteTrainingDataOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the query used for training.
+	QueryID string `json:"query_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteTrainingDataOptions : Instantiate DeleteTrainingDataOptions
+func NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
+    return &DeleteTrainingDataOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        QueryID: queryID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteTrainingDataOptions) SetEnvironmentID(param string) *DeleteTrainingDataOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteTrainingDataOptions) SetCollectionID(param string) *DeleteTrainingDataOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetQueryID : Allow user to set QueryID
+func (options *DeleteTrainingDataOptions) SetQueryID(param string) *DeleteTrainingDataOptions {
+    options.QueryID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteTrainingDataOptions) SetHeaders(param map[string]string) *DeleteTrainingDataOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteTrainingExampleOptions : The deleteTrainingExample options.
+type DeleteTrainingExampleOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the query used for training.
+	QueryID string `json:"query_id"`
+
+	// The ID of the document as it is indexed.
+	ExampleID string `json:"example_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteTrainingExampleOptions : Instantiate DeleteTrainingExampleOptions
+func NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
+    return &DeleteTrainingExampleOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        QueryID: queryID,
+        ExampleID: exampleID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteTrainingExampleOptions) SetEnvironmentID(param string) *DeleteTrainingExampleOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteTrainingExampleOptions) SetCollectionID(param string) *DeleteTrainingExampleOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetQueryID : Allow user to set QueryID
+func (options *DeleteTrainingExampleOptions) SetQueryID(param string) *DeleteTrainingExampleOptions {
+    options.QueryID = param
+    return options
+}
+
+// SetExampleID : Allow user to set ExampleID
+func (options *DeleteTrainingExampleOptions) SetExampleID(param string) *DeleteTrainingExampleOptions {
+    options.ExampleID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteTrainingExampleOptions) SetHeaders(param map[string]string) *DeleteTrainingExampleOptions {
+    options.Headers = param
+    return options
+}
+
+// DeleteUserDataOptions : The deleteUserData options.
+type DeleteUserDataOptions struct {
+
+	// The customer ID for which all data is to be deleted.
+	CustomerID string `json:"customer_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
+func NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+    return &DeleteUserDataOptions{
+        CustomerID: customerID,
+    }
+}
+
+// SetCustomerID : Allow user to set CustomerID
+func (options *DeleteUserDataOptions) SetCustomerID(param string) *DeleteUserDataOptions {
+    options.CustomerID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *DeleteUserDataOptions {
+    options.Headers = param
+    return options
 }
 
 // DiskUsage : Summary of the disk usage statistics for the environment.
@@ -3331,6 +4790,9 @@ type EnrichmentOptions struct {
 	// An object representing the enrichment features that will be applied to the specified field.
 	Features NluEnrichmentFeatures `json:"features,omitempty"`
 
+	// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language detection performed by the service. Valid codes are `ar` (Arabic), `en` (English), `fr` (French), `de` (German), `it` (Italian), `pt` (Portuguese), `ru` (Russian), `es` (Spanish), and `sv` (Swedish). **Note:** Not all features support all languages, automatic detection is recommended.
+	Language string `json:"language,omitempty"`
+
 	// *For use with `elements` enrichments only.* The element extraction model to use. Models available are: `contract`.
 	Model string `json:"model,omitempty"`
 }
@@ -3390,7 +4852,488 @@ type Expansion struct {
 type Expansions struct {
 
 	// An array of query expansion definitions. Each object in the **expansions** array represents a term or set of terms that will be expanded into other terms. Each expansion object can be configured as bidirectional or unidirectional. Bidirectional means that all terms are expanded to all other terms in the object. Unidirectional means that a set list of terms can be expanded into a second list of terms. To create a bi-directional expansion specify an **expanded_terms** array. When found in a query, all items in the **expanded_terms** array are then expanded to the other items in the same array. To create a uni-directional expansion, specify both an array of **input_terms** and an array of **expanded_terms**. When items in the **input_terms** array are present in a query, they are expanded using the items listed in the **expanded_terms** array.
-	Expansions []Expansion `json:"expansions"`
+	Expansions []Expansion `json:"expansions,omitempty"`
+}
+
+// FederatedQueryNoticesOptions : The federatedQueryNotices options.
+type FederatedQueryNoticesOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// A comma-separated list of collection IDs to be queried against.
+	CollectionIds []string `json:"collection_ids"`
+
+	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
+	Filter string `json:"filter,omitempty"`
+
+    // Indicates whether user set optional parameter Filter
+    IsFilterSet bool
+
+	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+	Query string `json:"query,omitempty"`
+
+    // Indicates whether user set optional parameter Query
+    IsQuerySet bool
+
+	// A natural language query that returns relevant documents by utilizing training data and natural language understanding. You cannot use **natural_language_query** and **query** at the same time.
+	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
+
+    // Indicates whether user set optional parameter NaturalLanguageQuery
+    IsNaturalLanguageQuerySet bool
+
+	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a full list of possible aggregrations, see the Query reference.
+	Aggregation string `json:"aggregation,omitempty"`
+
+    // Indicates whether user set optional parameter Aggregation
+    IsAggregationSet bool
+
+	// Number of documents to return.
+	Count int64 `json:"count,omitempty"`
+
+    // Indicates whether user set optional parameter Count
+    IsCountSet bool
+
+	// A comma separated list of the portion of the document hierarchy to return.
+	ReturnFields []string `json:"return_fields,omitempty"`
+
+    // Indicates whether user set optional parameter ReturnFields
+    IsReturnFieldsSet bool
+
+	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
+	Offset int64 `json:"offset,omitempty"`
+
+    // Indicates whether user set optional parameter Offset
+    IsOffsetSet bool
+
+	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
+	Sort []string `json:"sort,omitempty"`
+
+    // Indicates whether user set optional parameter Sort
+    IsSortSet bool
+
+	// When true a highlight field is returned for each result which contains the fields that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
+	Highlight bool `json:"highlight,omitempty"`
+
+    // Indicates whether user set optional parameter Highlight
+    IsHighlightSet bool
+
+	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
+	DeduplicateField string `json:"deduplicate_field,omitempty"`
+
+    // Indicates whether user set optional parameter DeduplicateField
+    IsDeduplicateFieldSet bool
+
+	// When `true`, results are returned based on their similarity to the document IDs specified in the **similar.document_ids** parameter.
+	Similar bool `json:"similar,omitempty"`
+
+    // Indicates whether user set optional parameter Similar
+    IsSimilarSet bool
+
+	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
+	SimilarDocumentIds []string `json:"similar_document_ids,omitempty"`
+
+    // Indicates whether user set optional parameter SimilarDocumentIds
+    IsSimilarDocumentIdsSet bool
+
+	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
+	SimilarFields []string `json:"similar_fields,omitempty"`
+
+    // Indicates whether user set optional parameter SimilarFields
+    IsSimilarFieldsSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewFederatedQueryNoticesOptions : Instantiate FederatedQueryNoticesOptions
+func NewFederatedQueryNoticesOptions(environmentID string, collectionIds []string) *FederatedQueryNoticesOptions {
+    return &FederatedQueryNoticesOptions{
+        EnvironmentID: environmentID,
+        CollectionIds: collectionIds,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *FederatedQueryNoticesOptions) SetEnvironmentID(param string) *FederatedQueryNoticesOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionIds : Allow user to set CollectionIds
+func (options *FederatedQueryNoticesOptions) SetCollectionIds(param []string) *FederatedQueryNoticesOptions {
+    options.CollectionIds = param
+    return options
+}
+
+// SetFilter : Allow user to set Filter
+func (options *FederatedQueryNoticesOptions) SetFilter(param string) *FederatedQueryNoticesOptions {
+    options.Filter = param
+    options.IsFilterSet = true
+    return options
+}
+
+// SetQuery : Allow user to set Query
+func (options *FederatedQueryNoticesOptions) SetQuery(param string) *FederatedQueryNoticesOptions {
+    options.Query = param
+    options.IsQuerySet = true
+    return options
+}
+
+// SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
+func (options *FederatedQueryNoticesOptions) SetNaturalLanguageQuery(param string) *FederatedQueryNoticesOptions {
+    options.NaturalLanguageQuery = param
+    options.IsNaturalLanguageQuerySet = true
+    return options
+}
+
+// SetAggregation : Allow user to set Aggregation
+func (options *FederatedQueryNoticesOptions) SetAggregation(param string) *FederatedQueryNoticesOptions {
+    options.Aggregation = param
+    options.IsAggregationSet = true
+    return options
+}
+
+// SetCount : Allow user to set Count
+func (options *FederatedQueryNoticesOptions) SetCount(param int64) *FederatedQueryNoticesOptions {
+    options.Count = param
+    options.IsCountSet = true
+    return options
+}
+
+// SetReturnFields : Allow user to set ReturnFields
+func (options *FederatedQueryNoticesOptions) SetReturnFields(param []string) *FederatedQueryNoticesOptions {
+    options.ReturnFields = param
+    options.IsReturnFieldsSet = true
+    return options
+}
+
+// SetOffset : Allow user to set Offset
+func (options *FederatedQueryNoticesOptions) SetOffset(param int64) *FederatedQueryNoticesOptions {
+    options.Offset = param
+    options.IsOffsetSet = true
+    return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *FederatedQueryNoticesOptions) SetSort(param []string) *FederatedQueryNoticesOptions {
+    options.Sort = param
+    options.IsSortSet = true
+    return options
+}
+
+// SetHighlight : Allow user to set Highlight
+func (options *FederatedQueryNoticesOptions) SetHighlight(param bool) *FederatedQueryNoticesOptions {
+    options.Highlight = param
+    options.IsHighlightSet = true
+    return options
+}
+
+// SetDeduplicateField : Allow user to set DeduplicateField
+func (options *FederatedQueryNoticesOptions) SetDeduplicateField(param string) *FederatedQueryNoticesOptions {
+    options.DeduplicateField = param
+    options.IsDeduplicateFieldSet = true
+    return options
+}
+
+// SetSimilar : Allow user to set Similar
+func (options *FederatedQueryNoticesOptions) SetSimilar(param bool) *FederatedQueryNoticesOptions {
+    options.Similar = param
+    options.IsSimilarSet = true
+    return options
+}
+
+// SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
+func (options *FederatedQueryNoticesOptions) SetSimilarDocumentIds(param []string) *FederatedQueryNoticesOptions {
+    options.SimilarDocumentIds = param
+    options.IsSimilarDocumentIdsSet = true
+    return options
+}
+
+// SetSimilarFields : Allow user to set SimilarFields
+func (options *FederatedQueryNoticesOptions) SetSimilarFields(param []string) *FederatedQueryNoticesOptions {
+    options.SimilarFields = param
+    options.IsSimilarFieldsSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *FederatedQueryNoticesOptions) SetHeaders(param map[string]string) *FederatedQueryNoticesOptions {
+    options.Headers = param
+    return options
+}
+
+// FederatedQueryOptions : The federatedQuery options.
+type FederatedQueryOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// A comma-separated list of collection IDs to be queried against.
+	CollectionIds []string `json:"collection_ids"`
+
+	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
+	Filter string `json:"filter,omitempty"`
+
+    // Indicates whether user set optional parameter Filter
+    IsFilterSet bool
+
+	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+	Query string `json:"query,omitempty"`
+
+    // Indicates whether user set optional parameter Query
+    IsQuerySet bool
+
+	// A natural language query that returns relevant documents by utilizing training data and natural language understanding. You cannot use **natural_language_query** and **query** at the same time.
+	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
+
+    // Indicates whether user set optional parameter NaturalLanguageQuery
+    IsNaturalLanguageQuerySet bool
+
+	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a full list of possible aggregrations, see the Query reference.
+	Aggregation string `json:"aggregation,omitempty"`
+
+    // Indicates whether user set optional parameter Aggregation
+    IsAggregationSet bool
+
+	// Number of documents to return.
+	Count int64 `json:"count,omitempty"`
+
+    // Indicates whether user set optional parameter Count
+    IsCountSet bool
+
+	// A comma separated list of the portion of the document hierarchy to return.
+	ReturnFields []string `json:"return_fields,omitempty"`
+
+    // Indicates whether user set optional parameter ReturnFields
+    IsReturnFieldsSet bool
+
+	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
+	Offset int64 `json:"offset,omitempty"`
+
+    // Indicates whether user set optional parameter Offset
+    IsOffsetSet bool
+
+	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
+	Sort []string `json:"sort,omitempty"`
+
+    // Indicates whether user set optional parameter Sort
+    IsSortSet bool
+
+	// When true a highlight field is returned for each result which contains the fields that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
+	Highlight bool `json:"highlight,omitempty"`
+
+    // Indicates whether user set optional parameter Highlight
+    IsHighlightSet bool
+
+	// When `true` and used with a Watson Discovery News collection, duplicate results (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not considered. This parameter is currently Beta functionality.
+	Deduplicate bool `json:"deduplicate,omitempty"`
+
+    // Indicates whether user set optional parameter Deduplicate
+    IsDeduplicateSet bool
+
+	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
+	DeduplicateField string `json:"deduplicate_field,omitempty"`
+
+    // Indicates whether user set optional parameter DeduplicateField
+    IsDeduplicateFieldSet bool
+
+	// When `true`, results are returned based on their similarity to the document IDs specified in the **similar.document_ids** parameter.
+	Similar bool `json:"similar,omitempty"`
+
+    // Indicates whether user set optional parameter Similar
+    IsSimilarSet bool
+
+	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
+	SimilarDocumentIds []string `json:"similar_document_ids,omitempty"`
+
+    // Indicates whether user set optional parameter SimilarDocumentIds
+    IsSimilarDocumentIdsSet bool
+
+	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
+	SimilarFields []string `json:"similar_fields,omitempty"`
+
+    // Indicates whether user set optional parameter SimilarFields
+    IsSimilarFieldsSet bool
+
+	// A passages query that returns the most relevant passages from the results.
+	Passages bool `json:"passages,omitempty"`
+
+    // Indicates whether user set optional parameter Passages
+    IsPassagesSet bool
+
+	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
+	PassagesFields []string `json:"passages_fields,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesFields
+    IsPassagesFieldsSet bool
+
+	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
+	PassagesCount int64 `json:"passages_count,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesCount
+    IsPassagesCountSet bool
+
+	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
+	PassagesCharacters int64 `json:"passages_characters,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesCharacters
+    IsPassagesCharactersSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewFederatedQueryOptions : Instantiate FederatedQueryOptions
+func NewFederatedQueryOptions(environmentID string, collectionIds []string) *FederatedQueryOptions {
+    return &FederatedQueryOptions{
+        EnvironmentID: environmentID,
+        CollectionIds: collectionIds,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *FederatedQueryOptions) SetEnvironmentID(param string) *FederatedQueryOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionIds : Allow user to set CollectionIds
+func (options *FederatedQueryOptions) SetCollectionIds(param []string) *FederatedQueryOptions {
+    options.CollectionIds = param
+    return options
+}
+
+// SetFilter : Allow user to set Filter
+func (options *FederatedQueryOptions) SetFilter(param string) *FederatedQueryOptions {
+    options.Filter = param
+    options.IsFilterSet = true
+    return options
+}
+
+// SetQuery : Allow user to set Query
+func (options *FederatedQueryOptions) SetQuery(param string) *FederatedQueryOptions {
+    options.Query = param
+    options.IsQuerySet = true
+    return options
+}
+
+// SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
+func (options *FederatedQueryOptions) SetNaturalLanguageQuery(param string) *FederatedQueryOptions {
+    options.NaturalLanguageQuery = param
+    options.IsNaturalLanguageQuerySet = true
+    return options
+}
+
+// SetAggregation : Allow user to set Aggregation
+func (options *FederatedQueryOptions) SetAggregation(param string) *FederatedQueryOptions {
+    options.Aggregation = param
+    options.IsAggregationSet = true
+    return options
+}
+
+// SetCount : Allow user to set Count
+func (options *FederatedQueryOptions) SetCount(param int64) *FederatedQueryOptions {
+    options.Count = param
+    options.IsCountSet = true
+    return options
+}
+
+// SetReturnFields : Allow user to set ReturnFields
+func (options *FederatedQueryOptions) SetReturnFields(param []string) *FederatedQueryOptions {
+    options.ReturnFields = param
+    options.IsReturnFieldsSet = true
+    return options
+}
+
+// SetOffset : Allow user to set Offset
+func (options *FederatedQueryOptions) SetOffset(param int64) *FederatedQueryOptions {
+    options.Offset = param
+    options.IsOffsetSet = true
+    return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *FederatedQueryOptions) SetSort(param []string) *FederatedQueryOptions {
+    options.Sort = param
+    options.IsSortSet = true
+    return options
+}
+
+// SetHighlight : Allow user to set Highlight
+func (options *FederatedQueryOptions) SetHighlight(param bool) *FederatedQueryOptions {
+    options.Highlight = param
+    options.IsHighlightSet = true
+    return options
+}
+
+// SetDeduplicate : Allow user to set Deduplicate
+func (options *FederatedQueryOptions) SetDeduplicate(param bool) *FederatedQueryOptions {
+    options.Deduplicate = param
+    options.IsDeduplicateSet = true
+    return options
+}
+
+// SetDeduplicateField : Allow user to set DeduplicateField
+func (options *FederatedQueryOptions) SetDeduplicateField(param string) *FederatedQueryOptions {
+    options.DeduplicateField = param
+    options.IsDeduplicateFieldSet = true
+    return options
+}
+
+// SetSimilar : Allow user to set Similar
+func (options *FederatedQueryOptions) SetSimilar(param bool) *FederatedQueryOptions {
+    options.Similar = param
+    options.IsSimilarSet = true
+    return options
+}
+
+// SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
+func (options *FederatedQueryOptions) SetSimilarDocumentIds(param []string) *FederatedQueryOptions {
+    options.SimilarDocumentIds = param
+    options.IsSimilarDocumentIdsSet = true
+    return options
+}
+
+// SetSimilarFields : Allow user to set SimilarFields
+func (options *FederatedQueryOptions) SetSimilarFields(param []string) *FederatedQueryOptions {
+    options.SimilarFields = param
+    options.IsSimilarFieldsSet = true
+    return options
+}
+
+// SetPassages : Allow user to set Passages
+func (options *FederatedQueryOptions) SetPassages(param bool) *FederatedQueryOptions {
+    options.Passages = param
+    options.IsPassagesSet = true
+    return options
+}
+
+// SetPassagesFields : Allow user to set PassagesFields
+func (options *FederatedQueryOptions) SetPassagesFields(param []string) *FederatedQueryOptions {
+    options.PassagesFields = param
+    options.IsPassagesFieldsSet = true
+    return options
+}
+
+// SetPassagesCount : Allow user to set PassagesCount
+func (options *FederatedQueryOptions) SetPassagesCount(param int64) *FederatedQueryOptions {
+    options.PassagesCount = param
+    options.IsPassagesCountSet = true
+    return options
+}
+
+// SetPassagesCharacters : Allow user to set PassagesCharacters
+func (options *FederatedQueryOptions) SetPassagesCharacters(param int64) *FederatedQueryOptions {
+    options.PassagesCharacters = param
+    options.IsPassagesCharactersSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *FederatedQueryOptions) SetHeaders(param map[string]string) *FederatedQueryOptions {
+    options.Headers = param
+    return options
 }
 
 // Field : Field struct
@@ -3417,6 +5360,309 @@ type FontSetting struct {
 	Italic bool `json:"italic,omitempty"`
 
 	Name string `json:"name,omitempty"`
+}
+
+// GetCollectionOptions : The getCollection options.
+type GetCollectionOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetCollectionOptions : Instantiate GetCollectionOptions
+func NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
+    return &GetCollectionOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetCollectionOptions) SetEnvironmentID(param string) *GetCollectionOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetCollectionOptions) SetCollectionID(param string) *GetCollectionOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCollectionOptions {
+    options.Headers = param
+    return options
+}
+
+// GetConfigurationOptions : The getConfiguration options.
+type GetConfigurationOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the configuration.
+	ConfigurationID string `json:"configuration_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetConfigurationOptions : Instantiate GetConfigurationOptions
+func NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
+    return &GetConfigurationOptions{
+        EnvironmentID: environmentID,
+        ConfigurationID: configurationID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetConfigurationOptions) SetEnvironmentID(param string) *GetConfigurationOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetConfigurationID : Allow user to set ConfigurationID
+func (options *GetConfigurationOptions) SetConfigurationID(param string) *GetConfigurationOptions {
+    options.ConfigurationID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetConfigurationOptions) SetHeaders(param map[string]string) *GetConfigurationOptions {
+    options.Headers = param
+    return options
+}
+
+// GetCredentialsOptions : The getCredentials options.
+type GetCredentialsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The unique identifier for a set of source credentials.
+	CredentialID string `json:"credential_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetCredentialsOptions : Instantiate GetCredentialsOptions
+func NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
+    return &GetCredentialsOptions{
+        EnvironmentID: environmentID,
+        CredentialID: credentialID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetCredentialsOptions) SetEnvironmentID(param string) *GetCredentialsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCredentialID : Allow user to set CredentialID
+func (options *GetCredentialsOptions) SetCredentialID(param string) *GetCredentialsOptions {
+    options.CredentialID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetCredentialsOptions) SetHeaders(param map[string]string) *GetCredentialsOptions {
+    options.Headers = param
+    return options
+}
+
+// GetDocumentStatusOptions : The getDocumentStatus options.
+type GetDocumentStatusOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the document.
+	DocumentID string `json:"document_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetDocumentStatusOptions : Instantiate GetDocumentStatusOptions
+func NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
+    return &GetDocumentStatusOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        DocumentID: documentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetDocumentStatusOptions) SetEnvironmentID(param string) *GetDocumentStatusOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetDocumentStatusOptions) SetCollectionID(param string) *GetDocumentStatusOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (options *GetDocumentStatusOptions) SetDocumentID(param string) *GetDocumentStatusOptions {
+    options.DocumentID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *GetDocumentStatusOptions {
+    options.Headers = param
+    return options
+}
+
+// GetEnvironmentOptions : The getEnvironment options.
+type GetEnvironmentOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetEnvironmentOptions : Instantiate GetEnvironmentOptions
+func NewGetEnvironmentOptions(environmentID string) *GetEnvironmentOptions {
+    return &GetEnvironmentOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetEnvironmentOptions) SetEnvironmentID(param string) *GetEnvironmentOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetEnvironmentOptions) SetHeaders(param map[string]string) *GetEnvironmentOptions {
+    options.Headers = param
+    return options
+}
+
+// GetTrainingDataOptions : The getTrainingData options.
+type GetTrainingDataOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the query used for training.
+	QueryID string `json:"query_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetTrainingDataOptions : Instantiate GetTrainingDataOptions
+func NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
+    return &GetTrainingDataOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        QueryID: queryID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetTrainingDataOptions) SetEnvironmentID(param string) *GetTrainingDataOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetTrainingDataOptions) SetCollectionID(param string) *GetTrainingDataOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetQueryID : Allow user to set QueryID
+func (options *GetTrainingDataOptions) SetQueryID(param string) *GetTrainingDataOptions {
+    options.QueryID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetTrainingDataOptions) SetHeaders(param map[string]string) *GetTrainingDataOptions {
+    options.Headers = param
+    return options
+}
+
+// GetTrainingExampleOptions : The getTrainingExample options.
+type GetTrainingExampleOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the query used for training.
+	QueryID string `json:"query_id"`
+
+	// The ID of the document as it is indexed.
+	ExampleID string `json:"example_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetTrainingExampleOptions : Instantiate GetTrainingExampleOptions
+func NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
+    return &GetTrainingExampleOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        QueryID: queryID,
+        ExampleID: exampleID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetTrainingExampleOptions) SetEnvironmentID(param string) *GetTrainingExampleOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetTrainingExampleOptions) SetCollectionID(param string) *GetTrainingExampleOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetQueryID : Allow user to set QueryID
+func (options *GetTrainingExampleOptions) SetQueryID(param string) *GetTrainingExampleOptions {
+    options.QueryID = param
+    return options
+}
+
+// SetExampleID : Allow user to set ExampleID
+func (options *GetTrainingExampleOptions) SetExampleID(param string) *GetTrainingExampleOptions {
+    options.ExampleID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetTrainingExampleOptions) SetHeaders(param map[string]string) *GetTrainingExampleOptions {
+    options.Headers = param
+    return options
 }
 
 // HTMLSettings : A list of HTML conversion settings.
@@ -3451,11 +5697,92 @@ type IndexCapacity struct {
 	MemoryUsage MemoryUsage `json:"memory_usage,omitempty"`
 }
 
+// ListCollectionFieldsOptions : The listCollectionFields options.
+type ListCollectionFieldsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListCollectionFieldsOptions : Instantiate ListCollectionFieldsOptions
+func NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
+    return &ListCollectionFieldsOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListCollectionFieldsOptions) SetEnvironmentID(param string) *ListCollectionFieldsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *ListCollectionFieldsOptions) SetCollectionID(param string) *ListCollectionFieldsOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListCollectionFieldsOptions) SetHeaders(param map[string]string) *ListCollectionFieldsOptions {
+    options.Headers = param
+    return options
+}
+
 // ListCollectionFieldsResponse : The list of fetched fields. The fields are returned using a fully qualified name format, however, the format differs slightly from that used by the query operations. * Fields which contain nested JSON objects are assigned a type of "nested". * Fields which belong to a nested object are prefixed with `.properties` (for example, `warnings.properties.severity` means that the `warnings` object has a property called `severity`). * Fields returned from the News collection are prefixed with `v{N}-fullnews-t3-{YEAR}.mappings` (for example, `v5-fullnews-t3-2016.mappings.text.properties.author`).
 type ListCollectionFieldsResponse struct {
 
 	// An array containing information about each field in the collections.
 	Fields []Field `json:"fields,omitempty"`
+}
+
+// ListCollectionsOptions : The listCollections options.
+type ListCollectionsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// Find collections with the given name.
+	Name string `json:"name,omitempty"`
+
+    // Indicates whether user set optional parameter Name
+    IsNameSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListCollectionsOptions : Instantiate ListCollectionsOptions
+func NewListCollectionsOptions(environmentID string) *ListCollectionsOptions {
+    return &ListCollectionsOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListCollectionsOptions) SetEnvironmentID(param string) *ListCollectionsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetName : Allow user to set Name
+func (options *ListCollectionsOptions) SetName(param string) *ListCollectionsOptions {
+    options.Name = param
+    options.IsNameSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListCollectionsOptions) SetHeaders(param map[string]string) *ListCollectionsOptions {
+    options.Headers = param
+    return options
 }
 
 // ListCollectionsResponse : ListCollectionsResponse struct
@@ -3465,6 +5792,48 @@ type ListCollectionsResponse struct {
 	Collections []Collection `json:"collections,omitempty"`
 }
 
+// ListConfigurationsOptions : The listConfigurations options.
+type ListConfigurationsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// Find configurations with the given name.
+	Name string `json:"name,omitempty"`
+
+    // Indicates whether user set optional parameter Name
+    IsNameSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListConfigurationsOptions : Instantiate ListConfigurationsOptions
+func NewListConfigurationsOptions(environmentID string) *ListConfigurationsOptions {
+    return &ListConfigurationsOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListConfigurationsOptions) SetEnvironmentID(param string) *ListConfigurationsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetName : Allow user to set Name
+func (options *ListConfigurationsOptions) SetName(param string) *ListConfigurationsOptions {
+    options.Name = param
+    options.IsNameSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListConfigurationsOptions) SetHeaders(param map[string]string) *ListConfigurationsOptions {
+    options.Headers = param
+    return options
+}
+
 // ListConfigurationsResponse : ListConfigurationsResponse struct
 type ListConfigurationsResponse struct {
 
@@ -3472,11 +5841,237 @@ type ListConfigurationsResponse struct {
 	Configurations []Configuration `json:"configurations,omitempty"`
 }
 
+// ListCredentialsOptions : The listCredentials options.
+type ListCredentialsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListCredentialsOptions : Instantiate ListCredentialsOptions
+func NewListCredentialsOptions(environmentID string) *ListCredentialsOptions {
+    return &ListCredentialsOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListCredentialsOptions) SetEnvironmentID(param string) *ListCredentialsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListCredentialsOptions) SetHeaders(param map[string]string) *ListCredentialsOptions {
+    options.Headers = param
+    return options
+}
+
+// ListEnvironmentsOptions : The listEnvironments options.
+type ListEnvironmentsOptions struct {
+
+	// Show only the environment with the given name.
+	Name string `json:"name,omitempty"`
+
+    // Indicates whether user set optional parameter Name
+    IsNameSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListEnvironmentsOptions : Instantiate ListEnvironmentsOptions
+func NewListEnvironmentsOptions() *ListEnvironmentsOptions {
+    return &ListEnvironmentsOptions{}
+}
+
+// SetName : Allow user to set Name
+func (options *ListEnvironmentsOptions) SetName(param string) *ListEnvironmentsOptions {
+    options.Name = param
+    options.IsNameSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListEnvironmentsOptions) SetHeaders(param map[string]string) *ListEnvironmentsOptions {
+    options.Headers = param
+    return options
+}
+
 // ListEnvironmentsResponse : ListEnvironmentsResponse struct
 type ListEnvironmentsResponse struct {
 
 	// An array of [environments] that are available for the service instance.
 	Environments []Environment `json:"environments,omitempty"`
+}
+
+// ListExpansionsOptions : The listExpansions options.
+type ListExpansionsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListExpansionsOptions : Instantiate ListExpansionsOptions
+func NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
+    return &ListExpansionsOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListExpansionsOptions) SetEnvironmentID(param string) *ListExpansionsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *ListExpansionsOptions) SetCollectionID(param string) *ListExpansionsOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListExpansionsOptions) SetHeaders(param map[string]string) *ListExpansionsOptions {
+    options.Headers = param
+    return options
+}
+
+// ListFieldsOptions : The listFields options.
+type ListFieldsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// A comma-separated list of collection IDs to be queried against.
+	CollectionIds []string `json:"collection_ids"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListFieldsOptions : Instantiate ListFieldsOptions
+func NewListFieldsOptions(environmentID string, collectionIds []string) *ListFieldsOptions {
+    return &ListFieldsOptions{
+        EnvironmentID: environmentID,
+        CollectionIds: collectionIds,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListFieldsOptions) SetEnvironmentID(param string) *ListFieldsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionIds : Allow user to set CollectionIds
+func (options *ListFieldsOptions) SetCollectionIds(param []string) *ListFieldsOptions {
+    options.CollectionIds = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListFieldsOptions) SetHeaders(param map[string]string) *ListFieldsOptions {
+    options.Headers = param
+    return options
+}
+
+// ListTrainingDataOptions : The listTrainingData options.
+type ListTrainingDataOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListTrainingDataOptions : Instantiate ListTrainingDataOptions
+func NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
+    return &ListTrainingDataOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListTrainingDataOptions) SetEnvironmentID(param string) *ListTrainingDataOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *ListTrainingDataOptions) SetCollectionID(param string) *ListTrainingDataOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListTrainingDataOptions) SetHeaders(param map[string]string) *ListTrainingDataOptions {
+    options.Headers = param
+    return options
+}
+
+// ListTrainingExamplesOptions : The listTrainingExamples options.
+type ListTrainingExamplesOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the query used for training.
+	QueryID string `json:"query_id"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListTrainingExamplesOptions : Instantiate ListTrainingExamplesOptions
+func NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
+    return &ListTrainingExamplesOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        QueryID: queryID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListTrainingExamplesOptions) SetEnvironmentID(param string) *ListTrainingExamplesOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *ListTrainingExamplesOptions) SetCollectionID(param string) *ListTrainingExamplesOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetQueryID : Allow user to set QueryID
+func (options *ListTrainingExamplesOptions) SetQueryID(param string) *ListTrainingExamplesOptions {
+    options.QueryID = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListTrainingExamplesOptions) SetHeaders(param map[string]string) *ListTrainingExamplesOptions {
+    options.Headers = param
+    return options
 }
 
 // MemoryUsage : **Deprecated**: Summary of the memory usage statistics for this environment.
@@ -3496,16 +6091,6 @@ type MemoryUsage struct {
 
 	// **Deprecated**: Percentage of the environment's memory capacity that is being used.
 	PercentUsed float64 `json:"percent_used,omitempty"`
-}
-
-// NewTrainingQuery : NewTrainingQuery struct
-type NewTrainingQuery struct {
-
-	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
-
-	Filter string `json:"filter,omitempty"`
-
-	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
 // NluEnrichmentCategories : An object that indicates the Categories enrichment will be applied to the specified field.
@@ -3680,25 +6265,6 @@ type QueryAggregation struct {
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 }
 
-// QueryEntities : QueryEntities struct
-type QueryEntities struct {
-
-	// The entity query feature to perform. Supported features are `disambiguate` and `similar_entities`.
-	Feature string `json:"feature,omitempty"`
-
-	// A text string that appears within the entity text field.
-	Entity QueryEntitiesEntity `json:"entity,omitempty"`
-
-	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted to query the city of London in England your query would look for `London` with the context of `England`.
-	Context QueryEntitiesContext `json:"context,omitempty"`
-
-	// The number of results to return. The default is `10`. The maximum is `1000`.
-	Count int64 `json:"count,omitempty"`
-
-	// The number of evidence items to return for each result. The default is `0`. The maximum number of evidence items per query is 10,000.
-	EvidenceCount int64 `json:"evidence_count,omitempty"`
-}
-
 // QueryEntitiesContext : Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted to query the city of London in England your query would look for `London` with the context of `England`.
 type QueryEntitiesContext struct {
 
@@ -3714,6 +6280,110 @@ type QueryEntitiesEntity struct {
 
 	// The type of the specified entity.
 	TypeVar string `json:"type_var,omitempty"`
+}
+
+// QueryEntitiesOptions : The queryEntities options.
+type QueryEntitiesOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The entity query feature to perform. Supported features are `disambiguate` and `similar_entities`.
+	Feature string `json:"feature,omitempty"`
+
+    // Indicates whether user set optional parameter Feature
+    IsFeatureSet bool
+
+	// A text string that appears within the entity text field.
+	Entity QueryEntitiesEntity `json:"entity,omitempty"`
+
+    // Indicates whether user set optional parameter Entity
+    IsEntitySet bool
+
+	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted to query the city of London in England your query would look for `London` with the context of `England`.
+	Context QueryEntitiesContext `json:"context,omitempty"`
+
+    // Indicates whether user set optional parameter Context
+    IsContextSet bool
+
+	// The number of results to return. The default is `10`. The maximum is `1000`.
+	Count int64 `json:"count,omitempty"`
+
+    // Indicates whether user set optional parameter Count
+    IsCountSet bool
+
+	// The number of evidence items to return for each result. The default is `0`. The maximum number of evidence items per query is 10,000.
+	EvidenceCount int64 `json:"evidence_count,omitempty"`
+
+    // Indicates whether user set optional parameter EvidenceCount
+    IsEvidenceCountSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewQueryEntitiesOptions : Instantiate QueryEntitiesOptions
+func NewQueryEntitiesOptions(environmentID string, collectionID string) *QueryEntitiesOptions {
+    return &QueryEntitiesOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *QueryEntitiesOptions) SetEnvironmentID(param string) *QueryEntitiesOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *QueryEntitiesOptions) SetCollectionID(param string) *QueryEntitiesOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetFeature : Allow user to set Feature
+func (options *QueryEntitiesOptions) SetFeature(param string) *QueryEntitiesOptions {
+    options.Feature = param
+    options.IsFeatureSet = true
+    return options
+}
+
+// SetEntity : Allow user to set Entity
+func (options *QueryEntitiesOptions) SetEntity(param QueryEntitiesEntity) *QueryEntitiesOptions {
+    options.Entity = param
+    options.IsEntitySet = true
+    return options
+}
+
+// SetContext : Allow user to set Context
+func (options *QueryEntitiesOptions) SetContext(param QueryEntitiesContext) *QueryEntitiesOptions {
+    options.Context = param
+    options.IsContextSet = true
+    return options
+}
+
+// SetCount : Allow user to set Count
+func (options *QueryEntitiesOptions) SetCount(param int64) *QueryEntitiesOptions {
+    options.Count = param
+    options.IsCountSet = true
+    return options
+}
+
+// SetEvidenceCount : Allow user to set EvidenceCount
+func (options *QueryEntitiesOptions) SetEvidenceCount(param int64) *QueryEntitiesOptions {
+    options.EvidenceCount = param
+    options.IsEvidenceCountSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *QueryEntitiesOptions) SetHeaders(param map[string]string) *QueryEntitiesOptions {
+    options.Headers = param
+    return options
 }
 
 // QueryEntitiesResponse : An array of entities resulting from the query.
@@ -3780,6 +6450,266 @@ type QueryFilterType struct {
 	Include []string `json:"include,omitempty"`
 }
 
+// QueryNoticesOptions : The queryNotices options.
+type QueryNoticesOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
+	Filter string `json:"filter,omitempty"`
+
+    // Indicates whether user set optional parameter Filter
+    IsFilterSet bool
+
+	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+	Query string `json:"query,omitempty"`
+
+    // Indicates whether user set optional parameter Query
+    IsQuerySet bool
+
+	// A natural language query that returns relevant documents by utilizing training data and natural language understanding. You cannot use **natural_language_query** and **query** at the same time.
+	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
+
+    // Indicates whether user set optional parameter NaturalLanguageQuery
+    IsNaturalLanguageQuerySet bool
+
+	// A passages query that returns the most relevant passages from the results.
+	Passages bool `json:"passages,omitempty"`
+
+    // Indicates whether user set optional parameter Passages
+    IsPassagesSet bool
+
+	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a full list of possible aggregrations, see the Query reference.
+	Aggregation string `json:"aggregation,omitempty"`
+
+    // Indicates whether user set optional parameter Aggregation
+    IsAggregationSet bool
+
+	// Number of documents to return.
+	Count int64 `json:"count,omitempty"`
+
+    // Indicates whether user set optional parameter Count
+    IsCountSet bool
+
+	// A comma separated list of the portion of the document hierarchy to return.
+	ReturnFields []string `json:"return_fields,omitempty"`
+
+    // Indicates whether user set optional parameter ReturnFields
+    IsReturnFieldsSet bool
+
+	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
+	Offset int64 `json:"offset,omitempty"`
+
+    // Indicates whether user set optional parameter Offset
+    IsOffsetSet bool
+
+	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
+	Sort []string `json:"sort,omitempty"`
+
+    // Indicates whether user set optional parameter Sort
+    IsSortSet bool
+
+	// When true a highlight field is returned for each result which contains the fields that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
+	Highlight bool `json:"highlight,omitempty"`
+
+    // Indicates whether user set optional parameter Highlight
+    IsHighlightSet bool
+
+	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
+	PassagesFields []string `json:"passages_fields,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesFields
+    IsPassagesFieldsSet bool
+
+	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
+	PassagesCount int64 `json:"passages_count,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesCount
+    IsPassagesCountSet bool
+
+	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
+	PassagesCharacters int64 `json:"passages_characters,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesCharacters
+    IsPassagesCharactersSet bool
+
+	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
+	DeduplicateField string `json:"deduplicate_field,omitempty"`
+
+    // Indicates whether user set optional parameter DeduplicateField
+    IsDeduplicateFieldSet bool
+
+	// When `true`, results are returned based on their similarity to the document IDs specified in the **similar.document_ids** parameter.
+	Similar bool `json:"similar,omitempty"`
+
+    // Indicates whether user set optional parameter Similar
+    IsSimilarSet bool
+
+	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
+	SimilarDocumentIds []string `json:"similar_document_ids,omitempty"`
+
+    // Indicates whether user set optional parameter SimilarDocumentIds
+    IsSimilarDocumentIdsSet bool
+
+	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
+	SimilarFields []string `json:"similar_fields,omitempty"`
+
+    // Indicates whether user set optional parameter SimilarFields
+    IsSimilarFieldsSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewQueryNoticesOptions : Instantiate QueryNoticesOptions
+func NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
+    return &QueryNoticesOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *QueryNoticesOptions) SetEnvironmentID(param string) *QueryNoticesOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *QueryNoticesOptions) SetCollectionID(param string) *QueryNoticesOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetFilter : Allow user to set Filter
+func (options *QueryNoticesOptions) SetFilter(param string) *QueryNoticesOptions {
+    options.Filter = param
+    options.IsFilterSet = true
+    return options
+}
+
+// SetQuery : Allow user to set Query
+func (options *QueryNoticesOptions) SetQuery(param string) *QueryNoticesOptions {
+    options.Query = param
+    options.IsQuerySet = true
+    return options
+}
+
+// SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
+func (options *QueryNoticesOptions) SetNaturalLanguageQuery(param string) *QueryNoticesOptions {
+    options.NaturalLanguageQuery = param
+    options.IsNaturalLanguageQuerySet = true
+    return options
+}
+
+// SetPassages : Allow user to set Passages
+func (options *QueryNoticesOptions) SetPassages(param bool) *QueryNoticesOptions {
+    options.Passages = param
+    options.IsPassagesSet = true
+    return options
+}
+
+// SetAggregation : Allow user to set Aggregation
+func (options *QueryNoticesOptions) SetAggregation(param string) *QueryNoticesOptions {
+    options.Aggregation = param
+    options.IsAggregationSet = true
+    return options
+}
+
+// SetCount : Allow user to set Count
+func (options *QueryNoticesOptions) SetCount(param int64) *QueryNoticesOptions {
+    options.Count = param
+    options.IsCountSet = true
+    return options
+}
+
+// SetReturnFields : Allow user to set ReturnFields
+func (options *QueryNoticesOptions) SetReturnFields(param []string) *QueryNoticesOptions {
+    options.ReturnFields = param
+    options.IsReturnFieldsSet = true
+    return options
+}
+
+// SetOffset : Allow user to set Offset
+func (options *QueryNoticesOptions) SetOffset(param int64) *QueryNoticesOptions {
+    options.Offset = param
+    options.IsOffsetSet = true
+    return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *QueryNoticesOptions) SetSort(param []string) *QueryNoticesOptions {
+    options.Sort = param
+    options.IsSortSet = true
+    return options
+}
+
+// SetHighlight : Allow user to set Highlight
+func (options *QueryNoticesOptions) SetHighlight(param bool) *QueryNoticesOptions {
+    options.Highlight = param
+    options.IsHighlightSet = true
+    return options
+}
+
+// SetPassagesFields : Allow user to set PassagesFields
+func (options *QueryNoticesOptions) SetPassagesFields(param []string) *QueryNoticesOptions {
+    options.PassagesFields = param
+    options.IsPassagesFieldsSet = true
+    return options
+}
+
+// SetPassagesCount : Allow user to set PassagesCount
+func (options *QueryNoticesOptions) SetPassagesCount(param int64) *QueryNoticesOptions {
+    options.PassagesCount = param
+    options.IsPassagesCountSet = true
+    return options
+}
+
+// SetPassagesCharacters : Allow user to set PassagesCharacters
+func (options *QueryNoticesOptions) SetPassagesCharacters(param int64) *QueryNoticesOptions {
+    options.PassagesCharacters = param
+    options.IsPassagesCharactersSet = true
+    return options
+}
+
+// SetDeduplicateField : Allow user to set DeduplicateField
+func (options *QueryNoticesOptions) SetDeduplicateField(param string) *QueryNoticesOptions {
+    options.DeduplicateField = param
+    options.IsDeduplicateFieldSet = true
+    return options
+}
+
+// SetSimilar : Allow user to set Similar
+func (options *QueryNoticesOptions) SetSimilar(param bool) *QueryNoticesOptions {
+    options.Similar = param
+    options.IsSimilarSet = true
+    return options
+}
+
+// SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
+func (options *QueryNoticesOptions) SetSimilarDocumentIds(param []string) *QueryNoticesOptions {
+    options.SimilarDocumentIds = param
+    options.IsSimilarDocumentIdsSet = true
+    return options
+}
+
+// SetSimilarFields : Allow user to set SimilarFields
+func (options *QueryNoticesOptions) SetSimilarFields(param []string) *QueryNoticesOptions {
+    options.SimilarFields = param
+    options.IsSimilarFieldsSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *QueryNoticesOptions) SetHeaders(param map[string]string) *QueryNoticesOptions {
+    options.Headers = param
+    return options
+}
+
 // QueryNoticesResponse : QueryNoticesResponse struct
 type QueryNoticesResponse struct {
 
@@ -3828,6 +6758,292 @@ type QueryNoticesResult struct {
 	Notices []Notice `json:"notices,omitempty"`
 }
 
+// QueryOptions : The query options.
+type QueryOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
+	Filter string `json:"filter,omitempty"`
+
+    // Indicates whether user set optional parameter Filter
+    IsFilterSet bool
+
+	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+	Query string `json:"query,omitempty"`
+
+    // Indicates whether user set optional parameter Query
+    IsQuerySet bool
+
+	// A natural language query that returns relevant documents by utilizing training data and natural language understanding. You cannot use **natural_language_query** and **query** at the same time.
+	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
+
+    // Indicates whether user set optional parameter NaturalLanguageQuery
+    IsNaturalLanguageQuerySet bool
+
+	// A passages query that returns the most relevant passages from the results.
+	Passages bool `json:"passages,omitempty"`
+
+    // Indicates whether user set optional parameter Passages
+    IsPassagesSet bool
+
+	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a full list of possible aggregrations, see the Query reference.
+	Aggregation string `json:"aggregation,omitempty"`
+
+    // Indicates whether user set optional parameter Aggregation
+    IsAggregationSet bool
+
+	// Number of documents to return.
+	Count int64 `json:"count,omitempty"`
+
+    // Indicates whether user set optional parameter Count
+    IsCountSet bool
+
+	// A comma separated list of the portion of the document hierarchy to return.
+	ReturnFields []string `json:"return_fields,omitempty"`
+
+    // Indicates whether user set optional parameter ReturnFields
+    IsReturnFieldsSet bool
+
+	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
+	Offset int64 `json:"offset,omitempty"`
+
+    // Indicates whether user set optional parameter Offset
+    IsOffsetSet bool
+
+	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
+	Sort []string `json:"sort,omitempty"`
+
+    // Indicates whether user set optional parameter Sort
+    IsSortSet bool
+
+	// When true a highlight field is returned for each result which contains the fields that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
+	Highlight bool `json:"highlight,omitempty"`
+
+    // Indicates whether user set optional parameter Highlight
+    IsHighlightSet bool
+
+	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
+	PassagesFields []string `json:"passages_fields,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesFields
+    IsPassagesFieldsSet bool
+
+	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
+	PassagesCount int64 `json:"passages_count,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesCount
+    IsPassagesCountSet bool
+
+	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
+	PassagesCharacters int64 `json:"passages_characters,omitempty"`
+
+    // Indicates whether user set optional parameter PassagesCharacters
+    IsPassagesCharactersSet bool
+
+	// When `true` and used with a Watson Discovery News collection, duplicate results (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not considered. This parameter is currently Beta functionality.
+	Deduplicate bool `json:"deduplicate,omitempty"`
+
+    // Indicates whether user set optional parameter Deduplicate
+    IsDeduplicateSet bool
+
+	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
+	DeduplicateField string `json:"deduplicate_field,omitempty"`
+
+    // Indicates whether user set optional parameter DeduplicateField
+    IsDeduplicateFieldSet bool
+
+	// When `true`, results are returned based on their similarity to the document IDs specified in the **similar.document_ids** parameter.
+	Similar bool `json:"similar,omitempty"`
+
+    // Indicates whether user set optional parameter Similar
+    IsSimilarSet bool
+
+	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
+	SimilarDocumentIds []string `json:"similar_document_ids,omitempty"`
+
+    // Indicates whether user set optional parameter SimilarDocumentIds
+    IsSimilarDocumentIdsSet bool
+
+	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
+	SimilarFields []string `json:"similar_fields,omitempty"`
+
+    // Indicates whether user set optional parameter SimilarFields
+    IsSimilarFieldsSet bool
+
+	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
+	LoggingOptOut bool `json:"logging_opt_out,omitempty"`
+
+    // Indicates whether user set optional parameter LoggingOptOut
+    IsLoggingOptOutSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewQueryOptions : Instantiate QueryOptions
+func NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
+    return &QueryOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *QueryOptions) SetEnvironmentID(param string) *QueryOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *QueryOptions) SetCollectionID(param string) *QueryOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetFilter : Allow user to set Filter
+func (options *QueryOptions) SetFilter(param string) *QueryOptions {
+    options.Filter = param
+    options.IsFilterSet = true
+    return options
+}
+
+// SetQuery : Allow user to set Query
+func (options *QueryOptions) SetQuery(param string) *QueryOptions {
+    options.Query = param
+    options.IsQuerySet = true
+    return options
+}
+
+// SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
+func (options *QueryOptions) SetNaturalLanguageQuery(param string) *QueryOptions {
+    options.NaturalLanguageQuery = param
+    options.IsNaturalLanguageQuerySet = true
+    return options
+}
+
+// SetPassages : Allow user to set Passages
+func (options *QueryOptions) SetPassages(param bool) *QueryOptions {
+    options.Passages = param
+    options.IsPassagesSet = true
+    return options
+}
+
+// SetAggregation : Allow user to set Aggregation
+func (options *QueryOptions) SetAggregation(param string) *QueryOptions {
+    options.Aggregation = param
+    options.IsAggregationSet = true
+    return options
+}
+
+// SetCount : Allow user to set Count
+func (options *QueryOptions) SetCount(param int64) *QueryOptions {
+    options.Count = param
+    options.IsCountSet = true
+    return options
+}
+
+// SetReturnFields : Allow user to set ReturnFields
+func (options *QueryOptions) SetReturnFields(param []string) *QueryOptions {
+    options.ReturnFields = param
+    options.IsReturnFieldsSet = true
+    return options
+}
+
+// SetOffset : Allow user to set Offset
+func (options *QueryOptions) SetOffset(param int64) *QueryOptions {
+    options.Offset = param
+    options.IsOffsetSet = true
+    return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *QueryOptions) SetSort(param []string) *QueryOptions {
+    options.Sort = param
+    options.IsSortSet = true
+    return options
+}
+
+// SetHighlight : Allow user to set Highlight
+func (options *QueryOptions) SetHighlight(param bool) *QueryOptions {
+    options.Highlight = param
+    options.IsHighlightSet = true
+    return options
+}
+
+// SetPassagesFields : Allow user to set PassagesFields
+func (options *QueryOptions) SetPassagesFields(param []string) *QueryOptions {
+    options.PassagesFields = param
+    options.IsPassagesFieldsSet = true
+    return options
+}
+
+// SetPassagesCount : Allow user to set PassagesCount
+func (options *QueryOptions) SetPassagesCount(param int64) *QueryOptions {
+    options.PassagesCount = param
+    options.IsPassagesCountSet = true
+    return options
+}
+
+// SetPassagesCharacters : Allow user to set PassagesCharacters
+func (options *QueryOptions) SetPassagesCharacters(param int64) *QueryOptions {
+    options.PassagesCharacters = param
+    options.IsPassagesCharactersSet = true
+    return options
+}
+
+// SetDeduplicate : Allow user to set Deduplicate
+func (options *QueryOptions) SetDeduplicate(param bool) *QueryOptions {
+    options.Deduplicate = param
+    options.IsDeduplicateSet = true
+    return options
+}
+
+// SetDeduplicateField : Allow user to set DeduplicateField
+func (options *QueryOptions) SetDeduplicateField(param string) *QueryOptions {
+    options.DeduplicateField = param
+    options.IsDeduplicateFieldSet = true
+    return options
+}
+
+// SetSimilar : Allow user to set Similar
+func (options *QueryOptions) SetSimilar(param bool) *QueryOptions {
+    options.Similar = param
+    options.IsSimilarSet = true
+    return options
+}
+
+// SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
+func (options *QueryOptions) SetSimilarDocumentIds(param []string) *QueryOptions {
+    options.SimilarDocumentIds = param
+    options.IsSimilarDocumentIdsSet = true
+    return options
+}
+
+// SetSimilarFields : Allow user to set SimilarFields
+func (options *QueryOptions) SetSimilarFields(param []string) *QueryOptions {
+    options.SimilarFields = param
+    options.IsSimilarFieldsSet = true
+    return options
+}
+
+// SetLoggingOptOut : Allow user to set LoggingOptOut
+func (options *QueryOptions) SetLoggingOptOut(param bool) *QueryOptions {
+    options.LoggingOptOut = param
+    options.IsLoggingOptOutSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *QueryOptions) SetHeaders(param map[string]string) *QueryOptions {
+    options.Headers = param
+    return options
+}
+
 // QueryPassages : QueryPassages struct
 type QueryPassages struct {
 
@@ -3848,28 +7064,6 @@ type QueryPassages struct {
 
 	// The label of the field from which the passage has been extracted.
 	Field string `json:"field,omitempty"`
-}
-
-// QueryRelations : A respresentation of a relationship query.
-type QueryRelations struct {
-
-	// An array of entities to find relationships for.
-	Entities []QueryRelationsEntity `json:"entities,omitempty"`
-
-	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted to query the city of London in England your query would look for `London` with the context of `England`.
-	Context QueryEntitiesContext `json:"context,omitempty"`
-
-	// The sorting method for the relationships, can be `score` or `frequency`. `frequency` is the number of unique times each entity is identified. The default is `score`.
-	Sort string `json:"sort,omitempty"`
-
-	// Filters to apply to the relationship query.
-	Filter QueryRelationsFilter `json:"filter,omitempty"`
-
-	// The number of results to return. The default is `10`. The maximum is `1000`.
-	Count int64 `json:"count,omitempty"`
-
-	// The number of evidence items to return for each result. The default is `0`. The maximum number of evidence items per query is 10,000.
-	EvidenceCount int64 `json:"evidence_count,omitempty"`
 }
 
 // QueryRelationsArgument : QueryRelationsArgument struct
@@ -3902,6 +7096,123 @@ type QueryRelationsFilter struct {
 
 	// A comma-separated list of document IDs to include in the query.
 	DocumentIds []string `json:"document_ids,omitempty"`
+}
+
+// QueryRelationsOptions : The queryRelations options.
+type QueryRelationsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// An array of entities to find relationships for.
+	Entities []QueryRelationsEntity `json:"entities,omitempty"`
+
+    // Indicates whether user set optional parameter Entities
+    IsEntitiesSet bool
+
+	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted to query the city of London in England your query would look for `London` with the context of `England`.
+	Context QueryEntitiesContext `json:"context,omitempty"`
+
+    // Indicates whether user set optional parameter Context
+    IsContextSet bool
+
+	// The sorting method for the relationships, can be `score` or `frequency`. `frequency` is the number of unique times each entity is identified. The default is `score`.
+	Sort string `json:"sort,omitempty"`
+
+    // Indicates whether user set optional parameter Sort
+    IsSortSet bool
+
+	// Filters to apply to the relationship query.
+	Filter QueryRelationsFilter `json:"filter,omitempty"`
+
+    // Indicates whether user set optional parameter Filter
+    IsFilterSet bool
+
+	// The number of results to return. The default is `10`. The maximum is `1000`.
+	Count int64 `json:"count,omitempty"`
+
+    // Indicates whether user set optional parameter Count
+    IsCountSet bool
+
+	// The number of evidence items to return for each result. The default is `0`. The maximum number of evidence items per query is 10,000.
+	EvidenceCount int64 `json:"evidence_count,omitempty"`
+
+    // Indicates whether user set optional parameter EvidenceCount
+    IsEvidenceCountSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewQueryRelationsOptions : Instantiate QueryRelationsOptions
+func NewQueryRelationsOptions(environmentID string, collectionID string) *QueryRelationsOptions {
+    return &QueryRelationsOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *QueryRelationsOptions) SetEnvironmentID(param string) *QueryRelationsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *QueryRelationsOptions) SetCollectionID(param string) *QueryRelationsOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetEntities : Allow user to set Entities
+func (options *QueryRelationsOptions) SetEntities(param []QueryRelationsEntity) *QueryRelationsOptions {
+    options.Entities = param
+    options.IsEntitiesSet = true
+    return options
+}
+
+// SetContext : Allow user to set Context
+func (options *QueryRelationsOptions) SetContext(param QueryEntitiesContext) *QueryRelationsOptions {
+    options.Context = param
+    options.IsContextSet = true
+    return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *QueryRelationsOptions) SetSort(param string) *QueryRelationsOptions {
+    options.Sort = param
+    options.IsSortSet = true
+    return options
+}
+
+// SetFilter : Allow user to set Filter
+func (options *QueryRelationsOptions) SetFilter(param QueryRelationsFilter) *QueryRelationsOptions {
+    options.Filter = param
+    options.IsFilterSet = true
+    return options
+}
+
+// SetCount : Allow user to set Count
+func (options *QueryRelationsOptions) SetCount(param int64) *QueryRelationsOptions {
+    options.Count = param
+    options.IsCountSet = true
+    return options
+}
+
+// SetEvidenceCount : Allow user to set EvidenceCount
+func (options *QueryRelationsOptions) SetEvidenceCount(param int64) *QueryRelationsOptions {
+    options.EvidenceCount = param
+    options.IsEvidenceCountSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *QueryRelationsOptions) SetHeaders(param map[string]string) *QueryRelationsOptions {
+    options.Headers = param
+    return options
 }
 
 // QueryRelationsRelationship : QueryRelationsRelationship struct
@@ -3939,7 +7250,7 @@ type QueryResponse struct {
 
 	DuplicatesRemoved int64 `json:"duplicates_removed,omitempty"`
 
-	// The session token for this query. The session token can be used to add events associated with this query to the query and event log.
+	// The session token for this query. The session token can be used to add events associated with this query to the query and event log. **Important:** Session tokens are case sensitive.
 	SessionToken string `json:"session_token,omitempty"`
 }
 
@@ -3965,10 +7276,10 @@ type QueryResult struct {
 // QueryResultMetadata : Metadata of a query result.
 type QueryResultMetadata struct {
 
-	// The raw score of the result. A higher score indicates a greater match to the query parameters.
+	// An unbounded measure of the relevance of a particular result, dependent on the query and matching document. A higher score indicates a greater match to the query parameters.
 	Score float64 `json:"score,omitempty"`
 
-	// The confidence score of the result's analysis. A higher score indicates greater confidence.
+	// The confidence score for the given result. Calculated based on how relevant the result is estimated to be, compared to a trained relevancy model. confidence can range from `0.0` to `1.0`. The higher the number, the more relevant the document.
 	Confidence float64 `json:"confidence,omitempty"`
 }
 
@@ -4067,6 +7378,113 @@ type SourceStatus struct {
 	LastUpdated strfmt.DateTime `json:"last_updated,omitempty"`
 }
 
+// TestConfigurationInEnvironmentOptions : The testConfigurationInEnvironment options.
+type TestConfigurationInEnvironmentOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The configuration to use to process the document. If this part is provided, then the provided configuration is used to process the document. If the **configuration_id** is also provided (both are present at the same time), then request is rejected. The maximum supported configuration size is 1 MB. Configuration parts larger than 1 MB are rejected. See the `GET /configurations/{configuration_id}` operation for an example configuration.
+	Configuration string `json:"configuration,omitempty"`
+
+    // Indicates whether user set optional parameter Configuration
+    IsConfigurationSet bool
+
+	// Specify to only run the input document through the given step instead of running the input document through the entire ingestion workflow. Valid values are `convert`, `enrich`, and `normalize`.
+	Step string `json:"step,omitempty"`
+
+    // Indicates whether user set optional parameter Step
+    IsStepSet bool
+
+	// The ID of the configuration to use to process the document. If the **configuration** form part is also provided (both are present at the same time), then the request will be rejected.
+	ConfigurationID string `json:"configuration_id,omitempty"`
+
+    // Indicates whether user set optional parameter ConfigurationID
+    IsConfigurationIDSet bool
+
+	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50 megabytes is rejected.
+	File os.File `json:"file,omitempty"`
+
+    // Indicates whether user set optional parameter File
+    IsFileSet bool
+
+	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` { "Creator": "Johnny Appleseed", "Subject": "Apples" } ```.
+	Metadata string `json:"metadata,omitempty"`
+
+    // Indicates whether user set optional parameter Metadata
+    IsMetadataSet bool
+
+	// The content type of File.
+	FileContentType string `json:"file_content_type,omitempty"`
+
+    // Indicates whether user set optional parameter FileContentType
+    IsFileContentTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewTestConfigurationInEnvironmentOptions : Instantiate TestConfigurationInEnvironmentOptions
+func NewTestConfigurationInEnvironmentOptions(environmentID string) *TestConfigurationInEnvironmentOptions {
+    return &TestConfigurationInEnvironmentOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *TestConfigurationInEnvironmentOptions) SetEnvironmentID(param string) *TestConfigurationInEnvironmentOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetConfiguration : Allow user to set Configuration
+func (options *TestConfigurationInEnvironmentOptions) SetConfiguration(param string) *TestConfigurationInEnvironmentOptions {
+    options.Configuration = param
+    options.IsConfigurationSet = true
+    return options
+}
+
+// SetStep : Allow user to set Step
+func (options *TestConfigurationInEnvironmentOptions) SetStep(param string) *TestConfigurationInEnvironmentOptions {
+    options.Step = param
+    options.IsStepSet = true
+    return options
+}
+
+// SetConfigurationID : Allow user to set ConfigurationID
+func (options *TestConfigurationInEnvironmentOptions) SetConfigurationID(param string) *TestConfigurationInEnvironmentOptions {
+    options.ConfigurationID = param
+    options.IsConfigurationIDSet = true
+    return options
+}
+
+// SetFile : Allow user to set File
+func (options *TestConfigurationInEnvironmentOptions) SetFile(param os.File) *TestConfigurationInEnvironmentOptions {
+    options.File = param
+    options.IsFileSet = true
+    return options
+}
+
+// SetMetadata : Allow user to set Metadata
+func (options *TestConfigurationInEnvironmentOptions) SetMetadata(param string) *TestConfigurationInEnvironmentOptions {
+    options.Metadata = param
+    options.IsMetadataSet = true
+    return options
+}
+
+// SetFileContentType : Allow user to set FileContentType
+func (options *TestConfigurationInEnvironmentOptions) SetFileContentType(param string) *TestConfigurationInEnvironmentOptions {
+    options.FileContentType = param
+    options.IsFileContentTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *TestConfigurationInEnvironmentOptions) SetHeaders(param map[string]string) *TestConfigurationInEnvironmentOptions {
+    options.Headers = param
+    return options
+}
+
 // TestDocument : TestDocument struct
 type TestDocument struct {
 
@@ -4125,14 +7543,6 @@ type TrainingExampleList struct {
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
-// TrainingExamplePatch : TrainingExamplePatch struct
-type TrainingExamplePatch struct {
-
-	CrossReference string `json:"cross_reference,omitempty"`
-
-	Relevance int64 `json:"relevance,omitempty"`
-}
-
 // TrainingQuery : TrainingQuery struct
 type TrainingQuery struct {
 
@@ -4167,27 +7577,490 @@ type TrainingStatus struct {
 	DataUpdated strfmt.DateTime `json:"data_updated,omitempty"`
 }
 
-// UpdateCollectionRequest : UpdateCollectionRequest struct
-type UpdateCollectionRequest struct {
+// UpdateCollectionOptions : The updateCollection options.
+type UpdateCollectionOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
 
 	// The name of the collection.
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
+
+    // Indicates whether user set optional parameter Name
+    IsNameSet bool
 
 	// A description of the collection.
 	Description string `json:"description,omitempty"`
 
+    // Indicates whether user set optional parameter Description
+    IsDescriptionSet bool
+
 	// The ID of the configuration in which the collection is to be updated.
 	ConfigurationID string `json:"configuration_id,omitempty"`
+
+    // Indicates whether user set optional parameter ConfigurationID
+    IsConfigurationIDSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
 }
 
-// UpdateEnvironmentRequest : UpdateEnvironmentRequest struct
-type UpdateEnvironmentRequest struct {
+// NewUpdateCollectionOptions : Instantiate UpdateCollectionOptions
+func NewUpdateCollectionOptions(environmentID string, collectionID string) *UpdateCollectionOptions {
+    return &UpdateCollectionOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *UpdateCollectionOptions) SetEnvironmentID(param string) *UpdateCollectionOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *UpdateCollectionOptions) SetCollectionID(param string) *UpdateCollectionOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateCollectionOptions) SetName(param string) *UpdateCollectionOptions {
+    options.Name = param
+    options.IsNameSet = true
+    return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *UpdateCollectionOptions) SetDescription(param string) *UpdateCollectionOptions {
+    options.Description = param
+    options.IsDescriptionSet = true
+    return options
+}
+
+// SetConfigurationID : Allow user to set ConfigurationID
+func (options *UpdateCollectionOptions) SetConfigurationID(param string) *UpdateCollectionOptions {
+    options.ConfigurationID = param
+    options.IsConfigurationIDSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *UpdateCollectionOptions {
+    options.Headers = param
+    return options
+}
+
+// UpdateConfigurationOptions : The updateConfiguration options.
+type UpdateConfigurationOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the configuration.
+	ConfigurationID string `json:"configuration_id"`
+
+	// The name of the configuration.
+	Name string `json:"name,omitempty"`
+
+    // Indicates whether user set optional parameter Name
+    IsNameSet bool
+
+	// The description of the configuration, if available.
+	Description string `json:"description,omitempty"`
+
+    // Indicates whether user set optional parameter Description
+    IsDescriptionSet bool
+
+	// The document conversion settings for the configuration.
+	Conversions Conversions `json:"conversions,omitempty"`
+
+    // Indicates whether user set optional parameter Conversions
+    IsConversionsSet bool
+
+	// An array of document enrichment settings for the configuration.
+	Enrichments []Enrichment `json:"enrichments,omitempty"`
+
+    // Indicates whether user set optional parameter Enrichments
+    IsEnrichmentsSet bool
+
+	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are executed in the order that they appear in the array.
+	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
+
+    // Indicates whether user set optional parameter Normalizations
+    IsNormalizationsSet bool
+
+	// Object containing source parameters for the configuration.
+	Source Source `json:"source,omitempty"`
+
+    // Indicates whether user set optional parameter Source
+    IsSourceSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUpdateConfigurationOptions : Instantiate UpdateConfigurationOptions
+func NewUpdateConfigurationOptions(environmentID string, configurationID string) *UpdateConfigurationOptions {
+    return &UpdateConfigurationOptions{
+        EnvironmentID: environmentID,
+        ConfigurationID: configurationID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *UpdateConfigurationOptions) SetEnvironmentID(param string) *UpdateConfigurationOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetConfigurationID : Allow user to set ConfigurationID
+func (options *UpdateConfigurationOptions) SetConfigurationID(param string) *UpdateConfigurationOptions {
+    options.ConfigurationID = param
+    return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateConfigurationOptions) SetName(param string) *UpdateConfigurationOptions {
+    options.Name = param
+    options.IsNameSet = true
+    return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *UpdateConfigurationOptions) SetDescription(param string) *UpdateConfigurationOptions {
+    options.Description = param
+    options.IsDescriptionSet = true
+    return options
+}
+
+// SetConversions : Allow user to set Conversions
+func (options *UpdateConfigurationOptions) SetConversions(param Conversions) *UpdateConfigurationOptions {
+    options.Conversions = param
+    options.IsConversionsSet = true
+    return options
+}
+
+// SetEnrichments : Allow user to set Enrichments
+func (options *UpdateConfigurationOptions) SetEnrichments(param []Enrichment) *UpdateConfigurationOptions {
+    options.Enrichments = param
+    options.IsEnrichmentsSet = true
+    return options
+}
+
+// SetNormalizations : Allow user to set Normalizations
+func (options *UpdateConfigurationOptions) SetNormalizations(param []NormalizationOperation) *UpdateConfigurationOptions {
+    options.Normalizations = param
+    options.IsNormalizationsSet = true
+    return options
+}
+
+// SetSource : Allow user to set Source
+func (options *UpdateConfigurationOptions) SetSource(param Source) *UpdateConfigurationOptions {
+    options.Source = param
+    options.IsSourceSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateConfigurationOptions) SetHeaders(param map[string]string) *UpdateConfigurationOptions {
+    options.Headers = param
+    return options
+}
+
+// UpdateCredentialsOptions : The updateCredentials options.
+type UpdateCredentialsOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The unique identifier for a set of source credentials.
+	CredentialID string `json:"credential_id"`
+
+	// The source that this credentials object connects to. -  `box` indicates the credentials are used to connect an instance of Enterprise Box. -  `salesforce` indicates the credentials are used to connect to Salesforce. -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+	SourceType string `json:"source_type,omitempty"`
+
+    // Indicates whether user set optional parameter SourceType
+    IsSourceTypeSet bool
+
+	// Object containing details of the stored credentials. Obtain credentials for your source from the administrator of the source.
+	CredentialDetails CredentialDetails `json:"credential_details,omitempty"`
+
+    // Indicates whether user set optional parameter CredentialDetails
+    IsCredentialDetailsSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
+func NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
+    return &UpdateCredentialsOptions{
+        EnvironmentID: environmentID,
+        CredentialID: credentialID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *UpdateCredentialsOptions) SetEnvironmentID(param string) *UpdateCredentialsOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCredentialID : Allow user to set CredentialID
+func (options *UpdateCredentialsOptions) SetCredentialID(param string) *UpdateCredentialsOptions {
+    options.CredentialID = param
+    return options
+}
+
+// SetSourceType : Allow user to set SourceType
+func (options *UpdateCredentialsOptions) SetSourceType(param string) *UpdateCredentialsOptions {
+    options.SourceType = param
+    options.IsSourceTypeSet = true
+    return options
+}
+
+// SetCredentialDetails : Allow user to set CredentialDetails
+func (options *UpdateCredentialsOptions) SetCredentialDetails(param CredentialDetails) *UpdateCredentialsOptions {
+    options.CredentialDetails = param
+    options.IsCredentialDetailsSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateCredentialsOptions) SetHeaders(param map[string]string) *UpdateCredentialsOptions {
+    options.Headers = param
+    return options
+}
+
+// UpdateDocumentOptions : The updateDocument options.
+type UpdateDocumentOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the document.
+	DocumentID string `json:"document_id"`
+
+	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50 megabytes is rejected.
+	File os.File `json:"file,omitempty"`
+
+    // Indicates whether user set optional parameter File
+    IsFileSet bool
+
+	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` { "Creator": "Johnny Appleseed", "Subject": "Apples" } ```.
+	Metadata string `json:"metadata,omitempty"`
+
+    // Indicates whether user set optional parameter Metadata
+    IsMetadataSet bool
+
+	// The content type of File.
+	FileContentType string `json:"file_content_type,omitempty"`
+
+    // Indicates whether user set optional parameter FileContentType
+    IsFileContentTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUpdateDocumentOptions : Instantiate UpdateDocumentOptions
+func NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
+    return &UpdateDocumentOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        DocumentID: documentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *UpdateDocumentOptions) SetEnvironmentID(param string) *UpdateDocumentOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *UpdateDocumentOptions) SetCollectionID(param string) *UpdateDocumentOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (options *UpdateDocumentOptions) SetDocumentID(param string) *UpdateDocumentOptions {
+    options.DocumentID = param
+    return options
+}
+
+// SetFile : Allow user to set File
+func (options *UpdateDocumentOptions) SetFile(param os.File) *UpdateDocumentOptions {
+    options.File = param
+    options.IsFileSet = true
+    return options
+}
+
+// SetMetadata : Allow user to set Metadata
+func (options *UpdateDocumentOptions) SetMetadata(param string) *UpdateDocumentOptions {
+    options.Metadata = param
+    options.IsMetadataSet = true
+    return options
+}
+
+// SetFileContentType : Allow user to set FileContentType
+func (options *UpdateDocumentOptions) SetFileContentType(param string) *UpdateDocumentOptions {
+    options.FileContentType = param
+    options.IsFileContentTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateDocumentOptions) SetHeaders(param map[string]string) *UpdateDocumentOptions {
+    options.Headers = param
+    return options
+}
+
+// UpdateEnvironmentOptions : The updateEnvironment options.
+type UpdateEnvironmentOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
 
 	// Name that identifies the environment.
 	Name string `json:"name,omitempty"`
 
+    // Indicates whether user set optional parameter Name
+    IsNameSet bool
+
 	// Description of the environment.
 	Description string `json:"description,omitempty"`
+
+    // Indicates whether user set optional parameter Description
+    IsDescriptionSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUpdateEnvironmentOptions : Instantiate UpdateEnvironmentOptions
+func NewUpdateEnvironmentOptions(environmentID string) *UpdateEnvironmentOptions {
+    return &UpdateEnvironmentOptions{
+        EnvironmentID: environmentID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *UpdateEnvironmentOptions) SetEnvironmentID(param string) *UpdateEnvironmentOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateEnvironmentOptions) SetName(param string) *UpdateEnvironmentOptions {
+    options.Name = param
+    options.IsNameSet = true
+    return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *UpdateEnvironmentOptions) SetDescription(param string) *UpdateEnvironmentOptions {
+    options.Description = param
+    options.IsDescriptionSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateEnvironmentOptions) SetHeaders(param map[string]string) *UpdateEnvironmentOptions {
+    options.Headers = param
+    return options
+}
+
+// UpdateTrainingExampleOptions : The updateTrainingExample options.
+type UpdateTrainingExampleOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID string `json:"environment_id"`
+
+	// The ID of the collection.
+	CollectionID string `json:"collection_id"`
+
+	// The ID of the query used for training.
+	QueryID string `json:"query_id"`
+
+	// The ID of the document as it is indexed.
+	ExampleID string `json:"example_id"`
+
+	CrossReference string `json:"cross_reference,omitempty"`
+
+    // Indicates whether user set optional parameter CrossReference
+    IsCrossReferenceSet bool
+
+	Relevance int64 `json:"relevance,omitempty"`
+
+    // Indicates whether user set optional parameter Relevance
+    IsRelevanceSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewUpdateTrainingExampleOptions : Instantiate UpdateTrainingExampleOptions
+func NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
+    return &UpdateTrainingExampleOptions{
+        EnvironmentID: environmentID,
+        CollectionID: collectionID,
+        QueryID: queryID,
+        ExampleID: exampleID,
+    }
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *UpdateTrainingExampleOptions) SetEnvironmentID(param string) *UpdateTrainingExampleOptions {
+    options.EnvironmentID = param
+    return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *UpdateTrainingExampleOptions) SetCollectionID(param string) *UpdateTrainingExampleOptions {
+    options.CollectionID = param
+    return options
+}
+
+// SetQueryID : Allow user to set QueryID
+func (options *UpdateTrainingExampleOptions) SetQueryID(param string) *UpdateTrainingExampleOptions {
+    options.QueryID = param
+    return options
+}
+
+// SetExampleID : Allow user to set ExampleID
+func (options *UpdateTrainingExampleOptions) SetExampleID(param string) *UpdateTrainingExampleOptions {
+    options.ExampleID = param
+    return options
+}
+
+// SetCrossReference : Allow user to set CrossReference
+func (options *UpdateTrainingExampleOptions) SetCrossReference(param string) *UpdateTrainingExampleOptions {
+    options.CrossReference = param
+    options.IsCrossReferenceSet = true
+    return options
+}
+
+// SetRelevance : Allow user to set Relevance
+func (options *UpdateTrainingExampleOptions) SetRelevance(param int64) *UpdateTrainingExampleOptions {
+    options.Relevance = param
+    options.IsRelevanceSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateTrainingExampleOptions) SetHeaders(param map[string]string) *UpdateTrainingExampleOptions {
+    options.Headers = param
+    return options
 }
 
 // WordHeadingDetection : WordHeadingDetection struct
@@ -4270,7 +8143,7 @@ type Timeslice struct {
 	// Interval of the aggregation. Valid date interval values are second/seconds minute/minutes, hour/hours, day/days, week/weeks, month/months, and year/years.
 	Interval string `json:"interval,omitempty"`
 
-	// Used to inducate that anomaly detection should be performed. Anomaly detection is used to locate unusual datapoints within a time series.
+	// Used to indicate that anomaly detection should be performed. Anomaly detection is used to locate unusual datapoints within a time series.
 	Anomaly bool `json:"anomaly,omitempty"`
 }
 

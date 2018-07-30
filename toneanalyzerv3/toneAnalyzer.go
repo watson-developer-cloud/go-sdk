@@ -44,7 +44,7 @@ func NewToneAnalyzerV3(creds watson.Credentials) (*ToneAnalyzerV3, error) {
 }
 
 // Tone : Analyze general tone
-func (toneAnalyzer *ToneAnalyzerV3) Tone(body *ToneInput, contentType string, sentences bool, tones []string, contentLanguage string, acceptLanguage string) (*watson.WatsonResponse, []error) {
+func (toneAnalyzer *ToneAnalyzerV3) Tone(options *ToneOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/tone"
     creds := toneAnalyzer.client.Creds
     useTM := toneAnalyzer.client.UseTM
@@ -52,15 +52,30 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(body *ToneInput, contentType string, se
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Set("Content-Type", fmt.Sprint(contentType))
-    request.Set("Content-Language", fmt.Sprint(contentLanguage))
-    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    request.Set("Content-Type", fmt.Sprint(options.ContentType))
+    if options.IsContentLanguageSet {
+        request.Set("Content-Language", fmt.Sprint(options.ContentLanguage))
+    }
+    if options.IsAcceptLanguageSet {
+        request.Set("Accept-Language", fmt.Sprint(options.AcceptLanguage))
+    }
     request.Query("version=" + creds.Version)
-    request.Query("sentences=" + fmt.Sprint(sentences))
-    request.Query("tones=" + fmt.Sprint(tones))
-    request.Send(body)
+    if options.IsSentencesSet {
+        request.Query("sentences=" + fmt.Sprint(options.Sentences))
+    }
+    if options.IsTonesSet {
+        request.Query("tones=" + fmt.Sprint(options.Tones))
+    }
+    if options.ContentType == "application/json" {
+        request.Send(options.ToneInput)
+    } else {
+        request.SendString(options.Body)
+    }
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -109,7 +124,7 @@ func GetToneResult(response *watson.WatsonResponse) *ToneAnalysis {
 }
 
 // ToneChat : Analyze customer engagement tone
-func (toneAnalyzer *ToneAnalyzerV3) ToneChat(body *ToneChatInput, contentLanguage string, acceptLanguage string) (*watson.WatsonResponse, []error) {
+func (toneAnalyzer *ToneAnalyzerV3) ToneChat(options *ToneChatOptions) (*watson.WatsonResponse, []error) {
     path := "/v3/tone_chat"
     creds := toneAnalyzer.client.Creds
     useTM := toneAnalyzer.client.UseTM
@@ -117,11 +132,21 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(body *ToneChatInput, contentLanguag
 
     request := req.New().Post(creds.ServiceURL + path)
 
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
-    request.Set("Content-Language", fmt.Sprint(contentLanguage))
-    request.Set("Accept-Language", fmt.Sprint(acceptLanguage))
+    if options.IsContentLanguageSet {
+        request.Set("Content-Language", fmt.Sprint(options.ContentLanguage))
+    }
+    if options.IsAcceptLanguageSet {
+        request.Set("Accept-Language", fmt.Sprint(options.AcceptLanguage))
+    }
     request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    body["utterances"] = options.Utterances
     request.Send(body)
 
     if useTM {
@@ -229,11 +254,59 @@ type ToneCategory struct {
 	CategoryName string `json:"category_name"`
 }
 
-// ToneChatInput : ToneChatInput struct
-type ToneChatInput struct {
+// ToneChatOptions : The toneChat options.
+type ToneChatOptions struct {
 
 	// An array of `Utterance` objects that provides the input content that the service is to analyze.
 	Utterances []Utterance `json:"utterances"`
+
+	// The language of the input text for the request: English or French. Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The input content must match the specified language. Do not submit content that contains both languages. You can use different languages for **Content-Language** and **Accept-Language**. * **`2017-09-21`:** Accepts `en` or `fr`. * **`2016-05-19`:** Accepts only `en`.
+	ContentLanguage string `json:"content_language,omitempty"`
+
+    // Indicates whether user set optional parameter ContentLanguage
+    IsContentLanguageSet bool
+
+	// The desired language of the response. For two-character arguments, regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and **Accept-Language**.
+	AcceptLanguage string `json:"accept_language,omitempty"`
+
+    // Indicates whether user set optional parameter AcceptLanguage
+    IsAcceptLanguageSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewToneChatOptions : Instantiate ToneChatOptions
+func NewToneChatOptions(utterances []Utterance) *ToneChatOptions {
+    return &ToneChatOptions{
+        Utterances: utterances,
+    }
+}
+
+// SetUtterances : Allow user to set Utterances
+func (options *ToneChatOptions) SetUtterances(param []Utterance) *ToneChatOptions {
+    options.Utterances = param
+    return options
+}
+
+// SetContentLanguage : Allow user to set ContentLanguage
+func (options *ToneChatOptions) SetContentLanguage(param string) *ToneChatOptions {
+    options.ContentLanguage = param
+    options.IsContentLanguageSet = true
+    return options
+}
+
+// SetAcceptLanguage : Allow user to set AcceptLanguage
+func (options *ToneChatOptions) SetAcceptLanguage(param string) *ToneChatOptions {
+    options.AcceptLanguage = param
+    options.IsAcceptLanguageSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ToneChatOptions) SetHeaders(param map[string]string) *ToneChatOptions {
+    options.Headers = param
+    return options
 }
 
 // ToneChatScore : ToneChatScore struct
@@ -254,6 +327,131 @@ type ToneInput struct {
 
 	// The input content that the service is to analyze.
 	Text string `json:"text"`
+}
+
+// ToneOptions : The tone options.
+type ToneOptions struct {
+
+	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type `ToneInput`.
+	ToneInput ToneInput `json:"tone_input,omitempty"`
+
+    // Indicates whether user set optional parameter ToneInput
+    IsToneInputSet bool
+
+	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type `ToneInput`.
+	Body string `json:"body,omitempty"`
+
+    // Indicates whether user set optional parameter Body
+    IsBodySet bool
+
+	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example, 'text/plain;charset=utf-8'.
+	ContentType string `json:"content_type"`
+
+	// Indicates whether the service is to return an analysis of each individual sentence in addition to its analysis of the full document. If `true` (the default), the service returns results for each sentence.
+	Sentences bool `json:"sentences,omitempty"`
+
+    // Indicates whether user set optional parameter Sentences
+    IsSentencesSet bool
+
+	// **`2017-09-21`:** Deprecated. The service continues to accept the parameter for backward-compatibility, but the parameter no longer affects the response. **`2016-05-19`:** A comma-separated list of tones for which the service is to return its analysis of the input; the indicated tones apply both to the full document and to individual sentences of the document. You can specify one or more of the valid values. Omit the parameter to request results for all three tones.
+	Tones []string `json:"tones,omitempty"`
+
+    // Indicates whether user set optional parameter Tones
+    IsTonesSet bool
+
+	// The language of the input text for the request: English or French. Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The input content must match the specified language. Do not submit content that contains both languages. You can use different languages for **Content-Language** and **Accept-Language**. * **`2017-09-21`:** Accepts `en` or `fr`. * **`2016-05-19`:** Accepts only `en`.
+	ContentLanguage string `json:"content_language,omitempty"`
+
+    // Indicates whether user set optional parameter ContentLanguage
+    IsContentLanguageSet bool
+
+	// The desired language of the response. For two-character arguments, regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and **Accept-Language**.
+	AcceptLanguage string `json:"accept_language,omitempty"`
+
+    // Indicates whether user set optional parameter AcceptLanguage
+    IsAcceptLanguageSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewToneOptionsForToneInput : Instantiate ToneOptionsForToneInput
+func NewToneOptionsForToneInput(toneInput ToneInput) *ToneOptions {
+    return &ToneOptions{
+        ToneInput: toneInput,
+        ContentType: "application/json",
+    }
+}
+
+// SetToneInput : Allow user to set ToneInput
+func (options *ToneOptions) SetToneInput(toneInput ToneInput) *ToneOptions {
+    options.ToneInput = toneInput
+    options.ContentType = "application/json"
+    return options
+}
+
+// NewToneOptionsForPlain : Instantiate ToneOptionsForPlain
+func NewToneOptionsForPlain(toneInput string) *ToneOptions {
+    return &ToneOptions{
+        Body: toneInput,
+        ContentType: "text/plain",
+    }
+}
+
+// SetPlain : Allow user to set Plain
+func (options *ToneOptions) SetPlain(toneInput string) *ToneOptions {
+    options.Body = toneInput
+    options.ContentType = "text/plain"
+    return options
+}
+
+// NewToneOptionsForHTML : Instantiate ToneOptionsForHTML
+func NewToneOptionsForHTML(toneInput string) *ToneOptions {
+    return &ToneOptions{
+        Body: toneInput,
+        ContentType: "text/html",
+    }
+}
+
+// SetHTML : Allow user to set HTML
+func (options *ToneOptions) SetHTML(toneInput string) *ToneOptions {
+    options.Body = toneInput
+    options.ContentType = "text/html"
+    return options
+}
+
+// SetSentences : Allow user to set Sentences
+func (options *ToneOptions) SetSentences(param bool) *ToneOptions {
+    options.Sentences = param
+    options.IsSentencesSet = true
+    return options
+}
+
+// SetTones : Allow user to set Tones
+func (options *ToneOptions) SetTones(param []string) *ToneOptions {
+    options.Tones = param
+    options.IsTonesSet = true
+    return options
+}
+
+// SetContentLanguage : Allow user to set ContentLanguage
+func (options *ToneOptions) SetContentLanguage(param string) *ToneOptions {
+    options.ContentLanguage = param
+    options.IsContentLanguageSet = true
+    return options
+}
+
+// SetAcceptLanguage : Allow user to set AcceptLanguage
+func (options *ToneOptions) SetAcceptLanguage(param string) *ToneOptions {
+    options.AcceptLanguage = param
+    options.IsAcceptLanguageSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ToneOptions) SetHeaders(param map[string]string) *ToneOptions {
+    options.Headers = param
+    return options
 }
 
 // ToneScore : ToneScore struct
