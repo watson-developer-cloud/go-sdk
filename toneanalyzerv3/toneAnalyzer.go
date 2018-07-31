@@ -261,13 +261,13 @@ type ToneChatOptions struct {
 	Utterances []Utterance `json:"utterances"`
 
 	// The language of the input text for the request: English or French. Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The input content must match the specified language. Do not submit content that contains both languages. You can use different languages for **Content-Language** and **Accept-Language**. * **`2017-09-21`:** Accepts `en` or `fr`. * **`2016-05-19`:** Accepts only `en`.
-	ContentLanguage string `json:"content_language,omitempty"`
+	ContentLanguage string `json:"Content-Language,omitempty"`
 
     // Indicates whether user set optional parameter ContentLanguage
     IsContentLanguageSet bool
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and **Accept-Language**.
-	AcceptLanguage string `json:"accept_language,omitempty"`
+	AcceptLanguage string `json:"Accept-Language,omitempty"`
 
     // Indicates whether user set optional parameter AcceptLanguage
     IsAcceptLanguageSet bool
@@ -345,7 +345,7 @@ type ToneOptions struct {
     IsBodySet bool
 
 	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example, 'text/plain;charset=utf-8'.
-	ContentType string `json:"content_type"`
+	ContentType string `json:"Content-Type"`
 
 	// Indicates whether the service is to return an analysis of each individual sentence in addition to its analysis of the full document. If `true` (the default), the service returns results for each sentence.
 	Sentences bool `json:"sentences,omitempty"`
@@ -360,13 +360,13 @@ type ToneOptions struct {
     IsTonesSet bool
 
 	// The language of the input text for the request: English or French. Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The input content must match the specified language. Do not submit content that contains both languages. You can use different languages for **Content-Language** and **Accept-Language**. * **`2017-09-21`:** Accepts `en` or `fr`. * **`2016-05-19`:** Accepts only `en`.
-	ContentLanguage string `json:"content_language,omitempty"`
+	ContentLanguage string `json:"Content-Language,omitempty"`
 
     // Indicates whether user set optional parameter ContentLanguage
     IsContentLanguageSet bool
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and **Accept-Language**.
-	AcceptLanguage string `json:"accept_language,omitempty"`
+	AcceptLanguage string `json:"Accept-Language,omitempty"`
 
     // Indicates whether user set optional parameter AcceptLanguage
     IsAcceptLanguageSet bool

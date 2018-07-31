@@ -627,14 +627,14 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(options *DeleteUser
 type Class struct {
 
 	// The name of the class.
-	ClassName string `json:"class_name"`
+	ClassName string `json:"class"`
 }
 
 // ClassResult : Result of a class within a classifier.
 type ClassResult struct {
 
 	// Name of the class.
-	ClassName string `json:"class_name"`
+	ClassName string `json:"class"`
 
 	// Confidence score for the property in the range of 0 to 1. A higher score indicates greater likelihood that the class is depicted in the image. The default threshold for returning scores from a classifier is 0.5.
 	Score float32 `json:"score,omitempty"`
@@ -742,7 +742,7 @@ type ClassifyOptions struct {
     IsImagesFileSet bool
 
 	// The language of the output class names. The full set of languages is supported for the built-in classifier IDs: `default`, `food`, and `explicit`. The class names of custom classifiers are not translated. The response might not be in the specified language when the requested language is not supported or when there is no translation for the class name.
-	AcceptLanguage string `json:"accept_language,omitempty"`
+	AcceptLanguage string `json:"Accept-Language,omitempty"`
 
     // Indicates whether user set optional parameter AcceptLanguage
     IsAcceptLanguageSet bool

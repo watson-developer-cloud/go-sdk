@@ -1509,7 +1509,7 @@ type SynthesizeOptions struct {
 	Text string `json:"text"`
 
 	// The requested audio format (MIME type) of the audio. You can use the `Accept` header or the `accept` query parameter to specify the audio format. (For the `audio/l16` format, you can optionally specify `endianness=big-endian` or `endianness=little-endian`; the default is little endian.) For detailed information about the supported audio formats and sampling rates, see [Specifying an audio format](https://console.bluemix.net/docs/services/text-to-speech/http.html#format).
-	Accept string `json:"accept,omitempty"`
+	Accept string `json:"Accept,omitempty"`
 
     // Indicates whether user set optional parameter Accept
     IsAcceptSet bool

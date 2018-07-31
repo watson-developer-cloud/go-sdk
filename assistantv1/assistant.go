@@ -3471,7 +3471,7 @@ type CreateDialogNode struct {
 	Title string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
-	NodeType string `json:"node_type,omitempty"`
+	NodeType string `json:"type,omitempty"`
 
 	// How an `event_handler` node is processed.
 	EventName string `json:"event_name,omitempty"`
@@ -3562,7 +3562,7 @@ type CreateDialogNodeOptions struct {
     IsTitleSet bool
 
 	// How the dialog node is processed.
-	NodeType string `json:"node_type,omitempty"`
+	NodeType string `json:"type,omitempty"`
 
     // Indicates whether user set optional parameter NodeType
     IsNodeTypeSet bool
@@ -4087,7 +4087,7 @@ type CreateValue struct {
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
-	ValueType string `json:"value_type,omitempty"`
+	ValueType string `json:"type,omitempty"`
 }
 
 // CreateValueOptions : The createValue options.
@@ -4121,7 +4121,7 @@ type CreateValueOptions struct {
     IsPatternsSet bool
 
 	// Specifies the type of value.
-	ValueType string `json:"value_type,omitempty"`
+	ValueType string `json:"type,omitempty"`
 
     // Indicates whether user set optional parameter ValueType
     IsValueTypeSet bool
@@ -4714,7 +4714,7 @@ func (options *DeleteWorkspaceOptions) SetHeaders(param map[string]string) *Dele
 type DialogNode struct {
 
 	// The dialog node ID.
-	DialogNodeID string `json:"dialog_node_id"`
+	DialogNodeID string `json:"dialog_node"`
 
 	// The description of the dialog node.
 	Description string `json:"description,omitempty"`
@@ -4753,7 +4753,7 @@ type DialogNode struct {
 	Title string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
-	NodeType string `json:"node_type,omitempty"`
+	NodeType string `json:"type,omitempty"`
 
 	// How an `event_handler` node is processed.
 	EventName string `json:"event_name,omitempty"`
@@ -4781,7 +4781,7 @@ type DialogNodeAction struct {
 	Name string `json:"name"`
 
 	// The type of action to invoke.
-	ActionType string `json:"action_type,omitempty"`
+	ActionType string `json:"type,omitempty"`
 
 	// A map of key/value pairs to be provided to the action.
 	Parameters interface{} `json:"parameters,omitempty"`
@@ -4983,7 +4983,7 @@ type DialogSuggestionValue struct {
 type Entity struct {
 
 	// The name of the entity.
-	EntityName string `json:"entity_name"`
+	EntityName string `json:"entity"`
 
 	// The timestamp for creation of the entity.
 	Created strfmt.DateTime `json:"created,omitempty"`
@@ -5015,7 +5015,7 @@ type EntityCollection struct {
 type EntityExport struct {
 
 	// The name of the entity.
-	EntityName string `json:"entity_name"`
+	EntityName string `json:"entity"`
 
 	// The timestamp for creation of the entity.
 	Created strfmt.DateTime `json:"created,omitempty"`
@@ -5040,10 +5040,10 @@ type EntityExport struct {
 type EntityMention struct {
 
 	// The text of the user input example.
-	ExampleText string `json:"example_text"`
+	ExampleText string `json:"text"`
 
 	// The name of the intent.
-	IntentName string `json:"intent_name"`
+	IntentName string `json:"intent"`
 
 	// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input text.
 	Location []int64 `json:"location"`
@@ -5063,7 +5063,7 @@ type EntityMentionCollection struct {
 type Example struct {
 
 	// The text of the user input example.
-	ExampleText string `json:"example_text"`
+	ExampleText string `json:"text"`
 
 	// The timestamp for creation of the example.
 	Created strfmt.DateTime `json:"created,omitempty"`
@@ -5594,7 +5594,7 @@ type InputData struct {
 type Intent struct {
 
 	// The name of the intent.
-	IntentName string `json:"intent_name"`
+	IntentName string `json:"intent"`
 
 	// The timestamp for creation of the intent.
 	Created strfmt.DateTime `json:"created,omitempty"`
@@ -5620,7 +5620,7 @@ type IntentCollection struct {
 type IntentExport struct {
 
 	// The name of the intent.
-	IntentName string `json:"intent_name"`
+	IntentName string `json:"intent"`
 
 	// The timestamp for creation of the intent.
 	Created strfmt.DateTime `json:"created,omitempty"`
@@ -6985,7 +6985,7 @@ type RuntimeIntent struct {
 type Synonym struct {
 
 	// The text of the synonym.
-	SynonymText string `json:"synonym_text"`
+	SynonymText string `json:"synonym"`
 
 	// The timestamp for creation of the synonym.
 	Created strfmt.DateTime `json:"created,omitempty"`
@@ -7018,7 +7018,7 @@ type UpdateCounterexampleOptions struct {
 	Text string `json:"text"`
 
 	// The text of a user input counterexample.
-	NewText string `json:"new_text,omitempty"`
+	NewText string `json:"text,omitempty"`
 
     // Indicates whether user set optional parameter NewText
     IsNewTextSet bool
@@ -7070,109 +7070,109 @@ type UpdateDialogNodeOptions struct {
 	DialogNode string `json:"dialog_node"`
 
 	// How the dialog node is processed.
-	NodeType string `json:"node_type,omitempty"`
+	NodeType string `json:"type,omitempty"`
 
     // Indicates whether user set optional parameter NodeType
     IsNodeTypeSet bool
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
-	NewConditions string `json:"new_conditions,omitempty"`
+	NewConditions string `json:"conditions,omitempty"`
 
     // Indicates whether user set optional parameter NewConditions
     IsNewConditionsSet bool
 
 	// An array of objects describing any actions to be invoked by the dialog node.
-	NewActions []DialogNodeAction `json:"new_actions,omitempty"`
+	NewActions []DialogNodeAction `json:"actions,omitempty"`
 
     // Indicates whether user set optional parameter NewActions
     IsNewActionsSet bool
 
 	// The ID of the previous sibling dialog node.
-	NewPreviousSibling string `json:"new_previous_sibling,omitempty"`
+	NewPreviousSibling string `json:"previous_sibling,omitempty"`
 
     // Indicates whether user set optional parameter NewPreviousSibling
     IsNewPreviousSiblingSet bool
 
 	// The context for the dialog node.
-	NewContext interface{} `json:"new_context,omitempty"`
+	NewContext interface{} `json:"context,omitempty"`
 
     // Indicates whether user set optional parameter NewContext
     IsNewContextSet bool
 
 	// The location in the dialog context where output is stored.
-	NewVariable string `json:"new_variable,omitempty"`
+	NewVariable string `json:"variable,omitempty"`
 
     // Indicates whether user set optional parameter NewVariable
     IsNewVariableSet bool
 
 	// A label that can be displayed externally to describe the purpose of the node to users.
-	NewUserLabel string `json:"new_user_label,omitempty"`
+	NewUserLabel string `json:"user_label,omitempty"`
 
     // Indicates whether user set optional parameter NewUserLabel
     IsNewUserLabelSet bool
 
 	// The metadata for the dialog node.
-	NewMetadata interface{} `json:"new_metadata,omitempty"`
+	NewMetadata interface{} `json:"metadata,omitempty"`
 
     // Indicates whether user set optional parameter NewMetadata
     IsNewMetadataSet bool
 
 	// The alias used to identify the dialog node. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 64 characters.
-	NewTitle string `json:"new_title,omitempty"`
+	NewTitle string `json:"title,omitempty"`
 
     // Indicates whether user set optional parameter NewTitle
     IsNewTitleSet bool
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
-	NewDescription string `json:"new_description,omitempty"`
+	NewDescription string `json:"description,omitempty"`
 
     // Indicates whether user set optional parameter NewDescription
     IsNewDescriptionSet bool
 
 	// Whether this dialog node can be returned to after a digression.
-	NewDigressOut string `json:"new_digress_out,omitempty"`
+	NewDigressOut string `json:"digress_out,omitempty"`
 
     // Indicates whether user set optional parameter NewDigressOut
     IsNewDigressOutSet bool
 
 	// How an `event_handler` node is processed.
-	NewEventName string `json:"new_event_name,omitempty"`
+	NewEventName string `json:"event_name,omitempty"`
 
     // Indicates whether user set optional parameter NewEventName
     IsNewEventNameSet bool
 
 	// Whether the user can digress to top-level nodes while filling out slots.
-	NewDigressOutSlots string `json:"new_digress_out_slots,omitempty"`
+	NewDigressOutSlots string `json:"digress_out_slots,omitempty"`
 
     // Indicates whether user set optional parameter NewDigressOutSlots
     IsNewDigressOutSlotsSet bool
 
 	// The next step to be executed in dialog processing.
-	NewNextStep DialogNodeNextStep `json:"new_next_step,omitempty"`
+	NewNextStep DialogNodeNextStep `json:"next_step,omitempty"`
 
     // Indicates whether user set optional parameter NewNextStep
     IsNewNextStepSet bool
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
-	NewOutput DialogNodeOutput `json:"new_output,omitempty"`
+	NewOutput DialogNodeOutput `json:"output,omitempty"`
 
     // Indicates whether user set optional parameter NewOutput
     IsNewOutputSet bool
 
 	// Whether this top-level dialog node can be digressed into.
-	NewDigressIn string `json:"new_digress_in,omitempty"`
+	NewDigressIn string `json:"digress_in,omitempty"`
 
     // Indicates whether user set optional parameter NewDigressIn
     IsNewDigressInSet bool
 
 	// The ID of the parent dialog node.
-	NewParent string `json:"new_parent,omitempty"`
+	NewParent string `json:"parent,omitempty"`
 
     // Indicates whether user set optional parameter NewParent
     IsNewParentSet bool
 
 	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
-	NewDialogNode string `json:"new_dialog_node,omitempty"`
+	NewDialogNode string `json:"dialog_node,omitempty"`
 
     // Indicates whether user set optional parameter NewDialogNode
     IsNewDialogNodeSet bool
@@ -7343,31 +7343,31 @@ type UpdateEntityOptions struct {
 	Entity string `json:"entity"`
 
 	// Whether to use fuzzy matching for the entity.
-	NewFuzzyMatch bool `json:"new_fuzzy_match,omitempty"`
+	NewFuzzyMatch bool `json:"fuzzy_match,omitempty"`
 
     // Indicates whether user set optional parameter NewFuzzyMatch
     IsNewFuzzyMatchSet bool
 
 	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
-	NewEntity string `json:"new_entity,omitempty"`
+	NewEntity string `json:"entity,omitempty"`
 
     // Indicates whether user set optional parameter NewEntity
     IsNewEntitySet bool
 
 	// Any metadata related to the entity.
-	NewMetadata interface{} `json:"new_metadata,omitempty"`
+	NewMetadata interface{} `json:"metadata,omitempty"`
 
     // Indicates whether user set optional parameter NewMetadata
     IsNewMetadataSet bool
 
 	// An array of entity values.
-	NewValues []CreateValue `json:"new_values,omitempty"`
+	NewValues []CreateValue `json:"values,omitempty"`
 
     // Indicates whether user set optional parameter NewValues
     IsNewValuesSet bool
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
-	NewDescription string `json:"new_description,omitempty"`
+	NewDescription string `json:"description,omitempty"`
 
     // Indicates whether user set optional parameter NewDescription
     IsNewDescriptionSet bool
@@ -7450,13 +7450,13 @@ type UpdateExampleOptions struct {
 	Text string `json:"text"`
 
 	// The text of the user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
-	NewText string `json:"new_text,omitempty"`
+	NewText string `json:"text,omitempty"`
 
     // Indicates whether user set optional parameter NewText
     IsNewTextSet bool
 
 	// An array of contextual entity mentions.
-	NewMentions []Mentions `json:"new_mentions,omitempty"`
+	NewMentions []Mentions `json:"mentions,omitempty"`
 
     // Indicates whether user set optional parameter NewMentions
     IsNewMentionsSet bool
@@ -7522,19 +7522,19 @@ type UpdateIntentOptions struct {
 	Intent string `json:"intent"`
 
 	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
-	NewIntent string `json:"new_intent,omitempty"`
+	NewIntent string `json:"intent,omitempty"`
 
     // Indicates whether user set optional parameter NewIntent
     IsNewIntentSet bool
 
 	// An array of user input examples for the intent.
-	NewExamples []CreateExample `json:"new_examples,omitempty"`
+	NewExamples []CreateExample `json:"examples,omitempty"`
 
     // Indicates whether user set optional parameter NewExamples
     IsNewExamplesSet bool
 
 	// The description of the intent.
-	NewDescription string `json:"new_description,omitempty"`
+	NewDescription string `json:"description,omitempty"`
 
     // Indicates whether user set optional parameter NewDescription
     IsNewDescriptionSet bool
@@ -7606,7 +7606,7 @@ type UpdateSynonymOptions struct {
 	Synonym string `json:"synonym"`
 
 	// The text of the synonym. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	NewSynonym string `json:"new_synonym,omitempty"`
+	NewSynonym string `json:"synonym,omitempty"`
 
     // Indicates whether user set optional parameter NewSynonym
     IsNewSynonymSet bool
@@ -7675,31 +7675,31 @@ type UpdateValueOptions struct {
 	Value string `json:"value"`
 
 	// Specifies the type of value.
-	ValueType string `json:"value_type,omitempty"`
+	ValueType string `json:"type,omitempty"`
 
     // Indicates whether user set optional parameter ValueType
     IsValueTypeSet bool
 
 	// An array of synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following resrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	NewSynonyms []string `json:"new_synonyms,omitempty"`
+	NewSynonyms []string `json:"synonyms,omitempty"`
 
     // Indicates whether user set optional parameter NewSynonyms
     IsNewSynonymsSet bool
 
 	// Any metadata related to the entity value.
-	NewMetadata interface{} `json:"new_metadata,omitempty"`
+	NewMetadata interface{} `json:"metadata,omitempty"`
 
     // Indicates whether user set optional parameter NewMetadata
     IsNewMetadataSet bool
 
 	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	NewValue string `json:"new_value,omitempty"`
+	NewValue string `json:"value,omitempty"`
 
     // Indicates whether user set optional parameter NewValue
     IsNewValueSet bool
 
 	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to specify a pattern, see the [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
-	NewPatterns []string `json:"new_patterns,omitempty"`
+	NewPatterns []string `json:"patterns,omitempty"`
 
     // Indicates whether user set optional parameter NewPatterns
     IsNewPatternsSet bool
@@ -7843,7 +7843,7 @@ type UpdateWorkspaceOptions struct {
     IsSystemSettingsSet bool
 
 	// Whether the new data is to be appended to the existing data in the workspace. If **append**=`false`, elements included in the new data completely replace the corresponding existing elements, including all subelements. For example, if the new data includes **entities** and **append**=`false`, all existing entities in the workspace are discarded and replaced with the new entities. If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new data collide with existing elements, the update request fails.
-	AppendVar bool `json:"append_var,omitempty"`
+	AppendVar bool `json:"append,omitempty"`
 
     // Indicates whether user set optional parameter AppendVar
     IsAppendVarSet bool
@@ -7952,7 +7952,7 @@ func (options *UpdateWorkspaceOptions) SetHeaders(param map[string]string) *Upda
 type Value struct {
 
 	// The text of the entity value.
-	ValueText string `json:"value_text"`
+	ValueText string `json:"value"`
 
 	// Any metadata related to the entity value.
 	Metadata interface{} `json:"metadata,omitempty"`
@@ -7970,7 +7970,7 @@ type Value struct {
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
-	ValueType string `json:"value_type"`
+	ValueType string `json:"type"`
 }
 
 // ValueCollection : ValueCollection struct
@@ -7987,7 +7987,7 @@ type ValueCollection struct {
 type ValueExport struct {
 
 	// The text of the entity value.
-	ValueText string `json:"value_text"`
+	ValueText string `json:"value"`
 
 	// Any metadata related to the entity value.
 	Metadata interface{} `json:"metadata,omitempty"`
@@ -8005,7 +8005,7 @@ type ValueExport struct {
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
-	ValueType string `json:"value_type"`
+	ValueType string `json:"type"`
 }
 
 // Workspace : Workspace struct

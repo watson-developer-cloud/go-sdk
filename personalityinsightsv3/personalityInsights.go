@@ -257,7 +257,7 @@ type ConsumptionPreferencesCategory struct {
 type Content struct {
 
 	// An array of `ContentItem` objects that provides the text that is to be analyzed.
-	ContentItems []ContentItem `json:"content_items"`
+	ContentItems []ContentItem `json:"contentItems"`
 }
 
 // ContentItem : ContentItem struct
@@ -338,16 +338,16 @@ type ProfileOptions struct {
     IsBodySet bool
 
 	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example, 'text/html;charset=utf-8'.
-	ContentType string `json:"content_type"`
+	ContentType string `json:"Content-Type"`
 
 	// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The effect of the **Content-Language** parameter depends on the **Content-Type** parameter. When **Content-Type** is `text/plain` or `text/html`, **Content-Language** is the only way to specify the language. When **Content-Type** is `application/json`, **Content-Language** overrides a language specified with the `language` parameter of a `ContentItem` object, and content items that specify a different language are ignored; omit this parameter to base the language on the specification of the content items. You can specify any combination of languages for **Content-Language** and **Accept-Language**.
-	ContentLanguage string `json:"content_language,omitempty"`
+	ContentLanguage string `json:"Content-Language,omitempty"`
 
     // Indicates whether user set optional parameter ContentLanguage
     IsContentLanguageSet bool
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input and response content.
-	AcceptLanguage string `json:"accept_language,omitempty"`
+	AcceptLanguage string `json:"Accept-Language,omitempty"`
 
     // Indicates whether user set optional parameter AcceptLanguage
     IsAcceptLanguageSet bool

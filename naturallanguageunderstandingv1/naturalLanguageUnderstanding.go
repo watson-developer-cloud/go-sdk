@@ -623,7 +623,7 @@ type EntitiesOptions struct {
 type EntitiesResult struct {
 
 	// Entity type.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// The name of the entity.
 	Text string `json:"text,omitempty"`
@@ -813,7 +813,7 @@ type RelationEntity struct {
 	Text string `json:"text,omitempty"`
 
 	// Entity type.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 }
 
 // RelationsOptions : An option specifying if the relationships found between entities in the analyzed content should be returned.
@@ -833,7 +833,7 @@ type RelationsResult struct {
 	Sentence string `json:"sentence,omitempty"`
 
 	// The type of the relation.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// The extracted relation objects from the text.
 	Arguments []RelationArgument `json:"arguments,omitempty"`
@@ -855,7 +855,7 @@ type SemanticRolesAction struct {
 type SemanticRolesEntity struct {
 
 	// Entity type.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// The entity text.
 	Text string `json:"text,omitempty"`

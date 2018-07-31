@@ -748,7 +748,7 @@ type ListModelsOptions struct {
     IsTargetSet bool
 
 	// If the default parameter isn't specified, the service will return all models (default and non-default) for each language pair. To return only default models, set this to `true`. To return only non-default models, set this to `false`. There is exactly one default model per language pair, the IBM provided base model.
-	DefaultModels bool `json:"default_models,omitempty"`
+	DefaultModels bool `json:"default,omitempty"`
 
     // Indicates whether user set optional parameter DefaultModels
     IsDefaultModelsSet bool
@@ -861,7 +861,7 @@ func (options *TranslateOptions) SetHeaders(param map[string]string) *TranslateO
 type Translation struct {
 
 	// Translation output in UTF-8.
-	TranslationOutput string `json:"translation_output"`
+	TranslationOutput string `json:"translation"`
 }
 
 // TranslationModel : Response payload for models.

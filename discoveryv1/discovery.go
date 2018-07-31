@@ -4168,7 +4168,7 @@ type CredentialDetails struct {
 	OrganizationURL string `json:"organization_url,omitempty"`
 
 	// The **site_collection.path** of the source that these credentials connect to. Only valid, and required, with a **source_type** of `sharepoint`.
-	SiteCollectionPath string `json:"site_collection_path,omitempty"`
+	SiteCollectionPath string `json:"site_collection.path,omitempty"`
 
 	// The **client_secret** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying **credentials**.
 	ClientSecret string `json:"client_secret,omitempty"`
@@ -4775,7 +4775,7 @@ type Enrichment struct {
 	Overwrite bool `json:"overwrite,omitempty"`
 
 	// Name of the enrichment service to call. Current options are `natural_language_understanding` and `elements`. When using `natual_language_understanding`, the **options** object must contain Natural Language Understanding options. When using `elements` the **options** object must contain Element Classification options. Additionally, when using the `elements` enrichment the configuration specified and files ingested must meet all the criteria specified in [the documentation](https://console.bluemix.net/docs/services/discovery/element-classification.html) Previous API versions also supported `alchemy_language`.
-	EnrichmentName string `json:"enrichment_name"`
+	EnrichmentName string `json:"enrichment"`
 
 	// If true, then most errors generated during the enrichment process will be treated as warnings and will not cause the document to fail processing.
 	IgnoreDownstreamErrors bool `json:"ignore_downstream_errors,omitempty"`
@@ -4895,7 +4895,7 @@ type FederatedQueryNoticesOptions struct {
     IsCountSet bool
 
 	// A comma separated list of the portion of the document hierarchy to return.
-	ReturnFields []string `json:"return_fields,omitempty"`
+	ReturnFields []string `json:"return,omitempty"`
 
     // Indicates whether user set optional parameter ReturnFields
     IsReturnFieldsSet bool
@@ -4919,7 +4919,7 @@ type FederatedQueryNoticesOptions struct {
     IsHighlightSet bool
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
-	DeduplicateField string `json:"deduplicate_field,omitempty"`
+	DeduplicateField string `json:"deduplicate.field,omitempty"`
 
     // Indicates whether user set optional parameter DeduplicateField
     IsDeduplicateFieldSet bool
@@ -4931,13 +4931,13 @@ type FederatedQueryNoticesOptions struct {
     IsSimilarSet bool
 
 	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
-	SimilarDocumentIds []string `json:"similar_document_ids,omitempty"`
+	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
     // Indicates whether user set optional parameter SimilarDocumentIds
     IsSimilarDocumentIdsSet bool
 
 	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
-	SimilarFields []string `json:"similar_fields,omitempty"`
+	SimilarFields []string `json:"similar.fields,omitempty"`
 
     // Indicates whether user set optional parameter SimilarFields
     IsSimilarFieldsSet bool
@@ -5103,7 +5103,7 @@ type FederatedQueryOptions struct {
     IsCountSet bool
 
 	// A comma separated list of the portion of the document hierarchy to return.
-	ReturnFields []string `json:"return_fields,omitempty"`
+	ReturnFields []string `json:"return,omitempty"`
 
     // Indicates whether user set optional parameter ReturnFields
     IsReturnFieldsSet bool
@@ -5133,7 +5133,7 @@ type FederatedQueryOptions struct {
     IsDeduplicateSet bool
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
-	DeduplicateField string `json:"deduplicate_field,omitempty"`
+	DeduplicateField string `json:"deduplicate.field,omitempty"`
 
     // Indicates whether user set optional parameter DeduplicateField
     IsDeduplicateFieldSet bool
@@ -5145,13 +5145,13 @@ type FederatedQueryOptions struct {
     IsSimilarSet bool
 
 	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
-	SimilarDocumentIds []string `json:"similar_document_ids,omitempty"`
+	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
     // Indicates whether user set optional parameter SimilarDocumentIds
     IsSimilarDocumentIdsSet bool
 
 	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
-	SimilarFields []string `json:"similar_fields,omitempty"`
+	SimilarFields []string `json:"similar.fields,omitempty"`
 
     // Indicates whether user set optional parameter SimilarFields
     IsSimilarFieldsSet bool
@@ -5163,19 +5163,19 @@ type FederatedQueryOptions struct {
     IsPassagesSet bool
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
-	PassagesFields []string `json:"passages_fields,omitempty"`
+	PassagesFields []string `json:"passages.fields,omitempty"`
 
     // Indicates whether user set optional parameter PassagesFields
     IsPassagesFieldsSet bool
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
-	PassagesCount int64 `json:"passages_count,omitempty"`
+	PassagesCount int64 `json:"passages.count,omitempty"`
 
     // Indicates whether user set optional parameter PassagesCount
     IsPassagesCountSet bool
 
 	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
-	PassagesCharacters int64 `json:"passages_characters,omitempty"`
+	PassagesCharacters int64 `json:"passages.characters,omitempty"`
 
     // Indicates whether user set optional parameter PassagesCharacters
     IsPassagesCharactersSet bool
@@ -5340,10 +5340,10 @@ func (options *FederatedQueryOptions) SetHeaders(param map[string]string) *Feder
 type Field struct {
 
 	// The name of the field.
-	FieldName string `json:"field_name,omitempty"`
+	FieldName string `json:"field,omitempty"`
 
 	// The type of the field.
-	FieldType string `json:"field_type,omitempty"`
+	FieldType string `json:"type,omitempty"`
 }
 
 // FontSetting : FontSetting struct
@@ -6254,7 +6254,7 @@ type PdfSettings struct {
 type QueryAggregation struct {
 
 	// The type of aggregation command used. For example: term, filter, max, min, etc.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	Results []AggregationResult `json:"results,omitempty"`
 
@@ -6279,7 +6279,7 @@ type QueryEntitiesEntity struct {
 	Text string `json:"text,omitempty"`
 
 	// The type of the specified entity.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 }
 
 // QueryEntitiesOptions : The queryEntities options.
@@ -6399,7 +6399,7 @@ type QueryEntitiesResponseItem struct {
 	Text string `json:"text,omitempty"`
 
 	// The type of the result entity.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// List of different evidentiary items to support the result.
 	Evidence []QueryEvidence `json:"evidence,omitempty"`
@@ -6428,7 +6428,7 @@ type QueryEvidence struct {
 type QueryEvidenceEntity struct {
 
 	// The entity type for this entity. Possible types vary based on model used.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// The original text of this entity as found in the evidence field.
 	Text string `json:"text,omitempty"`
@@ -6496,7 +6496,7 @@ type QueryNoticesOptions struct {
     IsCountSet bool
 
 	// A comma separated list of the portion of the document hierarchy to return.
-	ReturnFields []string `json:"return_fields,omitempty"`
+	ReturnFields []string `json:"return,omitempty"`
 
     // Indicates whether user set optional parameter ReturnFields
     IsReturnFieldsSet bool
@@ -6520,25 +6520,25 @@ type QueryNoticesOptions struct {
     IsHighlightSet bool
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
-	PassagesFields []string `json:"passages_fields,omitempty"`
+	PassagesFields []string `json:"passages.fields,omitempty"`
 
     // Indicates whether user set optional parameter PassagesFields
     IsPassagesFieldsSet bool
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
-	PassagesCount int64 `json:"passages_count,omitempty"`
+	PassagesCount int64 `json:"passages.count,omitempty"`
 
     // Indicates whether user set optional parameter PassagesCount
     IsPassagesCountSet bool
 
 	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
-	PassagesCharacters int64 `json:"passages_characters,omitempty"`
+	PassagesCharacters int64 `json:"passages.characters,omitempty"`
 
     // Indicates whether user set optional parameter PassagesCharacters
     IsPassagesCharactersSet bool
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
-	DeduplicateField string `json:"deduplicate_field,omitempty"`
+	DeduplicateField string `json:"deduplicate.field,omitempty"`
 
     // Indicates whether user set optional parameter DeduplicateField
     IsDeduplicateFieldSet bool
@@ -6550,13 +6550,13 @@ type QueryNoticesOptions struct {
     IsSimilarSet bool
 
 	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
-	SimilarDocumentIds []string `json:"similar_document_ids,omitempty"`
+	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
     // Indicates whether user set optional parameter SimilarDocumentIds
     IsSimilarDocumentIdsSet bool
 
 	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
-	SimilarFields []string `json:"similar_fields,omitempty"`
+	SimilarFields []string `json:"similar.fields,omitempty"`
 
     // Indicates whether user set optional parameter SimilarFields
     IsSimilarFieldsSet bool
@@ -6804,7 +6804,7 @@ type QueryOptions struct {
     IsCountSet bool
 
 	// A comma separated list of the portion of the document hierarchy to return.
-	ReturnFields []string `json:"return_fields,omitempty"`
+	ReturnFields []string `json:"return,omitempty"`
 
     // Indicates whether user set optional parameter ReturnFields
     IsReturnFieldsSet bool
@@ -6828,19 +6828,19 @@ type QueryOptions struct {
     IsHighlightSet bool
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
-	PassagesFields []string `json:"passages_fields,omitempty"`
+	PassagesFields []string `json:"passages.fields,omitempty"`
 
     // Indicates whether user set optional parameter PassagesFields
     IsPassagesFieldsSet bool
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
-	PassagesCount int64 `json:"passages_count,omitempty"`
+	PassagesCount int64 `json:"passages.count,omitempty"`
 
     // Indicates whether user set optional parameter PassagesCount
     IsPassagesCountSet bool
 
 	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
-	PassagesCharacters int64 `json:"passages_characters,omitempty"`
+	PassagesCharacters int64 `json:"passages.characters,omitempty"`
 
     // Indicates whether user set optional parameter PassagesCharacters
     IsPassagesCharactersSet bool
@@ -6852,7 +6852,7 @@ type QueryOptions struct {
     IsDeduplicateSet bool
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
-	DeduplicateField string `json:"deduplicate_field,omitempty"`
+	DeduplicateField string `json:"deduplicate.field,omitempty"`
 
     // Indicates whether user set optional parameter DeduplicateField
     IsDeduplicateFieldSet bool
@@ -6864,19 +6864,19 @@ type QueryOptions struct {
     IsSimilarSet bool
 
 	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
-	SimilarDocumentIds []string `json:"similar_document_ids,omitempty"`
+	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
     // Indicates whether user set optional parameter SimilarDocumentIds
     IsSimilarDocumentIdsSet bool
 
 	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
-	SimilarFields []string `json:"similar_fields,omitempty"`
+	SimilarFields []string `json:"similar.fields,omitempty"`
 
     // Indicates whether user set optional parameter SimilarFields
     IsSimilarFieldsSet bool
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
-	LoggingOptOut bool `json:"logging_opt_out,omitempty"`
+	LoggingOptOut bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
     // Indicates whether user set optional parameter LoggingOptOut
     IsLoggingOptOutSet bool
@@ -7079,7 +7079,7 @@ type QueryRelationsEntity struct {
 	Text string `json:"text,omitempty"`
 
 	// The type of the specified entity.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// If false, implicit querying is performed. The default is `false`.
 	Exact bool `json:"exact,omitempty"`
@@ -7219,7 +7219,7 @@ func (options *QueryRelationsOptions) SetHeaders(param map[string]string) *Query
 type QueryRelationsRelationship struct {
 
 	// The identified relationship type.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// The number of times the relationship is mentioned.
 	Frequency int64 `json:"frequency,omitempty"`
@@ -7297,7 +7297,7 @@ type SegmentSettings struct {
 type Source struct {
 
 	// The type of source to connect to. -  `box` indicates the configuration is to connect an instance of Enterprise Box. -  `salesforce` indicates the configuration is to connect to Salesforce. -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// The **credential_id** of the credentials to use to connect to the source. Credentials are defined using the **credentials** method. The **source_type** of the credentials used must match the **type** field specified in this object.
 	CredentialID string `json:"credential_id,omitempty"`

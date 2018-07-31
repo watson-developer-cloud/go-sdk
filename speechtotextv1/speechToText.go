@@ -2411,10 +2411,10 @@ type AddAudioOptions struct {
 	AudioResource io.ReadCloser `json:"audio_resource"`
 
 	// The type of the input.
-	ContentType string `json:"content_type"`
+	ContentType string `json:"Content-Type"`
 
 	// For an archive-type resource, specifies the format of the audio files contained in the archive file. The parameter accepts all of the audio formats supported for use with speech recognition, including the `rate`, `channels`, and `endianness` parameters that are used with some formats. For a complete list of supported audio formats, see [Audio formats](/docs/services/speech-to-text/input.html#formats).
-	ContainedContentType string `json:"contained_content_type,omitempty"`
+	ContainedContentType string `json:"Contained-Content-Type,omitempty"`
 
     // Indicates whether user set optional parameter ContainedContentType
     IsContainedContentTypeSet bool
@@ -2771,7 +2771,7 @@ func (options *AddWordsOptions) SetHeaders(param map[string]string) *AddWordsOpt
 type AudioDetails struct {
 
 	// The type of the audio resource: * `audio` for an individual audio file * `archive` for an archive (**.zip** or **.tar.gz**) file that contains audio files * `undetermined` for a resource that the service cannot validate (for example, if the user mistakenly passes a file that does not contain audio, such as a JPEG file).
-	TypeVar string `json:"type_var,omitempty"`
+	TypeVar string `json:"type,omitempty"`
 
 	// **For an audio-type resource,** the codec in which the audio is encoded. Omitted for an archive-type resource.
 	Codec string `json:"codec,omitempty"`
@@ -2962,7 +2962,7 @@ type CreateJobOptions struct {
 	Audio io.ReadCloser `json:"audio,omitempty"`
 
 	// The type of the input.
-	ContentType string `json:"content_type"`
+	ContentType string `json:"Content-Type"`
 
 	// The identifier of the model that is to be used for the recognition request or, for the **Create a session** method, with the new session.
 	Model string `json:"model,omitempty"`
@@ -4144,7 +4144,7 @@ type RecognizeOptions struct {
 	Audio io.ReadCloser `json:"audio,omitempty"`
 
 	// The type of the input.
-	ContentType string `json:"content_type"`
+	ContentType string `json:"Content-Type"`
 
 	// The identifier of the model that is to be used for the recognition request or, for the **Create a session** method, with the new session.
 	Model string `json:"model,omitempty"`
@@ -4588,7 +4588,7 @@ type SpeakerLabelsResult struct {
 	Confidence float32 `json:"confidence"`
 
 	// An indication of whether the service might further change word and speaker-label results. A value of `true` means that the service guarantees not to send any further updates for the current or any preceding results; `false` means that the service might send further updates to the results.
-	FinalResults bool `json:"final_results"`
+	FinalResults bool `json:"final"`
 }
 
 // SpeechModel : SpeechModel struct
@@ -4640,7 +4640,7 @@ type SpeechRecognitionAlternative struct {
 type SpeechRecognitionResult struct {
 
 	// An indication of whether the transcription results are final. If `true`, the results for this utterance are not updated further; no additional results are sent for a `result_index` once its results are indicated as final.
-	FinalResults bool `json:"final_results"`
+	FinalResults bool `json:"final"`
 
 	// An array of alternative transcripts. The `alternatives` array can include additional requested output such as word confidence or timestamps.
 	Alternatives []SpeechRecognitionAlternative `json:"alternatives"`
