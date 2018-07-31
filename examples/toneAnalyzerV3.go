@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	// Instantiate the Watson Language Translator service
+	// Instantiate the Watson Tone Analyzer service
 	toneAnalyzer, toneAnalyzerErr := toneanalyzerv3.NewToneAnalyzerV3(watson.Credentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2017-09-21",
@@ -23,21 +23,23 @@ func main() {
 
 	/* TONE CHAT */
 
-	utterances := toneanalyzerv3.ToneChatInput{
-		Utterances: []toneanalyzerv3.Utterance{
-			{
-				Text: "Hello World",
-				User: "Watson",
-			},
-			{
-				Text: "World Hello",
-				User: "John Doe",
-			},
+	utterances := []toneanalyzerv3.Utterance{
+		{
+			Text: "Hello World",
+			User: "Watson",
+		},
+		{
+			Text: "World Hello",
+			User: "John Doe",
 		},
 	}
 
-	// Call the toneAnalyzer Tone Chat method
-	toneChat, toneChatErr := toneAnalyzer.ToneChat(&utterances, "en", "en")
+	toneChatOptions := toneanalyzerv3.NewToneChatOptions(utterances).
+		SetAcceptLanguage("en").
+		SetContentLanguage("en")
+
+	// Call the toneAnalyzer ToneChat method
+	toneChat, toneChatErr := toneAnalyzer.ToneChat(toneChatOptions)
 
 	// Check successful call
 	if toneChatErr != nil {

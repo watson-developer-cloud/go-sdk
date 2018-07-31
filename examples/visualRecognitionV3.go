@@ -33,8 +33,17 @@ func main() {
 		return
 	}
 
-	// Call the visual recognition Classify  method
-	classify, classifyErr := visualRecognition.Classify(*imageFile, "en", "https://www.readersdigest.ca/wp-content/uploads/2011/01/4-ways-cheer-up-depressed-cat.jpg", 0.5, []string{"IBM"}, []string{"default"}, "JPEG")
+	classifyOptions := visualrecognitionv3.NewClassifyOptions().
+		SetImagesFile(*imageFile).
+		SetAcceptLanguage("en").
+		SetURL("https://www.readersdigest.ca/wp-content/uploads/2011/01/4-ways-cheer-up-depressed-cat.jpg").
+		SetThreshold(0.5).
+		SetOwners([]string{ "IBM" }).
+		SetClassifierIds([]string{ "default" }).
+		SetImagesFileContentType("JPEG")
+
+	// Call the visual recognition Classify method
+	classify, classifyErr := visualRecognition.Classify(classifyOptions)
 
 	// Check successful call
 	if classifyErr != nil {
@@ -51,5 +60,4 @@ func main() {
 		// Print result
 		fmt.Println(classifyResult)
 	}
-
 }

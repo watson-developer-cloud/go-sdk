@@ -24,8 +24,12 @@ func main() {
 
 	/* LIST ENVIRONMENTS */
 
-	// Call the discovery List Environments method
-	listEnvironment, listEnvironmentErr := discovery.ListEnvironments("Watson Discovery Environment")
+	// Create a new ListEnvironmentsOptions and set optional parameter Name
+	listEnvironmentsOptions := discoveryv1.NewListEnvironmentsOptions().
+		SetName("Watson Discovery Environment")
+
+	// Call the discovery ListEnvironments method
+	listEnvironment, listEnvironmentErr := discovery.ListEnvironments(listEnvironmentsOptions)
 
 	// Check successful call
 	if listEnvironmentErr != nil {

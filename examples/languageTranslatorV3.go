@@ -23,13 +23,16 @@ func main() {
 
 	/* TRANSLATE */
 
-	entryTranslate := languagetranslatorv3.TranslateRequest{
-		Text: []string {"Let's translate this message"},
-		ModelID: "es-en",
+	textToTranslate := []string{
+		"Let's translate this message",
+		"And this one",
 	}
 
+	translateOptions := languagetranslatorv3.NewTranslateOptions(textToTranslate).
+		SetModelID("es-en")
+
 	// Call the languageTranslator Translate method
-	translate, translateErr := languageTranslator.Translate(&entryTranslate)
+	translate, translateErr := languageTranslator.Translate(translateOptions)
 
 	// Check successful call
 	if translateErr != nil {
@@ -50,8 +53,10 @@ func main() {
 
 	/* LIST IDENTIFIABLE LANGUAGES */
 
-	// Call the languageTranslator List Identifiable Languages method
-	listLanguage, listLanguageErr := languageTranslator.ListIdentifiableLanguages()
+	listIdentifiableLanguagesOptions := languagetranslatorv3.NewListIdentifiableLanguagesOptions()
+
+	// Call the languageTranslator ListIdentifiableLanguages method
+	listLanguage, listLanguageErr := languageTranslator.ListIdentifiableLanguages(listIdentifiableLanguagesOptions)
 
 	// Check successful call
 	if listLanguageErr != nil {
@@ -72,10 +77,11 @@ func main() {
 
 	/* IDENTIFY */
 
-	entryIdentify := "What language is this message in?"
+	textToIdentify := "What language is this message in?"
+	identifyOptions := languagetranslatorv3.NewIdentifyOptions(textToIdentify)
 
 	// Call the languageTranslator Identify method
-	identify, identifyErr := languageTranslator.Identify(&entryIdentify)
+	identify, identifyErr := languageTranslator.Identify(identifyOptions)
 
 	// Check successful call
 	if identifyErr != nil {
@@ -96,8 +102,13 @@ func main() {
 
 	/* LIST MODELS */
 
-	// Call the languageTranslator List Models method
-	listModel, listModelErr := languageTranslator.ListModels("es", "en", true)
+	listModelsOptions := languagetranslatorv3.NewListModelsOptions().
+		SetSource("es").
+		SetTarget("en").
+		SetDefaultModels(true)
+
+	// Call the languageTranslator ListModels method
+	listModel, listModelErr := languageTranslator.ListModels(listModelsOptions)
 
 	// Check successful call
 	if listModelErr != nil {
@@ -120,18 +131,23 @@ func main() {
 
 	pwd, _ := os.Getwd()
 
-	glossary, glossaryErr := os.Open(pwd+ "/resources/glossary.tmx")
+	glossary, glossaryErr := os.Open(pwd + "/resources/glossary.tmx")
 	if glossaryErr != nil {
 		fmt.Println(glossaryErr)
 	}
 
-	corpus, corpusErr := os.Open(pwd+ "/resources/corpus.tmx")
+	corpus, corpusErr := os.Open(pwd + "/resources/corpus.tmx")
 	if corpusErr != nil {
 		fmt.Println(corpusErr)
 	}
 
-	// Call the languageTranslator Create Model method
-	createModel, createModelErr := languageTranslator.CreateModel("en-fr", "custom-en-fr", *glossary, *corpus)
+	createModelOptions := languagetranslatorv3.NewCreateModelOptions("en-fr").
+		SetName("custom-en-fr").
+		SetForcedGlossary(*glossary).
+		SetParallelCorpus(*corpus)
+
+	// Call the languageTranslator CreateModel method
+	createModel, createModelErr := languageTranslator.CreateModel(createModelOptions)
 
 	// Check successful call
 	if createModelErr != nil {
@@ -152,8 +168,9 @@ func main() {
 
 	/* DELETE MODEL */
 
-	// Call the languageTranslator Delete Model method
-	deleteModel, deleteModelErr := languageTranslator.DeleteModel("9f8d9c6f-2123-462f-9793-f17fdcb77cd6")
+	// Call the languageTranslator DeleteModel method
+	deleteModelOptions := languagetranslatorv3.NewDeleteModelOptions("9f8d9c6f-2123-462f-9793-f17fdcb77cd6")
+	deleteModel, deleteModelErr := languageTranslator.DeleteModel(deleteModelOptions)
 
 	// Check successful call
 	if deleteModelErr != nil {
@@ -174,8 +191,9 @@ func main() {
 
 	/* GET MODEL */
 
-	// Call the languageTranslator Get Model method
-	getModel, getModelErr := languageTranslator.GetModel("9f8d9c6f-2123-462f-9793-f17fdcb77cd6")
+	// Call the languageTranslator GetModel method
+	getModelOptions := languagetranslatorv3.NewGetModelOptions("9f8d9c6f-2123-462f-9793-f17fdcb77cd6")
+	getModel, getModelErr := languageTranslator.GetModel(getModelOptions)
 
 	// Check successful call
 	if getModelErr != nil {

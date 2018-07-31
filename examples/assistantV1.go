@@ -25,7 +25,7 @@ func main() {
 	/* LIST WORKSPACES */
 
 	// Call the assistant ListWorkspaces method
-	list, listErr := assistant.ListWorkspaces(0, true, "", "", false)
+	list, listErr := assistant.ListWorkspaces(assistantv1.NewListWorkspacesOptions())
 
 	// Check successful call
 	if listErr != nil {
@@ -47,8 +47,9 @@ func main() {
 
 	/* GET WORKSPACE */
 
-	// Call the assistant Get Workspace method
-	get, getErr := assistant.GetWorkspace("0a0c06c1-8e31-4655-9067-58fcac5134fc", false, false)
+	// Call the assistant GetWorkspace method
+	getWorkspaceOptions := assistantv1.NewGetWorkspaceOptions("0a0c06c1-8e31-4655-9067-58fcac5134fc")
+	get, getErr := assistant.GetWorkspace(getWorkspaceOptions)
 
 	// Check successful call
 	if getErr != nil {

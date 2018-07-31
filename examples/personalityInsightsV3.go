@@ -26,27 +26,24 @@ func main() {
 
 	/* PROFILE */
 
-	// Read file with example speech
+	// Read txt file with example speech
 	pwd, _ := os.Getwd()
-	speech, speechErr := ioutil.ReadFile(pwd + "/resources/personality-v3.txt")
+	fileName := "personality-v3.txt"
+	file, fileErr := ioutil.ReadFile(pwd + "/resources/" + fileName)
 
 	// Check successful file read
-	if speechErr != nil {
-		fmt.Println(speechErr)
+	if fileErr != nil {
+		fmt.Println(fileErr)
 		return
 	}
 
-	// Create request for Profile method
-	profileReq := personalityinsightsv3.Content{
-		ContentItems: []personalityinsightsv3.ContentItem{
-			{
-				Content: string(speech),
-			},
-		},
-	}
+	// Create a new ProfileOptions for ContentType "text/plain"
+	profileOptions := personalityinsightsv3.NewProfileOptionsForPlain(string(file)).
+		SetContentLanguage("en").
+		SetAcceptLanguage("en")
 
 	// Call the personality insights Profile method
-	prof, profErr := piV3.Profile(&profileReq, "text/plain;charset=utf-8", "en", "en", false, false, false)
+	prof, profErr := piV3.Profile(profileOptions)
 
 	// Check successful call
 	if profErr != nil {
@@ -62,6 +59,42 @@ func main() {
 	if profResult != nil {
 		// Print result with pretty indenting
 		output, _ := json.MarshalIndent(profResult, "", "    ")
-		fmt.Printf("PROFILE %+v\n", string(output))
+		fmt.Printf("Profile for %v:\n%+v\n", fileName, string(output))
+	}
+
+	// Read JSON file with example tweets
+	fileName = "personality-v3.json"
+	file, fileErr = ioutil.ReadFile(pwd + "/resources/" + fileName)
+
+	// Check successful file read
+	if fileErr != nil {
+		fmt.Println(fileErr)
+		return
+	}
+
+	// Unmarshal JSON into Content struct
+	content := new(personalityinsightsv3.Content)
+	json.Unmarshal(file, content)
+
+	// Set Content of profileOptions
+	profileOptions.SetContent(*content)
+
+	// Call the personality insights Profile method now with JSON Content
+	prof, profErr = piV3.Profile(profileOptions)
+
+	// Check successful call
+	if profErr != nil {
+		fmt.Println(profErr)
+		return
+	}
+
+	// Cast response again
+	profResult = personalityinsightsv3.GetProfileResult(prof)
+
+	// Check successful casting
+	if profResult != nil {
+		// Print result with pretty indenting
+		output, _ := json.MarshalIndent(profResult, "", "    ")
+		fmt.Printf("Profile for %v:\n%+v\n", fileName, string(output))
 	}
 }
