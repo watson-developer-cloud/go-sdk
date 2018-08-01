@@ -78,7 +78,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(options *ProfileOption
     if options.ContentType == "application/json" {
         request.Send(options.Content)
     } else {
-        request.SendString(options.Body)
+        request.Send(options.Body)
     }
 
     if useTM {
@@ -161,7 +161,7 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(options *ProfileO
     if options.ContentType == "application/json" {
         request.Send(options.Content)
     } else {
-        request.SendString(options.Body)
+        request.Send(options.Body)
     }
 
     if useTM {

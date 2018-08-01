@@ -60,15 +60,28 @@ func (visualRecognition *VisualRecognitionV3) Classify(options *ClassifyOptions)
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     if options.IsAcceptLanguageSet {
         request.Set("Accept-Language", fmt.Sprint(options.AcceptLanguage))
     }
     request.Query("version=" + creds.Version)
     request.Type("multipart")
+    form := map[string]interface{}{}
     if options.IsImagesFileSet {
-        request.SendFile(options.ImagesFile)
+        request.SendFile(options.ImagesFile, "", "images_file")
     }
+    if options.IsURLSet {
+        form["url"] = options.URL
+    }
+    if options.IsThresholdSet {
+        form["threshold"] = options.Threshold
+    }
+    if options.IsOwnersSet {
+        form["owners"] = strings.Join(options.Owners, ",")
+    }
+    if options.IsClassifierIdsSet {
+        form["classifier_ids"] = strings.Join(options.ClassifierIds, ",")
+    }
+    request.Send(form)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -130,12 +143,16 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(options *DetectFacesOp
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
+    form := map[string]interface{}{}
     if options.IsImagesFileSet {
-        request.SendFile(options.ImagesFile)
+        request.SendFile(options.ImagesFile, "", "images_file")
     }
+    if options.IsURLSet {
+        form["url"] = options.URL
+    }
+    request.Send(form)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -197,13 +214,15 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(options *CreateCl
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
-    request.SendFile(options.ClassnamePositiveExamples)
+    form := map[string]interface{}{}
+    form["name"] = options.Name
+    request.SendFile(options.ClassnamePositiveExamples, "", "classname_positive_examples")
     if options.IsNegativeExamplesSet {
-        request.SendFile(options.NegativeExamples)
+        request.SendFile(options.NegativeExamples, "", "negative_examples")
     }
+    request.Send(form)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -449,14 +468,13 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(options *UpdateCl
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
     if options.IsClassnamePositiveExamplesSet {
-        request.SendFile(options.ClassnamePositiveExamples)
+        request.SendFile(options.ClassnamePositiveExamples, "", "classname_positive_examples")
     }
     if options.IsNegativeExamplesSet {
-        request.SendFile(options.NegativeExamples)
+        request.SendFile(options.NegativeExamples, "", "negative_examples")
     }
 
     if useTM {

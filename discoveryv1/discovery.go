@@ -830,7 +830,6 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(options *TestConfig
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     if options.IsStepSet {
         request.Query("step=" + fmt.Sprint(options.Step))
@@ -839,9 +838,17 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(options *TestConfig
         request.Query("configuration_id=" + fmt.Sprint(options.ConfigurationID))
     }
     request.Type("multipart")
-    if options.IsFileSet {
-        request.SendFile(options.File)
+    form := map[string]interface{}{}
+    if options.IsConfigurationSet {
+        form["configuration"] = options.Configuration
     }
+    if options.IsFileSet {
+        request.SendFile(options.File, "", "file")
+    }
+    if options.IsMetadataSet {
+        form["metadata"] = options.Metadata
+    }
+    request.Send(form)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1508,12 +1515,16 @@ func (discovery *DiscoveryV1) AddDocument(options *AddDocumentOptions) (*watson.
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
+    form := map[string]interface{}{}
     if options.IsFileSet {
-        request.SendFile(options.File)
+        request.SendFile(options.File, "", "file")
     }
+    if options.IsMetadataSet {
+        form["metadata"] = options.Metadata
+    }
+    request.Send(form)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -1710,12 +1721,16 @@ func (discovery *DiscoveryV1) UpdateDocument(options *UpdateDocumentOptions) (*w
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
+    form := map[string]interface{}{}
     if options.IsFileSet {
-        request.SendFile(options.File)
+        request.SendFile(options.File, "", "file")
     }
+    if options.IsMetadataSet {
+        form["metadata"] = options.Metadata
+    }
+    request.Send(form)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()

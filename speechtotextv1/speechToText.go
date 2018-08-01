@@ -1124,12 +1124,11 @@ func (speechToText *SpeechToTextV1) AddCorpus(options *AddCorpusOptions) (*watso
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     if options.IsAllowOverwriteSet {
         request.Query("allow_overwrite=" + fmt.Sprint(options.AllowOverwrite))
     }
     request.Type("multipart")
-    request.SendFile(options.CorpusFile)
+    request.SendFile(options.CorpusFile, "", "corpus_file")
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()

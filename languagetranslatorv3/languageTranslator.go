@@ -136,7 +136,7 @@ func (languageTranslator *LanguageTranslatorV3) Identify(options *IdentifyOption
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "text/plain")
     request.Query("version=" + creds.Version)
-    request.SendString(options.Text)
+    request.Send(options.Text)
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -260,7 +260,6 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(options *CreateModel
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     request.Query("version=" + creds.Version)
     request.Query("base_model_id=" + fmt.Sprint(options.BaseModelID))
     if options.IsNameSet {
@@ -268,10 +267,10 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(options *CreateModel
     }
     request.Type("multipart")
     if options.IsForcedGlossarySet {
-        request.SendFile(options.ForcedGlossary)
+        request.SendFile(options.ForcedGlossary, "", "forced_glossary")
     }
     if options.IsParallelCorpusSet {
-        request.SendFile(options.ParallelCorpus)
+        request.SendFile(options.ParallelCorpus, "", "parallel_corpus")
     }
 
     if useTM {

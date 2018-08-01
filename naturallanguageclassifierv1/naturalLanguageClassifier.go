@@ -192,10 +192,9 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(o
     }
 
     request.Set("Accept", "application/json")
-    request.Set("Content-Type", "multipart/form-data")
     request.Type("multipart")
-    request.SendFile(options.Metadata)
-    request.SendFile(options.TrainingData)
+    request.SendFile(options.Metadata, "", "training_metadata")
+    request.SendFile(options.TrainingData, "", "training_data")
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()

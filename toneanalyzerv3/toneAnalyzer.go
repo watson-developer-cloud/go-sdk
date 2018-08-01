@@ -74,7 +74,7 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(options *ToneOptions) (*watson.WatsonRe
     if options.ContentType == "application/json" {
         request.Send(options.ToneInput)
     } else {
-        request.SendString(options.Body)
+        request.Send(options.Body)
     }
 
     if useTM {
