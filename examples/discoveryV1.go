@@ -4,7 +4,16 @@ import (
 	"fmt"
 	watson "golang-sdk"
 	"golang-sdk/discoveryv1"
+	"encoding/json"
 )
+
+func prettyPrint(result interface{}, resultName string) {
+	output, err := json.MarshalIndent(result, "", "    ")
+
+	if err == nil {
+		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
+	}
+}
 
 func main() {
 	// Instantiate the Watson Discovery service
@@ -43,8 +52,6 @@ func main() {
 
 	// Check successful casting
 	if listEnvironmentResult != nil {
-		// Print result
-		fmt.Println(listEnvironmentResult)
+		prettyPrint(listEnvironmentResult, "List Environments")
 	}
-
 }

@@ -4,7 +4,16 @@ import (
 	"fmt"
 	watson "golang-sdk"
 	"golang-sdk/assistantv1"
+	"encoding/json"
 )
+
+func prettyPrint(result interface{}, resultName string) {
+	output, err := json.MarshalIndent(result, "", "    ")
+
+	if err == nil {
+		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
+	}
+}
 
 func main() {
 	// Instantiate the Watson Assistant service
@@ -39,16 +48,14 @@ func main() {
 
 	// Check successful casting
 	if listResult != nil {
-		// Print result
-		fmt.Printf("FOUND %v WORKSPACES\n", len(listResult.Workspaces))
-		fmt.Println(listResult)
+		prettyPrint(listResult, "List Workspaces")
 	}
 
 
 	/* GET WORKSPACE */
 
 	// Call the assistant GetWorkspace method
-	getWorkspaceOptions := assistantv1.NewGetWorkspaceOptions("0a0c06c1-8e31-4655-9067-58fcac5134fc")
+	getWorkspaceOptions := assistantv1.NewGetWorkspaceOptions(listResult.Workspaces[0].WorkspaceID)
 	get, getErr := assistant.GetWorkspace(getWorkspaceOptions)
 
 	// Check successful call
@@ -63,7 +70,6 @@ func main() {
 
 	// Check successful casting
 	if getResult != nil {
-		// Print result
-		fmt.Println(getResult)
+		prettyPrint(getResult, "Get Workspace")
 	}
 }

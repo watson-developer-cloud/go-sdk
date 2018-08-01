@@ -4,7 +4,16 @@ import (
 	"fmt"
 	watson "golang-sdk"
 	"golang-sdk/toneanalyzerv3"
+	"encoding/json"
 )
+
+func prettyPrint(result interface{}, resultName string) {
+	output, err := json.MarshalIndent(result, "", "    ")
+
+	if err == nil {
+		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
+	}
+}
 
 func main() {
 	// Instantiate the Watson Tone Analyzer service
@@ -53,7 +62,6 @@ func main() {
 
 	// Check successful casting
 	if toneChatResult != nil {
-		// Print result
-		fmt.Println(toneChatResult)
+		prettyPrint(toneChatResult, "Tone Chat")
 	}
 }

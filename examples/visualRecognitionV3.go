@@ -5,7 +5,16 @@ import (
 	"fmt"
 	watson "golang-sdk"
 	"golang-sdk/visualrecognitionv3"
+	"encoding/json"
 )
+
+func prettyPrint(result interface{}, resultName string) {
+	output, err := json.MarshalIndent(result, "", "    ")
+
+	if err == nil {
+		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
+	}
+}
 
 func main() {
 	// Instantiate the Watson Visual Recognition service
@@ -17,7 +26,7 @@ func main() {
 
 	// Check successful instantiation
 	if visualRecognitionErr != nil {
-		fmt.Println(visualRecognition)
+		fmt.Println(visualRecognitionErr)
 		return
 	}
 
@@ -35,12 +44,9 @@ func main() {
 
 	classifyOptions := visualrecognitionv3.NewClassifyOptions().
 		SetImagesFile(*imageFile).
-		SetAcceptLanguage("en").
 		SetURL("https://www.readersdigest.ca/wp-content/uploads/2011/01/4-ways-cheer-up-depressed-cat.jpg").
-		SetThreshold(0.5).
-		SetOwners([]string{ "IBM" }).
-		SetClassifierIds([]string{ "default" }).
-		SetImagesFileContentType("JPEG")
+		SetThreshold(0.6).
+		SetClassifierIds([]string{ "default", "food", "explicit" })
 
 	// Call the visual recognition Classify method
 	classify, classifyErr := visualRecognition.Classify(classifyOptions)
@@ -57,7 +63,6 @@ func main() {
 
 	// Check successful casting
 	if classifyResult != nil {
-		// Print result
-		fmt.Println(classifyResult)
+		prettyPrint(classifyResult, "Classify")
 	}
 }

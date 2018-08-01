@@ -9,6 +9,14 @@ import (
 	"golang-sdk/personalityinsightsv3"
 )
 
+func prettyPrint(result interface{}, resultName string) {
+	output, err := json.MarshalIndent(result, "", "    ")
+
+	if err == nil {
+		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
+	}
+}
+
 func main() {
 	// Instantiate the Watson Personality Insights service
 	piV3, piV3Err := personalityinsightsv3.NewPersonalityInsightsV3(watson.Credentials{
@@ -57,9 +65,7 @@ func main() {
 
 	// Check successful casting
 	if profResult != nil {
-		// Print result with pretty indenting
-		output, _ := json.MarshalIndent(profResult, "", "    ")
-		fmt.Printf("Profile for %v:\n%+v\n", fileName, string(output))
+		prettyPrint(profResult, "Profile for " + fileName)
 	}
 
 	// Read JSON file with example tweets
@@ -93,8 +99,6 @@ func main() {
 
 	// Check successful casting
 	if profResult != nil {
-		// Print result with pretty indenting
-		output, _ := json.MarshalIndent(profResult, "", "    ")
-		fmt.Printf("Profile for %v:\n%+v\n", fileName, string(output))
+		prettyPrint(profResult, "Profile for " + fileName)
 	}
 }

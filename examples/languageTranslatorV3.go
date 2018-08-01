@@ -5,7 +5,16 @@ import (
 	watson "golang-sdk"
 	"golang-sdk/languagetranslatorv3"
 	"os"
+	"encoding/json"
 )
+
+func prettyPrint(result interface{}, resultName string) {
+	output, err := json.MarshalIndent(result, "", "    ")
+
+	if err == nil {
+		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
+	}
+}
 
 func main() {
 	// Instantiate the Watson Language Translator service
@@ -29,7 +38,7 @@ func main() {
 	}
 
 	translateOptions := languagetranslatorv3.NewTranslateOptions(textToTranslate).
-		SetModelID("es-en")
+		SetModelID("en-es")
 
 	// Call the languageTranslator Translate method
 	translate, translateErr := languageTranslator.Translate(translateOptions)
@@ -46,8 +55,7 @@ func main() {
 
 	// Check successful casting
 	if translateResult != nil {
-		// Print result
-		fmt.Println(translateResult)
+		prettyPrint(translateResult, "Translation")
 	}
 
 
@@ -70,8 +78,7 @@ func main() {
 
 	// Check successful casting
 	if listLanguageResult != nil {
-		// Print result
-		fmt.Println(listLanguageResult)
+		prettyPrint(listLanguageResult, "Identifiable Languages")
 	}
 
 
@@ -95,8 +102,7 @@ func main() {
 
 	// Check successful casting
 	if identifyResult != nil {
-		// Print result
-		fmt.Println(identifyResult)
+		prettyPrint(identifyResult, "Identify")
 	}
 
 
@@ -122,8 +128,7 @@ func main() {
 
 	// Check successful casting
 	if listModelResult != nil {
-		// Print result
-		fmt.Println(listModelResult)
+		prettyPrint(listModelResult, "Models")
 	}
 
 
@@ -136,15 +141,9 @@ func main() {
 		fmt.Println(glossaryErr)
 	}
 
-	corpus, corpusErr := os.Open(pwd + "/resources/corpus.tmx")
-	if corpusErr != nil {
-		fmt.Println(corpusErr)
-	}
-
 	createModelOptions := languagetranslatorv3.NewCreateModelOptions("en-fr").
 		SetName("custom-en-fr").
-		SetForcedGlossary(*glossary).
-		SetParallelCorpus(*corpus)
+		SetForcedGlossary(*glossary)
 
 	// Call the languageTranslator CreateModel method
 	createModel, createModelErr := languageTranslator.CreateModel(createModelOptions)
@@ -161,38 +160,14 @@ func main() {
 
 	// Check successful casting
 	if createModelResult != nil {
-		// Print result
-		fmt.Println(createModelResult)
-	}
-
-
-	/* DELETE MODEL */
-
-	// Call the languageTranslator DeleteModel method
-	deleteModelOptions := languagetranslatorv3.NewDeleteModelOptions("9f8d9c6f-2123-462f-9793-f17fdcb77cd6")
-	deleteModel, deleteModelErr := languageTranslator.DeleteModel(deleteModelOptions)
-
-	// Check successful call
-	if deleteModelErr != nil {
-		fmt.Println(deleteModelErr)
-		return
-	}
-
-	// Cast response from call to the specific struct returned by GetDeleteModelResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	deleteModelResult := languagetranslatorv3.GetDeleteModelResult(deleteModel)
-
-	// Check successful casting
-	if deleteModelResult != nil {
-		// Print result
-		fmt.Println(deleteModelResult)
+		prettyPrint(createModelResult, "Create Model")
 	}
 
 
 	/* GET MODEL */
 
 	// Call the languageTranslator GetModel method
-	getModelOptions := languagetranslatorv3.NewGetModelOptions("9f8d9c6f-2123-462f-9793-f17fdcb77cd6")
+	getModelOptions := languagetranslatorv3.NewGetModelOptions(createModelResult.ModelID)
 	getModel, getModelErr := languageTranslator.GetModel(getModelOptions)
 
 	// Check successful call
@@ -207,7 +182,28 @@ func main() {
 
 	// Check successful casting
 	if getModelResult != nil {
-		// Print result
-		fmt.Println(getModelResult)
+		prettyPrint(getModelResult, "Get Model")
+	}
+
+
+	/* DELETE MODEL */
+
+	// Call the languageTranslator DeleteModel method
+	deleteModelOptions := languagetranslatorv3.NewDeleteModelOptions(getModelResult.ModelID)
+	deleteModel, deleteModelErr := languageTranslator.DeleteModel(deleteModelOptions)
+
+	// Check successful call
+	if deleteModelErr != nil {
+		fmt.Println(deleteModelErr)
+		return
+	}
+
+	// Cast response from call to the specific struct returned by GetDeleteModelResult
+	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
+	deleteModelResult := languagetranslatorv3.GetDeleteModelResult(deleteModel)
+
+	// Check successful casting
+	if deleteModelResult != nil {
+		prettyPrint(deleteModelResult, "Delete Model")
 	}
 }
