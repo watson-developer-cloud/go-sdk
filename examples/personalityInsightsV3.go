@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	watson "golang-sdk"
 	"golang-sdk/personalityinsightsv3"
+	"bytes"
 )
 
 func prettyPrint(result interface{}, resultName string) {
@@ -100,5 +101,44 @@ func main() {
 	// Check successful casting
 	if profResult != nil {
 		prettyPrint(profResult, "Profile for " + fileName)
+	}
+
+
+	/* PROFILE AS CSV */
+
+	// Read txt file with example speech
+	fileName = "personality-v3.txt"
+	file, fileErr = ioutil.ReadFile(pwd + "/resources/" + fileName)
+
+	// Check successful file read
+	if fileErr != nil {
+		fmt.Println(fileErr)
+		return
+	}
+
+	// Set text/plain of profileOptions
+	profileOptions.SetPlain(string(file))
+
+	// Call the personality insights ProfileAsCsv method
+	prof, profErr = piV3.ProfileAsCsv(profileOptions)
+
+	// Check successful call
+	if profErr != nil {
+		fmt.Println(profErr)
+		return
+	}
+
+	// Cast response
+	profCsvResult := personalityinsightsv3.GetProfileAsCsvResult(prof)
+
+	// Check successful casting
+	if profCsvResult != nil {
+		buff := new(bytes.Buffer)
+		buff.ReadFrom(profCsvResult)
+		fmt.Printf("Profile as CSV for %v\n%v\n", fileName, buff.String())
+
+		file, _ := os.Create("profile_example.csv")
+		file.Write(buff.Bytes())
+		file.Close()
 	}
 }
