@@ -65,4 +65,29 @@ func main() {
 	if createResult != nil {
 		prettyPrint(createResult, "Create Classifier")
 	}
+
+
+	/* CLASSIFY */
+
+	if createResult.Status == "Available" {
+		classifyOptions := naturallanguageclassifierv1.NewClassifyOptions(createResult.ClassifierID, "How hot will it be tomorrow?")
+
+		// Call the natural language classifier Classify method
+		classify, classifyErr := nlc.Classify(classifyOptions)
+
+		// Check successful call
+		if classifyErr != nil {
+			fmt.Println(classifyErr)
+			return
+		}
+
+		// Cast response from call to the specific struct returned by GetClassifyResult
+		// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
+		classifyResult := naturallanguageclassifierv1.GetClassifyResult(classify)
+
+		// Check successful casting
+		if classifyResult != nil {
+			prettyPrint(classifyResult, "Classify")
+		}
+	}
 }
