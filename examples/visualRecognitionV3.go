@@ -32,7 +32,7 @@ func main() {
 
 	/* CLASSIFY */
 
-	// Read file with image to classify
+	// Open file with image to classify
 	pwd, _ := os.Getwd()
 	imageFile, imageFileErr := os.Open(pwd + "/resources/visualRecognition.jpg")
 
