@@ -20,6 +20,7 @@ import (
     "bytes"
     "fmt"
     "github.com/go-openapi/strfmt"
+    "io"
     "os"
     "strings"
     req "github.com/parnurzeal/gorequest"
@@ -555,8 +556,8 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(options *GetCoreMlM
 
     response := new(watson.WatsonResponse)
 
-    response.Result = new(os.File)
-    res, _, err := request.EndStruct(&response.Result)
+    res, _, err := request.End()
+    response.Result = res.Body
 
     response.Headers = res.Header
     response.StatusCode = res.StatusCode
@@ -577,8 +578,8 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(options *GetCoreMlM
 }
 
 // GetGetCoreMlModelResult : Cast result of GetCoreMlModel operation
-func GetGetCoreMlModelResult(response *watson.WatsonResponse) *os.File {
-    result, ok := response.Result.(*os.File)
+func GetGetCoreMlModelResult(response *watson.WatsonResponse) io.ReadCloser {
+    result, ok := response.Result.(io.ReadCloser)
 
     if ok {
         return result
@@ -783,7 +784,7 @@ type ClassifyOptions struct {
     // Indicates whether user set optional parameter Owners
     IsOwnersSet bool
 
-	// Which classifiers to apply. Overrides the **owners** parameter. You can specify both custom and built-in classifier IDs. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty. The following built-in classifier IDs require no training: - `default`: Returns classes from thousands of general tags. - `food`: (Beta) Enhances specificity and accuracy for images of food items. - `explicit`: (Beta) Evaluates whether the image might be pornographic.
+	// Which classifiers to apply. Overrides the **owners** parameter. You can specify both custom and built-in classifier IDs. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty. The following built-in classifier IDs require no training: - `default`: Returns classes from thousands of general tags. - `food`: Enhances specificity and accuracy for images of food items. - `explicit`: Evaluates whether the image might be pornographic.
 	ClassifierIds []string `json:"classifier_ids,omitempty"`
 
     // Indicates whether user set optional parameter ClassifierIds

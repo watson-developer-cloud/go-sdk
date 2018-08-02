@@ -19,7 +19,7 @@ package texttospeechv1
 import (
     "bytes"
     "fmt"
-    "os"
+    "io"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "golang-sdk"
@@ -213,8 +213,8 @@ func (textToSpeech *TextToSpeechV1) Synthesize(options *SynthesizeOptions) (*wat
 
     response := new(watson.WatsonResponse)
 
-    response.Result = new(os.File)
-    res, _, err := request.EndStruct(&response.Result)
+    res, _, err := request.End()
+    response.Result = res.Body
 
     response.Headers = res.Header
     response.StatusCode = res.StatusCode
@@ -235,8 +235,8 @@ func (textToSpeech *TextToSpeechV1) Synthesize(options *SynthesizeOptions) (*wat
 }
 
 // GetSynthesizeResult : Cast result of Synthesize operation
-func GetSynthesizeResult(response *watson.WatsonResponse) *os.File {
-    result, ok := response.Result.(*os.File)
+func GetSynthesizeResult(response *watson.WatsonResponse) io.ReadCloser {
+    result, ok := response.Result.(io.ReadCloser)
 
     if ok {
         return result

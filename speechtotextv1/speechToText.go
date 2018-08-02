@@ -2407,7 +2407,7 @@ type AddAudioOptions struct {
 	// The name of the audio resource for the custom acoustic model. When adding an audio resource, do not include spaces in the name; use a localized name that matches the language of the custom model.
 	AudioName string `json:"audio_name"`
 
-	AudioResource io.ReadCloser `json:"audio_resource"`
+	AudioResource io.ReadCloser `json:"audio_resource,omitempty"`
 
 	// The type of the input.
 	ContentType string `json:"Content-Type"`

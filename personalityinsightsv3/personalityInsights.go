@@ -19,7 +19,7 @@ package personalityinsightsv3
 import (
     "bytes"
     "fmt"
-    "os"
+    "io"
     req "github.com/parnurzeal/gorequest"
     watson "golang-sdk"
 )
@@ -178,8 +178,8 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(options *ProfileO
 
     response := new(watson.WatsonResponse)
 
-    response.Result = new(os.File)
-    res, _, err := request.EndStruct(&response.Result)
+    res, _, err := request.End()
+    response.Result = res.Body
 
     response.Headers = res.Header
     response.StatusCode = res.StatusCode
@@ -200,8 +200,8 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(options *ProfileO
 }
 
 // GetProfileAsCsvResult : Cast result of ProfileAsCsv operation
-func GetProfileAsCsvResult(response *watson.WatsonResponse) *os.File {
-    result, ok := response.Result.(*os.File)
+func GetProfileAsCsvResult(response *watson.WatsonResponse) io.ReadCloser {
+    result, ok := response.Result.(io.ReadCloser)
 
     if ok {
         return result
