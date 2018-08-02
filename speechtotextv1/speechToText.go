@@ -80,12 +80,12 @@ func (speechToText *SpeechToTextV1) GetModel(options *GetModelOptions) (*watson.
     response.Result = new(SpeechModel)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -142,12 +142,12 @@ func (speechToText *SpeechToTextV1) ListModels(options *ListModelsOptions) (*wat
     response.Result = new(SpeechModels)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -231,7 +231,9 @@ func (speechToText *SpeechToTextV1) Recognize(options *RecognizeOptions) (*watso
     if options.IsSpeakerLabelsSet {
         request.Query("speaker_labels=" + fmt.Sprint(options.SpeakerLabels))
     }
-    request.SendFile(options.Audio)
+    audio := new(bytes.Buffer)
+    audio.ReadFrom(options.Audio)
+    request.Send(audio.String())
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -250,12 +252,12 @@ func (speechToText *SpeechToTextV1) Recognize(options *RecognizeOptions) (*watso
     response.Result = new(SpeechRecognitionResults)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -313,12 +315,12 @@ func (speechToText *SpeechToTextV1) CheckJob(options *CheckJobOptions) (*watson.
     response.Result = new(RecognitionJob)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -375,12 +377,12 @@ func (speechToText *SpeechToTextV1) CheckJobs(options *CheckJobsOptions) (*watso
     response.Result = new(RecognitionJobs)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -476,7 +478,9 @@ func (speechToText *SpeechToTextV1) CreateJob(options *CreateJobOptions) (*watso
     if options.IsSpeakerLabelsSet {
         request.Query("speaker_labels=" + fmt.Sprint(options.SpeakerLabels))
     }
-    request.SendFile(options.Audio)
+    audio := new(bytes.Buffer)
+    audio.ReadFrom(options.Audio)
+    request.Send(audio.String())
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -495,12 +499,12 @@ func (speechToText *SpeechToTextV1) CreateJob(options *CreateJobOptions) (*watso
     response.Result = new(RecognitionJob)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -557,12 +561,12 @@ func (speechToText *SpeechToTextV1) DeleteJob(options *DeleteJobOptions) (*watso
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -613,12 +617,12 @@ func (speechToText *SpeechToTextV1) RegisterCallback(options *RegisterCallbackOp
     response.Result = new(RegisterStatus)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -675,12 +679,12 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(options *UnregisterCallba
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -737,12 +741,12 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(options *CreateLanguageM
     response.Result = new(LanguageModel)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -799,12 +803,12 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(options *DeleteLanguageM
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -852,12 +856,12 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(options *GetLanguageModelOp
     response.Result = new(LanguageModel)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -917,12 +921,12 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(options *ListLanguageMode
     response.Result = new(LanguageModels)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -979,12 +983,12 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(options *ResetLanguageMod
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1037,12 +1041,12 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(options *TrainLanguageMod
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1089,12 +1093,12 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(options *UpgradeLanguag
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1146,12 +1150,12 @@ func (speechToText *SpeechToTextV1) AddCorpus(options *AddCorpusOptions) (*watso
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1199,12 +1203,12 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(options *DeleteCorpusOptions) (
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1253,12 +1257,12 @@ func (speechToText *SpeechToTextV1) GetCorpus(options *GetCorpusOptions) (*watso
     response.Result = new(Corpus)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1316,12 +1320,12 @@ func (speechToText *SpeechToTextV1) ListCorpora(options *ListCorporaOptions) (*w
     response.Result = new(Corpora)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1390,12 +1394,12 @@ func (speechToText *SpeechToTextV1) AddWord(options *AddWordOptions) (*watson.Wa
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1445,12 +1449,12 @@ func (speechToText *SpeechToTextV1) AddWords(options *AddWordsOptions) (*watson.
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1498,12 +1502,12 @@ func (speechToText *SpeechToTextV1) DeleteWord(options *DeleteWordOptions) (*wat
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1552,12 +1556,12 @@ func (speechToText *SpeechToTextV1) GetWord(options *GetWordOptions) (*watson.Wa
     response.Result = new(Word)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1621,12 +1625,12 @@ func (speechToText *SpeechToTextV1) ListWords(options *ListWordsOptions) (*watso
     response.Result = new(Words)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1690,12 +1694,12 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(options *CreateAcousticM
     response.Result = new(AcousticModel)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1752,12 +1756,12 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(options *DeleteAcousticM
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1805,12 +1809,12 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(options *GetAcousticModelOp
     response.Result = new(AcousticModel)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1870,12 +1874,12 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(options *ListAcousticMode
     response.Result = new(AcousticModels)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1932,12 +1936,12 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(options *ResetAcousticMod
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1987,12 +1991,12 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(options *TrainAcousticMod
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2042,12 +2046,12 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(options *UpgradeAcousti
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2084,7 +2088,9 @@ func (speechToText *SpeechToTextV1) AddAudio(options *AddAudioOptions) (*watson.
     if options.IsAllowOverwriteSet {
         request.Query("allow_overwrite=" + fmt.Sprint(options.AllowOverwrite))
     }
-    request.SendFile(options.AudioResource)
+    audioResource := new(bytes.Buffer)
+    audioResource.ReadFrom(options.AudioResource)
+    request.Send(audioResource.String())
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -2102,12 +2108,12 @@ func (speechToText *SpeechToTextV1) AddAudio(options *AddAudioOptions) (*watson.
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2155,12 +2161,12 @@ func (speechToText *SpeechToTextV1) DeleteAudio(options *DeleteAudioOptions) (*w
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2209,12 +2215,12 @@ func (speechToText *SpeechToTextV1) GetAudio(options *GetAudioOptions) (*watson.
     response.Result = new(AudioListing)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2272,12 +2278,12 @@ func (speechToText *SpeechToTextV1) ListAudio(options *ListAudioOptions) (*watso
     response.Result = new(AudioResources)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2334,12 +2340,12 @@ func (speechToText *SpeechToTextV1) DeleteUserData(options *DeleteUserDataOption
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2407,7 +2413,7 @@ type AddAudioOptions struct {
 	// The name of the audio resource for the custom acoustic model. When adding an audio resource, do not include spaces in the name; use a localized name that matches the language of the custom model.
 	AudioName string `json:"audio_name"`
 
-	AudioResource io.ReadCloser `json:"audio_resource,omitempty"`
+	AudioResource io.ReadCloser `json:"audio_resource"`
 
 	// The type of the input.
 	ContentType string `json:"Content-Type"`

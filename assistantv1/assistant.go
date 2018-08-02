@@ -103,12 +103,12 @@ func (assistant *AssistantV1) Message(options *MessageOptions) (*watson.WatsonRe
     response.Result = new(MessageResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -198,12 +198,12 @@ func (assistant *AssistantV1) CreateWorkspace(options *CreateWorkspaceOptions) (
     response.Result = new(Workspace)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -260,12 +260,12 @@ func (assistant *AssistantV1) DeleteWorkspace(options *DeleteWorkspaceOptions) (
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -319,12 +319,12 @@ func (assistant *AssistantV1) GetWorkspace(options *GetWorkspaceOptions) (*watso
     response.Result = new(WorkspaceExport)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -396,12 +396,12 @@ func (assistant *AssistantV1) ListWorkspaces(options *ListWorkspacesOptions) (*w
     response.Result = new(WorkspaceCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -495,12 +495,12 @@ func (assistant *AssistantV1) UpdateWorkspace(options *UpdateWorkspaceOptions) (
     response.Result = new(Workspace)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -568,12 +568,12 @@ func (assistant *AssistantV1) CreateIntent(options *CreateIntentOptions) (*watso
     response.Result = new(Intent)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -631,12 +631,12 @@ func (assistant *AssistantV1) DeleteIntent(options *DeleteIntentOptions) (*watso
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -691,12 +691,12 @@ func (assistant *AssistantV1) GetIntent(options *GetIntentOptions) (*watson.Wats
     response.Result = new(IntentExport)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -772,12 +772,12 @@ func (assistant *AssistantV1) ListIntents(options *ListIntentsOptions) (*watson.
     response.Result = new(IntentCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -848,12 +848,12 @@ func (assistant *AssistantV1) UpdateIntent(options *UpdateIntentOptions) (*watso
     response.Result = new(Intent)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -919,12 +919,12 @@ func (assistant *AssistantV1) CreateExample(options *CreateExampleOptions) (*wat
     response.Result = new(Example)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -983,12 +983,12 @@ func (assistant *AssistantV1) DeleteExample(options *DeleteExampleOptions) (*wat
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1041,12 +1041,12 @@ func (assistant *AssistantV1) GetExample(options *GetExampleOptions) (*watson.Wa
     response.Result = new(Example)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1120,12 +1120,12 @@ func (assistant *AssistantV1) ListExamples(options *ListExamplesOptions) (*watso
     response.Result = new(ExampleCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1194,12 +1194,12 @@ func (assistant *AssistantV1) UpdateExample(options *UpdateExampleOptions) (*wat
     response.Result = new(Example)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1261,12 +1261,12 @@ func (assistant *AssistantV1) CreateCounterexample(options *CreateCounterexample
     response.Result = new(Counterexample)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1324,12 +1324,12 @@ func (assistant *AssistantV1) DeleteCounterexample(options *DeleteCounterexample
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1381,12 +1381,12 @@ func (assistant *AssistantV1) GetCounterexample(options *GetCounterexampleOption
     response.Result = new(Counterexample)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1459,12 +1459,12 @@ func (assistant *AssistantV1) ListCounterexamples(options *ListCounterexamplesOp
     response.Result = new(CounterexampleCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1529,12 +1529,12 @@ func (assistant *AssistantV1) UpdateCounterexample(options *UpdateCounterexample
     response.Result = new(Counterexample)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1608,12 +1608,12 @@ func (assistant *AssistantV1) CreateEntity(options *CreateEntityOptions) (*watso
     response.Result = new(Entity)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1671,12 +1671,12 @@ func (assistant *AssistantV1) DeleteEntity(options *DeleteEntityOptions) (*watso
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1731,12 +1731,12 @@ func (assistant *AssistantV1) GetEntity(options *GetEntityOptions) (*watson.Wats
     response.Result = new(EntityExport)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1812,12 +1812,12 @@ func (assistant *AssistantV1) ListEntities(options *ListEntitiesOptions) (*watso
     response.Result = new(EntityCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1894,12 +1894,12 @@ func (assistant *AssistantV1) UpdateEntity(options *UpdateEntityOptions) (*watso
     response.Result = new(Entity)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1964,12 +1964,12 @@ func (assistant *AssistantV1) ListMentions(options *ListMentionsOptions) (*watso
     response.Result = new(EntityMentionCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2044,12 +2044,12 @@ func (assistant *AssistantV1) CreateValue(options *CreateValueOptions) (*watson.
     response.Result = new(Value)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2108,12 +2108,12 @@ func (assistant *AssistantV1) DeleteValue(options *DeleteValueOptions) (*watson.
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2169,12 +2169,12 @@ func (assistant *AssistantV1) GetValue(options *GetValueOptions) (*watson.Watson
     response.Result = new(ValueExport)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2251,12 +2251,12 @@ func (assistant *AssistantV1) ListValues(options *ListValuesOptions) (*watson.Wa
     response.Result = new(ValueCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2334,12 +2334,12 @@ func (assistant *AssistantV1) UpdateValue(options *UpdateValueOptions) (*watson.
     response.Result = new(Value)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2403,12 +2403,12 @@ func (assistant *AssistantV1) CreateSynonym(options *CreateSynonymOptions) (*wat
     response.Result = new(Synonym)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2468,12 +2468,12 @@ func (assistant *AssistantV1) DeleteSynonym(options *DeleteSynonymOptions) (*wat
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2527,12 +2527,12 @@ func (assistant *AssistantV1) GetSynonym(options *GetSynonymOptions) (*watson.Wa
     response.Result = new(Synonym)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2607,12 +2607,12 @@ func (assistant *AssistantV1) ListSynonyms(options *ListSynonymsOptions) (*watso
     response.Result = new(SynonymCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2679,12 +2679,12 @@ func (assistant *AssistantV1) UpdateSynonym(options *UpdateSynonymOptions) (*wat
     response.Result = new(Synonym)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2797,12 +2797,12 @@ func (assistant *AssistantV1) CreateDialogNode(options *CreateDialogNodeOptions)
     response.Result = new(DialogNode)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2860,12 +2860,12 @@ func (assistant *AssistantV1) DeleteDialogNode(options *DeleteDialogNodeOptions)
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2917,12 +2917,12 @@ func (assistant *AssistantV1) GetDialogNode(options *GetDialogNodeOptions) (*wat
     response.Result = new(DialogNode)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2995,12 +2995,12 @@ func (assistant *AssistantV1) ListDialogNodes(options *ListDialogNodesOptions) (
     response.Result = new(DialogNodeCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3116,12 +3116,12 @@ func (assistant *AssistantV1) UpdateDialogNode(options *UpdateDialogNodeOptions)
     response.Result = new(DialogNode)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3188,12 +3188,12 @@ func (assistant *AssistantV1) ListAllLogs(options *ListAllLogsOptions) (*watson.
     response.Result = new(LogCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3263,12 +3263,12 @@ func (assistant *AssistantV1) ListLogs(options *ListLogsOptions) (*watson.Watson
     response.Result = new(LogCollection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3325,12 +3325,12 @@ func (assistant *AssistantV1) DeleteUserData(options *DeleteUserDataOptions) (*w
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)

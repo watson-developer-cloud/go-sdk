@@ -108,12 +108,12 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(opti
     response.Result = new(AnalysisResults)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -172,12 +172,12 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
     response.Result = new(DeleteModelResults)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -235,12 +235,12 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(o
     response.Result = new(ListModelsResults)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)

@@ -30,6 +30,7 @@ func main() {
 		return
 	}
 
+
 	/* TRANSLATE */
 
 	textToTranslate := []string{

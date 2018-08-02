@@ -101,12 +101,12 @@ func (visualRecognition *VisualRecognitionV3) Classify(options *ClassifyOptions)
     response.Result = new(ClassifiedImages)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -172,12 +172,12 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(options *DetectFacesOp
     response.Result = new(DetectedFaces)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -242,12 +242,12 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(options *CreateCl
     response.Result = new(Classifier)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -305,12 +305,12 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(options *DeleteCl
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -359,12 +359,12 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(options *GetClassifi
     response.Result = new(Classifier)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -425,12 +425,12 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(options *ListClass
     response.Result = new(Classifiers)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -495,12 +495,12 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(options *UpdateCl
     response.Result = new(Classifier)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -557,14 +557,14 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(options *GetCoreMlM
     response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
-    response.Result = res.Body
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
 
     if err != nil {
         return nil, err
     }
+
+    response.Result = res.Body
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -622,12 +622,12 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(options *DeleteUser
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)

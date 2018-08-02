@@ -89,12 +89,12 @@ func (discovery *DiscoveryV1) CreateEnvironment(options *CreateEnvironmentOption
     response.Result = new(Environment)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -153,12 +153,12 @@ func (discovery *DiscoveryV1) DeleteEnvironment(options *DeleteEnvironmentOption
     response.Result = new(DeleteEnvironmentResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -217,12 +217,12 @@ func (discovery *DiscoveryV1) GetEnvironment(options *GetEnvironmentOptions) (*w
     response.Result = new(Environment)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -283,12 +283,12 @@ func (discovery *DiscoveryV1) ListEnvironments(options *ListEnvironmentsOptions)
     response.Result = new(ListEnvironmentsResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -348,12 +348,12 @@ func (discovery *DiscoveryV1) ListFields(options *ListFieldsOptions) (*watson.Wa
     response.Result = new(ListCollectionFieldsResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -420,12 +420,12 @@ func (discovery *DiscoveryV1) UpdateEnvironment(options *UpdateEnvironmentOption
     response.Result = new(Environment)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -504,12 +504,12 @@ func (discovery *DiscoveryV1) CreateConfiguration(options *CreateConfigurationOp
     response.Result = new(Configuration)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -569,12 +569,12 @@ func (discovery *DiscoveryV1) DeleteConfiguration(options *DeleteConfigurationOp
     response.Result = new(DeleteConfigurationResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -634,12 +634,12 @@ func (discovery *DiscoveryV1) GetConfiguration(options *GetConfigurationOptions)
     response.Result = new(Configuration)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -701,12 +701,12 @@ func (discovery *DiscoveryV1) ListConfigurations(options *ListConfigurationsOpti
     response.Result = new(ListConfigurationsResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -786,12 +786,12 @@ func (discovery *DiscoveryV1) UpdateConfiguration(options *UpdateConfigurationOp
     response.Result = new(Configuration)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -867,12 +867,12 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(options *TestConfig
     response.Result = new(TestDocument)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -943,12 +943,12 @@ func (discovery *DiscoveryV1) CreateCollection(options *CreateCollectionOptions)
     response.Result = new(Collection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1008,12 +1008,12 @@ func (discovery *DiscoveryV1) DeleteCollection(options *DeleteCollectionOptions)
     response.Result = new(DeleteCollectionResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1073,12 +1073,12 @@ func (discovery *DiscoveryV1) GetCollection(options *GetCollectionOptions) (*wat
     response.Result = new(Collection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1138,12 +1138,12 @@ func (discovery *DiscoveryV1) ListCollectionFields(options *ListCollectionFields
     response.Result = new(ListCollectionFieldsResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1205,12 +1205,12 @@ func (discovery *DiscoveryV1) ListCollections(options *ListCollectionsOptions) (
     response.Result = new(ListCollectionsResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1281,12 +1281,12 @@ func (discovery *DiscoveryV1) UpdateCollection(options *UpdateCollectionOptions)
     response.Result = new(Collection)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1351,12 +1351,12 @@ func (discovery *DiscoveryV1) CreateExpansions(options *CreateExpansionsOptions)
     response.Result = new(Expansions)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1415,12 +1415,12 @@ func (discovery *DiscoveryV1) DeleteExpansions(options *DeleteExpansionsOptions)
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1470,12 +1470,12 @@ func (discovery *DiscoveryV1) ListExpansions(options *ListExpansionsOptions) (*w
     response.Result = new(Expansions)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1543,12 +1543,12 @@ func (discovery *DiscoveryV1) AddDocument(options *AddDocumentOptions) (*watson.
     response.Result = new(DocumentAccepted)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1609,12 +1609,12 @@ func (discovery *DiscoveryV1) DeleteDocument(options *DeleteDocumentOptions) (*w
     response.Result = new(DeleteDocumentResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1675,12 +1675,12 @@ func (discovery *DiscoveryV1) GetDocumentStatus(options *GetDocumentStatusOption
     response.Result = new(DocumentStatus)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1749,12 +1749,12 @@ func (discovery *DiscoveryV1) UpdateDocument(options *UpdateDocumentOptions) (*w
     response.Result = new(DocumentAccepted)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1868,12 +1868,12 @@ func (discovery *DiscoveryV1) FederatedQuery(options *FederatedQueryOptions) (*w
     response.Result = new(QueryResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -1972,12 +1972,12 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(options *FederatedQueryNotic
     response.Result = new(QueryNoticesResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2094,12 +2094,12 @@ func (discovery *DiscoveryV1) Query(options *QueryOptions) (*watson.WatsonRespon
     response.Result = new(QueryResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2176,12 +2176,12 @@ func (discovery *DiscoveryV1) QueryEntities(options *QueryEntitiesOptions) (*wat
     response.Result = new(QueryEntitiesResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2292,12 +2292,12 @@ func (discovery *DiscoveryV1) QueryNotices(options *QueryNoticesOptions) (*watso
     response.Result = new(QueryNoticesResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2377,12 +2377,12 @@ func (discovery *DiscoveryV1) QueryRelations(options *QueryRelationsOptions) (*w
     response.Result = new(QueryRelationsResponse)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2453,12 +2453,12 @@ func (discovery *DiscoveryV1) AddTrainingData(options *AddTrainingDataOptions) (
     response.Result = new(TrainingQuery)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2530,12 +2530,12 @@ func (discovery *DiscoveryV1) CreateTrainingExample(options *CreateTrainingExamp
     response.Result = new(TrainingExample)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2594,12 +2594,12 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(options *DeleteAllTrainingDa
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2649,12 +2649,12 @@ func (discovery *DiscoveryV1) DeleteTrainingData(options *DeleteTrainingDataOpti
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2705,12 +2705,12 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(options *DeleteTrainingExamp
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2761,12 +2761,12 @@ func (discovery *DiscoveryV1) GetTrainingData(options *GetTrainingDataOptions) (
     response.Result = new(TrainingQuery)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2828,12 +2828,12 @@ func (discovery *DiscoveryV1) GetTrainingExample(options *GetTrainingExampleOpti
     response.Result = new(TrainingExample)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2893,12 +2893,12 @@ func (discovery *DiscoveryV1) ListTrainingData(options *ListTrainingDataOptions)
     response.Result = new(TrainingDataSet)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -2959,12 +2959,12 @@ func (discovery *DiscoveryV1) ListTrainingExamples(options *ListTrainingExamples
     response.Result = new(TrainingExampleList)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3034,12 +3034,12 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(options *UpdateTrainingExamp
     response.Result = new(TrainingExample)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3097,12 +3097,12 @@ func (discovery *DiscoveryV1) DeleteUserData(options *DeleteUserDataOptions) (*w
 
     res, _, err := request.End()
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3159,12 +3159,12 @@ func (discovery *DiscoveryV1) CreateCredentials(options *CreateCredentialsOption
     response.Result = new(Credentials)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3224,12 +3224,12 @@ func (discovery *DiscoveryV1) DeleteCredentials(options *DeleteCredentialsOption
     response.Result = new(DeleteCredentials)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3289,12 +3289,12 @@ func (discovery *DiscoveryV1) GetCredentials(options *GetCredentialsOptions) (*w
     response.Result = new(Credentials)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3353,12 +3353,12 @@ func (discovery *DiscoveryV1) ListCredentials(options *ListCredentialsOptions) (
     response.Result = new(CredentialsList)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3426,12 +3426,12 @@ func (discovery *DiscoveryV1) UpdateCredentials(options *UpdateCredentialsOption
     response.Result = new(Credentials)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -3981,8 +3981,8 @@ type CreateEnvironmentOptions struct {
     // Indicates whether user set optional parameter Description
     IsDescriptionSet bool
 
-	// **Deprecated**: Size of the environment.
-	Size int64 `json:"size,omitempty"`
+	// Size of the environment.
+	Size string `json:"size,omitempty"`
 
     // Indicates whether user set optional parameter Size
     IsSizeSet bool
@@ -4012,7 +4012,7 @@ func (options *CreateEnvironmentOptions) SetDescription(param string) *CreateEnv
 }
 
 // SetSize : Allow user to set Size
-func (options *CreateEnvironmentOptions) SetSize(param int64) *CreateEnvironmentOptions {
+func (options *CreateEnvironmentOptions) SetSize(param string) *CreateEnvironmentOptions {
     options.Size = param
     options.IsSizeSet = true
     return options
@@ -4836,8 +4836,8 @@ type Environment struct {
 	// If `true`, the environment contains read-only collections that are maintained by IBM.
 	ReadOnly bool `json:"read_only,omitempty"`
 
-	// **Deprecated**: Size of the environment.
-	Size int64 `json:"size,omitempty"`
+	// Size of the environment.
+	Size string `json:"size,omitempty"`
 
 	// Details about the resource usage and capacity of the environment.
 	IndexCapacity IndexCapacity `json:"index_capacity,omitempty"`

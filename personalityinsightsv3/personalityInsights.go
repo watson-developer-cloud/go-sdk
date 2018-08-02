@@ -98,12 +98,12 @@ func (personalityInsights *PersonalityInsightsV3) Profile(options *ProfileOption
     response.Result = new(Profile)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -179,14 +179,14 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(options *ProfileO
     response := new(watson.WatsonResponse)
 
     res, _, err := request.End()
-    response.Result = res.Body
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
 
     if err != nil {
         return nil, err
     }
+
+    response.Result = res.Body
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)

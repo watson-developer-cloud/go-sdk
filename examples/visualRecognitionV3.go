@@ -30,11 +30,12 @@ func main() {
 		return
 	}
 
+
 	/* CLASSIFY */
 
 	// Open file with image to classify
 	pwd, _ := os.Getwd()
-	imageFile, imageFileErr := os.Open(pwd + "/resources/visualRecognition.jpg")
+	imageFile, imageFileErr := os.Open(pwd + "/resources/kitty.jpg")
 
 	// Check successful file read
 	if imageFileErr != nil {

@@ -94,12 +94,12 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(options *ToneOptions) (*watson.WatsonRe
     response.Result = new(ToneAnalysis)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
@@ -166,12 +166,12 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(options *ToneChatOptions) (*watson.
     response.Result = new(UtteranceAnalyses)
     res, _, err := request.EndStruct(&response.Result)
 
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
     if err != nil {
         return nil, err
     }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
 
     if res.StatusCode < 200 || res.StatusCode >= 300 {
         buff := new(bytes.Buffer)
