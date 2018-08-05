@@ -1,4 +1,4 @@
-package golangsdk
+package gosdk
 
 import (
 	"fmt"

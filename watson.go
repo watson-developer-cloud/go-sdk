@@ -1,4 +1,4 @@
-package golangsdk
+package gosdk
 
 import (
 	"fmt"
@@ -25,13 +25,13 @@ type Credentials struct {
 
 // Client : Base Client struct
 type Client struct {
-	Creds Credentials
+	Creds *Credentials
 	UseTM bool
 	TokenManager *TokenManager
 }
 
 // NewClient : Instantiate Client
-func NewClient(creds Credentials, serviceName string) (*Client, error) {
+func NewClient(creds *Credentials, serviceName string) (*Client, error) {
 	client := Client{
 		Creds: creds,
 		UseTM: false,

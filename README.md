@@ -1,8 +1,6 @@
-# Watson Developer Cloud Golang SDK
+# Watson Developer Cloud Go SDK
 
-Golang client library to quickly get started with the various [Watson APIs](https://www.ibm.com/watson/developercloud/) services.
-
-![gopher](https://www.spreadshirt.com/image-server/v1/mp/designs/1005862415,width=178,height=178/golang-gopher.png)
+Go client library to quickly get started with the various [Watson APIs](https://www.ibm.com/watson/developercloud/) services.
 
 <details>
 <summary>Table of Contents</summary>
@@ -28,26 +26,20 @@ Golang client library to quickly get started with the various [Watson APIs](http
 
 Get SDK package:
 ```bash
-go get github.com/watson-developer-cloud/golang-sdk
+go get github.com/watson-developer-cloud/go-sdk
 ```
 
-Import SDK package in your Go program:
+Import the specific service package you want to use in your Go program:
 ```go
 import (
-  watson "github.com/watson-developer-cloud/golang-sdk"
+  . "github.com/watson-developer-cloud/go-sdk/discoveryV1"
 )
 ```
-
-Import the specific service package you want:
-```go
-import (
-  "github.com/watson-developer-cloud/golang-sdk/discoveryv1"
-)
-```
+(Learn about Go [import types](https://medium.com/golangspec/import-declarations-in-go-8de0fd3ae8ff))
 
 ## Examples
 
-The [examples](https://github.ibm.com/arf/golang-sdk/tree/master/examples) folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
+The [examples](https://github.ibm.com/arf/go-sdk/tree/master/examples) folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
 
 ## Running in IBM Cloud
 
@@ -82,7 +74,7 @@ You supply either an IAM service **API key** or an **access token**:
 
 ```go
 // In the constructor, letting the SDK manage the IAM token
-discovery, discoveryErr := discoveryv1.NewDiscoveryV1(watson.Credentials{
+discovery, discoveryErr := NewDiscoveryV1(&ServiceCredentials{
   ServiceURL: "<service_url>",
   Version: "2018-02-16",
   APIkey: "<api_key>",
@@ -93,7 +85,7 @@ discovery, discoveryErr := discoveryv1.NewDiscoveryV1(watson.Credentials{
 
 ```go
 // In the constructor, assuming control of managing IAM token
-discovery, discoveryErr := discoveryv1.NewDiscoveryV1(watson.Credentials{
+discovery, discoveryErr := NewDiscoveryV1(&ServiceCredentials{
   ServiceURL: "<service_url>",
   Version: "2018-02-16",
   IAMtoken: "<iam_token>",
@@ -104,7 +96,7 @@ discovery, discoveryErr := discoveryv1.NewDiscoveryV1(watson.Credentials{
 
 ```go
 // In the constructor
-discovery, discoveryErr := discoveryv1.NewDiscoveryV1(watson.Credentials{
+discovery, discoveryErr := NewDiscoveryV1(&ServiceCredentials{
   ServiceURL: "<service_url>",
   Version: "2018-02-16",
   Username: "<username>",
@@ -114,7 +106,7 @@ discovery, discoveryErr := discoveryv1.NewDiscoveryV1(watson.Credentials{
 
 ## Contributing
 
-See [Contributing.md](https://github.com/watson-developer-cloud/python-sdk/blob/master/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.ibm.com/arf/go-sdk/tree/master/CONTRIBUTING.md).
 
 ## License
 
