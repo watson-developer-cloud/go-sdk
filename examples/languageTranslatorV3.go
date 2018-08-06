@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	watson "golang-sdk"
-	"golang-sdk/languagetranslatorv3"
+	. "go-sdk/languageTranslatorV3"
 	"os"
 	"encoding/json"
 )
@@ -18,7 +17,7 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Language Translator service
-	languageTranslator, languageTranslatorErr := languagetranslatorv3.NewLanguageTranslatorV3(watson.Credentials{
+	languageTranslator, languageTranslatorErr := NewLanguageTranslatorV3(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-02-16",
 		APIkey: "YOUR SERVICE API KEY",
@@ -38,7 +37,7 @@ func main() {
 		"And this one",
 	}
 
-	translateOptions := languagetranslatorv3.NewTranslateOptions(textToTranslate).
+	translateOptions := NewTranslateOptions(textToTranslate).
 		SetModelID("en-es")
 
 	// Call the languageTranslator Translate method
@@ -50,9 +49,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetTranslateResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	translateResult := languagetranslatorv3.GetTranslateResult(translate)
+	// Cast translate.Result to the specific dataType returned by Translate
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	translateResult := GetTranslateResult(translate)
 
 	// Check successful casting
 	if translateResult != nil {
@@ -62,7 +61,7 @@ func main() {
 
 	/* LIST IDENTIFIABLE LANGUAGES */
 
-	listIdentifiableLanguagesOptions := languagetranslatorv3.NewListIdentifiableLanguagesOptions()
+	listIdentifiableLanguagesOptions := NewListIdentifiableLanguagesOptions()
 
 	// Call the languageTranslator ListIdentifiableLanguages method
 	listLanguage, listLanguageErr := languageTranslator.ListIdentifiableLanguages(listIdentifiableLanguagesOptions)
@@ -73,9 +72,8 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetListIdentifiableLanguagesResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	listLanguageResult := languagetranslatorv3.GetListIdentifiableLanguagesResult(listLanguage)
+	// Cast result
+	listLanguageResult := GetListIdentifiableLanguagesResult(listLanguage)
 
 	// Check successful casting
 	if listLanguageResult != nil {
@@ -86,7 +84,7 @@ func main() {
 	/* IDENTIFY */
 
 	textToIdentify := "What language is this message in?"
-	identifyOptions := languagetranslatorv3.NewIdentifyOptions(textToIdentify)
+	identifyOptions := NewIdentifyOptions(textToIdentify)
 
 	// Call the languageTranslator Identify method
 	identify, identifyErr := languageTranslator.Identify(identifyOptions)
@@ -97,9 +95,8 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetIdentifyResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	identifyResult := languagetranslatorv3.GetIdentifyResult(identify)
+	// Cast result
+	identifyResult := GetIdentifyResult(identify)
 
 	// Check successful casting
 	if identifyResult != nil {
@@ -109,7 +106,7 @@ func main() {
 
 	/* LIST MODELS */
 
-	listModelsOptions := languagetranslatorv3.NewListModelsOptions().
+	listModelsOptions := NewListModelsOptions().
 		SetSource("es").
 		SetTarget("en").
 		SetDefaultModels(true)
@@ -123,9 +120,8 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetListModelsResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	listModelResult := languagetranslatorv3.GetListModelsResult(listModel)
+	// Cast result
+	listModelResult := GetListModelsResult(listModel)
 
 	// Check successful casting
 	if listModelResult != nil {
@@ -142,7 +138,7 @@ func main() {
 		fmt.Println(glossaryErr)
 	}
 
-	createModelOptions := languagetranslatorv3.NewCreateModelOptions("en-fr").
+	createModelOptions := NewCreateModelOptions("en-fr").
 		SetName("custom-en-fr").
 		SetForcedGlossary(*glossary)
 
@@ -155,9 +151,8 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetCreateModelResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	createModelResult := languagetranslatorv3.GetCreateModelResult(createModel)
+	// Cast result
+	createModelResult := GetCreateModelResult(createModel)
 
 	// Check successful casting
 	if createModelResult != nil {
@@ -168,7 +163,7 @@ func main() {
 	/* GET MODEL */
 
 	// Call the languageTranslator GetModel method
-	getModelOptions := languagetranslatorv3.NewGetModelOptions(createModelResult.ModelID)
+	getModelOptions := NewGetModelOptions(createModelResult.ModelID)
 	getModel, getModelErr := languageTranslator.GetModel(getModelOptions)
 
 	// Check successful call
@@ -177,9 +172,8 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetGetModelResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	getModelResult := languagetranslatorv3.GetGetModelResult(getModel)
+	// Cast result
+	getModelResult := GetGetModelResult(getModel)
 
 	// Check successful casting
 	if getModelResult != nil {
@@ -190,7 +184,7 @@ func main() {
 	/* DELETE MODEL */
 
 	// Call the languageTranslator DeleteModel method
-	deleteModelOptions := languagetranslatorv3.NewDeleteModelOptions(getModelResult.ModelID)
+	deleteModelOptions := NewDeleteModelOptions(getModelResult.ModelID)
 	deleteModel, deleteModelErr := languageTranslator.DeleteModel(deleteModelOptions)
 
 	// Check successful call
@@ -199,9 +193,8 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetDeleteModelResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	deleteModelResult := languagetranslatorv3.GetDeleteModelResult(deleteModel)
+	// Cast result
+	deleteModelResult := GetDeleteModelResult(deleteModel)
 
 	// Check successful casting
 	if deleteModelResult != nil {

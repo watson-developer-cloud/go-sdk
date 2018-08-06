@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	watson "golang-sdk"
-	"golang-sdk/naturallanguageclassifierv1"
+	. "go-sdk/naturalLanguageClassifierV1"
 	"encoding/json"
 	"os"
 )
@@ -18,7 +17,7 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Natural Language Classifier service
-	nlc, nlcErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(watson.Credentials{
+	nlc, nlcErr := NewNaturalLanguageClassifierV1(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-07-10",
 		Username: "YOUR SERVICE USERNAME",
@@ -46,7 +45,7 @@ func main() {
 		fmt.Println(dataErr)
 	}
 
-	createClassifierOptions := naturallanguageclassifierv1.NewCreateClassifierOptions(*metadata, *data)
+	createClassifierOptions := NewCreateClassifierOptions(*metadata, *data)
 
 	// Call the natural language classifier CreateClassifier method
 	create, createErr := nlc.CreateClassifier(createClassifierOptions)
@@ -57,9 +56,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetCreateClassifierResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	createResult := naturallanguageclassifierv1.GetCreateClassifierResult(create)
+	// Cast create.Result to the specific dataType returned by CreateClassifier
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	createResult := GetCreateClassifierResult(create)
 
 	// Check successful casting
 	if createResult != nil {
@@ -70,7 +69,7 @@ func main() {
 	/* CLASSIFY */
 
 	if createResult.Status == "Available" {
-		classifyOptions := naturallanguageclassifierv1.NewClassifyOptions(createResult.ClassifierID, "How hot will it be tomorrow?")
+		classifyOptions := NewClassifyOptions(createResult.ClassifierID, "How hot will it be tomorrow?")
 
 		// Call the natural language classifier Classify method
 		classify, classifyErr := nlc.Classify(classifyOptions)
@@ -81,9 +80,8 @@ func main() {
 			return
 		}
 
-		// Cast response from call to the specific struct returned by GetClassifyResult
-		// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-		classifyResult := naturallanguageclassifierv1.GetClassifyResult(classify)
+		// Cast result
+		classifyResult := GetClassifyResult(classify)
 
 		// Check successful casting
 		if classifyResult != nil {

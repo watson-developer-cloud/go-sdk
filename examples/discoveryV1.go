@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	watson "golang-sdk"
-	"golang-sdk/discoveryv1"
+	. "go-sdk/discoveryV1"
 	"encoding/json"
 )
 
@@ -17,7 +16,7 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Discovery service
-	discovery, discoveryV1Err := discoveryv1.NewDiscoveryV1(watson.Credentials{
+	discovery, discoveryV1Err := NewDiscoveryV1(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-03-05",
 		Username: "YOUR SERVICE USERNAME",
@@ -34,7 +33,7 @@ func main() {
 	/* LIST ENVIRONMENTS */
 
 	// Create a new ListEnvironmentsOptions and set optional parameter Name
-	listEnvironmentsOptions := discoveryv1.NewListEnvironmentsOptions().
+	listEnvironmentsOptions := NewListEnvironmentsOptions().
 		SetName("Watson Discovery Environment")
 
 	// Call the discovery ListEnvironments method
@@ -46,9 +45,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetListEnvironmentsResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	listEnvironmentResult := discoveryv1.GetListEnvironmentsResult(listEnvironment)
+	// Cast listEnvironment.Result to the specific dataType returned by ListEnvironments
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	listEnvironmentResult := GetListEnvironmentsResult(listEnvironment)
 
 	// Check successful casting
 	if listEnvironmentResult != nil {

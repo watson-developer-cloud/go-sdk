@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	watson "golang-sdk"
-	"golang-sdk/toneanalyzerv3"
+	. "go-sdk/toneAnalyzerV3"
 	"encoding/json"
 )
 
@@ -17,7 +16,7 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Tone Analyzer service
-	toneAnalyzer, toneAnalyzerErr := toneanalyzerv3.NewToneAnalyzerV3(watson.Credentials{
+	toneAnalyzer, toneAnalyzerErr := NewToneAnalyzerV3(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2017-09-21",
 		Username: "YOUR SERVICE USERNAME",
@@ -33,7 +32,7 @@ func main() {
 
 	/* TONE CHAT */
 
-	utterances := []toneanalyzerv3.Utterance{
+	utterances := []Utterance{
 		{
 			Text: "Hello World",
 			User: "Watson",
@@ -44,7 +43,7 @@ func main() {
 		},
 	}
 
-	toneChatOptions := toneanalyzerv3.NewToneChatOptions(utterances).
+	toneChatOptions := NewToneChatOptions(utterances).
 		SetAcceptLanguage("en").
 		SetContentLanguage("en")
 
@@ -57,9 +56,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetToneChatResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	toneChatResult := toneanalyzerv3.GetToneChatResult(toneChat)
+	// Cast toneChat.Result to the specific dataType returned by ToneChat
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	toneChatResult := GetToneChatResult(toneChat)
 
 	// Check successful casting
 	if toneChatResult != nil {

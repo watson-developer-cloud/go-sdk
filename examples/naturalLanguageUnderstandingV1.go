@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	watson "golang-sdk"
-	"golang-sdk/naturallanguageunderstandingv1"
+	. "go-sdk/naturalLanguageUnderstandingV1"
 	"encoding/json"
 	"os"
 	"io/ioutil"
@@ -19,7 +18,7 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Natural Language Understanding service
-	nlu, nluErr := naturallanguageunderstandingv1.NewNaturalLanguageUnderstandingV1(watson.Credentials{
+	nlu, nluErr := NewNaturalLanguageUnderstandingV1(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2017-02-27",
 		APIkey: "YOUR SERVICE API KEY",
@@ -43,7 +42,7 @@ func main() {
 		return
 	}
 
-	analyzeOptions := naturallanguageunderstandingv1.NewAnalyzeOptions(naturallanguageunderstandingv1.Features{}).
+	analyzeOptions := NewAnalyzeOptions(Features{}).
 		SetHTML(string(file))
 
 	// Call the naturalLanguageUnderstanding Analyze method
@@ -55,9 +54,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetAnalyzeResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	analyzeResult := naturallanguageunderstandingv1.GetAnalyzeResult(analyze)
+	// Cast analyze.Result to the specific dataType returned by Analyze
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	analyzeResult := GetAnalyzeResult(analyze)
 
 	// Check successful casting
 	if analyzeResult != nil {

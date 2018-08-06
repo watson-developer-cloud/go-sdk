@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	watson "golang-sdk"
-	"golang-sdk/texttospeechv1"
+	. "go-sdk/textToSpeechV1"
 	"bytes"
 	"os"
 )
 
 func main() {
 	// Instantiate the Watson Text To Speech service
-	textToSpeech, textToSpeechErr := texttospeechv1.NewTextToSpeechV1(watson.Credentials{
+	textToSpeech, textToSpeechErr := NewTextToSpeechV1(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2017-09-21",
 		Username: "YOUR SERVICE USERNAME",
@@ -26,7 +25,7 @@ func main() {
 
 	/* SYNTHESIZE */
 
-	synthesizeOptions := texttospeechv1.NewSynthesizeOptions("Hello World").
+	synthesizeOptions := NewSynthesizeOptions("Hello World").
 		SetAccept("audio/mp3").
 		SetVoice("en-GB_KateVoice")
 
@@ -39,9 +38,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetSynthesizeResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	synthesizeResult := texttospeechv1.GetSynthesizeResult(synthesize)
+	// Cast synthesize.Result to the specific dataType returned by Synthesize
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	synthesizeResult := GetSynthesizeResult(synthesize)
 
 	// Check successful casting
 	if synthesizeResult != nil {

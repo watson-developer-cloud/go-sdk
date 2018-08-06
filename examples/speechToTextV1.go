@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	watson "golang-sdk"
-	"golang-sdk/speechtotextv1"
+	. "go-sdk/speechToTextV1"
 	"os"
 	"encoding/json"
 )
@@ -18,7 +17,7 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Speech To Text service
-	speechToText, speechToTextErr := speechtotextv1.NewSpeechToTextV1(watson.Credentials{
+	speechToText, speechToTextErr := NewSpeechToTextV1(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2017-09-21",
 		APIkey: "YOUR SERVICE API KEY",
@@ -43,7 +42,7 @@ func main() {
 	}
 
 	// Create a new RecognizeOptions for ContentType "audio/mp3"
-	recognizeOptions := speechtotextv1.NewRecognizeOptionsForMp3(audio)
+	recognizeOptions := NewRecognizeOptionsForMp3(audio)
 
 	// Call the speechToText Recognize method
 	recognize, recognizeErr := speechToText.Recognize(recognizeOptions)
@@ -54,9 +53,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetRecognizeResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	recognizeResult := speechtotextv1.GetRecognizeResult(recognize)
+	// Cast recognize.Result to the specific dataType returned by Recognize
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	recognizeResult := GetRecognizeResult(recognize)
 
 	// Check successful casting
 	if recognizeResult != nil {

@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"encoding/json"
-	watson "golang-sdk"
-	"golang-sdk/personalityinsightsv3"
+	. "go-sdk/personalityInsightsV3"
 	"bytes"
 )
 
@@ -20,7 +19,7 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Personality Insights service
-	piV3, piV3Err := personalityinsightsv3.NewPersonalityInsightsV3(watson.Credentials{
+	piV3, piV3Err := NewPersonalityInsightsV3(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2017-10-13",
 		APIkey: "YOUR SERVICE API KEY",
@@ -47,7 +46,7 @@ func main() {
 	}
 
 	// Create a new ProfileOptions for ContentType "text/plain"
-	profileOptions := personalityinsightsv3.NewProfileOptionsForPlain(string(file)).
+	profileOptions := NewProfileOptionsForPlain(string(file)).
 		SetContentLanguage("en").
 		SetAcceptLanguage("en")
 
@@ -60,9 +59,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetProfileResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	profResult := personalityinsightsv3.GetProfileResult(prof)
+	// Cast prof.Result to the specific dataType returned by Profile
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	profResult := GetProfileResult(prof)
 
 	// Check successful casting
 	if profResult != nil {
@@ -80,7 +79,7 @@ func main() {
 	}
 
 	// Unmarshal JSON into Content struct
-	content := new(personalityinsightsv3.Content)
+	content := new(Content)
 	json.Unmarshal(file, content)
 
 	// Set Content of profileOptions
@@ -95,8 +94,8 @@ func main() {
 		return
 	}
 
-	// Cast response again
-	profResult = personalityinsightsv3.GetProfileResult(prof)
+	// Cast result again
+	profResult = GetProfileResult(prof)
 
 	// Check successful casting
 	if profResult != nil {
@@ -128,8 +127,8 @@ func main() {
 		return
 	}
 
-	// Cast response
-	profCsvResult := personalityinsightsv3.GetProfileAsCsvResult(prof)
+	// Cast result
+	profCsvResult := GetProfileAsCsvResult(prof)
 
 	// Check successful casting
 	if profCsvResult != nil {

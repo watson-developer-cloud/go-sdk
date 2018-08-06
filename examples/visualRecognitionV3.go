@@ -3,8 +3,7 @@ package main
 import (
 	"os"
 	"fmt"
-	watson "golang-sdk"
-	"golang-sdk/visualrecognitionv3"
+	. "go-sdk/visualRecognitionV3"
 	"encoding/json"
 )
 
@@ -18,7 +17,7 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Visual Recognition service
-	visualRecognition, visualRecognitionErr := visualrecognitionv3.NewVisualRecognitionV3(watson.Credentials{
+	visualRecognition, visualRecognitionErr := NewVisualRecognitionV3(&ServiceCredentials{
 		ServiceURL: "YOUR SERVICE URL",
 		Version: "2018-03-19",
 		APIkey: "YOUR SERVICE API KEY",
@@ -43,7 +42,7 @@ func main() {
 		return
 	}
 
-	classifyOptions := visualrecognitionv3.NewClassifyOptions().
+	classifyOptions := NewClassifyOptions().
 		SetImagesFile(*imageFile).
 		SetURL("https://www.readersdigest.ca/wp-content/uploads/2011/01/4-ways-cheer-up-depressed-cat.jpg").
 		SetThreshold(0.6).
@@ -58,9 +57,9 @@ func main() {
 		return
 	}
 
-	// Cast response from call to the specific struct returned by GetClassifyResult
-	// NOTE: other than DELETE requests, every method has a corresponding Get<methodName>Result() function
-	classifyResult := visualrecognitionv3.GetClassifyResult(classify)
+	// Cast classify.Result to the specific dataType returned by Classify
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	classifyResult := GetClassifyResult(classify)
 
 	// Check successful casting
 	if classifyResult != nil {
