@@ -65,4 +65,78 @@ func main() {
 	if classifyResult != nil {
 		prettyPrint(classifyResult, "Classify")
 	}
+
+
+	/* CREATE CLASSIFIER */
+
+	carsFile, carsFileErr := os.Open(pwd + "/resources/cars.zip")
+	if carsFileErr != nil {
+		fmt.Println(carsFileErr)
+		return
+	}
+
+	trucksFile, trucksFileErr := os.Open(pwd + "/resources/trucks.zip")
+	if trucksFileErr != nil {
+		fmt.Println(trucksFileErr)
+		return
+	}
+
+	createClassifierOptions := NewCreateClassifierOptions("Cars vs Trucks", "cars", *carsFile).
+		SetNegativeExamples(*trucksFile)
+
+	create, createErr := visualRecognition.CreateClassifier(createClassifierOptions)
+	if createErr != nil {
+		fmt.Println(createErr)
+		return
+	}
+
+	createResult := GetCreateClassifierResult(create)
+	if createResult != nil {
+		prettyPrint(createResult, "Create Classifier")
+	}
+
+	// Test classifier
+	imageFile, imageFileErr = os.Open(pwd + "/resources/car.jpg")
+	if imageFileErr != nil {
+		fmt.Println(imageFileErr)
+		return
+	}
+
+	classifyOptions = NewClassifyOptions().
+		SetImagesFile(*imageFile)
+
+	classify, classifyErr = visualRecognition.Classify(classifyOptions)
+	if classifyErr != nil {
+		fmt.Println(classifyErr)
+		return
+	}
+
+	classifyResult = GetClassifyResult(classify)
+	if classifyResult != nil {
+		prettyPrint(classifyResult, "Classify")
+	}
+
+
+	/* DETECT FACES */
+
+	imageFile, imageFileErr = os.Open(pwd + "/resources/face.jpg")
+	if imageFileErr != nil {
+		fmt.Println(imageFileErr)
+		return
+	}
+
+	detectFacesOptions := NewDetectFacesOptions().
+		SetImagesFile(*imageFile).
+		SetURL("https://www.ibm.com/ibm/ginni/images/ginni_bio_780x981_v4_03162016.jpg")
+
+	detect, detectErr := visualRecognition.DetectFaces(detectFacesOptions)
+	if detectErr != nil {
+		fmt.Println(detectErr)
+		return
+	}
+
+	detectResult := GetDetectFacesResult(detect)
+	if detectResult != nil {
+		prettyPrint(detectResult, "Detect Faces")
+	}
 }
