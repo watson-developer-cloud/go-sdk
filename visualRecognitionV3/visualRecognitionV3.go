@@ -237,7 +237,9 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(options *CreateCl
     request.Type("multipart")
     form := map[string]interface{}{}
     form["name"] = options.Name
-    request.SendFile(options.ClassnamePositiveExamples, "", "classname_positive_examples")
+    for className, file := range options.ClassnamePositiveExamples {
+        request.SendFile(file, "", className + "_positive_examples")
+    }
     if options.IsNegativeExamplesSet {
         request.SendFile(options.NegativeExamples, "", "negative_examples")
     }
@@ -497,8 +499,8 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(options *UpdateCl
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
-    if options.IsClassnamePositiveExamplesSet {
-        request.SendFile(options.ClassnamePositiveExamples, "", "classname_positive_examples")
+    for className, file := range options.ClassnamePositiveExamples {
+        request.SendFile(file, "", className + "_positive_examples")
     }
     if options.IsNegativeExamplesSet {
         request.SendFile(options.NegativeExamples, "", "negative_examples")
@@ -897,7 +899,7 @@ type CreateClassifierOptions struct {
 	Name string `json:"name"`
 
 	// A .zip file of images that depict the visual subject of a class in the new classifier. You can include more than one positive example file in a call. Specify the parameter name by appending `_positive_examples` to the class name. For example, `goldenretriever_positive_examples` creates the class **goldenretriever**. Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The maximum number of images is 10,000 images or 100 MB per .zip file. Encode special characters in the file name in UTF-8.
-	ClassnamePositiveExamples os.File `json:"classname_positive_examples"`
+	ClassnamePositiveExamples map[string]os.File `json:"classname_positive_examples"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must contain a minimum of 10 images. Encode special characters in the file name in UTF-8.
 	NegativeExamples os.File `json:"negative_examples,omitempty"`
@@ -910,10 +912,12 @@ type CreateClassifierOptions struct {
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func NewCreateClassifierOptions(name string, classnamePositiveExamples os.File) *CreateClassifierOptions {
+func NewCreateClassifierOptions(name string, className string, classNamePositiveExamples os.File) *CreateClassifierOptions {
     return &CreateClassifierOptions{
         Name: name,
-        ClassnamePositiveExamples: classnamePositiveExamples,
+        ClassnamePositiveExamples: map[string]os.File{
+            className: classNamePositiveExamples,
+        },
     }
 }
 
@@ -923,9 +927,9 @@ func (options *CreateClassifierOptions) SetName(param string) *CreateClassifierO
     return options
 }
 
-// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
-func (options *CreateClassifierOptions) SetClassnamePositiveExamples(param os.File) *CreateClassifierOptions {
-    options.ClassnamePositiveExamples = param
+// AddClassnamePositiveExamples : Allow user to add ClassnamePositiveExamples
+func (options *CreateClassifierOptions) AddClassnamePositiveExamples(className string, file os.File) *CreateClassifierOptions {
+    options.ClassnamePositiveExamples[className] = file
     return options
 }
 
@@ -1250,10 +1254,7 @@ type UpdateClassifierOptions struct {
 	ClassifierID string `json:"classifier_id"`
 
 	// A .zip file of images that depict the visual subject of a class in the classifier. The positive examples create or update classes in the classifier. You can include more than one positive example file in a call. Specify the parameter name by appending `_positive_examples` to the class name. For example, `goldenretriever_positive_examples` creates the class `goldenretriever`. Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The maximum number of images is 10,000 images or 100 MB per .zip file. Encode special characters in the file name in UTF-8.
-	ClassnamePositiveExamples os.File `json:"classname_positive_examples,omitempty"`
-
-    // Indicates whether user set optional parameter ClassnamePositiveExamples
-    IsClassnamePositiveExamplesSet bool
+	ClassnamePositiveExamples map[string]os.File `json:"classname_positive_examples,omitempty"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must contain a minimum of 10 images. Encode special characters in the file name in UTF-8.
 	NegativeExamples os.File `json:"negative_examples,omitempty"`
@@ -1278,10 +1279,9 @@ func (options *UpdateClassifierOptions) SetClassifierID(param string) *UpdateCla
     return options
 }
 
-// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
-func (options *UpdateClassifierOptions) SetClassnamePositiveExamples(param os.File) *UpdateClassifierOptions {
-    options.ClassnamePositiveExamples = param
-    options.IsClassnamePositiveExamplesSet = true
+// AddClassnamePositiveExamples : Allow user to add ClassnamePositiveExamples
+func (options *UpdateClassifierOptions) AddClassnamePositiveExamples(className string, file os.File) *UpdateClassifierOptions {
+    options.ClassnamePositiveExamples[className] = file
     return options
 }
 
