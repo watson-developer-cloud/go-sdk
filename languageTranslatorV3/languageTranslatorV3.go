@@ -1,5 +1,5 @@
-// Package languagetranslatorv3 : Operations and models for the LanguageTranslatorV3 service
-package languagetranslatorv3
+// Package languageTranslatorV3 : Operations and models for the LanguageTranslatorV3 service
+package languageTranslatorV3
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -22,27 +22,38 @@ import (
     "os"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // LanguageTranslatorV3 : The LanguageTranslatorV3 service
 type LanguageTranslatorV3 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewLanguageTranslatorV3 : Instantiate LanguageTranslatorV3
-func NewLanguageTranslatorV3(creds watson.Credentials) (*LanguageTranslatorV3, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://gateway.watsonplatform.net/language-translator/api"
+func NewLanguageTranslatorV3(serviceCreds *ServiceCredentials) (*LanguageTranslatorV3, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/language-translator/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "language_translator")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "language_translator")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &LanguageTranslatorV3{ client: client }, nil
+    return &LanguageTranslatorV3{ client: client }, nil
 }
 
 // Translate : Translate

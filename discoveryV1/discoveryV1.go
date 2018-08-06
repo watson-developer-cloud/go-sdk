@@ -1,5 +1,5 @@
-// Package discoveryv1 : Operations and models for the DiscoveryV1 service
-package discoveryv1
+// Package discoveryV1 : Operations and models for the DiscoveryV1 service
+package discoveryV1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -23,27 +23,38 @@ import (
     "os"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // DiscoveryV1 : The DiscoveryV1 service
 type DiscoveryV1 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewDiscoveryV1 : Instantiate DiscoveryV1
-func NewDiscoveryV1(creds watson.Credentials) (*DiscoveryV1, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://gateway.watsonplatform.net/discovery/api"
+func NewDiscoveryV1(serviceCreds *ServiceCredentials) (*DiscoveryV1, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/discovery/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "discovery")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "discovery")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &DiscoveryV1{ client: client }, nil
+    return &DiscoveryV1{ client: client }, nil
 }
 
 // CreateEnvironment : Create an environment

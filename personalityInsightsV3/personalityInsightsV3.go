@@ -1,5 +1,5 @@
-// Package personalityinsightsv3 : Operations and models for the PersonalityInsightsV3 service
-package personalityinsightsv3
+// Package personalityInsightsV3 : Operations and models for the PersonalityInsightsV3 service
+package personalityInsightsV3
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -21,27 +21,38 @@ import (
     "fmt"
     "io"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // PersonalityInsightsV3 : The PersonalityInsightsV3 service
 type PersonalityInsightsV3 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewPersonalityInsightsV3 : Instantiate PersonalityInsightsV3
-func NewPersonalityInsightsV3(creds watson.Credentials) (*PersonalityInsightsV3, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
+func NewPersonalityInsightsV3(serviceCreds *ServiceCredentials) (*PersonalityInsightsV3, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "personality_insights")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "personality_insights")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &PersonalityInsightsV3{ client: client }, nil
+    return &PersonalityInsightsV3{ client: client }, nil
 }
 
 // Profile : Get profile

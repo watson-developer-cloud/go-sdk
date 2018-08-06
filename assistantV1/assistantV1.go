@@ -1,5 +1,5 @@
-// Package assistantv1 : Operations and models for the AssistantV1 service
-package assistantv1
+// Package assistantV1 : Operations and models for the AssistantV1 service
+package assistantV1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -22,27 +22,38 @@ import (
     "github.com/go-openapi/strfmt"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // AssistantV1 : The AssistantV1 service
 type AssistantV1 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewAssistantV1 : Instantiate AssistantV1
-func NewAssistantV1(creds watson.Credentials) (*AssistantV1, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://gateway.watsonplatform.net/assistant/api"
+func NewAssistantV1(serviceCreds *ServiceCredentials) (*AssistantV1, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/assistant/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "conversation")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "conversation")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &AssistantV1{ client: client }, nil
+    return &AssistantV1{ client: client }, nil
 }
 
 // Message : Get response to user input

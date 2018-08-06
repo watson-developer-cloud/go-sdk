@@ -1,5 +1,5 @@
-// Package visualrecognitionv3 : Operations and models for the VisualRecognitionV3 service
-package visualrecognitionv3
+// Package visualRecognitionV3 : Operations and models for the VisualRecognitionV3 service
+package visualRecognitionV3
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -24,27 +24,38 @@ import (
     "os"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // VisualRecognitionV3 : The VisualRecognitionV3 service
 type VisualRecognitionV3 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewVisualRecognitionV3 : Instantiate VisualRecognitionV3
-func NewVisualRecognitionV3(creds watson.Credentials) (*VisualRecognitionV3, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
+func NewVisualRecognitionV3(serviceCreds *ServiceCredentials) (*VisualRecognitionV3, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "watson_vision_combined")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "watson_vision_combined")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &VisualRecognitionV3{ client: client }, nil
+    return &VisualRecognitionV3{ client: client }, nil
 }
 
 // Classify : Classify images

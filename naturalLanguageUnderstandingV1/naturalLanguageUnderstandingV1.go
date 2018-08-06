@@ -1,5 +1,5 @@
-// Package naturallanguageunderstandingv1 : Operations and models for the NaturalLanguageUnderstandingV1 service
-package naturallanguageunderstandingv1
+// Package naturalLanguageUnderstandingV1 : Operations and models for the NaturalLanguageUnderstandingV1 service
+package naturalLanguageUnderstandingV1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -21,27 +21,38 @@ import (
     "fmt"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // NaturalLanguageUnderstandingV1 : The NaturalLanguageUnderstandingV1 service
 type NaturalLanguageUnderstandingV1 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewNaturalLanguageUnderstandingV1 : Instantiate NaturalLanguageUnderstandingV1
-func NewNaturalLanguageUnderstandingV1(creds watson.Credentials) (*NaturalLanguageUnderstandingV1, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
+func NewNaturalLanguageUnderstandingV1(serviceCreds *ServiceCredentials) (*NaturalLanguageUnderstandingV1, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "natural-language-understanding")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "natural-language-understanding")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &NaturalLanguageUnderstandingV1{ client: client }, nil
+    return &NaturalLanguageUnderstandingV1{ client: client }, nil
 }
 
 // Analyze : Analyze text, HTML, or a public webpage

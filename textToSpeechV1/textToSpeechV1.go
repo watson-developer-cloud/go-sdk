@@ -1,5 +1,5 @@
-// Package texttospeechv1 : Operations and models for the TextToSpeechV1 service
-package texttospeechv1
+// Package textToSpeechV1 : Operations and models for the TextToSpeechV1 service
+package textToSpeechV1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -22,27 +22,38 @@ import (
     "io"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // TextToSpeechV1 : The TextToSpeechV1 service
 type TextToSpeechV1 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewTextToSpeechV1 : Instantiate TextToSpeechV1
-func NewTextToSpeechV1(creds watson.Credentials) (*TextToSpeechV1, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://stream.watsonplatform.net/text-to-speech/api"
+func NewTextToSpeechV1(serviceCreds *ServiceCredentials) (*TextToSpeechV1, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://stream.watsonplatform.net/text-to-speech/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "text_to_speech")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "text_to_speech")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &TextToSpeechV1{ client: client }, nil
+    return &TextToSpeechV1{ client: client }, nil
 }
 
 // GetVoice : Get a voice

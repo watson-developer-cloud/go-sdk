@@ -1,5 +1,5 @@
-// Package toneanalyzerv3 : Operations and models for the ToneAnalyzerV3 service
-package toneanalyzerv3
+// Package toneAnalyzerV3 : Operations and models for the ToneAnalyzerV3 service
+package toneAnalyzerV3
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -20,27 +20,38 @@ import (
     "bytes"
     "fmt"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // ToneAnalyzerV3 : The ToneAnalyzerV3 service
 type ToneAnalyzerV3 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewToneAnalyzerV3 : Instantiate ToneAnalyzerV3
-func NewToneAnalyzerV3(creds watson.Credentials) (*ToneAnalyzerV3, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://gateway.watsonplatform.net/tone-analyzer/api"
+func NewToneAnalyzerV3(serviceCreds *ServiceCredentials) (*ToneAnalyzerV3, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/tone-analyzer/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "tone_analyzer")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "tone_analyzer")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &ToneAnalyzerV3{ client: client }, nil
+    return &ToneAnalyzerV3{ client: client }, nil
 }
 
 // Tone : Analyze general tone

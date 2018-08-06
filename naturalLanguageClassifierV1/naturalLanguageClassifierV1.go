@@ -1,5 +1,5 @@
-// Package naturallanguageclassifierv1 : Operations and models for the NaturalLanguageClassifierV1 service
-package naturallanguageclassifierv1
+// Package naturalLanguageClassifierV1 : Operations and models for the NaturalLanguageClassifierV1 service
+package naturalLanguageClassifierV1
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -23,27 +23,38 @@ import (
     "os"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "golang-sdk"
+    watson "go-sdk"
 )
 
 // NaturalLanguageClassifierV1 : The NaturalLanguageClassifierV1 service
 type NaturalLanguageClassifierV1 struct {
-	client *watson.Client
+    client *watson.Client
+}
+
+// ServiceCredentials : Service credentials
+type ServiceCredentials struct {
+    ServiceURL string
+    Version string
+    Username string
+    Password string
+    APIkey string
+    IAMtoken string
 }
 
 // NewNaturalLanguageClassifierV1 : Instantiate NaturalLanguageClassifierV1
-func NewNaturalLanguageClassifierV1(creds watson.Credentials) (*NaturalLanguageClassifierV1, error) {
-    if creds.ServiceURL == "" {
-        creds.ServiceURL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
+func NewNaturalLanguageClassifierV1(serviceCreds *ServiceCredentials) (*NaturalLanguageClassifierV1, error) {
+    if serviceCreds.ServiceURL == "" {
+        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
     }
 
-	client, clientErr := watson.NewClient(creds, "natural_language_classifier")
+    creds := watson.Credentials(*serviceCreds)
+    client, clientErr := watson.NewClient(&creds, "natural_language_classifier")
 
-	if clientErr != nil {
-		return nil, clientErr
-	}
+    if clientErr != nil {
+        return nil, clientErr
+    }
 
-	return &NaturalLanguageClassifierV1{ client: client }, nil
+    return &NaturalLanguageClassifierV1{ client: client }, nil
 }
 
 // Classify : Classify a phrase
@@ -536,7 +547,7 @@ func (options *ClassifyCollectionOptions) SetHeaders(param map[string]string) *C
 // ClassifyInput : Request payload to classify.
 type ClassifyInput struct {
 
-	// The submitted phrase.
+	// The submitted phrase. The maximum length is 2048 characters.
 	Text string `json:"text"`
 }
 
@@ -546,7 +557,7 @@ type ClassifyOptions struct {
 	// Classifier ID to use.
 	ClassifierID string `json:"classifier_id"`
 
-	// The submitted phrase.
+	// The submitted phrase. The maximum length is 2048 characters.
 	Text string `json:"text"`
 
     // Allows users to set headers to be GDPR compliant
@@ -582,7 +593,7 @@ func (options *ClassifyOptions) SetHeaders(param map[string]string) *ClassifyOpt
 // CollectionItem : Response from the classifier for a phrase in a collection.
 type CollectionItem struct {
 
-	// The submitted phrase.
+	// The submitted phrase. The maximum length is 2048 characters.
 	Text string `json:"text,omitempty"`
 
 	// The class with the highest confidence.
