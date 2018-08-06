@@ -21,6 +21,7 @@ import (
     "fmt"
     "github.com/go-openapi/strfmt"
     "os"
+    "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
@@ -70,6 +71,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(options *
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -137,6 +140,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     body := map[string]interface{}{}
@@ -201,6 +206,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(o
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Type("multipart")
@@ -267,6 +274,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(o
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -318,6 +327,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(opti
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -380,6 +391,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(op
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")

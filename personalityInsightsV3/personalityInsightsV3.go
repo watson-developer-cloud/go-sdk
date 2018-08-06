@@ -20,6 +20,7 @@ import (
     "bytes"
     "fmt"
     "io"
+    "runtime"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
 )
@@ -67,6 +68,8 @@ func (personalityInsights *PersonalityInsightsV3) Profile(options *ProfileOption
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", fmt.Sprint(options.ContentType))
@@ -150,6 +153,8 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(options *ProfileO
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "text/csv")
     request.Set("Content-Type", fmt.Sprint(options.ContentType))

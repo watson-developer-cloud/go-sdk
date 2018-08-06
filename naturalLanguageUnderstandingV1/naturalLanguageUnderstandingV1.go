@@ -19,6 +19,7 @@ package naturalLanguageUnderstandingV1
 import (
     "bytes"
     "fmt"
+    "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
@@ -67,6 +68,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(opti
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -162,6 +165,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -224,6 +229,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(o
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")

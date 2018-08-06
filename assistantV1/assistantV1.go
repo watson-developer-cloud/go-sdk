@@ -20,6 +20,7 @@ import (
     "bytes"
     "fmt"
     "github.com/go-openapi/strfmt"
+    "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
@@ -69,6 +70,8 @@ func (assistant *AssistantV1) Message(options *MessageOptions) (*watson.WatsonRe
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -155,6 +158,8 @@ func (assistant *AssistantV1) CreateWorkspace(options *CreateWorkspaceOptions) (
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -252,6 +257,8 @@ func (assistant *AssistantV1) DeleteWorkspace(options *DeleteWorkspaceOptions) (
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -303,6 +310,8 @@ func (assistant *AssistantV1) GetWorkspace(options *GetWorkspaceOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -371,6 +380,8 @@ func (assistant *AssistantV1) ListWorkspaces(options *ListWorkspacesOptions) (*w
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -449,6 +460,8 @@ func (assistant *AssistantV1) UpdateWorkspace(options *UpdateWorkspaceOptions) (
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -549,6 +562,8 @@ func (assistant *AssistantV1) CreateIntent(options *CreateIntentOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -623,6 +638,8 @@ func (assistant *AssistantV1) DeleteIntent(options *DeleteIntentOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -675,6 +692,8 @@ func (assistant *AssistantV1) GetIntent(options *GetIntentOptions) (*watson.Wats
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -744,6 +763,8 @@ func (assistant *AssistantV1) ListIntents(options *ListIntentsOptions) (*watson.
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -827,6 +848,8 @@ func (assistant *AssistantV1) UpdateIntent(options *UpdateIntentOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -903,6 +926,8 @@ func (assistant *AssistantV1) CreateExample(options *CreateExampleOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -975,6 +1000,8 @@ func (assistant *AssistantV1) DeleteExample(options *DeleteExampleOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -1028,6 +1055,8 @@ func (assistant *AssistantV1) GetExample(options *GetExampleOptions) (*watson.Wa
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -1095,6 +1124,8 @@ func (assistant *AssistantV1) ListExamples(options *ListExamplesOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -1176,6 +1207,8 @@ func (assistant *AssistantV1) UpdateExample(options *UpdateExampleOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1248,6 +1281,8 @@ func (assistant *AssistantV1) CreateCounterexample(options *CreateCounterexample
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1316,6 +1351,8 @@ func (assistant *AssistantV1) DeleteCounterexample(options *DeleteCounterexample
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -1368,6 +1405,8 @@ func (assistant *AssistantV1) GetCounterexample(options *GetCounterexampleOption
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -1434,6 +1473,8 @@ func (assistant *AssistantV1) ListCounterexamples(options *ListCounterexamplesOp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -1514,6 +1555,8 @@ func (assistant *AssistantV1) UpdateCounterexample(options *UpdateCounterexample
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1582,6 +1625,8 @@ func (assistant *AssistantV1) CreateEntity(options *CreateEntityOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1663,6 +1708,8 @@ func (assistant *AssistantV1) DeleteEntity(options *DeleteEntityOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -1715,6 +1762,8 @@ func (assistant *AssistantV1) GetEntity(options *GetEntityOptions) (*watson.Wats
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -1784,6 +1833,8 @@ func (assistant *AssistantV1) ListEntities(options *ListEntitiesOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -1867,6 +1918,8 @@ func (assistant *AssistantV1) UpdateEntity(options *UpdateEntityOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1949,6 +2002,8 @@ func (assistant *AssistantV1) ListMentions(options *ListMentionsOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
     if options.IsExportSet {
@@ -2018,6 +2073,8 @@ func (assistant *AssistantV1) CreateValue(options *CreateValueOptions) (*watson.
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2100,6 +2157,8 @@ func (assistant *AssistantV1) DeleteValue(options *DeleteValueOptions) (*watson.
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -2153,6 +2212,8 @@ func (assistant *AssistantV1) GetValue(options *GetValueOptions) (*watson.Watson
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -2223,6 +2284,8 @@ func (assistant *AssistantV1) ListValues(options *ListValuesOptions) (*watson.Wa
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -2307,6 +2370,8 @@ func (assistant *AssistantV1) UpdateValue(options *UpdateValueOptions) (*watson.
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2390,6 +2455,8 @@ func (assistant *AssistantV1) CreateSynonym(options *CreateSynonymOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2460,6 +2527,8 @@ func (assistant *AssistantV1) DeleteSynonym(options *DeleteSynonymOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -2514,6 +2583,8 @@ func (assistant *AssistantV1) GetSynonym(options *GetSynonymOptions) (*watson.Wa
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -2582,6 +2653,8 @@ func (assistant *AssistantV1) ListSynonyms(options *ListSynonymsOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -2664,6 +2737,8 @@ func (assistant *AssistantV1) UpdateSynonym(options *UpdateSynonymOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2732,6 +2807,8 @@ func (assistant *AssistantV1) CreateDialogNode(options *CreateDialogNodeOptions)
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2852,6 +2929,8 @@ func (assistant *AssistantV1) DeleteDialogNode(options *DeleteDialogNodeOptions)
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -2904,6 +2983,8 @@ func (assistant *AssistantV1) GetDialogNode(options *GetDialogNodeOptions) (*wat
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -2970,6 +3051,8 @@ func (assistant *AssistantV1) ListDialogNodes(options *ListDialogNodesOptions) (
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -3049,6 +3132,8 @@ func (assistant *AssistantV1) UpdateDialogNode(options *UpdateDialogNodeOptions)
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -3169,6 +3254,8 @@ func (assistant *AssistantV1) ListAllLogs(options *ListAllLogsOptions) (*watson.
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
     request.Query("filter=" + fmt.Sprint(options.Filter))
@@ -3241,6 +3328,8 @@ func (assistant *AssistantV1) ListLogs(options *ListLogsOptions) (*watson.Watson
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -3315,6 +3404,8 @@ func (assistant *AssistantV1) DeleteUserData(options *DeleteUserDataOptions) (*w
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)

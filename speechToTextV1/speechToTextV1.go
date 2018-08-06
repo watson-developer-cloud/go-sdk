@@ -21,6 +21,7 @@ import (
     "fmt"
     "io"
     "os"
+    "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
@@ -70,6 +71,8 @@ func (speechToText *SpeechToTextV1) GetModel(options *GetModelOptions) (*watson.
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -133,6 +136,8 @@ func (speechToText *SpeechToTextV1) ListModels(options *ListModelsOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -194,6 +199,8 @@ func (speechToText *SpeechToTextV1) Recognize(options *RecognizeOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", fmt.Sprint(options.ContentType))
@@ -306,6 +313,8 @@ func (speechToText *SpeechToTextV1) CheckJob(options *CheckJobOptions) (*watson.
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -368,6 +377,8 @@ func (speechToText *SpeechToTextV1) CheckJobs(options *CheckJobsOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -429,6 +440,8 @@ func (speechToText *SpeechToTextV1) CreateJob(options *CreateJobOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", fmt.Sprint(options.ContentType))
@@ -553,6 +566,8 @@ func (speechToText *SpeechToTextV1) DeleteJob(options *DeleteJobOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -603,6 +618,8 @@ func (speechToText *SpeechToTextV1) RegisterCallback(options *RegisterCallbackOp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -670,6 +687,8 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(options *UnregisterCallba
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("callback_url=" + fmt.Sprint(options.CallbackURL))
@@ -721,6 +740,8 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(options *CreateLanguageM
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -795,6 +816,8 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(options *DeleteLanguageM
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -846,6 +869,8 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(options *GetLanguageModelOp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -908,6 +933,8 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(options *ListLanguageMode
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -975,6 +1002,8 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(options *ResetLanguageMod
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -1026,6 +1055,8 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(options *TrainLanguageMod
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1085,6 +1116,8 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(options *UpgradeLanguag
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -1137,6 +1170,8 @@ func (speechToText *SpeechToTextV1) AddCorpus(options *AddCorpusOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     if options.IsAllowOverwriteSet {
@@ -1195,6 +1230,8 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(options *DeleteCorpusOptions) (
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -1247,6 +1284,8 @@ func (speechToText *SpeechToTextV1) GetCorpus(options *GetCorpusOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1310,6 +1349,8 @@ func (speechToText *SpeechToTextV1) ListCorpora(options *ListCorporaOptions) (*w
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1375,6 +1416,8 @@ func (speechToText *SpeechToTextV1) AddWord(options *AddWordOptions) (*watson.Wa
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     body := map[string]interface{}{}
@@ -1438,6 +1481,8 @@ func (speechToText *SpeechToTextV1) AddWords(options *AddWordsOptions) (*watson.
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     body := map[string]interface{}{}
@@ -1494,6 +1539,8 @@ func (speechToText *SpeechToTextV1) DeleteWord(options *DeleteWordOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -1546,6 +1593,8 @@ func (speechToText *SpeechToTextV1) GetWord(options *GetWordOptions) (*watson.Wa
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1609,6 +1658,8 @@ func (speechToText *SpeechToTextV1) ListWords(options *ListWordsOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1677,6 +1728,8 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(options *CreateAcousticM
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1748,6 +1801,8 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(options *DeleteAcousticM
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -1799,6 +1854,8 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(options *GetAcousticModelOp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1861,6 +1918,8 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(options *ListAcousticMode
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1928,6 +1987,8 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(options *ResetAcousticMod
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -1979,6 +2040,8 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(options *TrainAcousticMod
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2035,6 +2098,8 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(options *UpgradeAcousti
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     if options.IsCustomLanguageModelIDSet {
@@ -2090,6 +2155,8 @@ func (speechToText *SpeechToTextV1) AddAudio(options *AddAudioOptions) (*watson.
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", fmt.Sprint(options.ContentType))
@@ -2153,6 +2220,8 @@ func (speechToText *SpeechToTextV1) DeleteAudio(options *DeleteAudioOptions) (*w
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -2205,6 +2274,8 @@ func (speechToText *SpeechToTextV1) GetAudio(options *GetAudioOptions) (*watson.
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2269,6 +2340,8 @@ func (speechToText *SpeechToTextV1) ListAudio(options *ListAudioOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
 
@@ -2330,6 +2403,8 @@ func (speechToText *SpeechToTextV1) DeleteUserData(options *DeleteUserDataOption
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2424,7 +2499,7 @@ type AddAudioOptions struct {
 	// The name of the audio resource for the custom acoustic model. When adding an audio resource, do not include spaces in the name; use a localized name that matches the language of the custom model.
 	AudioName string `json:"audio_name"`
 
-	AudioResource io.ReadCloser `json:"audio_resource"`
+	AudioResource io.ReadCloser `json:"audio_resource,omitempty"`
 
 	// The type of the input.
 	ContentType string `json:"Content-Type"`

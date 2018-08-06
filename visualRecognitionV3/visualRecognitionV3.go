@@ -22,6 +22,7 @@ import (
     "github.com/go-openapi/strfmt"
     "io"
     "os"
+    "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
@@ -70,6 +71,8 @@ func (visualRecognition *VisualRecognitionV3) Classify(options *ClassifyOptions)
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     if options.IsAcceptLanguageSet {
@@ -154,6 +157,8 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(options *DetectFacesOp
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
     request.Type("multipart")
@@ -224,6 +229,8 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(options *CreateCl
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -296,6 +303,8 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(options *DeleteCl
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -348,6 +357,8 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(options *GetClassifi
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -411,6 +422,8 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(options *ListClass
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -478,6 +491,8 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(options *UpdateCl
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -549,6 +564,8 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(options *GetCoreMlM
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/octet-stream")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -611,6 +628,8 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(options *DeleteUser
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")

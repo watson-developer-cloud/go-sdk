@@ -19,6 +19,7 @@ package toneAnalyzerV3
 import (
     "bytes"
     "fmt"
+    "runtime"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
 )
@@ -66,6 +67,8 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(options *ToneOptions) (*watson.WatsonRe
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", fmt.Sprint(options.ContentType))
@@ -146,6 +149,8 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(options *ToneChatOptions) (*watson.
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")

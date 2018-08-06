@@ -21,6 +21,7 @@ import (
     "fmt"
     "github.com/go-openapi/strfmt"
     "os"
+    "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
@@ -69,6 +70,8 @@ func (discovery *DiscoveryV1) CreateEnvironment(options *CreateEnvironmentOption
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -143,6 +146,8 @@ func (discovery *DiscoveryV1) DeleteEnvironment(options *DeleteEnvironmentOption
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -207,6 +212,8 @@ func (discovery *DiscoveryV1) GetEnvironment(options *GetEnvironmentOptions) (*w
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -269,6 +276,8 @@ func (discovery *DiscoveryV1) ListEnvironments(options *ListEnvironmentsOptions)
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -337,6 +346,8 @@ func (discovery *DiscoveryV1) ListFields(options *ListFieldsOptions) (*watson.Wa
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -401,6 +412,8 @@ func (discovery *DiscoveryV1) UpdateEnvironment(options *UpdateEnvironmentOption
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -473,6 +486,8 @@ func (discovery *DiscoveryV1) CreateConfiguration(options *CreateConfigurationOp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -559,6 +574,8 @@ func (discovery *DiscoveryV1) DeleteConfiguration(options *DeleteConfigurationOp
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -624,6 +641,8 @@ func (discovery *DiscoveryV1) GetConfiguration(options *GetConfigurationOptions)
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -687,6 +706,8 @@ func (discovery *DiscoveryV1) ListConfigurations(options *ListConfigurationsOpti
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -755,6 +776,8 @@ func (discovery *DiscoveryV1) UpdateConfiguration(options *UpdateConfigurationOp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -840,6 +863,8 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(options *TestConfig
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
     if options.IsStepSet {
@@ -921,6 +946,8 @@ func (discovery *DiscoveryV1) CreateCollection(options *CreateCollectionOptions)
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -998,6 +1025,8 @@ func (discovery *DiscoveryV1) DeleteCollection(options *DeleteCollectionOptions)
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1062,6 +1091,8 @@ func (discovery *DiscoveryV1) GetCollection(options *GetCollectionOptions) (*wat
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1128,6 +1159,8 @@ func (discovery *DiscoveryV1) ListCollectionFields(options *ListCollectionFields
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1191,6 +1224,8 @@ func (discovery *DiscoveryV1) ListCollections(options *ListCollectionsOptions) (
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1259,6 +1294,8 @@ func (discovery *DiscoveryV1) UpdateCollection(options *UpdateCollectionOptions)
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1336,6 +1373,8 @@ func (discovery *DiscoveryV1) CreateExpansions(options *CreateExpansionsOptions)
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1406,6 +1445,8 @@ func (discovery *DiscoveryV1) DeleteExpansions(options *DeleteExpansionsOptions)
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1459,6 +1500,8 @@ func (discovery *DiscoveryV1) ListExpansions(options *ListExpansionsOptions) (*w
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1524,6 +1567,8 @@ func (discovery *DiscoveryV1) AddDocument(options *AddDocumentOptions) (*watson.
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -1599,6 +1644,8 @@ func (discovery *DiscoveryV1) DeleteDocument(options *DeleteDocumentOptions) (*w
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1665,6 +1712,8 @@ func (discovery *DiscoveryV1) GetDocumentStatus(options *GetDocumentStatusOption
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -1730,6 +1779,8 @@ func (discovery *DiscoveryV1) UpdateDocument(options *UpdateDocumentOptions) (*w
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -1802,6 +1853,8 @@ func (discovery *DiscoveryV1) FederatedQuery(options *FederatedQueryOptions) (*w
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -1922,6 +1975,8 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(options *FederatedQueryNotic
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2026,6 +2081,8 @@ func (discovery *DiscoveryV1) Query(options *QueryOptions) (*watson.WatsonRespon
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2149,6 +2206,8 @@ func (discovery *DiscoveryV1) QueryEntities(options *QueryEntitiesOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2230,6 +2289,8 @@ func (discovery *DiscoveryV1) QueryNotices(options *QueryNoticesOptions) (*watso
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2347,6 +2408,8 @@ func (discovery *DiscoveryV1) QueryRelations(options *QueryRelationsOptions) (*w
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2432,6 +2495,8 @@ func (discovery *DiscoveryV1) AddTrainingData(options *AddTrainingDataOptions) (
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2509,6 +2574,8 @@ func (discovery *DiscoveryV1) CreateTrainingExample(options *CreateTrainingExamp
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2585,6 +2652,8 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(options *DeleteAllTrainingDa
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2639,6 +2708,8 @@ func (discovery *DiscoveryV1) DeleteTrainingData(options *DeleteTrainingDataOpti
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2696,6 +2767,8 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(options *DeleteTrainingExamp
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2750,6 +2823,8 @@ func (discovery *DiscoveryV1) GetTrainingData(options *GetTrainingDataOptions) (
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2818,6 +2893,8 @@ func (discovery *DiscoveryV1) GetTrainingExample(options *GetTrainingExampleOpti
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -2882,6 +2959,8 @@ func (discovery *DiscoveryV1) ListTrainingData(options *ListTrainingDataOptions)
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -2949,6 +3028,8 @@ func (discovery *DiscoveryV1) ListTrainingExamples(options *ListTrainingExamples
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -3015,6 +3096,8 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(options *UpdateTrainingExamp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -3087,6 +3170,8 @@ func (discovery *DiscoveryV1) DeleteUserData(options *DeleteUserDataOptions) (*w
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -3140,6 +3225,8 @@ func (discovery *DiscoveryV1) CreateCredentials(options *CreateCredentialsOption
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -3214,6 +3301,8 @@ func (discovery *DiscoveryV1) DeleteCredentials(options *DeleteCredentialsOption
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -3279,6 +3368,8 @@ func (discovery *DiscoveryV1) GetCredentials(options *GetCredentialsOptions) (*w
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     request.Query("version=" + creds.Version)
@@ -3342,6 +3433,8 @@ func (discovery *DiscoveryV1) ListCredentials(options *ListCredentialsOptions) (
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -3407,6 +3500,8 @@ func (discovery *DiscoveryV1) UpdateCredentials(options *UpdateCredentialsOption
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")

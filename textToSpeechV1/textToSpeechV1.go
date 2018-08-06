@@ -20,6 +20,7 @@ import (
     "bytes"
     "fmt"
     "io"
+    "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
@@ -69,6 +70,8 @@ func (textToSpeech *TextToSpeechV1) GetVoice(options *GetVoiceOptions) (*watson.
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     if options.IsCustomizationIDSet {
@@ -134,6 +137,8 @@ func (textToSpeech *TextToSpeechV1) ListVoices(options *ListVoicesOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
 
     if useTM {
@@ -194,6 +199,8 @@ func (textToSpeech *TextToSpeechV1) Synthesize(options *SynthesizeOptions) (*wat
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "audio/basic")
     request.Set("Content-Type", "application/json")
@@ -269,6 +276,8 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(options *GetPronunciationOp
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("text=" + fmt.Sprint(options.Text))
     if options.IsVoiceSet {
@@ -339,6 +348,8 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(options *CreateVoiceModelOp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -412,6 +423,8 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(options *DeleteVoiceModelOp
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -461,6 +474,8 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(options *GetVoiceModelOptions)
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
 
@@ -522,6 +537,8 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(options *ListVoiceModelsOpti
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     if options.IsLanguageSet {
@@ -588,6 +605,8 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(options *UpdateVoiceModelOp
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     body := map[string]interface{}{}
@@ -652,6 +671,8 @@ func (textToSpeech *TextToSpeechV1) AddWord(options *AddWordOptions) (*watson.Wa
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Content-Type", "application/json")
     body := map[string]interface{}{}
     if options.IsTranslationSet {
@@ -711,6 +732,8 @@ func (textToSpeech *TextToSpeechV1) AddWords(options *AddWordsOptions) (*watson.
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
     body := map[string]interface{}{}
@@ -769,6 +792,8 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(options *DeleteWordOptions) (*wat
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
 
     if useTM {
         token, tokenErr := tokenManager.GetToken()
@@ -819,6 +844,8 @@ func (textToSpeech *TextToSpeechV1) GetWord(options *GetWordOptions) (*watson.Wa
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
 
@@ -882,6 +909,8 @@ func (textToSpeech *TextToSpeechV1) ListWords(options *ListWordsOptions) (*watso
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
 
     if useTM {
@@ -942,6 +971,8 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(options *DeleteUserDataOption
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Query("customer_id=" + fmt.Sprint(options.CustomerID))
 

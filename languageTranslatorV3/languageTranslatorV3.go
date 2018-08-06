@@ -20,6 +20,7 @@ import (
     "bytes"
     "fmt"
     "os"
+    "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
     watson "go-sdk"
@@ -68,6 +69,8 @@ func (languageTranslator *LanguageTranslatorV3) Translate(options *TranslateOpti
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "application/json")
@@ -144,6 +147,8 @@ func (languageTranslator *LanguageTranslatorV3) Identify(options *IdentifyOption
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Set("Content-Type", "text/plain")
     request.Query("version=" + creds.Version)
@@ -208,6 +213,8 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(option
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -269,6 +276,8 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(options *CreateModel
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
@@ -344,6 +353,8 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(options *DeleteModel
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -407,6 +418,8 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(options *GetModelOption
         request.Set(headerName, headerValue)
     }
 
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
 
@@ -468,6 +481,8 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(options *ListModelsOp
     for headerName, headerValue := range options.Headers {
         request.Set(headerName, headerValue)
     }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
 
     request.Set("Accept", "application/json")
     request.Query("version=" + creds.Version)
