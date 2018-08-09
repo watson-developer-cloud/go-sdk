@@ -72,23 +72,6 @@ func main() {
 	}
 
 
-	/* DELETE WORKSPACE */
-
-	// Call the assistant DeleteWorkspace method
-	deleteWorkspaceOptions := NewDeleteWorkspaceOptions(getResult.WorkspaceID)
-	del, delErr := assistant.DeleteWorkspace(deleteWorkspaceOptions)
-
-	// Check successful call
-	if delErr != nil {
-		fmt.Println(delErr)
-		return
-	}
-
-	// NOTE: this method has no corresponding GetDeleteWorkspaceResult() function because DeleteWorkspace returns nothing
-
-	prettyPrint(del, "Delete Workspace")
-
-
 	/* CREATE WORKSPACE */
 
 	createWorkspaceOptions := NewCreateWorkspaceOptions().
@@ -131,5 +114,74 @@ func main() {
 	// Check successful casting
 	if updateResult != nil {
 		prettyPrint(updateResult, "Update Workspace")
+	}
+
+
+	/* DELETE WORKSPACE */
+
+	// Call the assistant DeleteWorkspace method
+	deleteWorkspaceOptions := NewDeleteWorkspaceOptions(updateResult.WorkspaceID)
+	del, delErr := assistant.DeleteWorkspace(deleteWorkspaceOptions)
+
+	// Check successful call
+	if delErr != nil {
+		fmt.Println(delErr)
+		return
+	}
+
+	// NOTE: this method has no corresponding GetDeleteWorkspaceResult() function because DeleteWorkspace returns nothing
+
+	prettyPrint(del, "Delete Workspace")
+
+
+	/* MESSAGE */
+
+	inputData := InputData{
+		Text: "Hello, how are you?",
+	}
+
+	messageOptions := NewMessageOptions(getResult.WorkspaceID).
+		SetInput(inputData)
+
+	// Call the Message method with no specified context to create a new assistant
+	message, messageErr := assistant.Message(messageOptions)
+
+	// Check successful call
+	if messageErr != nil {
+		fmt.Println(messageErr)
+		return
+	}
+
+	// Cast result
+	messageResult := GetMessageResult(message)
+
+	// Check successful casting
+	if messageResult != nil {
+		prettyPrint(messageResult, "Message")
+	}
+
+	// To continue with the same assistant, pass in the context from the previous call
+	context := Context{
+		ConversationID: messageResult.Context.ConversationID,
+	}
+
+	inputData.Text = "What's the weather right now?"
+	messageOptions.SetContext(context).
+		SetInput(inputData)
+
+	message, messageErr = assistant.Message(messageOptions)
+
+	// Check successful call
+	if messageErr != nil {
+		fmt.Println(messageErr)
+		return
+	}
+
+	// Cast result
+	messageResult = GetMessageResult(message)
+
+	// Check successful casting
+	if messageResult != nil {
+		prettyPrint(messageResult, "Message")
 	}
 }
