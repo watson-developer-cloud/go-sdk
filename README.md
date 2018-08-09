@@ -13,6 +13,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 	* [Getting-credentials](#getting-credentials)
 	* [IAM](#iam)
 	* [Username-and-password](#username-and-password)
+* [Tests](#tests)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -102,6 +103,24 @@ discovery, discoveryErr := NewDiscoveryV1(&ServiceCredentials{
   Username: "<username>",
   Password: "<password>",
 })
+```
+
+## Tests
+Testing is implemented using the [Ginkgo](https://onsi.github.io/ginkgo/) framework.
+
+Run all test suites:
+```bash
+ginkgo -r
+```
+
+Get code coverage for each test suite:
+```bash
+ginkgo -r -cover
+```
+
+Run a specific test suite:
+```bash
+ginkgo -cover discoveryV1/
 ```
 
 ## Contributing
