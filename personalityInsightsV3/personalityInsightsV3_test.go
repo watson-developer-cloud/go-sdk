@@ -92,6 +92,9 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				returnValue, returnValueErr := testService.Profile(profileOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := personalityInsightsV3.GetProfileResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -130,6 +133,9 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				returnValue, returnValueErr := testService.ProfileAsCsv(profileAsCsvOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := personalityInsightsV3.GetProfileAsCsvResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})

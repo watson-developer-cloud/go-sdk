@@ -92,6 +92,9 @@ var _ = Describe("ToneAnalyzerV3", func() {
 				returnValue, returnValueErr := testService.Tone(toneOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := toneAnalyzerV3.GetToneResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -130,6 +133,9 @@ var _ = Describe("ToneAnalyzerV3", func() {
 				returnValue, returnValueErr := testService.ToneChat(toneChatOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := toneAnalyzerV3.GetToneChatResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})

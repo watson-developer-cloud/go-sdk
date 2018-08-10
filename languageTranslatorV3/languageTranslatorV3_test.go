@@ -54,13 +54,13 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				testService.Translate(languageTranslatorV3.NewTranslateOptions([]string{}))
+				testService.ListModels(languageTranslatorV3.NewListModelsOptions())
 			})
 		})
 	})
 	Describe("Translate(options *TranslateOptions)", func() {
 		translatePath := "/v3/translate"
-		version := "exampleString"
+        version := "exampleString"
         text := []string{}
         translateOptions := languageTranslatorV3.NewTranslateOptions(text)
 		username := "user1"
@@ -93,12 +93,15 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				returnValue, returnValueErr := testService.Translate(translateOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := languageTranslatorV3.GetTranslateResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("Identify(options *IdentifyOptions)", func() {
 		identifyPath := "/v3/identify"
-		version := "exampleString"
+        version := "exampleString"
         text := "exampleString"
         identifyOptions := languageTranslatorV3.NewIdentifyOptions(text)
 		username := "user1"
@@ -131,12 +134,15 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				returnValue, returnValueErr := testService.Identify(identifyOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := languageTranslatorV3.GetIdentifyResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListIdentifiableLanguages(options *ListIdentifiableLanguagesOptions)", func() {
 		listIdentifiableLanguagesPath := "/v3/identifiable_languages"
-		version := "exampleString"
+        version := "exampleString"
         listIdentifiableLanguagesOptions := languageTranslatorV3.NewListIdentifiableLanguagesOptions()
 		username := "user1"
 		password := "pass1"
@@ -168,12 +174,15 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				returnValue, returnValueErr := testService.ListIdentifiableLanguages(listIdentifiableLanguagesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := languageTranslatorV3.GetListIdentifiableLanguagesResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("CreateModel(options *CreateModelOptions)", func() {
 		createModelPath := "/v3/models"
-		version := "exampleString"
+        version := "exampleString"
         baseModelID := "exampleString"
         createModelOptions := languageTranslatorV3.NewCreateModelOptions(baseModelID)
 		username := "user1"
@@ -205,12 +214,15 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				returnValue, returnValueErr := testService.CreateModel(createModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := languageTranslatorV3.GetCreateModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteModel(options *DeleteModelOptions)", func() {
 		deleteModelPath := "/v3/models/{model_id}"
-		version := "exampleString"
+        version := "exampleString"
         modelID := "exampleString"
         deleteModelOptions := languageTranslatorV3.NewDeleteModelOptions(modelID)
 		username := "user1"
@@ -244,12 +256,15 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				returnValue, returnValueErr := testService.DeleteModel(deleteModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := languageTranslatorV3.GetDeleteModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("GetModel(options *GetModelOptions)", func() {
 		getModelPath := "/v3/models/{model_id}"
-		version := "exampleString"
+        version := "exampleString"
         modelID := "exampleString"
         getModelOptions := languageTranslatorV3.NewGetModelOptions(modelID)
 		username := "user1"
@@ -283,12 +298,15 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				returnValue, returnValueErr := testService.GetModel(getModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := languageTranslatorV3.GetGetModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListModels(options *ListModelsOptions)", func() {
 		listModelsPath := "/v3/models"
-		version := "exampleString"
+        version := "exampleString"
         listModelsOptions := languageTranslatorV3.NewListModelsOptions()
 		username := "user1"
 		password := "pass1"
@@ -320,6 +338,9 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				returnValue, returnValueErr := testService.ListModels(listModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := languageTranslatorV3.GetListModelsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})

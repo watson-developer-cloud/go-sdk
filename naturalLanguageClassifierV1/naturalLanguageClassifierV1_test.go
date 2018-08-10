@@ -62,8 +62,8 @@ var _ = Describe("NaturalLanguageClassifierV1", func() {
 		classifyPath := "/v1/classifiers/{classifier_id}/classify"
         version := "exampleString"
         classifierID := "exampleString"
-        body := "exampleString"
-        classifyOptions := naturalLanguageClassifierV1.NewClassifyOptions(classifierID, body)
+        text := "exampleString"
+        classifyOptions := naturalLanguageClassifierV1.NewClassifyOptions(classifierID, text)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -94,6 +94,9 @@ var _ = Describe("NaturalLanguageClassifierV1", func() {
 				returnValue, returnValueErr := testService.Classify(classifyOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := naturalLanguageClassifierV1.GetClassifyResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -101,8 +104,8 @@ var _ = Describe("NaturalLanguageClassifierV1", func() {
 		classifyCollectionPath := "/v1/classifiers/{classifier_id}/classify_collection"
         version := "exampleString"
         classifierID := "exampleString"
-        body := []naturalLanguageClassifierV1.ClassifyInput{}
-        classifyCollectionOptions := naturalLanguageClassifierV1.NewClassifyCollectionOptions(classifierID, body)
+        collection := []naturalLanguageClassifierV1.ClassifyInput{}
+        classifyCollectionOptions := naturalLanguageClassifierV1.NewClassifyCollectionOptions(classifierID, collection)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -133,6 +136,9 @@ var _ = Describe("NaturalLanguageClassifierV1", func() {
 				returnValue, returnValueErr := testService.ClassifyCollection(classifyCollectionOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := naturalLanguageClassifierV1.GetClassifyCollectionResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -209,6 +215,9 @@ var _ = Describe("NaturalLanguageClassifierV1", func() {
 				returnValue, returnValueErr := testService.GetClassifier(getClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := naturalLanguageClassifierV1.GetGetClassifierResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -245,6 +254,9 @@ var _ = Describe("NaturalLanguageClassifierV1", func() {
 				returnValue, returnValueErr := testService.ListClassifiers(listClassifiersOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := naturalLanguageClassifierV1.GetListClassifiersResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})

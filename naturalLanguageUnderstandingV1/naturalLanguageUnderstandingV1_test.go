@@ -61,8 +61,8 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 	Describe("Analyze(options *AnalyzeOptions)", func() {
 		analyzePath := "/v1/analyze"
         version := "exampleString"
-        parameters := naturalLanguageUnderstandingV1.Features{}
-        analyzeOptions := naturalLanguageUnderstandingV1.NewAnalyzeOptions(parameters)
+        features := naturalLanguageUnderstandingV1.Features{}
+        analyzeOptions := naturalLanguageUnderstandingV1.NewAnalyzeOptions(features)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -93,6 +93,9 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 				returnValue, returnValueErr := testService.Analyze(analyzeOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := naturalLanguageUnderstandingV1.GetAnalyzeResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -132,6 +135,9 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 				returnValue, returnValueErr := testService.DeleteModel(deleteModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := naturalLanguageUnderstandingV1.GetDeleteModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -169,6 +175,9 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 				returnValue, returnValueErr := testService.ListModels(listModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := naturalLanguageUnderstandingV1.GetListModelsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})

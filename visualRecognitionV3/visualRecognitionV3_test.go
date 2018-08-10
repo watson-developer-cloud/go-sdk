@@ -92,6 +92,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				returnValue, returnValueErr := testService.Classify(classifyOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := visualRecognitionV3.GetClassifyResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -129,6 +132,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				returnValue, returnValueErr := testService.DetectFaces(detectFacesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := visualRecognitionV3.GetDetectFacesResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -207,6 +213,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				returnValue, returnValueErr := testService.GetClassifier(getClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := visualRecognitionV3.GetGetClassifierResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -244,6 +253,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				returnValue, returnValueErr := testService.ListClassifiers(listClassifiersOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := visualRecognitionV3.GetListClassifiersResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -283,6 +295,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				returnValue, returnValueErr := testService.UpdateClassifier(updateClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := visualRecognitionV3.GetUpdateClassifierResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -322,6 +337,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				returnValue, returnValueErr := testService.GetCoreMlModel(getCoreMlModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := visualRecognitionV3.GetGetCoreMlModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})

@@ -95,6 +95,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.GetModel(getModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetGetModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -131,6 +134,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.ListModels(listModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetListModelsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -168,6 +174,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.Recognize(recognizeOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetRecognizeResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -206,6 +215,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.CheckJob(checkJobOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetCheckJobResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -242,6 +254,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.CheckJobs(checkJobsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetCheckJobsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -279,6 +294,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.CreateJob(createJobOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetCreateJobResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -354,6 +372,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.RegisterCallback(registerCallbackOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetRegisterCallbackResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -429,6 +450,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.CreateLanguageModel(createLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetCreateLanguageModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -505,6 +529,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.GetLanguageModel(getLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetGetLanguageModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -541,6 +568,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.ListLanguageModels(listLanguageModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetListLanguageModelsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -735,6 +765,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.GetCorpus(getCorpusOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetGetCorpusResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -773,6 +806,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.ListCorpora(listCorporaOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetListCorporaResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -820,8 +856,8 @@ var _ = Describe("SpeechToTextV1", func() {
 		addWordsPath := "/v1/customizations/{customization_id}/words"
         version := "exampleString"
         customizationID := "exampleString"
-        customWords := []speechToTextV1.CustomWord{}
-        addWordsOptions := speechToTextV1.NewAddWordsOptions(customizationID, customWords)
+        words := []speechToTextV1.CustomWord{}
+        addWordsOptions := speechToTextV1.NewAddWordsOptions(customizationID, words)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -932,6 +968,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.GetWord(getWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetGetWordResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -970,6 +1009,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.ListWords(listWordsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetListWordsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -1008,6 +1050,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.CreateAcousticModel(createAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetCreateAcousticModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -1084,6 +1129,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.GetAcousticModel(getAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetGetAcousticModelResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -1120,6 +1168,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.ListAcousticModels(listAcousticModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetListAcousticModelsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -1357,6 +1408,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.GetAudio(getAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetGetAudioResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -1395,6 +1449,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.ListAudio(listAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := speechToTextV1.GetListAudioResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})

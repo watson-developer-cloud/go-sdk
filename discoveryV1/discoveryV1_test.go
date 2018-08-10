@@ -54,13 +54,13 @@ var _ = Describe("DiscoveryV1", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				testService.CreateEnvironment(discoveryV1.NewCreateEnvironmentOptions("exampleID"))
+				testService.QueryLog(discoveryV1.NewQueryLogOptions())
 			})
 		})
 	})
 	Describe("CreateEnvironment(options *CreateEnvironmentOptions)", func() {
 		createEnvironmentPath := "/v1/environments"
-		version := "exampleString"
+        version := "exampleString"
         name := "exampleString"
         createEnvironmentOptions := discoveryV1.NewCreateEnvironmentOptions(name)
 		username := "user1"
@@ -93,12 +93,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.CreateEnvironment(createEnvironmentOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetCreateEnvironmentResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteEnvironment(options *DeleteEnvironmentOptions)", func() {
 		deleteEnvironmentPath := "/v1/environments/{environment_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         deleteEnvironmentOptions := discoveryV1.NewDeleteEnvironmentOptions(environmentID)
 		username := "user1"
@@ -132,12 +135,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.DeleteEnvironment(deleteEnvironmentOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetDeleteEnvironmentResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("GetEnvironment(options *GetEnvironmentOptions)", func() {
 		getEnvironmentPath := "/v1/environments/{environment_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         getEnvironmentOptions := discoveryV1.NewGetEnvironmentOptions(environmentID)
 		username := "user1"
@@ -171,12 +177,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.GetEnvironment(getEnvironmentOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetEnvironmentResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListEnvironments(options *ListEnvironmentsOptions)", func() {
 		listEnvironmentsPath := "/v1/environments"
-		version := "exampleString"
+        version := "exampleString"
         listEnvironmentsOptions := discoveryV1.NewListEnvironmentsOptions()
 		username := "user1"
 		password := "pass1"
@@ -208,12 +217,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListEnvironments(listEnvironmentsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListEnvironmentsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListFields(options *ListFieldsOptions)", func() {
 		listFieldsPath := "/v1/environments/{environment_id}/fields"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionIds := []string{}
         listFieldsOptions := discoveryV1.NewListFieldsOptions(environmentID, collectionIds)
@@ -247,12 +259,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListFields(listFieldsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListFieldsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("UpdateEnvironment(options *UpdateEnvironmentOptions)", func() {
 		updateEnvironmentPath := "/v1/environments/{environment_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         updateEnvironmentOptions := discoveryV1.NewUpdateEnvironmentOptions(environmentID)
 		username := "user1"
@@ -286,12 +301,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.UpdateEnvironment(updateEnvironmentOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetUpdateEnvironmentResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("CreateConfiguration(options *CreateConfigurationOptions)", func() {
 		createConfigurationPath := "/v1/environments/{environment_id}/configurations"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         createConfigurationOptions := discoveryV1.NewCreateConfigurationOptions(environmentID)
 		username := "user1"
@@ -325,12 +343,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.CreateConfiguration(createConfigurationOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetCreateConfigurationResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteConfiguration(options *DeleteConfigurationOptions)", func() {
 		deleteConfigurationPath := "/v1/environments/{environment_id}/configurations/{configuration_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         configurationID := "exampleString"
         deleteConfigurationOptions := discoveryV1.NewDeleteConfigurationOptions(environmentID, configurationID)
@@ -366,12 +387,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.DeleteConfiguration(deleteConfigurationOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetDeleteConfigurationResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("GetConfiguration(options *GetConfigurationOptions)", func() {
 		getConfigurationPath := "/v1/environments/{environment_id}/configurations/{configuration_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         configurationID := "exampleString"
         getConfigurationOptions := discoveryV1.NewGetConfigurationOptions(environmentID, configurationID)
@@ -407,12 +431,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.GetConfiguration(getConfigurationOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetConfigurationResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListConfigurations(options *ListConfigurationsOptions)", func() {
 		listConfigurationsPath := "/v1/environments/{environment_id}/configurations"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         listConfigurationsOptions := discoveryV1.NewListConfigurationsOptions(environmentID)
 		username := "user1"
@@ -446,12 +473,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListConfigurations(listConfigurationsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListConfigurationsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("UpdateConfiguration(options *UpdateConfigurationOptions)", func() {
 		updateConfigurationPath := "/v1/environments/{environment_id}/configurations/{configuration_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         configurationID := "exampleString"
         updateConfigurationOptions := discoveryV1.NewUpdateConfigurationOptions(environmentID, configurationID)
@@ -487,12 +517,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.UpdateConfiguration(updateConfigurationOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetUpdateConfigurationResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("TestConfigurationInEnvironment(options *TestConfigurationInEnvironmentOptions)", func() {
 		testConfigurationInEnvironmentPath := "/v1/environments/{environment_id}/preview"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         testConfigurationInEnvironmentOptions := discoveryV1.NewTestConfigurationInEnvironmentOptions(environmentID)
 		username := "user1"
@@ -526,12 +559,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.TestConfigurationInEnvironment(testConfigurationInEnvironmentOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetTestConfigurationInEnvironmentResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("CreateCollection(options *CreateCollectionOptions)", func() {
 		createCollectionPath := "/v1/environments/{environment_id}/collections"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         name := "exampleString"
         createCollectionOptions := discoveryV1.NewCreateCollectionOptions(environmentID, name)
@@ -566,12 +602,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.CreateCollection(createCollectionOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetCreateCollectionResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteCollection(options *DeleteCollectionOptions)", func() {
 		deleteCollectionPath := "/v1/environments/{environment_id}/collections/{collection_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         deleteCollectionOptions := discoveryV1.NewDeleteCollectionOptions(environmentID, collectionID)
@@ -607,12 +646,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.DeleteCollection(deleteCollectionOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetDeleteCollectionResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("GetCollection(options *GetCollectionOptions)", func() {
 		getCollectionPath := "/v1/environments/{environment_id}/collections/{collection_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         getCollectionOptions := discoveryV1.NewGetCollectionOptions(environmentID, collectionID)
@@ -648,12 +690,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.GetCollection(getCollectionOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetCollectionResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListCollectionFields(options *ListCollectionFieldsOptions)", func() {
 		listCollectionFieldsPath := "/v1/environments/{environment_id}/collections/{collection_id}/fields"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         listCollectionFieldsOptions := discoveryV1.NewListCollectionFieldsOptions(environmentID, collectionID)
@@ -689,12 +734,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListCollectionFields(listCollectionFieldsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListCollectionFieldsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListCollections(options *ListCollectionsOptions)", func() {
 		listCollectionsPath := "/v1/environments/{environment_id}/collections"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         listCollectionsOptions := discoveryV1.NewListCollectionsOptions(environmentID)
 		username := "user1"
@@ -728,12 +776,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListCollections(listCollectionsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListCollectionsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("UpdateCollection(options *UpdateCollectionOptions)", func() {
 		updateCollectionPath := "/v1/environments/{environment_id}/collections/{collection_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         updateCollectionOptions := discoveryV1.NewUpdateCollectionOptions(environmentID, collectionID)
@@ -769,12 +820,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.UpdateCollection(updateCollectionOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetUpdateCollectionResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("CreateExpansions(options *CreateExpansionsOptions)", func() {
 		createExpansionsPath := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         createExpansionsOptions := discoveryV1.NewCreateExpansionsOptions(environmentID, collectionID)
@@ -810,12 +864,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.CreateExpansions(createExpansionsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetCreateExpansionsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteExpansions(options *DeleteExpansionsOptions)", func() {
 		deleteExpansionsPath := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         deleteExpansionsOptions := discoveryV1.NewDeleteExpansionsOptions(environmentID, collectionID)
@@ -856,7 +913,7 @@ var _ = Describe("DiscoveryV1", func() {
 	})
 	Describe("ListExpansions(options *ListExpansionsOptions)", func() {
 		listExpansionsPath := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         listExpansionsOptions := discoveryV1.NewListExpansionsOptions(environmentID, collectionID)
@@ -892,12 +949,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListExpansions(listExpansionsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListExpansionsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("AddDocument(options *AddDocumentOptions)", func() {
 		addDocumentPath := "/v1/environments/{environment_id}/collections/{collection_id}/documents"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         addDocumentOptions := discoveryV1.NewAddDocumentOptions(environmentID, collectionID)
@@ -933,12 +993,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.AddDocument(addDocumentOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetAddDocumentResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteDocument(options *DeleteDocumentOptions)", func() {
 		deleteDocumentPath := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         documentID := "exampleString"
@@ -976,12 +1039,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.DeleteDocument(deleteDocumentOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetDeleteDocumentResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("GetDocumentStatus(options *GetDocumentStatusOptions)", func() {
 		getDocumentStatusPath := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         documentID := "exampleString"
@@ -1019,12 +1085,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.GetDocumentStatus(getDocumentStatusOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetDocumentStatusResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("UpdateDocument(options *UpdateDocumentOptions)", func() {
 		updateDocumentPath := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         documentID := "exampleString"
@@ -1062,12 +1131,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.UpdateDocument(updateDocumentOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetUpdateDocumentResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("FederatedQuery(options *FederatedQueryOptions)", func() {
 		federatedQueryPath := "/v1/environments/{environment_id}/query"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionIds := []string{}
         federatedQueryOptions := discoveryV1.NewFederatedQueryOptions(environmentID, collectionIds)
@@ -1101,12 +1173,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.FederatedQuery(federatedQueryOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetFederatedQueryResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("FederatedQueryNotices(options *FederatedQueryNoticesOptions)", func() {
 		federatedQueryNoticesPath := "/v1/environments/{environment_id}/notices"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionIds := []string{}
         federatedQueryNoticesOptions := discoveryV1.NewFederatedQueryNoticesOptions(environmentID, collectionIds)
@@ -1140,12 +1215,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.FederatedQueryNotices(federatedQueryNoticesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetFederatedQueryNoticesResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("Query(options *QueryOptions)", func() {
 		queryPath := "/v1/environments/{environment_id}/collections/{collection_id}/query"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryOptions := discoveryV1.NewQueryOptions(environmentID, collectionID)
@@ -1181,12 +1259,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.Query(queryOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetQueryResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("QueryEntities(options *QueryEntitiesOptions)", func() {
 		queryEntitiesPath := "/v1/environments/{environment_id}/collections/{collection_id}/query_entities"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryEntitiesOptions := discoveryV1.NewQueryEntitiesOptions(environmentID, collectionID)
@@ -1222,12 +1303,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.QueryEntities(queryEntitiesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetQueryEntitiesResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("QueryNotices(options *QueryNoticesOptions)", func() {
 		queryNoticesPath := "/v1/environments/{environment_id}/collections/{collection_id}/notices"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryNoticesOptions := discoveryV1.NewQueryNoticesOptions(environmentID, collectionID)
@@ -1263,12 +1347,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.QueryNotices(queryNoticesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetQueryNoticesResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("QueryRelations(options *QueryRelationsOptions)", func() {
 		queryRelationsPath := "/v1/environments/{environment_id}/collections/{collection_id}/query_relations"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryRelationsOptions := discoveryV1.NewQueryRelationsOptions(environmentID, collectionID)
@@ -1304,12 +1391,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.QueryRelations(queryRelationsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetQueryRelationsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("AddTrainingData(options *AddTrainingDataOptions)", func() {
 		addTrainingDataPath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         addTrainingDataOptions := discoveryV1.NewAddTrainingDataOptions(environmentID, collectionID)
@@ -1345,12 +1435,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.AddTrainingData(addTrainingDataOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetAddTrainingDataResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("CreateTrainingExample(options *CreateTrainingExampleOptions)", func() {
 		createTrainingExamplePath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryID := "exampleString"
@@ -1388,12 +1481,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.CreateTrainingExample(createTrainingExampleOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetCreateTrainingExampleResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteAllTrainingData(options *DeleteAllTrainingDataOptions)", func() {
 		deleteAllTrainingDataPath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         deleteAllTrainingDataOptions := discoveryV1.NewDeleteAllTrainingDataOptions(environmentID, collectionID)
@@ -1434,7 +1530,7 @@ var _ = Describe("DiscoveryV1", func() {
 	})
 	Describe("DeleteTrainingData(options *DeleteTrainingDataOptions)", func() {
 		deleteTrainingDataPath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryID := "exampleString"
@@ -1477,7 +1573,7 @@ var _ = Describe("DiscoveryV1", func() {
 	})
 	Describe("DeleteTrainingExample(options *DeleteTrainingExampleOptions)", func() {
 		deleteTrainingExamplePath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryID := "exampleString"
@@ -1522,7 +1618,7 @@ var _ = Describe("DiscoveryV1", func() {
 	})
 	Describe("GetTrainingData(options *GetTrainingDataOptions)", func() {
 		getTrainingDataPath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryID := "exampleString"
@@ -1560,12 +1656,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.GetTrainingData(getTrainingDataOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetTrainingDataResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("GetTrainingExample(options *GetTrainingExampleOptions)", func() {
 		getTrainingExamplePath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryID := "exampleString"
@@ -1605,12 +1704,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.GetTrainingExample(getTrainingExampleOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetTrainingExampleResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListTrainingData(options *ListTrainingDataOptions)", func() {
 		listTrainingDataPath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         listTrainingDataOptions := discoveryV1.NewListTrainingDataOptions(environmentID, collectionID)
@@ -1646,12 +1748,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListTrainingData(listTrainingDataOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListTrainingDataResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListTrainingExamples(options *ListTrainingExamplesOptions)", func() {
 		listTrainingExamplesPath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryID := "exampleString"
@@ -1689,12 +1794,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListTrainingExamples(listTrainingExamplesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListTrainingExamplesResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("UpdateTrainingExample(options *UpdateTrainingExampleOptions)", func() {
 		updateTrainingExamplePath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         collectionID := "exampleString"
         queryID := "exampleString"
@@ -1734,12 +1842,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.UpdateTrainingExample(updateTrainingExampleOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetUpdateTrainingExampleResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteUserData(options *DeleteUserDataOptions)", func() {
 		deleteUserDataPath := "/v1/user_data"
-		version := "exampleString"
+        version := "exampleString"
         customerID := "exampleString"
         deleteUserDataOptions := discoveryV1.NewDeleteUserDataOptions(customerID)
 		username := "user1"
@@ -1774,9 +1885,291 @@ var _ = Describe("DiscoveryV1", func() {
 			})
 		})
 	})
+	Describe("CreateEvent(options *CreateEventOptions)", func() {
+		createEventPath := "/v1/events"
+        version := "exampleString"
+        typeVar := "exampleString"
+        data := discoveryV1.EventData{}
+        createEventOptions := discoveryV1.NewCreateEventOptions(typeVar, data)
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - Create event", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(createEventPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(createEventPath))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call CreateEvent", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryV1.NewDiscoveryV1(&discoveryV1.ServiceCredentials{
+					ServiceURL: testServer.URL,
+					Version: version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				returnValue, returnValueErr := testService.CreateEvent(createEventOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetCreateEventResult(returnValue)
+                Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetMetricsEventRate(options *GetMetricsEventRateOptions)", func() {
+		getMetricsEventRatePath := "/v1/metrics/event_rate"
+        version := "exampleString"
+        getMetricsEventRateOptions := discoveryV1.NewGetMetricsEventRateOptions()
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - Percentage of queries with an associated event", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(getMetricsEventRatePath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(getMetricsEventRatePath))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call GetMetricsEventRate", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryV1.NewDiscoveryV1(&discoveryV1.ServiceCredentials{
+					ServiceURL: testServer.URL,
+					Version: version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				returnValue, returnValueErr := testService.GetMetricsEventRate(getMetricsEventRateOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetMetricsEventRateResult(returnValue)
+                Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetMetricsQuery(options *GetMetricsQueryOptions)", func() {
+		getMetricsQueryPath := "/v1/metrics/number_of_queries"
+        version := "exampleString"
+        getMetricsQueryOptions := discoveryV1.NewGetMetricsQueryOptions()
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - Number of queries over time", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(getMetricsQueryPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(getMetricsQueryPath))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call GetMetricsQuery", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryV1.NewDiscoveryV1(&discoveryV1.ServiceCredentials{
+					ServiceURL: testServer.URL,
+					Version: version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				returnValue, returnValueErr := testService.GetMetricsQuery(getMetricsQueryOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetMetricsQueryResult(returnValue)
+                Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetMetricsQueryEvent(options *GetMetricsQueryEventOptions)", func() {
+		getMetricsQueryEventPath := "/v1/metrics/number_of_queries_with_event"
+        version := "exampleString"
+        getMetricsQueryEventOptions := discoveryV1.NewGetMetricsQueryEventOptions()
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - Number of queries with an event over time", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(getMetricsQueryEventPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(getMetricsQueryEventPath))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call GetMetricsQueryEvent", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryV1.NewDiscoveryV1(&discoveryV1.ServiceCredentials{
+					ServiceURL: testServer.URL,
+					Version: version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				returnValue, returnValueErr := testService.GetMetricsQueryEvent(getMetricsQueryEventOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetMetricsQueryEventResult(returnValue)
+                Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetMetricsQueryNoResults(options *GetMetricsQueryNoResultsOptions)", func() {
+		getMetricsQueryNoResultsPath := "/v1/metrics/number_of_queries_with_no_search_results"
+        version := "exampleString"
+        getMetricsQueryNoResultsOptions := discoveryV1.NewGetMetricsQueryNoResultsOptions()
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - Number of queries with no search results over time", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(getMetricsQueryNoResultsPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(getMetricsQueryNoResultsPath))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call GetMetricsQueryNoResults", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryV1.NewDiscoveryV1(&discoveryV1.ServiceCredentials{
+					ServiceURL: testServer.URL,
+					Version: version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				returnValue, returnValueErr := testService.GetMetricsQueryNoResults(getMetricsQueryNoResultsOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetMetricsQueryNoResultsResult(returnValue)
+                Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetMetricsQueryTokenEvent(options *GetMetricsQueryTokenEventOptions)", func() {
+		getMetricsQueryTokenEventPath := "/v1/metrics/top_query_tokens_with_event_rate"
+        version := "exampleString"
+        getMetricsQueryTokenEventOptions := discoveryV1.NewGetMetricsQueryTokenEventOptions()
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - Most frequent query tokens with an event", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(getMetricsQueryTokenEventPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(getMetricsQueryTokenEventPath))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call GetMetricsQueryTokenEvent", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryV1.NewDiscoveryV1(&discoveryV1.ServiceCredentials{
+					ServiceURL: testServer.URL,
+					Version: version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				returnValue, returnValueErr := testService.GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetMetricsQueryTokenEventResult(returnValue)
+                Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("QueryLog(options *QueryLogOptions)", func() {
+		queryLogPath := "/v1/logs"
+        version := "exampleString"
+        queryLogOptions := discoveryV1.NewQueryLogOptions()
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - Search the query and event log", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(queryLogPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(queryLogPath))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call QueryLog", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryV1.NewDiscoveryV1(&discoveryV1.ServiceCredentials{
+					ServiceURL: testServer.URL,
+					Version: version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				returnValue, returnValueErr := testService.QueryLog(queryLogOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetQueryLogResult(returnValue)
+                Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 	Describe("CreateCredentials(options *CreateCredentialsOptions)", func() {
 		createCredentialsPath := "/v1/environments/{environment_id}/credentials"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         createCredentialsOptions := discoveryV1.NewCreateCredentialsOptions(environmentID)
 		username := "user1"
@@ -1810,12 +2203,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.CreateCredentials(createCredentialsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetCreateCredentialsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteCredentials(options *DeleteCredentialsOptions)", func() {
 		deleteCredentialsPath := "/v1/environments/{environment_id}/credentials/{credential_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         credentialID := "exampleString"
         deleteCredentialsOptions := discoveryV1.NewDeleteCredentialsOptions(environmentID, credentialID)
@@ -1851,12 +2247,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.DeleteCredentials(deleteCredentialsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetDeleteCredentialsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("GetCredentials(options *GetCredentialsOptions)", func() {
 		getCredentialsPath := "/v1/environments/{environment_id}/credentials/{credential_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         credentialID := "exampleString"
         getCredentialsOptions := discoveryV1.NewGetCredentialsOptions(environmentID, credentialID)
@@ -1892,12 +2291,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.GetCredentials(getCredentialsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetGetCredentialsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListCredentials(options *ListCredentialsOptions)", func() {
 		listCredentialsPath := "/v1/environments/{environment_id}/credentials"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         listCredentialsOptions := discoveryV1.NewListCredentialsOptions(environmentID)
 		username := "user1"
@@ -1931,12 +2333,15 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.ListCredentials(listCredentialsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetListCredentialsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("UpdateCredentials(options *UpdateCredentialsOptions)", func() {
 		updateCredentialsPath := "/v1/environments/{environment_id}/credentials/{credential_id}"
-		version := "exampleString"
+        version := "exampleString"
         environmentID := "exampleString"
         credentialID := "exampleString"
         updateCredentialsOptions := discoveryV1.NewUpdateCredentialsOptions(environmentID, credentialID)
@@ -1972,6 +2377,9 @@ var _ = Describe("DiscoveryV1", func() {
 				returnValue, returnValueErr := testService.UpdateCredentials(updateCredentialsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
+
+                result := discoveryV1.GetUpdateCredentialsResult(returnValue)
+                Expect(result).ToNot(BeNil())
 			})
 		})
 	})

@@ -3212,6 +3212,519 @@ func (discovery *DiscoveryV1) DeleteUserData(options *DeleteUserDataOptions) (*w
 }
 
 
+// CreateEvent : Create event
+func (discovery *DiscoveryV1) CreateEvent(options *CreateEventOptions) (*watson.WatsonResponse, []error) {
+    path := "/v1/events"
+    creds := discovery.client.Creds
+    useTM := discovery.client.UseTM
+    tokenManager := discovery.client.TokenManager
+
+    request := req.New().Post(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
+    request.Query("version=" + creds.Version)
+    body := map[string]interface{}{}
+    body["type"] = options.TypeVar
+    body["data"] = options.Data
+    request.Send(body)
+
+    if useTM {
+        token, tokenErr := tokenManager.GetToken()
+
+        if tokenErr != nil {
+            return nil, tokenErr
+        }
+
+        request.Set("Authorization", "Bearer " + token)
+    } else {
+        request.SetBasicAuth(creds.Username, creds.Password)
+    }
+
+    response := new(watson.WatsonResponse)
+
+    response.Result = new(CreateEventResponse)
+    res, _, err := request.EndStruct(&response.Result)
+
+    if err != nil {
+        return nil, err
+    }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
+
+    if res.StatusCode < 200 || res.StatusCode >= 300 {
+        buff := new(bytes.Buffer)
+        buff.ReadFrom(res.Body)
+        errStr := buff.String()
+        err = append(err, fmt.Errorf(errStr))
+        return response, err
+    }
+
+    return response, nil
+}
+
+// GetCreateEventResult : Cast result of CreateEvent operation
+func GetCreateEventResult(response *watson.WatsonResponse) *CreateEventResponse {
+    result, ok := response.Result.(*CreateEventResponse)
+
+    if ok {
+        return result
+    }
+
+    return nil
+}
+
+// GetMetricsEventRate : Percentage of queries with an associated event
+func (discovery *DiscoveryV1) GetMetricsEventRate(options *GetMetricsEventRateOptions) (*watson.WatsonResponse, []error) {
+    path := "/v1/metrics/event_rate"
+    creds := discovery.client.Creds
+    useTM := discovery.client.UseTM
+    tokenManager := discovery.client.TokenManager
+
+    request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
+    request.Query("version=" + creds.Version)
+    if options.IsStartTimeSet {
+        request.Query("start_time=" + fmt.Sprint(options.StartTime))
+    }
+    if options.IsEndTimeSet {
+        request.Query("end_time=" + fmt.Sprint(options.EndTime))
+    }
+    if options.IsResultTypeSet {
+        request.Query("result_type=" + fmt.Sprint(options.ResultType))
+    }
+
+    if useTM {
+        token, tokenErr := tokenManager.GetToken()
+
+        if tokenErr != nil {
+            return nil, tokenErr
+        }
+
+        request.Set("Authorization", "Bearer " + token)
+    } else {
+        request.SetBasicAuth(creds.Username, creds.Password)
+    }
+
+    response := new(watson.WatsonResponse)
+
+    response.Result = new(MetricResponse)
+    res, _, err := request.EndStruct(&response.Result)
+
+    if err != nil {
+        return nil, err
+    }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
+
+    if res.StatusCode < 200 || res.StatusCode >= 300 {
+        buff := new(bytes.Buffer)
+        buff.ReadFrom(res.Body)
+        errStr := buff.String()
+        err = append(err, fmt.Errorf(errStr))
+        return response, err
+    }
+
+    return response, nil
+}
+
+// GetGetMetricsEventRateResult : Cast result of GetMetricsEventRate operation
+func GetGetMetricsEventRateResult(response *watson.WatsonResponse) *MetricResponse {
+    result, ok := response.Result.(*MetricResponse)
+
+    if ok {
+        return result
+    }
+
+    return nil
+}
+
+// GetMetricsQuery : Number of queries over time
+func (discovery *DiscoveryV1) GetMetricsQuery(options *GetMetricsQueryOptions) (*watson.WatsonResponse, []error) {
+    path := "/v1/metrics/number_of_queries"
+    creds := discovery.client.Creds
+    useTM := discovery.client.UseTM
+    tokenManager := discovery.client.TokenManager
+
+    request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
+    request.Query("version=" + creds.Version)
+    if options.IsStartTimeSet {
+        request.Query("start_time=" + fmt.Sprint(options.StartTime))
+    }
+    if options.IsEndTimeSet {
+        request.Query("end_time=" + fmt.Sprint(options.EndTime))
+    }
+    if options.IsResultTypeSet {
+        request.Query("result_type=" + fmt.Sprint(options.ResultType))
+    }
+
+    if useTM {
+        token, tokenErr := tokenManager.GetToken()
+
+        if tokenErr != nil {
+            return nil, tokenErr
+        }
+
+        request.Set("Authorization", "Bearer " + token)
+    } else {
+        request.SetBasicAuth(creds.Username, creds.Password)
+    }
+
+    response := new(watson.WatsonResponse)
+
+    response.Result = new(MetricResponse)
+    res, _, err := request.EndStruct(&response.Result)
+
+    if err != nil {
+        return nil, err
+    }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
+
+    if res.StatusCode < 200 || res.StatusCode >= 300 {
+        buff := new(bytes.Buffer)
+        buff.ReadFrom(res.Body)
+        errStr := buff.String()
+        err = append(err, fmt.Errorf(errStr))
+        return response, err
+    }
+
+    return response, nil
+}
+
+// GetGetMetricsQueryResult : Cast result of GetMetricsQuery operation
+func GetGetMetricsQueryResult(response *watson.WatsonResponse) *MetricResponse {
+    result, ok := response.Result.(*MetricResponse)
+
+    if ok {
+        return result
+    }
+
+    return nil
+}
+
+// GetMetricsQueryEvent : Number of queries with an event over time
+func (discovery *DiscoveryV1) GetMetricsQueryEvent(options *GetMetricsQueryEventOptions) (*watson.WatsonResponse, []error) {
+    path := "/v1/metrics/number_of_queries_with_event"
+    creds := discovery.client.Creds
+    useTM := discovery.client.UseTM
+    tokenManager := discovery.client.TokenManager
+
+    request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
+    request.Query("version=" + creds.Version)
+    if options.IsStartTimeSet {
+        request.Query("start_time=" + fmt.Sprint(options.StartTime))
+    }
+    if options.IsEndTimeSet {
+        request.Query("end_time=" + fmt.Sprint(options.EndTime))
+    }
+    if options.IsResultTypeSet {
+        request.Query("result_type=" + fmt.Sprint(options.ResultType))
+    }
+
+    if useTM {
+        token, tokenErr := tokenManager.GetToken()
+
+        if tokenErr != nil {
+            return nil, tokenErr
+        }
+
+        request.Set("Authorization", "Bearer " + token)
+    } else {
+        request.SetBasicAuth(creds.Username, creds.Password)
+    }
+
+    response := new(watson.WatsonResponse)
+
+    response.Result = new(MetricResponse)
+    res, _, err := request.EndStruct(&response.Result)
+
+    if err != nil {
+        return nil, err
+    }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
+
+    if res.StatusCode < 200 || res.StatusCode >= 300 {
+        buff := new(bytes.Buffer)
+        buff.ReadFrom(res.Body)
+        errStr := buff.String()
+        err = append(err, fmt.Errorf(errStr))
+        return response, err
+    }
+
+    return response, nil
+}
+
+// GetGetMetricsQueryEventResult : Cast result of GetMetricsQueryEvent operation
+func GetGetMetricsQueryEventResult(response *watson.WatsonResponse) *MetricResponse {
+    result, ok := response.Result.(*MetricResponse)
+
+    if ok {
+        return result
+    }
+
+    return nil
+}
+
+// GetMetricsQueryNoResults : Number of queries with no search results over time
+func (discovery *DiscoveryV1) GetMetricsQueryNoResults(options *GetMetricsQueryNoResultsOptions) (*watson.WatsonResponse, []error) {
+    path := "/v1/metrics/number_of_queries_with_no_search_results"
+    creds := discovery.client.Creds
+    useTM := discovery.client.UseTM
+    tokenManager := discovery.client.TokenManager
+
+    request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
+    request.Query("version=" + creds.Version)
+    if options.IsStartTimeSet {
+        request.Query("start_time=" + fmt.Sprint(options.StartTime))
+    }
+    if options.IsEndTimeSet {
+        request.Query("end_time=" + fmt.Sprint(options.EndTime))
+    }
+    if options.IsResultTypeSet {
+        request.Query("result_type=" + fmt.Sprint(options.ResultType))
+    }
+
+    if useTM {
+        token, tokenErr := tokenManager.GetToken()
+
+        if tokenErr != nil {
+            return nil, tokenErr
+        }
+
+        request.Set("Authorization", "Bearer " + token)
+    } else {
+        request.SetBasicAuth(creds.Username, creds.Password)
+    }
+
+    response := new(watson.WatsonResponse)
+
+    response.Result = new(MetricResponse)
+    res, _, err := request.EndStruct(&response.Result)
+
+    if err != nil {
+        return nil, err
+    }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
+
+    if res.StatusCode < 200 || res.StatusCode >= 300 {
+        buff := new(bytes.Buffer)
+        buff.ReadFrom(res.Body)
+        errStr := buff.String()
+        err = append(err, fmt.Errorf(errStr))
+        return response, err
+    }
+
+    return response, nil
+}
+
+// GetGetMetricsQueryNoResultsResult : Cast result of GetMetricsQueryNoResults operation
+func GetGetMetricsQueryNoResultsResult(response *watson.WatsonResponse) *MetricResponse {
+    result, ok := response.Result.(*MetricResponse)
+
+    if ok {
+        return result
+    }
+
+    return nil
+}
+
+// GetMetricsQueryTokenEvent : Most frequent query tokens with an event
+func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(options *GetMetricsQueryTokenEventOptions) (*watson.WatsonResponse, []error) {
+    path := "/v1/metrics/top_query_tokens_with_event_rate"
+    creds := discovery.client.Creds
+    useTM := discovery.client.UseTM
+    tokenManager := discovery.client.TokenManager
+
+    request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
+    request.Query("version=" + creds.Version)
+    if options.IsCountSet {
+        request.Query("count=" + fmt.Sprint(options.Count))
+    }
+
+    if useTM {
+        token, tokenErr := tokenManager.GetToken()
+
+        if tokenErr != nil {
+            return nil, tokenErr
+        }
+
+        request.Set("Authorization", "Bearer " + token)
+    } else {
+        request.SetBasicAuth(creds.Username, creds.Password)
+    }
+
+    response := new(watson.WatsonResponse)
+
+    response.Result = new(MetricTokenResponse)
+    res, _, err := request.EndStruct(&response.Result)
+
+    if err != nil {
+        return nil, err
+    }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
+
+    if res.StatusCode < 200 || res.StatusCode >= 300 {
+        buff := new(bytes.Buffer)
+        buff.ReadFrom(res.Body)
+        errStr := buff.String()
+        err = append(err, fmt.Errorf(errStr))
+        return response, err
+    }
+
+    return response, nil
+}
+
+// GetGetMetricsQueryTokenEventResult : Cast result of GetMetricsQueryTokenEvent operation
+func GetGetMetricsQueryTokenEventResult(response *watson.WatsonResponse) *MetricTokenResponse {
+    result, ok := response.Result.(*MetricTokenResponse)
+
+    if ok {
+        return result
+    }
+
+    return nil
+}
+
+// QueryLog : Search the query and event log
+func (discovery *DiscoveryV1) QueryLog(options *QueryLogOptions) (*watson.WatsonResponse, []error) {
+    path := "/v1/logs"
+    creds := discovery.client.Creds
+    useTM := discovery.client.UseTM
+    tokenManager := discovery.client.TokenManager
+
+    request := req.New().Get(creds.ServiceURL + path)
+
+    for headerName, headerValue := range options.Headers {
+        request.Set(headerName, headerValue)
+    }
+
+    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+
+    request.Set("Accept", "application/json")
+    request.Set("Content-Type", "application/json")
+    request.Query("version=" + creds.Version)
+    if options.IsFilterSet {
+        request.Query("filter=" + fmt.Sprint(options.Filter))
+    }
+    if options.IsQuerySet {
+        request.Query("query=" + fmt.Sprint(options.Query))
+    }
+    if options.IsCountSet {
+        request.Query("count=" + fmt.Sprint(options.Count))
+    }
+    if options.IsOffsetSet {
+        request.Query("offset=" + fmt.Sprint(options.Offset))
+    }
+    if options.IsSortSet {
+        request.Query("sort=" + fmt.Sprint(options.Sort))
+    }
+
+    if useTM {
+        token, tokenErr := tokenManager.GetToken()
+
+        if tokenErr != nil {
+            return nil, tokenErr
+        }
+
+        request.Set("Authorization", "Bearer " + token)
+    } else {
+        request.SetBasicAuth(creds.Username, creds.Password)
+    }
+
+    response := new(watson.WatsonResponse)
+
+    response.Result = new(LogQueryResponse)
+    res, _, err := request.EndStruct(&response.Result)
+
+    if err != nil {
+        return nil, err
+    }
+
+    response.Headers = res.Header
+    response.StatusCode = res.StatusCode
+
+    if res.StatusCode < 200 || res.StatusCode >= 300 {
+        buff := new(bytes.Buffer)
+        buff.ReadFrom(res.Body)
+        errStr := buff.String()
+        err = append(err, fmt.Errorf(errStr))
+        return response, err
+    }
+
+    return response, nil
+}
+
+// GetQueryLogResult : Cast result of QueryLog operation
+func GetQueryLogResult(response *watson.WatsonResponse) *LogQueryResponse {
+    result, ok := response.Result.(*LogQueryResponse)
+
+    if ok {
+        return result
+    }
+
+    return nil
+}
+
 // CreateCredentials : Create credentials
 func (discovery *DiscoveryV1) CreateCredentials(options *CreateCredentialsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/environments/{environment_id}/credentials"
@@ -4130,6 +4643,55 @@ func (options *CreateEnvironmentOptions) SetHeaders(param map[string]string) *Cr
     return options
 }
 
+// CreateEventOptions : The createEvent options.
+type CreateEventOptions struct {
+
+	// The event type to be created.
+	TypeVar string `json:"type"`
+
+	// Data object used to create a query event.
+	Data EventData `json:"data"`
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewCreateEventOptions : Instantiate CreateEventOptions
+func NewCreateEventOptions(typeVar string, data EventData) *CreateEventOptions {
+    return &CreateEventOptions{
+        TypeVar: typeVar,
+        Data: data,
+    }
+}
+
+// SetTypeVar : Allow user to set TypeVar
+func (options *CreateEventOptions) SetTypeVar(param string) *CreateEventOptions {
+    options.TypeVar = param
+    return options
+}
+
+// SetData : Allow user to set Data
+func (options *CreateEventOptions) SetData(param EventData) *CreateEventOptions {
+    options.Data = param
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateEventOptions) SetHeaders(param map[string]string) *CreateEventOptions {
+    options.Headers = param
+    return options
+}
+
+// CreateEventResponse : An object defining the event being created.
+type CreateEventResponse struct {
+
+	// The event type that was created.
+	TypeVar string `json:"type,omitempty"`
+
+	// Query event data object.
+	Data EventData `json:"data,omitempty"`
+}
+
 // CreateExpansionsOptions : The createExpansions options.
 type CreateExpansionsOptions struct {
 
@@ -4959,6 +5521,31 @@ type EnvironmentDocuments struct {
 	MaximumAllowed int64 `json:"maximum_allowed,omitempty"`
 }
 
+// EventData : Query event data object.
+type EventData struct {
+
+	// The **environment_id** associated with the query that the event is associated with.
+	EnvironmentID string `json:"environment_id"`
+
+	// The session token that was returned as part of the query results that this event is associated with.
+	SessionToken string `json:"session_token"`
+
+	// The optional timestamp for the event that was created. If not provided, the time that the event was created in the log was used.
+	ClientTimestamp strfmt.DateTime `json:"client_timestamp,omitempty"`
+
+	// The rank of the result item which the event is associated with.
+	DisplayRank int64 `json:"display_rank,omitempty"`
+
+	// The **collection_id** of the document that this event is associated with.
+	CollectionID string `json:"collection_id"`
+
+	// The **document_id** of the document that this event is associated with.
+	DocumentID string `json:"document_id"`
+
+	// The query identifier stored in the log. The query and any events associated with that query are stored with the same **query_id**.
+	QueryID string `json:"query_id,omitempty"`
+}
+
 // Expansion : An expansion definition. Each object respresents one set of expandable strings. For example, you could have expansions for the word `hot` in one object, and expansions for the word `cold` in another.
 type Expansion struct {
 
@@ -5009,7 +5596,7 @@ type FederatedQueryNoticesOptions struct {
     // Indicates whether user set optional parameter Aggregation
     IsAggregationSet bool
 
-	// Number of documents to return.
+	// Number of results to return.
 	Count int64 `json:"count,omitempty"`
 
     // Indicates whether user set optional parameter Count
@@ -5217,7 +5804,7 @@ type FederatedQueryOptions struct {
     // Indicates whether user set optional parameter Aggregation
     IsAggregationSet bool
 
-	// Number of documents to return.
+	// Number of results to return.
 	Count int64 `json:"count,omitempty"`
 
     // Indicates whether user set optional parameter Count
@@ -5674,6 +6261,265 @@ func (options *GetEnvironmentOptions) SetEnvironmentID(param string) *GetEnviron
 
 // SetHeaders : Allow user to set Headers
 func (options *GetEnvironmentOptions) SetHeaders(param map[string]string) *GetEnvironmentOptions {
+    options.Headers = param
+    return options
+}
+
+// GetMetricsEventRateOptions : The getMetricsEventRate options.
+type GetMetricsEventRateOptions struct {
+
+	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
+	StartTime strfmt.DateTime `json:"start_time,omitempty"`
+
+    // Indicates whether user set optional parameter StartTime
+    IsStartTimeSet bool
+
+	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
+	EndTime strfmt.DateTime `json:"end_time,omitempty"`
+
+    // Indicates whether user set optional parameter EndTime
+    IsEndTimeSet bool
+
+	// The type of result to consider when calculating the metric.
+	ResultType string `json:"result_type,omitempty"`
+
+    // Indicates whether user set optional parameter ResultType
+    IsResultTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetMetricsEventRateOptions : Instantiate GetMetricsEventRateOptions
+func NewGetMetricsEventRateOptions() *GetMetricsEventRateOptions {
+    return &GetMetricsEventRateOptions{}
+}
+
+// SetStartTime : Allow user to set StartTime
+func (options *GetMetricsEventRateOptions) SetStartTime(param strfmt.DateTime) *GetMetricsEventRateOptions {
+    options.StartTime = param
+    options.IsStartTimeSet = true
+    return options
+}
+
+// SetEndTime : Allow user to set EndTime
+func (options *GetMetricsEventRateOptions) SetEndTime(param strfmt.DateTime) *GetMetricsEventRateOptions {
+    options.EndTime = param
+    options.IsEndTimeSet = true
+    return options
+}
+
+// SetResultType : Allow user to set ResultType
+func (options *GetMetricsEventRateOptions) SetResultType(param string) *GetMetricsEventRateOptions {
+    options.ResultType = param
+    options.IsResultTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetMetricsEventRateOptions) SetHeaders(param map[string]string) *GetMetricsEventRateOptions {
+    options.Headers = param
+    return options
+}
+
+// GetMetricsQueryEventOptions : The getMetricsQueryEvent options.
+type GetMetricsQueryEventOptions struct {
+
+	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
+	StartTime strfmt.DateTime `json:"start_time,omitempty"`
+
+    // Indicates whether user set optional parameter StartTime
+    IsStartTimeSet bool
+
+	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
+	EndTime strfmt.DateTime `json:"end_time,omitempty"`
+
+    // Indicates whether user set optional parameter EndTime
+    IsEndTimeSet bool
+
+	// The type of result to consider when calculating the metric.
+	ResultType string `json:"result_type,omitempty"`
+
+    // Indicates whether user set optional parameter ResultType
+    IsResultTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetMetricsQueryEventOptions : Instantiate GetMetricsQueryEventOptions
+func NewGetMetricsQueryEventOptions() *GetMetricsQueryEventOptions {
+    return &GetMetricsQueryEventOptions{}
+}
+
+// SetStartTime : Allow user to set StartTime
+func (options *GetMetricsQueryEventOptions) SetStartTime(param strfmt.DateTime) *GetMetricsQueryEventOptions {
+    options.StartTime = param
+    options.IsStartTimeSet = true
+    return options
+}
+
+// SetEndTime : Allow user to set EndTime
+func (options *GetMetricsQueryEventOptions) SetEndTime(param strfmt.DateTime) *GetMetricsQueryEventOptions {
+    options.EndTime = param
+    options.IsEndTimeSet = true
+    return options
+}
+
+// SetResultType : Allow user to set ResultType
+func (options *GetMetricsQueryEventOptions) SetResultType(param string) *GetMetricsQueryEventOptions {
+    options.ResultType = param
+    options.IsResultTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetMetricsQueryEventOptions) SetHeaders(param map[string]string) *GetMetricsQueryEventOptions {
+    options.Headers = param
+    return options
+}
+
+// GetMetricsQueryNoResultsOptions : The getMetricsQueryNoResults options.
+type GetMetricsQueryNoResultsOptions struct {
+
+	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
+	StartTime strfmt.DateTime `json:"start_time,omitempty"`
+
+    // Indicates whether user set optional parameter StartTime
+    IsStartTimeSet bool
+
+	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
+	EndTime strfmt.DateTime `json:"end_time,omitempty"`
+
+    // Indicates whether user set optional parameter EndTime
+    IsEndTimeSet bool
+
+	// The type of result to consider when calculating the metric.
+	ResultType string `json:"result_type,omitempty"`
+
+    // Indicates whether user set optional parameter ResultType
+    IsResultTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetMetricsQueryNoResultsOptions : Instantiate GetMetricsQueryNoResultsOptions
+func NewGetMetricsQueryNoResultsOptions() *GetMetricsQueryNoResultsOptions {
+    return &GetMetricsQueryNoResultsOptions{}
+}
+
+// SetStartTime : Allow user to set StartTime
+func (options *GetMetricsQueryNoResultsOptions) SetStartTime(param strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
+    options.StartTime = param
+    options.IsStartTimeSet = true
+    return options
+}
+
+// SetEndTime : Allow user to set EndTime
+func (options *GetMetricsQueryNoResultsOptions) SetEndTime(param strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
+    options.EndTime = param
+    options.IsEndTimeSet = true
+    return options
+}
+
+// SetResultType : Allow user to set ResultType
+func (options *GetMetricsQueryNoResultsOptions) SetResultType(param string) *GetMetricsQueryNoResultsOptions {
+    options.ResultType = param
+    options.IsResultTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetMetricsQueryNoResultsOptions) SetHeaders(param map[string]string) *GetMetricsQueryNoResultsOptions {
+    options.Headers = param
+    return options
+}
+
+// GetMetricsQueryOptions : The getMetricsQuery options.
+type GetMetricsQueryOptions struct {
+
+	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
+	StartTime strfmt.DateTime `json:"start_time,omitempty"`
+
+    // Indicates whether user set optional parameter StartTime
+    IsStartTimeSet bool
+
+	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
+	EndTime strfmt.DateTime `json:"end_time,omitempty"`
+
+    // Indicates whether user set optional parameter EndTime
+    IsEndTimeSet bool
+
+	// The type of result to consider when calculating the metric.
+	ResultType string `json:"result_type,omitempty"`
+
+    // Indicates whether user set optional parameter ResultType
+    IsResultTypeSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetMetricsQueryOptions : Instantiate GetMetricsQueryOptions
+func NewGetMetricsQueryOptions() *GetMetricsQueryOptions {
+    return &GetMetricsQueryOptions{}
+}
+
+// SetStartTime : Allow user to set StartTime
+func (options *GetMetricsQueryOptions) SetStartTime(param strfmt.DateTime) *GetMetricsQueryOptions {
+    options.StartTime = param
+    options.IsStartTimeSet = true
+    return options
+}
+
+// SetEndTime : Allow user to set EndTime
+func (options *GetMetricsQueryOptions) SetEndTime(param strfmt.DateTime) *GetMetricsQueryOptions {
+    options.EndTime = param
+    options.IsEndTimeSet = true
+    return options
+}
+
+// SetResultType : Allow user to set ResultType
+func (options *GetMetricsQueryOptions) SetResultType(param string) *GetMetricsQueryOptions {
+    options.ResultType = param
+    options.IsResultTypeSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetMetricsQueryOptions) SetHeaders(param map[string]string) *GetMetricsQueryOptions {
+    options.Headers = param
+    return options
+}
+
+// GetMetricsQueryTokenEventOptions : The getMetricsQueryTokenEvent options.
+type GetMetricsQueryTokenEventOptions struct {
+
+	// Number of results to return.
+	Count int64 `json:"count,omitempty"`
+
+    // Indicates whether user set optional parameter Count
+    IsCountSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewGetMetricsQueryTokenEventOptions : Instantiate GetMetricsQueryTokenEventOptions
+func NewGetMetricsQueryTokenEventOptions() *GetMetricsQueryTokenEventOptions {
+    return &GetMetricsQueryTokenEventOptions{}
+}
+
+// SetCount : Allow user to set Count
+func (options *GetMetricsQueryTokenEventOptions) SetCount(param int64) *GetMetricsQueryTokenEventOptions {
+    options.Count = param
+    options.IsCountSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetMetricsQueryTokenEventOptions) SetHeaders(param map[string]string) *GetMetricsQueryTokenEventOptions {
     options.Headers = param
     return options
 }
@@ -6195,6 +7041,89 @@ func (options *ListTrainingExamplesOptions) SetHeaders(param map[string]string) 
     return options
 }
 
+// LogQueryResponse : Object containing results that match the requested **logs** query.
+type LogQueryResponse struct {
+
+	// Number of matching results.
+	MatchingResults int64 `json:"matching_results,omitempty"`
+
+	Results []LogQueryResponseResult `json:"results,omitempty"`
+}
+
+// LogQueryResponseResult : Individual result object for a **logs** query. Each object represents either a query to a Discovery collection or an event that is associated with a query.
+type LogQueryResponseResult struct {
+
+	// The environment ID that is associated with this log entry.
+	EnvironmentID string `json:"environment_id,omitempty"`
+
+	// The **customer_id** label that was specified in the header of the query or event API call that corresponds to this log entry.
+	CustomerID string `json:"customer_id,omitempty"`
+
+	// The type of log entry returned. **query** indicates that the log represents the results of a call to the single collection **query** method. **event** indicates that the log represents  a call to the **events** API.
+	DocumentType string `json:"document_type,omitempty"`
+
+	// The value of the **natural_language_query** query parameter that was used to create these results. Only returned with logs of type **query**. **Note:** Other query parameters (such as **filter** or **deduplicate**) might  have been used with this query, but are not recorded.
+	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
+
+	// Object containing result information that was returned by the query used to create this log entry. Only returned with logs of type `query`.
+	DocumentResults LogQueryResponseResultDocuments `json:"document_results,omitempty"`
+
+	// Date that the log result was created. Returned in `YYYY-MM-DDThh:mm:ssZ` format.
+	CreatedTimestamp strfmt.DateTime `json:"created_timestamp,omitempty"`
+
+	// Date specified by the user when recording an event. Returned in `YYYY-MM-DDThh:mm:ssZ` format. Only returned with logs of type **event**.
+	ClientTimestamp strfmt.DateTime `json:"client_timestamp,omitempty"`
+
+	// Identifier that corresponds to the **natural_language_query** string used in the original or associated query. All **event** and **query** log entries that have the same original **natural_language_query** string also have them same **query_id**. This field can be used to recall all **event** and **query** log results that have the same original query (**event** logs do not contain the original **natural_language_query** field).
+	QueryID string `json:"query_id,omitempty"`
+
+	// Unique identifier (within a 24-hour period) that identifies a single `query` log and any `event` logs that were created for it. **Note:** If the exact same query is run at the exact same time on different days, the **session_token** for those queries might be identical. However, the **created_timestamp** differs. **Note:** Session tokens are case sensitive. To avoid matching on session tokens that are identical except for case, use the exact match operator (`::`) when you query for a specific session token.
+	SessionToken string `json:"session_token,omitempty"`
+
+	// The collection ID of the document associated with this event. Only returned with logs of type `event`.
+	CollectionID string `json:"collection_id,omitempty"`
+
+	// The original display rank of the document associated with this event. Only returned with logs of type `event`.
+	DisplayRank int64 `json:"display_rank,omitempty"`
+
+	// The document ID of the document associated with this event. Only returned with logs of type `event`.
+	DocumentID string `json:"document_id,omitempty"`
+
+	// The type of event that this object respresents. Possible values are -  `query` the log of a query to a collection -  `click` the result of a call to the **events** endpoint.
+	EventType string `json:"event_type,omitempty"`
+
+	// The type of result that this **event** is associated with. Only returned with logs of type `event`.
+	ResultType string `json:"result_type,omitempty"`
+}
+
+// LogQueryResponseResultDocuments : Object containing result information that was returned by the query used to create this log entry. Only returned with logs of type `query`.
+type LogQueryResponseResultDocuments struct {
+
+	Results []LogQueryResponseResultDocumentsResult `json:"results,omitempty"`
+
+	// The number of results returned in the query associate with this log.
+	Count int64 `json:"count,omitempty"`
+}
+
+// LogQueryResponseResultDocumentsResult : Each object in the **results** array corresponds to an individual document returned by the original query.
+type LogQueryResponseResultDocumentsResult struct {
+
+	// The result rank of this document. A position of `1` indicates that it was the first returned result.
+	Position int64 `json:"position,omitempty"`
+
+	// The **document_id** of the document that this result represents.
+	DocumentID string `json:"document_id,omitempty"`
+
+	// The raw score of this result. A higher score indicates a greater match to the query parameters.
+	Score float64 `json:"score,omitempty"`
+
+	// The confidence score of the result's analysis. A higher score indicating greater confidence.
+	Confidence float64 `json:"confidence,omitempty"`
+
+	// The **collection_id** of the document represented by this result.
+	CollectionID string `json:"collection_id,omitempty"`
+}
+
 // MemoryUsage : **Deprecated**: Summary of the memory usage statistics for this environment.
 type MemoryUsage struct {
 
@@ -6212,6 +7141,68 @@ type MemoryUsage struct {
 
 	// **Deprecated**: Percentage of the environment's memory capacity that is being used.
 	PercentUsed float64 `json:"percent_used,omitempty"`
+}
+
+// MetricAggregation : An aggregation analyzing log information for queries and events.
+type MetricAggregation struct {
+
+	// The measurement interval for this metric. Metric intervals are always 1 day (`1d`).
+	Interval string `json:"interval,omitempty"`
+
+	// The event type associated with this metric result. This field, when present, will always be `click`.
+	EventType string `json:"event_type,omitempty"`
+
+	Results []MetricAggregationResult `json:"results,omitempty"`
+}
+
+// MetricAggregationResult : Aggregation result data for the requested metric.
+type MetricAggregationResult struct {
+
+	// Date in string form representing the start of this interval.
+	KeyAsString strfmt.DateTime `json:"key_as_string,omitempty"`
+
+	// Unix epoch time equivalent of the **key_as_string**, that represents the start of this interval.
+	Key int64 `json:"key,omitempty"`
+
+	// Number of matching results.
+	MatchingResults int64 `json:"matching_results,omitempty"`
+
+	// The number of queries with associated events divided by the total number of queries for the interval. Only returned with **event_rate** metrics.
+	EventRate float64 `json:"event_rate,omitempty"`
+}
+
+// MetricResponse : The response generated from a call to a **metrics** method.
+type MetricResponse struct {
+
+	Aggregations []MetricAggregation `json:"aggregations,omitempty"`
+}
+
+// MetricTokenAggregation : An aggregation analyzing log information for queries and events.
+type MetricTokenAggregation struct {
+
+	// The event type associated with this metric result. This field, when present, will always be `click`.
+	EventType string `json:"event_type,omitempty"`
+
+	Results []MetricTokenAggregationResult `json:"results,omitempty"`
+}
+
+// MetricTokenAggregationResult : Aggregation result data for the requested metric.
+type MetricTokenAggregationResult struct {
+
+	// The content of the **natural_language_query** parameter used in the query that this result represents.
+	Key string `json:"key,omitempty"`
+
+	// Number of matching results.
+	MatchingResults int64 `json:"matching_results,omitempty"`
+
+	// The number of queries with associated events divided by the total number of queries currently stored (queries and events are stored in the log for 30 days).
+	EventRate float64 `json:"event_rate,omitempty"`
+}
+
+// MetricTokenResponse : The response generated from a call to a **metrics** method that evaluates tokens.
+type MetricTokenResponse struct {
+
+	Aggregations []MetricTokenAggregation `json:"aggregations,omitempty"`
 }
 
 // NluEnrichmentCategories : An object that indicates the Categories enrichment will be applied to the specified field.
@@ -6571,6 +7562,89 @@ type QueryFilterType struct {
 	Include []string `json:"include,omitempty"`
 }
 
+// QueryLogOptions : The queryLog options.
+type QueryLogOptions struct {
+
+	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
+	Filter string `json:"filter,omitempty"`
+
+    // Indicates whether user set optional parameter Filter
+    IsFilterSet bool
+
+	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+	Query string `json:"query,omitempty"`
+
+    // Indicates whether user set optional parameter Query
+    IsQuerySet bool
+
+	// Number of results to return.
+	Count int64 `json:"count,omitempty"`
+
+    // Indicates whether user set optional parameter Count
+    IsCountSet bool
+
+	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
+	Offset int64 `json:"offset,omitempty"`
+
+    // Indicates whether user set optional parameter Offset
+    IsOffsetSet bool
+
+	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
+	Sort []string `json:"sort,omitempty"`
+
+    // Indicates whether user set optional parameter Sort
+    IsSortSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewQueryLogOptions : Instantiate QueryLogOptions
+func NewQueryLogOptions() *QueryLogOptions {
+    return &QueryLogOptions{}
+}
+
+// SetFilter : Allow user to set Filter
+func (options *QueryLogOptions) SetFilter(param string) *QueryLogOptions {
+    options.Filter = param
+    options.IsFilterSet = true
+    return options
+}
+
+// SetQuery : Allow user to set Query
+func (options *QueryLogOptions) SetQuery(param string) *QueryLogOptions {
+    options.Query = param
+    options.IsQuerySet = true
+    return options
+}
+
+// SetCount : Allow user to set Count
+func (options *QueryLogOptions) SetCount(param int64) *QueryLogOptions {
+    options.Count = param
+    options.IsCountSet = true
+    return options
+}
+
+// SetOffset : Allow user to set Offset
+func (options *QueryLogOptions) SetOffset(param int64) *QueryLogOptions {
+    options.Offset = param
+    options.IsOffsetSet = true
+    return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *QueryLogOptions) SetSort(param []string) *QueryLogOptions {
+    options.Sort = param
+    options.IsSortSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *QueryLogOptions) SetHeaders(param map[string]string) *QueryLogOptions {
+    options.Headers = param
+    return options
+}
+
 // QueryNoticesOptions : The queryNotices options.
 type QueryNoticesOptions struct {
 
@@ -6610,7 +7684,7 @@ type QueryNoticesOptions struct {
     // Indicates whether user set optional parameter Aggregation
     IsAggregationSet bool
 
-	// Number of documents to return.
+	// Number of results to return.
 	Count int64 `json:"count,omitempty"`
 
     // Indicates whether user set optional parameter Count
@@ -6918,7 +7992,7 @@ type QueryOptions struct {
     // Indicates whether user set optional parameter Aggregation
     IsAggregationSet bool
 
-	// Number of documents to return.
+	// Number of results to return.
 	Count int64 `json:"count,omitempty"`
 
     // Indicates whether user set optional parameter Count

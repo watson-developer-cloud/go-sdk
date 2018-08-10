@@ -1987,8 +1987,8 @@ func GetUpdateEntityResult(response *watson.WatsonResponse) *Entity {
     return nil
 }
 
-// ListMentions : List entity mentions
-func (assistant *AssistantV1) ListMentions(options *ListMentionsOptions) (*watson.WatsonResponse, []error) {
+// ListEntityMentions : List entity mentions
+func (assistant *AssistantV1) ListEntityMentions(options *ListEntityMentionsOptions) (*watson.WatsonResponse, []error) {
     path := "/v1/workspaces/{workspace_id}/entities/{entity}/mentions"
     creds := assistant.client.Creds
     useTM := assistant.client.UseTM
@@ -2048,8 +2048,8 @@ func (assistant *AssistantV1) ListMentions(options *ListMentionsOptions) (*watso
     return response, nil
 }
 
-// GetListMentionsResult : Cast result of ListMentions operation
-func GetListMentionsResult(response *watson.WatsonResponse) *EntityMentionCollection {
+// GetListEntityMentionsResult : Cast result of ListEntityMentions operation
+func GetListEntityMentionsResult(response *watson.WatsonResponse) *EntityMentionCollection {
     result, ok := response.Result.(*EntityMentionCollection)
 
     if ok {
@@ -4926,6 +4926,9 @@ type DialogNodeOutput struct {
 
 	// Options that modify how specified output is handled.
 	Modifiers DialogNodeOutputModifiers `json:"modifiers,omitempty"`
+
+	// An object defining text responses in dialog nodes that do not use the `output.generic` object to define responses. New dialog nodes should use `output.generic`. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	Text interface{} `json:"text,omitempty"`
 }
 
 // DialogNodeOutputGeneric : DialogNodeOutputGeneric struct
@@ -6097,6 +6100,71 @@ func (options *ListEntitiesOptions) SetHeaders(param map[string]string) *ListEnt
     return options
 }
 
+// ListEntityMentionsOptions : The listEntityMentions options.
+type ListEntityMentionsOptions struct {
+
+	// Unique identifier of the workspace.
+	WorkspaceID string `json:"workspace_id"`
+
+	// The name of the entity.
+	Entity string `json:"entity"`
+
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	Export bool `json:"export,omitempty"`
+
+    // Indicates whether user set optional parameter Export
+    IsExportSet bool
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit bool `json:"include_audit,omitempty"`
+
+    // Indicates whether user set optional parameter IncludeAudit
+    IsIncludeAuditSet bool
+
+    // Allows users to set headers to be GDPR compliant
+    Headers map[string]string
+}
+
+// NewListEntityMentionsOptions : Instantiate ListEntityMentionsOptions
+func NewListEntityMentionsOptions(workspaceID string, entity string) *ListEntityMentionsOptions {
+    return &ListEntityMentionsOptions{
+        WorkspaceID: workspaceID,
+        Entity: entity,
+    }
+}
+
+// SetWorkspaceID : Allow user to set WorkspaceID
+func (options *ListEntityMentionsOptions) SetWorkspaceID(param string) *ListEntityMentionsOptions {
+    options.WorkspaceID = param
+    return options
+}
+
+// SetEntity : Allow user to set Entity
+func (options *ListEntityMentionsOptions) SetEntity(param string) *ListEntityMentionsOptions {
+    options.Entity = param
+    return options
+}
+
+// SetExport : Allow user to set Export
+func (options *ListEntityMentionsOptions) SetExport(param bool) *ListEntityMentionsOptions {
+    options.Export = param
+    options.IsExportSet = true
+    return options
+}
+
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *ListEntityMentionsOptions) SetIncludeAudit(param bool) *ListEntityMentionsOptions {
+    options.IncludeAudit = param
+    options.IsIncludeAuditSet = true
+    return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListEntityMentionsOptions) SetHeaders(param map[string]string) *ListEntityMentionsOptions {
+    options.Headers = param
+    return options
+}
+
 // ListExamplesOptions : The listExamples options.
 type ListExamplesOptions struct {
 
@@ -6385,71 +6453,6 @@ func (options *ListLogsOptions) SetCursor(param string) *ListLogsOptions {
 
 // SetHeaders : Allow user to set Headers
 func (options *ListLogsOptions) SetHeaders(param map[string]string) *ListLogsOptions {
-    options.Headers = param
-    return options
-}
-
-// ListMentionsOptions : The listMentions options.
-type ListMentionsOptions struct {
-
-	// Unique identifier of the workspace.
-	WorkspaceID string `json:"workspace_id"`
-
-	// The name of the entity.
-	Entity string `json:"entity"`
-
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export bool `json:"export,omitempty"`
-
-    // Indicates whether user set optional parameter Export
-    IsExportSet bool
-
-	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit bool `json:"include_audit,omitempty"`
-
-    // Indicates whether user set optional parameter IncludeAudit
-    IsIncludeAuditSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
-}
-
-// NewListMentionsOptions : Instantiate ListMentionsOptions
-func NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
-    return &ListMentionsOptions{
-        WorkspaceID: workspaceID,
-        Entity: entity,
-    }
-}
-
-// SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListMentionsOptions) SetWorkspaceID(param string) *ListMentionsOptions {
-    options.WorkspaceID = param
-    return options
-}
-
-// SetEntity : Allow user to set Entity
-func (options *ListMentionsOptions) SetEntity(param string) *ListMentionsOptions {
-    options.Entity = param
-    return options
-}
-
-// SetExport : Allow user to set Export
-func (options *ListMentionsOptions) SetExport(param bool) *ListMentionsOptions {
-    options.Export = param
-    options.IsExportSet = true
-    return options
-}
-
-// SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListMentionsOptions) SetIncludeAudit(param bool) *ListMentionsOptions {
-    options.IncludeAudit = param
-    options.IsIncludeAuditSet = true
-    return options
-}
-
-// SetHeaders : Allow user to set Headers
-func (options *ListMentionsOptions) SetHeaders(param map[string]string) *ListMentionsOptions {
     options.Headers = param
     return options
 }
