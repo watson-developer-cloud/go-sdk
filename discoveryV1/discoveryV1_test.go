@@ -1,7 +1,7 @@
 package discoveryV1_test
 
 import (
-	"go-sdk/discoveryV1"
+	"github.ibm.com/arf/go-sdk/discoveryV1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"

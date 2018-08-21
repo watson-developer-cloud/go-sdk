@@ -1,7 +1,7 @@
 package assistantV1_test
 
 import (
-	"go-sdk/assistantV1"
+	"github.ibm.com/arf/go-sdk/assistantV1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"
