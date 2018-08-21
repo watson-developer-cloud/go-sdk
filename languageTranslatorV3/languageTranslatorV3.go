@@ -23,7 +23,8 @@ import (
     "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "go-sdk"
+    watson "github.ibm.com/arf/go-sdk"
+
 )
 
 // LanguageTranslatorV3 : The LanguageTranslatorV3 service
