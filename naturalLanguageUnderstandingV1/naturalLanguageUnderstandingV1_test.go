@@ -1,7 +1,7 @@
 package naturalLanguageUnderstandingV1_test
 
 import (
-	"go-sdk/naturalLanguageUnderstandingV1"
+	"github.ibm.com/arf/go-sdk/naturalLanguageUnderstandingV1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"

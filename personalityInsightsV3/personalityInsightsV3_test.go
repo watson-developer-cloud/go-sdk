@@ -1,7 +1,7 @@
 package personalityInsightsV3_test
 
 import (
-	"go-sdk/personalityInsightsV3"
+	"github.ibm.com/arf/go-sdk/personalityInsightsV3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"

@@ -1,7 +1,7 @@
 package naturalLanguageClassifierV1_test
 
 import (
-	"go-sdk/naturalLanguageClassifierV1"
+	"github.ibm.com/arf/go-sdk/naturalLanguageClassifierV1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"

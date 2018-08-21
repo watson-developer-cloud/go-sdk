@@ -1,7 +1,7 @@
 package languageTranslatorV3_test
 
 import (
-	"go-sdk/languageTranslatorV3"
+	"github.ibm.com/arf/go-sdk/languageTranslatorV3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"

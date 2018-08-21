@@ -1,7 +1,7 @@
 package textToSpeechV1_test
 
 import (
-	"go-sdk/textToSpeechV1"
+	"github.ibm.com/arf/go-sdk/textToSpeechV1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"

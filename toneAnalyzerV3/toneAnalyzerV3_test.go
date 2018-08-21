@@ -1,7 +1,7 @@
 package toneAnalyzerV3_test
 
 import (
-	"go-sdk/toneAnalyzerV3"
+	"github.ibm.com/arf/go-sdk/toneAnalyzerV3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"

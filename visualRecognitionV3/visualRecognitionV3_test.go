@@ -1,7 +1,7 @@
 package visualRecognitionV3_test
 
 import (
-	"go-sdk/visualRecognitionV3"
+	"github.ibm.com/arf/go-sdk/visualRecognitionV3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"encoding/base64"
