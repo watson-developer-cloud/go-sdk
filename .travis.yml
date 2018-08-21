@@ -12,8 +12,13 @@ go:
 
 before_install:
 - sudo apt-get update
-- sudo apt install golang-ginkgo-dev
-- curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.10
+- go get github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
+- go get github.com/onsi/gomega
+- go get github.com/modocache/gover
+- go get github.com/cloudfoundry-community/go-cfenv
+- go get github.com/go-resty/resty
+- go get github.com/stretchr/testify/assert
+- curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.10 # manually install linter
 
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
@@ -24,15 +29,6 @@ install:
 # Don't email me the results of the test runs.
 notifications:
   email: false
-
-# get linter
-before_script: 
-  - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-  - go get -u github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
-  - go get -u github.com/onsi/gomega/...     # fetches the matcher library
-  - go get github.com/cloudfoundry-community/go-cfenv
-  - go get github.com/go-resty/resty
-  - go get github.com/stretchr/testify/assert
 
 # script always runs to completion (set +e). If we have linter issues AND a
 # failing test, we want to see both. Configure golangci-lint with a
