@@ -23,7 +23,7 @@ import (
     "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "github.ibm.com/arf/go-sdk"
+    watson "go-sdk"
 )
 
 // AssistantV1 : The AssistantV1 service
