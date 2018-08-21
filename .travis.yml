@@ -28,7 +28,7 @@ before_script:
   - go get -u github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
   - go get -u github.com/onsi/gomega/...     # fetches the matcher library
   - go get github.com/cloudfoundry-community/go-cfenv
-  - go get github.com/watson-developer-cloud/go-sdk
+  - go get github.ibm.com/arf/go-sdk
 
 
 # script always runs to completion (set +e). If we have linter issues AND a
