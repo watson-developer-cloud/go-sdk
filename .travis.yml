@@ -12,7 +12,7 @@ go:
 
 before_install:
   - export GOPATH=$HOME/gopath/src/github.ibm.com/arf/go-sdk
-  - go get -u github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
+  # - go get -u github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
   - go get -u github.com/onsi/gomega/...
   - go get -u github.com/modocache/gover
   - go get -u github.com/cloudfoundry-community/go-cfenv
@@ -21,6 +21,8 @@ before_install:
   - go get -u github.com/go-openapi/strfmt
   - go get -u github.com/parnurzeal/gorequest
   - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.10 # manually install linter
+  - sudo apt-get update
+  - sudo apt install -y golang-ginkgo-dev
 
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
