@@ -17,13 +17,15 @@ before_install:
   - go get -u github.com/cloudfoundry-community/go-cfenv
   - go get -u github.com/go-resty/resty
   - go get -u github.com/stretchr/testify/assert
+  - go get -u github.com/go-openapi/strfmt
+  - go get -u github.com/parnurzeal/gorequest
   - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.10 # manually install linter
 
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
 install: 
   - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git arf/go-sdk/src/go-sdk
-  - export GOPATH=/home/travis/gopath/src/github.ibm.com/arf/go-sdk 
+  - export GOPATH=$HOME:/home/travis/gopath/src/github.ibm.com/arf/go-sdk:arf/go-sdk
 
 # Don't email me the results of the test runs.
 notifications:
