@@ -17,8 +17,7 @@ git:
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
 install: 
-  - echo "current directory is "
-  - pwd 
+- export GOPATH=/home/travis/gopath/src/github.ibm.com/arf/go-sdk 
 
 # Don't email me the results of the test runs.
 notifications:
