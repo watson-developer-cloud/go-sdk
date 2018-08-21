@@ -1,23 +1,24 @@
 # Questions
 
-If you are having problems using the APIs or have a question about the IBM Watson Services, please ask a question on [dW Answers][dw-answers] or [Stack Overflow][stack-overflow].
-
-# Coding Standard
+If you are having difficulties using the APIs or have a question about the IBM Watson Services,
+please ask a question on [dW Answers][dw] or [Stack Overflow][stackoverflow].
 
 # Issues
 
-If you encounter an issue with the .NET Standard SDK, you are welcome to submit a [bug report][go-sdk-issues]. Before that, please search for similar issues. It's possible somebody has already encountered this issue.
+If you encounter an issue with the Go SDK, you are welcome to submit a [bug report](https://github.com/watson-developer-cloud/go-sdk/issues).
+Before that, please search for similar issues. It's possible somebody has encountered this issue already.
 
 # Pull Requests
 
-If you want to contribute to the repository, follow these steps:
-
-1. Fork the repo.
-1. Develop and test your code changes Make sure you work in a feature branch. **PLEASE do not do your work in `master`.**
-1. Add a unit test for any new classes you add. Only refactoring and documentation changes require no new tests.
-1. Run unit tests within Visual Studio.
-1. Commit your changes.
-1. Push to your fork and submit a pull request.
+If you want to contribute to the repository, here's a quick guide:
+  1. Fork the repository
+  2. `go get` all the package dependencies
+  3. Develop and test your code changes `go test`
+    * Run `golint` - ignore error `don't use MixedCaps in package name`
+    * Check for unnecessary whitespace with git diff --check before committing
+  4. Make the tests pass
+  5. Commit your changes
+  6. Push to your fork and submit a pull request to the **master** branch
 
 # Developer's Certificate of Origin 1.1
 
@@ -45,7 +46,9 @@ By making a contribution to this project, I certify that:
    maintained indefinitely and may be redistributed consistent with
    this project or the open source license(s) involved.
 
-[dw-answers]: https://developer.ibm.com/answers/questions/ask/?topics=watson
-[stack-overflow]: http://stackoverflow.com/questions/ask?tags=ibm-watson
-[allman-style]: http://en.wikipedia.org/wiki/Indent_style#Allman_style
-[go-sdk-issues]: https://github.com/watson-developer-cloud/go-sdk/issues
+## Additional Resources
++ [General GitHub documentation](https://help.github.com/)
++ [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
+
+[dw]: https://developer.ibm.com/answers/questions/ask/?topics=watson
+[stackoverflow]: http://stackoverflow.com/questions/ask?tags=ibm-watson
