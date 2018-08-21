@@ -37,5 +37,5 @@ notifications:
 # failing test, we want to see both. Configure golangci-lint with a
 # .golangci.yml file at the top level of your repo.
 script:
-  # - golangci-lint run       # run a bunch of code checkers/linters in parallel
+  - golangci-lint run       # run a bunch of code checkers/linters in parallel
   - ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
