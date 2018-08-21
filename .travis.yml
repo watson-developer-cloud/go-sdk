@@ -10,11 +10,14 @@ language: go
 go:
   - 1.10.x
 
+before_install:
+- sudo apt-get update
+- sudo apt install golang-ginkgo-dev
+- curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.10
+
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
 install: 
-- sudo apt install golang-ginkgo-dev
-- curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.10
 - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git arf/go-sdk/src/go-sdk
 - export GOPATH=/home/travis/gopath/src/github.ibm.com/arf/go-sdk 
 
