@@ -24,7 +24,7 @@ import (
     "runtime"
     "strings"
     req "github.com/parnurzeal/gorequest"
-    watson "go-sdk"
+    watson "github.ibm.com/arf/go-sdk/"
 )
 
 // DiscoveryV1 : The DiscoveryV1 service
