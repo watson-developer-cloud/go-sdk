@@ -25,7 +25,7 @@ before_install:
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
 install: 
-  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH
+  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/go-sdk
 
 # Don't email me the results of the test runs.
 notifications:
