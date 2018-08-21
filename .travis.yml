@@ -11,7 +11,7 @@ go:
   - 1.10.x
 
 before_install:
-  - export GOPATH=$HOME/gopath/src/github.ibm.com/arf/go-sdk
+  # - export GOPATH=$HOME/gopath/src/github.ibm.com/arf/go-sdk
   - go get -u github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
   - go get -u github.com/onsi/gomega/...
   - go get -u github.com/modocache/gover
@@ -25,7 +25,7 @@ before_install:
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
 install: 
-  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $HOME/gopath/src/github.ibm.com/arf/go-sdk/src/github.ibm.com/arf/go-sdk
+  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH
 
 # Don't email me the results of the test runs.
 notifications:
