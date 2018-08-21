@@ -54,13 +54,11 @@ Watson services are migrating to token-based Identity and Access Management (IAM
 * In other instances, you authenticate by providing the [username and password](#username-and-password) for the service instance.
 
 ### Getting credentials
-
 To find out which authentication to use, view the service credentials. You find the service credentials for authentication the same way for all Watson services:
 
-1. Go to the IBM Cloud [Dashboard](https://console.bluemix.net/dashboard/apps?category=watson) page.
-2. Either click an existing Watson service instance or click **Create**.
-3. Click **Show** to view your service credentials.
-4. Copy the ```url``` and either ```apikey``` or ```username``` and ```password```.
+1. Go to the IBM Cloud [Dashboard](https://console.bluemix.net/dashboard/apps?category=ai) page.
+1. Either click an existing Watson service instance or click [**Create resource > AI**](https://console.bluemix.net/catalog/?category=ai) and create a service instance.
+1. Copy the `url` and either `apikey` or `username` and `password`. Click **Show** if the credentials are masked.
 
 ### IAM
 IBM Cloud is migrating to token-based Identity and Access Management (IAM) authentication. IAM authentication uses a service API key to get an access token that is passed with the call. Access tokens are valid for approximately one hour and must be regenerated.
