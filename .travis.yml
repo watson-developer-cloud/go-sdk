@@ -3,6 +3,8 @@
 sudo: false
 
 language: go
+node_js:
+- "8.3"
 
 # Only the last two Go releases are supported by the Go team with security
 # updates. Any older versions be considered deprecated. Don't bother testing
@@ -11,8 +13,7 @@ go:
   - 1.10.x
 
 before_install:
-  # - export GOPATH=$HOME/gopath/src/github.ibm.com/arf/go-sdk
-  - go get -u github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
+  - go get -u github.com/onsi/ginkgo/ginkgo
   - go get -u github.com/onsi/gomega/...
   - go get -u github.com/modocache/gover
   - go get -u github.com/cloudfoundry-community/go-cfenv
@@ -21,6 +22,7 @@ before_install:
   - go get -u github.com/go-openapi/strfmt
   - go get -u github.com/parnurzeal/gorequest
   - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | bash -s -- -b $GOPATH/bin v1.10 # manually install linter
+  - npm install -g npm@6.x 
 
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
@@ -37,3 +39,8 @@ notifications:
 script:
   # - golangci-lint run       # run a bunch of code checkers/linters in parallel
   - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: npx travis-deploy-once "npx semantic-release"
