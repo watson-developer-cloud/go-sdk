@@ -13,6 +13,8 @@ go:
 
 before_install:
   - nvm install 8.3
+  # TODO - remove the next line before public release. 
+  # Also replace env variables in Travis with github env variables.
   - npm install semantic-release@13.1.1
   - go get -u github.com/onsi/ginkgo/ginkgo
   - go get -u github.com/onsi/gomega/...
@@ -44,4 +46,4 @@ script:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: npx travis-deploy-once "npx semantic-release"
+  script: npx travis-deploy-once "npx semantic-release --debug"
