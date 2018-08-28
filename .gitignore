@@ -3,3 +3,4 @@
 .DS_Store
 credentials.txt
 *.coverprofile
+node_modules/
