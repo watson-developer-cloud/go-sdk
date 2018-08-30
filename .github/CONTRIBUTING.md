@@ -28,10 +28,10 @@ If you want to contribute to the repository, here's a quick guide:
   ```
   6. Check your code for lint issues
   ```sh
+  go get -u gopkg.in/alecthomas/gometalinter.v2
   go get -u golang.org/x/lint/golint
-  golint ./...
+  gometalinter.v2 ./...
   ```
-  * ignore error `don't use MixedCaps in package name` and `should not use dot imports`
   7. Develop and test your code changes `go test`
   * Check for unnecessary whitespace with git diff --check before committing
   8. Make the tests pass
