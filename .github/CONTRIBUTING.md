@@ -12,13 +12,31 @@ Before that, please search for similar issues. It's possible somebody has encoun
 
 If you want to contribute to the repository, here's a quick guide:
   1. Fork the repository
-  2. `go get` all the package dependencies
-  3. Develop and test your code changes `go test`
-    * Run `golint` - ignore error `don't use MixedCaps in package name`
-    * Check for unnecessary whitespace with git diff --check before committing
-  4. Make the tests pass
-  5. Commit your changes
-  6. Push to your fork and submit a pull request to the **master** branch
+  2. The GOPATH environment variable is used to specify directories outside of $GOROOT that contain the source for Go projects and their binaries. Example:
+  ```sh
+  export GOPATH="$HOME/workspace/go-workspace"
+  export PATH=$PATH:$GOPATH/bin
+  ````
+  3. Have the following directory layout
+  ```sh
+  mkdir $GOPATH/{src,bin,pkg}
+  ```
+  4. Clone the respository into the `src` directory
+  5. `go get` all the package dependencies
+  ```sh
+  go get -d ./...
+  ```
+  6. Check your code for lint issues
+  ```sh
+  go get -u golang.org/x/lint/golint
+  golint ./...
+  ```
+  * ignore error `don't use MixedCaps in package name` and `should not use dot imports`
+  7. Develop and test your code changes `go test`
+  * Check for unnecessary whitespace with git diff --check before committing
+  8. Make the tests pass
+  9. Commit your changes
+  10. Push to your fork and submit a pull request to the **master** branch
 
 # Developer's Certificate of Origin 1.1
 
