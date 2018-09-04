@@ -30,7 +30,7 @@ api-login:
 
 # Uploads the irx file to the AppScan API
 upload-file: api-login
-	$(eval TOKE := $(shell python appscan/getJson.py $(HOME)/token.json "Token"))
+	$(eval TOKE := $(shell python getJson.py $(HOME)/token.json "Token"))
 	$(eval AUTH := --header 'Authorization: Bearer $(TOKE)')
 	$(eval FILE := fileToUpload=@$(shell pwd)/$(notdir $(shell find $(pwd) -maxdepth 2 -name '*.irx' -print)))
 	
@@ -39,7 +39,7 @@ upload-file: api-login
 # Checks to see if Cert-Manager-Application already exists.
 # TODO: Error with the url, will come back to this later.
 get-app:
-	$(eval TOKE := $(shell python appscan/getJson.py $(HOME)/token.json "Token"))
+	$(eval TOKE := $(shell python getJson.py $(HOME)/token.json "Token"))
 	$(eval AUTH := --header 'Authorization: Bearer $(TOKE)')
 	$(eval URL := $(GET_APP_URL)'$(APP_NAME)''')
 
@@ -47,23 +47,23 @@ get-app:
 
 # Assume we have an existing application, then we'll simply run the static scan
 run-scan:
-	$(eval TOKE := $(shell python appscan/getJson.py $(HOME)/token.json "Token"))
+	$(eval TOKE := $(shell python getJson.py $(HOME)/token.json "Token"))
 	$(eval AUTH := --header 'Authorization: Bearer $(TOKE)')
-	$(eval FILE_ID := "$(shell python appscan/getJson.py $(HOME)/file.json "FileId")")
-	$(eval APP_ID := "$(shell python appscan/getJson.py appscan/app.json "Id")")
+	$(eval FILE_ID := "$(shell python getJson.py $(HOME)/file.json "FileId")")
+	$(eval APP_ID := "$(shell python getJson.py app.json "Id")")
 
 	curl -X POST $(CONTENT_HEADER_JSON) $(ACCEPT_HEADER_JSON) $(AUTH) -d '{"ARSAFileId": $(FILE_ID), "ApplicationFileId": $(FILE_ID), "ScanName": "$(TRAVIS_TAG):$(TRAVIS_JOB_NUMBER):$(TRAVIS_COMMIT)", "EnableMailNotification": false, "Locale": "en-US", "AppId": $(APP_ID), "Execute": true, "Personal": false}' $(STATIC_SCAN_URL)
 
 get-asset-group:
-	$(eval TOKE := $(shell python appscan/getJson.py $(HOME)/token.json "Token"))
+	$(eval TOKE := $(shell python getJson.py $(HOME)/token.json "Token"))
 	$(eval AUTH := --header 'Authorization: Bearer $(TOKE)')
 
 	curl -o asset.json -X GET $(ACCEPT_HEADER_JSON) $(AUTH) $(GET_ASSET_GROUP_URL)
 
 # Create the application only if the application doesn't already exist.
 create-app: get-asset-group
-	$(eval ASSET_GROUP_ID := "$(shell python appscan/getJson.py asset.json "Id")")
-	$(eval TOKE := $(shell python appscan/getJson.py $(HOME)/token.json "Token"))
+	$(eval ASSET_GROUP_ID := "$(shell python getJson.py asset.json "Id")")
+	$(eval TOKE := $(shell python getJson.py $(HOME)/token.json "Token"))
 	$(eval AUTH := --header 'Authorization: Bearer $(TOKE)')
 
-	curl -o appscan/app.json -X POST $(CONTENT_HEADER_JSON) $(ACCEPT_HEADER_JSON) $(AUTH) -d '{"Name": $(APP_NAME), "AssetGroupId": $(ASSET_GROUP_ID), "BusinessImpact": "Unspecified"}' $(CREATE_APP_URL)
+	curl -o app.json -X POST $(CONTENT_HEADER_JSON) $(ACCEPT_HEADER_JSON) $(AUTH) -d '{"Name": $(APP_NAME), "AssetGroupId": $(ASSET_GROUP_ID), "BusinessImpact": "Unspecified"}' $(CREATE_APP_URL)
