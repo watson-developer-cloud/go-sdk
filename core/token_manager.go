@@ -1,32 +1,33 @@
-package gosdk
+package core
 
 import (
 	"fmt"
 	"time"
+
 	req "github.com/parnurzeal/gorequest"
 )
 
 // TokenInfo : Response struct from token request
 type TokenInfo struct {
-	AccessToken string `json:"access_token"`
+	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
-	TokenType string `json:"token_type"`
-	ExpiresIn int64 `json:"expires_in"`
-	Expiration int64 `json:"expiration"`
+	TokenType    string `json:"token_type"`
+	ExpiresIn    int64  `json:"expires_in"`
+	Expiration   int64  `json:"expiration"`
 }
 
 // TokenManager : IAM token information
 type TokenManager struct {
 	userToken string
 	iamAPIkey string
-	iamURL string
+	iamURL    string
 	tokenInfo TokenInfo
 }
 
 // NewTokenManager : Instantiate TokenManager
 func NewTokenManager() *TokenManager {
 	return &TokenManager{
-		iamURL: "https://iam.bluemix.net/identity/token",
+		iamURL:    "https://iam.bluemix.net/identity/token",
 		tokenInfo: TokenInfo{},
 	}
 }
@@ -59,16 +60,16 @@ func (tm *TokenManager) GetToken() (string, []error) {
 }
 
 func (tm *TokenManager) requestTokenBody() map[string]string {
-	return map[string]string {
-		"grant_type": "urn:ibm:params:oauth:grant-type:apikey",
-		"apikey": tm.iamAPIkey,
+	return map[string]string{
+		"grant_type":    "urn:ibm:params:oauth:grant-type:apikey",
+		"apikey":        tm.iamAPIkey,
 		"response_type": "cloud_iam",
 	}
 }
 
 func (tm *TokenManager) refreshTokenBody() map[string]string {
-	return map[string]string {
-		"grant_type": "refresh_token",
+	return map[string]string{
+		"grant_type":    "refresh_token",
 		"refresh_token": tm.tokenInfo.RefreshToken,
 	}
 }
@@ -107,7 +108,7 @@ func (tm *TokenManager) isTokenExpired() bool {
 	buffer := 0.8
 	expiresIn := tm.tokenInfo.ExpiresIn
 	expireTime := tm.tokenInfo.Expiration
-	refreshTime := expireTime - (expiresIn * int64(1.0 - buffer))
+	refreshTime := expireTime - (expiresIn * int64(1.0-buffer))
 
 	currTime := time.Now().Unix()
 
