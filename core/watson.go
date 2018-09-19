@@ -3,8 +3,12 @@ package core // TODO: decide on the full path
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
+	"reflect"
+	"regexp"
 	"runtime"
 	"strings"
 	"time"
@@ -20,6 +24,10 @@ const (
 	applicationJSON = "application/json"
 	authorization   = "Authorization"
 	bearer          = "Bearer"
+
+	// Regular expressions used to determine mime type information
+	JSON_MIME_PATTERN       string = "(?i)^application\\/((json)|(merge\\-patch\\+json))(;.*)?$"
+	JSON_PATCH_MIME_PATTERN        = "(?i)^application\\/json\\-patch\\+json(;.*)?$"
 )
 
 // WatsonResponse : Generic response for Watson API
@@ -74,6 +82,7 @@ type WatsonService struct {
 	tokenManager *TokenManager
 	client       *http.Client
 	userAgent    string
+	body         io.Reader
 }
 
 // NewWatsonService Instantiate a Watson Service
@@ -117,20 +126,66 @@ func NewWatsonService(options *ServiceOptions, serviceName string, version strin
 	return &service, nil
 }
 
+// SetBodyContentJSON - set the body content from a JSON structure
+func (service *WatsonService) SetBodyContentJSON(bodyContent interface{}) error {
+	// Serialize the JSON structure and write it to a new byte buffer.
+	service.body = new(bytes.Buffer)
+	err := json.NewEncoder(service.body.(io.Writer)).Encode(bodyContent)
+	return err
+}
+
+// SetBodyContentStream - set the body content from an io.Reader instance
+func (service *WatsonService) SetBodyContentStream(bodyContent io.Reader) error {
+	// Just set the service Body field to the bodyContent
+	service.body = bodyContent
+	return nil
+}
+
+// SetBodyContentString - set the body content from a string
+func (service *WatsonService) SetBodyContentString(bodyContent string) error {
+	// Write the string to a byte buffer
+	service.body = strings.NewReader(bodyContent)
+	return nil
+}
+
+// SetBodyContent - sets the body content from one of three different sources, based on the content type
+func (service *WatsonService) SetBodyContent(contentType string, jsonContent interface{}, jsonPatchContent interface{},
+	nonJsonContent interface{}) error {
+	if contentType != "" {
+		if IsJSONMimeType(contentType) {
+			err := service.SetBodyContentJSON(jsonContent)
+			if err != nil {
+				return err
+			}
+		} else if IsJSONPatchMimeType(contentType) {
+			err := service.SetBodyContentJSON(jsonPatchContent)
+			if err != nil {
+				return err
+			}
+		} else {
+			// Set the non-JSON body content based on the type of value passed in,
+			// which should be either a "string" or an "io.Reader"
+			if IsObjectAString(nonJsonContent) {
+				service.SetBodyContentString(nonJsonContent.(string))
+			} else if IsObjectAReader(nonJsonContent) {
+				service.SetBodyContentStream(nonJsonContent.(io.Reader))
+			} else {
+				return errors.New(fmt.Sprintf("Invalid type for non-JSON body content: %s", reflect.TypeOf(nonJsonContent).String()))
+			}
+		}
+	}
+
+	return nil
+}
+
 // HandleRequest perform the HTTP request
-func (service *WatsonService) HandleRequest(method string, path string, acceptJSON bool,
-	body map[string]interface{}, headers map[string]string, params map[string]string, result interface{}) (*WatsonResponse, error) {
+func (service *WatsonService) HandleRequest(method string, path string, acceptJSON bool, headers map[string]string,
+	params map[string]string, result interface{}) (*WatsonResponse, error) {
 
 	fullURL := service.Options.URL + path
 
-	// Encode body
-	buff := new(bytes.Buffer)
-	if body != nil {
-		json.NewEncoder(buff).Encode(body)
-	}
-
 	// Create the request
-	req, err := http.NewRequest(method, fullURL, buff)
+	req, err := http.NewRequest(method, fullURL, service.body)
 	if err != nil {
 		return nil, err
 	}
@@ -180,6 +235,11 @@ func (service *WatsonService) HandleRequest(method string, path string, acceptJS
 			return response, err
 		}
 	}
+
+	// TODO: we should NOT assume the response is JSON just because the operation contains application/json
+	// in its "produces" list.
+	// Instead, we should interpret the response body according to the Content-Type header returned
+	// in the response.
 
 	// handle the response
 	defer resp.Body.Close()
@@ -252,4 +312,40 @@ func (service *WatsonService) accessVCAP(serviceName string) error {
 	}
 
 	return fmt.Errorf("you must specify an IAM API key or username and password service credentials")
+}
+
+// Returns true iff the specified mimeType value represents a "JSON" mimetype.
+func IsJSONMimeType(mimeType string) bool {
+	if mimeType == "" {
+		return false
+	}
+	matched, err := regexp.MatchString(JSON_MIME_PATTERN, mimeType)
+	if err != nil {
+		return false
+	}
+	return matched
+}
+
+// Returns true iff the specified mimeType value represents a "JSON Patch" mimetype.
+func IsJSONPatchMimeType(mimeType string) bool {
+	if mimeType == "" {
+		return false
+	}
+	matched, err := regexp.MatchString(JSON_PATCH_MIME_PATTERN, mimeType)
+	if err != nil {
+		return false
+	}
+	return matched
+}
+
+// Returns true iff "obj" represents an instance of "io.ReadCloser"
+func IsObjectAReader(obj interface{}) bool {
+	_, ok := obj.(io.Reader)
+	return ok
+}
+
+// Returns true iff "obj" is an instance of a "string"
+func IsObjectAString(obj interface{}) bool {
+	_, ok := obj.(string)
+	return ok
 }
