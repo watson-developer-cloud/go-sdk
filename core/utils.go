@@ -6,13 +6,13 @@ import (
 )
 
 const (
-	jSONMimePattern      = "(?i)^application\\/((json)|(merge\\-patch\\+json))(;.*)?$"
+	jsonMimePattern      = "(?i)^application\\/((json)|(merge\\-patch\\+json))(;.*)?$"
 	jsonPatchMimePattern = "(?i)^application\\/json\\-patch\\+json(;.*)?$"
 )
 
 // StringPtr : return pointer to string literal
-func StringPtr(str string) *string {
-	return &str
+func StringPtr(literal string) *string {
+	return &literal
 }
 
 // BoolPtr : return pointer to boolean literal
@@ -30,7 +30,7 @@ func IsJSONMimeType(mimeType string) bool {
 	if mimeType == "" {
 		return false
 	}
-	matched, err := regexp.MatchString(jSONMimePattern, mimeType)
+	matched, err := regexp.MatchString(jsonMimePattern, mimeType)
 	if err != nil {
 		return false
 	}
