@@ -1,9 +1,10 @@
 package core
 
 import (
-	assert "github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	assert "github.com/stretchr/testify/assert"
 )
 
 func TestIsObjectAString(t *testing.T) {
