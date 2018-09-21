@@ -38,7 +38,7 @@ notifications:
 # .golangci.yml file at the top level of your repo.
 script:
   # - golangci-lint run       # run a bunch of code checkers/linters in parallel
-  - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
+  # - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
 
 # TODO Enable semantic release below once we are public.
 # deploy:
