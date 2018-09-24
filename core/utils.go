@@ -3,7 +3,16 @@ package core
 import (
 	"io"
 	"regexp"
+
+	validator "gopkg.in/go-playground/validator.v9"
 )
+
+// Validate single instance of Validate, it caches struct info
+var Validate *validator.Validate
+
+func init() {
+	Validate = validator.New()
+}
 
 const (
 	jsonMimePattern      = "(?i)^application\\/((json)|(merge\\-patch\\+json))(;.*)?$"
