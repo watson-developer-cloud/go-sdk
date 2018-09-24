@@ -38,11 +38,12 @@ const (
 	PUT    = http.MethodPut
 )
 
+// common headers
 const (
-	// ACCEPT header
-	ACCEPT = "Accept"
-	// APPLICATIONJSON header value
-	APPLICATIONJSON = "application/json"
+	Accept             = "Accept"
+	ApplicationJSON    = "application/json"
+	ContentDisposition = "Content-Disposition"
+	ContentType        = "Content-Type"
 )
 
 // A FormData stores information for form data
@@ -145,9 +146,9 @@ func createFormFile(formWriter *multipart.Writer, fieldname string, filename str
 		contentDisposition += fmt.Sprintf(` filename="%s"`, filename)
 	}
 
-	h.Set("Content-Disposition", contentDisposition)
+	h.Set(ContentDisposition, contentDisposition)
 	if contentType != "" {
-		h.Set("Content-Type", contentType)
+		h.Set(ContentType, contentType)
 	}
 
 	return formWriter.CreatePart(h)
@@ -157,7 +158,7 @@ func createFormFile(formWriter *multipart.Writer, fieldname string, filename str
 func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType string, content interface{}, writer io.Writer) error {
 	var err error
 	if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
-		err = json.NewEncoder(writer).Encode(contentType)
+		err = json.NewEncoder(writer).Encode(content)
 	} else if IsObjectAString(content) {
 		writer.Write([]byte(content.(string)))
 	} else if IsObjectAReader(content) {
