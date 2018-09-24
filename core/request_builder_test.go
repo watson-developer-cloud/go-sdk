@@ -1,21 +1,18 @@
-package requestbuilder
+package core
 
 import (
 	"bytes"
+	"os"
 	"testing"
 
 	assert "github.com/stretchr/testify/assert"
 )
 
-type TestStructure struct {
-	Name *string `json:"name"`
+func setup() *RequestBuilder {
+	return NewRequestBuilder("GET")
 }
 
-func setup() *Request {
-	return NewRequest("GET")
-}
-
-func TestNewRequest(t *testing.T) {
+func TestNewRequestBuilder(t *testing.T) {
 	request := setup()
 	if request.Method != "GET" {
 		t.Errorf("Got incorrect method types")
@@ -66,22 +63,59 @@ func TestAddHeader(t *testing.T) {
 }
 
 func TestSetBodyContentJSON(t *testing.T) {
-	name := "wonder woman"
 	testStructure := &TestStructure{
-		Name: &name,
+		Name: "wonder woman",
 	}
 	body := make(map[string]interface{})
 	body["name"] = testStructure.Name
 	want := []byte(`{"name":"wonder woman"}`)
 
 	request := setup()
-	request.SetBodyContentJSON(body)
-	buff := make([]byte, 19)
+	request.SetBodyContentJSON(body, nil)
+	buff := make([]byte, 23)
 	request.Body.Read(buff)
 
 	if !bytes.Equal(want, buff) {
 		t.Errorf("Couldnt serialize")
 	}
+}
+
+func TestSetBodyContentString(t *testing.T) {
+	request := setup()
+	request.SetBodyContentString("hello GO SDK", nil)
+
+	if request.Body == nil {
+		t.Errorf("Couldnt set content type as string")
+	}
+}
+
+func TestBuildWithMultipartForm(t *testing.T) {
+	json1 := make(map[string]interface{})
+	json1["name1"] = "test name1"
+
+	json2 := make(map[string]interface{})
+	json2["name2"] = "test name2"
+
+	request := NewRequestBuilder("POST").
+		ConstructHTTPURL("test.com", nil, nil).
+		AddHeader("Content-Type", "Application/json").
+		AddQuery("Version", "2018-22-09").
+		AddFormData("name1", "json1.json", "application/json", json1).
+		AddFormData("name2", "json2.json", "application/json", json2).
+		AddFormData("hello", "", "text/plain", "Hello GO SDK")
+
+	pwd, _ := os.Getwd()
+	file, err := os.Open(pwd + "/resources/personality-v3.txt")
+	if err != nil {
+		t.Errorf("Could not open file")
+	}
+	request.AddFormData("personality", "personality.txt", "application/octet-stream", file)
+
+	_, err = request.Build()
+	if err != nil {
+		t.Errorf("Couldnt build successfully")
+	}
+	defer file.Close()
 }
 
 func TestBuild(t *testing.T) {
@@ -90,19 +124,18 @@ func TestBuild(t *testing.T) {
 	pathParameters := []string{"xxxxx"}
 	wantURL := "https://gateway.watsonplatform.net/assistant/api/xxxxx/v1/workspaces?Version=2018-22-09"
 
-	name := "wonder woman"
 	testStructure := &TestStructure{
-		Name: &name,
+		Name: "wonder woman",
 	}
 	body := make(map[string]interface{})
 	body["name"] = testStructure.Name
 
-	request := NewRequest("POST").
+	request := NewRequestBuilder("POST").
 		ConstructHTTPURL(endPoint, pathParameters, pathSegments).
 		AddHeader("Content-Type", "Application/json").
 		AddQuery("Version", "2018-22-09")
 
-	request, _ = request.SetBodyContentJSON(body)
+	request, _ = request.SetBodyContentJSON(body, nil)
 	req, err := request.Build()
 	if err != nil {
 		t.Errorf("Couldnt build successfully")
