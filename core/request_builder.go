@@ -103,7 +103,7 @@ func (requestBuilder *RequestBuilder) AddHeader(name string, value string) *Requ
 // AddFormData makes an entry for Form data
 func (requestBuilder *RequestBuilder) AddFormData(fieldName string, fileName string, contentType string, contents interface{}) *RequestBuilder {
 	requestBuilder.Form[fieldName] = FormData{
-		fileName:    fieldName,
+		fileName:    fileName,
 		contentType: contentType,
 		contents:    contents,
 	}
