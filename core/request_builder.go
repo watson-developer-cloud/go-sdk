@@ -140,30 +140,31 @@ func (requestBuilder *RequestBuilder) createMultipartWriter() *multipart.Writer 
 // a new form-data header with the provided field name and file name and contentType
 func createFormFile(formWriter *multipart.Writer, fieldname string, filename string, contentType string) (io.Writer, error) {
 	h := make(textproto.MIMEHeader)
-	h.Set("Content-Disposition",
-		fmt.Sprintf(`form-data; name="%s"; filename="%s"`,
-			fieldname, filename))
-	h.Set("Content-Type", contentType)
+	contentDisposition := fmt.Sprintf(`form-data; name="%s";`, fieldname)
+	if filename != "" {
+		contentDisposition += fmt.Sprintf(` filename="%s"`, filename)
+	}
+
+	h.Set("Content-Disposition", contentDisposition)
+	if contentType != "" {
+		h.Set("Content-Type", contentType)
+	}
+
 	return formWriter.CreatePart(h)
 }
 
 // SetBodyContentForMultipart - sets the body content from one of three different sources, based on the content type
 func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType string, content interface{}, writer io.Writer) error {
 	var err error
-
-	if contentType != "" {
-		if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
-			err = json.NewEncoder(writer).Encode(contentType)
-		} else if IsObjectAString(content) {
-			writer.Write([]byte(content.(string)))
-		} else if IsObjectAReader(content) {
-			_, err = io.Copy(writer, content.(io.Reader))
-		} else {
-			err = fmt.Errorf("Invalid type for non-JSON body content: %s", reflect.TypeOf(content).String())
-		}
+	if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
+		err = json.NewEncoder(writer).Encode(contentType)
+	} else if IsObjectAString(content) {
+		writer.Write([]byte(content.(string)))
+	} else if IsObjectAReader(content) {
+		_, err = io.Copy(writer, content.(io.Reader))
+	} else {
+		err = fmt.Errorf("Could not decipher the contents")
 	}
-	err = fmt.Errorf("Content-Type cant be empty")
-
 	return err
 }
 
@@ -184,7 +185,10 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 			if err != nil {
 				return nil, err
 			}
-			requestBuilder.SetBodyContentForMultipart(v.contentType, v.contents, dataPartWriter)
+			if err = requestBuilder.SetBodyContentForMultipart(v.contentType,
+				v.contents, dataPartWriter); err != nil {
+				return nil, err
+			}
 		}
 		formWriter.Close()
 	}

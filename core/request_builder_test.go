@@ -89,6 +89,20 @@ func TestSetBodyContentString(t *testing.T) {
 	}
 }
 
+func TestBuildWithMultipartFormEmptyFileName(t *testing.T) {
+	request := NewRequestBuilder("POST").
+		ConstructHTTPURL("test.com", nil, nil).
+		AddHeader("Content-Type", "Application/json").
+		AddQuery("Version", "2018-22-09").
+		AddFormData("hello1", "", "text/plain", "Hello GO SDK").
+		AddFormData("hello2", "", "", "Hello GO SDK again")
+
+	req, _ := request.Build()
+	if req.Body == nil {
+		t.Errorf("Couldnt build successfully")
+	}
+}
+
 func TestBuildWithMultipartForm(t *testing.T) {
 	json1 := make(map[string]interface{})
 	json1["name1"] = "test name1"
