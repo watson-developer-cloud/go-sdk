@@ -71,7 +71,7 @@ func TestSetBodyContentJSON(t *testing.T) {
 	want := []byte(`{"name":"wonder woman"}`)
 
 	request := setup()
-	request.SetBodyContentJSON(body, nil)
+	request.SetBodyContentJSON(body)
 	buff := make([]byte, 23)
 	request.Body.Read(buff)
 
@@ -82,7 +82,7 @@ func TestSetBodyContentJSON(t *testing.T) {
 
 func TestSetBodyContentString(t *testing.T) {
 	request := setup()
-	request.SetBodyContentString("hello GO SDK", nil)
+	request.SetBodyContentString("hello GO SDK")
 
 	if request.Body == nil {
 		t.Errorf("Couldnt set content type as string")
@@ -135,7 +135,7 @@ func TestBuild(t *testing.T) {
 		AddHeader("Content-Type", "Application/json").
 		AddQuery("Version", "2018-22-09")
 
-	request, _ = request.SetBodyContentJSON(body, nil)
+	request, _ = request.SetBodyContentJSON(body)
 	req, err := request.Build()
 	if err != nil {
 		t.Errorf("Couldnt build successfully")

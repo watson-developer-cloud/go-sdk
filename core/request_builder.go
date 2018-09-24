@@ -111,33 +111,20 @@ func (requestBuilder *RequestBuilder) AddFormData(fieldName string, fileName str
 }
 
 // SetBodyContentJSON - set the body content from a JSON structure
-func (requestBuilder *RequestBuilder) SetBodyContentJSON(bodyContent interface{}, writer io.Writer) (*RequestBuilder, error) {
-	if writer != nil {
-		err := json.NewEncoder(writer).Encode(bodyContent)
-		return requestBuilder, err
-	}
+func (requestBuilder *RequestBuilder) SetBodyContentJSON(bodyContent interface{}) (*RequestBuilder, error) {
 	requestBuilder.Body = new(bytes.Buffer)
 	err := json.NewEncoder(requestBuilder.Body.(io.Writer)).Encode(bodyContent)
 	return requestBuilder, err
 }
 
 // SetBodyContentString - set the body content from a string
-func (requestBuilder *RequestBuilder) SetBodyContentString(bodyContent string, writer io.Writer) (*RequestBuilder, error) {
-	if writer != nil {
-		writer.Write([]byte(bodyContent))
-		return requestBuilder, nil
-	}
+func (requestBuilder *RequestBuilder) SetBodyContentString(bodyContent string) (*RequestBuilder, error) {
 	requestBuilder.Body = strings.NewReader(bodyContent)
 	return requestBuilder, nil
 }
 
 // SetBodyContentStream - set the body content from an io.Reader instance
-func (requestBuilder *RequestBuilder) SetBodyContentStream(bodyContent io.Reader, writer io.Writer) (*RequestBuilder, error) {
-	if writer != nil {
-		if _, err := io.Copy(writer, bodyContent); err != nil {
-			return requestBuilder, err
-		}
-	}
+func (requestBuilder *RequestBuilder) SetBodyContentStream(bodyContent io.Reader) (*RequestBuilder, error) {
 	requestBuilder.Body = bodyContent
 	return requestBuilder, nil
 }
@@ -160,17 +147,17 @@ func createFormFile(formWriter *multipart.Writer, fieldname string, filename str
 	return formWriter.CreatePart(h)
 }
 
-// SetBodyContent - sets the body content from one of three different sources, based on the content type
-func (requestBuilder *RequestBuilder) SetBodyContent(contentType string, content interface{}, writer io.Writer) error {
+// SetBodyContentForMultipart - sets the body content from one of three different sources, based on the content type
+func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType string, content interface{}, writer io.Writer) error {
 	var err error
 
 	if contentType != "" {
 		if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
-			_, err = requestBuilder.SetBodyContentJSON(content, writer)
+			err = json.NewEncoder(writer).Encode(contentType)
 		} else if IsObjectAString(content) {
-			_, err = requestBuilder.SetBodyContentString(content.(string), writer)
+			writer.Write([]byte(content.(string)))
 		} else if IsObjectAReader(content) {
-			_, err = requestBuilder.SetBodyContentStream(content.(io.Reader), writer)
+			_, err = io.Copy(writer, content.(io.Reader))
 		} else {
 			err = fmt.Errorf("Invalid type for non-JSON body content: %s", reflect.TypeOf(content).String())
 		}
@@ -197,7 +184,7 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 			if err != nil {
 				return nil, err
 			}
-			requestBuilder.SetBodyContent(v.contentType, v.contents, dataPartWriter)
+			requestBuilder.SetBodyContentForMultipart(v.contentType, v.contents, dataPartWriter)
 		}
 		formWriter.Close()
 	}
@@ -221,4 +208,34 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 	req.URL.RawQuery = query.Encode()
 
 	return req, nil
+}
+
+// SetBodyContent - sets the body content from one of three different sources, based on the content type
+func (requestBuilder *RequestBuilder) SetBodyContent(contentType string, jsonContent interface{}, jsonPatchContent interface{},
+	nonJSONContent interface{}) error {
+	if contentType != "" {
+		if IsJSONMimeType(contentType) {
+			if _, err := requestBuilder.SetBodyContentJSON(jsonContent); err != nil {
+				return err
+			}
+		} else if IsJSONPatchMimeType(contentType) {
+			if _, err := requestBuilder.SetBodyContentJSON(jsonPatchContent); err != nil {
+				return err
+			}
+		} else {
+			// Set the non-JSON body content based on the type of value passed in,
+			// which should be either a "string" or an "io.Reader"
+			if IsObjectAString(nonJSONContent) {
+				requestBuilder.SetBodyContentString(nonJSONContent.(string))
+			} else if IsObjectAReader(nonJSONContent) {
+				requestBuilder.SetBodyContentStream(nonJSONContent.(io.Reader))
+			} else {
+				return fmt.Errorf("Invalid type for non-JSON body content: %s", reflect.TypeOf(nonJSONContent).String())
+			}
+		}
+	} else {
+		return fmt.Errorf("Content-Type cant be empty")
+	}
+
+	return nil
 }
