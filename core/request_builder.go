@@ -30,12 +30,12 @@ import (
 	"strings"
 )
 
-// HTTP methods
+// common HTTP methods
 const (
-	POST   = "POST"
-	GET    = "GET"
-	DELETE = "DELETE"
-	PUT    = "PUT"
+	POST   = http.MethodPost
+	GET    = http.MethodGet
+	DELETE = http.MethodDelete
+	PUT    = http.MethodPut
 )
 
 const (
@@ -162,26 +162,22 @@ func createFormFile(formWriter *multipart.Writer, fieldname string, filename str
 
 // SetBodyContent - sets the body content from one of three different sources, based on the content type
 func (requestBuilder *RequestBuilder) SetBodyContent(contentType string, content interface{}, writer io.Writer) error {
+	var err error
+
 	if contentType != "" {
 		if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
-			_, err := requestBuilder.SetBodyContentJSON(content, writer)
-			if err != nil {
-				return err
-			}
+			_, err = requestBuilder.SetBodyContentJSON(content, writer)
+		} else if IsObjectAString(content) {
+			_, err = requestBuilder.SetBodyContentString(content.(string), writer)
+		} else if IsObjectAReader(content) {
+			_, err = requestBuilder.SetBodyContentStream(content.(io.Reader), writer)
 		} else {
-			// Set the non-JSON body content based on the type of value passed in,
-			// which should be either a "string" or an "io.Reader"
-			if IsObjectAString(content) {
-				requestBuilder.SetBodyContentString(content.(string), writer)
-			} else if IsObjectAReader(content) {
-				requestBuilder.SetBodyContentStream(content.(io.Reader), writer)
-			} else {
-				return fmt.Errorf("Invalid type for non-JSON body content: %s", reflect.TypeOf(content).String())
-			}
+			err = fmt.Errorf("Invalid type for non-JSON body content: %s", reflect.TypeOf(content).String())
 		}
 	}
+	err = fmt.Errorf("Content-Type cant be empty")
 
-	return fmt.Errorf("Content-Type cant be empty")
+	return err
 }
 
 // Build the request
