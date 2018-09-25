@@ -1,4 +1,4 @@
-package assistantV1_test
+package assistantv1_test
 
 import (
 	"testing"

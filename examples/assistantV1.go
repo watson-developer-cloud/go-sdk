@@ -2,186 +2,136 @@ package main
 
 import (
 	"fmt"
-	. "go-sdk/assistantV1"
-	"encoding/json"
+	core "github.com/ibm-watson/go-sdk/core"
+	assistant "github.com/ibm-watson/go-sdk/assistantv1"
 )
-
-func prettyPrint(result interface{}, resultName string) {
-	output, err := json.MarshalIndent(result, "", "    ")
-
-	if err == nil {
-		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
-	}
-}
 
 func main() {
 	// Instantiate the Watson Assistant service
-	assistant, assistantErr := NewAssistantV1(&ServiceCredentials{
-		ServiceURL: "YOUR SERVICE URL",
-		Version: "2018-07-10",
+	service, serviceErr := assistant.NewAssistantV1(&assistant.AssistantV1Options{
+		URL:      "YOUR SERVICE URL",
+		Version:  "2018-07-10",
 		Username: "YOUR SERVICE USERNAME",
 		Password: "YOUR SERVICE PASSWORD",
 	})
 
 	// Check successful instantiation
-	if assistantErr != nil {
-		fmt.Println(assistantErr)
-		return
+	if serviceErr != nil {
+		panic(serviceErr)
 	}
-
 
 	/* LIST WORKSPACES */
 
 	// Call the assistant ListWorkspaces method
-	list, listErr := assistant.ListWorkspaces(NewListWorkspacesOptions())
+	response, responseErr := service.ListWorkspaces(&assistant.ListWorkspacesOptions{})
 
-	// Check successful call
-	if listErr != nil {
-		fmt.Println(listErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
-	// Cast list.Result to the specific dataType returned by ListWorkspaces
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	listResult := GetListWorkspacesResult(list)
-
-	// Check successful casting
-	if listResult != nil {
-		prettyPrint(listResult, "List Workspaces")
-	}
-
-
-	/* GET WORKSPACE */
-
-	// Call the assistant GetWorkspace method
-	getWorkspaceOptions := NewGetWorkspaceOptions(listResult.Workspaces[0].WorkspaceID)
-	get, getErr := assistant.GetWorkspace(getWorkspaceOptions)
-
-	// Check successful call
-	if getErr != nil {
-		fmt.Println(getErr)
-		return
-	}
-
-	// Cast result
-	getResult := GetGetWorkspaceResult(get)
-
-	// Check successful casting
-	if getResult != nil {
-		prettyPrint(getResult, "Get Workspace")
-	}
-
+	fmt.Println(response)
 
 	/* CREATE WORKSPACE */
 
-	createWorkspaceOptions := NewCreateWorkspaceOptions().
-		SetName("Test Workspace")
+	createEntity := assistant.CreateEntity{
+		Entity:      core.StringPtr("pizzatoppingstest"),
+		Description: core.StringPtr("Tasty pizza topping"),
+		Metadata:    map[string]string{"property": "value"},
+	}
+	createWorkspaceOptions := service.NewCreateWorkspaceOptions().
+		SetName("Test Workspace").
+		SetDescription("GO example workspace").
+		SetEntities([]assistant.CreateEntity{createEntity})
 
-	create, createErr := assistant.CreateWorkspace(createWorkspaceOptions)
+	response, responseErr = service.CreateWorkspace(createWorkspaceOptions)
 
 	// Check successful call
-	if createErr != nil {
-		fmt.Println(createErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
-	// Cast result
-	createResult := GetCreateWorkspaceResult(create)
+	fmt.Println(response)
 
-	// Check successful casting
-	if createResult != nil {
-		prettyPrint(createResult, "Create Workspace")
+	// Cast response.Result to the specific dataType
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	createWorkspaceResult := service.GetCreateWorkspaceResult(response)
+	workspaceID := createWorkspaceResult.WorkspaceID
+
+	// 	/* GET WORKSPACE */
+
+	// Call the assistant GetWorkspace method
+	response, responseErr = service.GetWorkspace(service.
+		NewGetWorkspaceOptions(*workspaceID).
+		SetExport(true))
+
+	// Check successful call
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
+	fmt.Println(response)
 
-	/* UPDATE WORKSPACE */
+	// 	/* UPDATE WORKSPACE */
 
-	updateWorkspaceOptions := NewUpdateWorkspaceOptions(createResult.WorkspaceID).
+	updateWorkspaceOptions := service.NewUpdateWorkspaceOptions(*workspaceID).
 		SetName("Updated workspace name").
 		SetDescription("Updated description")
 
-	update, updateErr := assistant.UpdateWorkspace(updateWorkspaceOptions)
+	response, responseErr = service.UpdateWorkspace(updateWorkspaceOptions)
 
 	// Check successful call
-	if updateErr != nil {
-		fmt.Println(updateErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
-	// Cast result
-	updateResult := GetUpdateWorkspaceResult(update)
+	fmt.Println(response)
 
-	// Check successful casting
-	if updateResult != nil {
-		prettyPrint(updateResult, "Update Workspace")
+	// 	/* MESSAGE */
+
+	inputData := assistant.InputData{
+		Text: core.StringPtr("Hello, how are you?"),
 	}
 
-
-	/* DELETE WORKSPACE */
-
-	// Call the assistant DeleteWorkspace method
-	deleteWorkspaceOptions := NewDeleteWorkspaceOptions(updateResult.WorkspaceID)
-	del, delErr := assistant.DeleteWorkspace(deleteWorkspaceOptions)
-
-	// Check successful call
-	if delErr != nil {
-		fmt.Println(delErr)
-		return
-	}
-
-	// NOTE: this method has no corresponding GetDeleteWorkspaceResult() function because DeleteWorkspace returns nothing
-
-	prettyPrint(del, "Delete Workspace")
-
-
-	/* MESSAGE */
-
-	inputData := InputData{
-		Text: "Hello, how are you?",
-	}
-
-	messageOptions := NewMessageOptions(getResult.WorkspaceID).
+	messageOptions := service.NewMessageOptions(*workspaceID).
 		SetInput(inputData)
 
-	// Call the Message method with no specified context to create a new assistant
-	message, messageErr := assistant.Message(messageOptions)
+	// Call the Message method with no specified context
+	response, responseErr = service.Message(messageOptions)
 
 	// Check successful call
-	if messageErr != nil {
-		fmt.Println(messageErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
-	// Cast result
-	messageResult := GetMessageResult(message)
-
-	// Check successful casting
-	if messageResult != nil {
-		prettyPrint(messageResult, "Message")
-	}
+	fmt.Println(response)
 
 	// To continue with the same assistant, pass in the context from the previous call
-	context := Context{
-		ConversationID: messageResult.Context.ConversationID,
+	conversationID := service.GetMessageResult(response).Context.ConversationID
+	context := assistant.Context{
+		ConversationID: conversationID,
 	}
 
-	inputData.Text = "What's the weather right now?"
+	inputData.Text = core.StringPtr("What's the weather right now?")
 	messageOptions.SetContext(context).
 		SetInput(inputData)
 
-	message, messageErr = assistant.Message(messageOptions)
+	response, responseErr = service.Message(messageOptions)
 
 	// Check successful call
-	if messageErr != nil {
-		fmt.Println(messageErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
-	// Cast result
-	messageResult = GetMessageResult(message)
+	fmt.Println(response)
 
-	// Check successful casting
-	if messageResult != nil {
-		prettyPrint(messageResult, "Message")
+	// 	/* DELETE WORKSPACE */
+
+	// Call the assistant DeleteWorkspace method
+	response, responseErr = service.DeleteWorkspace(service.NewDeleteWorkspaceOptions(*workspaceID))
+
+	// Check successful call
+	if responseErr != nil {
+		panic(responseErr)
 	}
+	fmt.Println(response)
 }

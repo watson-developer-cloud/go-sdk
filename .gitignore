@@ -4,3 +4,4 @@
 credentials.txt
 *.coverprofile
 node_modules/
+.project
