@@ -12,14 +12,13 @@ import (
 	cfenv "github.com/cloudfoundry-community/go-cfenv"
 )
 
+// common constants for core
 const (
-	apiKey          = "apikey"
-	icpPrefix       = "icp-"
-	userAgent       = "User-Agent"
-	accept          = "Accept"
-	applicationJSON = "application/json"
-	authorization   = "Authorization"
-	bearer          = "Bearer"
+	APIKey        = "apikey"
+	ICPPrefix     = "icp-"
+	UserAgent     = "User-Agent"
+	Authorization = "Authorization"
+	Bearer        = "Bearer"
 )
 
 // ServiceOptions Service options
@@ -28,7 +27,6 @@ type ServiceOptions struct {
 	URL            string
 	Username       string
 	Password       string
-	APIKey         string
 	IAMApiKey      string
 	IAMAccessToken string
 	IAMURL         string
@@ -36,11 +34,11 @@ type ServiceOptions struct {
 
 // WatsonService Base Service
 type WatsonService struct {
-	Options      *ServiceOptions
-	Headers      http.Header
-	tokenManager *TokenManager
-	client       *http.Client
-	userAgent    string
+	Options        *ServiceOptions
+	DefaultHeaders http.Header
+	tokenManager   *TokenManager
+	client         *http.Client
+	userAgent      string
 }
 
 // NewWatsonService Instantiate a Watson Service
@@ -58,10 +56,8 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 	userAgent += "-" + runtime.GOOS
 	service.userAgent = userAgent
 
-	if options.APIKey != "" {
-		service.SetAPIKey(options.APIKey)
-	} else if options.Username != "" && options.Password != "" {
-		if options.Username == apiKey && strings.HasPrefix(options.Password, icpPrefix) {
+	if options.Username != "" && options.Password != "" {
+		if options.Username == APIKey && !strings.HasPrefix(options.Password, ICPPrefix) {
 			service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL)
 		} else {
 			service.SetUsernameAndPassword(options.Username, options.Password)
@@ -79,14 +75,71 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 	return &service, nil
 }
 
+// SetUsernameAndPassword Sets the Username and Password
+func (service *WatsonService) SetUsernameAndPassword(username string, password string) {
+	service.Options.Username = username
+	service.Options.Password = password
+}
+
+// SetTokenManager Sets the Token Manager for IAM Authentication
+func (service *WatsonService) SetTokenManager(iamAPIKey string, iamAccessToken string, iamURL string) {
+	service.Options.IAMApiKey = iamAPIKey
+	service.Options.IAMAccessToken = iamAccessToken
+	service.Options.IAMURL = iamURL
+	tokenManager := NewTokenManager(iamAPIKey, iamURL, iamAccessToken)
+	service.tokenManager = tokenManager
+}
+
+// SetIAMAccessToken Sets the IAM access token
+func (service *WatsonService) SetIAMAccessToken(iamAccessToken string) {
+	if service.tokenManager != nil {
+		service.tokenManager.SetAccessToken(iamAccessToken)
+	} else {
+		tokenManager := NewTokenManager("", "", iamAccessToken)
+		service.tokenManager = tokenManager
+	}
+	service.Options.IAMAccessToken = iamAccessToken
+}
+
+// SetIAMAPIKey Sets the IAM API key
+func (service *WatsonService) SetIAMAPIKey(iamAPIKey string) {
+	if service.tokenManager != nil {
+		service.tokenManager.SetIAMAPIKey(iamAPIKey)
+	} else {
+		tokenManager := NewTokenManager(iamAPIKey, "", "")
+		service.tokenManager = tokenManager
+	}
+	service.Options.IAMApiKey = iamAPIKey
+}
+
+// SetURL sets the service URL
+func (service *WatsonService) SetURL(url string) {
+	service.Options.URL = url
+}
+
+// SetDefaultHeaders sets HTTP headers to be sent in every request.
+func (service *WatsonService) SetDefaultHeaders(headers http.Header) {
+	service.DefaultHeaders = headers
+}
+
+// SetHTTPClient updates the client handling the requests
+func (service *WatsonService) SetHTTPClient(client *http.Client) {
+	service.client = client
+}
+
 // Request performs the HTTP request
 func (service *WatsonService) Request(req *http.Request, result interface{}) (*DetailedResponse, error) {
-	// TODO: Update the request with default headers and other service-specific parameters.
+	// Add default headers
+	if service.DefaultHeaders != nil {
+		for k, v := range service.DefaultHeaders {
+			req.Header.Add(k, strings.Join(v, ""))
+		}
+	}
 
 	// Add authentication
 	if service.tokenManager != nil {
-		token, _ := service.tokenManager.GetToken()
-		req.Header.Add(authorization, bearer+" "+token)
+		token := service.tokenManager.GetToken()
+		req.Header.Add(Authorization, fmt.Sprintf(`%s %s`, Bearer, token))
 	} else if service.Options.Username != "" && service.Options.Password != "" {
 		req.SetBasicAuth(service.Options.Username, service.Options.Password)
 	}
@@ -94,7 +147,7 @@ func (service *WatsonService) Request(req *http.Request, result interface{}) (*D
 	// Perform the request
 	resp, err := service.client.Do(req)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	// handle the response
@@ -109,47 +162,21 @@ func (service *WatsonService) Request(req *http.Request, result interface{}) (*D
 		}
 	}
 
-	// TODO: we should NOT assume the response is JSON just because the operation contains application/json
-	// in its "produces" list.
-	// Instead, we should interpret the response body according to the Content-Type header returned
-	// in the response.
-	json.NewDecoder(resp.Body).Decode(&result)
+	contentType := resp.Header.Get(ContentType)
+	if contentType != "" {
+		if IsJSONMimeType(contentType) && result != nil {
+			json.NewDecoder(resp.Body).Decode(&result)
+			response.Result = result
+		}
+	}
+
+	if response.Result == nil {
+		response.Result = resp.Body
+	}
 
 	defer resp.Body.Close()
-	response.Result = result
 	return response, nil
 }
-
-// SetAPIKey Sets the API key used in Visual Recognition
-func (service *WatsonService) SetAPIKey(apiKey string) {
-	service.Options.APIKey = apiKey
-
-	// temporary for visual recognition
-	if service.Options.URL != "DEFAULT_FOR_VIS_REC" {
-		service.Options.URL = "https://gateway-a.watsonplatform.net/visual-recognition/api"
-	}
-}
-
-// SetUsernameAndPassword Sets the Username and Password
-func (service *WatsonService) SetUsernameAndPassword(username string, password string) {
-	service.Options.Username = username
-	service.Options.Password = password
-}
-
-// SetTokenManager Sets the Token Manager for IAM Authentication
-func (service *WatsonService) SetTokenManager(iamAPIKey string, iamAccessToken string, iamURL string) {
-	service.Options.IAMApiKey = iamAPIKey
-	service.Options.IAMAccessToken = iamAccessToken
-	service.Options.IAMURL = iamURL
-	if service.tokenManager == nil {
-		service.tokenManager = NewTokenManager()
-	}
-	// TODO: should even be able to set iam url
-	service.tokenManager.SetKey(iamAPIKey)
-	service.tokenManager.SetToken(iamAccessToken)
-}
-
-// TODO: Expose other IAM token infos
 
 func (service *WatsonService) accessVCAP(serviceName string) error {
 	appEnv, envErr := cfenv.Current()
@@ -168,12 +195,6 @@ func (service *WatsonService) accessVCAP(serviceName string) error {
 
 	username, userOK := creds["username"]
 	password, passOK := creds["password"]
-	APIkey, keyOK := creds["apikey"]
-
-	if keyOK {
-		service.tokenManager.SetKey(fmt.Sprint(APIkey))
-		return nil
-	}
 
 	if userOK && passOK {
 		service.Options.Username = fmt.Sprint(username)

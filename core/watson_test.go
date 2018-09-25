@@ -1,39 +1,61 @@
 package core
 
 import (
-	"os"
+	"encoding/base64"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
-	assert "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestIsObjectAString(t *testing.T) {
-	assert.True(t, IsObjectAString("a string"))
-
-	reader, _ := os.Open("foo.txt")
-	assert.True(t, IsObjectAReader(reader))
-
-	assert.False(t, IsObjectAString(nil))
-	assert.False(t, IsObjectAString(382636))
-
-	assert.False(t, IsObjectAReader(nil))
-	assert.False(t, IsObjectAReader("a string"))
+type Foo struct {
+	Name *string `json:"name,omitempty"`
 }
 
-func TestIsJSONMimeType(t *testing.T) {
-	assert.True(t, IsJSONMimeType("application/json"))
-	assert.True(t, IsJSONMimeType("APPlication/json"))
-	assert.True(t, IsJSONMimeType("application/json;blah"))
+func TestRequestResponseAsJSON(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-type", "application/json")
+		fmt.Fprintf(w, `{"name": "wonder woman"}`)
+	}))
+	defer server.Close()
 
-	assert.False(t, IsJSONMimeType("application/json-patch+patch"))
-	assert.False(t, IsJSONMimeType("YOapplication/jsonYO"))
+	builder := NewRequestBuilder("GET").
+		ConstructHTTPURL(server.URL, nil, nil).
+		AddHeader("Content-Type", "Application/json").
+		AddQuery("Version", "2018-22-09")
+	req, _ := builder.Build()
+
+	options := &ServiceOptions{
+		URL:      server.URL,
+		Username: "xxx",
+		Password: "yyy",
+	}
+	service, _ := NewWatsonService(options, "watson")
+	detailedResponse, _ := service.Request(req, new(Foo))
+	assert.Equal(t, "wonder woman", *detailedResponse.Result.(*Foo).Name)
 }
 
-func TestIsJSONPatchMimeType(t *testing.T) {
-	assert.True(t, IsJSONPatchMimeType("application/json-patch+json"))
-	assert.True(t, IsJSONPatchMimeType("APPlication/json-PATCH+json"))
-	assert.True(t, IsJSONPatchMimeType("application/json-patch+json;charset=UTF8"))
+func TestAuthentication(t *testing.T) {
+	encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte("xxx:yyy"))
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		assert.Equal(t, "Basic "+encodedBasicAuth, r.Header["Authorization"][0])
+	}))
+	defer server.Close()
 
-	assert.False(t, IsJSONPatchMimeType("application/json"))
-	assert.False(t, IsJSONPatchMimeType("YOapplication/json-patch+jsonYO"))
+	builder := NewRequestBuilder("GET").
+		ConstructHTTPURL(server.URL, nil, nil).
+		AddQuery("Version", "2018-22-09")
+	req, _ := builder.Build()
+
+	options := &ServiceOptions{
+		URL:      server.URL,
+		Username: "xxx",
+		Password: "yyy",
+	}
+	service, _ := NewWatsonService(options, "watson")
+
+	service.Request(req, new(Foo))
 }
