@@ -1,13 +1,14 @@
 package main
 
 import (
-	watson "go-sdk/assistantv1" //TODO: Update with the full path
-	"go-sdk/core"
+	"fmt"
+	core "github.com/ibm-watson/go-sdk/core"
+	assistant "github.com/ibm-watson/go-sdk/assistantv1"
 )
 
 func main() {
 	// Instantiate the Watson Assistant service
-	assistant, assistantErr := watson.NewAssistantV1(&watson.AssistantV1Options{
+	service, serviceErr := assistant.NewAssistantV1(&assistant.AssistantV1Options{
 		URL:      "YOUR SERVICE URL",
 		Version:  "2018-07-10",
 		Username: "YOUR SERVICE USERNAME",
@@ -15,50 +16,51 @@ func main() {
 	})
 
 	// Check successful instantiation
-	if assistantErr != nil {
-		panic(assistantErr)
+	if serviceErr != nil {
+		panic(serviceErr)
 	}
 
 	/* LIST WORKSPACES */
 
 	// Call the assistant ListWorkspaces method
-	response, responseErr := assistant.ListWorkspaces(&watson.ListWorkspacesOptions{})
+	response, responseErr := service.ListWorkspaces(&assistant.ListWorkspacesOptions{})
 
 	if responseErr != nil {
 		panic(responseErr)
 	}
 
-	// Check successful call
-	response.PrettyPrint(response.GetResult())
-	response.PrettyPrint(response.GetHeaders())
-	response.PrettyPrint(response.GetStatusCode())
+	fmt.Println(response)
 
 	/* CREATE WORKSPACE */
 
-	createEntity := watson.CreateEntity{
+	createEntity := assistant.CreateEntity{
 		Entity:      core.StringPtr("pizzatoppingstest"),
 		Description: core.StringPtr("Tasty pizza topping"),
 		Metadata:    map[string]string{"property": "value"},
 	}
-	createWorkspaceOptions := watson.NewCreateWorkspaceOptions().
+	createWorkspaceOptions := service.NewCreateWorkspaceOptions().
 		SetName("Test Workspace").
 		SetDescription("GO example workspace").
-		SetEntities([]watson.CreateEntity{createEntity})
+		SetEntities([]assistant.CreateEntity{createEntity})
 
-	response, responseErr = assistant.CreateWorkspace(createWorkspaceOptions)
+	response, responseErr = service.CreateWorkspace(createWorkspaceOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
 
-	response.PrettyPrint(response.GetResult())
+	fmt.Println(response)
+
+	// Cast response.Result to the specific dataType
+	// NOTE: most methods have a corresponding Get<methodName>Result() function
+	createWorkspaceResult := service.GetCreateWorkspaceResult(response)
+	workspaceID := createWorkspaceResult.WorkspaceID
 
 	// 	/* GET WORKSPACE */
 
 	// Call the assistant GetWorkspace method
-	workspaceID := watson.GetCreateWorkspaceResult(response).WorkspaceID // TODO: see if we can get it directly
-	response, responseErr = assistant.GetWorkspace(watson.
+	response, responseErr = service.GetWorkspace(service.
 		NewGetWorkspaceOptions(*workspaceID).
 		SetExport(true))
 
@@ -67,45 +69,45 @@ func main() {
 		panic(responseErr)
 	}
 
-	response.PrettyPrint(response.GetResult())
+	fmt.Println(response)
 
 	// 	/* UPDATE WORKSPACE */
 
-	updateWorkspaceOptions := watson.NewUpdateWorkspaceOptions(*workspaceID).
+	updateWorkspaceOptions := service.NewUpdateWorkspaceOptions(*workspaceID).
 		SetName("Updated workspace name").
 		SetDescription("Updated description")
 
-	response, responseErr = assistant.UpdateWorkspace(updateWorkspaceOptions)
+	response, responseErr = service.UpdateWorkspace(updateWorkspaceOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
 
-	response.PrettyPrint(response.GetResult())
+	fmt.Println(response)
 
 	// 	/* MESSAGE */
 
-	inputData := watson.InputData{
+	inputData := assistant.InputData{
 		Text: core.StringPtr("Hello, how are you?"),
 	}
 
-	messageOptions := watson.NewMessageOptions(*workspaceID).
+	messageOptions := service.NewMessageOptions(*workspaceID).
 		SetInput(inputData)
 
 	// Call the Message method with no specified context
-	response, responseErr = assistant.Message(messageOptions)
+	response, responseErr = service.Message(messageOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
 
-	response.PrettyPrint(response.GetResult())
+	fmt.Println(response)
 
 	// To continue with the same assistant, pass in the context from the previous call
-	conversationID := watson.GetMessageResult(response).Context.ConversationID // TODO: see if we can get it directly
-	context := watson.Context{
+	conversationID := service.GetMessageResult(response).Context.ConversationID
+	context := assistant.Context{
 		ConversationID: conversationID,
 	}
 
@@ -113,23 +115,23 @@ func main() {
 	messageOptions.SetContext(context).
 		SetInput(inputData)
 
-	response, responseErr = assistant.Message(messageOptions)
+	response, responseErr = service.Message(messageOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
 
-	response.PrettyPrint(response.GetResult())
+	fmt.Println(response)
 
 	// 	/* DELETE WORKSPACE */
 
 	// Call the assistant DeleteWorkspace method
-	response, responseErr = assistant.DeleteWorkspace(watson.NewDeleteWorkspaceOptions(*workspaceID))
+	response, responseErr = service.DeleteWorkspace(service.NewDeleteWorkspaceOptions(*workspaceID))
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-	response.PrettyPrint(response.GetResult())
+	fmt.Println(response)
 }

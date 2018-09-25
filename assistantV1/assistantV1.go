@@ -19,9 +19,7 @@ package assistantv1
 
 import (
 	"fmt"
-	core "go-sdk/core" // TODO: Generate correct path
-	"strings"
-
+	core "github.com/ibm-watson/go-sdk/core"
 	"github.com/go-openapi/strfmt"
 )
 
@@ -65,22 +63,33 @@ func NewAssistantV1(options *AssistantV1Options) (*AssistantV1, error) {
 }
 
 // Message : Get response to user input
-func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/message"
-	path = strings.Replace(path, "{workspace_id}", *messageOptions.WorkspaceID, 1)
+func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.DetailedResponse, error) {
+	if messageOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "messageOptions")
+	}
+	if messageOptions != nil {
+		err := core.Validate.Struct(messageOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces", "message" };
+	pathParameters := []string{ *messageOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range messageOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-	params := make(map[string]string)
 	if messageOptions.NodesVisitedDetails != nil {
-		params["nodes_visited_details"] = fmt.Sprint(*messageOptions.NodesVisitedDetails)
+		builder.AddQuery("nodes_visited_details", fmt.Sprint(*messageOptions.NodesVisitedDetails))
 	}
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if messageOptions.Input != nil {
@@ -101,23 +110,22 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Wat
 	if messageOptions.Output != nil {
 		body["output"] = messageOptions.Output
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(MessageResponse))
-	if err == nil {
-		result, ok := response.Result.(**MessageResponse)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(MessageResponse))
+	return response, err
 }
 
 // GetMessageResult : Cast result of Message operation
-func GetMessageResult(response *core.WatsonResponse) *MessageResponse {
+func (assistant *AssistantV1) GetMessageResult(response *core.DetailedResponse) *MessageResponse {
 	result, ok := response.Result.(*MessageResponse)
 	if ok {
 		return result
@@ -126,18 +134,27 @@ func GetMessageResult(response *core.WatsonResponse) *MessageResponse {
 }
 
 // CreateWorkspace : Create workspace
-func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces"
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range createWorkspaceOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions) (*core.DetailedResponse, error) {
+	if createWorkspaceOptions != nil {
+		err := core.Validate.Struct(createWorkspaceOptions)
+		if err != nil {
+			return nil, err
+		}
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces" };
+	pathParameters := []string{  };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range createWorkspaceOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createWorkspaceOptions.Name != nil {
@@ -170,23 +187,22 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	if createWorkspaceOptions.SystemSettings != nil {
 		body["system_settings"] = createWorkspaceOptions.SystemSettings
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Workspace))
-	if err == nil {
-		result, ok := response.Result.(**Workspace)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Workspace))
+	return response, err
 }
 
 // GetCreateWorkspaceResult : Cast result of CreateWorkspace operation
-func GetCreateWorkspaceResult(response *core.WatsonResponse) *Workspace {
+func (assistant *AssistantV1) GetCreateWorkspaceResult(response *core.DetailedResponse) *Workspace {
 	result, ok := response.Result.(*Workspace)
 	if ok {
 		return result
@@ -195,58 +211,81 @@ func GetCreateWorkspaceResult(response *core.WatsonResponse) *Workspace {
 }
 
 // DeleteWorkspace : Delete workspace
-func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}"
-	path = strings.Replace(path, "{workspace_id}", *deleteWorkspaceOptions.WorkspaceID, 1)
+func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions) (*core.DetailedResponse, error) {
+	if deleteWorkspaceOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteWorkspaceOptions")
+	}
+	if deleteWorkspaceOptions != nil {
+		err := core.Validate.Struct(deleteWorkspaceOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces" };
+	pathParameters := []string{ *deleteWorkspaceOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteWorkspaceOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // GetWorkspace : Get information about a workspace
-func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}"
-	path = strings.Replace(path, "{workspace_id}", *getWorkspaceOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range getWorkspaceOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions) (*core.DetailedResponse, error) {
+	if getWorkspaceOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getWorkspaceOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if getWorkspaceOptions.Export != nil {
-		params["export"] = fmt.Sprint(*getWorkspaceOptions.Export)
-	}
-	if getWorkspaceOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*getWorkspaceOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(WorkspaceExport))
-	if err == nil {
-		result, ok := response.Result.(**WorkspaceExport)
-		if ok {
-			response.Result = **result
+	if getWorkspaceOptions != nil {
+		err := core.Validate.Struct(getWorkspaceOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces" };
+	pathParameters := []string{ *getWorkspaceOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range getWorkspaceOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if getWorkspaceOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*getWorkspaceOptions.Export))
+	}
+	if getWorkspaceOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getWorkspaceOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(WorkspaceExport))
+	return response, err
 }
 
 // GetGetWorkspaceResult : Cast result of GetWorkspace operation
-func GetGetWorkspaceResult(response *core.WatsonResponse) *WorkspaceExport {
+func (assistant *AssistantV1) GetGetWorkspaceResult(response *core.DetailedResponse) *WorkspaceExport {
 	result, ok := response.Result.(*WorkspaceExport)
 	if ok {
 		return result
@@ -255,45 +294,53 @@ func GetGetWorkspaceResult(response *core.WatsonResponse) *WorkspaceExport {
 }
 
 // ListWorkspaces : List workspaces
-func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces"
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listWorkspacesOptions.Headers {
-		headers[headerName] = headerValue
-	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listWorkspacesOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listWorkspacesOptions.PageLimit)
-	}
-	if listWorkspacesOptions.IncludeCount != nil {
-		params["include_count"] = fmt.Sprint(*listWorkspacesOptions.IncludeCount)
-	}
-	if listWorkspacesOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listWorkspacesOptions.Sort)
-	}
-	if listWorkspacesOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listWorkspacesOptions.Cursor)
-	}
-	if listWorkspacesOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listWorkspacesOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(WorkspaceCollection))
-	if err == nil {
-		result, ok := response.Result.(**WorkspaceCollection)
-		if ok {
-			response.Result = **result
+func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) (*core.DetailedResponse, error) {
+	if listWorkspacesOptions != nil {
+		err := core.Validate.Struct(listWorkspacesOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces" };
+	pathParameters := []string{  };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listWorkspacesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listWorkspacesOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listWorkspacesOptions.PageLimit))
+	}
+	if listWorkspacesOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listWorkspacesOptions.IncludeCount))
+	}
+	if listWorkspacesOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listWorkspacesOptions.Sort))
+	}
+	if listWorkspacesOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listWorkspacesOptions.Cursor))
+	}
+	if listWorkspacesOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listWorkspacesOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(WorkspaceCollection))
+	return response, err
 }
 
 // GetListWorkspacesResult : Cast result of ListWorkspaces operation
-func GetListWorkspacesResult(response *core.WatsonResponse) *WorkspaceCollection {
+func (assistant *AssistantV1) GetListWorkspacesResult(response *core.DetailedResponse) *WorkspaceCollection {
 	result, ok := response.Result.(*WorkspaceCollection)
 	if ok {
 		return result
@@ -302,22 +349,33 @@ func GetListWorkspacesResult(response *core.WatsonResponse) *WorkspaceCollection
 }
 
 // UpdateWorkspace : Update workspace
-func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}"
-	path = strings.Replace(path, "{workspace_id}", *updateWorkspaceOptions.WorkspaceID, 1)
+func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions) (*core.DetailedResponse, error) {
+	if updateWorkspaceOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateWorkspaceOptions")
+	}
+	if updateWorkspaceOptions != nil {
+		err := core.Validate.Struct(updateWorkspaceOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces" };
+	pathParameters := []string{ *updateWorkspaceOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range updateWorkspaceOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-	params := make(map[string]string)
 	if updateWorkspaceOptions.Append != nil {
-		params["append"] = fmt.Sprint(*updateWorkspaceOptions.Append)
+		builder.AddQuery("append", fmt.Sprint(*updateWorkspaceOptions.Append))
 	}
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateWorkspaceOptions.Name != nil {
@@ -350,23 +408,22 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	if updateWorkspaceOptions.SystemSettings != nil {
 		body["system_settings"] = updateWorkspaceOptions.SystemSettings
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Workspace))
-	if err == nil {
-		result, ok := response.Result.(**Workspace)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Workspace))
+	return response, err
 }
 
 // GetUpdateWorkspaceResult : Cast result of UpdateWorkspace operation
-func GetUpdateWorkspaceResult(response *core.WatsonResponse) *Workspace {
+func (assistant *AssistantV1) GetUpdateWorkspaceResult(response *core.DetailedResponse) *Workspace {
 	result, ok := response.Result.(*Workspace)
 	if ok {
 		return result
@@ -375,19 +432,30 @@ func GetUpdateWorkspaceResult(response *core.WatsonResponse) *Workspace {
 }
 
 // CreateIntent : Create intent
-func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents"
-	path = strings.Replace(path, "{workspace_id}", *createIntentOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range createIntentOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOptions) (*core.DetailedResponse, error) {
+	if createIntentOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createIntentOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if createIntentOptions != nil {
+		err := core.Validate.Struct(createIntentOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "intents" };
+	pathParameters := []string{ *createIntentOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range createIntentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createIntentOptions.Intent != nil {
@@ -399,23 +467,22 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 	if createIntentOptions.Examples != nil {
 		body["examples"] = createIntentOptions.Examples
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Intent))
-	if err == nil {
-		result, ok := response.Result.(**Intent)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Intent))
+	return response, err
 }
 
 // GetCreateIntentResult : Cast result of CreateIntent operation
-func GetCreateIntentResult(response *core.WatsonResponse) *Intent {
+func (assistant *AssistantV1) GetCreateIntentResult(response *core.DetailedResponse) *Intent {
 	result, ok := response.Result.(*Intent)
 	if ok {
 		return result
@@ -424,60 +491,81 @@ func GetCreateIntentResult(response *core.WatsonResponse) *Intent {
 }
 
 // DeleteIntent : Delete intent
-func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents/{intent}"
-	path = strings.Replace(path, "{workspace_id}", *deleteIntentOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{intent}", *deleteIntentOptions.Intent, 1)
+func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOptions) (*core.DetailedResponse, error) {
+	if deleteIntentOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteIntentOptions")
+	}
+	if deleteIntentOptions != nil {
+		err := core.Validate.Struct(deleteIntentOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces", "intents" };
+	pathParameters := []string{ *deleteIntentOptions.WorkspaceID, *deleteIntentOptions.Intent };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteIntentOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // GetIntent : Get intent
-func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents/{intent}"
-	path = strings.Replace(path, "{workspace_id}", *getIntentOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{intent}", *getIntentOptions.Intent, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range getIntentOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*core.DetailedResponse, error) {
+	if getIntentOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getIntentOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if getIntentOptions.Export != nil {
-		params["export"] = fmt.Sprint(*getIntentOptions.Export)
-	}
-	if getIntentOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*getIntentOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(IntentExport))
-	if err == nil {
-		result, ok := response.Result.(**IntentExport)
-		if ok {
-			response.Result = **result
+	if getIntentOptions != nil {
+		err := core.Validate.Struct(getIntentOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "intents" };
+	pathParameters := []string{ *getIntentOptions.WorkspaceID, *getIntentOptions.Intent };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range getIntentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if getIntentOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*getIntentOptions.Export))
+	}
+	if getIntentOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getIntentOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(IntentExport))
+	return response, err
 }
 
 // GetGetIntentResult : Cast result of GetIntent operation
-func GetGetIntentResult(response *core.WatsonResponse) *IntentExport {
+func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse) *IntentExport {
 	result, ok := response.Result.(*IntentExport)
 	if ok {
 		return result
@@ -486,49 +574,59 @@ func GetGetIntentResult(response *core.WatsonResponse) *IntentExport {
 }
 
 // ListIntents : List intents
-func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents"
-	path = strings.Replace(path, "{workspace_id}", *listIntentsOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listIntentsOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions) (*core.DetailedResponse, error) {
+	if listIntentsOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listIntentsOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listIntentsOptions.Export != nil {
-		params["export"] = fmt.Sprint(*listIntentsOptions.Export)
-	}
-	if listIntentsOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listIntentsOptions.PageLimit)
-	}
-	if listIntentsOptions.IncludeCount != nil {
-		params["include_count"] = fmt.Sprint(*listIntentsOptions.IncludeCount)
-	}
-	if listIntentsOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listIntentsOptions.Sort)
-	}
-	if listIntentsOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listIntentsOptions.Cursor)
-	}
-	if listIntentsOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listIntentsOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(IntentCollection))
-	if err == nil {
-		result, ok := response.Result.(**IntentCollection)
-		if ok {
-			response.Result = **result
+	if listIntentsOptions != nil {
+		err := core.Validate.Struct(listIntentsOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "intents" };
+	pathParameters := []string{ *listIntentsOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listIntentsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listIntentsOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*listIntentsOptions.Export))
+	}
+	if listIntentsOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listIntentsOptions.PageLimit))
+	}
+	if listIntentsOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listIntentsOptions.IncludeCount))
+	}
+	if listIntentsOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listIntentsOptions.Sort))
+	}
+	if listIntentsOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listIntentsOptions.Cursor))
+	}
+	if listIntentsOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listIntentsOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(IntentCollection))
+	return response, err
 }
 
 // GetListIntentsResult : Cast result of ListIntents operation
-func GetListIntentsResult(response *core.WatsonResponse) *IntentCollection {
+func (assistant *AssistantV1) GetListIntentsResult(response *core.DetailedResponse) *IntentCollection {
 	result, ok := response.Result.(*IntentCollection)
 	if ok {
 		return result
@@ -537,20 +635,30 @@ func GetListIntentsResult(response *core.WatsonResponse) *IntentCollection {
 }
 
 // UpdateIntent : Update intent
-func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents/{intent}"
-	path = strings.Replace(path, "{workspace_id}", *updateIntentOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{intent}", *updateIntentOptions.Intent, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range updateIntentOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOptions) (*core.DetailedResponse, error) {
+	if updateIntentOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateIntentOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if updateIntentOptions != nil {
+		err := core.Validate.Struct(updateIntentOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "intents" };
+	pathParameters := []string{ *updateIntentOptions.WorkspaceID, *updateIntentOptions.Intent };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range updateIntentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateIntentOptions.NewIntent != nil {
@@ -562,23 +670,22 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	if updateIntentOptions.NewDescription != nil {
 		body["description"] = updateIntentOptions.NewDescription
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Intent))
-	if err == nil {
-		result, ok := response.Result.(**Intent)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Intent))
+	return response, err
 }
 
 // GetUpdateIntentResult : Cast result of UpdateIntent operation
-func GetUpdateIntentResult(response *core.WatsonResponse) *Intent {
+func (assistant *AssistantV1) GetUpdateIntentResult(response *core.DetailedResponse) *Intent {
 	result, ok := response.Result.(*Intent)
 	if ok {
 		return result
@@ -587,20 +694,30 @@ func GetUpdateIntentResult(response *core.WatsonResponse) *Intent {
 }
 
 // CreateExample : Create user input example
-func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples"
-	path = strings.Replace(path, "{workspace_id}", *createExampleOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{intent}", *createExampleOptions.Intent, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range createExampleOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleOptions) (*core.DetailedResponse, error) {
+	if createExampleOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createExampleOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if createExampleOptions != nil {
+		err := core.Validate.Struct(createExampleOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
+	pathParameters := []string{ *createExampleOptions.WorkspaceID, *createExampleOptions.Intent };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range createExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createExampleOptions.Text != nil {
@@ -609,23 +726,22 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 	if createExampleOptions.Mentions != nil {
 		body["mentions"] = createExampleOptions.Mentions
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Example))
-	if err == nil {
-		result, ok := response.Result.(**Example)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Example))
+	return response, err
 }
 
 // GetCreateExampleResult : Cast result of CreateExample operation
-func GetCreateExampleResult(response *core.WatsonResponse) *Example {
+func (assistant *AssistantV1) GetCreateExampleResult(response *core.DetailedResponse) *Example {
 	result, ok := response.Result.(*Example)
 	if ok {
 		return result
@@ -634,59 +750,78 @@ func GetCreateExampleResult(response *core.WatsonResponse) *Example {
 }
 
 // DeleteExample : Delete user input example
-func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
-	path = strings.Replace(path, "{workspace_id}", *deleteExampleOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{intent}", *deleteExampleOptions.Intent, 1)
-	path = strings.Replace(path, "{text}", *deleteExampleOptions.Text, 1)
+func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleOptions) (*core.DetailedResponse, error) {
+	if deleteExampleOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteExampleOptions")
+	}
+	if deleteExampleOptions != nil {
+		err := core.Validate.Struct(deleteExampleOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
+	pathParameters := []string{ *deleteExampleOptions.WorkspaceID, *deleteExampleOptions.Intent, *deleteExampleOptions.Text };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteExampleOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // GetExample : Get user input example
-func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
-	path = strings.Replace(path, "{workspace_id}", *getExampleOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{intent}", *getExampleOptions.Intent, 1)
-	path = strings.Replace(path, "{text}", *getExampleOptions.Text, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range getExampleOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (*core.DetailedResponse, error) {
+	if getExampleOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getExampleOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if getExampleOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*getExampleOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(Example))
-	if err == nil {
-		result, ok := response.Result.(**Example)
-		if ok {
-			response.Result = **result
+	if getExampleOptions != nil {
+		err := core.Validate.Struct(getExampleOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
+	pathParameters := []string{ *getExampleOptions.WorkspaceID, *getExampleOptions.Intent, *getExampleOptions.Text };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range getExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if getExampleOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getExampleOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(Example))
+	return response, err
 }
 
 // GetGetExampleResult : Cast result of GetExample operation
-func GetGetExampleResult(response *core.WatsonResponse) *Example {
+func (assistant *AssistantV1) GetGetExampleResult(response *core.DetailedResponse) *Example {
 	result, ok := response.Result.(*Example)
 	if ok {
 		return result
@@ -695,47 +830,56 @@ func GetGetExampleResult(response *core.WatsonResponse) *Example {
 }
 
 // ListExamples : List user input examples
-func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples"
-	path = strings.Replace(path, "{workspace_id}", *listExamplesOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{intent}", *listExamplesOptions.Intent, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listExamplesOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOptions) (*core.DetailedResponse, error) {
+	if listExamplesOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listExamplesOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listExamplesOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listExamplesOptions.PageLimit)
-	}
-	if listExamplesOptions.IncludeCount != nil {
-		params["include_count"] = fmt.Sprint(*listExamplesOptions.IncludeCount)
-	}
-	if listExamplesOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listExamplesOptions.Sort)
-	}
-	if listExamplesOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listExamplesOptions.Cursor)
-	}
-	if listExamplesOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listExamplesOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(ExampleCollection))
-	if err == nil {
-		result, ok := response.Result.(**ExampleCollection)
-		if ok {
-			response.Result = **result
+	if listExamplesOptions != nil {
+		err := core.Validate.Struct(listExamplesOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
+	pathParameters := []string{ *listExamplesOptions.WorkspaceID, *listExamplesOptions.Intent };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listExamplesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listExamplesOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listExamplesOptions.PageLimit))
+	}
+	if listExamplesOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listExamplesOptions.IncludeCount))
+	}
+	if listExamplesOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listExamplesOptions.Sort))
+	}
+	if listExamplesOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listExamplesOptions.Cursor))
+	}
+	if listExamplesOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listExamplesOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(ExampleCollection))
+	return response, err
 }
 
 // GetListExamplesResult : Cast result of ListExamples operation
-func GetListExamplesResult(response *core.WatsonResponse) *ExampleCollection {
+func (assistant *AssistantV1) GetListExamplesResult(response *core.DetailedResponse) *ExampleCollection {
 	result, ok := response.Result.(*ExampleCollection)
 	if ok {
 		return result
@@ -744,21 +888,30 @@ func GetListExamplesResult(response *core.WatsonResponse) *ExampleCollection {
 }
 
 // UpdateExample : Update user input example
-func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/intents/{intent}/examples/{text}"
-	path = strings.Replace(path, "{workspace_id}", *updateExampleOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{intent}", *updateExampleOptions.Intent, 1)
-	path = strings.Replace(path, "{text}", *updateExampleOptions.Text, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range updateExampleOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleOptions) (*core.DetailedResponse, error) {
+	if updateExampleOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateExampleOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if updateExampleOptions != nil {
+		err := core.Validate.Struct(updateExampleOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
+	pathParameters := []string{ *updateExampleOptions.WorkspaceID, *updateExampleOptions.Intent, *updateExampleOptions.Text };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range updateExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateExampleOptions.NewText != nil {
@@ -767,23 +920,22 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 	if updateExampleOptions.NewMentions != nil {
 		body["mentions"] = updateExampleOptions.NewMentions
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Example))
-	if err == nil {
-		result, ok := response.Result.(**Example)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Example))
+	return response, err
 }
 
 // GetUpdateExampleResult : Cast result of UpdateExample operation
-func GetUpdateExampleResult(response *core.WatsonResponse) *Example {
+func (assistant *AssistantV1) GetUpdateExampleResult(response *core.DetailedResponse) *Example {
 	result, ok := response.Result.(*Example)
 	if ok {
 		return result
@@ -792,41 +944,51 @@ func GetUpdateExampleResult(response *core.WatsonResponse) *Example {
 }
 
 // CreateCounterexample : Create counterexample
-func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/counterexamples"
-	path = strings.Replace(path, "{workspace_id}", *createCounterexampleOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range createCounterexampleOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) (*core.DetailedResponse, error) {
+	if createCounterexampleOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createCounterexampleOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if createCounterexampleOptions != nil {
+		err := core.Validate.Struct(createCounterexampleOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "counterexamples" };
+	pathParameters := []string{ *createCounterexampleOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range createCounterexampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createCounterexampleOptions.Text != nil {
 		body["text"] = createCounterexampleOptions.Text
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Counterexample))
-	if err == nil {
-		result, ok := response.Result.(**Counterexample)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Counterexample))
+	return response, err
 }
 
 // GetCreateCounterexampleResult : Cast result of CreateCounterexample operation
-func GetCreateCounterexampleResult(response *core.WatsonResponse) *Counterexample {
+func (assistant *AssistantV1) GetCreateCounterexampleResult(response *core.DetailedResponse) *Counterexample {
 	result, ok := response.Result.(*Counterexample)
 	if ok {
 		return result
@@ -835,57 +997,78 @@ func GetCreateCounterexampleResult(response *core.WatsonResponse) *Counterexampl
 }
 
 // DeleteCounterexample : Delete counterexample
-func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
-	path = strings.Replace(path, "{workspace_id}", *deleteCounterexampleOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{text}", *deleteCounterexampleOptions.Text, 1)
+func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions) (*core.DetailedResponse, error) {
+	if deleteCounterexampleOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteCounterexampleOptions")
+	}
+	if deleteCounterexampleOptions != nil {
+		err := core.Validate.Struct(deleteCounterexampleOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces", "counterexamples" };
+	pathParameters := []string{ *deleteCounterexampleOptions.WorkspaceID, *deleteCounterexampleOptions.Text };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteCounterexampleOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // GetCounterexample : Get counterexample
-func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
-	path = strings.Replace(path, "{workspace_id}", *getCounterexampleOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{text}", *getCounterexampleOptions.Text, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range getCounterexampleOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) (*core.DetailedResponse, error) {
+	if getCounterexampleOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getCounterexampleOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if getCounterexampleOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*getCounterexampleOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(Counterexample))
-	if err == nil {
-		result, ok := response.Result.(**Counterexample)
-		if ok {
-			response.Result = **result
+	if getCounterexampleOptions != nil {
+		err := core.Validate.Struct(getCounterexampleOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "counterexamples" };
+	pathParameters := []string{ *getCounterexampleOptions.WorkspaceID, *getCounterexampleOptions.Text };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range getCounterexampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if getCounterexampleOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getCounterexampleOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(Counterexample))
+	return response, err
 }
 
 // GetGetCounterexampleResult : Cast result of GetCounterexample operation
-func GetGetCounterexampleResult(response *core.WatsonResponse) *Counterexample {
+func (assistant *AssistantV1) GetGetCounterexampleResult(response *core.DetailedResponse) *Counterexample {
 	result, ok := response.Result.(*Counterexample)
 	if ok {
 		return result
@@ -894,46 +1077,56 @@ func GetGetCounterexampleResult(response *core.WatsonResponse) *Counterexample {
 }
 
 // ListCounterexamples : List counterexamples
-func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *ListCounterexamplesOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/counterexamples"
-	path = strings.Replace(path, "{workspace_id}", *listCounterexamplesOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listCounterexamplesOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *ListCounterexamplesOptions) (*core.DetailedResponse, error) {
+	if listCounterexamplesOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listCounterexamplesOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listCounterexamplesOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listCounterexamplesOptions.PageLimit)
-	}
-	if listCounterexamplesOptions.IncludeCount != nil {
-		params["include_count"] = fmt.Sprint(*listCounterexamplesOptions.IncludeCount)
-	}
-	if listCounterexamplesOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listCounterexamplesOptions.Sort)
-	}
-	if listCounterexamplesOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listCounterexamplesOptions.Cursor)
-	}
-	if listCounterexamplesOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listCounterexamplesOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(CounterexampleCollection))
-	if err == nil {
-		result, ok := response.Result.(**CounterexampleCollection)
-		if ok {
-			response.Result = **result
+	if listCounterexamplesOptions != nil {
+		err := core.Validate.Struct(listCounterexamplesOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "counterexamples" };
+	pathParameters := []string{ *listCounterexamplesOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listCounterexamplesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listCounterexamplesOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listCounterexamplesOptions.PageLimit))
+	}
+	if listCounterexamplesOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listCounterexamplesOptions.IncludeCount))
+	}
+	if listCounterexamplesOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listCounterexamplesOptions.Sort))
+	}
+	if listCounterexamplesOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listCounterexamplesOptions.Cursor))
+	}
+	if listCounterexamplesOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listCounterexamplesOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(CounterexampleCollection))
+	return response, err
 }
 
 // GetListCounterexamplesResult : Cast result of ListCounterexamples operation
-func GetListCounterexamplesResult(response *core.WatsonResponse) *CounterexampleCollection {
+func (assistant *AssistantV1) GetListCounterexamplesResult(response *core.DetailedResponse) *CounterexampleCollection {
 	result, ok := response.Result.(*CounterexampleCollection)
 	if ok {
 		return result
@@ -942,42 +1135,51 @@ func GetListCounterexamplesResult(response *core.WatsonResponse) *Counterexample
 }
 
 // UpdateCounterexample : Update counterexample
-func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/counterexamples/{text}"
-	path = strings.Replace(path, "{workspace_id}", *updateCounterexampleOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{text}", *updateCounterexampleOptions.Text, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range updateCounterexampleOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions) (*core.DetailedResponse, error) {
+	if updateCounterexampleOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateCounterexampleOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if updateCounterexampleOptions != nil {
+		err := core.Validate.Struct(updateCounterexampleOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "counterexamples" };
+	pathParameters := []string{ *updateCounterexampleOptions.WorkspaceID, *updateCounterexampleOptions.Text };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range updateCounterexampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateCounterexampleOptions.NewText != nil {
 		body["text"] = updateCounterexampleOptions.NewText
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Counterexample))
-	if err == nil {
-		result, ok := response.Result.(**Counterexample)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Counterexample))
+	return response, err
 }
 
 // GetUpdateCounterexampleResult : Cast result of UpdateCounterexample operation
-func GetUpdateCounterexampleResult(response *core.WatsonResponse) *Counterexample {
+func (assistant *AssistantV1) GetUpdateCounterexampleResult(response *core.DetailedResponse) *Counterexample {
 	result, ok := response.Result.(*Counterexample)
 	if ok {
 		return result
@@ -986,19 +1188,30 @@ func GetUpdateCounterexampleResult(response *core.WatsonResponse) *Counterexampl
 }
 
 // CreateEntity : Create entity
-func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities"
-	path = strings.Replace(path, "{workspace_id}", *createEntityOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range createEntityOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (*core.DetailedResponse, error) {
+	if createEntityOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createEntityOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if createEntityOptions != nil {
+		err := core.Validate.Struct(createEntityOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "entities" };
+	pathParameters := []string{ *createEntityOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range createEntityOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createEntityOptions.Entity != nil {
@@ -1016,23 +1229,22 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	if createEntityOptions.FuzzyMatch != nil {
 		body["fuzzy_match"] = createEntityOptions.FuzzyMatch
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Entity))
-	if err == nil {
-		result, ok := response.Result.(**Entity)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Entity))
+	return response, err
 }
 
 // GetCreateEntityResult : Cast result of CreateEntity operation
-func GetCreateEntityResult(response *core.WatsonResponse) *Entity {
+func (assistant *AssistantV1) GetCreateEntityResult(response *core.DetailedResponse) *Entity {
 	result, ok := response.Result.(*Entity)
 	if ok {
 		return result
@@ -1041,60 +1253,81 @@ func GetCreateEntityResult(response *core.WatsonResponse) *Entity {
 }
 
 // DeleteEntity : Delete entity
-func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}"
-	path = strings.Replace(path, "{workspace_id}", *deleteEntityOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *deleteEntityOptions.Entity, 1)
+func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (*core.DetailedResponse, error) {
+	if deleteEntityOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteEntityOptions")
+	}
+	if deleteEntityOptions != nil {
+		err := core.Validate.Struct(deleteEntityOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces", "entities" };
+	pathParameters := []string{ *deleteEntityOptions.WorkspaceID, *deleteEntityOptions.Entity };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteEntityOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // GetEntity : Get entity
-func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}"
-	path = strings.Replace(path, "{workspace_id}", *getEntityOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *getEntityOptions.Entity, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range getEntityOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*core.DetailedResponse, error) {
+	if getEntityOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getEntityOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if getEntityOptions.Export != nil {
-		params["export"] = fmt.Sprint(*getEntityOptions.Export)
-	}
-	if getEntityOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*getEntityOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(EntityExport))
-	if err == nil {
-		result, ok := response.Result.(**EntityExport)
-		if ok {
-			response.Result = **result
+	if getEntityOptions != nil {
+		err := core.Validate.Struct(getEntityOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "entities" };
+	pathParameters := []string{ *getEntityOptions.WorkspaceID, *getEntityOptions.Entity };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range getEntityOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if getEntityOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*getEntityOptions.Export))
+	}
+	if getEntityOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getEntityOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(EntityExport))
+	return response, err
 }
 
 // GetGetEntityResult : Cast result of GetEntity operation
-func GetGetEntityResult(response *core.WatsonResponse) *EntityExport {
+func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse) *EntityExport {
 	result, ok := response.Result.(*EntityExport)
 	if ok {
 		return result
@@ -1103,49 +1336,59 @@ func GetGetEntityResult(response *core.WatsonResponse) *EntityExport {
 }
 
 // ListEntities : List entities
-func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities"
-	path = strings.Replace(path, "{workspace_id}", *listEntitiesOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listEntitiesOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOptions) (*core.DetailedResponse, error) {
+	if listEntitiesOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listEntitiesOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listEntitiesOptions.Export != nil {
-		params["export"] = fmt.Sprint(*listEntitiesOptions.Export)
-	}
-	if listEntitiesOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listEntitiesOptions.PageLimit)
-	}
-	if listEntitiesOptions.IncludeCount != nil {
-		params["include_count"] = fmt.Sprint(*listEntitiesOptions.IncludeCount)
-	}
-	if listEntitiesOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listEntitiesOptions.Sort)
-	}
-	if listEntitiesOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listEntitiesOptions.Cursor)
-	}
-	if listEntitiesOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listEntitiesOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(EntityCollection))
-	if err == nil {
-		result, ok := response.Result.(**EntityCollection)
-		if ok {
-			response.Result = **result
+	if listEntitiesOptions != nil {
+		err := core.Validate.Struct(listEntitiesOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "entities" };
+	pathParameters := []string{ *listEntitiesOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listEntitiesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listEntitiesOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*listEntitiesOptions.Export))
+	}
+	if listEntitiesOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listEntitiesOptions.PageLimit))
+	}
+	if listEntitiesOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listEntitiesOptions.IncludeCount))
+	}
+	if listEntitiesOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listEntitiesOptions.Sort))
+	}
+	if listEntitiesOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listEntitiesOptions.Cursor))
+	}
+	if listEntitiesOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listEntitiesOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(EntityCollection))
+	return response, err
 }
 
 // GetListEntitiesResult : Cast result of ListEntities operation
-func GetListEntitiesResult(response *core.WatsonResponse) *EntityCollection {
+func (assistant *AssistantV1) GetListEntitiesResult(response *core.DetailedResponse) *EntityCollection {
 	result, ok := response.Result.(*EntityCollection)
 	if ok {
 		return result
@@ -1154,20 +1397,30 @@ func GetListEntitiesResult(response *core.WatsonResponse) *EntityCollection {
 }
 
 // UpdateEntity : Update entity
-func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}"
-	path = strings.Replace(path, "{workspace_id}", *updateEntityOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *updateEntityOptions.Entity, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range updateEntityOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOptions) (*core.DetailedResponse, error) {
+	if updateEntityOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateEntityOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if updateEntityOptions != nil {
+		err := core.Validate.Struct(updateEntityOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "entities" };
+	pathParameters := []string{ *updateEntityOptions.WorkspaceID, *updateEntityOptions.Entity };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range updateEntityOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateEntityOptions.NewFuzzyMatch != nil {
@@ -1185,23 +1438,22 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 	if updateEntityOptions.NewDescription != nil {
 		body["description"] = updateEntityOptions.NewDescription
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Entity))
-	if err == nil {
-		result, ok := response.Result.(**Entity)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Entity))
+	return response, err
 }
 
 // GetUpdateEntityResult : Cast result of UpdateEntity operation
-func GetUpdateEntityResult(response *core.WatsonResponse) *Entity {
+func (assistant *AssistantV1) GetUpdateEntityResult(response *core.DetailedResponse) *Entity {
 	result, ok := response.Result.(*Entity)
 	if ok {
 		return result
@@ -1210,38 +1462,47 @@ func GetUpdateEntityResult(response *core.WatsonResponse) *Entity {
 }
 
 // ListMentions : List entity mentions
-func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/mentions"
-	path = strings.Replace(path, "{workspace_id}", *listMentionsOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *listMentionsOptions.Entity, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listMentionsOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOptions) (*core.DetailedResponse, error) {
+	if listMentionsOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listMentionsOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listMentionsOptions.Export != nil {
-		params["export"] = fmt.Sprint(*listMentionsOptions.Export)
-	}
-	if listMentionsOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listMentionsOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(EntityMentionCollection))
-	if err == nil {
-		result, ok := response.Result.(**EntityMentionCollection)
-		if ok {
-			response.Result = **result
+	if listMentionsOptions != nil {
+		err := core.Validate.Struct(listMentionsOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "entities", "mentions" };
+	pathParameters := []string{ *listMentionsOptions.WorkspaceID, *listMentionsOptions.Entity };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listMentionsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listMentionsOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*listMentionsOptions.Export))
+	}
+	if listMentionsOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listMentionsOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(EntityMentionCollection))
+	return response, err
 }
 
 // GetListMentionsResult : Cast result of ListMentions operation
-func GetListMentionsResult(response *core.WatsonResponse) *EntityMentionCollection {
+func (assistant *AssistantV1) GetListMentionsResult(response *core.DetailedResponse) *EntityMentionCollection {
 	result, ok := response.Result.(*EntityMentionCollection)
 	if ok {
 		return result
@@ -1250,20 +1511,30 @@ func GetListMentionsResult(response *core.WatsonResponse) *EntityMentionCollecti
 }
 
 // CreateValue : Add entity value
-func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values"
-	path = strings.Replace(path, "{workspace_id}", *createValueOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *createValueOptions.Entity, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range createValueOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions) (*core.DetailedResponse, error) {
+	if createValueOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createValueOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if createValueOptions != nil {
+		err := core.Validate.Struct(createValueOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "entities", "values" };
+	pathParameters := []string{ *createValueOptions.WorkspaceID, *createValueOptions.Entity };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range createValueOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createValueOptions.Value != nil {
@@ -1281,23 +1552,22 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	if createValueOptions.ValueType != nil {
 		body["type"] = createValueOptions.ValueType
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Value))
-	if err == nil {
-		result, ok := response.Result.(**Value)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Value))
+	return response, err
 }
 
 // GetCreateValueResult : Cast result of CreateValue operation
-func GetCreateValueResult(response *core.WatsonResponse) *Value {
+func (assistant *AssistantV1) GetCreateValueResult(response *core.DetailedResponse) *Value {
 	result, ok := response.Result.(*Value)
 	if ok {
 		return result
@@ -1306,62 +1576,81 @@ func GetCreateValueResult(response *core.WatsonResponse) *Value {
 }
 
 // DeleteValue : Delete entity value
-func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
-	path = strings.Replace(path, "{workspace_id}", *deleteValueOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *deleteValueOptions.Entity, 1)
-	path = strings.Replace(path, "{value}", *deleteValueOptions.Value, 1)
+func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions) (*core.DetailedResponse, error) {
+	if deleteValueOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteValueOptions")
+	}
+	if deleteValueOptions != nil {
+		err := core.Validate.Struct(deleteValueOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces", "entities", "values" };
+	pathParameters := []string{ *deleteValueOptions.WorkspaceID, *deleteValueOptions.Entity, *deleteValueOptions.Value };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteValueOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // GetValue : Get entity value
-func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
-	path = strings.Replace(path, "{workspace_id}", *getValueOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *getValueOptions.Entity, 1)
-	path = strings.Replace(path, "{value}", *getValueOptions.Value, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range getValueOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.DetailedResponse, error) {
+	if getValueOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getValueOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if getValueOptions.Export != nil {
-		params["export"] = fmt.Sprint(*getValueOptions.Export)
-	}
-	if getValueOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*getValueOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(ValueExport))
-	if err == nil {
-		result, ok := response.Result.(**ValueExport)
-		if ok {
-			response.Result = **result
+	if getValueOptions != nil {
+		err := core.Validate.Struct(getValueOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "entities", "values" };
+	pathParameters := []string{ *getValueOptions.WorkspaceID, *getValueOptions.Entity, *getValueOptions.Value };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range getValueOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if getValueOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*getValueOptions.Export))
+	}
+	if getValueOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getValueOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(ValueExport))
+	return response, err
 }
 
 // GetGetValueResult : Cast result of GetValue operation
-func GetGetValueResult(response *core.WatsonResponse) *ValueExport {
+func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse) *ValueExport {
 	result, ok := response.Result.(*ValueExport)
 	if ok {
 		return result
@@ -1370,50 +1659,59 @@ func GetGetValueResult(response *core.WatsonResponse) *ValueExport {
 }
 
 // ListValues : List entity values
-func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values"
-	path = strings.Replace(path, "{workspace_id}", *listValuesOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *listValuesOptions.Entity, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listValuesOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (*core.DetailedResponse, error) {
+	if listValuesOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listValuesOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listValuesOptions.Export != nil {
-		params["export"] = fmt.Sprint(*listValuesOptions.Export)
-	}
-	if listValuesOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listValuesOptions.PageLimit)
-	}
-	if listValuesOptions.IncludeCount != nil {
-		params["include_count"] = fmt.Sprint(*listValuesOptions.IncludeCount)
-	}
-	if listValuesOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listValuesOptions.Sort)
-	}
-	if listValuesOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listValuesOptions.Cursor)
-	}
-	if listValuesOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listValuesOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(ValueCollection))
-	if err == nil {
-		result, ok := response.Result.(**ValueCollection)
-		if ok {
-			response.Result = **result
+	if listValuesOptions != nil {
+		err := core.Validate.Struct(listValuesOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "entities", "values" };
+	pathParameters := []string{ *listValuesOptions.WorkspaceID, *listValuesOptions.Entity };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listValuesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listValuesOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*listValuesOptions.Export))
+	}
+	if listValuesOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listValuesOptions.PageLimit))
+	}
+	if listValuesOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listValuesOptions.IncludeCount))
+	}
+	if listValuesOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listValuesOptions.Sort))
+	}
+	if listValuesOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listValuesOptions.Cursor))
+	}
+	if listValuesOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listValuesOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(ValueCollection))
+	return response, err
 }
 
 // GetListValuesResult : Cast result of ListValues operation
-func GetListValuesResult(response *core.WatsonResponse) *ValueCollection {
+func (assistant *AssistantV1) GetListValuesResult(response *core.DetailedResponse) *ValueCollection {
 	result, ok := response.Result.(*ValueCollection)
 	if ok {
 		return result
@@ -1422,21 +1720,30 @@ func GetListValuesResult(response *core.WatsonResponse) *ValueCollection {
 }
 
 // UpdateValue : Update entity value
-func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}"
-	path = strings.Replace(path, "{workspace_id}", *updateValueOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *updateValueOptions.Entity, 1)
-	path = strings.Replace(path, "{value}", *updateValueOptions.Value, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range updateValueOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions) (*core.DetailedResponse, error) {
+	if updateValueOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateValueOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if updateValueOptions != nil {
+		err := core.Validate.Struct(updateValueOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "entities", "values" };
+	pathParameters := []string{ *updateValueOptions.WorkspaceID, *updateValueOptions.Entity, *updateValueOptions.Value };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range updateValueOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateValueOptions.NewSynonyms != nil {
@@ -1454,23 +1761,22 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	if updateValueOptions.NewValue != nil {
 		body["value"] = updateValueOptions.NewValue
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Value))
-	if err == nil {
-		result, ok := response.Result.(**Value)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Value))
+	return response, err
 }
 
 // GetUpdateValueResult : Cast result of UpdateValue operation
-func GetUpdateValueResult(response *core.WatsonResponse) *Value {
+func (assistant *AssistantV1) GetUpdateValueResult(response *core.DetailedResponse) *Value {
 	result, ok := response.Result.(*Value)
 	if ok {
 		return result
@@ -1479,43 +1785,51 @@ func GetUpdateValueResult(response *core.WatsonResponse) *Value {
 }
 
 // CreateSynonym : Add entity value synonym
-func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms"
-	path = strings.Replace(path, "{workspace_id}", *createSynonymOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *createSynonymOptions.Entity, 1)
-	path = strings.Replace(path, "{value}", *createSynonymOptions.Value, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range createSynonymOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymOptions) (*core.DetailedResponse, error) {
+	if createSynonymOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createSynonymOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if createSynonymOptions != nil {
+		err := core.Validate.Struct(createSynonymOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
+	pathParameters := []string{ *createSynonymOptions.WorkspaceID, *createSynonymOptions.Entity, *createSynonymOptions.Value };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range createSynonymOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createSynonymOptions.Synonym != nil {
 		body["synonym"] = createSynonymOptions.Synonym
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Synonym))
-	if err == nil {
-		result, ok := response.Result.(**Synonym)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Synonym))
+	return response, err
 }
 
 // GetCreateSynonymResult : Cast result of CreateSynonym operation
-func GetCreateSynonymResult(response *core.WatsonResponse) *Synonym {
+func (assistant *AssistantV1) GetCreateSynonymResult(response *core.DetailedResponse) *Synonym {
 	result, ok := response.Result.(*Synonym)
 	if ok {
 		return result
@@ -1524,61 +1838,78 @@ func GetCreateSynonymResult(response *core.WatsonResponse) *Synonym {
 }
 
 // DeleteSynonym : Delete entity value synonym
-func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
-	path = strings.Replace(path, "{workspace_id}", *deleteSynonymOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *deleteSynonymOptions.Entity, 1)
-	path = strings.Replace(path, "{value}", *deleteSynonymOptions.Value, 1)
-	path = strings.Replace(path, "{synonym}", *deleteSynonymOptions.Synonym, 1)
+func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions) (*core.DetailedResponse, error) {
+	if deleteSynonymOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteSynonymOptions")
+	}
+	if deleteSynonymOptions != nil {
+		err := core.Validate.Struct(deleteSynonymOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
+	pathParameters := []string{ *deleteSynonymOptions.WorkspaceID, *deleteSynonymOptions.Entity, *deleteSynonymOptions.Value, *deleteSynonymOptions.Synonym };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteSynonymOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // GetSynonym : Get entity value synonym
-func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
-	path = strings.Replace(path, "{workspace_id}", *getSynonymOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *getSynonymOptions.Entity, 1)
-	path = strings.Replace(path, "{value}", *getSynonymOptions.Value, 1)
-	path = strings.Replace(path, "{synonym}", *getSynonymOptions.Synonym, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range getSynonymOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (*core.DetailedResponse, error) {
+	if getSynonymOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getSynonymOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if getSynonymOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*getSynonymOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(Synonym))
-	if err == nil {
-		result, ok := response.Result.(**Synonym)
-		if ok {
-			response.Result = **result
+	if getSynonymOptions != nil {
+		err := core.Validate.Struct(getSynonymOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
+	pathParameters := []string{ *getSynonymOptions.WorkspaceID, *getSynonymOptions.Entity, *getSynonymOptions.Value, *getSynonymOptions.Synonym };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range getSynonymOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if getSynonymOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getSynonymOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(Synonym))
+	return response, err
 }
 
 // GetGetSynonymResult : Cast result of GetSynonym operation
-func GetGetSynonymResult(response *core.WatsonResponse) *Synonym {
+func (assistant *AssistantV1) GetGetSynonymResult(response *core.DetailedResponse) *Synonym {
 	result, ok := response.Result.(*Synonym)
 	if ok {
 		return result
@@ -1587,48 +1918,56 @@ func GetGetSynonymResult(response *core.WatsonResponse) *Synonym {
 }
 
 // ListSynonyms : List entity value synonyms
-func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms"
-	path = strings.Replace(path, "{workspace_id}", *listSynonymsOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *listSynonymsOptions.Entity, 1)
-	path = strings.Replace(path, "{value}", *listSynonymsOptions.Value, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listSynonymsOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOptions) (*core.DetailedResponse, error) {
+	if listSynonymsOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listSynonymsOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listSynonymsOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listSynonymsOptions.PageLimit)
-	}
-	if listSynonymsOptions.IncludeCount != nil {
-		params["include_count"] = fmt.Sprint(*listSynonymsOptions.IncludeCount)
-	}
-	if listSynonymsOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listSynonymsOptions.Sort)
-	}
-	if listSynonymsOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listSynonymsOptions.Cursor)
-	}
-	if listSynonymsOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listSynonymsOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(SynonymCollection))
-	if err == nil {
-		result, ok := response.Result.(**SynonymCollection)
-		if ok {
-			response.Result = **result
+	if listSynonymsOptions != nil {
+		err := core.Validate.Struct(listSynonymsOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
+	pathParameters := []string{ *listSynonymsOptions.WorkspaceID, *listSynonymsOptions.Entity, *listSynonymsOptions.Value };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listSynonymsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listSynonymsOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listSynonymsOptions.PageLimit))
+	}
+	if listSynonymsOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listSynonymsOptions.IncludeCount))
+	}
+	if listSynonymsOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listSynonymsOptions.Sort))
+	}
+	if listSynonymsOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listSynonymsOptions.Cursor))
+	}
+	if listSynonymsOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listSynonymsOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(SynonymCollection))
+	return response, err
 }
 
 // GetListSynonymsResult : Cast result of ListSynonyms operation
-func GetListSynonymsResult(response *core.WatsonResponse) *SynonymCollection {
+func (assistant *AssistantV1) GetListSynonymsResult(response *core.DetailedResponse) *SynonymCollection {
 	result, ok := response.Result.(*SynonymCollection)
 	if ok {
 		return result
@@ -1637,44 +1976,51 @@ func GetListSynonymsResult(response *core.WatsonResponse) *SynonymCollection {
 }
 
 // UpdateSynonym : Update entity value synonym
-func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/entities/{entity}/values/{value}/synonyms/{synonym}"
-	path = strings.Replace(path, "{workspace_id}", *updateSynonymOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{entity}", *updateSynonymOptions.Entity, 1)
-	path = strings.Replace(path, "{value}", *updateSynonymOptions.Value, 1)
-	path = strings.Replace(path, "{synonym}", *updateSynonymOptions.Synonym, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range updateSynonymOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions) (*core.DetailedResponse, error) {
+	if updateSynonymOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateSynonymOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if updateSynonymOptions != nil {
+		err := core.Validate.Struct(updateSynonymOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
+	pathParameters := []string{ *updateSynonymOptions.WorkspaceID, *updateSynonymOptions.Entity, *updateSynonymOptions.Value, *updateSynonymOptions.Synonym };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range updateSynonymOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateSynonymOptions.NewSynonym != nil {
 		body["synonym"] = updateSynonymOptions.NewSynonym
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(Synonym))
-	if err == nil {
-		result, ok := response.Result.(**Synonym)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(Synonym))
+	return response, err
 }
 
 // GetUpdateSynonymResult : Cast result of UpdateSynonym operation
-func GetUpdateSynonymResult(response *core.WatsonResponse) *Synonym {
+func (assistant *AssistantV1) GetUpdateSynonymResult(response *core.DetailedResponse) *Synonym {
 	result, ok := response.Result.(*Synonym)
 	if ok {
 		return result
@@ -1683,19 +2029,30 @@ func GetUpdateSynonymResult(response *core.WatsonResponse) *Synonym {
 }
 
 // CreateDialogNode : Create dialog node
-func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/dialog_nodes"
-	path = strings.Replace(path, "{workspace_id}", *createDialogNodeOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range createDialogNodeOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions) (*core.DetailedResponse, error) {
+	if createDialogNodeOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createDialogNodeOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if createDialogNodeOptions != nil {
+		err := core.Validate.Struct(createDialogNodeOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
+	pathParameters := []string{ *createDialogNodeOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range createDialogNodeOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createDialogNodeOptions.DialogNode != nil {
@@ -1752,23 +2109,22 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	if createDialogNodeOptions.UserLabel != nil {
 		body["user_label"] = createDialogNodeOptions.UserLabel
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(DialogNode))
-	if err == nil {
-		result, ok := response.Result.(**DialogNode)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(DialogNode))
+	return response, err
 }
 
 // GetCreateDialogNodeResult : Cast result of CreateDialogNode operation
-func GetCreateDialogNodeResult(response *core.WatsonResponse) *DialogNode {
+func (assistant *AssistantV1) GetCreateDialogNodeResult(response *core.DetailedResponse) *DialogNode {
 	result, ok := response.Result.(*DialogNode)
 	if ok {
 		return result
@@ -1777,57 +2133,78 @@ func GetCreateDialogNodeResult(response *core.WatsonResponse) *DialogNode {
 }
 
 // DeleteDialogNode : Delete dialog node
-func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
-	path = strings.Replace(path, "{workspace_id}", *deleteDialogNodeOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{dialog_node}", *deleteDialogNodeOptions.DialogNode, 1)
+func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions) (*core.DetailedResponse, error) {
+	if deleteDialogNodeOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteDialogNodeOptions")
+	}
+	if deleteDialogNodeOptions != nil {
+		err := core.Validate.Struct(deleteDialogNodeOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
+	pathParameters := []string{ *deleteDialogNodeOptions.WorkspaceID, *deleteDialogNodeOptions.DialogNode };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteDialogNodeOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // GetDialogNode : Get dialog node
-func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
-	path = strings.Replace(path, "{workspace_id}", *getDialogNodeOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{dialog_node}", *getDialogNodeOptions.DialogNode, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range getDialogNodeOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeOptions) (*core.DetailedResponse, error) {
+	if getDialogNodeOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getDialogNodeOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if getDialogNodeOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*getDialogNodeOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(DialogNode))
-	if err == nil {
-		result, ok := response.Result.(**DialogNode)
-		if ok {
-			response.Result = **result
+	if getDialogNodeOptions != nil {
+		err := core.Validate.Struct(getDialogNodeOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
+	pathParameters := []string{ *getDialogNodeOptions.WorkspaceID, *getDialogNodeOptions.DialogNode };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range getDialogNodeOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if getDialogNodeOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getDialogNodeOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(DialogNode))
+	return response, err
 }
 
 // GetGetDialogNodeResult : Cast result of GetDialogNode operation
-func GetGetDialogNodeResult(response *core.WatsonResponse) *DialogNode {
+func (assistant *AssistantV1) GetGetDialogNodeResult(response *core.DetailedResponse) *DialogNode {
 	result, ok := response.Result.(*DialogNode)
 	if ok {
 		return result
@@ -1836,46 +2213,56 @@ func GetGetDialogNodeResult(response *core.WatsonResponse) *DialogNode {
 }
 
 // ListDialogNodes : List dialog nodes
-func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/dialog_nodes"
-	path = strings.Replace(path, "{workspace_id}", *listDialogNodesOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listDialogNodesOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) (*core.DetailedResponse, error) {
+	if listDialogNodesOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listDialogNodesOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listDialogNodesOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listDialogNodesOptions.PageLimit)
-	}
-	if listDialogNodesOptions.IncludeCount != nil {
-		params["include_count"] = fmt.Sprint(*listDialogNodesOptions.IncludeCount)
-	}
-	if listDialogNodesOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listDialogNodesOptions.Sort)
-	}
-	if listDialogNodesOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listDialogNodesOptions.Cursor)
-	}
-	if listDialogNodesOptions.IncludeAudit != nil {
-		params["include_audit"] = fmt.Sprint(*listDialogNodesOptions.IncludeAudit)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(DialogNodeCollection))
-	if err == nil {
-		result, ok := response.Result.(**DialogNodeCollection)
-		if ok {
-			response.Result = **result
+	if listDialogNodesOptions != nil {
+		err := core.Validate.Struct(listDialogNodesOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
+	pathParameters := []string{ *listDialogNodesOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listDialogNodesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listDialogNodesOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listDialogNodesOptions.PageLimit))
+	}
+	if listDialogNodesOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listDialogNodesOptions.IncludeCount))
+	}
+	if listDialogNodesOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listDialogNodesOptions.Sort))
+	}
+	if listDialogNodesOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listDialogNodesOptions.Cursor))
+	}
+	if listDialogNodesOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listDialogNodesOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(DialogNodeCollection))
+	return response, err
 }
 
 // GetListDialogNodesResult : Cast result of ListDialogNodes operation
-func GetListDialogNodesResult(response *core.WatsonResponse) *DialogNodeCollection {
+func (assistant *AssistantV1) GetListDialogNodesResult(response *core.DetailedResponse) *DialogNodeCollection {
 	result, ok := response.Result.(*DialogNodeCollection)
 	if ok {
 		return result
@@ -1884,20 +2271,30 @@ func GetListDialogNodesResult(response *core.WatsonResponse) *DialogNodeCollecti
 }
 
 // UpdateDialogNode : Update dialog node
-func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/dialog_nodes/{dialog_node}"
-	path = strings.Replace(path, "{workspace_id}", *updateDialogNodeOptions.WorkspaceID, 1)
-	path = strings.Replace(path, "{dialog_node}", *updateDialogNodeOptions.DialogNode, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range updateDialogNodeOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions) (*core.DetailedResponse, error) {
+	if updateDialogNodeOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateDialogNodeOptions")
 	}
-	headers["Accept"] = "application/json"
-	headers["Content-Type"] = "application/json"
+	if updateDialogNodeOptions != nil {
+		err := core.Validate.Struct(updateDialogNodeOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	params := make(map[string]string)
-	params["version"] = assistant.service.Options.Version
+	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
+	pathParameters := []string{ *updateDialogNodeOptions.WorkspaceID, *updateDialogNodeOptions.DialogNode };
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range updateDialogNodeOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateDialogNodeOptions.NodeType != nil {
@@ -1954,23 +2351,22 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	if updateDialogNodeOptions.NewDialogNode != nil {
 		body["dialog_node"] = updateDialogNodeOptions.NewDialogNode
 	}
-	err := assistant.service.SetBodyContentJSON(body)
+	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.HandleRequest("POST", path, headers, params, new(DialogNode))
-	if err == nil {
-		result, ok := response.Result.(**DialogNode)
-		if ok {
-			response.Result = **result
-		}
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, new(DialogNode))
+	return response, err
 }
 
 // GetUpdateDialogNodeResult : Cast result of UpdateDialogNode operation
-func GetUpdateDialogNodeResult(response *core.WatsonResponse) *DialogNode {
+func (assistant *AssistantV1) GetUpdateDialogNodeResult(response *core.DetailedResponse) *DialogNode {
 	result, ok := response.Result.(*DialogNode)
 	if ok {
 		return result
@@ -1979,42 +2375,53 @@ func GetUpdateDialogNodeResult(response *core.WatsonResponse) *DialogNode {
 }
 
 // ListAllLogs : List log events in all workspaces
-func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions) (*core.WatsonResponse, error) {
-	path := "/v1/logs"
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listAllLogsOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions) (*core.DetailedResponse, error) {
+	if listAllLogsOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listAllLogsOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listAllLogsOptions.Filter != nil {
-		params["filter"] = fmt.Sprint(*listAllLogsOptions.Filter)
-	}
-	if listAllLogsOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listAllLogsOptions.Sort)
-	}
-	if listAllLogsOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listAllLogsOptions.PageLimit)
-	}
-	if listAllLogsOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listAllLogsOptions.Cursor)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(LogCollection))
-	if err == nil {
-		result, ok := response.Result.(**LogCollection)
-		if ok {
-			response.Result = **result
+	if listAllLogsOptions != nil {
+		err := core.Validate.Struct(listAllLogsOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/logs" };
+	pathParameters := []string{  };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listAllLogsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listAllLogsOptions.Filter != nil {
+		builder.AddQuery("filter", fmt.Sprint(*listAllLogsOptions.Filter))
+	}
+	if listAllLogsOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listAllLogsOptions.Sort))
+	}
+	if listAllLogsOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listAllLogsOptions.PageLimit))
+	}
+	if listAllLogsOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listAllLogsOptions.Cursor))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(LogCollection))
+	return response, err
 }
 
 // GetListAllLogsResult : Cast result of ListAllLogs operation
-func GetListAllLogsResult(response *core.WatsonResponse) *LogCollection {
+func (assistant *AssistantV1) GetListAllLogsResult(response *core.DetailedResponse) *LogCollection {
 	result, ok := response.Result.(*LogCollection)
 	if ok {
 		return result
@@ -2023,43 +2430,53 @@ func GetListAllLogsResult(response *core.WatsonResponse) *LogCollection {
 }
 
 // ListLogs : List log events in a workspace
-func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.WatsonResponse, error) {
-	path := "/v1/workspaces/{workspace_id}/logs"
-	path = strings.Replace(path, "{workspace_id}", *listLogsOptions.WorkspaceID, 1)
-
-	headers := make(map[string]string)
-	for headerName, headerValue := range listLogsOptions.Headers {
-		headers[headerName] = headerValue
+func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.DetailedResponse, error) {
+	if listLogsOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listLogsOptions")
 	}
-	headers["Accept"] = "application/json"
-
-	params := make(map[string]string)
-	if listLogsOptions.Sort != nil {
-		params["sort"] = fmt.Sprint(*listLogsOptions.Sort)
-	}
-	if listLogsOptions.Filter != nil {
-		params["filter"] = fmt.Sprint(*listLogsOptions.Filter)
-	}
-	if listLogsOptions.PageLimit != nil {
-		params["page_limit"] = fmt.Sprint(*listLogsOptions.PageLimit)
-	}
-	if listLogsOptions.Cursor != nil {
-		params["cursor"] = fmt.Sprint(*listLogsOptions.Cursor)
-	}
-	params["version"] = assistant.service.Options.Version
-
-	response, err := assistant.service.HandleRequest("GET", path, headers, params, new(LogCollection))
-	if err == nil {
-		result, ok := response.Result.(**LogCollection)
-		if ok {
-			response.Result = **result
+	if listLogsOptions != nil {
+		err := core.Validate.Struct(listLogsOptions)
+		if err != nil {
+			return nil, err
 		}
 	}
-	return response, nil
+
+	pathSegments := []string{ "v1/workspaces", "logs" };
+	pathParameters := []string{ *listLogsOptions.WorkspaceID };
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
+	for headerName, headerValue := range listLogsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	if listLogsOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listLogsOptions.Sort))
+	}
+	if listLogsOptions.Filter != nil {
+		builder.AddQuery("filter", fmt.Sprint(*listLogsOptions.Filter))
+	}
+	if listLogsOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listLogsOptions.PageLimit))
+	}
+	if listLogsOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listLogsOptions.Cursor))
+	}
+	builder.AddQuery("version", assistant.service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.service.Request(request, new(LogCollection))
+	return response, err
 }
 
 // GetListLogsResult : Cast result of ListLogs operation
-func GetListLogsResult(response *core.WatsonResponse) *LogCollection {
+func (assistant *AssistantV1) GetListLogsResult(response *core.DetailedResponse) *LogCollection {
 	result, ok := response.Result.(*LogCollection)
 	if ok {
 		return result
@@ -2068,33 +2485,47 @@ func GetListLogsResult(response *core.WatsonResponse) *LogCollection {
 }
 
 // DeleteUserData : Delete labeled data
-func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.WatsonResponse, error) {
-	path := "/v1/user_data"
+func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
+	if deleteUserDataOptions == nil {
+		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteUserDataOptions")
+	}
+	if deleteUserDataOptions != nil {
+		err := core.Validate.Struct(deleteUserDataOptions)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-	headers := make(map[string]string)
+	pathSegments := []string{ "v1/user_data" };
+	pathParameters := []string{  };
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
-		headers[headerName] = headerValue
+		builder.AddHeader(headerName, headerValue)
 	}
-	headers["Accept"] = "application/json"
+	builder.AddHeader("Accept", "application/json")
 
-	params := make(map[string]string)
 	if deleteUserDataOptions.CustomerID != nil {
-		params["customer_id"] = fmt.Sprint(*deleteUserDataOptions.CustomerID)
+		builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 	}
-	params["version"] = assistant.service.Options.Version
+	builder.AddQuery("version", assistant.service.Options.Version)
 
-	response, err := assistant.service.HandleRequest("DELETE", path, headers, params, nil)
-	if err == nil {
-		response.Result = nil
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	return response, nil
+
+	response, err := assistant.service.Request(request, nil)
+	return response, err
 }
 
 // CaptureGroup : CaptureGroup struct
 type CaptureGroup struct {
 
 	// A recognized capture group for the entity.
-	Group *string `json:"group"`
+	Group *string `json:"group" validate:"required"`
 
 	// Zero-based character offsets that indicate where the entity value begins and ends in the input text.
 	Location []int64 `json:"location,omitempty"`
@@ -2114,7 +2545,7 @@ type Context struct {
 type Counterexample struct {
 
 	// The text of the counterexample.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// The timestamp for creation of the counterexample.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -2127,37 +2558,37 @@ type Counterexample struct {
 type CounterexampleCollection struct {
 
 	// An array of objects describing the examples marked as irrelevant input.
-	Counterexamples []Counterexample `json:"counterexamples"`
+	Counterexamples []Counterexample `json:"counterexamples" validate:"required"`
 
 	// The pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // CreateCounterexample : CreateCounterexample struct
 type CreateCounterexample struct {
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters - It cannot consist of only whitespace characters - It must be no longer than 1024 characters.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 }
 
 // CreateCounterexampleOptions : The createCounterexample options.
 type CreateCounterexampleOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters - It cannot consist of only whitespace characters - It must be no longer than 1024 characters.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewCreateCounterexampleOptions : Instantiate CreateCounterexampleOptions
-func NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
+func (assistant *AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
 	return &CreateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -2183,7 +2614,7 @@ func (options *CreateCounterexampleOptions) SetHeaders(param map[string]string) 
 type CreateDialogNode struct {
 
 	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
-	DialogNode *string `json:"dialog_node"`
+	DialogNode *string `json:"dialog_node" validate:"required"`
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
@@ -2201,10 +2632,10 @@ type CreateDialogNode struct {
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
-	Context *interface{} `json:"context,omitempty"`
+	Context interface{} `json:"context,omitempty"`
 
 	// The metadata for the dialog node.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The next step to be executed in dialog processing.
 	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
@@ -2241,10 +2672,10 @@ type CreateDialogNode struct {
 type CreateDialogNodeOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
-	DialogNode *string `json:"dialog_node"`
+	DialogNode *string `json:"dialog_node" validate:"required"`
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
@@ -2262,10 +2693,10 @@ type CreateDialogNodeOptions struct {
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
-	Context *interface{} `json:"context,omitempty"`
+	Context interface{} `json:"context,omitempty"`
 
 	// The metadata for the dialog node.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The next step to be executed in dialog processing.
 	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
@@ -2302,10 +2733,10 @@ type CreateDialogNodeOptions struct {
 }
 
 // NewCreateDialogNodeOptions : Instantiate CreateDialogNodeOptions
-func NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
+func (assistant *AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
@@ -2433,7 +2864,7 @@ func (options *CreateDialogNodeOptions) SetHeaders(param map[string]string) *Cre
 type CreateEntity struct {
 
 	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
@@ -2452,16 +2883,16 @@ type CreateEntity struct {
 type CreateEntityOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the value.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// An array of objects describing the entity values.
 	Values []CreateValue `json:"values,omitempty"`
@@ -2474,10 +2905,10 @@ type CreateEntityOptions struct {
 }
 
 // NewCreateEntityOptions : Instantiate CreateEntityOptions
-func NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
+func (assistant *AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
 	return &CreateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -2527,7 +2958,7 @@ func (options *CreateEntityOptions) SetHeaders(param map[string]string) *CreateE
 type CreateExample struct {
 
 	// The text of a user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
 	Mentions []Mentions `json:"mentions,omitempty"`
@@ -2537,13 +2968,13 @@ type CreateExample struct {
 type CreateExampleOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The intent name.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The text of a user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
 	Mentions []Mentions `json:"mentions,omitempty"`
@@ -2553,11 +2984,11 @@ type CreateExampleOptions struct {
 }
 
 // NewCreateExampleOptions : Instantiate CreateExampleOptions
-func NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
+func (assistant *AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
 	return &CreateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -2595,7 +3026,7 @@ func (options *CreateExampleOptions) SetHeaders(param map[string]string) *Create
 type CreateIntent struct {
 
 	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
@@ -2608,10 +3039,10 @@ type CreateIntent struct {
 type CreateIntentOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
@@ -2624,10 +3055,10 @@ type CreateIntentOptions struct {
 }
 
 // NewCreateIntentOptions : Instantiate CreateIntentOptions
-func NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
+func (assistant *AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
 	return &CreateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -2665,28 +3096,28 @@ func (options *CreateIntentOptions) SetHeaders(param map[string]string) *CreateI
 type CreateSynonymOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// The text of the synonym. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	Synonym *string `json:"synonym"`
+	Synonym *string `json:"synonym" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewCreateSynonymOptions : Instantiate CreateSynonymOptions
-func NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
+func (assistant *AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
 	return &CreateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
@@ -2724,10 +3155,10 @@ func (options *CreateSynonymOptions) SetHeaders(param map[string]string) *Create
 type CreateValue struct {
 
 	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
@@ -2743,16 +3174,16 @@ type CreateValue struct {
 type CreateValueOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
@@ -2768,11 +3199,11 @@ type CreateValueOptions struct {
 }
 
 // NewCreateValueOptions : Instantiate CreateValueOptions
-func NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
+func (assistant *AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -2849,7 +3280,7 @@ type CreateWorkspaceOptions struct {
 	Counterexamples []CreateCounterexample `json:"counterexamples,omitempty"`
 
 	// Any metadata related to the workspace.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
@@ -2862,7 +3293,7 @@ type CreateWorkspaceOptions struct {
 }
 
 // NewCreateWorkspaceOptions : Instantiate CreateWorkspaceOptions
-func NewCreateWorkspaceOptions() *CreateWorkspaceOptions {
+func (assistant *AssistantV1) NewCreateWorkspaceOptions() *CreateWorkspaceOptions {
 	return &CreateWorkspaceOptions{}
 }
 
@@ -2936,20 +3367,20 @@ func (options *CreateWorkspaceOptions) SetHeaders(param map[string]string) *Crea
 type DeleteCounterexampleOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteCounterexampleOptions : Instantiate DeleteCounterexampleOptions
-func NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
+func (assistant *AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
 	return &DeleteCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -2975,20 +3406,20 @@ func (options *DeleteCounterexampleOptions) SetHeaders(param map[string]string) 
 type DeleteDialogNodeOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The dialog node ID (for example, `get_order`).
-	DialogNode *string `json:"dialog_node"`
+	DialogNode *string `json:"dialog_node" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteDialogNodeOptions : Instantiate DeleteDialogNodeOptions
-func NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
+func (assistant *AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
 	return &DeleteDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
@@ -3014,20 +3445,20 @@ func (options *DeleteDialogNodeOptions) SetHeaders(param map[string]string) *Del
 type DeleteEntityOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteEntityOptions : Instantiate DeleteEntityOptions
-func NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
+func (assistant *AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
 	return &DeleteEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -3053,24 +3484,24 @@ func (options *DeleteEntityOptions) SetHeaders(param map[string]string) *DeleteE
 type DeleteExampleOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The intent name.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The text of the user input example.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteExampleOptions : Instantiate DeleteExampleOptions
-func NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
+func (assistant *AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
 	return &DeleteExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -3102,20 +3533,20 @@ func (options *DeleteExampleOptions) SetHeaders(param map[string]string) *Delete
 type DeleteIntentOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The intent name.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteIntentOptions : Instantiate DeleteIntentOptions
-func NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
+func (assistant *AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
 	return &DeleteIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -3141,28 +3572,28 @@ func (options *DeleteIntentOptions) SetHeaders(param map[string]string) *DeleteI
 type DeleteSynonymOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// The text of the synonym.
-	Synonym *string `json:"synonym"`
+	Synonym *string `json:"synonym" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteSynonymOptions : Instantiate DeleteSynonymOptions
-func NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
+func (assistant *AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
 	return &DeleteSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
@@ -3200,14 +3631,14 @@ func (options *DeleteSynonymOptions) SetHeaders(param map[string]string) *Delete
 type DeleteUserDataOptions struct {
 
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `json:"customer_id"`
+	CustomerID *string `json:"customer_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
-func NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+func (assistant *AssistantV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
 	return &DeleteUserDataOptions{
 		CustomerID: core.StringPtr(customerID),
 	}
@@ -3229,24 +3660,24 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 type DeleteValueOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteValueOptions : Instantiate DeleteValueOptions
-func NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
+func (assistant *AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
 	return &DeleteValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -3278,14 +3709,14 @@ func (options *DeleteValueOptions) SetHeaders(param map[string]string) *DeleteVa
 type DeleteWorkspaceOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewDeleteWorkspaceOptions : Instantiate DeleteWorkspaceOptions
-func NewDeleteWorkspaceOptions(workspaceID string) *DeleteWorkspaceOptions {
+func (assistant *AssistantV1) NewDeleteWorkspaceOptions(workspaceID string) *DeleteWorkspaceOptions {
 	return &DeleteWorkspaceOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -3307,7 +3738,7 @@ func (options *DeleteWorkspaceOptions) SetHeaders(param map[string]string) *Dele
 type DialogNode struct {
 
 	// The dialog node ID.
-	DialogNodeID *string `json:"dialog_node"`
+	DialogNodeID *string `json:"dialog_node" validate:"required"`
 
 	// The description of the dialog node.
 	Description *string `json:"description,omitempty"`
@@ -3325,10 +3756,10 @@ type DialogNode struct {
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context (if defined) for the dialog node.
-	Context *interface{} `json:"context,omitempty"`
+	Context interface{} `json:"context,omitempty"`
 
 	// Any metadata for the dialog node.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The next step to execute following this dialog node.
 	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
@@ -3371,16 +3802,16 @@ type DialogNode struct {
 type DialogNodeAction struct {
 
 	// The name of the action.
-	Name *string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// The type of action to invoke.
 	ActionType *string `json:"type,omitempty"`
 
 	// A map of key/value pairs to be provided to the action.
-	Parameters *interface{} `json:"parameters,omitempty"`
+	Parameters interface{} `json:"parameters,omitempty"`
 
 	// The location in the dialog context where the result of the action is stored.
-	ResultVariable *string `json:"result_variable"`
+	ResultVariable *string `json:"result_variable" validate:"required"`
 
 	// The name of the context variable that the client application will use to pass in credentials for the action.
 	Credentials *string `json:"credentials,omitempty"`
@@ -3390,17 +3821,17 @@ type DialogNodeAction struct {
 type DialogNodeCollection struct {
 
 	// An array of objects describing the dialog nodes defined for the workspace.
-	DialogNodes []DialogNode `json:"dialog_nodes"`
+	DialogNodes []DialogNode `json:"dialog_nodes" validate:"required"`
 
 	// The pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // DialogNodeNextStep : The next step to execute following this dialog node.
 type DialogNodeNextStep struct {
 
 	// What happens after the dialog node completes. The valid values depend on the node type: - The following values are valid for any node: - `get_user_input` - `skip_user_input` - `jump_to` - If the node is of type `event_handler` and its parent node is of type `slot` or `frame`, additional values are also valid: - if **event_name**=`filled` and the type of the parent node is `slot`: - `reprompt` - `skip_all_slots` - if **event_name**=`nomatch` and the type of the parent node is `slot`: - `reprompt` - `skip_slot` - `skip_all_slots` - if **event_name**=`generic` and the type of the parent node is `frame`: - `reprompt` - `skip_slot` - `skip_all_slots` If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
-	Behavior *string `json:"behavior"`
+	Behavior *string `json:"behavior" validate:"required"`
 
 	// The ID of the dialog node to process next. This parameter is required if **behavior**=`jump_to`.
 	DialogNode *string `json:"dialog_node,omitempty"`
@@ -3423,7 +3854,7 @@ type DialogNodeOutput struct {
 type DialogNodeOutputGeneric struct {
 
 	// The type of response returned by the dialog node. The specified response type must be supported by the client application or channel.
-	ResponseType *string `json:"response_type"`
+	ResponseType *string `json:"response_type" validate:"required"`
 
 	// A list of one or more objects defining text responses. Required when **response_type**=`text`.
 	Values []DialogNodeOutputTextValuesElement `json:"values,omitempty"`
@@ -3470,10 +3901,10 @@ type DialogNodeOutputModifiers struct {
 type DialogNodeOutputOptionsElement struct {
 
 	// The user-facing label for the option.
-	Label *string `json:"label"`
+	Label *string `json:"label" validate:"required"`
 
 	// An object defining the message input to be sent to the Watson Assistant service if the user selects the corresponding option.
-	Value *DialogNodeOutputOptionsElementValue `json:"value"`
+	Value *DialogNodeOutputOptionsElementValue `json:"value" validate:"required"`
 }
 
 // DialogNodeOutputOptionsElementValue : An object defining the message input to be sent to the Watson Assistant service if the user selects the corresponding option.
@@ -3507,7 +3938,7 @@ type DialogNodeVisitedDetails struct {
 type DialogRuntimeResponseGeneric struct {
 
 	// The type of response returned by the dialog node. The specified response type must be supported by the client application or channel. **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Premium users.
-	ResponseType *string `json:"response_type"`
+	ResponseType *string `json:"response_type" validate:"required"`
 
 	// The text of the response.
 	Text *string `json:"text,omitempty"`
@@ -3547,13 +3978,13 @@ type DialogRuntimeResponseGeneric struct {
 type DialogSuggestion struct {
 
 	// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of the corresponding dialog node.
-	Label *string `json:"label"`
+	Label *string `json:"label" validate:"required"`
 
 	// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user selects the corresponding disambiguation option.
-	Value *DialogSuggestionValue `json:"value"`
+	Value *DialogSuggestionValue `json:"value" validate:"required"`
 
 	// The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding option.
-	Output *interface{} `json:"output,omitempty"`
+	Output interface{} `json:"output,omitempty"`
 }
 
 // DialogSuggestionValue : An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user selects the corresponding disambiguation option.
@@ -3573,7 +4004,7 @@ type DialogSuggestionValue struct {
 type Entity struct {
 
 	// The name of the entity.
-	EntityName *string `json:"entity"`
+	EntityName *string `json:"entity" validate:"required"`
 
 	// The timestamp for creation of the entity.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -3585,7 +4016,7 @@ type Entity struct {
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the entity.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// Whether fuzzy matching is used for the entity.
 	FuzzyMatch *bool `json:"fuzzy_match,omitempty"`
@@ -3595,17 +4026,17 @@ type Entity struct {
 type EntityCollection struct {
 
 	// An array of objects describing the entities defined for the workspace.
-	Entities []EntityExport `json:"entities"`
+	Entities []EntityExport `json:"entities" validate:"required"`
 
 	// The pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // EntityExport : EntityExport struct
 type EntityExport struct {
 
 	// The name of the entity.
-	EntityName *string `json:"entity"`
+	EntityName *string `json:"entity" validate:"required"`
 
 	// The timestamp for creation of the entity.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -3617,7 +4048,7 @@ type EntityExport struct {
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the entity.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// Whether fuzzy matching is used for the entity.
 	FuzzyMatch *bool `json:"fuzzy_match,omitempty"`
@@ -3630,30 +4061,30 @@ type EntityExport struct {
 type EntityMention struct {
 
 	// The text of the user input example.
-	ExampleText *string `json:"text"`
+	ExampleText *string `json:"text" validate:"required"`
 
 	// The name of the intent.
-	IntentName *string `json:"intent"`
+	IntentName *string `json:"intent" validate:"required"`
 
 	// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input text.
-	Location []int64 `json:"location"`
+	Location []int64 `json:"location" validate:"required"`
 }
 
 // EntityMentionCollection : EntityMentionCollection struct
 type EntityMentionCollection struct {
 
 	// An array of objects describing the entity mentions defined for an entity.
-	Examples []EntityMention `json:"examples"`
+	Examples []EntityMention `json:"examples" validate:"required"`
 
 	// The pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // Example : Example struct
 type Example struct {
 
 	// The text of the user input example.
-	ExampleText *string `json:"text"`
+	ExampleText *string `json:"text" validate:"required"`
 
 	// The timestamp for creation of the example.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -3669,20 +4100,20 @@ type Example struct {
 type ExampleCollection struct {
 
 	// An array of objects describing the examples defined for the intent.
-	Examples []Example `json:"examples"`
+	Examples []Example `json:"examples" validate:"required"`
 
 	// The pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // GetCounterexampleOptions : The getCounterexample options.
 type GetCounterexampleOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
 	IncludeAudit *bool `json:"include_audit,omitempty"`
@@ -3692,10 +4123,10 @@ type GetCounterexampleOptions struct {
 }
 
 // NewGetCounterexampleOptions : Instantiate GetCounterexampleOptions
-func NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
+func (assistant *AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
 	return &GetCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -3727,10 +4158,10 @@ func (options *GetCounterexampleOptions) SetHeaders(param map[string]string) *Ge
 type GetDialogNodeOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The dialog node ID (for example, `get_order`).
-	DialogNode *string `json:"dialog_node"`
+	DialogNode *string `json:"dialog_node" validate:"required"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
 	IncludeAudit *bool `json:"include_audit,omitempty"`
@@ -3740,10 +4171,10 @@ type GetDialogNodeOptions struct {
 }
 
 // NewGetDialogNodeOptions : Instantiate GetDialogNodeOptions
-func NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
+func (assistant *AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
 	return &GetDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
@@ -3775,10 +4206,10 @@ func (options *GetDialogNodeOptions) SetHeaders(param map[string]string) *GetDia
 type GetEntityOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
@@ -3791,10 +4222,10 @@ type GetEntityOptions struct {
 }
 
 // NewGetEntityOptions : Instantiate GetEntityOptions
-func NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
+func (assistant *AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
 	return &GetEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -3832,13 +4263,13 @@ func (options *GetEntityOptions) SetHeaders(param map[string]string) *GetEntityO
 type GetExampleOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The intent name.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The text of the user input example.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
 	IncludeAudit *bool `json:"include_audit,omitempty"`
@@ -3848,11 +4279,11 @@ type GetExampleOptions struct {
 }
 
 // NewGetExampleOptions : Instantiate GetExampleOptions
-func NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
+func (assistant *AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
 	return &GetExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -3890,10 +4321,10 @@ func (options *GetExampleOptions) SetHeaders(param map[string]string) *GetExampl
 type GetIntentOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The intent name.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
@@ -3906,10 +4337,10 @@ type GetIntentOptions struct {
 }
 
 // NewGetIntentOptions : Instantiate GetIntentOptions
-func NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
+func (assistant *AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
 	return &GetIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -3947,16 +4378,16 @@ func (options *GetIntentOptions) SetHeaders(param map[string]string) *GetIntentO
 type GetSynonymOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// The text of the synonym.
-	Synonym *string `json:"synonym"`
+	Synonym *string `json:"synonym" validate:"required"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
 	IncludeAudit *bool `json:"include_audit,omitempty"`
@@ -3966,12 +4397,12 @@ type GetSynonymOptions struct {
 }
 
 // NewGetSynonymOptions : Instantiate GetSynonymOptions
-func NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
+func (assistant *AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
 	return &GetSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
@@ -4015,13 +4446,13 @@ func (options *GetSynonymOptions) SetHeaders(param map[string]string) *GetSynony
 type GetValueOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
@@ -4034,11 +4465,11 @@ type GetValueOptions struct {
 }
 
 // NewGetValueOptions : Instantiate GetValueOptions
-func NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
+func (assistant *AssistantV1) NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
 	return &GetValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -4082,7 +4513,7 @@ func (options *GetValueOptions) SetHeaders(param map[string]string) *GetValueOpt
 type GetWorkspaceOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
@@ -4095,7 +4526,7 @@ type GetWorkspaceOptions struct {
 }
 
 // NewGetWorkspaceOptions : Instantiate GetWorkspaceOptions
-func NewGetWorkspaceOptions(workspaceID string) *GetWorkspaceOptions {
+func (assistant *AssistantV1) NewGetWorkspaceOptions(workspaceID string) *GetWorkspaceOptions {
 	return &GetWorkspaceOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -4129,14 +4560,14 @@ func (options *GetWorkspaceOptions) SetHeaders(param map[string]string) *GetWork
 type InputData struct {
 
 	// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 }
 
 // Intent : Intent struct
 type Intent struct {
 
 	// The name of the intent.
-	IntentName *string `json:"intent"`
+	IntentName *string `json:"intent" validate:"required"`
 
 	// The timestamp for creation of the intent.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -4152,17 +4583,17 @@ type Intent struct {
 type IntentCollection struct {
 
 	// An array of objects describing the intents defined for the workspace.
-	Intents []IntentExport `json:"intents"`
+	Intents []IntentExport `json:"intents" validate:"required"`
 
 	// The pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // IntentExport : IntentExport struct
 type IntentExport struct {
 
 	// The name of the intent.
-	IntentName *string `json:"intent"`
+	IntentName *string `json:"intent" validate:"required"`
 
 	// The timestamp for creation of the intent.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -4181,7 +4612,7 @@ type IntentExport struct {
 type ListAllLogsOptions struct {
 
 	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter query that includes a value for `language`, as well as a value for `workspace_id` or `request.context.metadata.deployment`. For more information, see the [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax).
-	Filter *string `json:"filter"`
+	Filter *string `json:"filter" validate:"required"`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the parameter value with a minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -4197,7 +4628,7 @@ type ListAllLogsOptions struct {
 }
 
 // NewListAllLogsOptions : Instantiate ListAllLogsOptions
-func NewListAllLogsOptions(filter string) *ListAllLogsOptions {
+func (assistant *AssistantV1) NewListAllLogsOptions(filter string) *ListAllLogsOptions {
 	return &ListAllLogsOptions{
 		Filter: core.StringPtr(filter),
 	}
@@ -4237,7 +4668,7 @@ func (options *ListAllLogsOptions) SetHeaders(param map[string]string) *ListAllL
 type ListCounterexamplesOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
@@ -4259,7 +4690,7 @@ type ListCounterexamplesOptions struct {
 }
 
 // NewListCounterexamplesOptions : Instantiate ListCounterexamplesOptions
-func NewListCounterexamplesOptions(workspaceID string) *ListCounterexamplesOptions {
+func (assistant *AssistantV1) NewListCounterexamplesOptions(workspaceID string) *ListCounterexamplesOptions {
 	return &ListCounterexamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -4311,7 +4742,7 @@ func (options *ListCounterexamplesOptions) SetHeaders(param map[string]string) *
 type ListDialogNodesOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
@@ -4333,7 +4764,7 @@ type ListDialogNodesOptions struct {
 }
 
 // NewListDialogNodesOptions : Instantiate ListDialogNodesOptions
-func NewListDialogNodesOptions(workspaceID string) *ListDialogNodesOptions {
+func (assistant *AssistantV1) NewListDialogNodesOptions(workspaceID string) *ListDialogNodesOptions {
 	return &ListDialogNodesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -4385,7 +4816,7 @@ func (options *ListDialogNodesOptions) SetHeaders(param map[string]string) *List
 type ListEntitiesOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
@@ -4410,7 +4841,7 @@ type ListEntitiesOptions struct {
 }
 
 // NewListEntitiesOptions : Instantiate ListEntitiesOptions
-func NewListEntitiesOptions(workspaceID string) *ListEntitiesOptions {
+func (assistant *AssistantV1) NewListEntitiesOptions(workspaceID string) *ListEntitiesOptions {
 	return &ListEntitiesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -4468,10 +4899,10 @@ func (options *ListEntitiesOptions) SetHeaders(param map[string]string) *ListEnt
 type ListExamplesOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The intent name.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
@@ -4493,10 +4924,10 @@ type ListExamplesOptions struct {
 }
 
 // NewListExamplesOptions : Instantiate ListExamplesOptions
-func NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
+func (assistant *AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
 	return &ListExamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -4552,7 +4983,7 @@ func (options *ListExamplesOptions) SetHeaders(param map[string]string) *ListExa
 type ListIntentsOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
@@ -4577,7 +5008,7 @@ type ListIntentsOptions struct {
 }
 
 // NewListIntentsOptions : Instantiate ListIntentsOptions
-func NewListIntentsOptions(workspaceID string) *ListIntentsOptions {
+func (assistant *AssistantV1) NewListIntentsOptions(workspaceID string) *ListIntentsOptions {
 	return &ListIntentsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -4635,7 +5066,7 @@ func (options *ListIntentsOptions) SetHeaders(param map[string]string) *ListInte
 type ListLogsOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the parameter value with a minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -4654,7 +5085,7 @@ type ListLogsOptions struct {
 }
 
 // NewListLogsOptions : Instantiate ListLogsOptions
-func NewListLogsOptions(workspaceID string) *ListLogsOptions {
+func (assistant *AssistantV1) NewListLogsOptions(workspaceID string) *ListLogsOptions {
 	return &ListLogsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -4700,10 +5131,10 @@ func (options *ListLogsOptions) SetHeaders(param map[string]string) *ListLogsOpt
 type ListMentionsOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
@@ -4716,10 +5147,10 @@ type ListMentionsOptions struct {
 }
 
 // NewListMentionsOptions : Instantiate ListMentionsOptions
-func NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
+func (assistant *AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
 	return &ListMentionsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -4757,13 +5188,13 @@ func (options *ListMentionsOptions) SetHeaders(param map[string]string) *ListMen
 type ListSynonymsOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
@@ -4785,11 +5216,11 @@ type ListSynonymsOptions struct {
 }
 
 // NewListSynonymsOptions : Instantiate ListSynonymsOptions
-func NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
+func (assistant *AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
 	return &ListSynonymsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -4851,10 +5282,10 @@ func (options *ListSynonymsOptions) SetHeaders(param map[string]string) *ListSyn
 type ListValuesOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
@@ -4879,10 +5310,10 @@ type ListValuesOptions struct {
 }
 
 // NewListValuesOptions : Instantiate ListValuesOptions
-func NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
+func (assistant *AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
 	return &ListValuesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -4963,7 +5394,7 @@ type ListWorkspacesOptions struct {
 }
 
 // NewListWorkspacesOptions : Instantiate ListWorkspacesOptions
-func NewListWorkspacesOptions() *ListWorkspacesOptions {
+func (assistant *AssistantV1) NewListWorkspacesOptions() *ListWorkspacesOptions {
 	return &ListWorkspacesOptions{}
 }
 
@@ -5007,45 +5438,45 @@ func (options *ListWorkspacesOptions) SetHeaders(param map[string]string) *ListW
 type LogCollection struct {
 
 	// An array of objects describing log events.
-	Logs []LogExport `json:"logs"`
+	Logs []LogExport `json:"logs" validate:"required"`
 
 	// The pagination data for the returned objects.
-	Pagination *LogPagination `json:"pagination"`
+	Pagination *LogPagination `json:"pagination" validate:"required"`
 }
 
 // LogExport : LogExport struct
 type LogExport struct {
 
 	// A request received by the workspace, including the user input and context.
-	Request *MessageRequest `json:"request"`
+	Request *MessageRequest `json:"request" validate:"required"`
 
 	// The response sent by the workspace, including the output text, detected intents and entities, and context.
-	Response *MessageResponse `json:"response"`
+	Response *MessageResponse `json:"response" validate:"required"`
 
 	// A unique identifier for the logged event.
-	LogID *string `json:"log_id"`
+	LogID *string `json:"log_id" validate:"required"`
 
 	// The timestamp for receipt of the message.
-	RequestTimestamp *string `json:"request_timestamp"`
+	RequestTimestamp *string `json:"request_timestamp" validate:"required"`
 
 	// The timestamp for the system response to the message.
-	ResponseTimestamp *string `json:"response_timestamp"`
+	ResponseTimestamp *string `json:"response_timestamp" validate:"required"`
 
 	// The unique identifier of the workspace where the request was made.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The language of the workspace where the message request was made.
-	Language *string `json:"language"`
+	Language *string `json:"language" validate:"required"`
 }
 
 // LogMessage : Log message details.
 type LogMessage struct {
 
 	// The severity of the log message.
-	Level *string `json:"level"`
+	Level *string `json:"level" validate:"required"`
 
 	// The text of the log message.
-	Msg *string `json:"msg"`
+	Msg *string `json:"msg" validate:"required"`
 }
 
 // LogPagination : The pagination data for the returned objects.
@@ -5065,10 +5496,10 @@ type LogPagination struct {
 type Mentions struct {
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input text.
-	Location []int64 `json:"location"`
+	Location []int64 `json:"location" validate:"required"`
 }
 
 // MessageInput : The text of the user input.
@@ -5082,7 +5513,7 @@ type MessageInput struct {
 type MessageOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// An input object that includes the input text.
 	Input *InputData `json:"input,omitempty"`
@@ -5110,7 +5541,7 @@ type MessageOptions struct {
 }
 
 // NewMessageOptions : Instantiate MessageOptions
-func NewMessageOptions(workspaceID string) *MessageOptions {
+func (assistant *AssistantV1) NewMessageOptions(workspaceID string) *MessageOptions {
 	return &MessageOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -5199,19 +5630,19 @@ type MessageResponse struct {
 	Input *MessageInput `json:"input,omitempty"`
 
 	// An array of intents recognized in the user input, sorted in descending order of confidence.
-	Intents []RuntimeIntent `json:"intents"`
+	Intents []RuntimeIntent `json:"intents" validate:"required"`
 
 	// An array of entities identified in the user input.
-	Entities []RuntimeEntity `json:"entities"`
+	Entities []RuntimeEntity `json:"entities" validate:"required"`
 
 	// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
 	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
 	// State information for the conversation.
-	Context *Context `json:"context"`
+	Context *Context `json:"context" validate:"required"`
 
 	// Output from the dialog, including the response to the user, the nodes that were triggered, and log messages.
-	Output *OutputData `json:"output"`
+	Output *OutputData `json:"output" validate:"required"`
 
 	// An array of objects describing any actions requested by the dialog node.
 	Actions []DialogNodeAction `json:"actions,omitempty"`
@@ -5221,10 +5652,10 @@ type MessageResponse struct {
 type OutputData struct {
 
 	// An array of up to 50 messages logged with the request.
-	LogMessages []LogMessage `json:"log_messages"`
+	LogMessages []LogMessage `json:"log_messages" validate:"required"`
 
 	// An array of responses to the user.
-	Text []string `json:"text"`
+	Text []string `json:"text" validate:"required"`
 
 	// Output intended for any channel. It is the responsibility of the client application to implement the supported response types.
 	Generic []DialogRuntimeResponseGeneric `json:"generic,omitempty"`
@@ -5240,7 +5671,7 @@ type OutputData struct {
 type Pagination struct {
 
 	// The URL that will return the same page of results.
-	RefreshURL *string `json:"refresh_url"`
+	RefreshURL *string `json:"refresh_url" validate:"required"`
 
 	// The URL that will return the next page of results.
 	NextURL *string `json:"next_url,omitempty"`
@@ -5262,19 +5693,19 @@ type Pagination struct {
 type RuntimeEntity struct {
 
 	// An entity detected in the input.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// An array of zero-based character offsets that indicate where the detected entity values begin and end in the input text.
-	Location []int64 `json:"location"`
+	Location []int64 `json:"location" validate:"required"`
 
 	// The term in the input text that was recognized as an entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// A decimal percentage that represents Watson's confidence in the entity.
 	Confidence *float64 `json:"confidence,omitempty"`
 
 	// Any metadata for the entity.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The recognized capture groups for the entity, as defined by the entity pattern.
 	Groups []CaptureGroup `json:"groups,omitempty"`
@@ -5284,17 +5715,17 @@ type RuntimeEntity struct {
 type RuntimeIntent struct {
 
 	// The name of the recognized intent.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// A decimal percentage that represents Watson's confidence in the intent.
-	Confidence *float64 `json:"confidence"`
+	Confidence *float64 `json:"confidence" validate:"required"`
 }
 
 // Synonym : Synonym struct
 type Synonym struct {
 
 	// The text of the synonym.
-	SynonymText *string `json:"synonym"`
+	SynonymText *string `json:"synonym" validate:"required"`
 
 	// The timestamp for creation of the synonym.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -5307,10 +5738,10 @@ type Synonym struct {
 type SynonymCollection struct {
 
 	// An array of synonyms.
-	Synonyms []Synonym `json:"synonyms"`
+	Synonyms []Synonym `json:"synonyms" validate:"required"`
 
 	// The pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // SystemResponse : For internal use only.
@@ -5321,23 +5752,23 @@ type SystemResponse struct {
 type UpdateCounterexampleOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// The text of a user input counterexample.
-	NewText *string `json:"text,omitempty"`
+	NewText *string `json:"new_text,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewUpdateCounterexampleOptions : Instantiate UpdateCounterexampleOptions
-func NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
+func (assistant *AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
 	return &UpdateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -5369,74 +5800,74 @@ func (options *UpdateCounterexampleOptions) SetHeaders(param map[string]string) 
 type UpdateDialogNodeOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The dialog node ID (for example, `get_order`).
-	DialogNode *string `json:"dialog_node"`
+	DialogNode *string `json:"dialog_node" validate:"required"`
 
 	// How the dialog node is processed.
-	NodeType *string `json:"type,omitempty"`
+	NodeType *string `json:"new_type,omitempty"`
 
 	// An array of objects describing any actions to be invoked by the dialog node.
-	NewActions []DialogNodeAction `json:"actions,omitempty"`
+	NewActions []DialogNodeAction `json:"new_actions,omitempty"`
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
-	NewConditions *string `json:"conditions,omitempty"`
+	NewConditions *string `json:"new_conditions,omitempty"`
 
 	// The context for the dialog node.
-	NewContext *interface{} `json:"context,omitempty"`
+	NewContext interface{} `json:"new_context,omitempty"`
 
 	// The ID of the previous sibling dialog node.
-	NewPreviousSibling *string `json:"previous_sibling,omitempty"`
+	NewPreviousSibling *string `json:"new_previous_sibling,omitempty"`
 
 	// The location in the dialog context where output is stored.
-	NewVariable *string `json:"variable,omitempty"`
+	NewVariable *string `json:"new_variable,omitempty"`
 
 	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer than 512 characters.
-	NewUserLabel *string `json:"user_label,omitempty"`
+	NewUserLabel *string `json:"new_user_label,omitempty"`
 
 	// The metadata for the dialog node.
-	NewMetadata *interface{} `json:"metadata,omitempty"`
+	NewMetadata interface{} `json:"new_metadata,omitempty"`
 
 	// The alias used to identify the dialog node. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 64 characters.
-	NewTitle *string `json:"title,omitempty"`
+	NewTitle *string `json:"new_title,omitempty"`
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
-	NewDescription *string `json:"description,omitempty"`
+	NewDescription *string `json:"new_description,omitempty"`
 
 	// Whether this dialog node can be returned to after a digression.
-	NewDigressOut *string `json:"digress_out,omitempty"`
+	NewDigressOut *string `json:"new_digress_out,omitempty"`
 
 	// How an `event_handler` node is processed.
-	NewEventName *string `json:"event_name,omitempty"`
+	NewEventName *string `json:"new_event_name,omitempty"`
 
 	// Whether the user can digress to top-level nodes while filling out slots.
-	NewDigressOutSlots *string `json:"digress_out_slots,omitempty"`
+	NewDigressOutSlots *string `json:"new_digress_out_slots,omitempty"`
 
 	// The next step to be executed in dialog processing.
-	NewNextStep *DialogNodeNextStep `json:"next_step,omitempty"`
+	NewNextStep *DialogNodeNextStep `json:"new_next_step,omitempty"`
 
 	// Whether this top-level dialog node can be digressed into.
-	NewDigressIn *string `json:"digress_in,omitempty"`
+	NewDigressIn *string `json:"new_digress_in,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
-	NewOutput *DialogNodeOutput `json:"output,omitempty"`
+	NewOutput *DialogNodeOutput `json:"new_output,omitempty"`
 
 	// The ID of the parent dialog node.
-	NewParent *string `json:"parent,omitempty"`
+	NewParent *string `json:"new_parent,omitempty"`
 
 	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
-	NewDialogNode *string `json:"dialog_node,omitempty"`
+	NewDialogNode *string `json:"new_dialog_node,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewUpdateDialogNodeOptions : Instantiate UpdateDialogNodeOptions
-func NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
+func (assistant *AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
@@ -5570,35 +6001,35 @@ func (options *UpdateDialogNodeOptions) SetHeaders(param map[string]string) *Upd
 type UpdateEntityOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// Whether to use fuzzy matching for the entity.
-	NewFuzzyMatch *bool `json:"fuzzy_match,omitempty"`
+	NewFuzzyMatch *bool `json:"new_fuzzy_match,omitempty"`
 
 	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
-	NewEntity *string `json:"entity,omitempty"`
+	NewEntity *string `json:"new_entity,omitempty"`
 
 	// Any metadata related to the entity.
-	NewMetadata *interface{} `json:"metadata,omitempty"`
+	NewMetadata interface{} `json:"new_metadata,omitempty"`
 
 	// An array of entity values.
-	NewValues []CreateValue `json:"values,omitempty"`
+	NewValues []CreateValue `json:"new_values,omitempty"`
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
-	NewDescription *string `json:"description,omitempty"`
+	NewDescription *string `json:"new_description,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewUpdateEntityOptions : Instantiate UpdateEntityOptions
-func NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
+func (assistant *AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
 	return &UpdateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -5654,30 +6085,30 @@ func (options *UpdateEntityOptions) SetHeaders(param map[string]string) *UpdateE
 type UpdateExampleOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The intent name.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The text of the user input example.
-	Text *string `json:"text"`
+	Text *string `json:"text" validate:"required"`
 
 	// The text of the user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
-	NewText *string `json:"text,omitempty"`
+	NewText *string `json:"new_text,omitempty"`
 
 	// An array of contextual entity mentions.
-	NewMentions []Mentions `json:"mentions,omitempty"`
+	NewMentions []Mentions `json:"new_mentions,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewUpdateExampleOptions : Instantiate UpdateExampleOptions
-func NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
+func (assistant *AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
 	return &UpdateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -5721,29 +6152,29 @@ func (options *UpdateExampleOptions) SetHeaders(param map[string]string) *Update
 type UpdateIntentOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The intent name.
-	Intent *string `json:"intent"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
-	NewIntent *string `json:"intent,omitempty"`
+	NewIntent *string `json:"new_intent,omitempty"`
 
 	// An array of user input examples for the intent.
-	NewExamples []CreateExample `json:"examples,omitempty"`
+	NewExamples []CreateExample `json:"new_examples,omitempty"`
 
 	// The description of the intent.
-	NewDescription *string `json:"description,omitempty"`
+	NewDescription *string `json:"new_description,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewUpdateIntentOptions : Instantiate UpdateIntentOptions
-func NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
+func (assistant *AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
 	return &UpdateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -5787,31 +6218,31 @@ func (options *UpdateIntentOptions) SetHeaders(param map[string]string) *UpdateI
 type UpdateSynonymOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// The text of the synonym.
-	Synonym *string `json:"synonym"`
+	Synonym *string `json:"synonym" validate:"required"`
 
 	// The text of the synonym. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	NewSynonym *string `json:"synonym,omitempty"`
+	NewSynonym *string `json:"new_synonym,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewUpdateSynonymOptions : Instantiate UpdateSynonymOptions
-func NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
+func (assistant *AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
 	return &UpdateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
@@ -5855,39 +6286,39 @@ func (options *UpdateSynonymOptions) SetHeaders(param map[string]string) *Update
 type UpdateValueOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the entity.
-	Entity *string `json:"entity"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The text of the entity value.
-	Value *string `json:"value"`
+	Value *string `json:"value" validate:"required"`
 
 	// An array of synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following resrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	NewSynonyms []string `json:"synonyms,omitempty"`
+	NewSynonyms []string `json:"new_synonyms,omitempty"`
 
 	// Specifies the type of value.
-	ValueType *string `json:"type,omitempty"`
+	ValueType *string `json:"new_type,omitempty"`
 
 	// Any metadata related to the entity value.
-	NewMetadata *interface{} `json:"metadata,omitempty"`
+	NewMetadata interface{} `json:"new_metadata,omitempty"`
 
 	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to specify a pattern, see the [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
-	NewPatterns []string `json:"patterns,omitempty"`
+	NewPatterns []string `json:"new_patterns,omitempty"`
 
 	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
-	NewValue *string `json:"value,omitempty"`
+	NewValue *string `json:"new_value,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewUpdateValueOptions : Instantiate UpdateValueOptions
-func NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
+func (assistant *AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -5949,7 +6380,7 @@ func (options *UpdateValueOptions) SetHeaders(param map[string]string) *UpdateVa
 type UpdateWorkspaceOptions struct {
 
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 64 characters.
 	Name *string `json:"name,omitempty"`
@@ -5973,7 +6404,7 @@ type UpdateWorkspaceOptions struct {
 	Counterexamples []CreateCounterexample `json:"counterexamples,omitempty"`
 
 	// Any metadata related to the workspace.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
@@ -5989,7 +6420,7 @@ type UpdateWorkspaceOptions struct {
 }
 
 // NewUpdateWorkspaceOptions : Instantiate UpdateWorkspaceOptions
-func NewUpdateWorkspaceOptions(workspaceID string) *UpdateWorkspaceOptions {
+func (assistant *AssistantV1) NewUpdateWorkspaceOptions(workspaceID string) *UpdateWorkspaceOptions {
 	return &UpdateWorkspaceOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
 	}
@@ -6077,10 +6508,10 @@ func (options *UpdateWorkspaceOptions) SetHeaders(param map[string]string) *Upda
 type Value struct {
 
 	// The text of the entity value.
-	ValueText *string `json:"value"`
+	ValueText *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The timestamp for creation of the entity value.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -6095,27 +6526,27 @@ type Value struct {
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
-	ValueType *string `json:"type"`
+	ValueType *string `json:"type" validate:"required"`
 }
 
 // ValueCollection : ValueCollection struct
 type ValueCollection struct {
 
 	// An array of entity values.
-	Values []ValueExport `json:"values"`
+	Values []ValueExport `json:"values" validate:"required"`
 
 	// An object defining the pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // ValueExport : ValueExport struct
 type ValueExport struct {
 
 	// The text of the entity value.
-	ValueText *string `json:"value"`
+	ValueText *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The timestamp for creation of the entity value.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -6130,17 +6561,17 @@ type ValueExport struct {
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
-	ValueType *string `json:"type"`
+	ValueType *string `json:"type" validate:"required"`
 }
 
 // Workspace : Workspace struct
 type Workspace struct {
 
 	// The name of the workspace.
-	Name *string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// The language of the workspace.
-	Language *string `json:"language"`
+	Language *string `json:"language" validate:"required"`
 
 	// The timestamp for creation of the workspace.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -6149,13 +6580,13 @@ type Workspace struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
 	// The workspace ID.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The description of the workspace.
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the workspace.
-	Metadata *interface{} `json:"metadata,omitempty"`
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
@@ -6168,26 +6599,26 @@ type Workspace struct {
 type WorkspaceCollection struct {
 
 	// An array of objects describing the workspaces associated with the service instance.
-	Workspaces []Workspace `json:"workspaces"`
+	Workspaces []Workspace `json:"workspaces" validate:"required"`
 
 	// An object defining the pagination data for the returned objects.
-	Pagination *Pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
 // WorkspaceExport : WorkspaceExport struct
 type WorkspaceExport struct {
 
 	// The name of the workspace.
-	Name *string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// The description of the workspace.
-	Description *string `json:"description"`
+	Description *string `json:"description" validate:"required"`
 
 	// The language of the workspace.
-	Language *string `json:"language"`
+	Language *string `json:"language" validate:"required"`
 
 	// Any metadata that is required by the workspace.
-	Metadata *interface{} `json:"metadata"`
+	Metadata interface{} `json:"metadata" validate:"required"`
 
 	// The timestamp for creation of the workspace.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -6196,13 +6627,13 @@ type WorkspaceExport struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
 	// The workspace ID.
-	WorkspaceID *string `json:"workspace_id"`
+	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The current status of the workspace.
-	Status *string `json:"status"`
+	Status *string `json:"status" validate:"required"`
 
 	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
-	LearningOptOut *bool `json:"learning_opt_out"`
+	LearningOptOut *bool `json:"learning_opt_out" validate:"required"`
 
 	// Global settings for the workspace.
 	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
@@ -6230,7 +6661,7 @@ type WorkspaceSystemSettings struct {
 	Disambiguation *WorkspaceSystemSettingsDisambiguation `json:"disambiguation,omitempty"`
 
 	// For internal use only.
-	HumanAgentAssist *interface{} `json:"human_agent_assist,omitempty"`
+	HumanAgentAssist interface{} `json:"human_agent_assist,omitempty"`
 }
 
 // WorkspaceSystemSettingsDisambiguation : WorkspaceSystemSettingsDisambiguation struct
