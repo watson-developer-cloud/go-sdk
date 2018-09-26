@@ -1,7 +1,10 @@
 package core
 
 import (
+	"errors"
+	"fmt"
 	"io"
+	"reflect"
 	"regexp"
 
 	validator "gopkg.in/go-playground/validator.v9"
@@ -18,6 +21,44 @@ const (
 	jsonMimePattern      = "(?i)^application\\/((json)|(merge\\-patch\\+json))(;.*)?$"
 	jsonPatchMimePattern = "(?i)^application\\/json\\-patch\\+json(;.*)?$"
 )
+
+// isNil checks if the specified object is nil or not
+func isNil(object interface{}) bool {
+	if object == nil {
+		return true
+	}
+
+	value := reflect.ValueOf(object)
+	kind := value.Kind()
+	if kind >= reflect.Chan && kind <= reflect.Slice && value.IsNil() {
+		return true
+	}
+
+	return false
+}
+
+// ValidateNotNil - returns the specified error if 'object' is nil, nil otherwise
+func ValidateNotNil(object interface{}, errorMsg string) error {
+	if isNil(object) {
+		return errors.New(errorMsg)
+	}
+	return nil
+}
+
+// ValidateStruct - validates 'param' (assumed to be a struct) according to the annotations attached to its fields
+func ValidateStruct(param interface{}, paramName string) error {
+	if param != nil {
+		if err := Validate.Struct(param); err != nil {
+			// If there were validation errors then return an error containing the field errors
+			if fieldErrors, ok := err.(validator.ValidationErrors); ok {
+				return fmt.Errorf("%s failed validation:\n%s", paramName, fieldErrors.Error())
+			} else {
+				return fmt.Errorf("An unexpected system error occurred while validating %s\n%s", paramName, err.Error())
+			}
+		}
+	}
+	return nil
+}
 
 // StringPtr : return pointer to string literal
 func StringPtr(literal string) *string {
@@ -68,4 +109,12 @@ func IsObjectAReader(obj interface{}) bool {
 func IsObjectAString(obj interface{}) bool {
 	_, ok := obj.(string)
 	return ok
+}
+
+// StringNilMapper -
+func StringNilMapper(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
 }

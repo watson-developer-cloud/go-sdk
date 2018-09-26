@@ -37,6 +37,20 @@ func TestIsJSONPatchMimeType(t *testing.T) {
 	assert.False(t, IsJSONPatchMimeType("application/json"))
 	assert.False(t, IsJSONPatchMimeType("YOapplication/json-patch+jsonYO"))
 }
+
+func TestStringNilMapper(t *testing.T) {
+	var s = "test string"
+	assert.Equal(t, "", StringNilMapper(nil))
+	assert.Equal(t, "test string", StringNilMapper(&s))
+}
+
+func TestValidateNotNil(t *testing.T) {
+	var s *string
+	assert.Nil(t, s)
+	err := ValidateNotNil(s, "s should not be nil!")
+	assert.NotNil(t, err, "Should have gotten an error for nil 's' ptr")
+}
+
 func TestValidateStruct(t *testing.T) {
 	type Address struct {
 		Street string `validate:"required"`
@@ -62,9 +76,19 @@ func TestValidateStruct(t *testing.T) {
 		Addresses: []*Address{address},
 	}
 
-	err := Validate.Struct(user)
-
-	if err == nil {
-		t.Errorf("Validator is incorrect, it should print an error")
+	goodStruct := &Address{
+		Street: "Beltorre Drive",
+		City:   "Georgetown, TX",
 	}
+
+	badStruct := &Address{
+		Street: "Beltorre Drive",
+	}
+
+	assert.NotNil(t, ValidateStruct(user, "userPtr"), "Should have a validation error!")
+	assert.Nil(t, ValidateStruct(nil, "nil ptr"), "nil pointer should validate cleanly!")
+	assert.Nil(t, ValidateStruct(goodStruct, "goodStruct"), "Should not cause a validation error!")
+	err := ValidateStruct(badStruct, "badStruct")
+	assert.NotNil(t, err, "Should have a validation error!")
+	// fmt.Printf("Returned error:\n%s", err.Error())
 }
