@@ -45,10 +45,23 @@ func TestStringNilMapper(t *testing.T) {
 }
 
 func TestValidateNotNil(t *testing.T) {
-	var s *string
-	assert.Nil(t, s)
-	err := ValidateNotNil(s, "s should not be nil!")
-	assert.NotNil(t, err, "Should have gotten an error for nil 's' ptr")
+	var str *string
+	assert.Nil(t, str)
+	err := ValidateNotNil(str, "str should not be nil!")
+	assert.NotNil(t, err, "Should have gotten an error for nil 'str' pointer")
+	msg := err.Error()
+	assert.Equal(t, "str should not be nil!", msg)
+
+	type MyOperationOptions struct {
+		Parameter1 *string
+	}
+
+	var options *MyOperationOptions
+	assert.Nil(t, options, "options should be nil!")
+	err = ValidateNotNil(options, "options param should not be nil")
+	assert.NotNil(t, err, "Should have gotten an error for nil 'y' ptr")
+	msg = err.Error()
+	assert.Equal(t, "options param should not be nil", msg)
 }
 
 func TestValidateStruct(t *testing.T) {
