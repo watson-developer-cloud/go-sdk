@@ -110,7 +110,7 @@ func TestGetToken(t *testing.T) {
 			"refresh_token": "jy4gl91BQ"
 		}`)
 		body, _ := ioutil.ReadAll(r.Body)
-		assert.Contains(t, string(body), "urn:ibm:params")
+		assert.Contains(t, string(body), "grant_type=urn")
 	}))
 	defer server2.Close()
 	tokenManager = NewTokenManager("iamApiKey", server2.URL, "")

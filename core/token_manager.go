@@ -49,7 +49,7 @@ func NewTokenManager(iamAPIkey string, iamURL string, userAccessToken string) *T
 		tokenInfo:       &TokenInfo{},
 
 		client: &http.Client{
-			// Timeout: time.Second * 30,
+			Timeout: time.Second * 30,
 		},
 	}
 	return &tokenManager
@@ -111,12 +111,10 @@ func (tm *TokenManager) requestToken() *TokenInfo {
 		AddHeader(Authorization, DefaultAuthorization).
 		AddHeader(Accept, ApplicationJSON)
 
-	data := map[string]string{
-		"grant_type":    RequestTokenGrantType,
-		"apikey":        tm.iamAPIkey,
-		"response_type": RequestTokenResponseType,
-	}
-	builder.SetBodyContentJSON(data)
+	// Add form data
+	builder.AddFormData("grant_type", "", "", RequestTokenGrantType).
+		AddFormData("apikey", "", "", tm.iamAPIkey).
+		AddFormData("response_type", "", "", RequestTokenResponseType)
 
 	req, err := builder.Build()
 	if err != nil {
@@ -134,11 +132,8 @@ func (tm *TokenManager) refreshToken() *TokenInfo {
 		AddHeader(Authorization, DefaultAuthorization).
 		AddHeader(Accept, ApplicationJSON)
 
-	data := map[string]string{
-		"grant_type":    RefreshTokenGrantType,
-		"refresh_token": tm.tokenInfo.RefreshToken,
-	}
-	builder.SetBodyContentJSON(data)
+	builder.AddFormData("grant_type", "", "", RefreshTokenGrantType).
+		AddFormData("refresh_token", "", "", tm.tokenInfo.RefreshToken)
 
 	req, err := builder.Build()
 	if err != nil {

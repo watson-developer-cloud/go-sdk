@@ -41,10 +41,11 @@ const (
 
 // common headers
 const (
-	Accept             = "Accept"
-	ApplicationJSON    = "application/json"
-	ContentDisposition = "Content-Disposition"
-	ContentType        = "Content-Type"
+	Accept               = "Accept"
+	ApplicationJSON      = "application/json"
+	ContentDisposition   = "Content-Disposition"
+	ContentType          = "Content-Type"
+	FormURLEncodedHeader = "application/x-www-form-urlencoded"
 )
 
 // A FormData stores information for form data
@@ -173,7 +174,7 @@ func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType str
 // Build the request
 func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 	// URL
-	url, err := url.Parse(requestBuilder.URL.String())
+	URL, err := url.Parse(requestBuilder.URL.String())
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
@@ -181,22 +182,37 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 
 	// Create multipart form data
 	if len(requestBuilder.Form) > 0 {
-		formWriter := requestBuilder.createMultipartWriter()
-		for fieldName, v := range requestBuilder.Form {
-			dataPartWriter, err := createFormFile(formWriter, fieldName, v.fileName, v.contentType)
+		// handle both application/x-www-form-urlencoded or multipart/form-data
+		contentType := requestBuilder.Header.Get(ContentType)
+		if contentType == FormURLEncodedHeader {
+			data := url.Values{}
+			for fieldName, v := range requestBuilder.Form {
+				data.Add(fieldName, v.contents.(string))
+			}
+			requestBuilder.SetBodyContentString(data.Encode())
+		} else {
+			formWriter := requestBuilder.createMultipartWriter()
+			for fieldName, v := range requestBuilder.Form {
+				dataPartWriter, err := createFormFile(formWriter, fieldName, v.fileName, v.contentType)
+				if err != nil {
+					return nil, err
+				}
+				if err = requestBuilder.SetBodyContentForMultipart(v.contentType,
+					v.contents, dataPartWriter); err != nil {
+					return nil, err
+				}
+			}
+
+			requestBuilder.AddHeader("Content-Type", formWriter.FormDataContentType())
+			err = formWriter.Close()
 			if err != nil {
 				return nil, err
 			}
-			if err = requestBuilder.SetBodyContentForMultipart(v.contentType,
-				v.contents, dataPartWriter); err != nil {
-				return nil, err
-			}
 		}
-		formWriter.Close()
 	}
 
 	// Create the request
-	req, err := http.NewRequest(requestBuilder.Method, url.String(), requestBuilder.Body)
+	req, err := http.NewRequest(requestBuilder.Method, URL.String(), requestBuilder.Body)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err

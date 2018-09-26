@@ -132,6 +132,20 @@ func TestBuildWithMultipartForm(t *testing.T) {
 	defer file.Close()
 }
 
+func TestURLEncodedForm(t *testing.T) {
+	request := NewRequestBuilder("POST").
+		ConstructHTTPURL("test.com", nil, nil).
+		AddHeader("Content-Type", FormURLEncodedHeader).
+		AddQuery("Version", "2018-22-09").
+		AddFormData("grant_type", "", "", "lalalala").
+		AddFormData("apikey", "", "", "xxxx")
+
+	_, err := request.Build()
+	if err != nil {
+		t.Errorf("Couldnt build successfully")
+	}
+}
+
 func TestBuild(t *testing.T) {
 	endPoint := "https://gateway.watsonplatform.net/assistant/api"
 	pathSegments := []string{"v1/workspaces", "message"}
