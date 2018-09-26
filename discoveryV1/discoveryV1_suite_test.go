@@ -1,4 +1,4 @@
-package discoveryV1_test
+package discoveryv1_test
 
 import (
 	"testing"

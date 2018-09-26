@@ -1,5 +1,6 @@
-// Package discoveryV1 : Operations and models for the DiscoveryV1 service
-package discoveryV1
+// Package discoveryv1 : Operations and models for the DiscoveryV1 service
+package discoveryv1
+
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -17,4225 +18,2855 @@ package discoveryV1
  */
 
 import (
-    "bytes"
-    "fmt"
-    "github.com/go-openapi/strfmt"
-    "os"
-    "runtime"
-    "strings"
-    req "github.com/parnurzeal/gorequest"
-    watson "go-sdk"
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/go-openapi/strfmt"
+	core "github.com/ibm-watson/go-sdk/core"
 )
 
 // DiscoveryV1 : The DiscoveryV1 service
 type DiscoveryV1 struct {
-    client *watson.Client
+	service *core.WatsonService
 }
 
-// ServiceCredentials : Service credentials
-type ServiceCredentials struct {
-    ServiceURL string
-    Version string
-    Username string
-    Password string
-    APIkey string
-    IAMtoken string
+// DiscoveryV1Options : Service options
+type DiscoveryV1Options struct {
+	Version        string
+	URL            string
+	Username       string
+	Password       string
+	IAMApiKey      string
+	IAMAccessToken string
+	IAMURL         string
 }
 
 // NewDiscoveryV1 : Instantiate DiscoveryV1
-func NewDiscoveryV1(serviceCreds *ServiceCredentials) (*DiscoveryV1, error) {
-    if serviceCreds.ServiceURL == "" {
-        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/discovery/api"
-    }
+func NewDiscoveryV1(options *DiscoveryV1Options) (*DiscoveryV1, error) {
+	if options.URL == "" {
+		options.URL = "https://gateway.watsonplatform.net/discovery/api"
+	}
 
-    creds := watson.Credentials(*serviceCreds)
-    client, clientErr := watson.NewClient(&creds, "discovery")
+	serviceOptions := &core.ServiceOptions{
+		URL:            options.URL,
+		Version:        options.Version,
+		Username:       options.Username,
+		Password:       options.Password,
+		IAMApiKey:      options.IAMApiKey,
+		IAMAccessToken: options.IAMAccessToken,
+		IAMURL:         options.IAMURL,
+	}
+	service, serviceErr := core.NewWatsonService(serviceOptions, "discovery")
+	if serviceErr != nil {
+		return nil, serviceErr
+	}
 
-    if clientErr != nil {
-        return nil, clientErr
-    }
-
-    return &DiscoveryV1{ client: client }, nil
+	return &DiscoveryV1{service: service}, nil
 }
 
 // CreateEnvironment : Create an environment
-func (discovery *DiscoveryV1) CreateEnvironment(options *CreateEnvironmentOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *CreateEnvironmentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createEnvironmentOptions, "createEnvironmentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createEnvironmentOptions, "createEnvironmentOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range createEnvironmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    body["name"] = options.Name
-    if options.IsDescriptionSet {
-        body["description"] = options.Description
-    }
-    if options.IsSizeSet {
-        body["size"] = options.Size
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if createEnvironmentOptions.Name != nil {
+		body["name"] = createEnvironmentOptions.Name
+	}
+	if createEnvironmentOptions.Description != nil {
+		body["description"] = createEnvironmentOptions.Description
+	}
+	if createEnvironmentOptions.Size != nil {
+		body["size"] = createEnvironmentOptions.Size
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Environment)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Environment))
+	return response, err
 }
 
 // GetCreateEnvironmentResult : Cast result of CreateEnvironment operation
-func GetCreateEnvironmentResult(response *watson.WatsonResponse) *Environment {
-    result, ok := response.Result.(*Environment)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetCreateEnvironmentResult(response *core.DetailedResponse) *Environment {
+	result, ok := response.Result.(*Environment)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // DeleteEnvironment : Delete environment
-func (discovery *DiscoveryV1) DeleteEnvironment(options *DeleteEnvironmentOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *DeleteEnvironmentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteEnvironmentOptions, "deleteEnvironmentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteEnvironmentOptions, "deleteEnvironmentOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments"}
+	pathParameters := []string{*deleteEnvironmentOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteEnvironmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(DeleteEnvironmentResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(DeleteEnvironmentResponse))
+	return response, err
 }
 
 // GetDeleteEnvironmentResult : Cast result of DeleteEnvironment operation
-func GetDeleteEnvironmentResult(response *watson.WatsonResponse) *DeleteEnvironmentResponse {
-    result, ok := response.Result.(*DeleteEnvironmentResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetDeleteEnvironmentResult(response *core.DetailedResponse) *DeleteEnvironmentResponse {
+	result, ok := response.Result.(*DeleteEnvironmentResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetEnvironment : Get environment info
-func (discovery *DiscoveryV1) GetEnvironment(options *GetEnvironmentOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironmentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getEnvironmentOptions, "getEnvironmentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getEnvironmentOptions, "getEnvironmentOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments"}
+	pathParameters := []string{*getEnvironmentOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getEnvironmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Environment)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Environment))
+	return response, err
 }
 
 // GetGetEnvironmentResult : Cast result of GetEnvironment operation
-func GetGetEnvironmentResult(response *watson.WatsonResponse) *Environment {
-    result, ok := response.Result.(*Environment)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetEnvironmentResult(response *core.DetailedResponse) *Environment {
+	result, ok := response.Result.(*Environment)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListEnvironments : List environments
-func (discovery *DiscoveryV1) ListEnvironments(options *ListEnvironmentsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvironmentsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listEnvironmentsOptions, "listEnvironmentsOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listEnvironmentsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsNameSet {
-        request.Query("name=" + fmt.Sprint(options.Name))
-    }
+	if listEnvironmentsOptions.Name != nil {
+		builder.AddQuery("name", fmt.Sprint(*listEnvironmentsOptions.Name))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(ListEnvironmentsResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(ListEnvironmentsResponse))
+	return response, err
 }
 
 // GetListEnvironmentsResult : Cast result of ListEnvironments operation
-func GetListEnvironmentsResult(response *watson.WatsonResponse) *ListEnvironmentsResponse {
-    result, ok := response.Result.(*ListEnvironmentsResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListEnvironmentsResult(response *core.DetailedResponse) *ListEnvironmentsResponse {
+	result, ok := response.Result.(*ListEnvironmentsResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListFields : List fields across collections
-func (discovery *DiscoveryV1) ListFields(options *ListFieldsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/fields"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listFieldsOptions, "listFieldsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listFieldsOptions, "listFieldsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "fields"}
+	pathParameters := []string{*listFieldsOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listFieldsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    request.Query("collection_ids=" + fmt.Sprint(options.CollectionIds))
+	builder.AddQuery("collection_ids", strings.Join(listFieldsOptions.CollectionIds, ","))
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(ListCollectionFieldsResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(ListCollectionFieldsResponse))
+	return response, err
 }
 
 // GetListFieldsResult : Cast result of ListFields operation
-func GetListFieldsResult(response *watson.WatsonResponse) *ListCollectionFieldsResponse {
-    result, ok := response.Result.(*ListCollectionFieldsResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListFieldsResult(response *core.DetailedResponse) *ListCollectionFieldsResponse {
+	result, ok := response.Result.(*ListCollectionFieldsResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // UpdateEnvironment : Update an environment
-func (discovery *DiscoveryV1) UpdateEnvironment(options *UpdateEnvironmentOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *UpdateEnvironmentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(updateEnvironmentOptions, "updateEnvironmentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(updateEnvironmentOptions, "updateEnvironmentOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Put(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments"}
+	pathParameters := []string{*updateEnvironmentOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.PUT)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range updateEnvironmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsNameSet {
-        body["name"] = options.Name
-    }
-    if options.IsDescriptionSet {
-        body["description"] = options.Description
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if updateEnvironmentOptions.Name != nil {
+		body["name"] = updateEnvironmentOptions.Name
+	}
+	if updateEnvironmentOptions.Description != nil {
+		body["description"] = updateEnvironmentOptions.Description
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Environment)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Environment))
+	return response, err
 }
 
 // GetUpdateEnvironmentResult : Cast result of UpdateEnvironment operation
-func GetUpdateEnvironmentResult(response *watson.WatsonResponse) *Environment {
-    result, ok := response.Result.(*Environment)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetUpdateEnvironmentResult(response *core.DetailedResponse) *Environment {
+	result, ok := response.Result.(*Environment)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // CreateConfiguration : Add configuration
-func (discovery *DiscoveryV1) CreateConfiguration(options *CreateConfigurationOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/configurations"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *CreateConfigurationOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createConfigurationOptions, "createConfigurationOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createConfigurationOptions, "createConfigurationOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "configurations"}
+	pathParameters := []string{*createConfigurationOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range createConfigurationOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsNameSet {
-        body["name"] = options.Name
-    }
-    if options.IsDescriptionSet {
-        body["description"] = options.Description
-    }
-    if options.IsConversionsSet {
-        body["conversions"] = options.Conversions
-    }
-    if options.IsEnrichmentsSet {
-        body["enrichments"] = options.Enrichments
-    }
-    if options.IsNormalizationsSet {
-        body["normalizations"] = options.Normalizations
-    }
-    if options.IsSourceSet {
-        body["source"] = options.Source
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if createConfigurationOptions.Name != nil {
+		body["name"] = createConfigurationOptions.Name
+	}
+	if createConfigurationOptions.Description != nil {
+		body["description"] = createConfigurationOptions.Description
+	}
+	if createConfigurationOptions.Conversions != nil {
+		body["conversions"] = createConfigurationOptions.Conversions
+	}
+	if createConfigurationOptions.Enrichments != nil {
+		body["enrichments"] = createConfigurationOptions.Enrichments
+	}
+	if createConfigurationOptions.Normalizations != nil {
+		body["normalizations"] = createConfigurationOptions.Normalizations
+	}
+	if createConfigurationOptions.Source != nil {
+		body["source"] = createConfigurationOptions.Source
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Configuration)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Configuration))
+	return response, err
 }
 
 // GetCreateConfigurationResult : Cast result of CreateConfiguration operation
-func GetCreateConfigurationResult(response *watson.WatsonResponse) *Configuration {
-    result, ok := response.Result.(*Configuration)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetCreateConfigurationResult(response *core.DetailedResponse) *Configuration {
+	result, ok := response.Result.(*Configuration)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // DeleteConfiguration : Delete a configuration
-func (discovery *DiscoveryV1) DeleteConfiguration(options *DeleteConfigurationOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/configurations/{configuration_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *DeleteConfigurationOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteConfigurationOptions, "deleteConfigurationOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteConfigurationOptions, "deleteConfigurationOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{configuration_id}", options.ConfigurationID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "configurations"}
+	pathParameters := []string{*deleteConfigurationOptions.EnvironmentID, *deleteConfigurationOptions.ConfigurationID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteConfigurationOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(DeleteConfigurationResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(DeleteConfigurationResponse))
+	return response, err
 }
 
 // GetDeleteConfigurationResult : Cast result of DeleteConfiguration operation
-func GetDeleteConfigurationResult(response *watson.WatsonResponse) *DeleteConfigurationResponse {
-    result, ok := response.Result.(*DeleteConfigurationResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetDeleteConfigurationResult(response *core.DetailedResponse) *DeleteConfigurationResponse {
+	result, ok := response.Result.(*DeleteConfigurationResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetConfiguration : Get configuration details
-func (discovery *DiscoveryV1) GetConfiguration(options *GetConfigurationOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/configurations/{configuration_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfigurationOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getConfigurationOptions, "getConfigurationOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getConfigurationOptions, "getConfigurationOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{configuration_id}", options.ConfigurationID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "configurations"}
+	pathParameters := []string{*getConfigurationOptions.EnvironmentID, *getConfigurationOptions.ConfigurationID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getConfigurationOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Configuration)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Configuration))
+	return response, err
 }
 
 // GetGetConfigurationResult : Cast result of GetConfiguration operation
-func GetGetConfigurationResult(response *watson.WatsonResponse) *Configuration {
-    result, ok := response.Result.(*Configuration)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetConfigurationResult(response *core.DetailedResponse) *Configuration {
+	result, ok := response.Result.(*Configuration)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListConfigurations : List configurations
-func (discovery *DiscoveryV1) ListConfigurations(options *ListConfigurationsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/configurations"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *ListConfigurationsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listConfigurationsOptions, "listConfigurationsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listConfigurationsOptions, "listConfigurationsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "configurations"}
+	pathParameters := []string{*listConfigurationsOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listConfigurationsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsNameSet {
-        request.Query("name=" + fmt.Sprint(options.Name))
-    }
+	if listConfigurationsOptions.Name != nil {
+		builder.AddQuery("name", fmt.Sprint(*listConfigurationsOptions.Name))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(ListConfigurationsResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(ListConfigurationsResponse))
+	return response, err
 }
 
 // GetListConfigurationsResult : Cast result of ListConfigurations operation
-func GetListConfigurationsResult(response *watson.WatsonResponse) *ListConfigurationsResponse {
-    result, ok := response.Result.(*ListConfigurationsResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListConfigurationsResult(response *core.DetailedResponse) *ListConfigurationsResponse {
+	result, ok := response.Result.(*ListConfigurationsResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // UpdateConfiguration : Update a configuration
-func (discovery *DiscoveryV1) UpdateConfiguration(options *UpdateConfigurationOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/configurations/{configuration_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *UpdateConfigurationOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(updateConfigurationOptions, "updateConfigurationOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(updateConfigurationOptions, "updateConfigurationOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{configuration_id}", options.ConfigurationID, 1)
-    request := req.New().Put(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "configurations"}
+	pathParameters := []string{*updateConfigurationOptions.EnvironmentID, *updateConfigurationOptions.ConfigurationID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.PUT)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range updateConfigurationOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsNameSet {
-        body["name"] = options.Name
-    }
-    if options.IsDescriptionSet {
-        body["description"] = options.Description
-    }
-    if options.IsConversionsSet {
-        body["conversions"] = options.Conversions
-    }
-    if options.IsEnrichmentsSet {
-        body["enrichments"] = options.Enrichments
-    }
-    if options.IsNormalizationsSet {
-        body["normalizations"] = options.Normalizations
-    }
-    if options.IsSourceSet {
-        body["source"] = options.Source
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if updateConfigurationOptions.Name != nil {
+		body["name"] = updateConfigurationOptions.Name
+	}
+	if updateConfigurationOptions.Description != nil {
+		body["description"] = updateConfigurationOptions.Description
+	}
+	if updateConfigurationOptions.Conversions != nil {
+		body["conversions"] = updateConfigurationOptions.Conversions
+	}
+	if updateConfigurationOptions.Enrichments != nil {
+		body["enrichments"] = updateConfigurationOptions.Enrichments
+	}
+	if updateConfigurationOptions.Normalizations != nil {
+		body["normalizations"] = updateConfigurationOptions.Normalizations
+	}
+	if updateConfigurationOptions.Source != nil {
+		body["source"] = updateConfigurationOptions.Source
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Configuration)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Configuration))
+	return response, err
 }
 
 // GetUpdateConfigurationResult : Cast result of UpdateConfiguration operation
-func GetUpdateConfigurationResult(response *watson.WatsonResponse) *Configuration {
-    result, ok := response.Result.(*Configuration)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetUpdateConfigurationResult(response *core.DetailedResponse) *Configuration {
+	result, ok := response.Result.(*Configuration)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // TestConfigurationInEnvironment : Test configuration
-func (discovery *DiscoveryV1) TestConfigurationInEnvironment(options *TestConfigurationInEnvironmentOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/preview"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) TestConfigurationInEnvironment(testConfigurationInEnvironmentOptions *TestConfigurationInEnvironmentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(testConfigurationInEnvironmentOptions, "testConfigurationInEnvironmentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(testConfigurationInEnvironmentOptions, "testConfigurationInEnvironmentOptions"); err != nil {
+		return nil, err
+	}
+	if (testConfigurationInEnvironmentOptions.Configuration == nil) && (testConfigurationInEnvironmentOptions.File == nil) && (testConfigurationInEnvironmentOptions.Metadata == nil) {
+		return nil, fmt.Errorf("At least one of configuration, file, or metadata must be supplied")
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "preview"}
+	pathParameters := []string{*testConfigurationInEnvironmentOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range testConfigurationInEnvironmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsStepSet {
-        request.Query("step=" + fmt.Sprint(options.Step))
-    }
-    if options.IsConfigurationIDSet {
-        request.Query("configuration_id=" + fmt.Sprint(options.ConfigurationID))
-    }
-    request.Type("multipart")
-    form := map[string]interface{}{}
-    if options.IsConfigurationSet {
-        form["configuration"] = options.Configuration
-    }
-    if options.IsFileSet {
-        request.SendFile(options.File, "", "file")
-    }
-    if options.IsMetadataSet {
-        form["metadata"] = options.Metadata
-    }
-    request.Send(form)
+	if testConfigurationInEnvironmentOptions.Step != nil {
+		builder.AddQuery("step", fmt.Sprint(*testConfigurationInEnvironmentOptions.Step))
+	}
+	if testConfigurationInEnvironmentOptions.ConfigurationID != nil {
+		builder.AddQuery("configuration_id", fmt.Sprint(*testConfigurationInEnvironmentOptions.ConfigurationID))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	if testConfigurationInEnvironmentOptions.Configuration != nil {
+		builder.AddFormData("configuration", "", "", fmt.Sprint(*testConfigurationInEnvironmentOptions.Configuration))
+	}
+	if testConfigurationInEnvironmentOptions.File != nil {
+		builder.AddFormData("file", core.StringNilMapper(testConfigurationInEnvironmentOptions.Filename), core.StringNilMapper(testConfigurationInEnvironmentOptions.FileContentType), testConfigurationInEnvironmentOptions.File)
+	}
+	if testConfigurationInEnvironmentOptions.Metadata != nil {
+		builder.AddFormData("metadata", "", "", fmt.Sprint(*testConfigurationInEnvironmentOptions.Metadata))
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(TestDocument)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(TestDocument))
+	return response, err
 }
 
 // GetTestConfigurationInEnvironmentResult : Cast result of TestConfigurationInEnvironment operation
-func GetTestConfigurationInEnvironmentResult(response *watson.WatsonResponse) *TestDocument {
-    result, ok := response.Result.(*TestDocument)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetTestConfigurationInEnvironmentResult(response *core.DetailedResponse) *TestDocument {
+	result, ok := response.Result.(*TestDocument)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // CreateCollection : Create a collection
-func (discovery *DiscoveryV1) CreateCollection(options *CreateCollectionOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCollectionOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createCollectionOptions, "createCollectionOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createCollectionOptions, "createCollectionOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections"}
+	pathParameters := []string{*createCollectionOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range createCollectionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    body["name"] = options.Name
-    if options.IsDescriptionSet {
-        body["description"] = options.Description
-    }
-    if options.IsConfigurationIDSet {
-        body["configuration_id"] = options.ConfigurationID
-    }
-    if options.IsLanguageSet {
-        body["language"] = options.Language
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if createCollectionOptions.Name != nil {
+		body["name"] = createCollectionOptions.Name
+	}
+	if createCollectionOptions.Description != nil {
+		body["description"] = createCollectionOptions.Description
+	}
+	if createCollectionOptions.ConfigurationID != nil {
+		body["configuration_id"] = createCollectionOptions.ConfigurationID
+	}
+	if createCollectionOptions.Language != nil {
+		body["language"] = createCollectionOptions.Language
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Collection)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Collection))
+	return response, err
 }
 
 // GetCreateCollectionResult : Cast result of CreateCollection operation
-func GetCreateCollectionResult(response *watson.WatsonResponse) *Collection {
-    result, ok := response.Result.(*Collection)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetCreateCollectionResult(response *core.DetailedResponse) *Collection {
+	result, ok := response.Result.(*Collection)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // DeleteCollection : Delete a collection
-func (discovery *DiscoveryV1) DeleteCollection(options *DeleteCollectionOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteCollectionOptions, "deleteCollectionOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteCollectionOptions, "deleteCollectionOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections"}
+	pathParameters := []string{*deleteCollectionOptions.EnvironmentID, *deleteCollectionOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteCollectionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(DeleteCollectionResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(DeleteCollectionResponse))
+	return response, err
 }
 
 // GetDeleteCollectionResult : Cast result of DeleteCollection operation
-func GetDeleteCollectionResult(response *watson.WatsonResponse) *DeleteCollectionResponse {
-    result, ok := response.Result.(*DeleteCollectionResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetDeleteCollectionResult(response *core.DetailedResponse) *DeleteCollectionResponse {
+	result, ok := response.Result.(*DeleteCollectionResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetCollection : Get collection details
-func (discovery *DiscoveryV1) GetCollection(options *GetCollectionOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getCollectionOptions, "getCollectionOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getCollectionOptions, "getCollectionOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections"}
+	pathParameters := []string{*getCollectionOptions.EnvironmentID, *getCollectionOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getCollectionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Collection)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Collection))
+	return response, err
 }
 
 // GetGetCollectionResult : Cast result of GetCollection operation
-func GetGetCollectionResult(response *watson.WatsonResponse) *Collection {
-    result, ok := response.Result.(*Collection)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetCollectionResult(response *core.DetailedResponse) *Collection {
+	result, ok := response.Result.(*Collection)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListCollectionFields : List collection fields
-func (discovery *DiscoveryV1) ListCollectionFields(options *ListCollectionFieldsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/fields"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *ListCollectionFieldsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listCollectionFieldsOptions, "listCollectionFieldsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listCollectionFieldsOptions, "listCollectionFieldsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "fields"}
+	pathParameters := []string{*listCollectionFieldsOptions.EnvironmentID, *listCollectionFieldsOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listCollectionFieldsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(ListCollectionFieldsResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(ListCollectionFieldsResponse))
+	return response, err
 }
 
 // GetListCollectionFieldsResult : Cast result of ListCollectionFields operation
-func GetListCollectionFieldsResult(response *watson.WatsonResponse) *ListCollectionFieldsResponse {
-    result, ok := response.Result.(*ListCollectionFieldsResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListCollectionFieldsResult(response *core.DetailedResponse) *ListCollectionFieldsResponse {
+	result, ok := response.Result.(*ListCollectionFieldsResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListCollections : List collections
-func (discovery *DiscoveryV1) ListCollections(options *ListCollectionsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollectionsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listCollectionsOptions, "listCollectionsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listCollectionsOptions, "listCollectionsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections"}
+	pathParameters := []string{*listCollectionsOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listCollectionsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsNameSet {
-        request.Query("name=" + fmt.Sprint(options.Name))
-    }
+	if listCollectionsOptions.Name != nil {
+		builder.AddQuery("name", fmt.Sprint(*listCollectionsOptions.Name))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(ListCollectionsResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(ListCollectionsResponse))
+	return response, err
 }
 
 // GetListCollectionsResult : Cast result of ListCollections operation
-func GetListCollectionsResult(response *watson.WatsonResponse) *ListCollectionsResponse {
-    result, ok := response.Result.(*ListCollectionsResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListCollectionsResult(response *core.DetailedResponse) *ListCollectionsResponse {
+	result, ok := response.Result.(*ListCollectionsResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // UpdateCollection : Update a collection
-func (discovery *DiscoveryV1) UpdateCollection(options *UpdateCollectionOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCollectionOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(updateCollectionOptions, "updateCollectionOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(updateCollectionOptions, "updateCollectionOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Put(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections"}
+	pathParameters := []string{*updateCollectionOptions.EnvironmentID, *updateCollectionOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.PUT)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range updateCollectionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsNameSet {
-        body["name"] = options.Name
-    }
-    if options.IsDescriptionSet {
-        body["description"] = options.Description
-    }
-    if options.IsConfigurationIDSet {
-        body["configuration_id"] = options.ConfigurationID
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if updateCollectionOptions.Name != nil {
+		body["name"] = updateCollectionOptions.Name
+	}
+	if updateCollectionOptions.Description != nil {
+		body["description"] = updateCollectionOptions.Description
+	}
+	if updateCollectionOptions.ConfigurationID != nil {
+		body["configuration_id"] = updateCollectionOptions.ConfigurationID
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Collection)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Collection))
+	return response, err
 }
 
 // GetUpdateCollectionResult : Cast result of UpdateCollection operation
-func GetUpdateCollectionResult(response *watson.WatsonResponse) *Collection {
-    result, ok := response.Result.(*Collection)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetUpdateCollectionResult(response *core.DetailedResponse) *Collection {
+	result, ok := response.Result.(*Collection)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // CreateExpansions : Create or update expansion list
-func (discovery *DiscoveryV1) CreateExpansions(options *CreateExpansionsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateExpansionsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createExpansionsOptions, "createExpansionsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createExpansionsOptions, "createExpansionsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "expansions"}
+	pathParameters := []string{*createExpansionsOptions.EnvironmentID, *createExpansionsOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range createExpansionsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsExpansionsSet {
-        body["expansions"] = options.Expansions
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if createExpansionsOptions.Expansions != nil {
+		body["expansions"] = createExpansionsOptions.Expansions
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Expansions)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Expansions))
+	return response, err
 }
 
 // GetCreateExpansionsResult : Cast result of CreateExpansions operation
-func GetCreateExpansionsResult(response *watson.WatsonResponse) *Expansions {
-    result, ok := response.Result.(*Expansions)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetCreateExpansionsResult(response *core.DetailedResponse) *Expansions {
+	result, ok := response.Result.(*Expansions)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // DeleteExpansions : Delete the expansion list
-func (discovery *DiscoveryV1) DeleteExpansions(options *DeleteExpansionsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteExpansionsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteExpansionsOptions, "deleteExpansionsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteExpansionsOptions, "deleteExpansionsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "expansions"}
+	pathParameters := []string{*deleteExpansionsOptions.EnvironmentID, *deleteExpansionsOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteExpansionsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    res, _, err := request.End()
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, nil)
+	return response, err
 }
 
-
 // ListExpansions : Get the expansion list
-func (discovery *DiscoveryV1) ListExpansions(options *ListExpansionsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/expansions"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansionsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listExpansionsOptions, "listExpansionsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listExpansionsOptions, "listExpansionsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "expansions"}
+	pathParameters := []string{*listExpansionsOptions.EnvironmentID, *listExpansionsOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listExpansionsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Expansions)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Expansions))
+	return response, err
 }
 
 // GetListExpansionsResult : Cast result of ListExpansions operation
-func GetListExpansionsResult(response *watson.WatsonResponse) *Expansions {
-    result, ok := response.Result.(*Expansions)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListExpansionsResult(response *core.DetailedResponse) *Expansions {
+	result, ok := response.Result.(*Expansions)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // AddDocument : Add a document
-func (discovery *DiscoveryV1) AddDocument(options *AddDocumentOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/documents"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(addDocumentOptions, "addDocumentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(addDocumentOptions, "addDocumentOptions"); err != nil {
+		return nil, err
+	}
+	if (addDocumentOptions.File == nil) && (addDocumentOptions.Metadata == nil) {
+		return nil, fmt.Errorf("At least one of file or metadata must be supplied")
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "documents"}
+	pathParameters := []string{*addDocumentOptions.EnvironmentID, *addDocumentOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range addDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
-    request.Type("multipart")
-    form := map[string]interface{}{}
-    if options.IsFileSet {
-        request.SendFile(options.File, "", "file")
-    }
-    if options.IsMetadataSet {
-        form["metadata"] = options.Metadata
-    }
-    request.Send(form)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	if addDocumentOptions.File != nil {
+		builder.AddFormData("file", core.StringNilMapper(addDocumentOptions.Filename), core.StringNilMapper(addDocumentOptions.FileContentType), addDocumentOptions.File)
+	}
+	if addDocumentOptions.Metadata != nil {
+		builder.AddFormData("metadata", "", "", fmt.Sprint(*addDocumentOptions.Metadata))
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(DocumentAccepted)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(DocumentAccepted))
+	return response, err
 }
 
 // GetAddDocumentResult : Cast result of AddDocument operation
-func GetAddDocumentResult(response *watson.WatsonResponse) *DocumentAccepted {
-    result, ok := response.Result.(*DocumentAccepted)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetAddDocumentResult(response *core.DetailedResponse) *DocumentAccepted {
+	result, ok := response.Result.(*DocumentAccepted)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // DeleteDocument : Delete a document
-func (discovery *DiscoveryV1) DeleteDocument(options *DeleteDocumentOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteDocumentOptions, "deleteDocumentOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{document_id}", options.DocumentID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "documents"}
+	pathParameters := []string{*deleteDocumentOptions.EnvironmentID, *deleteDocumentOptions.CollectionID, *deleteDocumentOptions.DocumentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(DeleteDocumentResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(DeleteDocumentResponse))
+	return response, err
 }
 
 // GetDeleteDocumentResult : Cast result of DeleteDocument operation
-func GetDeleteDocumentResult(response *watson.WatsonResponse) *DeleteDocumentResponse {
-    result, ok := response.Result.(*DeleteDocumentResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetDeleteDocumentResult(response *core.DetailedResponse) *DeleteDocumentResponse {
+	result, ok := response.Result.(*DeleteDocumentResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetDocumentStatus : Get document details
-func (discovery *DiscoveryV1) GetDocumentStatus(options *GetDocumentStatusOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getDocumentStatusOptions, "getDocumentStatusOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getDocumentStatusOptions, "getDocumentStatusOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{document_id}", options.DocumentID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "documents"}
+	pathParameters := []string{*getDocumentStatusOptions.EnvironmentID, *getDocumentStatusOptions.CollectionID, *getDocumentStatusOptions.DocumentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getDocumentStatusOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(DocumentStatus)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(DocumentStatus))
+	return response, err
 }
 
 // GetGetDocumentStatusResult : Cast result of GetDocumentStatus operation
-func GetGetDocumentStatusResult(response *watson.WatsonResponse) *DocumentStatus {
-    result, ok := response.Result.(*DocumentStatus)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetDocumentStatusResult(response *core.DetailedResponse) *DocumentStatus {
+	result, ok := response.Result.(*DocumentStatus)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // UpdateDocument : Update a document
-func (discovery *DiscoveryV1) UpdateDocument(options *UpdateDocumentOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(updateDocumentOptions, "updateDocumentOptions"); err != nil {
+		return nil, err
+	}
+	if (updateDocumentOptions.File == nil) && (updateDocumentOptions.Metadata == nil) {
+		return nil, fmt.Errorf("At least one of file or metadata must be supplied")
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{document_id}", options.DocumentID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "documents"}
+	pathParameters := []string{*updateDocumentOptions.EnvironmentID, *updateDocumentOptions.CollectionID, *updateDocumentOptions.DocumentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range updateDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Query("version=" + creds.Version)
-    request.Type("multipart")
-    form := map[string]interface{}{}
-    if options.IsFileSet {
-        request.SendFile(options.File, "", "file")
-    }
-    if options.IsMetadataSet {
-        form["metadata"] = options.Metadata
-    }
-    request.Send(form)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	if updateDocumentOptions.File != nil {
+		builder.AddFormData("file", core.StringNilMapper(updateDocumentOptions.Filename), core.StringNilMapper(updateDocumentOptions.FileContentType), updateDocumentOptions.File)
+	}
+	if updateDocumentOptions.Metadata != nil {
+		builder.AddFormData("metadata", "", "", fmt.Sprint(*updateDocumentOptions.Metadata))
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(DocumentAccepted)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(DocumentAccepted))
+	return response, err
 }
 
 // GetUpdateDocumentResult : Cast result of UpdateDocument operation
-func GetUpdateDocumentResult(response *watson.WatsonResponse) *DocumentAccepted {
-    result, ok := response.Result.(*DocumentAccepted)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetUpdateDocumentResult(response *core.DetailedResponse) *DocumentAccepted {
+	result, ok := response.Result.(*DocumentAccepted)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // FederatedQuery : Query documents in multiple collections
-func (discovery *DiscoveryV1) FederatedQuery(options *FederatedQueryOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/query"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQueryOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(federatedQueryOptions, "federatedQueryOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(federatedQueryOptions, "federatedQueryOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "query"}
+	pathParameters := []string{*federatedQueryOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range federatedQueryOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    request.Query("collection_ids=" + fmt.Sprint(options.CollectionIds))
-    if options.IsFilterSet {
-        request.Query("filter=" + fmt.Sprint(options.Filter))
-    }
-    if options.IsQuerySet {
-        request.Query("query=" + fmt.Sprint(options.Query))
-    }
-    if options.IsNaturalLanguageQuerySet {
-        request.Query("natural_language_query=" + fmt.Sprint(options.NaturalLanguageQuery))
-    }
-    if options.IsAggregationSet {
-        request.Query("aggregation=" + fmt.Sprint(options.Aggregation))
-    }
-    if options.IsCountSet {
-        request.Query("count=" + fmt.Sprint(options.Count))
-    }
-    if options.IsReturnFieldsSet {
-        request.Query("return=" + fmt.Sprint(options.ReturnFields))
-    }
-    if options.IsOffsetSet {
-        request.Query("offset=" + fmt.Sprint(options.Offset))
-    }
-    if options.IsSortSet {
-        request.Query("sort=" + fmt.Sprint(options.Sort))
-    }
-    if options.IsHighlightSet {
-        request.Query("highlight=" + fmt.Sprint(options.Highlight))
-    }
-    if options.IsDeduplicateSet {
-        request.Query("deduplicate=" + fmt.Sprint(options.Deduplicate))
-    }
-    if options.IsDeduplicateFieldSet {
-        request.Query("deduplicate.field=" + fmt.Sprint(options.DeduplicateField))
-    }
-    if options.IsSimilarSet {
-        request.Query("similar=" + fmt.Sprint(options.Similar))
-    }
-    if options.IsSimilarDocumentIdsSet {
-        request.Query("similar.document_ids=" + fmt.Sprint(options.SimilarDocumentIds))
-    }
-    if options.IsSimilarFieldsSet {
-        request.Query("similar.fields=" + fmt.Sprint(options.SimilarFields))
-    }
-    if options.IsPassagesSet {
-        request.Query("passages=" + fmt.Sprint(options.Passages))
-    }
-    if options.IsPassagesFieldsSet {
-        request.Query("passages.fields=" + fmt.Sprint(options.PassagesFields))
-    }
-    if options.IsPassagesCountSet {
-        request.Query("passages.count=" + fmt.Sprint(options.PassagesCount))
-    }
-    if options.IsPassagesCharactersSet {
-        request.Query("passages.characters=" + fmt.Sprint(options.PassagesCharacters))
-    }
+	builder.AddQuery("collection_ids", strings.Join(federatedQueryOptions.CollectionIds, ","))
+	if federatedQueryOptions.Filter != nil {
+		builder.AddQuery("filter", fmt.Sprint(*federatedQueryOptions.Filter))
+	}
+	if federatedQueryOptions.Query != nil {
+		builder.AddQuery("query", fmt.Sprint(*federatedQueryOptions.Query))
+	}
+	if federatedQueryOptions.NaturalLanguageQuery != nil {
+		builder.AddQuery("natural_language_query", fmt.Sprint(*federatedQueryOptions.NaturalLanguageQuery))
+	}
+	if federatedQueryOptions.Aggregation != nil {
+		builder.AddQuery("aggregation", fmt.Sprint(*federatedQueryOptions.Aggregation))
+	}
+	if federatedQueryOptions.Count != nil {
+		builder.AddQuery("count", fmt.Sprint(*federatedQueryOptions.Count))
+	}
+	if federatedQueryOptions.ReturnFields != nil {
+		builder.AddQuery("return", strings.Join(federatedQueryOptions.ReturnFields, ","))
+	}
+	if federatedQueryOptions.Offset != nil {
+		builder.AddQuery("offset", fmt.Sprint(*federatedQueryOptions.Offset))
+	}
+	if federatedQueryOptions.Sort != nil {
+		builder.AddQuery("sort", strings.Join(federatedQueryOptions.Sort, ","))
+	}
+	if federatedQueryOptions.Highlight != nil {
+		builder.AddQuery("highlight", fmt.Sprint(*federatedQueryOptions.Highlight))
+	}
+	if federatedQueryOptions.Deduplicate != nil {
+		builder.AddQuery("deduplicate", fmt.Sprint(*federatedQueryOptions.Deduplicate))
+	}
+	if federatedQueryOptions.DeduplicateField != nil {
+		builder.AddQuery("deduplicate.field", fmt.Sprint(*federatedQueryOptions.DeduplicateField))
+	}
+	if federatedQueryOptions.Similar != nil {
+		builder.AddQuery("similar", fmt.Sprint(*federatedQueryOptions.Similar))
+	}
+	if federatedQueryOptions.SimilarDocumentIds != nil {
+		builder.AddQuery("similar.document_ids", strings.Join(federatedQueryOptions.SimilarDocumentIds, ","))
+	}
+	if federatedQueryOptions.SimilarFields != nil {
+		builder.AddQuery("similar.fields", strings.Join(federatedQueryOptions.SimilarFields, ","))
+	}
+	if federatedQueryOptions.Passages != nil {
+		builder.AddQuery("passages", fmt.Sprint(*federatedQueryOptions.Passages))
+	}
+	if federatedQueryOptions.PassagesFields != nil {
+		builder.AddQuery("passages.fields", strings.Join(federatedQueryOptions.PassagesFields, ","))
+	}
+	if federatedQueryOptions.PassagesCount != nil {
+		builder.AddQuery("passages.count", fmt.Sprint(*federatedQueryOptions.PassagesCount))
+	}
+	if federatedQueryOptions.PassagesCharacters != nil {
+		builder.AddQuery("passages.characters", fmt.Sprint(*federatedQueryOptions.PassagesCharacters))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(QueryResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(QueryResponse))
+	return response, err
 }
 
 // GetFederatedQueryResult : Cast result of FederatedQuery operation
-func GetFederatedQueryResult(response *watson.WatsonResponse) *QueryResponse {
-    result, ok := response.Result.(*QueryResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetFederatedQueryResult(response *core.DetailedResponse) *QueryResponse {
+	result, ok := response.Result.(*QueryResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // FederatedQueryNotices : Query multiple collection system notices
-func (discovery *DiscoveryV1) FederatedQueryNotices(options *FederatedQueryNoticesOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/notices"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions *FederatedQueryNoticesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(federatedQueryNoticesOptions, "federatedQueryNoticesOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(federatedQueryNoticesOptions, "federatedQueryNoticesOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "notices"}
+	pathParameters := []string{*federatedQueryNoticesOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range federatedQueryNoticesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    request.Query("collection_ids=" + fmt.Sprint(options.CollectionIds))
-    if options.IsFilterSet {
-        request.Query("filter=" + fmt.Sprint(options.Filter))
-    }
-    if options.IsQuerySet {
-        request.Query("query=" + fmt.Sprint(options.Query))
-    }
-    if options.IsNaturalLanguageQuerySet {
-        request.Query("natural_language_query=" + fmt.Sprint(options.NaturalLanguageQuery))
-    }
-    if options.IsAggregationSet {
-        request.Query("aggregation=" + fmt.Sprint(options.Aggregation))
-    }
-    if options.IsCountSet {
-        request.Query("count=" + fmt.Sprint(options.Count))
-    }
-    if options.IsReturnFieldsSet {
-        request.Query("return=" + fmt.Sprint(options.ReturnFields))
-    }
-    if options.IsOffsetSet {
-        request.Query("offset=" + fmt.Sprint(options.Offset))
-    }
-    if options.IsSortSet {
-        request.Query("sort=" + fmt.Sprint(options.Sort))
-    }
-    if options.IsHighlightSet {
-        request.Query("highlight=" + fmt.Sprint(options.Highlight))
-    }
-    if options.IsDeduplicateFieldSet {
-        request.Query("deduplicate.field=" + fmt.Sprint(options.DeduplicateField))
-    }
-    if options.IsSimilarSet {
-        request.Query("similar=" + fmt.Sprint(options.Similar))
-    }
-    if options.IsSimilarDocumentIdsSet {
-        request.Query("similar.document_ids=" + fmt.Sprint(options.SimilarDocumentIds))
-    }
-    if options.IsSimilarFieldsSet {
-        request.Query("similar.fields=" + fmt.Sprint(options.SimilarFields))
-    }
+	builder.AddQuery("collection_ids", strings.Join(federatedQueryNoticesOptions.CollectionIds, ","))
+	if federatedQueryNoticesOptions.Filter != nil {
+		builder.AddQuery("filter", fmt.Sprint(*federatedQueryNoticesOptions.Filter))
+	}
+	if federatedQueryNoticesOptions.Query != nil {
+		builder.AddQuery("query", fmt.Sprint(*federatedQueryNoticesOptions.Query))
+	}
+	if federatedQueryNoticesOptions.NaturalLanguageQuery != nil {
+		builder.AddQuery("natural_language_query", fmt.Sprint(*federatedQueryNoticesOptions.NaturalLanguageQuery))
+	}
+	if federatedQueryNoticesOptions.Aggregation != nil {
+		builder.AddQuery("aggregation", fmt.Sprint(*federatedQueryNoticesOptions.Aggregation))
+	}
+	if federatedQueryNoticesOptions.Count != nil {
+		builder.AddQuery("count", fmt.Sprint(*federatedQueryNoticesOptions.Count))
+	}
+	if federatedQueryNoticesOptions.ReturnFields != nil {
+		builder.AddQuery("return", strings.Join(federatedQueryNoticesOptions.ReturnFields, ","))
+	}
+	if federatedQueryNoticesOptions.Offset != nil {
+		builder.AddQuery("offset", fmt.Sprint(*federatedQueryNoticesOptions.Offset))
+	}
+	if federatedQueryNoticesOptions.Sort != nil {
+		builder.AddQuery("sort", strings.Join(federatedQueryNoticesOptions.Sort, ","))
+	}
+	if federatedQueryNoticesOptions.Highlight != nil {
+		builder.AddQuery("highlight", fmt.Sprint(*federatedQueryNoticesOptions.Highlight))
+	}
+	if federatedQueryNoticesOptions.DeduplicateField != nil {
+		builder.AddQuery("deduplicate.field", fmt.Sprint(*federatedQueryNoticesOptions.DeduplicateField))
+	}
+	if federatedQueryNoticesOptions.Similar != nil {
+		builder.AddQuery("similar", fmt.Sprint(*federatedQueryNoticesOptions.Similar))
+	}
+	if federatedQueryNoticesOptions.SimilarDocumentIds != nil {
+		builder.AddQuery("similar.document_ids", strings.Join(federatedQueryNoticesOptions.SimilarDocumentIds, ","))
+	}
+	if federatedQueryNoticesOptions.SimilarFields != nil {
+		builder.AddQuery("similar.fields", strings.Join(federatedQueryNoticesOptions.SimilarFields, ","))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(QueryNoticesResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(QueryNoticesResponse))
+	return response, err
 }
 
 // GetFederatedQueryNoticesResult : Cast result of FederatedQueryNotices operation
-func GetFederatedQueryNoticesResult(response *watson.WatsonResponse) *QueryNoticesResponse {
-    result, ok := response.Result.(*QueryNoticesResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetFederatedQueryNoticesResult(response *core.DetailedResponse) *QueryNoticesResponse {
+	result, ok := response.Result.(*QueryNoticesResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // Query : Query your collection
-func (discovery *DiscoveryV1) Query(options *QueryOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/query"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(queryOptions, "queryOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(queryOptions, "queryOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "query"}
+	pathParameters := []string{*queryOptions.EnvironmentID, *queryOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range queryOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	if queryOptions.LoggingOptOut != nil {
+		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*queryOptions.LoggingOptOut))
+	}
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    if options.IsLoggingOptOutSet {
-        request.Set("X-Watson-Logging-Opt-Out", fmt.Sprint(options.LoggingOptOut))
-    }
-    request.Query("version=" + creds.Version)
-    if options.IsFilterSet {
-        request.Query("filter=" + fmt.Sprint(options.Filter))
-    }
-    if options.IsQuerySet {
-        request.Query("query=" + fmt.Sprint(options.Query))
-    }
-    if options.IsNaturalLanguageQuerySet {
-        request.Query("natural_language_query=" + fmt.Sprint(options.NaturalLanguageQuery))
-    }
-    if options.IsPassagesSet {
-        request.Query("passages=" + fmt.Sprint(options.Passages))
-    }
-    if options.IsAggregationSet {
-        request.Query("aggregation=" + fmt.Sprint(options.Aggregation))
-    }
-    if options.IsCountSet {
-        request.Query("count=" + fmt.Sprint(options.Count))
-    }
-    if options.IsReturnFieldsSet {
-        request.Query("return=" + fmt.Sprint(options.ReturnFields))
-    }
-    if options.IsOffsetSet {
-        request.Query("offset=" + fmt.Sprint(options.Offset))
-    }
-    if options.IsSortSet {
-        request.Query("sort=" + fmt.Sprint(options.Sort))
-    }
-    if options.IsHighlightSet {
-        request.Query("highlight=" + fmt.Sprint(options.Highlight))
-    }
-    if options.IsPassagesFieldsSet {
-        request.Query("passages.fields=" + fmt.Sprint(options.PassagesFields))
-    }
-    if options.IsPassagesCountSet {
-        request.Query("passages.count=" + fmt.Sprint(options.PassagesCount))
-    }
-    if options.IsPassagesCharactersSet {
-        request.Query("passages.characters=" + fmt.Sprint(options.PassagesCharacters))
-    }
-    if options.IsDeduplicateSet {
-        request.Query("deduplicate=" + fmt.Sprint(options.Deduplicate))
-    }
-    if options.IsDeduplicateFieldSet {
-        request.Query("deduplicate.field=" + fmt.Sprint(options.DeduplicateField))
-    }
-    if options.IsSimilarSet {
-        request.Query("similar=" + fmt.Sprint(options.Similar))
-    }
-    if options.IsSimilarDocumentIdsSet {
-        request.Query("similar.document_ids=" + fmt.Sprint(options.SimilarDocumentIds))
-    }
-    if options.IsSimilarFieldsSet {
-        request.Query("similar.fields=" + fmt.Sprint(options.SimilarFields))
-    }
+	if queryOptions.Filter != nil {
+		builder.AddQuery("filter", fmt.Sprint(*queryOptions.Filter))
+	}
+	if queryOptions.Query != nil {
+		builder.AddQuery("query", fmt.Sprint(*queryOptions.Query))
+	}
+	if queryOptions.NaturalLanguageQuery != nil {
+		builder.AddQuery("natural_language_query", fmt.Sprint(*queryOptions.NaturalLanguageQuery))
+	}
+	if queryOptions.Passages != nil {
+		builder.AddQuery("passages", fmt.Sprint(*queryOptions.Passages))
+	}
+	if queryOptions.Aggregation != nil {
+		builder.AddQuery("aggregation", fmt.Sprint(*queryOptions.Aggregation))
+	}
+	if queryOptions.Count != nil {
+		builder.AddQuery("count", fmt.Sprint(*queryOptions.Count))
+	}
+	if queryOptions.ReturnFields != nil {
+		builder.AddQuery("return", strings.Join(queryOptions.ReturnFields, ","))
+	}
+	if queryOptions.Offset != nil {
+		builder.AddQuery("offset", fmt.Sprint(*queryOptions.Offset))
+	}
+	if queryOptions.Sort != nil {
+		builder.AddQuery("sort", strings.Join(queryOptions.Sort, ","))
+	}
+	if queryOptions.Highlight != nil {
+		builder.AddQuery("highlight", fmt.Sprint(*queryOptions.Highlight))
+	}
+	if queryOptions.PassagesFields != nil {
+		builder.AddQuery("passages.fields", strings.Join(queryOptions.PassagesFields, ","))
+	}
+	if queryOptions.PassagesCount != nil {
+		builder.AddQuery("passages.count", fmt.Sprint(*queryOptions.PassagesCount))
+	}
+	if queryOptions.PassagesCharacters != nil {
+		builder.AddQuery("passages.characters", fmt.Sprint(*queryOptions.PassagesCharacters))
+	}
+	if queryOptions.Deduplicate != nil {
+		builder.AddQuery("deduplicate", fmt.Sprint(*queryOptions.Deduplicate))
+	}
+	if queryOptions.DeduplicateField != nil {
+		builder.AddQuery("deduplicate.field", fmt.Sprint(*queryOptions.DeduplicateField))
+	}
+	if queryOptions.Similar != nil {
+		builder.AddQuery("similar", fmt.Sprint(*queryOptions.Similar))
+	}
+	if queryOptions.SimilarDocumentIds != nil {
+		builder.AddQuery("similar.document_ids", strings.Join(queryOptions.SimilarDocumentIds, ","))
+	}
+	if queryOptions.SimilarFields != nil {
+		builder.AddQuery("similar.fields", strings.Join(queryOptions.SimilarFields, ","))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(QueryResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(QueryResponse))
+	return response, err
 }
 
 // GetQueryResult : Cast result of Query operation
-func GetQueryResult(response *watson.WatsonResponse) *QueryResponse {
-    result, ok := response.Result.(*QueryResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetQueryResult(response *core.DetailedResponse) *QueryResponse {
+	result, ok := response.Result.(*QueryResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // QueryEntities : Knowledge Graph entity query
-func (discovery *DiscoveryV1) QueryEntities(options *QueryEntitiesOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/query_entities"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(queryEntitiesOptions, "queryEntitiesOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(queryEntitiesOptions, "queryEntitiesOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "query_entities"}
+	pathParameters := []string{*queryEntitiesOptions.EnvironmentID, *queryEntitiesOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range queryEntitiesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsFeatureSet {
-        body["feature"] = options.Feature
-    }
-    if options.IsEntitySet {
-        body["entity"] = options.Entity
-    }
-    if options.IsContextSet {
-        body["context"] = options.Context
-    }
-    if options.IsCountSet {
-        body["count"] = options.Count
-    }
-    if options.IsEvidenceCountSet {
-        body["evidence_count"] = options.EvidenceCount
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if queryEntitiesOptions.Feature != nil {
+		body["feature"] = queryEntitiesOptions.Feature
+	}
+	if queryEntitiesOptions.Entity != nil {
+		body["entity"] = queryEntitiesOptions.Entity
+	}
+	if queryEntitiesOptions.Context != nil {
+		body["context"] = queryEntitiesOptions.Context
+	}
+	if queryEntitiesOptions.Count != nil {
+		body["count"] = queryEntitiesOptions.Count
+	}
+	if queryEntitiesOptions.EvidenceCount != nil {
+		body["evidence_count"] = queryEntitiesOptions.EvidenceCount
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(QueryEntitiesResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(QueryEntitiesResponse))
+	return response, err
 }
 
 // GetQueryEntitiesResult : Cast result of QueryEntities operation
-func GetQueryEntitiesResult(response *watson.WatsonResponse) *QueryEntitiesResponse {
-    result, ok := response.Result.(*QueryEntitiesResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetQueryEntitiesResult(response *core.DetailedResponse) *QueryEntitiesResponse {
+	result, ok := response.Result.(*QueryEntitiesResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // QueryNotices : Query system notices
-func (discovery *DiscoveryV1) QueryNotices(options *QueryNoticesOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/notices"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(queryNoticesOptions, "queryNoticesOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(queryNoticesOptions, "queryNoticesOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "notices"}
+	pathParameters := []string{*queryNoticesOptions.EnvironmentID, *queryNoticesOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range queryNoticesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsFilterSet {
-        request.Query("filter=" + fmt.Sprint(options.Filter))
-    }
-    if options.IsQuerySet {
-        request.Query("query=" + fmt.Sprint(options.Query))
-    }
-    if options.IsNaturalLanguageQuerySet {
-        request.Query("natural_language_query=" + fmt.Sprint(options.NaturalLanguageQuery))
-    }
-    if options.IsPassagesSet {
-        request.Query("passages=" + fmt.Sprint(options.Passages))
-    }
-    if options.IsAggregationSet {
-        request.Query("aggregation=" + fmt.Sprint(options.Aggregation))
-    }
-    if options.IsCountSet {
-        request.Query("count=" + fmt.Sprint(options.Count))
-    }
-    if options.IsReturnFieldsSet {
-        request.Query("return=" + fmt.Sprint(options.ReturnFields))
-    }
-    if options.IsOffsetSet {
-        request.Query("offset=" + fmt.Sprint(options.Offset))
-    }
-    if options.IsSortSet {
-        request.Query("sort=" + fmt.Sprint(options.Sort))
-    }
-    if options.IsHighlightSet {
-        request.Query("highlight=" + fmt.Sprint(options.Highlight))
-    }
-    if options.IsPassagesFieldsSet {
-        request.Query("passages.fields=" + fmt.Sprint(options.PassagesFields))
-    }
-    if options.IsPassagesCountSet {
-        request.Query("passages.count=" + fmt.Sprint(options.PassagesCount))
-    }
-    if options.IsPassagesCharactersSet {
-        request.Query("passages.characters=" + fmt.Sprint(options.PassagesCharacters))
-    }
-    if options.IsDeduplicateFieldSet {
-        request.Query("deduplicate.field=" + fmt.Sprint(options.DeduplicateField))
-    }
-    if options.IsSimilarSet {
-        request.Query("similar=" + fmt.Sprint(options.Similar))
-    }
-    if options.IsSimilarDocumentIdsSet {
-        request.Query("similar.document_ids=" + fmt.Sprint(options.SimilarDocumentIds))
-    }
-    if options.IsSimilarFieldsSet {
-        request.Query("similar.fields=" + fmt.Sprint(options.SimilarFields))
-    }
+	if queryNoticesOptions.Filter != nil {
+		builder.AddQuery("filter", fmt.Sprint(*queryNoticesOptions.Filter))
+	}
+	if queryNoticesOptions.Query != nil {
+		builder.AddQuery("query", fmt.Sprint(*queryNoticesOptions.Query))
+	}
+	if queryNoticesOptions.NaturalLanguageQuery != nil {
+		builder.AddQuery("natural_language_query", fmt.Sprint(*queryNoticesOptions.NaturalLanguageQuery))
+	}
+	if queryNoticesOptions.Passages != nil {
+		builder.AddQuery("passages", fmt.Sprint(*queryNoticesOptions.Passages))
+	}
+	if queryNoticesOptions.Aggregation != nil {
+		builder.AddQuery("aggregation", fmt.Sprint(*queryNoticesOptions.Aggregation))
+	}
+	if queryNoticesOptions.Count != nil {
+		builder.AddQuery("count", fmt.Sprint(*queryNoticesOptions.Count))
+	}
+	if queryNoticesOptions.ReturnFields != nil {
+		builder.AddQuery("return", strings.Join(queryNoticesOptions.ReturnFields, ","))
+	}
+	if queryNoticesOptions.Offset != nil {
+		builder.AddQuery("offset", fmt.Sprint(*queryNoticesOptions.Offset))
+	}
+	if queryNoticesOptions.Sort != nil {
+		builder.AddQuery("sort", strings.Join(queryNoticesOptions.Sort, ","))
+	}
+	if queryNoticesOptions.Highlight != nil {
+		builder.AddQuery("highlight", fmt.Sprint(*queryNoticesOptions.Highlight))
+	}
+	if queryNoticesOptions.PassagesFields != nil {
+		builder.AddQuery("passages.fields", strings.Join(queryNoticesOptions.PassagesFields, ","))
+	}
+	if queryNoticesOptions.PassagesCount != nil {
+		builder.AddQuery("passages.count", fmt.Sprint(*queryNoticesOptions.PassagesCount))
+	}
+	if queryNoticesOptions.PassagesCharacters != nil {
+		builder.AddQuery("passages.characters", fmt.Sprint(*queryNoticesOptions.PassagesCharacters))
+	}
+	if queryNoticesOptions.DeduplicateField != nil {
+		builder.AddQuery("deduplicate.field", fmt.Sprint(*queryNoticesOptions.DeduplicateField))
+	}
+	if queryNoticesOptions.Similar != nil {
+		builder.AddQuery("similar", fmt.Sprint(*queryNoticesOptions.Similar))
+	}
+	if queryNoticesOptions.SimilarDocumentIds != nil {
+		builder.AddQuery("similar.document_ids", strings.Join(queryNoticesOptions.SimilarDocumentIds, ","))
+	}
+	if queryNoticesOptions.SimilarFields != nil {
+		builder.AddQuery("similar.fields", strings.Join(queryNoticesOptions.SimilarFields, ","))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(QueryNoticesResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(QueryNoticesResponse))
+	return response, err
 }
 
 // GetQueryNoticesResult : Cast result of QueryNotices operation
-func GetQueryNoticesResult(response *watson.WatsonResponse) *QueryNoticesResponse {
-    result, ok := response.Result.(*QueryNoticesResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetQueryNoticesResult(response *core.DetailedResponse) *QueryNoticesResponse {
+	result, ok := response.Result.(*QueryNoticesResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // QueryRelations : Knowledge Graph relationship query
-func (discovery *DiscoveryV1) QueryRelations(options *QueryRelationsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/query_relations"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelationsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(queryRelationsOptions, "queryRelationsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(queryRelationsOptions, "queryRelationsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "query_relations"}
+	pathParameters := []string{*queryRelationsOptions.EnvironmentID, *queryRelationsOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range queryRelationsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsEntitiesSet {
-        body["entities"] = options.Entities
-    }
-    if options.IsContextSet {
-        body["context"] = options.Context
-    }
-    if options.IsSortSet {
-        body["sort"] = options.Sort
-    }
-    if options.IsFilterSet {
-        body["filter"] = options.Filter
-    }
-    if options.IsCountSet {
-        body["count"] = options.Count
-    }
-    if options.IsEvidenceCountSet {
-        body["evidence_count"] = options.EvidenceCount
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if queryRelationsOptions.Entities != nil {
+		body["entities"] = queryRelationsOptions.Entities
+	}
+	if queryRelationsOptions.Context != nil {
+		body["context"] = queryRelationsOptions.Context
+	}
+	if queryRelationsOptions.Sort != nil {
+		body["sort"] = queryRelationsOptions.Sort
+	}
+	if queryRelationsOptions.Filter != nil {
+		body["filter"] = queryRelationsOptions.Filter
+	}
+	if queryRelationsOptions.Count != nil {
+		body["count"] = queryRelationsOptions.Count
+	}
+	if queryRelationsOptions.EvidenceCount != nil {
+		body["evidence_count"] = queryRelationsOptions.EvidenceCount
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(QueryRelationsResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(QueryRelationsResponse))
+	return response, err
 }
 
 // GetQueryRelationsResult : Cast result of QueryRelations operation
-func GetQueryRelationsResult(response *watson.WatsonResponse) *QueryRelationsResponse {
-    result, ok := response.Result.(*QueryRelationsResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetQueryRelationsResult(response *core.DetailedResponse) *QueryRelationsResponse {
+	result, ok := response.Result.(*QueryRelationsResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // AddTrainingData : Add query to training data
-func (discovery *DiscoveryV1) AddTrainingData(options *AddTrainingDataOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainingDataOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(addTrainingDataOptions, "addTrainingDataOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(addTrainingDataOptions, "addTrainingDataOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data"}
+	pathParameters := []string{*addTrainingDataOptions.EnvironmentID, *addTrainingDataOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range addTrainingDataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsNaturalLanguageQuerySet {
-        body["natural_language_query"] = options.NaturalLanguageQuery
-    }
-    if options.IsFilterSet {
-        body["filter"] = options.Filter
-    }
-    if options.IsExamplesSet {
-        body["examples"] = options.Examples
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if addTrainingDataOptions.NaturalLanguageQuery != nil {
+		body["natural_language_query"] = addTrainingDataOptions.NaturalLanguageQuery
+	}
+	if addTrainingDataOptions.Filter != nil {
+		body["filter"] = addTrainingDataOptions.Filter
+	}
+	if addTrainingDataOptions.Examples != nil {
+		body["examples"] = addTrainingDataOptions.Examples
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(TrainingQuery)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(TrainingQuery))
+	return response, err
 }
 
 // GetAddTrainingDataResult : Cast result of AddTrainingData operation
-func GetAddTrainingDataResult(response *watson.WatsonResponse) *TrainingQuery {
-    result, ok := response.Result.(*TrainingQuery)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetAddTrainingDataResult(response *core.DetailedResponse) *TrainingQuery {
+	result, ok := response.Result.(*TrainingQuery)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // CreateTrainingExample : Add example to training data query
-func (discovery *DiscoveryV1) CreateTrainingExample(options *CreateTrainingExampleOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions *CreateTrainingExampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createTrainingExampleOptions, "createTrainingExampleOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createTrainingExampleOptions, "createTrainingExampleOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
+	pathParameters := []string{*createTrainingExampleOptions.EnvironmentID, *createTrainingExampleOptions.CollectionID, *createTrainingExampleOptions.QueryID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range createTrainingExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsDocumentIDSet {
-        body["document_id"] = options.DocumentID
-    }
-    if options.IsCrossReferenceSet {
-        body["cross_reference"] = options.CrossReference
-    }
-    if options.IsRelevanceSet {
-        body["relevance"] = options.Relevance
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if createTrainingExampleOptions.DocumentID != nil {
+		body["document_id"] = createTrainingExampleOptions.DocumentID
+	}
+	if createTrainingExampleOptions.CrossReference != nil {
+		body["cross_reference"] = createTrainingExampleOptions.CrossReference
+	}
+	if createTrainingExampleOptions.Relevance != nil {
+		body["relevance"] = createTrainingExampleOptions.Relevance
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(TrainingExample)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(TrainingExample))
+	return response, err
 }
 
 // GetCreateTrainingExampleResult : Cast result of CreateTrainingExample operation
-func GetCreateTrainingExampleResult(response *watson.WatsonResponse) *TrainingExample {
-    result, ok := response.Result.(*TrainingExample)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetCreateTrainingExampleResult(response *core.DetailedResponse) *TrainingExample {
+	result, ok := response.Result.(*TrainingExample)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // DeleteAllTrainingData : Delete all training data
-func (discovery *DiscoveryV1) DeleteAllTrainingData(options *DeleteAllTrainingDataOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions *DeleteAllTrainingDataOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteAllTrainingDataOptions, "deleteAllTrainingDataOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteAllTrainingDataOptions, "deleteAllTrainingDataOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data"}
+	pathParameters := []string{*deleteAllTrainingDataOptions.EnvironmentID, *deleteAllTrainingDataOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteAllTrainingDataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    res, _, err := request.End()
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, nil)
+	return response, err
 }
-
 
 // DeleteTrainingData : Delete a training data query
-func (discovery *DiscoveryV1) DeleteTrainingData(options *DeleteTrainingDataOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *DeleteTrainingDataOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteTrainingDataOptions, "deleteTrainingDataOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteTrainingDataOptions, "deleteTrainingDataOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data"}
+	pathParameters := []string{*deleteTrainingDataOptions.EnvironmentID, *deleteTrainingDataOptions.CollectionID, *deleteTrainingDataOptions.QueryID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteTrainingDataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    res, _, err := request.End()
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, nil)
+	return response, err
 }
-
 
 // DeleteTrainingExample : Delete example for training data query
-func (discovery *DiscoveryV1) DeleteTrainingExample(options *DeleteTrainingExampleOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions *DeleteTrainingExampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteTrainingExampleOptions, "deleteTrainingExampleOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteTrainingExampleOptions, "deleteTrainingExampleOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
-    path = strings.Replace(path, "{example_id}", options.ExampleID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
+	pathParameters := []string{*deleteTrainingExampleOptions.EnvironmentID, *deleteTrainingExampleOptions.CollectionID, *deleteTrainingExampleOptions.QueryID, *deleteTrainingExampleOptions.ExampleID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteTrainingExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    res, _, err := request.End()
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, nil)
+	return response, err
 }
 
-
 // GetTrainingData : Get details about a query
-func (discovery *DiscoveryV1) GetTrainingData(options *GetTrainingDataOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainingDataOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getTrainingDataOptions, "getTrainingDataOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getTrainingDataOptions, "getTrainingDataOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data"}
+	pathParameters := []string{*getTrainingDataOptions.EnvironmentID, *getTrainingDataOptions.CollectionID, *getTrainingDataOptions.QueryID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getTrainingDataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(TrainingQuery)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(TrainingQuery))
+	return response, err
 }
 
 // GetGetTrainingDataResult : Cast result of GetTrainingData operation
-func GetGetTrainingDataResult(response *watson.WatsonResponse) *TrainingQuery {
-    result, ok := response.Result.(*TrainingQuery)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetTrainingDataResult(response *core.DetailedResponse) *TrainingQuery {
+	result, ok := response.Result.(*TrainingQuery)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetTrainingExample : Get details for training data example
-func (discovery *DiscoveryV1) GetTrainingExample(options *GetTrainingExampleOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetTrainingExampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getTrainingExampleOptions, "getTrainingExampleOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getTrainingExampleOptions, "getTrainingExampleOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
-    path = strings.Replace(path, "{example_id}", options.ExampleID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
+	pathParameters := []string{*getTrainingExampleOptions.EnvironmentID, *getTrainingExampleOptions.CollectionID, *getTrainingExampleOptions.QueryID, *getTrainingExampleOptions.ExampleID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getTrainingExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(TrainingExample)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(TrainingExample))
+	return response, err
 }
 
 // GetGetTrainingExampleResult : Cast result of GetTrainingExample operation
-func GetGetTrainingExampleResult(response *watson.WatsonResponse) *TrainingExample {
-    result, ok := response.Result.(*TrainingExample)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetTrainingExampleResult(response *core.DetailedResponse) *TrainingExample {
+	result, ok := response.Result.(*TrainingExample)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListTrainingData : List training data
-func (discovery *DiscoveryV1) ListTrainingData(options *ListTrainingDataOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listTrainingDataOptions, "listTrainingDataOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listTrainingDataOptions, "listTrainingDataOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data"}
+	pathParameters := []string{*listTrainingDataOptions.EnvironmentID, *listTrainingDataOptions.CollectionID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listTrainingDataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(TrainingDataSet)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(TrainingDataSet))
+	return response, err
 }
 
 // GetListTrainingDataResult : Cast result of ListTrainingData operation
-func GetListTrainingDataResult(response *watson.WatsonResponse) *TrainingDataSet {
-    result, ok := response.Result.(*TrainingDataSet)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListTrainingDataResult(response *core.DetailedResponse) *TrainingDataSet {
+	result, ok := response.Result.(*TrainingDataSet)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListTrainingExamples : List examples for a training data query
-func (discovery *DiscoveryV1) ListTrainingExamples(options *ListTrainingExamplesOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *ListTrainingExamplesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listTrainingExamplesOptions, "listTrainingExamplesOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listTrainingExamplesOptions, "listTrainingExamplesOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
+	pathParameters := []string{*listTrainingExamplesOptions.EnvironmentID, *listTrainingExamplesOptions.CollectionID, *listTrainingExamplesOptions.QueryID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listTrainingExamplesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(TrainingExampleList)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(TrainingExampleList))
+	return response, err
 }
 
 // GetListTrainingExamplesResult : Cast result of ListTrainingExamples operation
-func GetListTrainingExamplesResult(response *watson.WatsonResponse) *TrainingExampleList {
-    result, ok := response.Result.(*TrainingExampleList)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListTrainingExamplesResult(response *core.DetailedResponse) *TrainingExampleList {
+	result, ok := response.Result.(*TrainingExampleList)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // UpdateTrainingExample : Change label or cross reference for example
-func (discovery *DiscoveryV1) UpdateTrainingExample(options *UpdateTrainingExampleOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions *UpdateTrainingExampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(updateTrainingExampleOptions, "updateTrainingExampleOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(updateTrainingExampleOptions, "updateTrainingExampleOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{collection_id}", options.CollectionID, 1)
-    path = strings.Replace(path, "{query_id}", options.QueryID, 1)
-    path = strings.Replace(path, "{example_id}", options.ExampleID, 1)
-    request := req.New().Put(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
+	pathParameters := []string{*updateTrainingExampleOptions.EnvironmentID, *updateTrainingExampleOptions.CollectionID, *updateTrainingExampleOptions.QueryID, *updateTrainingExampleOptions.ExampleID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.PUT)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range updateTrainingExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsCrossReferenceSet {
-        body["cross_reference"] = options.CrossReference
-    }
-    if options.IsRelevanceSet {
-        body["relevance"] = options.Relevance
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if updateTrainingExampleOptions.CrossReference != nil {
+		body["cross_reference"] = updateTrainingExampleOptions.CrossReference
+	}
+	if updateTrainingExampleOptions.Relevance != nil {
+		body["relevance"] = updateTrainingExampleOptions.Relevance
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(TrainingExample)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(TrainingExample))
+	return response, err
 }
 
 // GetUpdateTrainingExampleResult : Cast result of UpdateTrainingExample operation
-func GetUpdateTrainingExampleResult(response *watson.WatsonResponse) *TrainingExample {
-    result, ok := response.Result.(*TrainingExample)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetUpdateTrainingExampleResult(response *core.DetailedResponse) *TrainingExample {
+	result, ok := response.Result.(*TrainingExample)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // DeleteUserData : Delete labeled data
-func (discovery *DiscoveryV1) DeleteUserData(options *DeleteUserDataOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/user_data"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/user_data"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteUserDataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    request.Query("customer_id=" + fmt.Sprint(options.CustomerID))
+	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    res, _, err := request.End()
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, nil)
+	return response, err
 }
 
-
 // CreateEvent : Create event
-func (discovery *DiscoveryV1) CreateEvent(options *CreateEventOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/events"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createEventOptions, "createEventOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createEventOptions, "createEventOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/events"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range createEventOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    body["type"] = options.TypeVar
-    body["data"] = options.Data
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if createEventOptions.Type != nil {
+		body["type"] = createEventOptions.Type
+	}
+	if createEventOptions.Data != nil {
+		body["data"] = createEventOptions.Data
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(CreateEventResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(CreateEventResponse))
+	return response, err
 }
 
 // GetCreateEventResult : Cast result of CreateEvent operation
-func GetCreateEventResult(response *watson.WatsonResponse) *CreateEventResponse {
-    result, ok := response.Result.(*CreateEventResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetCreateEventResult(response *core.DetailedResponse) *CreateEventResponse {
+	result, ok := response.Result.(*CreateEventResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetMetricsEventRate : Percentage of queries with an associated event
-func (discovery *DiscoveryV1) GetMetricsEventRate(options *GetMetricsEventRateOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/metrics/event_rate"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *GetMetricsEventRateOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(getMetricsEventRateOptions, "getMetricsEventRateOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/metrics/event_rate"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getMetricsEventRateOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsStartTimeSet {
-        request.Query("start_time=" + fmt.Sprint(options.StartTime))
-    }
-    if options.IsEndTimeSet {
-        request.Query("end_time=" + fmt.Sprint(options.EndTime))
-    }
-    if options.IsResultTypeSet {
-        request.Query("result_type=" + fmt.Sprint(options.ResultType))
-    }
+	if getMetricsEventRateOptions.StartTime != nil {
+		builder.AddQuery("start_time", fmt.Sprint(*getMetricsEventRateOptions.StartTime))
+	}
+	if getMetricsEventRateOptions.EndTime != nil {
+		builder.AddQuery("end_time", fmt.Sprint(*getMetricsEventRateOptions.EndTime))
+	}
+	if getMetricsEventRateOptions.ResultType != nil {
+		builder.AddQuery("result_type", fmt.Sprint(*getMetricsEventRateOptions.ResultType))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(MetricResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(MetricResponse))
+	return response, err
 }
 
 // GetGetMetricsEventRateResult : Cast result of GetMetricsEventRate operation
-func GetGetMetricsEventRateResult(response *watson.WatsonResponse) *MetricResponse {
-    result, ok := response.Result.(*MetricResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetMetricsEventRateResult(response *core.DetailedResponse) *MetricResponse {
+	result, ok := response.Result.(*MetricResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetMetricsQuery : Number of queries over time
-func (discovery *DiscoveryV1) GetMetricsQuery(options *GetMetricsQueryOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/metrics/number_of_queries"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetricsQueryOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(getMetricsQueryOptions, "getMetricsQueryOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/metrics/number_of_queries"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getMetricsQueryOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsStartTimeSet {
-        request.Query("start_time=" + fmt.Sprint(options.StartTime))
-    }
-    if options.IsEndTimeSet {
-        request.Query("end_time=" + fmt.Sprint(options.EndTime))
-    }
-    if options.IsResultTypeSet {
-        request.Query("result_type=" + fmt.Sprint(options.ResultType))
-    }
+	if getMetricsQueryOptions.StartTime != nil {
+		builder.AddQuery("start_time", fmt.Sprint(*getMetricsQueryOptions.StartTime))
+	}
+	if getMetricsQueryOptions.EndTime != nil {
+		builder.AddQuery("end_time", fmt.Sprint(*getMetricsQueryOptions.EndTime))
+	}
+	if getMetricsQueryOptions.ResultType != nil {
+		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryOptions.ResultType))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(MetricResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(MetricResponse))
+	return response, err
 }
 
 // GetGetMetricsQueryResult : Cast result of GetMetricsQuery operation
-func GetGetMetricsQueryResult(response *watson.WatsonResponse) *MetricResponse {
-    result, ok := response.Result.(*MetricResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetMetricsQueryResult(response *core.DetailedResponse) *MetricResponse {
+	result, ok := response.Result.(*MetricResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetMetricsQueryEvent : Number of queries with an event over time
-func (discovery *DiscoveryV1) GetMetricsQueryEvent(options *GetMetricsQueryEventOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/metrics/number_of_queries_with_event"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *GetMetricsQueryEventOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(getMetricsQueryEventOptions, "getMetricsQueryEventOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/metrics/number_of_queries_with_event"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getMetricsQueryEventOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsStartTimeSet {
-        request.Query("start_time=" + fmt.Sprint(options.StartTime))
-    }
-    if options.IsEndTimeSet {
-        request.Query("end_time=" + fmt.Sprint(options.EndTime))
-    }
-    if options.IsResultTypeSet {
-        request.Query("result_type=" + fmt.Sprint(options.ResultType))
-    }
+	if getMetricsQueryEventOptions.StartTime != nil {
+		builder.AddQuery("start_time", fmt.Sprint(*getMetricsQueryEventOptions.StartTime))
+	}
+	if getMetricsQueryEventOptions.EndTime != nil {
+		builder.AddQuery("end_time", fmt.Sprint(*getMetricsQueryEventOptions.EndTime))
+	}
+	if getMetricsQueryEventOptions.ResultType != nil {
+		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryEventOptions.ResultType))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(MetricResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(MetricResponse))
+	return response, err
 }
 
 // GetGetMetricsQueryEventResult : Cast result of GetMetricsQueryEvent operation
-func GetGetMetricsQueryEventResult(response *watson.WatsonResponse) *MetricResponse {
-    result, ok := response.Result.(*MetricResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetMetricsQueryEventResult(response *core.DetailedResponse) *MetricResponse {
+	result, ok := response.Result.(*MetricResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetMetricsQueryNoResults : Number of queries with no search results over time
-func (discovery *DiscoveryV1) GetMetricsQueryNoResults(options *GetMetricsQueryNoResultsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/metrics/number_of_queries_with_no_search_results"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsOptions *GetMetricsQueryNoResultsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(getMetricsQueryNoResultsOptions, "getMetricsQueryNoResultsOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/metrics/number_of_queries_with_no_search_results"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getMetricsQueryNoResultsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsStartTimeSet {
-        request.Query("start_time=" + fmt.Sprint(options.StartTime))
-    }
-    if options.IsEndTimeSet {
-        request.Query("end_time=" + fmt.Sprint(options.EndTime))
-    }
-    if options.IsResultTypeSet {
-        request.Query("result_type=" + fmt.Sprint(options.ResultType))
-    }
+	if getMetricsQueryNoResultsOptions.StartTime != nil {
+		builder.AddQuery("start_time", fmt.Sprint(*getMetricsQueryNoResultsOptions.StartTime))
+	}
+	if getMetricsQueryNoResultsOptions.EndTime != nil {
+		builder.AddQuery("end_time", fmt.Sprint(*getMetricsQueryNoResultsOptions.EndTime))
+	}
+	if getMetricsQueryNoResultsOptions.ResultType != nil {
+		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryNoResultsOptions.ResultType))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(MetricResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(MetricResponse))
+	return response, err
 }
 
 // GetGetMetricsQueryNoResultsResult : Cast result of GetMetricsQueryNoResults operation
-func GetGetMetricsQueryNoResultsResult(response *watson.WatsonResponse) *MetricResponse {
-    result, ok := response.Result.(*MetricResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetMetricsQueryNoResultsResult(response *core.DetailedResponse) *MetricResponse {
+	result, ok := response.Result.(*MetricResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetMetricsQueryTokenEvent : Most frequent query tokens with an event
-func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(options *GetMetricsQueryTokenEventOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/metrics/top_query_tokens_with_event_rate"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(getMetricsQueryTokenEventOptions, "getMetricsQueryTokenEventOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/metrics/top_query_tokens_with_event_rate"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getMetricsQueryTokenEventOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsCountSet {
-        request.Query("count=" + fmt.Sprint(options.Count))
-    }
+	if getMetricsQueryTokenEventOptions.Count != nil {
+		builder.AddQuery("count", fmt.Sprint(*getMetricsQueryTokenEventOptions.Count))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(MetricTokenResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(MetricTokenResponse))
+	return response, err
 }
 
 // GetGetMetricsQueryTokenEventResult : Cast result of GetMetricsQueryTokenEvent operation
-func GetGetMetricsQueryTokenEventResult(response *watson.WatsonResponse) *MetricTokenResponse {
-    result, ok := response.Result.(*MetricTokenResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetMetricsQueryTokenEventResult(response *core.DetailedResponse) *MetricTokenResponse {
+	result, ok := response.Result.(*MetricTokenResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // QueryLog : Search the query and event log
-func (discovery *DiscoveryV1) QueryLog(options *QueryLogOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/logs"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(queryLogOptions, "queryLogOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/logs"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range queryLogOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    if options.IsFilterSet {
-        request.Query("filter=" + fmt.Sprint(options.Filter))
-    }
-    if options.IsQuerySet {
-        request.Query("query=" + fmt.Sprint(options.Query))
-    }
-    if options.IsCountSet {
-        request.Query("count=" + fmt.Sprint(options.Count))
-    }
-    if options.IsOffsetSet {
-        request.Query("offset=" + fmt.Sprint(options.Offset))
-    }
-    if options.IsSortSet {
-        request.Query("sort=" + fmt.Sprint(options.Sort))
-    }
+	if queryLogOptions.Filter != nil {
+		builder.AddQuery("filter", fmt.Sprint(*queryLogOptions.Filter))
+	}
+	if queryLogOptions.Query != nil {
+		builder.AddQuery("query", fmt.Sprint(*queryLogOptions.Query))
+	}
+	if queryLogOptions.Count != nil {
+		builder.AddQuery("count", fmt.Sprint(*queryLogOptions.Count))
+	}
+	if queryLogOptions.Offset != nil {
+		builder.AddQuery("offset", fmt.Sprint(*queryLogOptions.Offset))
+	}
+	if queryLogOptions.Sort != nil {
+		builder.AddQuery("sort", strings.Join(queryLogOptions.Sort, ","))
+	}
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(LogQueryResponse)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(LogQueryResponse))
+	return response, err
 }
 
 // GetQueryLogResult : Cast result of QueryLog operation
-func GetQueryLogResult(response *watson.WatsonResponse) *LogQueryResponse {
-    result, ok := response.Result.(*LogQueryResponse)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetQueryLogResult(response *core.DetailedResponse) *LogQueryResponse {
+	result, ok := response.Result.(*LogQueryResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // CreateCredentials : Create credentials
-func (discovery *DiscoveryV1) CreateCredentials(options *CreateCredentialsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/credentials"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *CreateCredentialsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createCredentialsOptions, "createCredentialsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createCredentialsOptions, "createCredentialsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "credentials"}
+	pathParameters := []string{*createCredentialsOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range createCredentialsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsSourceTypeSet {
-        body["source_type"] = options.SourceType
-    }
-    if options.IsCredentialDetailsSet {
-        body["credential_details"] = options.CredentialDetails
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if createCredentialsOptions.SourceType != nil {
+		body["source_type"] = createCredentialsOptions.SourceType
+	}
+	if createCredentialsOptions.CredentialDetails != nil {
+		body["credential_details"] = createCredentialsOptions.CredentialDetails
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Credentials)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Credentials))
+	return response, err
 }
 
 // GetCreateCredentialsResult : Cast result of CreateCredentials operation
-func GetCreateCredentialsResult(response *watson.WatsonResponse) *Credentials {
-    result, ok := response.Result.(*Credentials)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetCreateCredentialsResult(response *core.DetailedResponse) *Credentials {
+	result, ok := response.Result.(*Credentials)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // DeleteCredentials : Delete credentials
-func (discovery *DiscoveryV1) DeleteCredentials(options *DeleteCredentialsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/credentials/{credential_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *DeleteCredentialsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteCredentialsOptions, "deleteCredentialsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteCredentialsOptions, "deleteCredentialsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{credential_id}", options.CredentialID, 1)
-    request := req.New().Delete(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "credentials"}
+	pathParameters := []string{*deleteCredentialsOptions.EnvironmentID, *deleteCredentialsOptions.CredentialID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range deleteCredentialsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(DeleteCredentials)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(DeleteCredentials))
+	return response, err
 }
 
 // GetDeleteCredentialsResult : Cast result of DeleteCredentials operation
-func GetDeleteCredentialsResult(response *watson.WatsonResponse) *DeleteCredentials {
-    result, ok := response.Result.(*DeleteCredentials)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetDeleteCredentialsResult(response *core.DetailedResponse) *DeleteCredentials {
+	result, ok := response.Result.(*DeleteCredentials)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetCredentials : View Credentials
-func (discovery *DiscoveryV1) GetCredentials(options *GetCredentialsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/credentials/{credential_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentialsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getCredentialsOptions, "getCredentialsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getCredentialsOptions, "getCredentialsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{credential_id}", options.CredentialID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "credentials"}
+	pathParameters := []string{*getCredentialsOptions.EnvironmentID, *getCredentialsOptions.CredentialID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range getCredentialsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Credentials)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Credentials))
+	return response, err
 }
 
 // GetGetCredentialsResult : Cast result of GetCredentials operation
-func GetGetCredentialsResult(response *watson.WatsonResponse) *Credentials {
-    result, ok := response.Result.(*Credentials)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetGetCredentialsResult(response *core.DetailedResponse) *Credentials {
+	result, ok := response.Result.(*Credentials)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListCredentials : List credentials
-func (discovery *DiscoveryV1) ListCredentials(options *ListCredentialsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/credentials"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCredentialsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listCredentialsOptions, "listCredentialsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listCredentialsOptions, "listCredentialsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    request := req.New().Get(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "credentials"}
+	pathParameters := []string{*listCredentialsOptions.EnvironmentID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range listCredentialsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
-
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(CredentialsList)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(CredentialsList))
+	return response, err
 }
 
 // GetListCredentialsResult : Cast result of ListCredentials operation
-func GetListCredentialsResult(response *watson.WatsonResponse) *CredentialsList {
-    result, ok := response.Result.(*CredentialsList)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetListCredentialsResult(response *core.DetailedResponse) *CredentialsList {
+	result, ok := response.Result.(*CredentialsList)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // UpdateCredentials : Update credentials
-func (discovery *DiscoveryV1) UpdateCredentials(options *UpdateCredentialsOptions) (*watson.WatsonResponse, []error) {
-    path := "/v1/environments/{environment_id}/credentials/{credential_id}"
-    creds := discovery.client.Creds
-    useTM := discovery.client.UseTM
-    tokenManager := discovery.client.TokenManager
+func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *UpdateCredentialsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(updateCredentialsOptions, "updateCredentialsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(updateCredentialsOptions, "updateCredentialsOptions"); err != nil {
+		return nil, err
+	}
 
-    path = strings.Replace(path, "{environment_id}", options.EnvironmentID, 1)
-    path = strings.Replace(path, "{credential_id}", options.CredentialID, 1)
-    request := req.New().Put(creds.ServiceURL + path)
+	pathSegments := []string{"v1/environments", "credentials"}
+	pathParameters := []string{*updateCredentialsOptions.EnvironmentID, *updateCredentialsOptions.CredentialID}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.PUT)
+	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range updateCredentialsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", "application/json")
-    request.Query("version=" + creds.Version)
-    body := map[string]interface{}{}
-    if options.IsSourceTypeSet {
-        body["source_type"] = options.SourceType
-    }
-    if options.IsCredentialDetailsSet {
-        body["credential_details"] = options.CredentialDetails
-    }
-    request.Send(body)
+	builder.AddQuery("version", discovery.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	body := make(map[string]interface{})
+	if updateCredentialsOptions.SourceType != nil {
+		body["source_type"] = updateCredentialsOptions.SourceType
+	}
+	if updateCredentialsOptions.CredentialDetails != nil {
+		body["credential_details"] = updateCredentialsOptions.CredentialDetails
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Credentials)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := discovery.service.Request(request, new(Credentials))
+	return response, err
 }
 
 // GetUpdateCredentialsResult : Cast result of UpdateCredentials operation
-func GetUpdateCredentialsResult(response *watson.WatsonResponse) *Credentials {
-    result, ok := response.Result.(*Credentials)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (discovery *DiscoveryV1) GetUpdateCredentialsResult(response *core.DetailedResponse) *Credentials {
+	result, ok := response.Result.(*Credentials)
+	if ok {
+		return result
+	}
+	return nil
 }
-
 
 // AddDocumentOptions : The addDocument options.
 type AddDocumentOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50 megabytes is rejected.
-	File os.File `json:"file,omitempty"`
+	File *os.File `json:"file,omitempty"`
 
-    // Indicates whether user set optional parameter File
-    IsFileSet bool
+	// The filename for file.
+	Filename *string `json:"filename,omitempty"`
 
 	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` { "Creator": "Johnny Appleseed", "Subject": "Apples" } ```.
-	Metadata string `json:"metadata,omitempty"`
+	Metadata *string `json:"metadata,omitempty"`
 
-    // Indicates whether user set optional parameter Metadata
-    IsMetadataSet bool
+	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The content type of File.
-	FileContentType string `json:"file_content_type,omitempty"`
-
-    // Indicates whether user set optional parameter FileContentType
-    IsFileContentTypeSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewAddDocumentOptions : Instantiate AddDocumentOptions
-func NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
-    return &AddDocumentOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
+	return &AddDocumentOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *AddDocumentOptions) SetEnvironmentID(param string) *AddDocumentOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *AddDocumentOptions) SetCollectionID(param string) *AddDocumentOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetFile : Allow user to set File
-func (options *AddDocumentOptions) SetFile(param os.File) *AddDocumentOptions {
-    options.File = param
-    options.IsFileSet = true
-    return options
+func (options *AddDocumentOptions) SetFile(param *os.File) *AddDocumentOptions {
+	options.File = param
+	return options
+}
+
+// SetFilename : Allow user to set Filename
+func (options *AddDocumentOptions) SetFilename(param string) *AddDocumentOptions {
+	options.Filename = core.StringPtr(param)
+	return options
 }
 
 // SetMetadata : Allow user to set Metadata
 func (options *AddDocumentOptions) SetMetadata(param string) *AddDocumentOptions {
-    options.Metadata = param
-    options.IsMetadataSet = true
-    return options
+	options.Metadata = core.StringPtr(param)
+	return options
 }
 
 // SetFileContentType : Allow user to set FileContentType
 func (options *AddDocumentOptions) SetFileContentType(param string) *AddDocumentOptions {
-    options.FileContentType = param
-    options.IsFileContentTypeSet = true
-    return options
+	options.FileContentType = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *AddDocumentOptions) SetHeaders(param map[string]string) *AddDocumentOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // AddTrainingDataOptions : The addTrainingData options.
 type AddTrainingDataOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
-	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
-    // Indicates whether user set optional parameter NaturalLanguageQuery
-    IsNaturalLanguageQuerySet bool
-
-	Filter string `json:"filter,omitempty"`
-
-    // Indicates whether user set optional parameter Filter
-    IsFilterSet bool
+	Filter *string `json:"filter,omitempty"`
 
 	Examples []TrainingExample `json:"examples,omitempty"`
 
-    // Indicates whether user set optional parameter Examples
-    IsExamplesSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewAddTrainingDataOptions : Instantiate AddTrainingDataOptions
-func NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
-    return &AddTrainingDataOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
+	return &AddTrainingDataOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *AddTrainingDataOptions) SetEnvironmentID(param string) *AddTrainingDataOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *AddTrainingDataOptions) SetCollectionID(param string) *AddTrainingDataOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
 func (options *AddTrainingDataOptions) SetNaturalLanguageQuery(param string) *AddTrainingDataOptions {
-    options.NaturalLanguageQuery = param
-    options.IsNaturalLanguageQuerySet = true
-    return options
+	options.NaturalLanguageQuery = core.StringPtr(param)
+	return options
 }
 
 // SetFilter : Allow user to set Filter
 func (options *AddTrainingDataOptions) SetFilter(param string) *AddTrainingDataOptions {
-    options.Filter = param
-    options.IsFilterSet = true
-    return options
+	options.Filter = core.StringPtr(param)
+	return options
 }
 
 // SetExamples : Allow user to set Examples
 func (options *AddTrainingDataOptions) SetExamples(param []TrainingExample) *AddTrainingDataOptions {
-    options.Examples = param
-    options.IsExamplesSet = true
-    return options
+	options.Examples = param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *AddTrainingDataOptions) SetHeaders(param map[string]string) *AddTrainingDataOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // AggregationResult : AggregationResult struct
 type AggregationResult struct {
 
 	// Key that matched the aggregation type.
-	Key string `json:"key,omitempty"`
+	Key *string `json:"key,omitempty"`
 
 	// Number of matching results.
-	MatchingResults int64 `json:"matching_results,omitempty"`
+	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	// Aggregations returned in the case of chained aggregations.
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
@@ -4245,79 +2876,79 @@ type AggregationResult struct {
 type Collection struct {
 
 	// The unique identifier of the collection.
-	CollectionID string `json:"collection_id,omitempty"`
+	CollectionID *string `json:"collection_id,omitempty"`
 
 	// The name of the collection.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
 	// The description of the collection.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 
 	// The creation date of the collection in the format yyyy-MM-dd'T'HH:mmcon:ss.SSS'Z'.
-	Created strfmt.DateTime `json:"created,omitempty"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// The timestamp of when the collection was last updated in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-	Updated strfmt.DateTime `json:"updated,omitempty"`
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
 	// The status of the collection.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 
 	// The unique identifier of the collection's configuration.
-	ConfigurationID string `json:"configuration_id,omitempty"`
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// The language of the documents stored in the collection. Permitted values include `en` (English), `de` (German), and `es` (Spanish).
-	Language string `json:"language,omitempty"`
+	Language *string `json:"language,omitempty"`
 
 	// The object providing information about the documents in the collection. Present only when retrieving details of a collection.
-	DocumentCounts DocumentCounts `json:"document_counts,omitempty"`
+	DocumentCounts *DocumentCounts `json:"document_counts,omitempty"`
 
 	// The object providing information about the disk usage of the collection. Present only when retrieving details of a collection.
-	DiskUsage CollectionDiskUsage `json:"disk_usage,omitempty"`
+	DiskUsage *CollectionDiskUsage `json:"disk_usage,omitempty"`
 
 	// Provides information about the status of relevance training for collection.
-	TrainingStatus TrainingStatus `json:"training_status,omitempty"`
+	TrainingStatus *TrainingStatus `json:"training_status,omitempty"`
 
 	// Object containing source crawl status information.
-	SourceCrawl SourceStatus `json:"source_crawl,omitempty"`
+	SourceCrawl *SourceStatus `json:"source_crawl,omitempty"`
 }
 
 // CollectionDiskUsage : Summary of the disk usage statistics for this collection.
 type CollectionDiskUsage struct {
 
 	// Number of bytes used by the collection.
-	UsedBytes int64 `json:"used_bytes,omitempty"`
+	UsedBytes *int64 `json:"used_bytes,omitempty"`
 }
 
 // CollectionUsage : Summary of the collection usage in the environment.
 type CollectionUsage struct {
 
 	// Number of active collections in the environment.
-	Available int64 `json:"available,omitempty"`
+	Available *int64 `json:"available,omitempty"`
 
 	// Total number of collections allowed in the environment.
-	MaximumAllowed int64 `json:"maximum_allowed,omitempty"`
+	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
 }
 
 // Configuration : A custom configuration for the environment.
 type Configuration struct {
 
 	// The unique identifier of the configuration.
-	ConfigurationID string `json:"configuration_id,omitempty"`
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// The name of the configuration.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
 	// The creation date of the configuration in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-	Created strfmt.DateTime `json:"created,omitempty"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// The timestamp of when the configuration was last updated in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-	Updated strfmt.DateTime `json:"updated,omitempty"`
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
 	// The description of the configuration, if available.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 
 	// The document conversion settings for the configuration.
-	Conversions Conversions `json:"conversions,omitempty"`
+	Conversions *Conversions `json:"conversions,omitempty"`
 
 	// An array of document enrichment settings for the configuration.
 	Enrichments []Enrichment `json:"enrichments,omitempty"`
@@ -4326,23 +2957,23 @@ type Configuration struct {
 	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
 
 	// Object containing source parameters for the configuration.
-	Source Source `json:"source,omitempty"`
+	Source *Source `json:"source,omitempty"`
 }
 
 // Conversions : Document conversion settings.
 type Conversions struct {
 
 	// A list of PDF conversion settings.
-	Pdf PdfSettings `json:"pdf,omitempty"`
+	Pdf *PdfSettings `json:"pdf,omitempty"`
 
 	// A list of Word conversion settings.
-	Word WordSettings `json:"word,omitempty"`
+	Word *WordSettings `json:"word,omitempty"`
 
 	// A list of HTML conversion settings.
-	HTML HTMLSettings `json:"html,omitempty"`
+	HTML *HTMLSettings `json:"html,omitempty"`
 
 	// A list of Document Segmentation settings.
-	Segment SegmentSettings `json:"segment,omitempty"`
+	Segment *SegmentSettings `json:"segment,omitempty"`
 
 	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are executed in the order that they appear in the array.
 	JSONNormalizations []NormalizationOperation `json:"json_normalizations,omitempty"`
@@ -4352,534 +2983,466 @@ type Conversions struct {
 type CreateCollectionOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The name of the collection to be created.
-	Name string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// A description of the collection.
-	Description string `json:"description,omitempty"`
-
-    // Indicates whether user set optional parameter Description
-    IsDescriptionSet bool
+	Description *string `json:"description,omitempty"`
 
 	// The ID of the configuration in which the collection is to be created.
-	ConfigurationID string `json:"configuration_id,omitempty"`
-
-    // Indicates whether user set optional parameter ConfigurationID
-    IsConfigurationIDSet bool
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
-	Language string `json:"language,omitempty"`
+	Language *string `json:"language,omitempty"`
 
-    // Indicates whether user set optional parameter Language
-    IsLanguageSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewCreateCollectionOptions : Instantiate CreateCollectionOptions
-func NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
-    return &CreateCollectionOptions{
-        EnvironmentID: environmentID,
-        Name: name,
-    }
+func (discovery *DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
+	return &CreateCollectionOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		Name:          core.StringPtr(name),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *CreateCollectionOptions) SetEnvironmentID(param string) *CreateCollectionOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetName : Allow user to set Name
 func (options *CreateCollectionOptions) SetName(param string) *CreateCollectionOptions {
-    options.Name = param
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetDescription : Allow user to set Description
 func (options *CreateCollectionOptions) SetDescription(param string) *CreateCollectionOptions {
-    options.Description = param
-    options.IsDescriptionSet = true
-    return options
+	options.Description = core.StringPtr(param)
+	return options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
 func (options *CreateCollectionOptions) SetConfigurationID(param string) *CreateCollectionOptions {
-    options.ConfigurationID = param
-    options.IsConfigurationIDSet = true
-    return options
+	options.ConfigurationID = core.StringPtr(param)
+	return options
 }
 
 // SetLanguage : Allow user to set Language
 func (options *CreateCollectionOptions) SetLanguage(param string) *CreateCollectionOptions {
-    options.Language = param
-    options.IsLanguageSet = true
-    return options
+	options.Language = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *CreateCollectionOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // CreateConfigurationOptions : The createConfiguration options.
 type CreateConfigurationOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The name of the configuration.
-	Name string `json:"name,omitempty"`
-
-    // Indicates whether user set optional parameter Name
-    IsNameSet bool
+	Name *string `json:"name,omitempty"`
 
 	// The description of the configuration, if available.
-	Description string `json:"description,omitempty"`
-
-    // Indicates whether user set optional parameter Description
-    IsDescriptionSet bool
+	Description *string `json:"description,omitempty"`
 
 	// The document conversion settings for the configuration.
-	Conversions Conversions `json:"conversions,omitempty"`
-
-    // Indicates whether user set optional parameter Conversions
-    IsConversionsSet bool
+	Conversions *Conversions `json:"conversions,omitempty"`
 
 	// An array of document enrichment settings for the configuration.
 	Enrichments []Enrichment `json:"enrichments,omitempty"`
 
-    // Indicates whether user set optional parameter Enrichments
-    IsEnrichmentsSet bool
-
 	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are executed in the order that they appear in the array.
 	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
 
-    // Indicates whether user set optional parameter Normalizations
-    IsNormalizationsSet bool
-
 	// Object containing source parameters for the configuration.
-	Source Source `json:"source,omitempty"`
+	Source *Source `json:"source,omitempty"`
 
-    // Indicates whether user set optional parameter Source
-    IsSourceSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewCreateConfigurationOptions : Instantiate CreateConfigurationOptions
-func NewCreateConfigurationOptions(environmentID string) *CreateConfigurationOptions {
-    return &CreateConfigurationOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewCreateConfigurationOptions(environmentID string) *CreateConfigurationOptions {
+	return &CreateConfigurationOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *CreateConfigurationOptions) SetEnvironmentID(param string) *CreateConfigurationOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetName : Allow user to set Name
 func (options *CreateConfigurationOptions) SetName(param string) *CreateConfigurationOptions {
-    options.Name = param
-    options.IsNameSet = true
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetDescription : Allow user to set Description
 func (options *CreateConfigurationOptions) SetDescription(param string) *CreateConfigurationOptions {
-    options.Description = param
-    options.IsDescriptionSet = true
-    return options
+	options.Description = core.StringPtr(param)
+	return options
 }
 
 // SetConversions : Allow user to set Conversions
 func (options *CreateConfigurationOptions) SetConversions(param Conversions) *CreateConfigurationOptions {
-    options.Conversions = param
-    options.IsConversionsSet = true
-    return options
+	options.Conversions = &param
+	return options
 }
 
 // SetEnrichments : Allow user to set Enrichments
 func (options *CreateConfigurationOptions) SetEnrichments(param []Enrichment) *CreateConfigurationOptions {
-    options.Enrichments = param
-    options.IsEnrichmentsSet = true
-    return options
+	options.Enrichments = param
+	return options
 }
 
 // SetNormalizations : Allow user to set Normalizations
 func (options *CreateConfigurationOptions) SetNormalizations(param []NormalizationOperation) *CreateConfigurationOptions {
-    options.Normalizations = param
-    options.IsNormalizationsSet = true
-    return options
+	options.Normalizations = param
+	return options
 }
 
 // SetSource : Allow user to set Source
 func (options *CreateConfigurationOptions) SetSource(param Source) *CreateConfigurationOptions {
-    options.Source = param
-    options.IsSourceSet = true
-    return options
+	options.Source = &param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *CreateConfigurationOptions) SetHeaders(param map[string]string) *CreateConfigurationOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // CreateCredentialsOptions : The createCredentials options.
 type CreateCredentialsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The source that this credentials object connects to. -  `box` indicates the credentials are used to connect an instance of Enterprise Box. -  `salesforce` indicates the credentials are used to connect to Salesforce. -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-	SourceType string `json:"source_type,omitempty"`
-
-    // Indicates whether user set optional parameter SourceType
-    IsSourceTypeSet bool
+	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials. Obtain credentials for your source from the administrator of the source.
-	CredentialDetails CredentialDetails `json:"credential_details,omitempty"`
+	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 
-    // Indicates whether user set optional parameter CredentialDetails
-    IsCredentialDetailsSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
-func NewCreateCredentialsOptions(environmentID string) *CreateCredentialsOptions {
-    return &CreateCredentialsOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewCreateCredentialsOptions(environmentID string) *CreateCredentialsOptions {
+	return &CreateCredentialsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *CreateCredentialsOptions) SetEnvironmentID(param string) *CreateCredentialsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetSourceType : Allow user to set SourceType
 func (options *CreateCredentialsOptions) SetSourceType(param string) *CreateCredentialsOptions {
-    options.SourceType = param
-    options.IsSourceTypeSet = true
-    return options
+	options.SourceType = core.StringPtr(param)
+	return options
 }
 
 // SetCredentialDetails : Allow user to set CredentialDetails
 func (options *CreateCredentialsOptions) SetCredentialDetails(param CredentialDetails) *CreateCredentialsOptions {
-    options.CredentialDetails = param
-    options.IsCredentialDetailsSet = true
-    return options
+	options.CredentialDetails = &param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *CreateCredentialsOptions) SetHeaders(param map[string]string) *CreateCredentialsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // CreateEnvironmentOptions : The createEnvironment options.
 type CreateEnvironmentOptions struct {
 
 	// Name that identifies the environment.
-	Name string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// Description of the environment.
-	Description string `json:"description,omitempty"`
-
-    // Indicates whether user set optional parameter Description
-    IsDescriptionSet bool
+	Description *string `json:"description,omitempty"`
 
 	// Size of the environment.
-	Size string `json:"size,omitempty"`
+	Size *string `json:"size,omitempty"`
 
-    // Indicates whether user set optional parameter Size
-    IsSizeSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewCreateEnvironmentOptions : Instantiate CreateEnvironmentOptions
-func NewCreateEnvironmentOptions(name string) *CreateEnvironmentOptions {
-    return &CreateEnvironmentOptions{
-        Name: name,
-    }
+func (discovery *DiscoveryV1) NewCreateEnvironmentOptions(name string) *CreateEnvironmentOptions {
+	return &CreateEnvironmentOptions{
+		Name: core.StringPtr(name),
+	}
 }
 
 // SetName : Allow user to set Name
 func (options *CreateEnvironmentOptions) SetName(param string) *CreateEnvironmentOptions {
-    options.Name = param
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetDescription : Allow user to set Description
 func (options *CreateEnvironmentOptions) SetDescription(param string) *CreateEnvironmentOptions {
-    options.Description = param
-    options.IsDescriptionSet = true
-    return options
+	options.Description = core.StringPtr(param)
+	return options
 }
 
 // SetSize : Allow user to set Size
 func (options *CreateEnvironmentOptions) SetSize(param string) *CreateEnvironmentOptions {
-    options.Size = param
-    options.IsSizeSet = true
-    return options
+	options.Size = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *CreateEnvironmentOptions) SetHeaders(param map[string]string) *CreateEnvironmentOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // CreateEventOptions : The createEvent options.
 type CreateEventOptions struct {
 
 	// The event type to be created.
-	TypeVar string `json:"type"`
+	Type *string `json:"type" validate:"required"`
 
 	// Data object used to create a query event.
-	Data EventData `json:"data"`
+	Data *EventData `json:"data" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewCreateEventOptions : Instantiate CreateEventOptions
-func NewCreateEventOptions(typeVar string, data EventData) *CreateEventOptions {
-    return &CreateEventOptions{
-        TypeVar: typeVar,
-        Data: data,
-    }
+func (discovery *DiscoveryV1) NewCreateEventOptions(typeVar string, data EventData) *CreateEventOptions {
+	return &CreateEventOptions{
+		Type: core.StringPtr(typeVar),
+		Data: &data,
+	}
 }
 
-// SetTypeVar : Allow user to set TypeVar
-func (options *CreateEventOptions) SetTypeVar(param string) *CreateEventOptions {
-    options.TypeVar = param
-    return options
+// SetType : Allow user to set Type
+func (options *CreateEventOptions) SetType(param string) *CreateEventOptions {
+	options.Type = core.StringPtr(param)
+	return options
 }
 
 // SetData : Allow user to set Data
 func (options *CreateEventOptions) SetData(param EventData) *CreateEventOptions {
-    options.Data = param
-    return options
+	options.Data = &param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *CreateEventOptions) SetHeaders(param map[string]string) *CreateEventOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // CreateEventResponse : An object defining the event being created.
 type CreateEventResponse struct {
 
 	// The event type that was created.
-	TypeVar string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// Query event data object.
-	Data EventData `json:"data,omitempty"`
+	Data *EventData `json:"data,omitempty"`
 }
 
 // CreateExpansionsOptions : The createExpansions options.
 type CreateExpansionsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// An array of query expansion definitions. Each object in the **expansions** array represents a term or set of terms that will be expanded into other terms. Each expansion object can be configured as bidirectional or unidirectional. Bidirectional means that all terms are expanded to all other terms in the object. Unidirectional means that a set list of terms can be expanded into a second list of terms. To create a bi-directional expansion specify an **expanded_terms** array. When found in a query, all items in the **expanded_terms** array are then expanded to the other items in the same array. To create a uni-directional expansion, specify both an array of **input_terms** and an array of **expanded_terms**. When items in the **input_terms** array are present in a query, they are expanded using the items listed in the **expanded_terms** array.
 	Expansions []Expansion `json:"expansions,omitempty"`
 
-    // Indicates whether user set optional parameter Expansions
-    IsExpansionsSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewCreateExpansionsOptions : Instantiate CreateExpansionsOptions
-func NewCreateExpansionsOptions(environmentID string, collectionID string) *CreateExpansionsOptions {
-    return &CreateExpansionsOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string) *CreateExpansionsOptions {
+	return &CreateExpansionsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *CreateExpansionsOptions) SetEnvironmentID(param string) *CreateExpansionsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *CreateExpansionsOptions) SetCollectionID(param string) *CreateExpansionsOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetExpansions : Allow user to set Expansions
 func (options *CreateExpansionsOptions) SetExpansions(param []Expansion) *CreateExpansionsOptions {
-    options.Expansions = param
-    options.IsExpansionsSet = true
-    return options
+	options.Expansions = param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *CreateExpansionsOptions) SetHeaders(param map[string]string) *CreateExpansionsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // CreateTrainingExampleOptions : The createTrainingExample options.
 type CreateTrainingExampleOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the query used for training.
-	QueryID string `json:"query_id"`
+	QueryID *string `json:"query_id" validate:"required"`
 
-	DocumentID string `json:"document_id,omitempty"`
+	DocumentID *string `json:"document_id,omitempty"`
 
-    // Indicates whether user set optional parameter DocumentID
-    IsDocumentIDSet bool
+	CrossReference *string `json:"cross_reference,omitempty"`
 
-	CrossReference string `json:"cross_reference,omitempty"`
+	Relevance *int64 `json:"relevance,omitempty"`
 
-    // Indicates whether user set optional parameter CrossReference
-    IsCrossReferenceSet bool
-
-	Relevance int64 `json:"relevance,omitempty"`
-
-    // Indicates whether user set optional parameter Relevance
-    IsRelevanceSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewCreateTrainingExampleOptions : Instantiate CreateTrainingExampleOptions
-func NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
-    return &CreateTrainingExampleOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        QueryID: queryID,
-    }
+func (discovery *DiscoveryV1) NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
+	return &CreateTrainingExampleOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *CreateTrainingExampleOptions) SetEnvironmentID(param string) *CreateTrainingExampleOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *CreateTrainingExampleOptions) SetCollectionID(param string) *CreateTrainingExampleOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetQueryID : Allow user to set QueryID
 func (options *CreateTrainingExampleOptions) SetQueryID(param string) *CreateTrainingExampleOptions {
-    options.QueryID = param
-    return options
+	options.QueryID = core.StringPtr(param)
+	return options
 }
 
 // SetDocumentID : Allow user to set DocumentID
 func (options *CreateTrainingExampleOptions) SetDocumentID(param string) *CreateTrainingExampleOptions {
-    options.DocumentID = param
-    options.IsDocumentIDSet = true
-    return options
+	options.DocumentID = core.StringPtr(param)
+	return options
 }
 
 // SetCrossReference : Allow user to set CrossReference
 func (options *CreateTrainingExampleOptions) SetCrossReference(param string) *CreateTrainingExampleOptions {
-    options.CrossReference = param
-    options.IsCrossReferenceSet = true
-    return options
+	options.CrossReference = core.StringPtr(param)
+	return options
 }
 
 // SetRelevance : Allow user to set Relevance
 func (options *CreateTrainingExampleOptions) SetRelevance(param int64) *CreateTrainingExampleOptions {
-    options.Relevance = param
-    options.IsRelevanceSet = true
-    return options
+	options.Relevance = core.Int64Ptr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *CreateTrainingExampleOptions) SetHeaders(param map[string]string) *CreateTrainingExampleOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // CredentialDetails : Object containing details of the stored credentials. Obtain credentials for your source from the administrator of the source.
 type CredentialDetails struct {
 
 	// The authentication method for this credentials definition. The  **credential_type** specified must be supported by the **source_type**. The following combinations are possible: -  `"source_type": "box"` - valid `credential_type`s: `oauth2` -  `"source_type": "salesforce"` - valid `credential_type`s: `username_password` -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml`.
-	CredentialType string `json:"credential_type,omitempty"`
+	CredentialType *string `json:"credential_type,omitempty"`
 
 	// The **client_id** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `oauth2`.
-	ClientID string `json:"client_id,omitempty"`
+	ClientID *string `json:"client_id,omitempty"`
 
 	// The **enterprise_id** of the Box site that these credentials connect to. Only valid, and required, with a **source_type** of `box`.
-	EnterpriseID string `json:"enterprise_id,omitempty"`
+	EnterpriseID *string `json:"enterprise_id,omitempty"`
 
 	// The **url** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `username_password`.
-	URL string `json:"url,omitempty"`
+	URL *string `json:"url,omitempty"`
 
 	// The **username** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `saml` and `username_password`.
-	Username string `json:"username,omitempty"`
+	Username *string `json:"username,omitempty"`
 
 	// The **organization_url** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `saml`.
-	OrganizationURL string `json:"organization_url,omitempty"`
+	OrganizationURL *string `json:"organization_url,omitempty"`
 
 	// The **site_collection.path** of the source that these credentials connect to. Only valid, and required, with a **source_type** of `sharepoint`.
-	SiteCollectionPath string `json:"site_collection.path,omitempty"`
+	SiteCollectionPath *string `json:"site_collection.path,omitempty"`
 
 	// The **client_secret** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying **credentials**.
-	ClientSecret string `json:"client_secret,omitempty"`
+	ClientSecret *string `json:"client_secret,omitempty"`
 
 	// The **public_key_id** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying **credentials**.
-	PublicKeyID string `json:"public_key_id,omitempty"`
+	PublicKeyID *string `json:"public_key_id,omitempty"`
 
 	// The **private_key** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying **credentials**.
-	PrivateKey string `json:"private_key,omitempty"`
+	PrivateKey *string `json:"private_key,omitempty"`
 
 	// The **passphrase** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying **credentials**.
-	Passphrase string `json:"passphrase,omitempty"`
+	Passphrase *string `json:"passphrase,omitempty"`
 
 	// The **password** of the source that these credentials connect to. Only valid, and required, with **credential_type**s of `saml` and `username_password`. **Note:** When used with a **source_type** of `salesforce`, the password consists of the Salesforce password and a valid Salesforce security token concatenated. This value is never returned and is only used when creating or modifying **credentials**.
-	Password string `json:"password,omitempty"`
+	Password *string `json:"password,omitempty"`
 }
 
 // Credentials : Object containing credential information.
 type Credentials struct {
 
 	// Unique identifier for this set of credentials.
-	CredentialID string `json:"credential_id,omitempty"`
+	CredentialID *string `json:"credential_id,omitempty"`
 
 	// The source that this credentials object connects to. -  `box` indicates the credentials are used to connect an instance of Enterprise Box. -  `salesforce` indicates the credentials are used to connect to Salesforce. -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-	SourceType string `json:"source_type,omitempty"`
+	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials. Obtain credentials for your source from the administrator of the source.
-	CredentialDetails CredentialDetails `json:"credential_details,omitempty"`
+	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 }
 
 // CredentialsList : CredentialsList struct
@@ -4893,137 +3456,137 @@ type CredentialsList struct {
 type DeleteAllTrainingDataOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteAllTrainingDataOptions : Instantiate DeleteAllTrainingDataOptions
-func NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
-    return &DeleteAllTrainingDataOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
+	return &DeleteAllTrainingDataOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteAllTrainingDataOptions) SetEnvironmentID(param string) *DeleteAllTrainingDataOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *DeleteAllTrainingDataOptions) SetCollectionID(param string) *DeleteAllTrainingDataOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteAllTrainingDataOptions) SetHeaders(param map[string]string) *DeleteAllTrainingDataOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteCollectionOptions : The deleteCollection options.
 type DeleteCollectionOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteCollectionOptions : Instantiate DeleteCollectionOptions
-func NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
-    return &DeleteCollectionOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
+	return &DeleteCollectionOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteCollectionOptions) SetEnvironmentID(param string) *DeleteCollectionOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *DeleteCollectionOptions) SetCollectionID(param string) *DeleteCollectionOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteCollectionOptions) SetHeaders(param map[string]string) *DeleteCollectionOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteCollectionResponse : DeleteCollectionResponse struct
 type DeleteCollectionResponse struct {
 
 	// The unique identifier of the collection that is being deleted.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The status of the collection. The status of a successful deletion operation is `deleted`.
-	Status string `json:"status"`
+	Status *string `json:"status" validate:"required"`
 }
 
 // DeleteConfigurationOptions : The deleteConfiguration options.
 type DeleteConfigurationOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the configuration.
-	ConfigurationID string `json:"configuration_id"`
+	ConfigurationID *string `json:"configuration_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteConfigurationOptions : Instantiate DeleteConfigurationOptions
-func NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
-    return &DeleteConfigurationOptions{
-        EnvironmentID: environmentID,
-        ConfigurationID: configurationID,
-    }
+func (discovery *DiscoveryV1) NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
+	return &DeleteConfigurationOptions{
+		EnvironmentID:   core.StringPtr(environmentID),
+		ConfigurationID: core.StringPtr(configurationID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteConfigurationOptions) SetEnvironmentID(param string) *DeleteConfigurationOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
 func (options *DeleteConfigurationOptions) SetConfigurationID(param string) *DeleteConfigurationOptions {
-    options.ConfigurationID = param
-    return options
+	options.ConfigurationID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteConfigurationOptions) SetHeaders(param map[string]string) *DeleteConfigurationOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteConfigurationResponse : DeleteConfigurationResponse struct
 type DeleteConfigurationResponse struct {
 
 	// The unique identifier for the configuration.
-	ConfigurationID string `json:"configuration_id"`
+	ConfigurationID *string `json:"configuration_id" validate:"required"`
 
 	// Status of the configuration. A deleted configuration has the status deleted.
-	Status string `json:"status"`
+	Status *string `json:"status" validate:"required"`
 
 	// An array of notice messages, if any.
 	Notices []Notice `json:"notices,omitempty"`
@@ -5033,355 +3596,355 @@ type DeleteConfigurationResponse struct {
 type DeleteCredentials struct {
 
 	// The unique identifier of the credentials that have been deleted.
-	CredentialID string `json:"credential_id,omitempty"`
+	CredentialID *string `json:"credential_id,omitempty"`
 
 	// The status of the deletion request.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 }
 
 // DeleteCredentialsOptions : The deleteCredentials options.
 type DeleteCredentialsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID string `json:"credential_id"`
+	CredentialID *string `json:"credential_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteCredentialsOptions : Instantiate DeleteCredentialsOptions
-func NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
-    return &DeleteCredentialsOptions{
-        EnvironmentID: environmentID,
-        CredentialID: credentialID,
-    }
+func (discovery *DiscoveryV1) NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
+	return &DeleteCredentialsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CredentialID:  core.StringPtr(credentialID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteCredentialsOptions) SetEnvironmentID(param string) *DeleteCredentialsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCredentialID : Allow user to set CredentialID
 func (options *DeleteCredentialsOptions) SetCredentialID(param string) *DeleteCredentialsOptions {
-    options.CredentialID = param
-    return options
+	options.CredentialID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteCredentialsOptions) SetHeaders(param map[string]string) *DeleteCredentialsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteDocumentOptions : The deleteDocument options.
 type DeleteDocumentOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the document.
-	DocumentID string `json:"document_id"`
+	DocumentID *string `json:"document_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteDocumentOptions : Instantiate DeleteDocumentOptions
-func NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
-    return &DeleteDocumentOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        DocumentID: documentID,
-    }
+func (discovery *DiscoveryV1) NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
+	return &DeleteDocumentOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteDocumentOptions) SetEnvironmentID(param string) *DeleteDocumentOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *DeleteDocumentOptions) SetCollectionID(param string) *DeleteDocumentOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetDocumentID : Allow user to set DocumentID
 func (options *DeleteDocumentOptions) SetDocumentID(param string) *DeleteDocumentOptions {
-    options.DocumentID = param
-    return options
+	options.DocumentID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteDocumentOptions) SetHeaders(param map[string]string) *DeleteDocumentOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteDocumentResponse : DeleteDocumentResponse struct
 type DeleteDocumentResponse struct {
 
 	// The unique identifier of the document.
-	DocumentID string `json:"document_id,omitempty"`
+	DocumentID *string `json:"document_id,omitempty"`
 
 	// Status of the document. A deleted document has the status deleted.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 }
 
 // DeleteEnvironmentOptions : The deleteEnvironment options.
 type DeleteEnvironmentOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteEnvironmentOptions : Instantiate DeleteEnvironmentOptions
-func NewDeleteEnvironmentOptions(environmentID string) *DeleteEnvironmentOptions {
-    return &DeleteEnvironmentOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewDeleteEnvironmentOptions(environmentID string) *DeleteEnvironmentOptions {
+	return &DeleteEnvironmentOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteEnvironmentOptions) SetEnvironmentID(param string) *DeleteEnvironmentOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteEnvironmentOptions) SetHeaders(param map[string]string) *DeleteEnvironmentOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteEnvironmentResponse : DeleteEnvironmentResponse struct
 type DeleteEnvironmentResponse struct {
 
 	// The unique identifier for the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// Status of the environment.
-	Status string `json:"status"`
+	Status *string `json:"status" validate:"required"`
 }
 
 // DeleteExpansionsOptions : The deleteExpansions options.
 type DeleteExpansionsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteExpansionsOptions : Instantiate DeleteExpansionsOptions
-func NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
-    return &DeleteExpansionsOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
+	return &DeleteExpansionsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteExpansionsOptions) SetEnvironmentID(param string) *DeleteExpansionsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *DeleteExpansionsOptions) SetCollectionID(param string) *DeleteExpansionsOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteExpansionsOptions) SetHeaders(param map[string]string) *DeleteExpansionsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteTrainingDataOptions : The deleteTrainingData options.
 type DeleteTrainingDataOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the query used for training.
-	QueryID string `json:"query_id"`
+	QueryID *string `json:"query_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteTrainingDataOptions : Instantiate DeleteTrainingDataOptions
-func NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
-    return &DeleteTrainingDataOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        QueryID: queryID,
-    }
+func (discovery *DiscoveryV1) NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
+	return &DeleteTrainingDataOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteTrainingDataOptions) SetEnvironmentID(param string) *DeleteTrainingDataOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *DeleteTrainingDataOptions) SetCollectionID(param string) *DeleteTrainingDataOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetQueryID : Allow user to set QueryID
 func (options *DeleteTrainingDataOptions) SetQueryID(param string) *DeleteTrainingDataOptions {
-    options.QueryID = param
-    return options
+	options.QueryID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteTrainingDataOptions) SetHeaders(param map[string]string) *DeleteTrainingDataOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteTrainingExampleOptions : The deleteTrainingExample options.
 type DeleteTrainingExampleOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the query used for training.
-	QueryID string `json:"query_id"`
+	QueryID *string `json:"query_id" validate:"required"`
 
 	// The ID of the document as it is indexed.
-	ExampleID string `json:"example_id"`
+	ExampleID *string `json:"example_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteTrainingExampleOptions : Instantiate DeleteTrainingExampleOptions
-func NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
-    return &DeleteTrainingExampleOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        QueryID: queryID,
-        ExampleID: exampleID,
-    }
+func (discovery *DiscoveryV1) NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
+	return &DeleteTrainingExampleOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *DeleteTrainingExampleOptions) SetEnvironmentID(param string) *DeleteTrainingExampleOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *DeleteTrainingExampleOptions) SetCollectionID(param string) *DeleteTrainingExampleOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetQueryID : Allow user to set QueryID
 func (options *DeleteTrainingExampleOptions) SetQueryID(param string) *DeleteTrainingExampleOptions {
-    options.QueryID = param
-    return options
+	options.QueryID = core.StringPtr(param)
+	return options
 }
 
 // SetExampleID : Allow user to set ExampleID
 func (options *DeleteTrainingExampleOptions) SetExampleID(param string) *DeleteTrainingExampleOptions {
-    options.ExampleID = param
-    return options
+	options.ExampleID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteTrainingExampleOptions) SetHeaders(param map[string]string) *DeleteTrainingExampleOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DeleteUserDataOptions : The deleteUserData options.
 type DeleteUserDataOptions struct {
 
 	// The customer ID for which all data is to be deleted.
-	CustomerID string `json:"customer_id"`
+	CustomerID *string `json:"customer_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
-func NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
-    return &DeleteUserDataOptions{
-        CustomerID: customerID,
-    }
+func (discovery *DiscoveryV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+	return &DeleteUserDataOptions{
+		CustomerID: core.StringPtr(customerID),
+	}
 }
 
 // SetCustomerID : Allow user to set CustomerID
 func (options *DeleteUserDataOptions) SetCustomerID(param string) *DeleteUserDataOptions {
-    options.CustomerID = param
-    return options
+	options.CustomerID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *DeleteUserDataOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // DiskUsage : Summary of the disk usage statistics for the environment.
 type DiskUsage struct {
 
 	// Number of bytes within the environment's disk capacity that are currently used to store data.
-	UsedBytes int64 `json:"used_bytes,omitempty"`
+	UsedBytes *int64 `json:"used_bytes,omitempty"`
 
 	// Total number of bytes available in the environment's disk capacity.
-	MaximumAllowedBytes int64 `json:"maximum_allowed_bytes,omitempty"`
+	MaximumAllowedBytes *int64 `json:"maximum_allowed_bytes,omitempty"`
 
 	// **Deprecated**: Total number of bytes available in the environment's disk capacity.
-	TotalBytes int64 `json:"total_bytes,omitempty"`
+	TotalBytes *int64 `json:"total_bytes,omitempty"`
 
 	// **Deprecated**: Amount of disk capacity used, in KB or GB format.
-	Used string `json:"used,omitempty"`
+	Used *string `json:"used,omitempty"`
 
 	// **Deprecated**: Total amount of the environment's disk capacity, in KB or GB format.
-	Total string `json:"total,omitempty"`
+	Total *string `json:"total,omitempty"`
 
 	// **Deprecated**: Percentage of the environment's disk capacity that is being used.
-	PercentUsed float64 `json:"percent_used,omitempty"`
+	PercentUsed *float64 `json:"percent_used,omitempty"`
 }
 
 // DocumentAccepted : DocumentAccepted struct
 type DocumentAccepted struct {
 
 	// The unique identifier of the ingested document.
-	DocumentID string `json:"document_id,omitempty"`
+	DocumentID *string `json:"document_id,omitempty"`
 
 	// Status of the document in the ingestion process.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 
 	// Array of notices produced by the document-ingestion process.
 	Notices []Notice `json:"notices,omitempty"`
@@ -5391,19 +3954,18 @@ type DocumentAccepted struct {
 type DocumentCounts struct {
 
 	// The total number of available documents in the collection.
-	Available int64 `json:"available,omitempty"`
+	Available *int64 `json:"available,omitempty"`
 
 	// The number of documents in the collection that are currently being processed.
-	Processing int64 `json:"processing,omitempty"`
+	Processing *int64 `json:"processing,omitempty"`
 
 	// The number of documents in the collection that failed to be ingested.
-	Failed int64 `json:"failed,omitempty"`
+	Failed *int64 `json:"failed,omitempty"`
 }
 
 // DocumentSnapshot : DocumentSnapshot struct
 type DocumentSnapshot struct {
-
-	Step string `json:"step,omitempty"`
+	Step *string `json:"step,omitempty"`
 
 	Snapshot interface{} `json:"snapshot,omitempty"`
 }
@@ -5412,138 +3974,138 @@ type DocumentSnapshot struct {
 type DocumentStatus struct {
 
 	// The unique identifier of the document.
-	DocumentID string `json:"document_id"`
+	DocumentID *string `json:"document_id" validate:"required"`
 
 	// The unique identifier for the configuration.
-	ConfigurationID string `json:"configuration_id,omitempty"`
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// The creation date of the document in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-	Created strfmt.DateTime `json:"created,omitempty"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// Date of the most recent document update, in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-	Updated strfmt.DateTime `json:"updated,omitempty"`
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
 	// Status of the document in the ingestion process.
-	Status string `json:"status"`
+	Status *string `json:"status" validate:"required"`
 
 	// Description of the document status.
-	StatusDescription string `json:"status_description"`
+	StatusDescription *string `json:"status_description" validate:"required"`
 
 	// Name of the original source file (if available).
-	Filename string `json:"filename,omitempty"`
+	Filename *string `json:"filename,omitempty"`
 
 	// The type of the original source file.
-	FileType string `json:"file_type,omitempty"`
+	FileType *string `json:"file_type,omitempty"`
 
 	// The SHA-1 hash of the original source file (formatted as a hexadecimal string).
-	Sha1 string `json:"sha1,omitempty"`
+	Sha1 *string `json:"sha1,omitempty"`
 
 	// Array of notices produced by the document-ingestion process.
-	Notices []Notice `json:"notices"`
+	Notices []Notice `json:"notices" validate:"required"`
 }
 
 // Enrichment : Enrichment struct
 type Enrichment struct {
 
 	// Describes what the enrichment step does.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 
 	// Field where enrichments will be stored. This field must already exist or be at most 1 level deeper than an existing field. For example, if `text` is a top-level field with no sub-fields, `text.foo` is a valid destination but `text.foo.bar` is not.
-	DestinationField string `json:"destination_field"`
+	DestinationField *string `json:"destination_field" validate:"required"`
 
 	// Field to be enriched.
-	SourceField string `json:"source_field"`
+	SourceField *string `json:"source_field" validate:"required"`
 
 	// Indicates that the enrichments will overwrite the destination_field field if it already exists.
-	Overwrite bool `json:"overwrite,omitempty"`
+	Overwrite *bool `json:"overwrite,omitempty"`
 
 	// Name of the enrichment service to call. Current options are `natural_language_understanding` and `elements`. When using `natual_language_understanding`, the **options** object must contain Natural Language Understanding options. When using `elements` the **options** object must contain Element Classification options. Additionally, when using the `elements` enrichment the configuration specified and files ingested must meet all the criteria specified in [the documentation](https://console.bluemix.net/docs/services/discovery/element-classification.html) Previous API versions also supported `alchemy_language`.
-	EnrichmentName string `json:"enrichment"`
+	EnrichmentName *string `json:"enrichment" validate:"required"`
 
 	// If true, then most errors generated during the enrichment process will be treated as warnings and will not cause the document to fail processing.
-	IgnoreDownstreamErrors bool `json:"ignore_downstream_errors,omitempty"`
+	IgnoreDownstreamErrors *bool `json:"ignore_downstream_errors,omitempty"`
 
 	// A list of options specific to the enrichment.
-	Options EnrichmentOptions `json:"options,omitempty"`
+	Options *EnrichmentOptions `json:"options,omitempty"`
 }
 
 // EnrichmentOptions : Options which are specific to a particular enrichment.
 type EnrichmentOptions struct {
 
 	// An object representing the enrichment features that will be applied to the specified field.
-	Features NluEnrichmentFeatures `json:"features,omitempty"`
+	Features *NluEnrichmentFeatures `json:"features,omitempty"`
 
 	// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language detection performed by the service. Valid codes are `ar` (Arabic), `en` (English), `fr` (French), `de` (German), `it` (Italian), `pt` (Portuguese), `ru` (Russian), `es` (Spanish), and `sv` (Swedish). **Note:** Not all features support all languages, automatic detection is recommended.
-	Language string `json:"language,omitempty"`
+	Language *string `json:"language,omitempty"`
 
 	// *For use with `elements` enrichments only.* The element extraction model to use. Models available are: `contract`.
-	Model string `json:"model,omitempty"`
+	Model *string `json:"model,omitempty"`
 }
 
 // Environment : Details about an environment.
 type Environment struct {
 
 	// Unique identifier for the environment.
-	EnvironmentID string `json:"environment_id,omitempty"`
+	EnvironmentID *string `json:"environment_id,omitempty"`
 
 	// Name that identifies the environment.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
 	// Description of the environment.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 
 	// Creation date of the environment, in the format `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`.
-	Created strfmt.DateTime `json:"created,omitempty"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// Date of most recent environment update, in the format `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`.
-	Updated strfmt.DateTime `json:"updated,omitempty"`
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
 	// Status of the environment.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 
 	// If `true`, the environment contains read-only collections that are maintained by IBM.
-	ReadOnly bool `json:"read_only,omitempty"`
+	ReadOnly *bool `json:"read_only,omitempty"`
 
 	// Size of the environment.
-	Size string `json:"size,omitempty"`
+	Size *string `json:"size,omitempty"`
 
 	// Details about the resource usage and capacity of the environment.
-	IndexCapacity IndexCapacity `json:"index_capacity,omitempty"`
+	IndexCapacity *IndexCapacity `json:"index_capacity,omitempty"`
 }
 
 // EnvironmentDocuments : Summary of the document usage statistics for the environment.
 type EnvironmentDocuments struct {
 
 	// Number of documents indexed for the environment.
-	Indexed int64 `json:"indexed,omitempty"`
+	Indexed *int64 `json:"indexed,omitempty"`
 
 	// Total number of documents allowed in the environment's capacity.
-	MaximumAllowed int64 `json:"maximum_allowed,omitempty"`
+	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
 }
 
 // EventData : Query event data object.
 type EventData struct {
 
 	// The **environment_id** associated with the query that the event is associated with.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The session token that was returned as part of the query results that this event is associated with.
-	SessionToken string `json:"session_token"`
+	SessionToken *string `json:"session_token" validate:"required"`
 
 	// The optional timestamp for the event that was created. If not provided, the time that the event was created in the log was used.
-	ClientTimestamp strfmt.DateTime `json:"client_timestamp,omitempty"`
+	ClientTimestamp *strfmt.DateTime `json:"client_timestamp,omitempty"`
 
 	// The rank of the result item which the event is associated with.
-	DisplayRank int64 `json:"display_rank,omitempty"`
+	DisplayRank *int64 `json:"display_rank,omitempty"`
 
 	// The **collection_id** of the document that this event is associated with.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The **document_id** of the document that this event is associated with.
-	DocumentID string `json:"document_id"`
+	DocumentID *string `json:"document_id" validate:"required"`
 
 	// The query identifier stored in the log. The query and any events associated with that query are stored with the same **query_id**.
-	QueryID string `json:"query_id,omitempty"`
+	QueryID *string `json:"query_id,omitempty"`
 }
 
 // Expansion : An expansion definition. Each object respresents one set of expandable strings. For example, you could have expansions for the word `hot` in one object, and expansions for the word `cold` in another.
@@ -5553,7 +4115,7 @@ type Expansion struct {
 	InputTerms []string `json:"input_terms,omitempty"`
 
 	// A list of terms that this expansion will be expanded to. If specified without **input_terms**, it also functions as the input term list.
-	ExpandedTerms []string `json:"expanded_terms"`
+	ExpandedTerms []string `json:"expanded_terms" validate:"required"`
 }
 
 // Expansions : The query expansion definitions for the specified collection.
@@ -5567,1081 +4129,903 @@ type Expansions struct {
 type FederatedQueryNoticesOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string `json:"collection_ids"`
+	CollectionIds []string `json:"collection_ids" validate:"required"`
 
 	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
-	Filter string `json:"filter,omitempty"`
-
-    // Indicates whether user set optional parameter Filter
-    IsFilterSet bool
+	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-	Query string `json:"query,omitempty"`
-
-    // Indicates whether user set optional parameter Query
-    IsQuerySet bool
+	Query *string `json:"query,omitempty"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language understanding. You cannot use **natural_language_query** and **query** at the same time.
-	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
-
-    // Indicates whether user set optional parameter NaturalLanguageQuery
-    IsNaturalLanguageQuerySet bool
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a full list of possible aggregrations, see the Query reference.
-	Aggregation string `json:"aggregation,omitempty"`
-
-    // Indicates whether user set optional parameter Aggregation
-    IsAggregationSet bool
+	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
-	Count int64 `json:"count,omitempty"`
-
-    // Indicates whether user set optional parameter Count
-    IsCountSet bool
+	Count *int64 `json:"count,omitempty"`
 
 	// A comma separated list of the portion of the document hierarchy to return.
 	ReturnFields []string `json:"return,omitempty"`
 
-    // Indicates whether user set optional parameter ReturnFields
-    IsReturnFieldsSet bool
-
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
-	Offset int64 `json:"offset,omitempty"`
-
-    // Indicates whether user set optional parameter Offset
-    IsOffsetSet bool
+	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
 	Sort []string `json:"sort,omitempty"`
 
-    // Indicates whether user set optional parameter Sort
-    IsSortSet bool
-
 	// When true a highlight field is returned for each result which contains the fields that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
-	Highlight bool `json:"highlight,omitempty"`
-
-    // Indicates whether user set optional parameter Highlight
-    IsHighlightSet bool
+	Highlight *bool `json:"highlight,omitempty"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
-	DeduplicateField string `json:"deduplicate.field,omitempty"`
-
-    // Indicates whether user set optional parameter DeduplicateField
-    IsDeduplicateFieldSet bool
+	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the **similar.document_ids** parameter.
-	Similar bool `json:"similar,omitempty"`
-
-    // Indicates whether user set optional parameter Similar
-    IsSimilarSet bool
+	Similar *bool `json:"similar,omitempty"`
 
 	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
 	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
-    // Indicates whether user set optional parameter SimilarDocumentIds
-    IsSimilarDocumentIdsSet bool
-
 	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
 	SimilarFields []string `json:"similar.fields,omitempty"`
 
-    // Indicates whether user set optional parameter SimilarFields
-    IsSimilarFieldsSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewFederatedQueryNoticesOptions : Instantiate FederatedQueryNoticesOptions
-func NewFederatedQueryNoticesOptions(environmentID string, collectionIds []string) *FederatedQueryNoticesOptions {
-    return &FederatedQueryNoticesOptions{
-        EnvironmentID: environmentID,
-        CollectionIds: collectionIds,
-    }
+func (discovery *DiscoveryV1) NewFederatedQueryNoticesOptions(environmentID string, collectionIds []string) *FederatedQueryNoticesOptions {
+	return &FederatedQueryNoticesOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionIds: collectionIds,
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *FederatedQueryNoticesOptions) SetEnvironmentID(param string) *FederatedQueryNoticesOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
 func (options *FederatedQueryNoticesOptions) SetCollectionIds(param []string) *FederatedQueryNoticesOptions {
-    options.CollectionIds = param
-    return options
+	options.CollectionIds = param
+	return options
 }
 
 // SetFilter : Allow user to set Filter
 func (options *FederatedQueryNoticesOptions) SetFilter(param string) *FederatedQueryNoticesOptions {
-    options.Filter = param
-    options.IsFilterSet = true
-    return options
+	options.Filter = core.StringPtr(param)
+	return options
 }
 
 // SetQuery : Allow user to set Query
 func (options *FederatedQueryNoticesOptions) SetQuery(param string) *FederatedQueryNoticesOptions {
-    options.Query = param
-    options.IsQuerySet = true
-    return options
+	options.Query = core.StringPtr(param)
+	return options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
 func (options *FederatedQueryNoticesOptions) SetNaturalLanguageQuery(param string) *FederatedQueryNoticesOptions {
-    options.NaturalLanguageQuery = param
-    options.IsNaturalLanguageQuerySet = true
-    return options
+	options.NaturalLanguageQuery = core.StringPtr(param)
+	return options
 }
 
 // SetAggregation : Allow user to set Aggregation
 func (options *FederatedQueryNoticesOptions) SetAggregation(param string) *FederatedQueryNoticesOptions {
-    options.Aggregation = param
-    options.IsAggregationSet = true
-    return options
+	options.Aggregation = core.StringPtr(param)
+	return options
 }
 
 // SetCount : Allow user to set Count
 func (options *FederatedQueryNoticesOptions) SetCount(param int64) *FederatedQueryNoticesOptions {
-    options.Count = param
-    options.IsCountSet = true
-    return options
+	options.Count = core.Int64Ptr(param)
+	return options
 }
 
 // SetReturnFields : Allow user to set ReturnFields
 func (options *FederatedQueryNoticesOptions) SetReturnFields(param []string) *FederatedQueryNoticesOptions {
-    options.ReturnFields = param
-    options.IsReturnFieldsSet = true
-    return options
+	options.ReturnFields = param
+	return options
 }
 
 // SetOffset : Allow user to set Offset
 func (options *FederatedQueryNoticesOptions) SetOffset(param int64) *FederatedQueryNoticesOptions {
-    options.Offset = param
-    options.IsOffsetSet = true
-    return options
+	options.Offset = core.Int64Ptr(param)
+	return options
 }
 
 // SetSort : Allow user to set Sort
 func (options *FederatedQueryNoticesOptions) SetSort(param []string) *FederatedQueryNoticesOptions {
-    options.Sort = param
-    options.IsSortSet = true
-    return options
+	options.Sort = param
+	return options
 }
 
 // SetHighlight : Allow user to set Highlight
 func (options *FederatedQueryNoticesOptions) SetHighlight(param bool) *FederatedQueryNoticesOptions {
-    options.Highlight = param
-    options.IsHighlightSet = true
-    return options
+	options.Highlight = core.BoolPtr(param)
+	return options
 }
 
 // SetDeduplicateField : Allow user to set DeduplicateField
 func (options *FederatedQueryNoticesOptions) SetDeduplicateField(param string) *FederatedQueryNoticesOptions {
-    options.DeduplicateField = param
-    options.IsDeduplicateFieldSet = true
-    return options
+	options.DeduplicateField = core.StringPtr(param)
+	return options
 }
 
 // SetSimilar : Allow user to set Similar
 func (options *FederatedQueryNoticesOptions) SetSimilar(param bool) *FederatedQueryNoticesOptions {
-    options.Similar = param
-    options.IsSimilarSet = true
-    return options
+	options.Similar = core.BoolPtr(param)
+	return options
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
 func (options *FederatedQueryNoticesOptions) SetSimilarDocumentIds(param []string) *FederatedQueryNoticesOptions {
-    options.SimilarDocumentIds = param
-    options.IsSimilarDocumentIdsSet = true
-    return options
+	options.SimilarDocumentIds = param
+	return options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
 func (options *FederatedQueryNoticesOptions) SetSimilarFields(param []string) *FederatedQueryNoticesOptions {
-    options.SimilarFields = param
-    options.IsSimilarFieldsSet = true
-    return options
+	options.SimilarFields = param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *FederatedQueryNoticesOptions) SetHeaders(param map[string]string) *FederatedQueryNoticesOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // FederatedQueryOptions : The federatedQuery options.
 type FederatedQueryOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string `json:"collection_ids"`
+	CollectionIds []string `json:"collection_ids" validate:"required"`
 
 	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
-	Filter string `json:"filter,omitempty"`
-
-    // Indicates whether user set optional parameter Filter
-    IsFilterSet bool
+	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-	Query string `json:"query,omitempty"`
-
-    // Indicates whether user set optional parameter Query
-    IsQuerySet bool
+	Query *string `json:"query,omitempty"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language understanding. You cannot use **natural_language_query** and **query** at the same time.
-	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
-
-    // Indicates whether user set optional parameter NaturalLanguageQuery
-    IsNaturalLanguageQuerySet bool
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a full list of possible aggregrations, see the Query reference.
-	Aggregation string `json:"aggregation,omitempty"`
-
-    // Indicates whether user set optional parameter Aggregation
-    IsAggregationSet bool
+	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
-	Count int64 `json:"count,omitempty"`
-
-    // Indicates whether user set optional parameter Count
-    IsCountSet bool
+	Count *int64 `json:"count,omitempty"`
 
 	// A comma separated list of the portion of the document hierarchy to return.
 	ReturnFields []string `json:"return,omitempty"`
 
-    // Indicates whether user set optional parameter ReturnFields
-    IsReturnFieldsSet bool
-
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
-	Offset int64 `json:"offset,omitempty"`
-
-    // Indicates whether user set optional parameter Offset
-    IsOffsetSet bool
+	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
 	Sort []string `json:"sort,omitempty"`
 
-    // Indicates whether user set optional parameter Sort
-    IsSortSet bool
-
 	// When true a highlight field is returned for each result which contains the fields that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
-	Highlight bool `json:"highlight,omitempty"`
-
-    // Indicates whether user set optional parameter Highlight
-    IsHighlightSet bool
+	Highlight *bool `json:"highlight,omitempty"`
 
 	// When `true` and used with a Watson Discovery News collection, duplicate results (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not considered. This parameter is currently Beta functionality.
-	Deduplicate bool `json:"deduplicate,omitempty"`
-
-    // Indicates whether user set optional parameter Deduplicate
-    IsDeduplicateSet bool
+	Deduplicate *bool `json:"deduplicate,omitempty"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
-	DeduplicateField string `json:"deduplicate.field,omitempty"`
-
-    // Indicates whether user set optional parameter DeduplicateField
-    IsDeduplicateFieldSet bool
+	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the **similar.document_ids** parameter.
-	Similar bool `json:"similar,omitempty"`
-
-    // Indicates whether user set optional parameter Similar
-    IsSimilarSet bool
+	Similar *bool `json:"similar,omitempty"`
 
 	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
 	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
-    // Indicates whether user set optional parameter SimilarDocumentIds
-    IsSimilarDocumentIdsSet bool
-
 	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
 	SimilarFields []string `json:"similar.fields,omitempty"`
 
-    // Indicates whether user set optional parameter SimilarFields
-    IsSimilarFieldsSet bool
-
 	// A passages query that returns the most relevant passages from the results.
-	Passages bool `json:"passages,omitempty"`
-
-    // Indicates whether user set optional parameter Passages
-    IsPassagesSet bool
+	Passages *bool `json:"passages,omitempty"`
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
 	PassagesFields []string `json:"passages.fields,omitempty"`
 
-    // Indicates whether user set optional parameter PassagesFields
-    IsPassagesFieldsSet bool
-
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
-	PassagesCount int64 `json:"passages.count,omitempty"`
-
-    // Indicates whether user set optional parameter PassagesCount
-    IsPassagesCountSet bool
+	PassagesCount *int64 `json:"passages.count,omitempty"`
 
 	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
-	PassagesCharacters int64 `json:"passages.characters,omitempty"`
+	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
-    // Indicates whether user set optional parameter PassagesCharacters
-    IsPassagesCharactersSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewFederatedQueryOptions : Instantiate FederatedQueryOptions
-func NewFederatedQueryOptions(environmentID string, collectionIds []string) *FederatedQueryOptions {
-    return &FederatedQueryOptions{
-        EnvironmentID: environmentID,
-        CollectionIds: collectionIds,
-    }
+func (discovery *DiscoveryV1) NewFederatedQueryOptions(environmentID string, collectionIds []string) *FederatedQueryOptions {
+	return &FederatedQueryOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionIds: collectionIds,
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *FederatedQueryOptions) SetEnvironmentID(param string) *FederatedQueryOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
 func (options *FederatedQueryOptions) SetCollectionIds(param []string) *FederatedQueryOptions {
-    options.CollectionIds = param
-    return options
+	options.CollectionIds = param
+	return options
 }
 
 // SetFilter : Allow user to set Filter
 func (options *FederatedQueryOptions) SetFilter(param string) *FederatedQueryOptions {
-    options.Filter = param
-    options.IsFilterSet = true
-    return options
+	options.Filter = core.StringPtr(param)
+	return options
 }
 
 // SetQuery : Allow user to set Query
 func (options *FederatedQueryOptions) SetQuery(param string) *FederatedQueryOptions {
-    options.Query = param
-    options.IsQuerySet = true
-    return options
+	options.Query = core.StringPtr(param)
+	return options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
 func (options *FederatedQueryOptions) SetNaturalLanguageQuery(param string) *FederatedQueryOptions {
-    options.NaturalLanguageQuery = param
-    options.IsNaturalLanguageQuerySet = true
-    return options
+	options.NaturalLanguageQuery = core.StringPtr(param)
+	return options
 }
 
 // SetAggregation : Allow user to set Aggregation
 func (options *FederatedQueryOptions) SetAggregation(param string) *FederatedQueryOptions {
-    options.Aggregation = param
-    options.IsAggregationSet = true
-    return options
+	options.Aggregation = core.StringPtr(param)
+	return options
 }
 
 // SetCount : Allow user to set Count
 func (options *FederatedQueryOptions) SetCount(param int64) *FederatedQueryOptions {
-    options.Count = param
-    options.IsCountSet = true
-    return options
+	options.Count = core.Int64Ptr(param)
+	return options
 }
 
 // SetReturnFields : Allow user to set ReturnFields
 func (options *FederatedQueryOptions) SetReturnFields(param []string) *FederatedQueryOptions {
-    options.ReturnFields = param
-    options.IsReturnFieldsSet = true
-    return options
+	options.ReturnFields = param
+	return options
 }
 
 // SetOffset : Allow user to set Offset
 func (options *FederatedQueryOptions) SetOffset(param int64) *FederatedQueryOptions {
-    options.Offset = param
-    options.IsOffsetSet = true
-    return options
+	options.Offset = core.Int64Ptr(param)
+	return options
 }
 
 // SetSort : Allow user to set Sort
 func (options *FederatedQueryOptions) SetSort(param []string) *FederatedQueryOptions {
-    options.Sort = param
-    options.IsSortSet = true
-    return options
+	options.Sort = param
+	return options
 }
 
 // SetHighlight : Allow user to set Highlight
 func (options *FederatedQueryOptions) SetHighlight(param bool) *FederatedQueryOptions {
-    options.Highlight = param
-    options.IsHighlightSet = true
-    return options
+	options.Highlight = core.BoolPtr(param)
+	return options
 }
 
 // SetDeduplicate : Allow user to set Deduplicate
 func (options *FederatedQueryOptions) SetDeduplicate(param bool) *FederatedQueryOptions {
-    options.Deduplicate = param
-    options.IsDeduplicateSet = true
-    return options
+	options.Deduplicate = core.BoolPtr(param)
+	return options
 }
 
 // SetDeduplicateField : Allow user to set DeduplicateField
 func (options *FederatedQueryOptions) SetDeduplicateField(param string) *FederatedQueryOptions {
-    options.DeduplicateField = param
-    options.IsDeduplicateFieldSet = true
-    return options
+	options.DeduplicateField = core.StringPtr(param)
+	return options
 }
 
 // SetSimilar : Allow user to set Similar
 func (options *FederatedQueryOptions) SetSimilar(param bool) *FederatedQueryOptions {
-    options.Similar = param
-    options.IsSimilarSet = true
-    return options
+	options.Similar = core.BoolPtr(param)
+	return options
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
 func (options *FederatedQueryOptions) SetSimilarDocumentIds(param []string) *FederatedQueryOptions {
-    options.SimilarDocumentIds = param
-    options.IsSimilarDocumentIdsSet = true
-    return options
+	options.SimilarDocumentIds = param
+	return options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
 func (options *FederatedQueryOptions) SetSimilarFields(param []string) *FederatedQueryOptions {
-    options.SimilarFields = param
-    options.IsSimilarFieldsSet = true
-    return options
+	options.SimilarFields = param
+	return options
 }
 
 // SetPassages : Allow user to set Passages
 func (options *FederatedQueryOptions) SetPassages(param bool) *FederatedQueryOptions {
-    options.Passages = param
-    options.IsPassagesSet = true
-    return options
+	options.Passages = core.BoolPtr(param)
+	return options
 }
 
 // SetPassagesFields : Allow user to set PassagesFields
 func (options *FederatedQueryOptions) SetPassagesFields(param []string) *FederatedQueryOptions {
-    options.PassagesFields = param
-    options.IsPassagesFieldsSet = true
-    return options
+	options.PassagesFields = param
+	return options
 }
 
 // SetPassagesCount : Allow user to set PassagesCount
 func (options *FederatedQueryOptions) SetPassagesCount(param int64) *FederatedQueryOptions {
-    options.PassagesCount = param
-    options.IsPassagesCountSet = true
-    return options
+	options.PassagesCount = core.Int64Ptr(param)
+	return options
 }
 
 // SetPassagesCharacters : Allow user to set PassagesCharacters
 func (options *FederatedQueryOptions) SetPassagesCharacters(param int64) *FederatedQueryOptions {
-    options.PassagesCharacters = param
-    options.IsPassagesCharactersSet = true
-    return options
+	options.PassagesCharacters = core.Int64Ptr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *FederatedQueryOptions) SetHeaders(param map[string]string) *FederatedQueryOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // Field : Field struct
 type Field struct {
 
 	// The name of the field.
-	FieldName string `json:"field,omitempty"`
+	FieldName *string `json:"field,omitempty"`
 
 	// The type of the field.
-	FieldType string `json:"type,omitempty"`
+	FieldType *string `json:"type,omitempty"`
 }
 
 // FontSetting : FontSetting struct
 type FontSetting struct {
+	Level *int64 `json:"level,omitempty"`
 
-	Level int64 `json:"level,omitempty"`
+	MinSize *int64 `json:"min_size,omitempty"`
 
-	MinSize int64 `json:"min_size,omitempty"`
+	MaxSize *int64 `json:"max_size,omitempty"`
 
-	MaxSize int64 `json:"max_size,omitempty"`
+	Bold *bool `json:"bold,omitempty"`
 
-	Bold bool `json:"bold,omitempty"`
+	Italic *bool `json:"italic,omitempty"`
 
-	Italic bool `json:"italic,omitempty"`
-
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 // GetCollectionOptions : The getCollection options.
 type GetCollectionOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetCollectionOptions : Instantiate GetCollectionOptions
-func NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
-    return &GetCollectionOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
+	return &GetCollectionOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *GetCollectionOptions) SetEnvironmentID(param string) *GetCollectionOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *GetCollectionOptions) SetCollectionID(param string) *GetCollectionOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCollectionOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetConfigurationOptions : The getConfiguration options.
 type GetConfigurationOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the configuration.
-	ConfigurationID string `json:"configuration_id"`
+	ConfigurationID *string `json:"configuration_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetConfigurationOptions : Instantiate GetConfigurationOptions
-func NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
-    return &GetConfigurationOptions{
-        EnvironmentID: environmentID,
-        ConfigurationID: configurationID,
-    }
+func (discovery *DiscoveryV1) NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
+	return &GetConfigurationOptions{
+		EnvironmentID:   core.StringPtr(environmentID),
+		ConfigurationID: core.StringPtr(configurationID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *GetConfigurationOptions) SetEnvironmentID(param string) *GetConfigurationOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
 func (options *GetConfigurationOptions) SetConfigurationID(param string) *GetConfigurationOptions {
-    options.ConfigurationID = param
-    return options
+	options.ConfigurationID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetConfigurationOptions) SetHeaders(param map[string]string) *GetConfigurationOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetCredentialsOptions : The getCredentials options.
 type GetCredentialsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID string `json:"credential_id"`
+	CredentialID *string `json:"credential_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetCredentialsOptions : Instantiate GetCredentialsOptions
-func NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
-    return &GetCredentialsOptions{
-        EnvironmentID: environmentID,
-        CredentialID: credentialID,
-    }
+func (discovery *DiscoveryV1) NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
+	return &GetCredentialsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CredentialID:  core.StringPtr(credentialID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *GetCredentialsOptions) SetEnvironmentID(param string) *GetCredentialsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCredentialID : Allow user to set CredentialID
 func (options *GetCredentialsOptions) SetCredentialID(param string) *GetCredentialsOptions {
-    options.CredentialID = param
-    return options
+	options.CredentialID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetCredentialsOptions) SetHeaders(param map[string]string) *GetCredentialsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetDocumentStatusOptions : The getDocumentStatus options.
 type GetDocumentStatusOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the document.
-	DocumentID string `json:"document_id"`
+	DocumentID *string `json:"document_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetDocumentStatusOptions : Instantiate GetDocumentStatusOptions
-func NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
-    return &GetDocumentStatusOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        DocumentID: documentID,
-    }
+func (discovery *DiscoveryV1) NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
+	return &GetDocumentStatusOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *GetDocumentStatusOptions) SetEnvironmentID(param string) *GetDocumentStatusOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *GetDocumentStatusOptions) SetCollectionID(param string) *GetDocumentStatusOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetDocumentID : Allow user to set DocumentID
 func (options *GetDocumentStatusOptions) SetDocumentID(param string) *GetDocumentStatusOptions {
-    options.DocumentID = param
-    return options
+	options.DocumentID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *GetDocumentStatusOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetEnvironmentOptions : The getEnvironment options.
 type GetEnvironmentOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetEnvironmentOptions : Instantiate GetEnvironmentOptions
-func NewGetEnvironmentOptions(environmentID string) *GetEnvironmentOptions {
-    return &GetEnvironmentOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewGetEnvironmentOptions(environmentID string) *GetEnvironmentOptions {
+	return &GetEnvironmentOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *GetEnvironmentOptions) SetEnvironmentID(param string) *GetEnvironmentOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetEnvironmentOptions) SetHeaders(param map[string]string) *GetEnvironmentOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetMetricsEventRateOptions : The getMetricsEventRate options.
 type GetMetricsEventRateOptions struct {
 
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime strfmt.DateTime `json:"start_time,omitempty"`
-
-    // Indicates whether user set optional parameter StartTime
-    IsStartTimeSet bool
+	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime strfmt.DateTime `json:"end_time,omitempty"`
-
-    // Indicates whether user set optional parameter EndTime
-    IsEndTimeSet bool
+	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
 
 	// The type of result to consider when calculating the metric.
-	ResultType string `json:"result_type,omitempty"`
+	ResultType *string `json:"result_type,omitempty"`
 
-    // Indicates whether user set optional parameter ResultType
-    IsResultTypeSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetMetricsEventRateOptions : Instantiate GetMetricsEventRateOptions
-func NewGetMetricsEventRateOptions() *GetMetricsEventRateOptions {
-    return &GetMetricsEventRateOptions{}
+func (discovery *DiscoveryV1) NewGetMetricsEventRateOptions() *GetMetricsEventRateOptions {
+	return &GetMetricsEventRateOptions{}
 }
 
 // SetStartTime : Allow user to set StartTime
 func (options *GetMetricsEventRateOptions) SetStartTime(param strfmt.DateTime) *GetMetricsEventRateOptions {
-    options.StartTime = param
-    options.IsStartTimeSet = true
-    return options
+	options.StartTime = &param
+	return options
 }
 
 // SetEndTime : Allow user to set EndTime
 func (options *GetMetricsEventRateOptions) SetEndTime(param strfmt.DateTime) *GetMetricsEventRateOptions {
-    options.EndTime = param
-    options.IsEndTimeSet = true
-    return options
+	options.EndTime = &param
+	return options
 }
 
 // SetResultType : Allow user to set ResultType
 func (options *GetMetricsEventRateOptions) SetResultType(param string) *GetMetricsEventRateOptions {
-    options.ResultType = param
-    options.IsResultTypeSet = true
-    return options
+	options.ResultType = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetMetricsEventRateOptions) SetHeaders(param map[string]string) *GetMetricsEventRateOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetMetricsQueryEventOptions : The getMetricsQueryEvent options.
 type GetMetricsQueryEventOptions struct {
 
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime strfmt.DateTime `json:"start_time,omitempty"`
-
-    // Indicates whether user set optional parameter StartTime
-    IsStartTimeSet bool
+	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime strfmt.DateTime `json:"end_time,omitempty"`
-
-    // Indicates whether user set optional parameter EndTime
-    IsEndTimeSet bool
+	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
 
 	// The type of result to consider when calculating the metric.
-	ResultType string `json:"result_type,omitempty"`
+	ResultType *string `json:"result_type,omitempty"`
 
-    // Indicates whether user set optional parameter ResultType
-    IsResultTypeSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetMetricsQueryEventOptions : Instantiate GetMetricsQueryEventOptions
-func NewGetMetricsQueryEventOptions() *GetMetricsQueryEventOptions {
-    return &GetMetricsQueryEventOptions{}
+func (discovery *DiscoveryV1) NewGetMetricsQueryEventOptions() *GetMetricsQueryEventOptions {
+	return &GetMetricsQueryEventOptions{}
 }
 
 // SetStartTime : Allow user to set StartTime
 func (options *GetMetricsQueryEventOptions) SetStartTime(param strfmt.DateTime) *GetMetricsQueryEventOptions {
-    options.StartTime = param
-    options.IsStartTimeSet = true
-    return options
+	options.StartTime = &param
+	return options
 }
 
 // SetEndTime : Allow user to set EndTime
 func (options *GetMetricsQueryEventOptions) SetEndTime(param strfmt.DateTime) *GetMetricsQueryEventOptions {
-    options.EndTime = param
-    options.IsEndTimeSet = true
-    return options
+	options.EndTime = &param
+	return options
 }
 
 // SetResultType : Allow user to set ResultType
 func (options *GetMetricsQueryEventOptions) SetResultType(param string) *GetMetricsQueryEventOptions {
-    options.ResultType = param
-    options.IsResultTypeSet = true
-    return options
+	options.ResultType = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetMetricsQueryEventOptions) SetHeaders(param map[string]string) *GetMetricsQueryEventOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetMetricsQueryNoResultsOptions : The getMetricsQueryNoResults options.
 type GetMetricsQueryNoResultsOptions struct {
 
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime strfmt.DateTime `json:"start_time,omitempty"`
-
-    // Indicates whether user set optional parameter StartTime
-    IsStartTimeSet bool
+	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime strfmt.DateTime `json:"end_time,omitempty"`
-
-    // Indicates whether user set optional parameter EndTime
-    IsEndTimeSet bool
+	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
 
 	// The type of result to consider when calculating the metric.
-	ResultType string `json:"result_type,omitempty"`
+	ResultType *string `json:"result_type,omitempty"`
 
-    // Indicates whether user set optional parameter ResultType
-    IsResultTypeSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetMetricsQueryNoResultsOptions : Instantiate GetMetricsQueryNoResultsOptions
-func NewGetMetricsQueryNoResultsOptions() *GetMetricsQueryNoResultsOptions {
-    return &GetMetricsQueryNoResultsOptions{}
+func (discovery *DiscoveryV1) NewGetMetricsQueryNoResultsOptions() *GetMetricsQueryNoResultsOptions {
+	return &GetMetricsQueryNoResultsOptions{}
 }
 
 // SetStartTime : Allow user to set StartTime
 func (options *GetMetricsQueryNoResultsOptions) SetStartTime(param strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
-    options.StartTime = param
-    options.IsStartTimeSet = true
-    return options
+	options.StartTime = &param
+	return options
 }
 
 // SetEndTime : Allow user to set EndTime
 func (options *GetMetricsQueryNoResultsOptions) SetEndTime(param strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
-    options.EndTime = param
-    options.IsEndTimeSet = true
-    return options
+	options.EndTime = &param
+	return options
 }
 
 // SetResultType : Allow user to set ResultType
 func (options *GetMetricsQueryNoResultsOptions) SetResultType(param string) *GetMetricsQueryNoResultsOptions {
-    options.ResultType = param
-    options.IsResultTypeSet = true
-    return options
+	options.ResultType = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetMetricsQueryNoResultsOptions) SetHeaders(param map[string]string) *GetMetricsQueryNoResultsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetMetricsQueryOptions : The getMetricsQuery options.
 type GetMetricsQueryOptions struct {
 
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime strfmt.DateTime `json:"start_time,omitempty"`
-
-    // Indicates whether user set optional parameter StartTime
-    IsStartTimeSet bool
+	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime strfmt.DateTime `json:"end_time,omitempty"`
-
-    // Indicates whether user set optional parameter EndTime
-    IsEndTimeSet bool
+	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
 
 	// The type of result to consider when calculating the metric.
-	ResultType string `json:"result_type,omitempty"`
+	ResultType *string `json:"result_type,omitempty"`
 
-    // Indicates whether user set optional parameter ResultType
-    IsResultTypeSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetMetricsQueryOptions : Instantiate GetMetricsQueryOptions
-func NewGetMetricsQueryOptions() *GetMetricsQueryOptions {
-    return &GetMetricsQueryOptions{}
+func (discovery *DiscoveryV1) NewGetMetricsQueryOptions() *GetMetricsQueryOptions {
+	return &GetMetricsQueryOptions{}
 }
 
 // SetStartTime : Allow user to set StartTime
 func (options *GetMetricsQueryOptions) SetStartTime(param strfmt.DateTime) *GetMetricsQueryOptions {
-    options.StartTime = param
-    options.IsStartTimeSet = true
-    return options
+	options.StartTime = &param
+	return options
 }
 
 // SetEndTime : Allow user to set EndTime
 func (options *GetMetricsQueryOptions) SetEndTime(param strfmt.DateTime) *GetMetricsQueryOptions {
-    options.EndTime = param
-    options.IsEndTimeSet = true
-    return options
+	options.EndTime = &param
+	return options
 }
 
 // SetResultType : Allow user to set ResultType
 func (options *GetMetricsQueryOptions) SetResultType(param string) *GetMetricsQueryOptions {
-    options.ResultType = param
-    options.IsResultTypeSet = true
-    return options
+	options.ResultType = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetMetricsQueryOptions) SetHeaders(param map[string]string) *GetMetricsQueryOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetMetricsQueryTokenEventOptions : The getMetricsQueryTokenEvent options.
 type GetMetricsQueryTokenEventOptions struct {
 
 	// Number of results to return.
-	Count int64 `json:"count,omitempty"`
+	Count *int64 `json:"count,omitempty"`
 
-    // Indicates whether user set optional parameter Count
-    IsCountSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetMetricsQueryTokenEventOptions : Instantiate GetMetricsQueryTokenEventOptions
-func NewGetMetricsQueryTokenEventOptions() *GetMetricsQueryTokenEventOptions {
-    return &GetMetricsQueryTokenEventOptions{}
+func (discovery *DiscoveryV1) NewGetMetricsQueryTokenEventOptions() *GetMetricsQueryTokenEventOptions {
+	return &GetMetricsQueryTokenEventOptions{}
 }
 
 // SetCount : Allow user to set Count
 func (options *GetMetricsQueryTokenEventOptions) SetCount(param int64) *GetMetricsQueryTokenEventOptions {
-    options.Count = param
-    options.IsCountSet = true
-    return options
+	options.Count = core.Int64Ptr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetMetricsQueryTokenEventOptions) SetHeaders(param map[string]string) *GetMetricsQueryTokenEventOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetTrainingDataOptions : The getTrainingData options.
 type GetTrainingDataOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the query used for training.
-	QueryID string `json:"query_id"`
+	QueryID *string `json:"query_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetTrainingDataOptions : Instantiate GetTrainingDataOptions
-func NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
-    return &GetTrainingDataOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        QueryID: queryID,
-    }
+func (discovery *DiscoveryV1) NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
+	return &GetTrainingDataOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *GetTrainingDataOptions) SetEnvironmentID(param string) *GetTrainingDataOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *GetTrainingDataOptions) SetCollectionID(param string) *GetTrainingDataOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetQueryID : Allow user to set QueryID
 func (options *GetTrainingDataOptions) SetQueryID(param string) *GetTrainingDataOptions {
-    options.QueryID = param
-    return options
+	options.QueryID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetTrainingDataOptions) SetHeaders(param map[string]string) *GetTrainingDataOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // GetTrainingExampleOptions : The getTrainingExample options.
 type GetTrainingExampleOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the query used for training.
-	QueryID string `json:"query_id"`
+	QueryID *string `json:"query_id" validate:"required"`
 
 	// The ID of the document as it is indexed.
-	ExampleID string `json:"example_id"`
+	ExampleID *string `json:"example_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewGetTrainingExampleOptions : Instantiate GetTrainingExampleOptions
-func NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
-    return &GetTrainingExampleOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        QueryID: queryID,
-        ExampleID: exampleID,
-    }
+func (discovery *DiscoveryV1) NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
+	return &GetTrainingExampleOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *GetTrainingExampleOptions) SetEnvironmentID(param string) *GetTrainingExampleOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *GetTrainingExampleOptions) SetCollectionID(param string) *GetTrainingExampleOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetQueryID : Allow user to set QueryID
 func (options *GetTrainingExampleOptions) SetQueryID(param string) *GetTrainingExampleOptions {
-    options.QueryID = param
-    return options
+	options.QueryID = core.StringPtr(param)
+	return options
 }
 
 // SetExampleID : Allow user to set ExampleID
 func (options *GetTrainingExampleOptions) SetExampleID(param string) *GetTrainingExampleOptions {
-    options.ExampleID = param
-    return options
+	options.ExampleID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *GetTrainingExampleOptions) SetHeaders(param map[string]string) *GetTrainingExampleOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // HTMLSettings : A list of HTML conversion settings.
 type HTMLSettings struct {
-
 	ExcludeTagsCompletely []string `json:"exclude_tags_completely,omitempty"`
 
 	ExcludeTagsKeepContent []string `json:"exclude_tags_keep_content,omitempty"`
 
-	KeepContent XPathPatterns `json:"keep_content,omitempty"`
+	KeepContent *XPathPatterns `json:"keep_content,omitempty"`
 
-	ExcludeContent XPathPatterns `json:"exclude_content,omitempty"`
+	ExcludeContent *XPathPatterns `json:"exclude_content,omitempty"`
 
 	KeepTagAttributes []string `json:"keep_tag_attributes,omitempty"`
 
@@ -6652,55 +5036,55 @@ type HTMLSettings struct {
 type IndexCapacity struct {
 
 	// Summary of the document usage statistics for the environment.
-	Documents EnvironmentDocuments `json:"documents,omitempty"`
+	Documents *EnvironmentDocuments `json:"documents,omitempty"`
 
 	// Summary of the disk usage of the environment.
-	DiskUsage DiskUsage `json:"disk_usage,omitempty"`
+	DiskUsage *DiskUsage `json:"disk_usage,omitempty"`
 
 	// Summary of the collection usage in the environment.
-	Collections CollectionUsage `json:"collections,omitempty"`
+	Collections *CollectionUsage `json:"collections,omitempty"`
 
 	// **Deprecated**: Summary of the memory usage of the environment.
-	MemoryUsage MemoryUsage `json:"memory_usage,omitempty"`
+	MemoryUsage *MemoryUsage `json:"memory_usage,omitempty"`
 }
 
 // ListCollectionFieldsOptions : The listCollectionFields options.
 type ListCollectionFieldsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListCollectionFieldsOptions : Instantiate ListCollectionFieldsOptions
-func NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
-    return &ListCollectionFieldsOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
+	return &ListCollectionFieldsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *ListCollectionFieldsOptions) SetEnvironmentID(param string) *ListCollectionFieldsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *ListCollectionFieldsOptions) SetCollectionID(param string) *ListCollectionFieldsOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListCollectionFieldsOptions) SetHeaders(param map[string]string) *ListCollectionFieldsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // ListCollectionFieldsResponse : The list of fetched fields. The fields are returned using a fully qualified name format, however, the format differs slightly from that used by the query operations. * Fields which contain nested JSON objects are assigned a type of "nested". * Fields which belong to a nested object are prefixed with `.properties` (for example, `warnings.properties.severity` means that the `warnings` object has a property called `severity`). * Fields returned from the News collection are prefixed with `v{N}-fullnews-t3-{YEAR}.mappings` (for example, `v5-fullnews-t3-2016.mappings.text.properties.author`).
@@ -6714,42 +5098,38 @@ type ListCollectionFieldsResponse struct {
 type ListCollectionsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// Find collections with the given name.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
-    // Indicates whether user set optional parameter Name
-    IsNameSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListCollectionsOptions : Instantiate ListCollectionsOptions
-func NewListCollectionsOptions(environmentID string) *ListCollectionsOptions {
-    return &ListCollectionsOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewListCollectionsOptions(environmentID string) *ListCollectionsOptions {
+	return &ListCollectionsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *ListCollectionsOptions) SetEnvironmentID(param string) *ListCollectionsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetName : Allow user to set Name
 func (options *ListCollectionsOptions) SetName(param string) *ListCollectionsOptions {
-    options.Name = param
-    options.IsNameSet = true
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListCollectionsOptions) SetHeaders(param map[string]string) *ListCollectionsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // ListCollectionsResponse : ListCollectionsResponse struct
@@ -6763,42 +5143,38 @@ type ListCollectionsResponse struct {
 type ListConfigurationsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// Find configurations with the given name.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
-    // Indicates whether user set optional parameter Name
-    IsNameSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListConfigurationsOptions : Instantiate ListConfigurationsOptions
-func NewListConfigurationsOptions(environmentID string) *ListConfigurationsOptions {
-    return &ListConfigurationsOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewListConfigurationsOptions(environmentID string) *ListConfigurationsOptions {
+	return &ListConfigurationsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *ListConfigurationsOptions) SetEnvironmentID(param string) *ListConfigurationsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetName : Allow user to set Name
 func (options *ListConfigurationsOptions) SetName(param string) *ListConfigurationsOptions {
-    options.Name = param
-    options.IsNameSet = true
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListConfigurationsOptions) SetHeaders(param map[string]string) *ListConfigurationsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // ListConfigurationsResponse : ListConfigurationsResponse struct
@@ -6812,60 +5188,56 @@ type ListConfigurationsResponse struct {
 type ListCredentialsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListCredentialsOptions : Instantiate ListCredentialsOptions
-func NewListCredentialsOptions(environmentID string) *ListCredentialsOptions {
-    return &ListCredentialsOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewListCredentialsOptions(environmentID string) *ListCredentialsOptions {
+	return &ListCredentialsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *ListCredentialsOptions) SetEnvironmentID(param string) *ListCredentialsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListCredentialsOptions) SetHeaders(param map[string]string) *ListCredentialsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // ListEnvironmentsOptions : The listEnvironments options.
 type ListEnvironmentsOptions struct {
 
 	// Show only the environment with the given name.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
-    // Indicates whether user set optional parameter Name
-    IsNameSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListEnvironmentsOptions : Instantiate ListEnvironmentsOptions
-func NewListEnvironmentsOptions() *ListEnvironmentsOptions {
-    return &ListEnvironmentsOptions{}
+func (discovery *DiscoveryV1) NewListEnvironmentsOptions() *ListEnvironmentsOptions {
+	return &ListEnvironmentsOptions{}
 }
 
 // SetName : Allow user to set Name
 func (options *ListEnvironmentsOptions) SetName(param string) *ListEnvironmentsOptions {
-    options.Name = param
-    options.IsNameSet = true
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListEnvironmentsOptions) SetHeaders(param map[string]string) *ListEnvironmentsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // ListEnvironmentsResponse : ListEnvironmentsResponse struct
@@ -6879,173 +5251,173 @@ type ListEnvironmentsResponse struct {
 type ListExpansionsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListExpansionsOptions : Instantiate ListExpansionsOptions
-func NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
-    return &ListExpansionsOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
+	return &ListExpansionsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *ListExpansionsOptions) SetEnvironmentID(param string) *ListExpansionsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *ListExpansionsOptions) SetCollectionID(param string) *ListExpansionsOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListExpansionsOptions) SetHeaders(param map[string]string) *ListExpansionsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // ListFieldsOptions : The listFields options.
 type ListFieldsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string `json:"collection_ids"`
+	CollectionIds []string `json:"collection_ids" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListFieldsOptions : Instantiate ListFieldsOptions
-func NewListFieldsOptions(environmentID string, collectionIds []string) *ListFieldsOptions {
-    return &ListFieldsOptions{
-        EnvironmentID: environmentID,
-        CollectionIds: collectionIds,
-    }
+func (discovery *DiscoveryV1) NewListFieldsOptions(environmentID string, collectionIds []string) *ListFieldsOptions {
+	return &ListFieldsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionIds: collectionIds,
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *ListFieldsOptions) SetEnvironmentID(param string) *ListFieldsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
 func (options *ListFieldsOptions) SetCollectionIds(param []string) *ListFieldsOptions {
-    options.CollectionIds = param
-    return options
+	options.CollectionIds = param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListFieldsOptions) SetHeaders(param map[string]string) *ListFieldsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // ListTrainingDataOptions : The listTrainingData options.
 type ListTrainingDataOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListTrainingDataOptions : Instantiate ListTrainingDataOptions
-func NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
-    return &ListTrainingDataOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
+	return &ListTrainingDataOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *ListTrainingDataOptions) SetEnvironmentID(param string) *ListTrainingDataOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *ListTrainingDataOptions) SetCollectionID(param string) *ListTrainingDataOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListTrainingDataOptions) SetHeaders(param map[string]string) *ListTrainingDataOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // ListTrainingExamplesOptions : The listTrainingExamples options.
 type ListTrainingExamplesOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the query used for training.
-	QueryID string `json:"query_id"`
+	QueryID *string `json:"query_id" validate:"required"`
 
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewListTrainingExamplesOptions : Instantiate ListTrainingExamplesOptions
-func NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
-    return &ListTrainingExamplesOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        QueryID: queryID,
-    }
+func (discovery *DiscoveryV1) NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
+	return &ListTrainingExamplesOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *ListTrainingExamplesOptions) SetEnvironmentID(param string) *ListTrainingExamplesOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *ListTrainingExamplesOptions) SetCollectionID(param string) *ListTrainingExamplesOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetQueryID : Allow user to set QueryID
 func (options *ListTrainingExamplesOptions) SetQueryID(param string) *ListTrainingExamplesOptions {
-    options.QueryID = param
-    return options
+	options.QueryID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ListTrainingExamplesOptions) SetHeaders(param map[string]string) *ListTrainingExamplesOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // LogQueryResponse : Object containing results that match the requested **logs** query.
 type LogQueryResponse struct {
 
 	// Number of matching results.
-	MatchingResults int64 `json:"matching_results,omitempty"`
+	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	Results []LogQueryResponseResult `json:"results,omitempty"`
 }
@@ -7054,103 +5426,102 @@ type LogQueryResponse struct {
 type LogQueryResponseResult struct {
 
 	// The environment ID that is associated with this log entry.
-	EnvironmentID string `json:"environment_id,omitempty"`
+	EnvironmentID *string `json:"environment_id,omitempty"`
 
 	// The **customer_id** label that was specified in the header of the query or event API call that corresponds to this log entry.
-	CustomerID string `json:"customer_id,omitempty"`
+	CustomerID *string `json:"customer_id,omitempty"`
 
 	// The type of log entry returned. **query** indicates that the log represents the results of a call to the single collection **query** method. **event** indicates that the log represents  a call to the **events** API.
-	DocumentType string `json:"document_type,omitempty"`
+	DocumentType *string `json:"document_type,omitempty"`
 
 	// The value of the **natural_language_query** query parameter that was used to create these results. Only returned with logs of type **query**. **Note:** Other query parameters (such as **filter** or **deduplicate**) might  have been used with this query, but are not recorded.
-	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// Object containing result information that was returned by the query used to create this log entry. Only returned with logs of type `query`.
-	DocumentResults LogQueryResponseResultDocuments `json:"document_results,omitempty"`
+	DocumentResults *LogQueryResponseResultDocuments `json:"document_results,omitempty"`
 
 	// Date that the log result was created. Returned in `YYYY-MM-DDThh:mm:ssZ` format.
-	CreatedTimestamp strfmt.DateTime `json:"created_timestamp,omitempty"`
+	CreatedTimestamp *strfmt.DateTime `json:"created_timestamp,omitempty"`
 
 	// Date specified by the user when recording an event. Returned in `YYYY-MM-DDThh:mm:ssZ` format. Only returned with logs of type **event**.
-	ClientTimestamp strfmt.DateTime `json:"client_timestamp,omitempty"`
+	ClientTimestamp *strfmt.DateTime `json:"client_timestamp,omitempty"`
 
 	// Identifier that corresponds to the **natural_language_query** string used in the original or associated query. All **event** and **query** log entries that have the same original **natural_language_query** string also have them same **query_id**. This field can be used to recall all **event** and **query** log results that have the same original query (**event** logs do not contain the original **natural_language_query** field).
-	QueryID string `json:"query_id,omitempty"`
+	QueryID *string `json:"query_id,omitempty"`
 
 	// Unique identifier (within a 24-hour period) that identifies a single `query` log and any `event` logs that were created for it. **Note:** If the exact same query is run at the exact same time on different days, the **session_token** for those queries might be identical. However, the **created_timestamp** differs. **Note:** Session tokens are case sensitive. To avoid matching on session tokens that are identical except for case, use the exact match operator (`::`) when you query for a specific session token.
-	SessionToken string `json:"session_token,omitempty"`
+	SessionToken *string `json:"session_token,omitempty"`
 
 	// The collection ID of the document associated with this event. Only returned with logs of type `event`.
-	CollectionID string `json:"collection_id,omitempty"`
+	CollectionID *string `json:"collection_id,omitempty"`
 
 	// The original display rank of the document associated with this event. Only returned with logs of type `event`.
-	DisplayRank int64 `json:"display_rank,omitempty"`
+	DisplayRank *int64 `json:"display_rank,omitempty"`
 
 	// The document ID of the document associated with this event. Only returned with logs of type `event`.
-	DocumentID string `json:"document_id,omitempty"`
+	DocumentID *string `json:"document_id,omitempty"`
 
 	// The type of event that this object respresents. Possible values are -  `query` the log of a query to a collection -  `click` the result of a call to the **events** endpoint.
-	EventType string `json:"event_type,omitempty"`
+	EventType *string `json:"event_type,omitempty"`
 
 	// The type of result that this **event** is associated with. Only returned with logs of type `event`.
-	ResultType string `json:"result_type,omitempty"`
+	ResultType *string `json:"result_type,omitempty"`
 }
 
 // LogQueryResponseResultDocuments : Object containing result information that was returned by the query used to create this log entry. Only returned with logs of type `query`.
 type LogQueryResponseResultDocuments struct {
-
 	Results []LogQueryResponseResultDocumentsResult `json:"results,omitempty"`
 
 	// The number of results returned in the query associate with this log.
-	Count int64 `json:"count,omitempty"`
+	Count *int64 `json:"count,omitempty"`
 }
 
 // LogQueryResponseResultDocumentsResult : Each object in the **results** array corresponds to an individual document returned by the original query.
 type LogQueryResponseResultDocumentsResult struct {
 
 	// The result rank of this document. A position of `1` indicates that it was the first returned result.
-	Position int64 `json:"position,omitempty"`
+	Position *int64 `json:"position,omitempty"`
 
 	// The **document_id** of the document that this result represents.
-	DocumentID string `json:"document_id,omitempty"`
+	DocumentID *string `json:"document_id,omitempty"`
 
 	// The raw score of this result. A higher score indicates a greater match to the query parameters.
-	Score float64 `json:"score,omitempty"`
+	Score *float64 `json:"score,omitempty"`
 
 	// The confidence score of the result's analysis. A higher score indicating greater confidence.
-	Confidence float64 `json:"confidence,omitempty"`
+	Confidence *float64 `json:"confidence,omitempty"`
 
 	// The **collection_id** of the document represented by this result.
-	CollectionID string `json:"collection_id,omitempty"`
+	CollectionID *string `json:"collection_id,omitempty"`
 }
 
 // MemoryUsage : **Deprecated**: Summary of the memory usage statistics for this environment.
 type MemoryUsage struct {
 
 	// **Deprecated**: Number of bytes used in the environment's memory capacity.
-	UsedBytes int64 `json:"used_bytes,omitempty"`
+	UsedBytes *int64 `json:"used_bytes,omitempty"`
 
 	// **Deprecated**: Total number of bytes available in the environment's memory capacity.
-	TotalBytes int64 `json:"total_bytes,omitempty"`
+	TotalBytes *int64 `json:"total_bytes,omitempty"`
 
 	// **Deprecated**: Amount of memory capacity used, in KB or GB format.
-	Used string `json:"used,omitempty"`
+	Used *string `json:"used,omitempty"`
 
 	// **Deprecated**: Total amount of the environment's memory capacity, in KB or GB format.
-	Total string `json:"total,omitempty"`
+	Total *string `json:"total,omitempty"`
 
 	// **Deprecated**: Percentage of the environment's memory capacity that is being used.
-	PercentUsed float64 `json:"percent_used,omitempty"`
+	PercentUsed *float64 `json:"percent_used,omitempty"`
 }
 
 // MetricAggregation : An aggregation analyzing log information for queries and events.
 type MetricAggregation struct {
 
 	// The measurement interval for this metric. Metric intervals are always 1 day (`1d`).
-	Interval string `json:"interval,omitempty"`
+	Interval *string `json:"interval,omitempty"`
 
 	// The event type associated with this metric result. This field, when present, will always be `click`.
-	EventType string `json:"event_type,omitempty"`
+	EventType *string `json:"event_type,omitempty"`
 
 	Results []MetricAggregationResult `json:"results,omitempty"`
 }
@@ -7159,21 +5530,20 @@ type MetricAggregation struct {
 type MetricAggregationResult struct {
 
 	// Date in string form representing the start of this interval.
-	KeyAsString strfmt.DateTime `json:"key_as_string,omitempty"`
+	KeyAsString *strfmt.DateTime `json:"key_as_string,omitempty"`
 
 	// Unix epoch time equivalent of the **key_as_string**, that represents the start of this interval.
-	Key int64 `json:"key,omitempty"`
+	Key *int64 `json:"key,omitempty"`
 
 	// Number of matching results.
-	MatchingResults int64 `json:"matching_results,omitempty"`
+	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	// The number of queries with associated events divided by the total number of queries for the interval. Only returned with **event_rate** metrics.
-	EventRate float64 `json:"event_rate,omitempty"`
+	EventRate *float64 `json:"event_rate,omitempty"`
 }
 
 // MetricResponse : The response generated from a call to a **metrics** method.
 type MetricResponse struct {
-
 	Aggregations []MetricAggregation `json:"aggregations,omitempty"`
 }
 
@@ -7181,7 +5551,7 @@ type MetricResponse struct {
 type MetricTokenAggregation struct {
 
 	// The event type associated with this metric result. This field, when present, will always be `click`.
-	EventType string `json:"event_type,omitempty"`
+	EventType *string `json:"event_type,omitempty"`
 
 	Results []MetricTokenAggregationResult `json:"results,omitempty"`
 }
@@ -7190,18 +5560,17 @@ type MetricTokenAggregation struct {
 type MetricTokenAggregationResult struct {
 
 	// The content of the **natural_language_query** parameter used in the query that this result represents.
-	Key string `json:"key,omitempty"`
+	Key *string `json:"key,omitempty"`
 
 	// Number of matching results.
-	MatchingResults int64 `json:"matching_results,omitempty"`
+	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	// The number of queries with associated events divided by the total number of queries currently stored (queries and events are stored in the log for 30 days).
-	EventRate float64 `json:"event_rate,omitempty"`
+	EventRate *float64 `json:"event_rate,omitempty"`
 }
 
 // MetricTokenResponse : The response generated from a call to a **metrics** method that evaluates tokens.
 type MetricTokenResponse struct {
-
 	Aggregations []MetricTokenAggregation `json:"aggregations,omitempty"`
 }
 
@@ -7213,7 +5582,7 @@ type NluEnrichmentCategories struct {
 type NluEnrichmentEmotion struct {
 
 	// When `true`, emotion detection is performed on the entire field.
-	Document bool `json:"document,omitempty"`
+	Document *bool `json:"document,omitempty"`
 
 	// A comma-separated list of target strings that will have any associated emotions detected.
 	Targets []string `json:"targets,omitempty"`
@@ -7223,90 +5592,90 @@ type NluEnrichmentEmotion struct {
 type NluEnrichmentEntities struct {
 
 	// When `true`, sentiment analysis of entities will be performed on the specified field.
-	Sentiment bool `json:"sentiment,omitempty"`
+	Sentiment *bool `json:"sentiment,omitempty"`
 
 	// When `true`, emotion detection of entities will be performed on the specified field.
-	Emotion bool `json:"emotion,omitempty"`
+	Emotion *bool `json:"emotion,omitempty"`
 
 	// The maximum number of entities to extract for each instance of the specified field.
-	Limit int64 `json:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty"`
 
 	// When `true`, the number of mentions of each identified entity is recorded. The default is `false`.
-	Mentions bool `json:"mentions,omitempty"`
+	Mentions *bool `json:"mentions,omitempty"`
 
 	// When `true`, the types of mentions for each idetifieid entity is recorded. The default is `false`.
-	MentionTypes bool `json:"mention_types,omitempty"`
+	MentionTypes *bool `json:"mention_types,omitempty"`
 
 	// When `true`, a list of sentence locations for each instance of each identified entity is recorded. The default is `false`.
-	SentenceLocation bool `json:"sentence_location,omitempty"`
+	SentenceLocation *bool `json:"sentence_location,omitempty"`
 
 	// The enrichement model to use with entity extraction. May be a custom model provided by Watson Knowledge Studio, the public model for use with Knowledge Graph `en-news`, or the default public model `alchemy`.
-	Model string `json:"model,omitempty"`
+	Model *string `json:"model,omitempty"`
 }
 
 // NluEnrichmentFeatures : NluEnrichmentFeatures struct
 type NluEnrichmentFeatures struct {
 
 	// An object specifying the Keyword enrichment and related parameters.
-	Keywords NluEnrichmentKeywords `json:"keywords,omitempty"`
+	Keywords *NluEnrichmentKeywords `json:"keywords,omitempty"`
 
 	// An object speficying the Entities enrichment and related parameters.
-	Entities NluEnrichmentEntities `json:"entities,omitempty"`
+	Entities *NluEnrichmentEntities `json:"entities,omitempty"`
 
 	// An object specifying the sentiment extraction enrichment and related parameters.
-	Sentiment NluEnrichmentSentiment `json:"sentiment,omitempty"`
+	Sentiment *NluEnrichmentSentiment `json:"sentiment,omitempty"`
 
 	// An object specifying the emotion detection enrichment and related parameters.
-	Emotion NluEnrichmentEmotion `json:"emotion,omitempty"`
+	Emotion *NluEnrichmentEmotion `json:"emotion,omitempty"`
 
 	// An object specifying the categories enrichment and related parameters.
-	Categories NluEnrichmentCategories `json:"categories,omitempty"`
+	Categories *NluEnrichmentCategories `json:"categories,omitempty"`
 
 	// An object specifiying the semantic roles enrichment and related parameters.
-	SemanticRoles NluEnrichmentSemanticRoles `json:"semantic_roles,omitempty"`
+	SemanticRoles *NluEnrichmentSemanticRoles `json:"semantic_roles,omitempty"`
 
 	// An object specifying the relations enrichment and related parameters.
-	Relations NluEnrichmentRelations `json:"relations,omitempty"`
+	Relations *NluEnrichmentRelations `json:"relations,omitempty"`
 }
 
 // NluEnrichmentKeywords : An object specifying the Keyword enrichment and related parameters.
 type NluEnrichmentKeywords struct {
 
 	// When `true`, sentiment analysis of keywords will be performed on the specified field.
-	Sentiment bool `json:"sentiment,omitempty"`
+	Sentiment *bool `json:"sentiment,omitempty"`
 
 	// When `true`, emotion detection of keywords will be performed on the specified field.
-	Emotion bool `json:"emotion,omitempty"`
+	Emotion *bool `json:"emotion,omitempty"`
 
 	// The maximum number of keywords to extract for each instance of the specified field.
-	Limit int64 `json:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty"`
 }
 
 // NluEnrichmentRelations : An object specifying the relations enrichment and related parameters.
 type NluEnrichmentRelations struct {
 
 	// *For use with `natural_language_understanding` enrichments only.* The enrichement model to use with relationship extraction. May be a custom model provided by Watson Knowledge Studio, the public model for use with Knowledge Graph `en-news`, the default is`en-news`.
-	Model string `json:"model,omitempty"`
+	Model *string `json:"model,omitempty"`
 }
 
 // NluEnrichmentSemanticRoles : An object specifiying the semantic roles enrichment and related parameters.
 type NluEnrichmentSemanticRoles struct {
 
 	// When `true`, entities are extracted from the identified sentence parts.
-	Entities bool `json:"entities,omitempty"`
+	Entities *bool `json:"entities,omitempty"`
 
 	// When `true`, keywords are extracted from the identified sentence parts.
-	Keywords bool `json:"keywords,omitempty"`
+	Keywords *bool `json:"keywords,omitempty"`
 
 	// The maximum number of semantic roles enrichments to extact from each instance of the specified field.
-	Limit int64 `json:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty"`
 }
 
 // NluEnrichmentSentiment : An object specifying the sentiment extraction enrichment and related parameters.
 type NluEnrichmentSentiment struct {
 
 	// When `true`, sentiment analysis is performed on the entire field.
-	Document bool `json:"document,omitempty"`
+	Document *bool `json:"document,omitempty"`
 
 	// A comma-separated list of target strings that will have any associated sentiment analyzed.
 	Targets []string `json:"targets,omitempty"`
@@ -7316,62 +5685,60 @@ type NluEnrichmentSentiment struct {
 type NormalizationOperation struct {
 
 	// Identifies what type of operation to perform. **copy** - Copies the value of the **source_field** to the **destination_field** field. If the **destination_field** already exists, then the value of the **source_field** overwrites the original value of the **destination_field**. **move** - Renames (moves) the **source_field** to the **destination_field**. If the **destination_field** already exists, then the value of the **source_field** overwrites the original value of the **destination_field**. Rename is identical to copy, except that the **source_field** is removed after the value has been copied to the **destination_field** (it is the same as a _copy_ followed by a _remove_). **merge** - Merges the value of the **source_field** with the value of the **destination_field**. The **destination_field** is converted into an array if it is not already an array, and the value of the **source_field** is appended to the array. This operation removes the **source_field** after the merge. If the **source_field** does not exist in the current document, then the **destination_field** is still converted into an array (if it is not an array already). This conversion ensures the type for **destination_field** is consistent across all documents. **remove** - Deletes the **source_field** field. The **destination_field** is ignored for this operation. **remove_nulls** - Removes all nested null (blank) field values from the JSON tree. **source_field** and **destination_field** are ignored by this operation because _remove_nulls_ operates on the entire JSON tree. Typically, **remove_nulls** is invoked as the last normalization operation (if it is invoked at all, it can be time-expensive).
-	Operation string `json:"operation,omitempty"`
+	Operation *string `json:"operation,omitempty"`
 
 	// The source field for the operation.
-	SourceField string `json:"source_field,omitempty"`
+	SourceField *string `json:"source_field,omitempty"`
 
 	// The destination field for the operation.
-	DestinationField string `json:"destination_field,omitempty"`
+	DestinationField *string `json:"destination_field,omitempty"`
 }
 
 // Notice : A notice produced for the collection.
 type Notice struct {
 
 	// Identifies the notice. Many notices might have the same ID. This field exists so that user applications can programmatically identify a notice and take automatic corrective action.
-	NoticeID string `json:"notice_id,omitempty"`
+	NoticeID *string `json:"notice_id,omitempty"`
 
 	// The creation date of the collection in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-	Created strfmt.DateTime `json:"created,omitempty"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// Unique identifier of the document.
-	DocumentID string `json:"document_id,omitempty"`
+	DocumentID *string `json:"document_id,omitempty"`
 
 	// Unique identifier of the query used for relevance training.
-	QueryID string `json:"query_id,omitempty"`
+	QueryID *string `json:"query_id,omitempty"`
 
 	// Severity level of the notice.
-	Severity string `json:"severity,omitempty"`
+	Severity *string `json:"severity,omitempty"`
 
 	// Ingestion or training step in which the notice occurred.
-	Step string `json:"step,omitempty"`
+	Step *string `json:"step,omitempty"`
 
 	// The description of the notice.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 }
 
 // PdfHeadingDetection : PdfHeadingDetection struct
 type PdfHeadingDetection struct {
-
 	Fonts []FontSetting `json:"fonts,omitempty"`
 }
 
 // PdfSettings : A list of PDF conversion settings.
 type PdfSettings struct {
-
-	Heading PdfHeadingDetection `json:"heading,omitempty"`
+	Heading *PdfHeadingDetection `json:"heading,omitempty"`
 }
 
 // QueryAggregation : An aggregation produced by the Discovery service to analyze the input provided.
 type QueryAggregation struct {
 
 	// The type of aggregation command used. For example: term, filter, max, min, etc.
-	TypeVar string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	Results []AggregationResult `json:"results,omitempty"`
 
 	// Number of matching results.
-	MatchingResults int64 `json:"matching_results,omitempty"`
+	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	// Aggregations returned by the Discovery service.
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
@@ -7381,126 +5748,105 @@ type QueryAggregation struct {
 type QueryEntitiesContext struct {
 
 	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted to query the city of London in England your query would look for `London` with the context of `England`.
-	Text string `json:"text,omitempty"`
+	Text *string `json:"text,omitempty"`
 }
 
 // QueryEntitiesEntity : A text string that appears within the entity text field.
 type QueryEntitiesEntity struct {
 
 	// Entity text content.
-	Text string `json:"text,omitempty"`
+	Text *string `json:"text,omitempty"`
 
 	// The type of the specified entity.
-	TypeVar string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 }
 
 // QueryEntitiesOptions : The queryEntities options.
 type QueryEntitiesOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The entity query feature to perform. Supported features are `disambiguate` and `similar_entities`.
-	Feature string `json:"feature,omitempty"`
-
-    // Indicates whether user set optional parameter Feature
-    IsFeatureSet bool
+	Feature *string `json:"feature,omitempty"`
 
 	// A text string that appears within the entity text field.
-	Entity QueryEntitiesEntity `json:"entity,omitempty"`
-
-    // Indicates whether user set optional parameter Entity
-    IsEntitySet bool
+	Entity *QueryEntitiesEntity `json:"entity,omitempty"`
 
 	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted to query the city of London in England your query would look for `London` with the context of `England`.
-	Context QueryEntitiesContext `json:"context,omitempty"`
-
-    // Indicates whether user set optional parameter Context
-    IsContextSet bool
+	Context *QueryEntitiesContext `json:"context,omitempty"`
 
 	// The number of results to return. The default is `10`. The maximum is `1000`.
-	Count int64 `json:"count,omitempty"`
-
-    // Indicates whether user set optional parameter Count
-    IsCountSet bool
+	Count *int64 `json:"count,omitempty"`
 
 	// The number of evidence items to return for each result. The default is `0`. The maximum number of evidence items per query is 10,000.
-	EvidenceCount int64 `json:"evidence_count,omitempty"`
+	EvidenceCount *int64 `json:"evidence_count,omitempty"`
 
-    // Indicates whether user set optional parameter EvidenceCount
-    IsEvidenceCountSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewQueryEntitiesOptions : Instantiate QueryEntitiesOptions
-func NewQueryEntitiesOptions(environmentID string, collectionID string) *QueryEntitiesOptions {
-    return &QueryEntitiesOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewQueryEntitiesOptions(environmentID string, collectionID string) *QueryEntitiesOptions {
+	return &QueryEntitiesOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *QueryEntitiesOptions) SetEnvironmentID(param string) *QueryEntitiesOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *QueryEntitiesOptions) SetCollectionID(param string) *QueryEntitiesOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetFeature : Allow user to set Feature
 func (options *QueryEntitiesOptions) SetFeature(param string) *QueryEntitiesOptions {
-    options.Feature = param
-    options.IsFeatureSet = true
-    return options
+	options.Feature = core.StringPtr(param)
+	return options
 }
 
 // SetEntity : Allow user to set Entity
 func (options *QueryEntitiesOptions) SetEntity(param QueryEntitiesEntity) *QueryEntitiesOptions {
-    options.Entity = param
-    options.IsEntitySet = true
-    return options
+	options.Entity = &param
+	return options
 }
 
 // SetContext : Allow user to set Context
 func (options *QueryEntitiesOptions) SetContext(param QueryEntitiesContext) *QueryEntitiesOptions {
-    options.Context = param
-    options.IsContextSet = true
-    return options
+	options.Context = &param
+	return options
 }
 
 // SetCount : Allow user to set Count
 func (options *QueryEntitiesOptions) SetCount(param int64) *QueryEntitiesOptions {
-    options.Count = param
-    options.IsCountSet = true
-    return options
+	options.Count = core.Int64Ptr(param)
+	return options
 }
 
 // SetEvidenceCount : Allow user to set EvidenceCount
 func (options *QueryEntitiesOptions) SetEvidenceCount(param int64) *QueryEntitiesOptions {
-    options.EvidenceCount = param
-    options.IsEvidenceCountSet = true
-    return options
+	options.EvidenceCount = core.Int64Ptr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *QueryEntitiesOptions) SetHeaders(param map[string]string) *QueryEntitiesOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // QueryEntitiesResponse : An array of entities resulting from the query.
 type QueryEntitiesResponse struct {
-
 	Entities []QueryEntitiesResponseItem `json:"entities,omitempty"`
 }
 
@@ -7508,10 +5854,10 @@ type QueryEntitiesResponse struct {
 type QueryEntitiesResponseItem struct {
 
 	// Entity text content.
-	Text string `json:"text,omitempty"`
+	Text *string `json:"text,omitempty"`
 
 	// The type of the result entity.
-	TypeVar string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// List of different evidentiary items to support the result.
 	Evidence []QueryEvidence `json:"evidence,omitempty"`
@@ -7521,16 +5867,16 @@ type QueryEntitiesResponseItem struct {
 type QueryEvidence struct {
 
 	// The docuemnt ID (as indexed in Discovery) of the evidence location.
-	DocumentID string `json:"document_id,omitempty"`
+	DocumentID *string `json:"document_id,omitempty"`
 
 	// The field of the document where the supporting evidence was identified.
-	Field string `json:"field,omitempty"`
+	Field *string `json:"field,omitempty"`
 
 	// The start location of the evidence in the identified field. This value is inclusive.
-	StartOffset int64 `json:"start_offset,omitempty"`
+	StartOffset *int64 `json:"start_offset,omitempty"`
 
 	// The end location of the evidence in the identified field. This value is inclusive.
-	EndOffset int64 `json:"end_offset,omitempty"`
+	EndOffset *int64 `json:"end_offset,omitempty"`
 
 	// An array of entity objects that show evidence of the result.
 	Entities []QueryEvidenceEntity `json:"entities,omitempty"`
@@ -7540,16 +5886,16 @@ type QueryEvidence struct {
 type QueryEvidenceEntity struct {
 
 	// The entity type for this entity. Possible types vary based on model used.
-	TypeVar string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// The original text of this entity as found in the evidence field.
-	Text string `json:"text,omitempty"`
+	Text *string `json:"text,omitempty"`
 
 	// The start location of the entity text in the identified field. This value is inclusive.
-	StartOffset int64 `json:"start_offset,omitempty"`
+	StartOffset *int64 `json:"start_offset,omitempty"`
 
 	// The end location of the entity text in the identified field. This value is exclusive.
-	EndOffset int64 `json:"end_offset,omitempty"`
+	EndOffset *int64 `json:"end_offset,omitempty"`
 }
 
 // QueryFilterType : QueryFilterType struct
@@ -7566,349 +5912,260 @@ type QueryFilterType struct {
 type QueryLogOptions struct {
 
 	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
-	Filter string `json:"filter,omitempty"`
-
-    // Indicates whether user set optional parameter Filter
-    IsFilterSet bool
+	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-	Query string `json:"query,omitempty"`
-
-    // Indicates whether user set optional parameter Query
-    IsQuerySet bool
+	Query *string `json:"query,omitempty"`
 
 	// Number of results to return.
-	Count int64 `json:"count,omitempty"`
-
-    // Indicates whether user set optional parameter Count
-    IsCountSet bool
+	Count *int64 `json:"count,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
-	Offset int64 `json:"offset,omitempty"`
-
-    // Indicates whether user set optional parameter Offset
-    IsOffsetSet bool
+	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
 	Sort []string `json:"sort,omitempty"`
 
-    // Indicates whether user set optional parameter Sort
-    IsSortSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewQueryLogOptions : Instantiate QueryLogOptions
-func NewQueryLogOptions() *QueryLogOptions {
-    return &QueryLogOptions{}
+func (discovery *DiscoveryV1) NewQueryLogOptions() *QueryLogOptions {
+	return &QueryLogOptions{}
 }
 
 // SetFilter : Allow user to set Filter
 func (options *QueryLogOptions) SetFilter(param string) *QueryLogOptions {
-    options.Filter = param
-    options.IsFilterSet = true
-    return options
+	options.Filter = core.StringPtr(param)
+	return options
 }
 
 // SetQuery : Allow user to set Query
 func (options *QueryLogOptions) SetQuery(param string) *QueryLogOptions {
-    options.Query = param
-    options.IsQuerySet = true
-    return options
+	options.Query = core.StringPtr(param)
+	return options
 }
 
 // SetCount : Allow user to set Count
 func (options *QueryLogOptions) SetCount(param int64) *QueryLogOptions {
-    options.Count = param
-    options.IsCountSet = true
-    return options
+	options.Count = core.Int64Ptr(param)
+	return options
 }
 
 // SetOffset : Allow user to set Offset
 func (options *QueryLogOptions) SetOffset(param int64) *QueryLogOptions {
-    options.Offset = param
-    options.IsOffsetSet = true
-    return options
+	options.Offset = core.Int64Ptr(param)
+	return options
 }
 
 // SetSort : Allow user to set Sort
 func (options *QueryLogOptions) SetSort(param []string) *QueryLogOptions {
-    options.Sort = param
-    options.IsSortSet = true
-    return options
+	options.Sort = param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *QueryLogOptions) SetHeaders(param map[string]string) *QueryLogOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // QueryNoticesOptions : The queryNotices options.
 type QueryNoticesOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
-	Filter string `json:"filter,omitempty"`
-
-    // Indicates whether user set optional parameter Filter
-    IsFilterSet bool
+	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-	Query string `json:"query,omitempty"`
-
-    // Indicates whether user set optional parameter Query
-    IsQuerySet bool
+	Query *string `json:"query,omitempty"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language understanding. You cannot use **natural_language_query** and **query** at the same time.
-	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
-
-    // Indicates whether user set optional parameter NaturalLanguageQuery
-    IsNaturalLanguageQuerySet bool
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// A passages query that returns the most relevant passages from the results.
-	Passages bool `json:"passages,omitempty"`
-
-    // Indicates whether user set optional parameter Passages
-    IsPassagesSet bool
+	Passages *bool `json:"passages,omitempty"`
 
 	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a full list of possible aggregrations, see the Query reference.
-	Aggregation string `json:"aggregation,omitempty"`
-
-    // Indicates whether user set optional parameter Aggregation
-    IsAggregationSet bool
+	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
-	Count int64 `json:"count,omitempty"`
-
-    // Indicates whether user set optional parameter Count
-    IsCountSet bool
+	Count *int64 `json:"count,omitempty"`
 
 	// A comma separated list of the portion of the document hierarchy to return.
 	ReturnFields []string `json:"return,omitempty"`
 
-    // Indicates whether user set optional parameter ReturnFields
-    IsReturnFieldsSet bool
-
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
-	Offset int64 `json:"offset,omitempty"`
-
-    // Indicates whether user set optional parameter Offset
-    IsOffsetSet bool
+	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
 	Sort []string `json:"sort,omitempty"`
 
-    // Indicates whether user set optional parameter Sort
-    IsSortSet bool
-
 	// When true a highlight field is returned for each result which contains the fields that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
-	Highlight bool `json:"highlight,omitempty"`
-
-    // Indicates whether user set optional parameter Highlight
-    IsHighlightSet bool
+	Highlight *bool `json:"highlight,omitempty"`
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
 	PassagesFields []string `json:"passages.fields,omitempty"`
 
-    // Indicates whether user set optional parameter PassagesFields
-    IsPassagesFieldsSet bool
-
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
-	PassagesCount int64 `json:"passages.count,omitempty"`
-
-    // Indicates whether user set optional parameter PassagesCount
-    IsPassagesCountSet bool
+	PassagesCount *int64 `json:"passages.count,omitempty"`
 
 	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
-	PassagesCharacters int64 `json:"passages.characters,omitempty"`
-
-    // Indicates whether user set optional parameter PassagesCharacters
-    IsPassagesCharactersSet bool
+	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
-	DeduplicateField string `json:"deduplicate.field,omitempty"`
-
-    // Indicates whether user set optional parameter DeduplicateField
-    IsDeduplicateFieldSet bool
+	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the **similar.document_ids** parameter.
-	Similar bool `json:"similar,omitempty"`
-
-    // Indicates whether user set optional parameter Similar
-    IsSimilarSet bool
+	Similar *bool `json:"similar,omitempty"`
 
 	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
 	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
-    // Indicates whether user set optional parameter SimilarDocumentIds
-    IsSimilarDocumentIdsSet bool
-
 	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
 	SimilarFields []string `json:"similar.fields,omitempty"`
 
-    // Indicates whether user set optional parameter SimilarFields
-    IsSimilarFieldsSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewQueryNoticesOptions : Instantiate QueryNoticesOptions
-func NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
-    return &QueryNoticesOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
+	return &QueryNoticesOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *QueryNoticesOptions) SetEnvironmentID(param string) *QueryNoticesOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *QueryNoticesOptions) SetCollectionID(param string) *QueryNoticesOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetFilter : Allow user to set Filter
 func (options *QueryNoticesOptions) SetFilter(param string) *QueryNoticesOptions {
-    options.Filter = param
-    options.IsFilterSet = true
-    return options
+	options.Filter = core.StringPtr(param)
+	return options
 }
 
 // SetQuery : Allow user to set Query
 func (options *QueryNoticesOptions) SetQuery(param string) *QueryNoticesOptions {
-    options.Query = param
-    options.IsQuerySet = true
-    return options
+	options.Query = core.StringPtr(param)
+	return options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
 func (options *QueryNoticesOptions) SetNaturalLanguageQuery(param string) *QueryNoticesOptions {
-    options.NaturalLanguageQuery = param
-    options.IsNaturalLanguageQuerySet = true
-    return options
+	options.NaturalLanguageQuery = core.StringPtr(param)
+	return options
 }
 
 // SetPassages : Allow user to set Passages
 func (options *QueryNoticesOptions) SetPassages(param bool) *QueryNoticesOptions {
-    options.Passages = param
-    options.IsPassagesSet = true
-    return options
+	options.Passages = core.BoolPtr(param)
+	return options
 }
 
 // SetAggregation : Allow user to set Aggregation
 func (options *QueryNoticesOptions) SetAggregation(param string) *QueryNoticesOptions {
-    options.Aggregation = param
-    options.IsAggregationSet = true
-    return options
+	options.Aggregation = core.StringPtr(param)
+	return options
 }
 
 // SetCount : Allow user to set Count
 func (options *QueryNoticesOptions) SetCount(param int64) *QueryNoticesOptions {
-    options.Count = param
-    options.IsCountSet = true
-    return options
+	options.Count = core.Int64Ptr(param)
+	return options
 }
 
 // SetReturnFields : Allow user to set ReturnFields
 func (options *QueryNoticesOptions) SetReturnFields(param []string) *QueryNoticesOptions {
-    options.ReturnFields = param
-    options.IsReturnFieldsSet = true
-    return options
+	options.ReturnFields = param
+	return options
 }
 
 // SetOffset : Allow user to set Offset
 func (options *QueryNoticesOptions) SetOffset(param int64) *QueryNoticesOptions {
-    options.Offset = param
-    options.IsOffsetSet = true
-    return options
+	options.Offset = core.Int64Ptr(param)
+	return options
 }
 
 // SetSort : Allow user to set Sort
 func (options *QueryNoticesOptions) SetSort(param []string) *QueryNoticesOptions {
-    options.Sort = param
-    options.IsSortSet = true
-    return options
+	options.Sort = param
+	return options
 }
 
 // SetHighlight : Allow user to set Highlight
 func (options *QueryNoticesOptions) SetHighlight(param bool) *QueryNoticesOptions {
-    options.Highlight = param
-    options.IsHighlightSet = true
-    return options
+	options.Highlight = core.BoolPtr(param)
+	return options
 }
 
 // SetPassagesFields : Allow user to set PassagesFields
 func (options *QueryNoticesOptions) SetPassagesFields(param []string) *QueryNoticesOptions {
-    options.PassagesFields = param
-    options.IsPassagesFieldsSet = true
-    return options
+	options.PassagesFields = param
+	return options
 }
 
 // SetPassagesCount : Allow user to set PassagesCount
 func (options *QueryNoticesOptions) SetPassagesCount(param int64) *QueryNoticesOptions {
-    options.PassagesCount = param
-    options.IsPassagesCountSet = true
-    return options
+	options.PassagesCount = core.Int64Ptr(param)
+	return options
 }
 
 // SetPassagesCharacters : Allow user to set PassagesCharacters
 func (options *QueryNoticesOptions) SetPassagesCharacters(param int64) *QueryNoticesOptions {
-    options.PassagesCharacters = param
-    options.IsPassagesCharactersSet = true
-    return options
+	options.PassagesCharacters = core.Int64Ptr(param)
+	return options
 }
 
 // SetDeduplicateField : Allow user to set DeduplicateField
 func (options *QueryNoticesOptions) SetDeduplicateField(param string) *QueryNoticesOptions {
-    options.DeduplicateField = param
-    options.IsDeduplicateFieldSet = true
-    return options
+	options.DeduplicateField = core.StringPtr(param)
+	return options
 }
 
 // SetSimilar : Allow user to set Similar
 func (options *QueryNoticesOptions) SetSimilar(param bool) *QueryNoticesOptions {
-    options.Similar = param
-    options.IsSimilarSet = true
-    return options
+	options.Similar = core.BoolPtr(param)
+	return options
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
 func (options *QueryNoticesOptions) SetSimilarDocumentIds(param []string) *QueryNoticesOptions {
-    options.SimilarDocumentIds = param
-    options.IsSimilarDocumentIdsSet = true
-    return options
+	options.SimilarDocumentIds = param
+	return options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
 func (options *QueryNoticesOptions) SetSimilarFields(param []string) *QueryNoticesOptions {
-    options.SimilarFields = param
-    options.IsSimilarFieldsSet = true
-    return options
+	options.SimilarFields = param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *QueryNoticesOptions) SetHeaders(param map[string]string) *QueryNoticesOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // QueryNoticesResponse : QueryNoticesResponse struct
 type QueryNoticesResponse struct {
-
-	MatchingResults int64 `json:"matching_results,omitempty"`
+	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	Results []QueryNoticesResult `json:"results,omitempty"`
 
@@ -7916,38 +6173,38 @@ type QueryNoticesResponse struct {
 
 	Passages []QueryPassages `json:"passages,omitempty"`
 
-	DuplicatesRemoved int64 `json:"duplicates_removed,omitempty"`
+	DuplicatesRemoved *int64 `json:"duplicates_removed,omitempty"`
 }
 
 // QueryNoticesResult : QueryNoticesResult struct
 type QueryNoticesResult struct {
 
 	// The unique identifier of the document.
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// *Deprecated* This field is now part of the **result_metadata** object.
-	Score float64 `json:"score,omitempty"`
+	Score *float64 `json:"score,omitempty"`
 
 	// Metadata of the document.
 	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The collection ID of the collection containing the document for this result.
-	CollectionID string `json:"collection_id,omitempty"`
+	CollectionID *string `json:"collection_id,omitempty"`
 
 	// Metadata of the query result.
-	ResultMetadata QueryResultMetadata `json:"result_metadata,omitempty"`
+	ResultMetadata *QueryResultMetadata `json:"result_metadata,omitempty"`
 
 	// The internal status code returned by the ingestion subsystem indicating the overall result of ingesting the source document.
-	Code int64 `json:"code,omitempty"`
+	Code *int64 `json:"code,omitempty"`
 
 	// Name of the original source file (if available).
-	Filename string `json:"filename,omitempty"`
+	Filename *string `json:"filename,omitempty"`
 
 	// The type of the original source file.
-	FileType string `json:"file_type,omitempty"`
+	FileType *string `json:"file_type,omitempty"`
 
 	// The SHA-1 hash of the original source file (formatted as a hexadecimal string).
-	Sha1 string `json:"sha1,omitempty"`
+	Sha1 *string `json:"sha1,omitempty"`
 
 	// Array of notices for the document.
 	Notices []Notice `json:"notices,omitempty"`
@@ -7957,313 +6214,236 @@ type QueryNoticesResult struct {
 type QueryOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data set.
-	Filter string `json:"filter,omitempty"`
-
-    // Indicates whether user set optional parameter Filter
-    IsFilterSet bool
+	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most relevant documents listed first. Use a query search when you want to find the most relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-	Query string `json:"query,omitempty"`
-
-    // Indicates whether user set optional parameter Query
-    IsQuerySet bool
+	Query *string `json:"query,omitempty"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language understanding. You cannot use **natural_language_query** and **query** at the same time.
-	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
-
-    // Indicates whether user set optional parameter NaturalLanguageQuery
-    IsNaturalLanguageQuerySet bool
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// A passages query that returns the most relevant passages from the results.
-	Passages bool `json:"passages,omitempty"`
-
-    // Indicates whether user set optional parameter Passages
-    IsPassagesSet bool
+	Passages *bool `json:"passages,omitempty"`
 
 	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a full list of possible aggregrations, see the Query reference.
-	Aggregation string `json:"aggregation,omitempty"`
-
-    // Indicates whether user set optional parameter Aggregation
-    IsAggregationSet bool
+	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
-	Count int64 `json:"count,omitempty"`
-
-    // Indicates whether user set optional parameter Count
-    IsCountSet bool
+	Count *int64 `json:"count,omitempty"`
 
 	// A comma separated list of the portion of the document hierarchy to return.
 	ReturnFields []string `json:"return,omitempty"`
 
-    // Indicates whether user set optional parameter ReturnFields
-    IsReturnFieldsSet bool
-
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned is 10, and the offset is 8, it returns the last two results.
-	Offset int64 `json:"offset,omitempty"`
-
-    // Indicates whether user set optional parameter Offset
-    IsOffsetSet bool
+	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no prefix is specified.
 	Sort []string `json:"sort,omitempty"`
 
-    // Indicates whether user set optional parameter Sort
-    IsSortSet bool
-
 	// When true a highlight field is returned for each result which contains the fields that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
-	Highlight bool `json:"highlight,omitempty"`
-
-    // Indicates whether user set optional parameter Highlight
-    IsHighlightSet bool
+	Highlight *bool `json:"highlight,omitempty"`
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level fields are included.
 	PassagesFields []string `json:"passages.fields,omitempty"`
 
-    // Indicates whether user set optional parameter PassagesFields
-    IsPassagesFieldsSet bool
-
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The default is `10`. The maximum is `100`.
-	PassagesCount int64 `json:"passages.count,omitempty"`
-
-    // Indicates whether user set optional parameter PassagesCount
-    IsPassagesCountSet bool
+	PassagesCount *int64 `json:"passages.count,omitempty"`
 
 	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The maximum is `2000`.
-	PassagesCharacters int64 `json:"passages.characters,omitempty"`
-
-    // Indicates whether user set optional parameter PassagesCharacters
-    IsPassagesCharactersSet bool
+	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
 	// When `true` and used with a Watson Discovery News collection, duplicate results (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not considered. This parameter is currently Beta functionality.
-	Deduplicate bool `json:"deduplicate,omitempty"`
-
-    // Indicates whether user set optional parameter Deduplicate
-    IsDeduplicateSet bool
+	Deduplicate *bool `json:"deduplicate,omitempty"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta functionality.
-	DeduplicateField string `json:"deduplicate.field,omitempty"`
-
-    // Indicates whether user set optional parameter DeduplicateField
-    IsDeduplicateFieldSet bool
+	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the **similar.document_ids** parameter.
-	Similar bool `json:"similar,omitempty"`
-
-    // Indicates whether user set optional parameter Similar
-    IsSimilarSet bool
+	Similar *bool `json:"similar,omitempty"`
 
 	// A comma-separated list of document IDs that will be used to find similar documents. **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the document similarity search to include the natural language query. Other query parameters, such as **filter** and **query** are subsequently applied and reduce the query scope.
 	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
-    // Indicates whether user set optional parameter SimilarDocumentIds
-    IsSimilarDocumentIdsSet bool
-
 	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If not specified, the entire document is used for comparison.
 	SimilarFields []string `json:"similar.fields,omitempty"`
 
-    // Indicates whether user set optional parameter SimilarFields
-    IsSimilarFieldsSet bool
-
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
-	LoggingOptOut bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
+	LoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
-    // Indicates whether user set optional parameter LoggingOptOut
-    IsLoggingOptOutSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewQueryOptions : Instantiate QueryOptions
-func NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
-    return &QueryOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
+	return &QueryOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *QueryOptions) SetEnvironmentID(param string) *QueryOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *QueryOptions) SetCollectionID(param string) *QueryOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetFilter : Allow user to set Filter
 func (options *QueryOptions) SetFilter(param string) *QueryOptions {
-    options.Filter = param
-    options.IsFilterSet = true
-    return options
+	options.Filter = core.StringPtr(param)
+	return options
 }
 
 // SetQuery : Allow user to set Query
 func (options *QueryOptions) SetQuery(param string) *QueryOptions {
-    options.Query = param
-    options.IsQuerySet = true
-    return options
+	options.Query = core.StringPtr(param)
+	return options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
 func (options *QueryOptions) SetNaturalLanguageQuery(param string) *QueryOptions {
-    options.NaturalLanguageQuery = param
-    options.IsNaturalLanguageQuerySet = true
-    return options
+	options.NaturalLanguageQuery = core.StringPtr(param)
+	return options
 }
 
 // SetPassages : Allow user to set Passages
 func (options *QueryOptions) SetPassages(param bool) *QueryOptions {
-    options.Passages = param
-    options.IsPassagesSet = true
-    return options
+	options.Passages = core.BoolPtr(param)
+	return options
 }
 
 // SetAggregation : Allow user to set Aggregation
 func (options *QueryOptions) SetAggregation(param string) *QueryOptions {
-    options.Aggregation = param
-    options.IsAggregationSet = true
-    return options
+	options.Aggregation = core.StringPtr(param)
+	return options
 }
 
 // SetCount : Allow user to set Count
 func (options *QueryOptions) SetCount(param int64) *QueryOptions {
-    options.Count = param
-    options.IsCountSet = true
-    return options
+	options.Count = core.Int64Ptr(param)
+	return options
 }
 
 // SetReturnFields : Allow user to set ReturnFields
 func (options *QueryOptions) SetReturnFields(param []string) *QueryOptions {
-    options.ReturnFields = param
-    options.IsReturnFieldsSet = true
-    return options
+	options.ReturnFields = param
+	return options
 }
 
 // SetOffset : Allow user to set Offset
 func (options *QueryOptions) SetOffset(param int64) *QueryOptions {
-    options.Offset = param
-    options.IsOffsetSet = true
-    return options
+	options.Offset = core.Int64Ptr(param)
+	return options
 }
 
 // SetSort : Allow user to set Sort
 func (options *QueryOptions) SetSort(param []string) *QueryOptions {
-    options.Sort = param
-    options.IsSortSet = true
-    return options
+	options.Sort = param
+	return options
 }
 
 // SetHighlight : Allow user to set Highlight
 func (options *QueryOptions) SetHighlight(param bool) *QueryOptions {
-    options.Highlight = param
-    options.IsHighlightSet = true
-    return options
+	options.Highlight = core.BoolPtr(param)
+	return options
 }
 
 // SetPassagesFields : Allow user to set PassagesFields
 func (options *QueryOptions) SetPassagesFields(param []string) *QueryOptions {
-    options.PassagesFields = param
-    options.IsPassagesFieldsSet = true
-    return options
+	options.PassagesFields = param
+	return options
 }
 
 // SetPassagesCount : Allow user to set PassagesCount
 func (options *QueryOptions) SetPassagesCount(param int64) *QueryOptions {
-    options.PassagesCount = param
-    options.IsPassagesCountSet = true
-    return options
+	options.PassagesCount = core.Int64Ptr(param)
+	return options
 }
 
 // SetPassagesCharacters : Allow user to set PassagesCharacters
 func (options *QueryOptions) SetPassagesCharacters(param int64) *QueryOptions {
-    options.PassagesCharacters = param
-    options.IsPassagesCharactersSet = true
-    return options
+	options.PassagesCharacters = core.Int64Ptr(param)
+	return options
 }
 
 // SetDeduplicate : Allow user to set Deduplicate
 func (options *QueryOptions) SetDeduplicate(param bool) *QueryOptions {
-    options.Deduplicate = param
-    options.IsDeduplicateSet = true
-    return options
+	options.Deduplicate = core.BoolPtr(param)
+	return options
 }
 
 // SetDeduplicateField : Allow user to set DeduplicateField
 func (options *QueryOptions) SetDeduplicateField(param string) *QueryOptions {
-    options.DeduplicateField = param
-    options.IsDeduplicateFieldSet = true
-    return options
+	options.DeduplicateField = core.StringPtr(param)
+	return options
 }
 
 // SetSimilar : Allow user to set Similar
 func (options *QueryOptions) SetSimilar(param bool) *QueryOptions {
-    options.Similar = param
-    options.IsSimilarSet = true
-    return options
+	options.Similar = core.BoolPtr(param)
+	return options
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
 func (options *QueryOptions) SetSimilarDocumentIds(param []string) *QueryOptions {
-    options.SimilarDocumentIds = param
-    options.IsSimilarDocumentIdsSet = true
-    return options
+	options.SimilarDocumentIds = param
+	return options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
 func (options *QueryOptions) SetSimilarFields(param []string) *QueryOptions {
-    options.SimilarFields = param
-    options.IsSimilarFieldsSet = true
-    return options
+	options.SimilarFields = param
+	return options
 }
 
 // SetLoggingOptOut : Allow user to set LoggingOptOut
 func (options *QueryOptions) SetLoggingOptOut(param bool) *QueryOptions {
-    options.LoggingOptOut = param
-    options.IsLoggingOptOutSet = true
-    return options
+	options.LoggingOptOut = core.BoolPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *QueryOptions) SetHeaders(param map[string]string) *QueryOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // QueryPassages : QueryPassages struct
 type QueryPassages struct {
 
 	// The unique identifier of the document from which the passage has been extracted.
-	DocumentID string `json:"document_id,omitempty"`
+	DocumentID *string `json:"document_id,omitempty"`
 
 	// The confidence score of the passages's analysis. A higher score indicates greater confidence.
-	PassageScore float64 `json:"passage_score,omitempty"`
+	PassageScore *float64 `json:"passage_score,omitempty"`
 
 	// The content of the extracted passage.
-	PassageText string `json:"passage_text,omitempty"`
+	PassageText *string `json:"passage_text,omitempty"`
 
 	// The position of the first character of the extracted passage in the originating field.
-	StartOffset int64 `json:"start_offset,omitempty"`
+	StartOffset *int64 `json:"start_offset,omitempty"`
 
 	// The position of the last character of the extracted passage in the originating field.
-	EndOffset int64 `json:"end_offset,omitempty"`
+	EndOffset *int64 `json:"end_offset,omitempty"`
 
 	// The label of the field from which the passage has been extracted.
-	Field string `json:"field,omitempty"`
+	Field *string `json:"field,omitempty"`
 }
 
 // QueryRelationsArgument : QueryRelationsArgument struct
 type QueryRelationsArgument struct {
-
 	Entities []QueryEntitiesEntity `json:"entities,omitempty"`
 }
 
@@ -8271,23 +6451,23 @@ type QueryRelationsArgument struct {
 type QueryRelationsEntity struct {
 
 	// Entity text content.
-	Text string `json:"text,omitempty"`
+	Text *string `json:"text,omitempty"`
 
 	// The type of the specified entity.
-	TypeVar string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// If false, implicit querying is performed. The default is `false`.
-	Exact bool `json:"exact,omitempty"`
+	Exact *bool `json:"exact,omitempty"`
 }
 
 // QueryRelationsFilter : QueryRelationsFilter struct
 type QueryRelationsFilter struct {
 
 	// A list of relation types to include or exclude from the query.
-	RelationTypes QueryFilterType `json:"relation_types,omitempty"`
+	RelationTypes *QueryFilterType `json:"relation_types,omitempty"`
 
 	// A list of entity types to include or exclude from the query.
-	EntityTypes QueryFilterType `json:"entity_types,omitempty"`
+	EntityTypes *QueryFilterType `json:"entity_types,omitempty"`
 
 	// A comma-separated list of document IDs to include in the query.
 	DocumentIds []string `json:"document_ids,omitempty"`
@@ -8297,127 +6477,103 @@ type QueryRelationsFilter struct {
 type QueryRelationsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// An array of entities to find relationships for.
 	Entities []QueryRelationsEntity `json:"entities,omitempty"`
 
-    // Indicates whether user set optional parameter Entities
-    IsEntitiesSet bool
-
 	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted to query the city of London in England your query would look for `London` with the context of `England`.
-	Context QueryEntitiesContext `json:"context,omitempty"`
-
-    // Indicates whether user set optional parameter Context
-    IsContextSet bool
+	Context *QueryEntitiesContext `json:"context,omitempty"`
 
 	// The sorting method for the relationships, can be `score` or `frequency`. `frequency` is the number of unique times each entity is identified. The default is `score`.
-	Sort string `json:"sort,omitempty"`
-
-    // Indicates whether user set optional parameter Sort
-    IsSortSet bool
+	Sort *string `json:"sort,omitempty"`
 
 	// Filters to apply to the relationship query.
-	Filter QueryRelationsFilter `json:"filter,omitempty"`
-
-    // Indicates whether user set optional parameter Filter
-    IsFilterSet bool
+	Filter *QueryRelationsFilter `json:"filter,omitempty"`
 
 	// The number of results to return. The default is `10`. The maximum is `1000`.
-	Count int64 `json:"count,omitempty"`
-
-    // Indicates whether user set optional parameter Count
-    IsCountSet bool
+	Count *int64 `json:"count,omitempty"`
 
 	// The number of evidence items to return for each result. The default is `0`. The maximum number of evidence items per query is 10,000.
-	EvidenceCount int64 `json:"evidence_count,omitempty"`
+	EvidenceCount *int64 `json:"evidence_count,omitempty"`
 
-    // Indicates whether user set optional parameter EvidenceCount
-    IsEvidenceCountSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewQueryRelationsOptions : Instantiate QueryRelationsOptions
-func NewQueryRelationsOptions(environmentID string, collectionID string) *QueryRelationsOptions {
-    return &QueryRelationsOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewQueryRelationsOptions(environmentID string, collectionID string) *QueryRelationsOptions {
+	return &QueryRelationsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *QueryRelationsOptions) SetEnvironmentID(param string) *QueryRelationsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *QueryRelationsOptions) SetCollectionID(param string) *QueryRelationsOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetEntities : Allow user to set Entities
 func (options *QueryRelationsOptions) SetEntities(param []QueryRelationsEntity) *QueryRelationsOptions {
-    options.Entities = param
-    options.IsEntitiesSet = true
-    return options
+	options.Entities = param
+	return options
 }
 
 // SetContext : Allow user to set Context
 func (options *QueryRelationsOptions) SetContext(param QueryEntitiesContext) *QueryRelationsOptions {
-    options.Context = param
-    options.IsContextSet = true
-    return options
+	options.Context = &param
+	return options
 }
 
 // SetSort : Allow user to set Sort
 func (options *QueryRelationsOptions) SetSort(param string) *QueryRelationsOptions {
-    options.Sort = param
-    options.IsSortSet = true
-    return options
+	options.Sort = core.StringPtr(param)
+	return options
 }
 
 // SetFilter : Allow user to set Filter
 func (options *QueryRelationsOptions) SetFilter(param QueryRelationsFilter) *QueryRelationsOptions {
-    options.Filter = param
-    options.IsFilterSet = true
-    return options
+	options.Filter = &param
+	return options
 }
 
 // SetCount : Allow user to set Count
 func (options *QueryRelationsOptions) SetCount(param int64) *QueryRelationsOptions {
-    options.Count = param
-    options.IsCountSet = true
-    return options
+	options.Count = core.Int64Ptr(param)
+	return options
 }
 
 // SetEvidenceCount : Allow user to set EvidenceCount
 func (options *QueryRelationsOptions) SetEvidenceCount(param int64) *QueryRelationsOptions {
-    options.EvidenceCount = param
-    options.IsEvidenceCountSet = true
-    return options
+	options.EvidenceCount = core.Int64Ptr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *QueryRelationsOptions) SetHeaders(param map[string]string) *QueryRelationsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // QueryRelationsRelationship : QueryRelationsRelationship struct
 type QueryRelationsRelationship struct {
 
 	// The identified relationship type.
-	TypeVar string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// The number of times the relationship is mentioned.
-	Frequency int64 `json:"frequency,omitempty"`
+	Frequency *int64 `json:"frequency,omitempty"`
 
 	// Information about the relationship.
 	Arguments []QueryRelationsArgument `json:"arguments,omitempty"`
@@ -8428,14 +6584,12 @@ type QueryRelationsRelationship struct {
 
 // QueryRelationsResponse : QueryRelationsResponse struct
 type QueryRelationsResponse struct {
-
 	Relations []QueryRelationsRelationship `json:"relations,omitempty"`
 }
 
 // QueryResponse : A response containing the documents and aggregations for the query.
 type QueryResponse struct {
-
-	MatchingResults int64 `json:"matching_results,omitempty"`
+	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	Results []QueryResult `json:"results,omitempty"`
 
@@ -8443,46 +6597,46 @@ type QueryResponse struct {
 
 	Passages []QueryPassages `json:"passages,omitempty"`
 
-	DuplicatesRemoved int64 `json:"duplicates_removed,omitempty"`
+	DuplicatesRemoved *int64 `json:"duplicates_removed,omitempty"`
 
 	// The session token for this query. The session token can be used to add events associated with this query to the query and event log. **Important:** Session tokens are case sensitive.
-	SessionToken string `json:"session_token,omitempty"`
+	SessionToken *string `json:"session_token,omitempty"`
 }
 
 // QueryResult : QueryResult struct
 type QueryResult struct {
 
 	// The unique identifier of the document.
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// *Deprecated* This field is now part of the **result_metadata** object.
-	Score float64 `json:"score,omitempty"`
+	Score *float64 `json:"score,omitempty"`
 
 	// Metadata of the document.
 	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The collection ID of the collection containing the document for this result.
-	CollectionID string `json:"collection_id,omitempty"`
+	CollectionID *string `json:"collection_id,omitempty"`
 
 	// Metadata of the query result.
-	ResultMetadata QueryResultMetadata `json:"result_metadata,omitempty"`
+	ResultMetadata *QueryResultMetadata `json:"result_metadata,omitempty"`
 }
 
 // QueryResultMetadata : Metadata of a query result.
 type QueryResultMetadata struct {
 
 	// An unbounded measure of the relevance of a particular result, dependent on the query and matching document. A higher score indicates a greater match to the query parameters.
-	Score float64 `json:"score,omitempty"`
+	Score *float64 `json:"score,omitempty"`
 
 	// The confidence score for the given result. Calculated based on how relevant the result is estimated to be, compared to a trained relevancy model. confidence can range from `0.0` to `1.0`. The higher the number, the more relevant the document.
-	Confidence float64 `json:"confidence,omitempty"`
+	Confidence *float64 `json:"confidence,omitempty"`
 }
 
 // SegmentSettings : A list of Document Segmentation settings.
 type SegmentSettings struct {
 
 	// Enables/disables the Document Segmentation feature.
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
 
 	// Defines the heading level that splits into document segments. Valid values are h1, h2, h3, h4, h5, h6.
 	SelectorTags []string `json:"selector_tags,omitempty"`
@@ -8492,16 +6646,16 @@ type SegmentSettings struct {
 type Source struct {
 
 	// The type of source to connect to. -  `box` indicates the configuration is to connect an instance of Enterprise Box. -  `salesforce` indicates the configuration is to connect to Salesforce. -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
-	TypeVar string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// The **credential_id** of the credentials to use to connect to the source. Credentials are defined using the **credentials** method. The **source_type** of the credentials used must match the **type** field specified in this object.
-	CredentialID string `json:"credential_id,omitempty"`
+	CredentialID *string `json:"credential_id,omitempty"`
 
 	// Object containing the schedule information for the source.
-	Schedule SourceSchedule `json:"schedule,omitempty"`
+	Schedule *SourceSchedule `json:"schedule,omitempty"`
 
 	// The **options** object defines which items to crawl from the source system.
-	Options SourceOptions `json:"options,omitempty"`
+	Options *SourceOptions `json:"options,omitempty"`
 }
 
 // SourceOptions : The **options** object defines which items to crawl from the source system.
@@ -8521,179 +6675,164 @@ type SourceOptions struct {
 type SourceOptionsFolder struct {
 
 	// The Box user ID of the user who owns the folder to crawl.
-	OwnerUserID string `json:"owner_user_id"`
+	OwnerUserID *string `json:"owner_user_id" validate:"required"`
 
 	// The Box folder ID of the folder to crawl.
-	FolderID string `json:"folder_id"`
+	FolderID *string `json:"folder_id" validate:"required"`
 
 	// The maximum number of documents to crawl for this folder. By default, all documents in the folder are crawled.
-	Limit int64 `json:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty"`
 }
 
 // SourceOptionsObject : Object that defines a Salesforce document object type crawl with this configuration.
 type SourceOptionsObject struct {
 
 	// The name of the Salesforce document object to crawl. For example, `case`.
-	Name string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// The maximum number of documents to crawl for this document object. By default, all documents in the document object are crawled.
-	Limit int64 `json:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty"`
 }
 
 // SourceOptionsSiteColl : Object that defines a Microsoft SharePoint site collection to crawl with this configuration.
 type SourceOptionsSiteColl struct {
 
 	// The Microsoft SharePoint Online site collection path to crawl. The path must be be relative to the **organization_url** that was specified in the credentials associated with this source configuration.
-	SiteCollectionPath string `json:"site_collection_path"`
+	SiteCollectionPath *string `json:"site_collection_path" validate:"required"`
 
 	// The maximum number of documents to crawl for this site collection. By default, all documents in the site collection are crawled.
-	Limit int64 `json:"limit,omitempty"`
+	Limit *int64 `json:"limit,omitempty"`
 }
 
 // SourceSchedule : Object containing the schedule information for the source.
 type SourceSchedule struct {
 
 	// When `true`, the source is re-crawled based on the **frequency** field in this object. When `false` the source is not re-crawled; When `false` and connecting to Salesforce the source is crawled annually.
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
 
 	// The time zone to base source crawl times on. Possible values correspond to the IANA (Internet Assigned Numbers Authority) time zones list.
-	TimeZone string `json:"time_zone,omitempty"`
+	TimeZone *string `json:"time_zone,omitempty"`
 
 	// The crawl schedule in the specified **time_zone**. -  `daily`: Runs every day between 00:00 and 06:00. -  `weekly`: Runs every week on Sunday between 00:00 and 06:00. -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
-	Frequency string `json:"frequency,omitempty"`
+	Frequency *string `json:"frequency,omitempty"`
 }
 
 // SourceStatus : Object containing source crawl status information.
 type SourceStatus struct {
 
 	// The current status of the source crawl for this collection. This field returns `not_configured` if the default configuration for this source does not have a **source** object defined. -  `running` indicates that a crawl to fetch more documents is in progress. -  `complete` indicates that the crawl has completed with no errors. -  `complete_with_notices` indicates that some notices were generated during the crawl. Notices can be checked by using the **notices** query method. -  `stopped` indicates that the crawl has stopped but is not complete.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 
 	// Date in UTC format indicating when the last crawl was attempted. If `null`, no crawl was completed.
-	LastUpdated strfmt.DateTime `json:"last_updated,omitempty"`
+	LastUpdated *strfmt.DateTime `json:"last_updated,omitempty"`
 }
 
 // TestConfigurationInEnvironmentOptions : The testConfigurationInEnvironment options.
 type TestConfigurationInEnvironmentOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The configuration to use to process the document. If this part is provided, then the provided configuration is used to process the document. If the **configuration_id** is also provided (both are present at the same time), then request is rejected. The maximum supported configuration size is 1 MB. Configuration parts larger than 1 MB are rejected. See the `GET /configurations/{configuration_id}` operation for an example configuration.
-	Configuration string `json:"configuration,omitempty"`
-
-    // Indicates whether user set optional parameter Configuration
-    IsConfigurationSet bool
+	Configuration *string `json:"configuration,omitempty"`
 
 	// Specify to only run the input document through the given step instead of running the input document through the entire ingestion workflow. Valid values are `convert`, `enrich`, and `normalize`.
-	Step string `json:"step,omitempty"`
-
-    // Indicates whether user set optional parameter Step
-    IsStepSet bool
+	Step *string `json:"step,omitempty"`
 
 	// The ID of the configuration to use to process the document. If the **configuration** form part is also provided (both are present at the same time), then the request will be rejected.
-	ConfigurationID string `json:"configuration_id,omitempty"`
-
-    // Indicates whether user set optional parameter ConfigurationID
-    IsConfigurationIDSet bool
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50 megabytes is rejected.
-	File os.File `json:"file,omitempty"`
+	File *os.File `json:"file,omitempty"`
 
-    // Indicates whether user set optional parameter File
-    IsFileSet bool
+	// The filename for file.
+	Filename *string `json:"filename,omitempty"`
 
 	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` { "Creator": "Johnny Appleseed", "Subject": "Apples" } ```.
-	Metadata string `json:"metadata,omitempty"`
+	Metadata *string `json:"metadata,omitempty"`
 
-    // Indicates whether user set optional parameter Metadata
-    IsMetadataSet bool
+	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The content type of File.
-	FileContentType string `json:"file_content_type,omitempty"`
-
-    // Indicates whether user set optional parameter FileContentType
-    IsFileContentTypeSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewTestConfigurationInEnvironmentOptions : Instantiate TestConfigurationInEnvironmentOptions
-func NewTestConfigurationInEnvironmentOptions(environmentID string) *TestConfigurationInEnvironmentOptions {
-    return &TestConfigurationInEnvironmentOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewTestConfigurationInEnvironmentOptions(environmentID string) *TestConfigurationInEnvironmentOptions {
+	return &TestConfigurationInEnvironmentOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *TestConfigurationInEnvironmentOptions) SetEnvironmentID(param string) *TestConfigurationInEnvironmentOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetConfiguration : Allow user to set Configuration
 func (options *TestConfigurationInEnvironmentOptions) SetConfiguration(param string) *TestConfigurationInEnvironmentOptions {
-    options.Configuration = param
-    options.IsConfigurationSet = true
-    return options
+	options.Configuration = core.StringPtr(param)
+	return options
 }
 
 // SetStep : Allow user to set Step
 func (options *TestConfigurationInEnvironmentOptions) SetStep(param string) *TestConfigurationInEnvironmentOptions {
-    options.Step = param
-    options.IsStepSet = true
-    return options
+	options.Step = core.StringPtr(param)
+	return options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
 func (options *TestConfigurationInEnvironmentOptions) SetConfigurationID(param string) *TestConfigurationInEnvironmentOptions {
-    options.ConfigurationID = param
-    options.IsConfigurationIDSet = true
-    return options
+	options.ConfigurationID = core.StringPtr(param)
+	return options
 }
 
 // SetFile : Allow user to set File
-func (options *TestConfigurationInEnvironmentOptions) SetFile(param os.File) *TestConfigurationInEnvironmentOptions {
-    options.File = param
-    options.IsFileSet = true
-    return options
+func (options *TestConfigurationInEnvironmentOptions) SetFile(param *os.File) *TestConfigurationInEnvironmentOptions {
+	options.File = param
+	return options
+}
+
+// SetFilename : Allow user to set Filename
+func (options *TestConfigurationInEnvironmentOptions) SetFilename(param string) *TestConfigurationInEnvironmentOptions {
+	options.Filename = core.StringPtr(param)
+	return options
 }
 
 // SetMetadata : Allow user to set Metadata
 func (options *TestConfigurationInEnvironmentOptions) SetMetadata(param string) *TestConfigurationInEnvironmentOptions {
-    options.Metadata = param
-    options.IsMetadataSet = true
-    return options
+	options.Metadata = core.StringPtr(param)
+	return options
 }
 
 // SetFileContentType : Allow user to set FileContentType
 func (options *TestConfigurationInEnvironmentOptions) SetFileContentType(param string) *TestConfigurationInEnvironmentOptions {
-    options.FileContentType = param
-    options.IsFileContentTypeSet = true
-    return options
+	options.FileContentType = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *TestConfigurationInEnvironmentOptions) SetHeaders(param map[string]string) *TestConfigurationInEnvironmentOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // TestDocument : TestDocument struct
 type TestDocument struct {
 
 	// The unique identifier for the configuration.
-	ConfigurationID string `json:"configuration_id,omitempty"`
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// Status of the preview operation.
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 
 	// The number of 10-kB chunks of field data that were enriched. This can be used to estimate the cost of running a real ingestion.
-	EnrichedFieldUnits int64 `json:"enriched_field_units,omitempty"`
+	EnrichedFieldUnits *int64 `json:"enriched_field_units,omitempty"`
 
 	// Format of the test document.
-	OriginalMediaType string `json:"original_media_type,omitempty"`
+	OriginalMediaType *string `json:"original_media_type,omitempty"`
 
 	// An array of objects that describe each step in the preview process.
 	Snapshots []DocumentSnapshot `json:"snapshots,omitempty"`
@@ -8706,7 +6845,7 @@ type TestDocument struct {
 type TopHitsResults struct {
 
 	// Number of matching results.
-	MatchingResults int64 `json:"matching_results,omitempty"`
+	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	// Top results returned by the aggregation.
 	Hits []QueryResult `json:"hits,omitempty"`
@@ -8714,553 +6853,484 @@ type TopHitsResults struct {
 
 // TrainingDataSet : TrainingDataSet struct
 type TrainingDataSet struct {
+	EnvironmentID *string `json:"environment_id,omitempty"`
 
-	EnvironmentID string `json:"environment_id,omitempty"`
-
-	CollectionID string `json:"collection_id,omitempty"`
+	CollectionID *string `json:"collection_id,omitempty"`
 
 	Queries []TrainingQuery `json:"queries,omitempty"`
 }
 
 // TrainingExample : TrainingExample struct
 type TrainingExample struct {
+	DocumentID *string `json:"document_id,omitempty"`
 
-	DocumentID string `json:"document_id,omitempty"`
+	CrossReference *string `json:"cross_reference,omitempty"`
 
-	CrossReference string `json:"cross_reference,omitempty"`
-
-	Relevance int64 `json:"relevance,omitempty"`
+	Relevance *int64 `json:"relevance,omitempty"`
 }
 
 // TrainingExampleList : TrainingExampleList struct
 type TrainingExampleList struct {
-
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
 // TrainingQuery : TrainingQuery struct
 type TrainingQuery struct {
+	QueryID *string `json:"query_id,omitempty"`
 
-	QueryID string `json:"query_id,omitempty"`
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
-	NaturalLanguageQuery string `json:"natural_language_query,omitempty"`
-
-	Filter string `json:"filter,omitempty"`
+	Filter *string `json:"filter,omitempty"`
 
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
 // TrainingStatus : TrainingStatus struct
 type TrainingStatus struct {
+	TotalExamples *int64 `json:"total_examples,omitempty"`
 
-	TotalExamples int64 `json:"total_examples,omitempty"`
+	Available *bool `json:"available,omitempty"`
 
-	Available bool `json:"available,omitempty"`
+	Processing *bool `json:"processing,omitempty"`
 
-	Processing bool `json:"processing,omitempty"`
+	MinimumQueriesAdded *bool `json:"minimum_queries_added,omitempty"`
 
-	MinimumQueriesAdded bool `json:"minimum_queries_added,omitempty"`
+	MinimumExamplesAdded *bool `json:"minimum_examples_added,omitempty"`
 
-	MinimumExamplesAdded bool `json:"minimum_examples_added,omitempty"`
+	SufficientLabelDiversity *bool `json:"sufficient_label_diversity,omitempty"`
 
-	SufficientLabelDiversity bool `json:"sufficient_label_diversity,omitempty"`
+	Notices *int64 `json:"notices,omitempty"`
 
-	Notices int64 `json:"notices,omitempty"`
+	SuccessfullyTrained *strfmt.DateTime `json:"successfully_trained,omitempty"`
 
-	SuccessfullyTrained strfmt.DateTime `json:"successfully_trained,omitempty"`
-
-	DataUpdated strfmt.DateTime `json:"data_updated,omitempty"`
+	DataUpdated *strfmt.DateTime `json:"data_updated,omitempty"`
 }
 
 // UpdateCollectionOptions : The updateCollection options.
 type UpdateCollectionOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The name of the collection.
-	Name string `json:"name,omitempty"`
-
-    // Indicates whether user set optional parameter Name
-    IsNameSet bool
+	Name *string `json:"name,omitempty"`
 
 	// A description of the collection.
-	Description string `json:"description,omitempty"`
-
-    // Indicates whether user set optional parameter Description
-    IsDescriptionSet bool
+	Description *string `json:"description,omitempty"`
 
 	// The ID of the configuration in which the collection is to be updated.
-	ConfigurationID string `json:"configuration_id,omitempty"`
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
-    // Indicates whether user set optional parameter ConfigurationID
-    IsConfigurationIDSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewUpdateCollectionOptions : Instantiate UpdateCollectionOptions
-func NewUpdateCollectionOptions(environmentID string, collectionID string) *UpdateCollectionOptions {
-    return &UpdateCollectionOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-    }
+func (discovery *DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string) *UpdateCollectionOptions {
+	return &UpdateCollectionOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *UpdateCollectionOptions) SetEnvironmentID(param string) *UpdateCollectionOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *UpdateCollectionOptions) SetCollectionID(param string) *UpdateCollectionOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetName : Allow user to set Name
 func (options *UpdateCollectionOptions) SetName(param string) *UpdateCollectionOptions {
-    options.Name = param
-    options.IsNameSet = true
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetDescription : Allow user to set Description
 func (options *UpdateCollectionOptions) SetDescription(param string) *UpdateCollectionOptions {
-    options.Description = param
-    options.IsDescriptionSet = true
-    return options
+	options.Description = core.StringPtr(param)
+	return options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
 func (options *UpdateCollectionOptions) SetConfigurationID(param string) *UpdateCollectionOptions {
-    options.ConfigurationID = param
-    options.IsConfigurationIDSet = true
-    return options
+	options.ConfigurationID = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *UpdateCollectionOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // UpdateConfigurationOptions : The updateConfiguration options.
 type UpdateConfigurationOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the configuration.
-	ConfigurationID string `json:"configuration_id"`
+	ConfigurationID *string `json:"configuration_id" validate:"required"`
 
 	// The name of the configuration.
-	Name string `json:"name,omitempty"`
-
-    // Indicates whether user set optional parameter Name
-    IsNameSet bool
+	Name *string `json:"name,omitempty"`
 
 	// The description of the configuration, if available.
-	Description string `json:"description,omitempty"`
-
-    // Indicates whether user set optional parameter Description
-    IsDescriptionSet bool
+	Description *string `json:"description,omitempty"`
 
 	// The document conversion settings for the configuration.
-	Conversions Conversions `json:"conversions,omitempty"`
-
-    // Indicates whether user set optional parameter Conversions
-    IsConversionsSet bool
+	Conversions *Conversions `json:"conversions,omitempty"`
 
 	// An array of document enrichment settings for the configuration.
 	Enrichments []Enrichment `json:"enrichments,omitempty"`
 
-    // Indicates whether user set optional parameter Enrichments
-    IsEnrichmentsSet bool
-
 	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are executed in the order that they appear in the array.
 	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
 
-    // Indicates whether user set optional parameter Normalizations
-    IsNormalizationsSet bool
-
 	// Object containing source parameters for the configuration.
-	Source Source `json:"source,omitempty"`
+	Source *Source `json:"source,omitempty"`
 
-    // Indicates whether user set optional parameter Source
-    IsSourceSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewUpdateConfigurationOptions : Instantiate UpdateConfigurationOptions
-func NewUpdateConfigurationOptions(environmentID string, configurationID string) *UpdateConfigurationOptions {
-    return &UpdateConfigurationOptions{
-        EnvironmentID: environmentID,
-        ConfigurationID: configurationID,
-    }
+func (discovery *DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string) *UpdateConfigurationOptions {
+	return &UpdateConfigurationOptions{
+		EnvironmentID:   core.StringPtr(environmentID),
+		ConfigurationID: core.StringPtr(configurationID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *UpdateConfigurationOptions) SetEnvironmentID(param string) *UpdateConfigurationOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
 func (options *UpdateConfigurationOptions) SetConfigurationID(param string) *UpdateConfigurationOptions {
-    options.ConfigurationID = param
-    return options
+	options.ConfigurationID = core.StringPtr(param)
+	return options
 }
 
 // SetName : Allow user to set Name
 func (options *UpdateConfigurationOptions) SetName(param string) *UpdateConfigurationOptions {
-    options.Name = param
-    options.IsNameSet = true
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetDescription : Allow user to set Description
 func (options *UpdateConfigurationOptions) SetDescription(param string) *UpdateConfigurationOptions {
-    options.Description = param
-    options.IsDescriptionSet = true
-    return options
+	options.Description = core.StringPtr(param)
+	return options
 }
 
 // SetConversions : Allow user to set Conversions
 func (options *UpdateConfigurationOptions) SetConversions(param Conversions) *UpdateConfigurationOptions {
-    options.Conversions = param
-    options.IsConversionsSet = true
-    return options
+	options.Conversions = &param
+	return options
 }
 
 // SetEnrichments : Allow user to set Enrichments
 func (options *UpdateConfigurationOptions) SetEnrichments(param []Enrichment) *UpdateConfigurationOptions {
-    options.Enrichments = param
-    options.IsEnrichmentsSet = true
-    return options
+	options.Enrichments = param
+	return options
 }
 
 // SetNormalizations : Allow user to set Normalizations
 func (options *UpdateConfigurationOptions) SetNormalizations(param []NormalizationOperation) *UpdateConfigurationOptions {
-    options.Normalizations = param
-    options.IsNormalizationsSet = true
-    return options
+	options.Normalizations = param
+	return options
 }
 
 // SetSource : Allow user to set Source
 func (options *UpdateConfigurationOptions) SetSource(param Source) *UpdateConfigurationOptions {
-    options.Source = param
-    options.IsSourceSet = true
-    return options
+	options.Source = &param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *UpdateConfigurationOptions) SetHeaders(param map[string]string) *UpdateConfigurationOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // UpdateCredentialsOptions : The updateCredentials options.
 type UpdateCredentialsOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID string `json:"credential_id"`
+	CredentialID *string `json:"credential_id" validate:"required"`
 
 	// The source that this credentials object connects to. -  `box` indicates the credentials are used to connect an instance of Enterprise Box. -  `salesforce` indicates the credentials are used to connect to Salesforce. -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-	SourceType string `json:"source_type,omitempty"`
-
-    // Indicates whether user set optional parameter SourceType
-    IsSourceTypeSet bool
+	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials. Obtain credentials for your source from the administrator of the source.
-	CredentialDetails CredentialDetails `json:"credential_details,omitempty"`
+	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 
-    // Indicates whether user set optional parameter CredentialDetails
-    IsCredentialDetailsSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
-func NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
-    return &UpdateCredentialsOptions{
-        EnvironmentID: environmentID,
-        CredentialID: credentialID,
-    }
+func (discovery *DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
+	return &UpdateCredentialsOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CredentialID:  core.StringPtr(credentialID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *UpdateCredentialsOptions) SetEnvironmentID(param string) *UpdateCredentialsOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCredentialID : Allow user to set CredentialID
 func (options *UpdateCredentialsOptions) SetCredentialID(param string) *UpdateCredentialsOptions {
-    options.CredentialID = param
-    return options
+	options.CredentialID = core.StringPtr(param)
+	return options
 }
 
 // SetSourceType : Allow user to set SourceType
 func (options *UpdateCredentialsOptions) SetSourceType(param string) *UpdateCredentialsOptions {
-    options.SourceType = param
-    options.IsSourceTypeSet = true
-    return options
+	options.SourceType = core.StringPtr(param)
+	return options
 }
 
 // SetCredentialDetails : Allow user to set CredentialDetails
 func (options *UpdateCredentialsOptions) SetCredentialDetails(param CredentialDetails) *UpdateCredentialsOptions {
-    options.CredentialDetails = param
-    options.IsCredentialDetailsSet = true
-    return options
+	options.CredentialDetails = &param
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *UpdateCredentialsOptions) SetHeaders(param map[string]string) *UpdateCredentialsOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // UpdateDocumentOptions : The updateDocument options.
 type UpdateDocumentOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the document.
-	DocumentID string `json:"document_id"`
+	DocumentID *string `json:"document_id" validate:"required"`
 
 	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50 megabytes is rejected.
-	File os.File `json:"file,omitempty"`
+	File *os.File `json:"file,omitempty"`
 
-    // Indicates whether user set optional parameter File
-    IsFileSet bool
+	// The filename for file.
+	Filename *string `json:"filename,omitempty"`
 
 	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` { "Creator": "Johnny Appleseed", "Subject": "Apples" } ```.
-	Metadata string `json:"metadata,omitempty"`
+	Metadata *string `json:"metadata,omitempty"`
 
-    // Indicates whether user set optional parameter Metadata
-    IsMetadataSet bool
+	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The content type of File.
-	FileContentType string `json:"file_content_type,omitempty"`
-
-    // Indicates whether user set optional parameter FileContentType
-    IsFileContentTypeSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewUpdateDocumentOptions : Instantiate UpdateDocumentOptions
-func NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
-    return &UpdateDocumentOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        DocumentID: documentID,
-    }
+func (discovery *DiscoveryV1) NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
+	return &UpdateDocumentOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *UpdateDocumentOptions) SetEnvironmentID(param string) *UpdateDocumentOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *UpdateDocumentOptions) SetCollectionID(param string) *UpdateDocumentOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetDocumentID : Allow user to set DocumentID
 func (options *UpdateDocumentOptions) SetDocumentID(param string) *UpdateDocumentOptions {
-    options.DocumentID = param
-    return options
+	options.DocumentID = core.StringPtr(param)
+	return options
 }
 
 // SetFile : Allow user to set File
-func (options *UpdateDocumentOptions) SetFile(param os.File) *UpdateDocumentOptions {
-    options.File = param
-    options.IsFileSet = true
-    return options
+func (options *UpdateDocumentOptions) SetFile(param *os.File) *UpdateDocumentOptions {
+	options.File = param
+	return options
+}
+
+// SetFilename : Allow user to set Filename
+func (options *UpdateDocumentOptions) SetFilename(param string) *UpdateDocumentOptions {
+	options.Filename = core.StringPtr(param)
+	return options
 }
 
 // SetMetadata : Allow user to set Metadata
 func (options *UpdateDocumentOptions) SetMetadata(param string) *UpdateDocumentOptions {
-    options.Metadata = param
-    options.IsMetadataSet = true
-    return options
+	options.Metadata = core.StringPtr(param)
+	return options
 }
 
 // SetFileContentType : Allow user to set FileContentType
 func (options *UpdateDocumentOptions) SetFileContentType(param string) *UpdateDocumentOptions {
-    options.FileContentType = param
-    options.IsFileContentTypeSet = true
-    return options
+	options.FileContentType = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *UpdateDocumentOptions) SetHeaders(param map[string]string) *UpdateDocumentOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // UpdateEnvironmentOptions : The updateEnvironment options.
 type UpdateEnvironmentOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// Name that identifies the environment.
-	Name string `json:"name,omitempty"`
-
-    // Indicates whether user set optional parameter Name
-    IsNameSet bool
+	Name *string `json:"name,omitempty"`
 
 	// Description of the environment.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 
-    // Indicates whether user set optional parameter Description
-    IsDescriptionSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewUpdateEnvironmentOptions : Instantiate UpdateEnvironmentOptions
-func NewUpdateEnvironmentOptions(environmentID string) *UpdateEnvironmentOptions {
-    return &UpdateEnvironmentOptions{
-        EnvironmentID: environmentID,
-    }
+func (discovery *DiscoveryV1) NewUpdateEnvironmentOptions(environmentID string) *UpdateEnvironmentOptions {
+	return &UpdateEnvironmentOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *UpdateEnvironmentOptions) SetEnvironmentID(param string) *UpdateEnvironmentOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetName : Allow user to set Name
 func (options *UpdateEnvironmentOptions) SetName(param string) *UpdateEnvironmentOptions {
-    options.Name = param
-    options.IsNameSet = true
-    return options
+	options.Name = core.StringPtr(param)
+	return options
 }
 
 // SetDescription : Allow user to set Description
 func (options *UpdateEnvironmentOptions) SetDescription(param string) *UpdateEnvironmentOptions {
-    options.Description = param
-    options.IsDescriptionSet = true
-    return options
+	options.Description = core.StringPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *UpdateEnvironmentOptions) SetHeaders(param map[string]string) *UpdateEnvironmentOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // UpdateTrainingExampleOptions : The updateTrainingExample options.
 type UpdateTrainingExampleOptions struct {
 
 	// The ID of the environment.
-	EnvironmentID string `json:"environment_id"`
+	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The ID of the collection.
-	CollectionID string `json:"collection_id"`
+	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The ID of the query used for training.
-	QueryID string `json:"query_id"`
+	QueryID *string `json:"query_id" validate:"required"`
 
 	// The ID of the document as it is indexed.
-	ExampleID string `json:"example_id"`
+	ExampleID *string `json:"example_id" validate:"required"`
 
-	CrossReference string `json:"cross_reference,omitempty"`
+	CrossReference *string `json:"cross_reference,omitempty"`
 
-    // Indicates whether user set optional parameter CrossReference
-    IsCrossReferenceSet bool
+	Relevance *int64 `json:"relevance,omitempty"`
 
-	Relevance int64 `json:"relevance,omitempty"`
-
-    // Indicates whether user set optional parameter Relevance
-    IsRelevanceSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewUpdateTrainingExampleOptions : Instantiate UpdateTrainingExampleOptions
-func NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
-    return &UpdateTrainingExampleOptions{
-        EnvironmentID: environmentID,
-        CollectionID: collectionID,
-        QueryID: queryID,
-        ExampleID: exampleID,
-    }
+func (discovery *DiscoveryV1) NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
+	return &UpdateTrainingExampleOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
+	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *UpdateTrainingExampleOptions) SetEnvironmentID(param string) *UpdateTrainingExampleOptions {
-    options.EnvironmentID = param
-    return options
+	options.EnvironmentID = core.StringPtr(param)
+	return options
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (options *UpdateTrainingExampleOptions) SetCollectionID(param string) *UpdateTrainingExampleOptions {
-    options.CollectionID = param
-    return options
+	options.CollectionID = core.StringPtr(param)
+	return options
 }
 
 // SetQueryID : Allow user to set QueryID
 func (options *UpdateTrainingExampleOptions) SetQueryID(param string) *UpdateTrainingExampleOptions {
-    options.QueryID = param
-    return options
+	options.QueryID = core.StringPtr(param)
+	return options
 }
 
 // SetExampleID : Allow user to set ExampleID
 func (options *UpdateTrainingExampleOptions) SetExampleID(param string) *UpdateTrainingExampleOptions {
-    options.ExampleID = param
-    return options
+	options.ExampleID = core.StringPtr(param)
+	return options
 }
 
 // SetCrossReference : Allow user to set CrossReference
 func (options *UpdateTrainingExampleOptions) SetCrossReference(param string) *UpdateTrainingExampleOptions {
-    options.CrossReference = param
-    options.IsCrossReferenceSet = true
-    return options
+	options.CrossReference = core.StringPtr(param)
+	return options
 }
 
 // SetRelevance : Allow user to set Relevance
 func (options *UpdateTrainingExampleOptions) SetRelevance(param int64) *UpdateTrainingExampleOptions {
-    options.Relevance = param
-    options.IsRelevanceSet = true
-    return options
+	options.Relevance = core.Int64Ptr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *UpdateTrainingExampleOptions) SetHeaders(param map[string]string) *UpdateTrainingExampleOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // WordHeadingDetection : WordHeadingDetection struct
 type WordHeadingDetection struct {
-
 	Fonts []FontSetting `json:"fonts,omitempty"`
 
 	Styles []WordStyle `json:"styles,omitempty"`
@@ -9268,21 +7338,18 @@ type WordHeadingDetection struct {
 
 // WordSettings : A list of Word conversion settings.
 type WordSettings struct {
-
-	Heading WordHeadingDetection `json:"heading,omitempty"`
+	Heading *WordHeadingDetection `json:"heading,omitempty"`
 }
 
 // WordStyle : WordStyle struct
 type WordStyle struct {
-
-	Level int64 `json:"level,omitempty"`
+	Level *int64 `json:"level,omitempty"`
 
 	Names []string `json:"names,omitempty"`
 }
 
 // XPathPatterns : XPathPatterns struct
 type XPathPatterns struct {
-
 	Xpaths []string `json:"xpaths,omitempty"`
 }
 
@@ -9290,63 +7357,63 @@ type XPathPatterns struct {
 type Calculation struct {
 
 	// The field where the aggregation is located in the document.
-	Field string `json:"field,omitempty"`
+	Field *string `json:"field,omitempty"`
 
 	// Value of the aggregation.
-	Value float64 `json:"value,omitempty"`
+	Value *float64 `json:"value,omitempty"`
 }
 
 // Filter : Filter struct
 type Filter struct {
 
 	// The match the aggregated results queried for.
-	Match string `json:"match,omitempty"`
+	Match *string `json:"match,omitempty"`
 }
 
 // Histogram : Histogram struct
 type Histogram struct {
 
 	// The field where the aggregation is located in the document.
-	Field string `json:"field,omitempty"`
+	Field *string `json:"field,omitempty"`
 
 	// Interval of the aggregation. (For 'histogram' type).
-	Interval int64 `json:"interval,omitempty"`
+	Interval *int64 `json:"interval,omitempty"`
 }
 
 // Nested : Nested struct
 type Nested struct {
 
 	// The area of the results the aggregation was restricted to.
-	Path string `json:"path,omitempty"`
+	Path *string `json:"path,omitempty"`
 }
 
 // Term : Term struct
 type Term struct {
 
 	// The field where the aggregation is located in the document.
-	Field string `json:"field,omitempty"`
+	Field *string `json:"field,omitempty"`
 
-	Count int64 `json:"count,omitempty"`
+	Count *int64 `json:"count,omitempty"`
 }
 
 // Timeslice : Timeslice struct
 type Timeslice struct {
 
 	// The field where the aggregation is located in the document.
-	Field string `json:"field,omitempty"`
+	Field *string `json:"field,omitempty"`
 
 	// Interval of the aggregation. Valid date interval values are second/seconds minute/minutes, hour/hours, day/days, week/weeks, month/months, and year/years.
-	Interval string `json:"interval,omitempty"`
+	Interval *string `json:"interval,omitempty"`
 
 	// Used to indicate that anomaly detection should be performed. Anomaly detection is used to locate unusual datapoints within a time series.
-	Anomaly bool `json:"anomaly,omitempty"`
+	Anomaly *bool `json:"anomaly,omitempty"`
 }
 
 // TopHits : TopHits struct
 type TopHits struct {
 
 	// Number of top hits returned by the aggregation.
-	Size int64 `json:"size,omitempty"`
+	Size *int64 `json:"size,omitempty"`
 
-	Hits TopHitsResults `json:"hits,omitempty"`
+	Hits *TopHitsResults `json:"hits,omitempty"`
 }
