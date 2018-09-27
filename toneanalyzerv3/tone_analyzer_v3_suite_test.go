@@ -1,4 +1,4 @@
-package toneAnalyzerV3_test
+package toneanalyzerv3_test
 
 import (
 	"testing"

@@ -1,16 +1,17 @@
-package toneAnalyzerV3_test
+package toneanalyzerv3_test
 
 import (
-	"github.ibm.com/arf/go-sdk/toneAnalyzerV3"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"github.com/cloudfoundry-community/go-cfenv"
+	"github.com/ibm-watson/go-sdk/toneanalyzerv3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"encoding/base64"
-	"net/http/httptest"
 	"net/http"
-	"fmt"
+	"net/http/httptest"
 	"os"
-	"encoding/json"
-	"github.com/cloudfoundry-community/go-cfenv"
+	"strings"
 )
 
 var _ = Describe("ToneAnalyzerV3", func() {
@@ -19,12 +20,12 @@ var _ = Describe("ToneAnalyzerV3", func() {
 		username := "hyphenated-user"
 		password := "hyphenated-pass"
 		VCAPservices := cfenv.Services{
-			"conversation" : {
+			"conversation": {
 				{
 					Name: "tone_analyzer",
 					Tags: []string{},
 					Credentials: map[string]interface{}{
-						"url": "https://gateway.watsonplatform.net/tone-analyzer/api",
+						"url":      "https://gateway.watsonplatform.net/tone-analyzer/api",
 						"username": username,
 						"password": password,
 					},
@@ -46,22 +47,22 @@ var _ = Describe("ToneAnalyzerV3", func() {
 			It("Succeed to create ToneAnalyzerV3", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := toneAnalyzerV3.NewToneAnalyzerV3(&toneAnalyzerV3.ServiceCredentials{
+				testService, testServiceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				testService.Tone(toneAnalyzerV3.NewToneOptionsForPlain("exampleString"))
+				testService.(testService.NewOptions())
 			})
 		})
 	})
-	Describe("Tone(options *ToneOptions)", func() {
-		tonePath := "/v3/tone"
-        version := "exampleString"
-        toneInput := toneAnalyzerV3.ToneInput{}
-        toneOptions := toneAnalyzerV3.NewToneOptionsForToneInput(toneInput)
+	Describe("Tone(toneOptions *ToneOptions)", func() {
+		TonePath := "/v3/tone"
+		version := "exampleString"
+		ContentType := "exampleString"
+		ToneOptions := testService.NewToneOptions(ContentType)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -69,8 +70,8 @@ var _ = Describe("ToneAnalyzerV3", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(tonePath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(tonePath))
+				Expect(req.URL.String()).To(Equal(TonePath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(TonePath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -80,7 +81,7 @@ var _ = Describe("ToneAnalyzerV3", func() {
 			It("Succeed to call Tone", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := toneAnalyzerV3.NewToneAnalyzerV3(&toneAnalyzerV3.ServiceCredentials{
+				testService, testServiceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -89,20 +90,20 @@ var _ = Describe("ToneAnalyzerV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.Tone(toneOptions)
+				returnValue, returnValueErr := testService.Tone(ToneOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := toneAnalyzerV3.GetToneResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := toneanalyzerv3.GetToneResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("ToneChat(options *ToneChatOptions)", func() {
-		toneChatPath := "/v3/tone_chat"
-        version := "exampleString"
-        utterances := []toneAnalyzerV3.Utterance{}
-        toneChatOptions := toneAnalyzerV3.NewToneChatOptions(utterances)
+	Describe("ToneChat(toneChatOptions *ToneChatOptions)", func() {
+		ToneChatPath := "/v3/tone_chat"
+		version := "exampleString"
+		Utterances := []toneanalyzerv3.Utterance{}
+		ToneChatOptions := testService.NewToneChatOptions(Utterances)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -110,8 +111,8 @@ var _ = Describe("ToneAnalyzerV3", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(toneChatPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(toneChatPath))
+				Expect(req.URL.String()).To(Equal(ToneChatPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(ToneChatPath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -121,7 +122,7 @@ var _ = Describe("ToneAnalyzerV3", func() {
 			It("Succeed to call ToneChat", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := toneAnalyzerV3.NewToneAnalyzerV3(&toneAnalyzerV3.ServiceCredentials{
+				testService, testServiceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -130,12 +131,12 @@ var _ = Describe("ToneAnalyzerV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.ToneChat(toneChatOptions)
+				returnValue, returnValueErr := testService.ToneChat(ToneChatOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := toneAnalyzerV3.GetToneChatResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := toneanalyzerv3.GetToneChatResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
