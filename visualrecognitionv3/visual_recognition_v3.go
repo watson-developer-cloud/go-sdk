@@ -73,8 +73,8 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		return nil, fmt.Errorf("At least one of imagesFile, url, threshold, owners, or classifierIds must be supplied")
 	}
 
-	pathSegments := []string{ "v3/classify" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v3/classify"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -135,8 +135,8 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *De
 		return nil, fmt.Errorf("At least one of imagesFile or url must be supplied")
 	}
 
-	pathSegments := []string{ "v3/detect_faces" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v3/detect_faces"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -182,8 +182,8 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 		return nil, err
 	}
 
-	pathSegments := []string{ "v3/classifiers" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v3/classifiers"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -195,7 +195,7 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	builder.AddQuery("version", visualRecognition.service.Options.Version)
 
 	builder.AddFormData("name", "", "", fmt.Sprint(*createClassifierOptions.Name))
-	builder.AddFormData("classname_positive_examples", core.StringNilMapper(createClassifierOptions.ClassnamePositiveExamplesFilename), 
+	builder.AddFormData("classname_positive_examples", core.StringNilMapper(createClassifierOptions.ClassnamePositiveExamplesFilename),
 		"application/octet-stream", createClassifierOptions.ClassnamePositiveExamples)
 	if createClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(createClassifierOptions.NegativeExamplesFilename),
@@ -229,8 +229,8 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 		return nil, err
 	}
 
-	pathSegments := []string{ "v3/classifiers" }
-	pathParameters := []string{ *deleteClassifierOptions.ClassifierID }
+	pathSegments := []string{"v3/classifiers"}
+	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -259,8 +259,8 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 		return nil, err
 	}
 
-	pathSegments := []string{ "v3/classifiers" }
-	pathParameters := []string{ *getClassifierOptions.ClassifierID }
+	pathSegments := []string{"v3/classifiers"}
+	pathParameters := []string{*getClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -295,8 +295,8 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 		return nil, err
 	}
 
-	pathSegments := []string{ "v3/classifiers" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v3/classifiers"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -341,8 +341,8 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 		return nil, fmt.Errorf("At least one of classnamePositiveExamples or negativeExamples must be supplied")
 	}
 
-	pathSegments := []string{ "v3/classifiers" }
-	pathParameters := []string{ *updateClassifierOptions.ClassifierID }
+	pathSegments := []string{"v3/classifiers"}
+	pathParameters := []string{*updateClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -389,8 +389,8 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 		return nil, err
 	}
 
-	pathSegments := []string{ "v3/classifiers", "core_ml_model" }
-	pathParameters := []string{ *getCoreMlModelOptions.ClassifierID }
+	pathSegments := []string{"v3/classifiers", "core_ml_model"}
+	pathParameters := []string{*getCoreMlModelOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -428,8 +428,8 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 		return nil, err
 	}
 
-	pathSegments := []string{ "v3/user_data" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v3/user_data"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
@@ -675,7 +675,7 @@ type CreateClassifierOptions struct {
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
 func (visualRecognition *VisualRecognitionV3) NewCreateClassifierOptions(name string, classnamePositiveExamples os.File) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
-		Name: core.StringPtr(name),
+		Name:                      core.StringPtr(name),
 		ClassnamePositiveExamples: &classnamePositiveExamples,
 	}
 }
