@@ -120,7 +120,7 @@ func TestBuildWithMultipartForm(t *testing.T) {
 		AddFormData("hello", "", "text/plain", "Hello GO SDK")
 
 	pwd, _ := os.Getwd()
-	file, err := os.Open(pwd + "/resources/personality-v3.txt")
+	file, err := os.Open(pwd + "/../resources/personality-v3.txt")
 	if err != nil {
 		t.Errorf("Could not open file")
 	}

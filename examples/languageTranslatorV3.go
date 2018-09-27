@@ -1,13 +1,15 @@
 package main
 
 import (
-	"fmt"
-	. "go-sdk/languageTranslatorV3"
-	"os"
 	"encoding/json"
+	"fmt"
+	"os"
+
+	languagetranslator "github.com/ibm-watson/go-sdk/languagetranslatorv3"
 )
 
-func prettyPrint(result interface{}, resultName string) {
+// PrettyPrint print pretty
+func PrettyPrint(result interface{}, resultName string) {
 	output, err := json.MarshalIndent(result, "", "    ")
 
 	if err == nil {
@@ -17,18 +19,18 @@ func prettyPrint(result interface{}, resultName string) {
 
 func main() {
 	// Instantiate the Watson Language Translator service
-	languageTranslator, languageTranslatorErr := NewLanguageTranslatorV3(&ServiceCredentials{
-		ServiceURL: "YOUR SERVICE URL",
-		Version: "2018-02-16",
-		APIkey: "YOUR SERVICE API KEY",
-	})
+	service, serviceErr := languagetranslator.
+		NewLanguageTranslatorV3(&languagetranslator.LanguageTranslatorV3Options{
+			URL:       "YOUR SERVICE URL",
+			Version:   "2018-02-16",
+			IAMApiKey: "YOUR IAM API KEY",
+		})
 
 	// Check successful instantiation
-	if languageTranslatorErr != nil {
-		fmt.Println(languageTranslatorErr)
+	if serviceErr != nil {
+		fmt.Println(serviceErr)
 		return
 	}
-
 
 	/* TRANSLATE */
 
@@ -37,167 +39,157 @@ func main() {
 		"And this one",
 	}
 
-	translateOptions := NewTranslateOptions(textToTranslate).
+	translateOptions := service.NewTranslateOptions(textToTranslate).
 		SetModelID("en-es")
 
 	// Call the languageTranslator Translate method
-	translate, translateErr := languageTranslator.Translate(translateOptions)
+	response, responseErr := service.Translate(translateOptions)
 
 	// Check successful call
-	if translateErr != nil {
-		fmt.Println(translateErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
+
+	fmt.Println(response)
 
 	// Cast translate.Result to the specific dataType returned by Translate
 	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	translateResult := GetTranslateResult(translate)
+	translateResult := service.GetTranslateResult(response)
 
 	// Check successful casting
 	if translateResult != nil {
-		prettyPrint(translateResult, "Translation")
+		fmt.Println("The word count is ", *translateResult.WordCount)
 	}
-
 
 	/* LIST IDENTIFIABLE LANGUAGES */
 
-	listIdentifiableLanguagesOptions := NewListIdentifiableLanguagesOptions()
+	listIdentifiableLanguagesOptions := service.NewListIdentifiableLanguagesOptions()
 
 	// Call the languageTranslator ListIdentifiableLanguages method
-	listLanguage, listLanguageErr := languageTranslator.ListIdentifiableLanguages(listIdentifiableLanguagesOptions)
+	response, responseErr = service.ListIdentifiableLanguages(listIdentifiableLanguagesOptions)
 
 	// Check successful call
-	if listLanguageErr != nil {
-		fmt.Println(listLanguageErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast result
-	listLanguageResult := GetListIdentifiableLanguagesResult(listLanguage)
+	listLanguageResult := service.GetListIdentifiableLanguagesResult(response)
 
 	// Check successful casting
 	if listLanguageResult != nil {
-		prettyPrint(listLanguageResult, "Identifiable Languages")
+		PrettyPrint(listLanguageResult, "Identifiable Languages")
 	}
-
 
 	/* IDENTIFY */
 
 	textToIdentify := "What language is this message in?"
-	identifyOptions := NewIdentifyOptions(textToIdentify)
+	identifyOptions := service.NewIdentifyOptions(textToIdentify)
 
 	// Call the languageTranslator Identify method
-	identify, identifyErr := languageTranslator.Identify(identifyOptions)
+	response, responseErr = service.Identify(identifyOptions)
 
 	// Check successful call
-	if identifyErr != nil {
-		fmt.Println(identifyErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast result
-	identifyResult := GetIdentifyResult(identify)
+	identifyResult := service.GetIdentifyResult(response)
 
 	// Check successful casting
 	if identifyResult != nil {
-		prettyPrint(identifyResult, "Identify")
+		PrettyPrint(identifyResult, "Identify")
 	}
-
 
 	/* LIST MODELS */
 
-	listModelsOptions := NewListModelsOptions().
+	listModelsOptions := service.NewListModelsOptions().
 		SetSource("es").
 		SetTarget("en").
 		SetDefaultModels(true)
 
 	// Call the languageTranslator ListModels method
-	listModel, listModelErr := languageTranslator.ListModels(listModelsOptions)
+	response, responseErr = service.ListModels(listModelsOptions)
 
 	// Check successful call
-	if listModelErr != nil {
-		fmt.Println(listModelErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast result
-	listModelResult := GetListModelsResult(listModel)
+	listModelResult := service.GetListModelsResult(response)
 
 	// Check successful casting
 	if listModelResult != nil {
-		prettyPrint(listModelResult, "Models")
+		PrettyPrint(listModelResult, "Models")
 	}
-
 
 	/* CREATE MODEL */
 
 	pwd, _ := os.Getwd()
 
-	glossary, glossaryErr := os.Open(pwd + "/resources/glossary.tmx")
+	glossary, glossaryErr := os.Open(pwd + "/../resources/glossary.tmx")
+	fmt.Println(glossary)
 	if glossaryErr != nil {
 		fmt.Println(glossaryErr)
 	}
 
-	createModelOptions := NewCreateModelOptions("en-fr").
+	createModelOptions := service.NewCreateModelOptions("en-fr").
 		SetName("custom-en-fr").
-		SetForcedGlossary(*glossary)
+		SetForcedGlossary(glossary)
 
 	// Call the languageTranslator CreateModel method
-	createModel, createModelErr := languageTranslator.CreateModel(createModelOptions)
+	response, responseErr = service.CreateModel(createModelOptions)
 
 	// Check successful call
-	if createModelErr != nil {
-		fmt.Println(createModelErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast result
-	createModelResult := GetCreateModelResult(createModel)
+	createModelResult := service.GetCreateModelResult(response)
 
 	// Check successful casting
 	if createModelResult != nil {
-		prettyPrint(createModelResult, "Create Model")
+		PrettyPrint(createModelResult, "Create Model")
 	}
-
 
 	/* GET MODEL */
 
 	// Call the languageTranslator GetModel method
-	getModelOptions := NewGetModelOptions(createModelResult.ModelID)
-	getModel, getModelErr := languageTranslator.GetModel(getModelOptions)
+	getModelOptions := service.NewGetModelOptions(*createModelResult.ModelID)
+	response, getModelErr := service.GetModel(getModelOptions)
 
 	// Check successful call
 	if getModelErr != nil {
-		fmt.Println(getModelErr)
-		return
+		panic(getModelErr)
 	}
 
 	// Cast result
-	getModelResult := GetGetModelResult(getModel)
+	getModelResult := service.GetGetModelResult(response)
 
 	// Check successful casting
 	if getModelResult != nil {
-		prettyPrint(getModelResult, "Get Model")
+		PrettyPrint(getModelResult, "Get Model")
 	}
-
 
 	/* DELETE MODEL */
 
 	// Call the languageTranslator DeleteModel method
-	deleteModelOptions := NewDeleteModelOptions(getModelResult.ModelID)
-	deleteModel, deleteModelErr := languageTranslator.DeleteModel(deleteModelOptions)
+	deleteModelOptions := service.NewDeleteModelOptions(*getModelResult.ModelID)
+	response, responseErr = service.DeleteModel(deleteModelOptions)
 
 	// Check successful call
-	if deleteModelErr != nil {
-		fmt.Println(deleteModelErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast result
-	deleteModelResult := GetDeleteModelResult(deleteModel)
+	deleteModelResult := service.GetDeleteModelResult(response)
 
 	// Check successful casting
 	if deleteModelResult != nil {
-		prettyPrint(deleteModelResult, "Delete Model")
+		PrettyPrint(deleteModelResult, "Delete Model")
 	}
 }

@@ -26,6 +26,8 @@ import (
 	"net/http"
 	"net/textproto"
 	"net/url"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 )
@@ -104,7 +106,14 @@ func (requestBuilder *RequestBuilder) AddHeader(name string, value string) *Requ
 }
 
 // AddFormData makes an entry for Form data
-func (requestBuilder *RequestBuilder) AddFormData(fieldName string, fileName string, contentType string, contents interface{}) *RequestBuilder {
+func (requestBuilder *RequestBuilder) AddFormData(fieldName string, fileName string, contentType string,
+	contents interface{}) *RequestBuilder {
+	if fileName == "" {
+		if file, ok := contents.(*os.File); ok {
+			name := filepath.Base(file.Name())
+			fileName = name
+		}
+	}
 	requestBuilder.Form[fieldName] = FormData{
 		fileName:    fileName,
 		contentType: contentType,
@@ -236,15 +245,15 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 
 // SetBodyContent - sets the body content from one of three different sources, based on the content type
 func (requestBuilder *RequestBuilder) SetBodyContent(contentType string, jsonContent interface{}, jsonPatchContent interface{},
-	nonJSONContent interface{}) error {
+	nonJSONContent interface{}) (*RequestBuilder, error) {
 	if contentType != "" {
 		if IsJSONMimeType(contentType) {
-			if _, err := requestBuilder.SetBodyContentJSON(jsonContent); err != nil {
-				return err
+			if builder, err := requestBuilder.SetBodyContentJSON(jsonContent); err != nil {
+				return builder, err
 			}
 		} else if IsJSONPatchMimeType(contentType) {
-			if _, err := requestBuilder.SetBodyContentJSON(jsonPatchContent); err != nil {
-				return err
+			if builder, err := requestBuilder.SetBodyContentJSON(jsonPatchContent); err != nil {
+				return builder, err
 			}
 		} else {
 			// Set the non-JSON body content based on the type of value passed in,
@@ -256,12 +265,13 @@ func (requestBuilder *RequestBuilder) SetBodyContent(contentType string, jsonCon
 			} else if stream, ok := nonJSONContent.(io.Reader); ok {
 				requestBuilder.SetBodyContentStream(stream)
 			} else {
-				return fmt.Errorf("Invalid type for non-JSON body content: %s", reflect.TypeOf(nonJSONContent).String())
+				return requestBuilder, fmt.Errorf("Invalid type for non-JSON body content: %s",
+					reflect.TypeOf(nonJSONContent).String())
 			}
 		}
 	} else {
-		return fmt.Errorf("Content-Type cant be empty")
+		return requestBuilder, fmt.Errorf("Content-Type cant be empty")
 	}
 
-	return nil
+	return requestBuilder, nil
 }

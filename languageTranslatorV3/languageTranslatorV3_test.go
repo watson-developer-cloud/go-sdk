@@ -1,17 +1,18 @@
-package languageTranslatorV3_test
+package languagetranslatorv3_test
 
 import (
-	"github.ibm.com/arf/go-sdk/languageTranslatorV3"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"strings"
+
+	"github.com/cloudfoundry-community/go-cfenv"
+	languagetranslatorv3 "github.com/ibm-watson/go-sdk/languagetranslatorv3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"encoding/base64"
-	"net/http/httptest"
-	"net/http"
-	"strings"
-	"fmt"
-	"os"
-	"encoding/json"
-	"github.com/cloudfoundry-community/go-cfenv"
 )
 
 var _ = Describe("LanguageTranslatorV3", func() {
@@ -20,12 +21,12 @@ var _ = Describe("LanguageTranslatorV3", func() {
 		username := "hyphenated-user"
 		password := "hyphenated-pass"
 		VCAPservices := cfenv.Services{
-			"conversation" : {
+			"conversation": {
 				{
 					Name: "language_translator",
 					Tags: []string{},
 					Credentials: map[string]interface{}{
-						"url": "https://gateway.watsonplatform.net/language-translator/api",
+						"url":      "https://gateway.watsonplatform.net/language-translator/api",
 						"username": username,
 						"password": password,
 					},
@@ -47,22 +48,22 @@ var _ = Describe("LanguageTranslatorV3", func() {
 			It("Succeed to create LanguageTranslatorV3", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := languageTranslatorV3.NewLanguageTranslatorV3(&languageTranslatorV3.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-				})
+				testService, testServiceErr := languagetranslatorv3.
+					NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+						URL:     testServer.URL,
+						Version: version,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				testService.ListModels(languageTranslatorV3.NewListModelsOptions())
+				testService.ListModels(testService.NewListModelsOptions())
 			})
 		})
 	})
 	Describe("Translate(options *TranslateOptions)", func() {
 		translatePath := "/v3/translate"
-        version := "exampleString"
-        text := []string{}
-        translateOptions := languageTranslatorV3.NewTranslateOptions(text)
+		version := "exampleString"
+		text := []string{}
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -75,35 +76,36 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"word_count":28}`)
 			}))
 			It("Succeed to call Translate", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := languageTranslatorV3.NewLanguageTranslatorV3(&languageTranslatorV3.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := languagetranslatorv3.
+					NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+						URL:      testServer.URL,
+						Version:  version,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
+				translateOptions := testService.NewTranslateOptions(text)
 				returnValue, returnValueErr := testService.Translate(translateOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := languageTranslatorV3.GetTranslateResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetTranslateResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("Identify(options *IdentifyOptions)", func() {
 		identifyPath := "/v3/identify"
-        version := "exampleString"
-        text := "exampleString"
-        identifyOptions := languageTranslatorV3.NewIdentifyOptions(text)
+		version := "exampleString"
+		text := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -116,34 +118,34 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `[]`)
 			}))
 			It("Succeed to call Identify", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := languageTranslatorV3.NewLanguageTranslatorV3(&languageTranslatorV3.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
 					Username: username,
 					Password: password,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
+				identifyOptions := testService.NewIdentifyOptions(text)
 				returnValue, returnValueErr := testService.Identify(identifyOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := languageTranslatorV3.GetIdentifyResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetIdentifyResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListIdentifiableLanguages(options *ListIdentifiableLanguagesOptions)", func() {
 		listIdentifiableLanguagesPath := "/v3/identifiable_languages"
-        version := "exampleString"
-        listIdentifiableLanguagesOptions := languageTranslatorV3.NewListIdentifiableLanguagesOptions()
+		version := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -156,35 +158,36 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `[{"language":"en", "name":"english"}]`)
 			}))
 			It("Succeed to call ListIdentifiableLanguages", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := languageTranslatorV3.NewLanguageTranslatorV3(&languageTranslatorV3.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := languagetranslatorv3.
+					NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+						URL:      testServer.URL,
+						Version:  version,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
+				listIdentifiableLanguagesOptions := testService.NewListIdentifiableLanguagesOptions()
 				returnValue, returnValueErr := testService.ListIdentifiableLanguages(listIdentifiableLanguagesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := languageTranslatorV3.GetListIdentifiableLanguagesResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetListIdentifiableLanguagesResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("CreateModel(options *CreateModelOptions)", func() {
 		createModelPath := "/v3/models"
-        version := "exampleString"
-        baseModelID := "exampleString"
-        createModelOptions := languageTranslatorV3.NewCreateModelOptions(baseModelID)
+		version := "exampleString"
+		baseModelID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -196,39 +199,45 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"model_id":"xxx"}`)
 			}))
 			It("Succeed to call CreateModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := languageTranslatorV3.NewLanguageTranslatorV3(&languageTranslatorV3.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
 					Username: username,
 					Password: password,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
+				pwd, _ := os.Getwd()
+				file, err := os.Open(pwd + "/../resources/language_translator_model.tmx")
+				Expect(err).To(BeNil())
+				defer file.Close()
+
+				createModelOptions := testService.NewCreateModelOptions(baseModelID).
+					SetForcedGlossary(file)
 				returnValue, returnValueErr := testService.CreateModel(createModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := languageTranslatorV3.GetCreateModelResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetCreateModelResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("DeleteModel(options *DeleteModelOptions)", func() {
 		deleteModelPath := "/v3/models/{model_id}"
-        version := "exampleString"
-        modelID := "exampleString"
-        deleteModelOptions := languageTranslatorV3.NewDeleteModelOptions(modelID)
+		version := "exampleString"
+		modelID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        deleteModelPath = strings.Replace(deleteModelPath, "{model_id}", modelID, 1)
+		deleteModelPath = strings.Replace(deleteModelPath, "{model_id}", modelID, 1)
 		Context("Successfully - Delete model", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
@@ -238,39 +247,40 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(req.Method).To(Equal("DELETE"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"status":"success"}`)
 			}))
 			It("Succeed to call DeleteModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := languageTranslatorV3.NewLanguageTranslatorV3(&languageTranslatorV3.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := languagetranslatorv3.
+					NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+						URL:      testServer.URL,
+						Version:  version,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
+				deleteModelOptions := testService.NewDeleteModelOptions(modelID)
 				returnValue, returnValueErr := testService.DeleteModel(deleteModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := languageTranslatorV3.GetDeleteModelResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetDeleteModelResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("GetModel(options *GetModelOptions)", func() {
 		getModelPath := "/v3/models/{model_id}"
-        version := "exampleString"
-        modelID := "exampleString"
-        getModelOptions := languageTranslatorV3.NewGetModelOptions(modelID)
+		version := "exampleString"
+		modelID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        getModelPath = strings.Replace(getModelPath, "{model_id}", modelID, 1)
+		getModelPath = strings.Replace(getModelPath, "{model_id}", modelID, 1)
 		Context("Successfully - Get model details", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
@@ -280,34 +290,34 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"model_id":"xxx"}`)
 			}))
 			It("Succeed to call GetModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := languageTranslatorV3.NewLanguageTranslatorV3(&languageTranslatorV3.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
 					Username: username,
 					Password: password,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
+				getModelOptions := testService.NewGetModelOptions(modelID)
 				returnValue, returnValueErr := testService.GetModel(getModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := languageTranslatorV3.GetGetModelResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetGetModelResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
 	Describe("ListModels(options *ListModelsOptions)", func() {
 		listModelsPath := "/v3/models"
-        version := "exampleString"
-        listModelsOptions := languageTranslatorV3.NewListModelsOptions()
+		version := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -320,27 +330,28 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `[]`)
 			}))
 			It("Succeed to call ListModels", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := languageTranslatorV3.NewLanguageTranslatorV3(&languageTranslatorV3.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
 					Username: username,
 					Password: password,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
+				listModelsOptions := testService.NewListModelsOptions()
 				returnValue, returnValueErr := testService.ListModels(listModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := languageTranslatorV3.GetListModelsResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetListModelsResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})

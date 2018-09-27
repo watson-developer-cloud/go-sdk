@@ -1,4 +1,4 @@
-package languageTranslatorV3_test
+package languagetranslatorv3_test
 
 import (
 	"testing"
