@@ -1,17 +1,18 @@
-package naturalLanguageUnderstandingV1_test
+package naturallanguageunderstandingv1_test
 
 import (
-	"github.ibm.com/arf/go-sdk/naturalLanguageUnderstandingV1"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"strings"
+
+	"github.com/cloudfoundry-community/go-cfenv"
+	"github.com/ibm-watson/go-sdk/naturallanguageunderstandingv1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"encoding/base64"
-	"net/http/httptest"
-	"net/http"
-	"strings"
-	"fmt"
-	"os"
-	"encoding/json"
-	"github.com/cloudfoundry-community/go-cfenv"
 )
 
 var _ = Describe("NaturalLanguageUnderstandingV1", func() {
@@ -20,12 +21,12 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 		username := "hyphenated-user"
 		password := "hyphenated-pass"
 		VCAPservices := cfenv.Services{
-			"conversation" : {
+			"conversation": {
 				{
 					Name: "natural-language-understanding",
 					Tags: []string{},
 					Credentials: map[string]interface{}{
-						"url": "https://gateway.watsonplatform.net/natural-language-understanding/api",
+						"url":      "https://gateway.watsonplatform.net/natural-language-understanding/api",
 						"username": username,
 						"password": password,
 					},
@@ -47,22 +48,22 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 			It("Succeed to create NaturalLanguageUnderstandingV1", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := naturalLanguageUnderstandingV1.NewNaturalLanguageUnderstandingV1(&naturalLanguageUnderstandingV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-				})
+				testService, testServiceErr := naturallanguageunderstandingv1.
+					NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
+						URL:     testServer.URL,
+						Version: version,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				testService.ListModels(naturalLanguageUnderstandingV1.NewListModelsOptions())
+				testService.ListModels(testService.NewListModelsOptions())
 			})
 		})
 	})
-	Describe("Analyze(options *AnalyzeOptions)", func() {
-		analyzePath := "/v1/analyze"
-        version := "exampleString"
-        features := naturalLanguageUnderstandingV1.Features{}
-        analyzeOptions := naturalLanguageUnderstandingV1.NewAnalyzeOptions(features)
+	Describe("Analyze(analyzeOptions *AnalyzeOptions)", func() {
+		AnalyzePath := "/v1/analyze"
+		version := "exampleString"
+		Features := naturallanguageunderstandingv1.Features{}
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -70,81 +71,83 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(analyzePath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(analyzePath))
+				Expect(req.URL.String()).To(Equal(AnalyzePath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(AnalyzePath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"language":"xxx"}`)
 			}))
 			It("Succeed to call Analyze", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := naturalLanguageUnderstandingV1.NewNaturalLanguageUnderstandingV1(&naturalLanguageUnderstandingV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := naturallanguageunderstandingv1.
+					NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
+						URL:      testServer.URL,
+						Version:  version,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.Analyze(analyzeOptions)
+				AnalyzeOptions := testService.NewAnalyzeOptions(Features)
+				returnValue, returnValueErr := testService.Analyze(AnalyzeOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := naturalLanguageUnderstandingV1.GetAnalyzeResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetAnalyzeResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("DeleteModel(options *DeleteModelOptions)", func() {
-		deleteModelPath := "/v1/models/{model_id}"
-        version := "exampleString"
-        modelID := "exampleString"
-        deleteModelOptions := naturalLanguageUnderstandingV1.NewDeleteModelOptions(modelID)
+	Describe("DeleteModel(deleteModelOptions *DeleteModelOptions)", func() {
+		DeleteModelPath := "/v1/models/{model_id}"
+		version := "exampleString"
+		ModelID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        deleteModelPath = strings.Replace(deleteModelPath, "{model_id}", modelID, 1)
+		DeleteModelPath = strings.Replace(DeleteModelPath, "{model_id}", ModelID, 1)
 		Context("Successfully - Delete model", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(deleteModelPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(deleteModelPath))
+				Expect(req.URL.String()).To(Equal(DeleteModelPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(DeleteModelPath))
 				Expect(req.Method).To(Equal("DELETE"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"deleted":"yes"}`)
 			}))
 			It("Succeed to call DeleteModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := naturalLanguageUnderstandingV1.NewNaturalLanguageUnderstandingV1(&naturalLanguageUnderstandingV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := naturallanguageunderstandingv1.
+					NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
+						URL:      testServer.URL,
+						Version:  version,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.DeleteModel(deleteModelOptions)
+				DeleteModelOptions := testService.NewDeleteModelOptions(ModelID)
+				returnValue, returnValueErr := testService.DeleteModel(DeleteModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := naturalLanguageUnderstandingV1.GetDeleteModelResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetDeleteModelResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("ListModels(options *ListModelsOptions)", func() {
-		listModelsPath := "/v1/models"
-        version := "exampleString"
-        listModelsOptions := naturalLanguageUnderstandingV1.NewListModelsOptions()
+	Describe("ListModels(listModelsOptions *ListModelsOptions)", func() {
+		ListModelsPath := "/v1/models"
+		version := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -152,32 +155,34 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(listModelsPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(listModelsPath))
+				Expect(req.URL.String()).To(Equal(ListModelsPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(ListModelsPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `[]`)
 			}))
 			It("Succeed to call ListModels", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := naturalLanguageUnderstandingV1.NewNaturalLanguageUnderstandingV1(&naturalLanguageUnderstandingV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := naturallanguageunderstandingv1.
+					NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
+						URL:      testServer.URL,
+						Version:  version,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.ListModels(listModelsOptions)
+				ListModelsOptions := testService.NewListModelsOptions()
+				returnValue, returnValueErr := testService.ListModels(ListModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := naturalLanguageUnderstandingV1.GetListModelsResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetListModelsResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})

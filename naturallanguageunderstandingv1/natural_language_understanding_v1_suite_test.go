@@ -1,4 +1,4 @@
-package naturalLanguageUnderstandingV1_test
+package naturallanguageunderstandingv1_test
 
 import (
 	"testing"
