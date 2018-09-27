@@ -1,17 +1,17 @@
-package visualRecognitionV3_test
+package visualrecognitionv3_test
 
 import (
-	"github.ibm.com/arf/go-sdk/visualRecognitionV3"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"github.com/cloudfoundry-community/go-cfenv"
+	"github.com/ibm-watson/go-sdk/visualrecognitionv3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"encoding/base64"
-	"net/http/httptest"
 	"net/http"
-	"strings"
-	"fmt"
+	"net/http/httptest"
 	"os"
-	"encoding/json"
-	"github.com/cloudfoundry-community/go-cfenv"
+	"strings"
 )
 
 var _ = Describe("VisualRecognitionV3", func() {
@@ -20,12 +20,12 @@ var _ = Describe("VisualRecognitionV3", func() {
 		username := "hyphenated-user"
 		password := "hyphenated-pass"
 		VCAPservices := cfenv.Services{
-			"conversation" : {
+			"conversation": {
 				{
 					Name: "watson_vision_combined",
 					Tags: []string{},
 					Credentials: map[string]interface{}{
-						"url": "https://gateway.watsonplatform.net/visual-recognition/api",
+						"url":      "https://gateway.watsonplatform.net/visual-recognition/api",
 						"username": username,
 						"password": password,
 					},
@@ -47,21 +47,21 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to create VisualRecognitionV3", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				testService.ListClassifiers(visualRecognitionV3.NewListClassifiersOptions())
+				testService.ListClassifiers(testService.NewListClassifiersOptions())
 			})
 		})
 	})
-	Describe("Classify(options *ClassifyOptions)", func() {
-		classifyPath := "/v3/classify"
-        version := "exampleString"
-        classifyOptions := visualRecognitionV3.NewClassifyOptions()
+	Describe("Classify(classifyOptions *ClassifyOptions)", func() {
+		ClassifyPath := "/v3/classify"
+		version := "exampleString"
+		ClassifyOptions := testService.NewClassifyOptions()
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -69,8 +69,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(classifyPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(classifyPath))
+				Expect(req.URL.String()).To(Equal(ClassifyPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(ClassifyPath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -80,7 +80,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to call Classify", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -89,19 +89,19 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.Classify(classifyOptions)
+				returnValue, returnValueErr := testService.Classify(ClassifyOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := visualRecognitionV3.GetClassifyResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := visualrecognitionv3.GetClassifyResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("DetectFaces(options *DetectFacesOptions)", func() {
-		detectFacesPath := "/v3/detect_faces"
-        version := "exampleString"
-        detectFacesOptions := visualRecognitionV3.NewDetectFacesOptions()
+	Describe("DetectFaces(detectFacesOptions *DetectFacesOptions)", func() {
+		DetectFacesPath := "/v3/detect_faces"
+		version := "exampleString"
+		DetectFacesOptions := testService.NewDetectFacesOptions()
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -109,8 +109,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(detectFacesPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(detectFacesPath))
+				Expect(req.URL.String()).To(Equal(DetectFacesPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(DetectFacesPath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -120,7 +120,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to call DetectFaces", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -129,30 +129,72 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.DetectFaces(detectFacesOptions)
+				returnValue, returnValueErr := testService.DetectFaces(DetectFacesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := visualRecognitionV3.GetDetectFacesResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := visualrecognitionv3.GetDetectFacesResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("DeleteClassifier(options *DeleteClassifierOptions)", func() {
-		deleteClassifierPath := "/v3/classifiers/{classifier_id}"
-        version := "exampleString"
-        classifierID := "exampleString"
-        deleteClassifierOptions := visualRecognitionV3.NewDeleteClassifierOptions(classifierID)
+	Describe("CreateClassifier(createClassifierOptions *CreateClassifierOptions)", func() {
+		CreateClassifierPath := "/v3/classifiers"
+		version := "exampleString"
+		Name := "exampleString"
+		ClassnamePositiveExamples := new(os.File)
+		CreateClassifierOptions := testService.NewCreateClassifierOptions(Name, *ClassnamePositiveExamples)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        deleteClassifierPath = strings.Replace(deleteClassifierPath, "{classifier_id}", classifierID, 1)
+		Context("Successfully - Create a classifier", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(CreateClassifierPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(CreateClassifierPath))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call CreateClassifier", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
+					ServiceURL: testServer.URL,
+					Version: version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				returnValue, returnValueErr := testService.CreateClassifier(CreateClassifierOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := visualrecognitionv3.GetCreateClassifierResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions)", func() {
+		DeleteClassifierPath := "/v3/classifiers/{classifier_id}"
+		version := "exampleString"
+		ClassifierID := "exampleString"
+		DeleteClassifierOptions := testService.NewDeleteClassifierOptions(ClassifierID)
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		DeleteClassifierPath = strings.Replace(DeleteClassifierPath, "{classifier_id}", ClassifierID, 1)
 		Context("Successfully - Delete a classifier", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(deleteClassifierPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(deleteClassifierPath))
+				Expect(req.URL.String()).To(Equal(DeleteClassifierPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(DeleteClassifierPath))
 				Expect(req.Method).To(Equal("DELETE"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -162,7 +204,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to call DeleteClassifier", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -171,27 +213,27 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.DeleteClassifier(deleteClassifierOptions)
+				returnValue, returnValueErr := testService.DeleteClassifier(DeleteClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("GetClassifier(options *GetClassifierOptions)", func() {
-		getClassifierPath := "/v3/classifiers/{classifier_id}"
-        version := "exampleString"
-        classifierID := "exampleString"
-        getClassifierOptions := visualRecognitionV3.NewGetClassifierOptions(classifierID)
+	Describe("GetClassifier(getClassifierOptions *GetClassifierOptions)", func() {
+		GetClassifierPath := "/v3/classifiers/{classifier_id}"
+		version := "exampleString"
+		ClassifierID := "exampleString"
+		GetClassifierOptions := testService.NewGetClassifierOptions(ClassifierID)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        getClassifierPath = strings.Replace(getClassifierPath, "{classifier_id}", classifierID, 1)
+		GetClassifierPath = strings.Replace(GetClassifierPath, "{classifier_id}", ClassifierID, 1)
 		Context("Successfully - Retrieve classifier details", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(getClassifierPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(getClassifierPath))
+				Expect(req.URL.String()).To(Equal(GetClassifierPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(GetClassifierPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -201,7 +243,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to call GetClassifier", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -210,19 +252,19 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.GetClassifier(getClassifierOptions)
+				returnValue, returnValueErr := testService.GetClassifier(GetClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := visualRecognitionV3.GetGetClassifierResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := visualrecognitionv3.GetGetClassifierResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("ListClassifiers(options *ListClassifiersOptions)", func() {
-		listClassifiersPath := "/v3/classifiers"
-        version := "exampleString"
-        listClassifiersOptions := visualRecognitionV3.NewListClassifiersOptions()
+	Describe("ListClassifiers(listClassifiersOptions *ListClassifiersOptions)", func() {
+		ListClassifiersPath := "/v3/classifiers"
+		version := "exampleString"
+		ListClassifiersOptions := testService.NewListClassifiersOptions()
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -230,8 +272,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(listClassifiersPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(listClassifiersPath))
+				Expect(req.URL.String()).To(Equal(ListClassifiersPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(ListClassifiersPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -241,7 +283,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to call ListClassifiers", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -250,30 +292,30 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.ListClassifiers(listClassifiersOptions)
+				returnValue, returnValueErr := testService.ListClassifiers(ListClassifiersOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := visualRecognitionV3.GetListClassifiersResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := visualrecognitionv3.GetListClassifiersResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("UpdateClassifier(options *UpdateClassifierOptions)", func() {
-		updateClassifierPath := "/v3/classifiers/{classifier_id}"
-        version := "exampleString"
-        classifierID := "exampleString"
-        updateClassifierOptions := visualRecognitionV3.NewUpdateClassifierOptions(classifierID)
+	Describe("UpdateClassifier(updateClassifierOptions *UpdateClassifierOptions)", func() {
+		UpdateClassifierPath := "/v3/classifiers/{classifier_id}"
+		version := "exampleString"
+		ClassifierID := "exampleString"
+		UpdateClassifierOptions := testService.NewUpdateClassifierOptions(ClassifierID)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        updateClassifierPath = strings.Replace(updateClassifierPath, "{classifier_id}", classifierID, 1)
+		UpdateClassifierPath = strings.Replace(UpdateClassifierPath, "{classifier_id}", ClassifierID, 1)
 		Context("Successfully - Update a classifier", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(updateClassifierPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(updateClassifierPath))
+				Expect(req.URL.String()).To(Equal(UpdateClassifierPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(UpdateClassifierPath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -283,7 +325,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to call UpdateClassifier", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -292,30 +334,30 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.UpdateClassifier(updateClassifierOptions)
+				returnValue, returnValueErr := testService.UpdateClassifier(UpdateClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := visualRecognitionV3.GetUpdateClassifierResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := visualrecognitionv3.GetUpdateClassifierResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("GetCoreMlModel(options *GetCoreMlModelOptions)", func() {
-		getCoreMlModelPath := "/v3/classifiers/{classifier_id}/core_ml_model"
-        version := "exampleString"
-        classifierID := "exampleString"
-        getCoreMlModelOptions := visualRecognitionV3.NewGetCoreMlModelOptions(classifierID)
+	Describe("GetCoreMlModel(getCoreMlModelOptions *GetCoreMlModelOptions)", func() {
+		GetCoreMlModelPath := "/v3/classifiers/{classifier_id}/core_ml_model"
+		version := "exampleString"
+		ClassifierID := "exampleString"
+		GetCoreMlModelOptions := testService.NewGetCoreMlModelOptions(ClassifierID)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        getCoreMlModelPath = strings.Replace(getCoreMlModelPath, "{classifier_id}", classifierID, 1)
+		GetCoreMlModelPath = strings.Replace(GetCoreMlModelPath, "{classifier_id}", ClassifierID, 1)
 		Context("Successfully - Retrieve a Core ML model of a classifier", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(getCoreMlModelPath + "?version=" + version))
-				Expect(req.URL.Path).To(Equal(getCoreMlModelPath))
+				Expect(req.URL.String()).To(Equal(GetCoreMlModelPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(GetCoreMlModelPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -325,7 +367,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to call GetCoreMlModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -334,20 +376,20 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.GetCoreMlModel(getCoreMlModelOptions)
+				returnValue, returnValueErr := testService.GetCoreMlModel(GetCoreMlModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := visualRecognitionV3.GetGetCoreMlModelResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := visualrecognitionv3.GetGetCoreMlModelResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("DeleteUserData(options *DeleteUserDataOptions)", func() {
-		deleteUserDataPath := "/v3/user_data"
-        version := "exampleString"
-        customerID := "exampleString"
-        deleteUserDataOptions := visualRecognitionV3.NewDeleteUserDataOptions(customerID)
+	Describe("DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)", func() {
+		DeleteUserDataPath := "/v3/user_data"
+		version := "exampleString"
+		CustomerID := "exampleString"
+		DeleteUserDataOptions := testService.NewDeleteUserDataOptions(CustomerID)
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -355,7 +397,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(deleteUserDataPath))
+				Expect(req.URL.String()).To(Equal(DeleteUserDataPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(DeleteUserDataPath))
 				Expect(req.Method).To(Equal("DELETE"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -365,7 +408,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 			It("Succeed to call DeleteUserData", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := visualRecognitionV3.NewVisualRecognitionV3(&visualRecognitionV3.ServiceCredentials{
+				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.ServiceCredentials{
 					ServiceURL: testServer.URL,
 					Version: version,
 					Username: username,
@@ -374,7 +417,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.DeleteUserData(deleteUserDataOptions)
+				returnValue, returnValueErr := testService.DeleteUserData(DeleteUserDataOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})

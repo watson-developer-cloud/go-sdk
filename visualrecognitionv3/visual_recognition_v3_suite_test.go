@@ -1,4 +1,4 @@
-package visualRecognitionV3_test
+package visualrecognitionv3_test
 
 import (
 	"testing"
