@@ -71,8 +71,8 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.Detail
 		return nil, err
 	}
 
-	pathSegments := []string{ "v3/tone" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v3/tone"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder.ConstructHTTPURL(toneAnalyzer.service.Options.URL, pathSegments, pathParameters)
@@ -99,7 +99,7 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.Detail
 	}
 	builder.AddQuery("version", toneAnalyzer.service.Options.Version)
 
-	_, err := builder.SetBodyContent(toneOptions.ContentType, toneOptions.ToneInput, nil, toneOptions.Body)
+	_, err := builder.SetBodyContent(core.StringNilMapper(toneOptions.ContentType), toneOptions.ToneInput, nil, toneOptions.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -131,8 +131,8 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 		return nil, err
 	}
 
-	pathSegments := []string{ "v3/tone_chat" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v3/tone_chat"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder.ConstructHTTPURL(toneAnalyzer.service.Options.URL, pathSegments, pathParameters)
@@ -333,45 +333,45 @@ type ToneOptions struct {
 // NewToneOptionsForToneInput : Instantiate ToneOptionsForToneInput
 func (toneAnalyzer *ToneAnalyzerV3) NewToneOptionsForToneInput(toneInput ToneInput) *ToneOptions {
 	return &ToneOptions{
-		ToneInput: toneInput,
-		ContentType: "application/json",
+		ToneInput:   &toneInput,
+		ContentType: core.StringPtr("application/json"),
 	}
 }
 
 // SetToneInput : Allow user to set ToneInput
 func (options *ToneOptions) SetToneInput(toneInput ToneInput) *ToneOptions {
-	options.ToneInput = toneInput
-	options.ContentType = "application/json"
+	options.ToneInput = &toneInput
+	options.ContentType = core.StringPtr("application/json")
 	return options
 }
 
 // NewToneOptionsForPlain : Instantiate ToneOptionsForPlain
 func (toneAnalyzer *ToneAnalyzerV3) NewToneOptionsForPlain(body string) *ToneOptions {
 	return &ToneOptions{
-		Body: body,
-		ContentType: "text/plain",
+		Body:        &body,
+		ContentType: core.StringPtr("text/plain"),
 	}
 }
 
 // SetPlain : Allow user to set Plain
 func (options *ToneOptions) SetPlain(body string) *ToneOptions {
-	options.Body = body
-	options.ContentType = "text/plain"
+	options.Body = &body
+	options.ContentType = core.StringPtr("text/plain")
 	return options
 }
 
 // NewToneOptionsForHTML : Instantiate ToneOptionsForHTML
 func (toneAnalyzer *ToneAnalyzerV3) NewToneOptionsForHTML(body string) *ToneOptions {
 	return &ToneOptions{
-		Body: body,
-		ContentType: "text/html",
+		Body:        &body,
+		ContentType: core.StringPtr("text/html"),
 	}
 }
 
 // SetHTML : Allow user to set HTML
 func (options *ToneOptions) SetHTML(body string) *ToneOptions {
-	options.Body = body
-	options.ContentType = "text/html"
+	options.Body = &body
+	options.ContentType = core.StringPtr("text/html")
 	return options
 }
 
