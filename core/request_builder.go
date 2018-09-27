@@ -110,8 +110,10 @@ func (requestBuilder *RequestBuilder) AddFormData(fieldName string, fileName str
 	contents interface{}) *RequestBuilder {
 	if fileName == "" {
 		if file, ok := contents.(*os.File); ok {
-			name := filepath.Base(file.Name())
-			fileName = name
+			if !((os.File{}) == *file) { // if file is not empty
+				name := filepath.Base(file.Name())
+				fileName = name
+			}
 		}
 	}
 	requestBuilder.Form[fieldName] = FormData{
@@ -170,12 +172,12 @@ func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType str
 	var err error
 	if stream, ok := content.(io.Reader); ok {
 		_, err = io.Copy(writer, stream)
+	} else if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
+		err = json.NewEncoder(writer).Encode(content)
 	} else if str, ok := content.(string); ok {
 		writer.Write([]byte(str))
 	} else if strPtr, ok := content.(*string); ok {
 		writer.Write([]byte(*strPtr))
-	} else if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
-		err = json.NewEncoder(writer).Encode(content)
 	} else {
 		err = fmt.Errorf("Could not decipher the contents")
 	}

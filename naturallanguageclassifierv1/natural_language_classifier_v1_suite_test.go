@@ -1,4 +1,4 @@
-package naturalLanguageClassifierV1_test
+package naturallanguageclassifierv1_test
 
 import (
 	"testing"
