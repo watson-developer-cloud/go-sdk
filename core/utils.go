@@ -3,7 +3,6 @@ package core
 import (
 	"errors"
 	"fmt"
-	"io"
 	"reflect"
 	"regexp"
 
@@ -99,19 +98,7 @@ func IsJSONPatchMimeType(mimeType string) bool {
 	return matched
 }
 
-// IsObjectAReader : Returns true iff "obj" represents an instance of "io.ReadCloser"
-func IsObjectAReader(obj interface{}) bool {
-	_, ok := obj.(io.Reader)
-	return ok
-}
-
-// IsObjectAString : Returns true iff "obj" is an instance of a "string"
-func IsObjectAString(obj interface{}) bool {
-	_, ok := obj.(string)
-	return ok
-}
-
-// StringNilMapper -
+// StringNilMapper - de-references the parameter 's' and returns the result, or "" if 's' is nil
 func StringNilMapper(s *string) string {
 	if s == nil {
 		return ""

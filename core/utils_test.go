@@ -1,24 +1,10 @@
 package core
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func TestIsObjectAString(t *testing.T) {
-	assert.True(t, IsObjectAString("a string"))
-
-	reader, _ := os.Open("foo.txt")
-	assert.True(t, IsObjectAReader(reader))
-
-	assert.False(t, IsObjectAString(nil))
-	assert.False(t, IsObjectAString(382636))
-
-	assert.False(t, IsObjectAReader(nil))
-	assert.False(t, IsObjectAReader("a string"))
-}
 
 func TestIsJSONMimeType(t *testing.T) {
 	assert.True(t, IsJSONMimeType("application/json"))
@@ -103,5 +89,4 @@ func TestValidateStruct(t *testing.T) {
 	assert.Nil(t, ValidateStruct(goodStruct, "goodStruct"), "Should not cause a validation error!")
 	err := ValidateStruct(badStruct, "badStruct")
 	assert.NotNil(t, err, "Should have a validation error!")
-	// fmt.Printf("Returned error:\n%s", err.Error())
 }

@@ -156,15 +156,17 @@ func createFormFile(formWriter *multipart.Writer, fieldname string, filename str
 	return formWriter.CreatePart(h)
 }
 
-// SetBodyContentForMultipart - sets the body content from one of three different sources, based on the content type
+// SetBodyContentForMultipart - sets the body content for a part in a multi-part form
 func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType string, content interface{}, writer io.Writer) error {
 	var err error
 	if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
 		err = json.NewEncoder(writer).Encode(content)
-	} else if IsObjectAString(content) {
-		writer.Write([]byte(content.(string)))
-	} else if IsObjectAReader(content) {
-		_, err = io.Copy(writer, content.(io.Reader))
+	} else if str, ok := content.(string); ok {
+		writer.Write([]byte(str))
+	} else if strPtr, ok := content.(*string); ok {
+		writer.Write([]byte(*strPtr))
+	} else if stream, ok := content.(io.Reader); ok {
+		_, err = io.Copy(writer, stream)
 	} else {
 		err = fmt.Errorf("Could not decipher the contents")
 	}
@@ -246,11 +248,13 @@ func (requestBuilder *RequestBuilder) SetBodyContent(contentType string, jsonCon
 			}
 		} else {
 			// Set the non-JSON body content based on the type of value passed in,
-			// which should be either a "string" or an "io.Reader"
-			if IsObjectAString(nonJSONContent) {
-				requestBuilder.SetBodyContentString(nonJSONContent.(string))
-			} else if IsObjectAReader(nonJSONContent) {
-				requestBuilder.SetBodyContentStream(nonJSONContent.(io.Reader))
+			// which should be a "string", "*string" or an "io.Reader"
+			if str, ok := nonJSONContent.(string); ok {
+				requestBuilder.SetBodyContentString(str)
+			} else if strPtr, ok := nonJSONContent.(*string); ok {
+				requestBuilder.SetBodyContentString(*strPtr)
+			} else if stream, ok := nonJSONContent.(io.Reader); ok {
+				requestBuilder.SetBodyContentStream(stream)
 			} else {
 				return fmt.Errorf("Invalid type for non-JSON body content: %s", reflect.TypeOf(nonJSONContent).String())
 			}
