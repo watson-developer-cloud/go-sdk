@@ -2,6 +2,7 @@ package core
 
 import (
 	"bytes"
+	"io"
 	"os"
 	"testing"
 
@@ -14,9 +15,7 @@ func setup() *RequestBuilder {
 
 func TestNewRequestBuilder(t *testing.T) {
 	request := setup()
-	if request.Method != "GET" {
-		t.Errorf("Got incorrect method types")
-	}
+	assert.Equal(t, "GET", request.Method, "Got incorrect method types")
 }
 
 func TestConstructHTTPURL(t *testing.T) {
@@ -26,10 +25,7 @@ func TestConstructHTTPURL(t *testing.T) {
 	request := setup()
 	want := "https://gateway.watsonplatform.net/assistant/api/v1/workspaces/xxxxx/message"
 	request.ConstructHTTPURL(endPoint, pathSegments, pathParameters)
-
-	if request.URL.String() != want {
-		t.Errorf("Invalid comstruction of url")
-	}
+	assert.Equal(t, want, request.URL.String(), "Invalid comstruction of url")
 }
 
 func TestConstructHTTPURLWithNoPathParam(t *testing.T) {
@@ -38,28 +34,25 @@ func TestConstructHTTPURLWithNoPathParam(t *testing.T) {
 	request := setup()
 	want := "https://gateway.watsonplatform.net/assistant/api/v1/workspaces"
 	request.ConstructHTTPURL(endPoint, pathSegments, nil)
-
-	if request.URL.String() != want {
-		t.Errorf("Invalid comstruction of url")
-	}
+	assert.Equal(t, want, request.URL.String(), "Invalid comstruction of url")
 }
 
 func TestAddQuery(t *testing.T) {
 	request := setup()
 	request.AddQuery("VERSION", "2018-22-09")
-
-	if len(request.Query) != 1 {
-		t.Errorf("Didnt set the query pair")
-	}
+	assert.Equal(t, 1, len(request.Query), "Didnt set the query param")
 }
 
 func TestAddHeader(t *testing.T) {
 	request := setup()
 	request.AddHeader("Content-Type", "application/json")
+	assert.Equal(t, 1, len(request.Header), "Didnt set the header pair")
+}
 
-	if len(request.Header) != 1 {
-		t.Errorf("Didnt set the header pair")
-	}
+func readStream(body io.Reader) string {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(body)
+	return buf.String()
 }
 
 func TestSetBodyContentJSON(t *testing.T) {
@@ -68,25 +61,36 @@ func TestSetBodyContentJSON(t *testing.T) {
 	}
 	body := make(map[string]interface{})
 	body["name"] = testStructure.Name
-	want := []byte(`{"name":"wonder woman"}`)
+	want := "{\"name\":\"wonder woman\"}\n"
 
 	request := setup()
 	request.SetBodyContentJSON(body)
-	buff := make([]byte, 23)
-	request.Body.Read(buff)
-
-	if !bytes.Equal(want, buff) {
-		t.Errorf("Couldnt serialize")
-	}
+	assert.NotNil(t, request.Body)
+	assert.Equal(t, want, readStream(request.Body))
 }
 
 func TestSetBodyContentString(t *testing.T) {
+	var str = "hello GO SDK"
 	request := setup()
-	request.SetBodyContentString("hello GO SDK")
+	request.SetBodyContentString(str)
+	assert.NotNil(t, request.Body)
+	assert.Equal(t, str, readStream(request.Body))
+}
 
-	if request.Body == nil {
-		t.Errorf("Couldnt set content type as string")
-	}
+func TestSetBodyContent1(t *testing.T) {
+	var str = "hello GO SDK"
+	request := setup()
+	request.SetBodyContent("text/plain", nil, nil, str)
+	assert.NotNil(t, request.Body)
+	assert.Equal(t, str, readStream(request.Body))
+}
+
+func TestSetBodyContent2(t *testing.T) {
+	var str = "hello GO SDK"
+	request := setup()
+	request.SetBodyContent("text/plain", nil, nil, &str)
+	assert.NotNil(t, request.Body)
+	assert.Equal(t, str, readStream(request.Body))
 }
 
 func TestBuildWithMultipartFormEmptyFileName(t *testing.T) {
@@ -96,11 +100,8 @@ func TestBuildWithMultipartFormEmptyFileName(t *testing.T) {
 		AddQuery("Version", "2018-22-09").
 		AddFormData("hello1", "", "text/plain", "Hello GO SDK").
 		AddFormData("hello2", "", "", "Hello GO SDK again")
-
 	req, _ := request.Build()
-	if req.Body == nil {
-		t.Errorf("Couldnt build successfully")
-	}
+	assert.NotNil(t, req.Body, "Couldnt build successfully")
 }
 
 func TestBuildWithMultipartForm(t *testing.T) {
@@ -126,9 +127,8 @@ func TestBuildWithMultipartForm(t *testing.T) {
 	request.AddFormData("personality", "personality.txt", "application/octet-stream", file)
 
 	_, err = request.Build()
-	if err != nil {
-		t.Errorf("Couldnt build successfully")
-	}
+	assert.Nil(t, err, "Couldnt build successfully")
+	assert.NotNil(t, request.Body)
 	defer file.Close()
 }
 
