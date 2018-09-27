@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"reflect"
@@ -103,4 +104,13 @@ func StringNilMapper(s *string) string {
 		return ""
 	}
 	return *s
+}
+
+// PrettyPrint print pretty
+func PrettyPrint(result interface{}, resultName string) {
+	output, err := json.MarshalIndent(result, "", "    ")
+
+	if err == nil {
+		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
+	}
 }

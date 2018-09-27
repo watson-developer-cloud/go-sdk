@@ -168,14 +168,14 @@ func createFormFile(formWriter *multipart.Writer, fieldname string, filename str
 // SetBodyContentForMultipart - sets the body content for a part in a multi-part form
 func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType string, content interface{}, writer io.Writer) error {
 	var err error
-	if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
-		err = json.NewEncoder(writer).Encode(content)
+	if stream, ok := content.(io.Reader); ok {
+		_, err = io.Copy(writer, stream)
 	} else if str, ok := content.(string); ok {
 		writer.Write([]byte(str))
 	} else if strPtr, ok := content.(*string); ok {
 		writer.Write([]byte(*strPtr))
-	} else if stream, ok := content.(io.Reader); ok {
-		_, err = io.Copy(writer, stream)
+	} else if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
+		err = json.NewEncoder(writer).Encode(content)
 	} else {
 		err = fmt.Errorf("Could not decipher the contents")
 	}

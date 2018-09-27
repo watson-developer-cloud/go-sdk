@@ -1,21 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 
 	languagetranslator "github.com/ibm-watson/go-sdk/languagetranslatorv3"
 )
-
-// PrettyPrint print pretty
-func PrettyPrint(result interface{}, resultName string) {
-	output, err := json.MarshalIndent(result, "", "    ")
-
-	if err == nil {
-		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
-	}
-}
 
 func main() {
 	// Instantiate the Watson Language Translator service
