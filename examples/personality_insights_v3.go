@@ -1,134 +1,121 @@
 package main
 
 import (
-	"os"
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"encoding/json"
-	. "go-sdk/personalityInsightsV3"
-	"bytes"
+	"os"
+
+	"github.com/ibm-watson/go-sdk/core"
+	"github.com/ibm-watson/go-sdk/personalityinsightsv3"
 )
-
-func prettyPrint(result interface{}, resultName string) {
-	output, err := json.MarshalIndent(result, "", "    ")
-
-	if err == nil {
-		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
-	}
-}
 
 func main() {
 	// Instantiate the Watson Personality Insights service
-	piV3, piV3Err := NewPersonalityInsightsV3(&ServiceCredentials{
-		ServiceURL: "YOUR SERVICE URL",
-		Version: "2017-10-13",
-		APIkey: "YOUR SERVICE API KEY",
-	})
+	service, serviceErr := personalityinsightsv3.
+		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+			URL:      "YOUR SERVICE URL",
+			Version:  "2017-10-13",
+			Username: "YOUR SERVICE USERNAME",
+			Password: "YOUR SERVICE PASSWORD",
+		})
 
 	// Check successful instantiation
-	if piV3Err != nil {
-		fmt.Println(piV3Err)
-		return
+	if serviceErr != nil {
+		panic(serviceErr)
 	}
-
 
 	/* PROFILE */
 
 	// Read txt file with example speech
 	pwd, _ := os.Getwd()
 	fileName := "personality-v3.txt"
-	file, fileErr := ioutil.ReadFile(pwd + "/resources/" + fileName)
+	file, fileErr := ioutil.ReadFile(pwd + "/../resources/" + fileName)
 
 	// Check successful file read
 	if fileErr != nil {
-		fmt.Println(fileErr)
-		return
+		panic(fileErr)
 	}
 
 	// Create a new ProfileOptions for ContentType "text/plain"
-	profileOptions := NewProfileOptionsForPlain(string(file)).
-		SetContentLanguage("en").
-		SetAcceptLanguage("en")
+	profileOptions := service.NewProfileOptionsForPlain(string(file))
+	profileOptions.ContentLanguage = core.StringPtr("en")
+	profileOptions.AcceptLanguage = core.StringPtr("en")
 
 	// Call the personality insights Profile method
-	prof, profErr := piV3.Profile(profileOptions)
+	response, responseErr := service.Profile(profileOptions)
 
 	// Check successful call
-	if profErr != nil {
-		fmt.Println(profErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast prof.Result to the specific dataType returned by Profile
 	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	profResult := GetProfileResult(prof)
+	profResult := service.GetProfileResult(response)
 
 	// Check successful casting
 	if profResult != nil {
-		prettyPrint(profResult, "Profile for " + fileName)
+		core.PrettyPrint(profResult, "Profile for "+fileName)
 	}
 
 	// Read JSON file with example tweets
 	fileName = "personality-v3.json"
-	file, fileErr = ioutil.ReadFile(pwd + "/resources/" + fileName)
+	file, fileErr = ioutil.ReadFile(pwd + "/../resources/" + fileName)
 
 	// Check successful file read
 	if fileErr != nil {
-		fmt.Println(fileErr)
-		return
+		panic(fileErr)
 	}
 
 	// Unmarshal JSON into Content struct
-	content := new(Content)
+	content := new(personalityinsightsv3.Content)
 	json.Unmarshal(file, content)
 
 	// Set Content of profileOptions
-	profileOptions.SetContent(*content)
+	profileOptions.Content = content
 
 	// Call the personality insights Profile method now with JSON Content
-	prof, profErr = piV3.Profile(profileOptions)
+	response, responseErr = service.Profile(profileOptions)
 
 	// Check successful call
-	if profErr != nil {
-		fmt.Println(profErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast result again
-	profResult = GetProfileResult(prof)
+	profResult = service.GetProfileResult(response)
 
 	// Check successful casting
 	if profResult != nil {
-		prettyPrint(profResult, "Profile for " + fileName)
+		core.PrettyPrint(profResult, "Profile for "+fileName)
 	}
-
 
 	/* PROFILE AS CSV */
 
 	// Read txt file with example speech
 	fileName = "personality-v3.txt"
-	file, fileErr = ioutil.ReadFile(pwd + "/resources/" + fileName)
+	file, fileErr = ioutil.ReadFile(pwd + "/../resources/" + fileName)
 
 	// Check successful file read
 	if fileErr != nil {
-		fmt.Println(fileErr)
-		return
+		panic(fileErr)
 	}
 
 	// Set text/plain of profileOptions
 	profileOptions.SetPlain(string(file))
 
 	// Call the personality insights ProfileAsCsv method
-	prof, profErr = piV3.ProfileAsCsv(profileOptions)
+	response, responseErr = service.ProfileAsCsv(profileOptions)
 
 	// Check successful call
-	if profErr != nil {
-		fmt.Println(profErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast result
-	profCsvResult := GetProfileAsCsvResult(prof)
+	profCsvResult := service.GetProfileAsCsvResult(response)
 
 	// Check successful casting
 	if profCsvResult != nil {

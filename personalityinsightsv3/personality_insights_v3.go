@@ -19,8 +19,9 @@ package personalityinsightsv3
 
 import (
 	"fmt"
-	core "github.com/ibm-watson/go-sdk/core"
 	"io"
+
+	core "github.com/ibm-watson/go-sdk/core"
 )
 
 // PersonalityInsightsV3 : The PersonalityInsightsV3 service
@@ -333,7 +334,7 @@ type ProfileOptions struct {
 // NewProfileOptionsForContent : Instantiate ProfileOptionsForContent
 func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForContent(content Content) *ProfileOptions {
 	return &ProfileOptions{
-		Content: &content,
+		Content:     &content,
 		ContentType: core.StringPtr("application/json"),
 	}
 }
@@ -348,7 +349,7 @@ func (options *ProfileOptions) SetContent(content Content) *ProfileOptions {
 // NewProfileOptionsForHTML : Instantiate ProfileOptionsForHTML
 func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForHTML(body string) *ProfileOptions {
 	return &ProfileOptions{
-		Body: &body,
+		Body:        &body,
 		ContentType: core.StringPtr("text/html"),
 	}
 }
@@ -363,7 +364,7 @@ func (options *ProfileOptions) SetHTML(body string) *ProfileOptions {
 // NewProfileOptionsForPlain : Instantiate ProfileOptionsForPlain
 func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForPlain(body string) *ProfileOptions {
 	return &ProfileOptions{
-		Body: &body,
+		Body:        &body,
 		ContentType: core.StringPtr("text/plain"),
 	}
 }
