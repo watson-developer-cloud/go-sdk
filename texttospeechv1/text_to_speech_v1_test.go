@@ -1,31 +1,32 @@
-package textToSpeechV1_test
+package texttospeechv1_test
 
 import (
-	"github.ibm.com/arf/go-sdk/textToSpeechV1"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"strings"
+
+	"github.com/cloudfoundry-community/go-cfenv"
+	"github.com/ibm-watson/go-sdk/texttospeechv1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"encoding/base64"
-	"net/http/httptest"
-	"net/http"
-	"strings"
-	"fmt"
-	"os"
-	"encoding/json"
-	"github.com/cloudfoundry-community/go-cfenv"
 )
 
 var _ = Describe("TextToSpeechV1", func() {
 	Describe("Get credentials from VCAP", func() {
-		version := "exampleString"
 		username := "hyphenated-user"
 		password := "hyphenated-pass"
 		VCAPservices := cfenv.Services{
-			"conversation" : {
+			"conversation": {
 				{
 					Name: "text_to_speech",
 					Tags: []string{},
 					Credentials: map[string]interface{}{
-						"url": "https://stream.watsonplatform.net/text-to-speech/api",
+						"url":      "https://stream.watsonplatform.net/text-to-speech/api",
 						"username": username,
 						"password": password,
 					},
@@ -47,62 +48,59 @@ var _ = Describe("TextToSpeechV1", func() {
 			It("Succeed to create TextToSpeechV1", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL: testServer.URL,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				testService.ListVoiceModels(textToSpeechV1.NewListVoiceModelsOptions())
+				testService.ListVoiceModels(testService.NewListVoiceModelsOptions())
 			})
 		})
 	})
-	Describe("GetVoice(options *GetVoiceOptions)", func() {
-		getVoicePath := "/v1/voices/{voice}"
-        version := "exampleString"
-        voice := "exampleString"
-        getVoiceOptions := textToSpeechV1.NewGetVoiceOptions(voice)
+	Describe("GetVoice(getVoiceOptions *GetVoiceOptions)", func() {
+		GetVoicePath := "/v1/voices/{voice}"
+		Voice := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        getVoicePath = strings.Replace(getVoicePath, "{voice}", voice, 1)
+		GetVoicePath = strings.Replace(GetVoicePath, "{voice}", Voice, 1)
 		Context("Successfully - Get a voice", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(getVoicePath))
+				Expect(req.URL.Path).To(Equal(GetVoicePath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"url":"https://test.com", "gender":"female"}`)
 			}))
 			It("Succeed to call GetVoice", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.GetVoice(getVoiceOptions)
+				GetVoiceOptions := testService.NewGetVoiceOptions(Voice)
+				returnValue, returnValueErr := testService.GetVoice(GetVoiceOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetGetVoiceResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetGetVoiceResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("ListVoices(options *ListVoicesOptions)", func() {
-		listVoicesPath := "/v1/voices"
-        version := "exampleString"
-        listVoicesOptions := textToSpeechV1.NewListVoicesOptions()
+	Describe("ListVoices(listVoicesOptions *ListVoicesOptions)", func() {
+		ListVoicesPath := "/v1/voices"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -110,39 +108,38 @@ var _ = Describe("TextToSpeechV1", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(listVoicesPath))
+				Expect(req.URL.Path).To(Equal(ListVoicesPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `["gender":"female"]`)
 			}))
 			It("Succeed to call ListVoices", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.ListVoices(listVoicesOptions)
+				ListVoicesOptions := testService.NewListVoicesOptions()
+				returnValue, returnValueErr := testService.ListVoices(ListVoicesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetListVoicesResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetListVoicesResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("Synthesize(options *SynthesizeOptions)", func() {
-		synthesizePath := "/v1/synthesize"
-        version := "exampleString"
-        text := "exampleString"
-        synthesizeOptions := textToSpeechV1.NewSynthesizeOptions(text)
+	Describe("Synthesize(synthesizeOptions *SynthesizeOptions)", func() {
+		SynthesizePath := "/v1/synthesize"
+		Text := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -150,39 +147,48 @@ var _ = Describe("TextToSpeechV1", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(synthesizePath))
+				Expect(req.URL.Path).To(Equal(SynthesizePath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+
+				res.WriteHeader(http.StatusOK)
+				pwd, _ := os.Getwd()
+				file, err := os.Open(pwd + "/../resources/output.wav")
+				if err != nil {
+					panic(err)
+				}
+				bytes, err := ioutil.ReadAll(file)
+				if err != nil {
+					panic(err)
+				}
+				res.Write(bytes)
 			}))
 			It("Succeed to call Synthesize", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.Synthesize(synthesizeOptions)
+				SynthesizeOptions := testService.NewSynthesizeOptions(Text)
+				returnValue, returnValueErr := testService.Synthesize(SynthesizeOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetSynthesizeResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetSynthesizeResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("GetPronunciation(options *GetPronunciationOptions)", func() {
-		getPronunciationPath := "/v1/pronunciation"
-        version := "exampleString"
-        text := "exampleString"
-        getPronunciationOptions := textToSpeechV1.NewGetPronunciationOptions(text)
+	Describe("GetPronunciation(getPronunciationOptions *GetPronunciationOptions)", func() {
+		GetPronunciationPath := "/v1/pronunciation"
+		Text := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -190,39 +196,38 @@ var _ = Describe("TextToSpeechV1", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(getPronunciationPath))
+				Expect(req.URL.Path).To(Equal(GetPronunciationPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"pronunciation":"creepy"}`)
 			}))
 			It("Succeed to call GetPronunciation", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.GetPronunciation(getPronunciationOptions)
+				GetPronunciationOptions := testService.NewGetPronunciationOptions(Text)
+				returnValue, returnValueErr := testService.GetPronunciation(GetPronunciationOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetGetPronunciationResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetGetPronunciationResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("CreateVoiceModel(options *CreateVoiceModelOptions)", func() {
-		createVoiceModelPath := "/v1/customizations"
-        version := "exampleString"
-        name := "exampleString"
-        createVoiceModelOptions := textToSpeechV1.NewCreateVoiceModelOptions(name)
+	Describe("CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions)", func() {
+		CreateVoiceModelPath := "/v1/customizations"
+		Name := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -230,48 +235,47 @@ var _ = Describe("TextToSpeechV1", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(createVoiceModelPath))
+				Expect(req.URL.Path).To(Equal(CreateVoiceModelPath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"customization_id":"xxx"}`)
 			}))
 			It("Succeed to call CreateVoiceModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.CreateVoiceModel(createVoiceModelOptions)
+				CreateVoiceModelOptions := testService.NewCreateVoiceModelOptions(Name)
+				returnValue, returnValueErr := testService.CreateVoiceModel(CreateVoiceModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetCreateVoiceModelResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetCreateVoiceModelResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("DeleteVoiceModel(options *DeleteVoiceModelOptions)", func() {
-		deleteVoiceModelPath := "/v1/customizations/{customization_id}"
-        version := "exampleString"
-        customizationID := "exampleString"
-        deleteVoiceModelOptions := textToSpeechV1.NewDeleteVoiceModelOptions(customizationID)
+	Describe("DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions)", func() {
+		DeleteVoiceModelPath := "/v1/customizations/{customization_id}"
+		CustomizationID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        deleteVoiceModelPath = strings.Replace(deleteVoiceModelPath, "{customization_id}", customizationID, 1)
+		DeleteVoiceModelPath = strings.Replace(DeleteVoiceModelPath, "{customization_id}", CustomizationID, 1)
 		Context("Successfully - Delete a custom model", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(deleteVoiceModelPath))
+				Expect(req.URL.Path).To(Equal(DeleteVoiceModelPath))
 				Expect(req.Method).To(Equal("DELETE"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -281,66 +285,64 @@ var _ = Describe("TextToSpeechV1", func() {
 			It("Succeed to call DeleteVoiceModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.DeleteVoiceModel(deleteVoiceModelOptions)
+				DeleteVoiceModelOptions := testService.NewDeleteVoiceModelOptions(CustomizationID)
+				returnValue, returnValueErr := testService.DeleteVoiceModel(DeleteVoiceModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("GetVoiceModel(options *GetVoiceModelOptions)", func() {
-		getVoiceModelPath := "/v1/customizations/{customization_id}"
-        version := "exampleString"
-        customizationID := "exampleString"
-        getVoiceModelOptions := textToSpeechV1.NewGetVoiceModelOptions(customizationID)
+	Describe("GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions)", func() {
+		GetVoiceModelPath := "/v1/customizations/{customization_id}"
+		CustomizationID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        getVoiceModelPath = strings.Replace(getVoiceModelPath, "{customization_id}", customizationID, 1)
+		GetVoiceModelPath = strings.Replace(GetVoiceModelPath, "{customization_id}", CustomizationID, 1)
 		Context("Successfully - Get a custom model", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(getVoiceModelPath))
+				Expect(req.URL.Path).To(Equal(GetVoiceModelPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"customization_id":"xxx"}`)
 			}))
 			It("Succeed to call GetVoiceModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.GetVoiceModel(getVoiceModelOptions)
+				GetVoiceModelOptions := testService.NewGetVoiceModelOptions(CustomizationID)
+				returnValue, returnValueErr := testService.GetVoiceModel(GetVoiceModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetGetVoiceModelResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetGetVoiceModelResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("ListVoiceModels(options *ListVoiceModelsOptions)", func() {
-		listVoiceModelsPath := "/v1/customizations"
-        version := "exampleString"
-        listVoiceModelsOptions := textToSpeechV1.NewListVoiceModelsOptions()
+	Describe("ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions)", func() {
+		ListVoiceModelsPath := "/v1/customizations"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -348,48 +350,47 @@ var _ = Describe("TextToSpeechV1", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(listVoiceModelsPath))
+				Expect(req.URL.Path).To(Equal(ListVoiceModelsPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `[]`)
 			}))
 			It("Succeed to call ListVoiceModels", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.ListVoiceModels(listVoiceModelsOptions)
+				ListVoiceModelsOptions := testService.NewListVoiceModelsOptions()
+				returnValue, returnValueErr := testService.ListVoiceModels(ListVoiceModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetListVoiceModelsResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetListVoiceModelsResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("UpdateVoiceModel(options *UpdateVoiceModelOptions)", func() {
-		updateVoiceModelPath := "/v1/customizations/{customization_id}"
-        version := "exampleString"
-        customizationID := "exampleString"
-        updateVoiceModelOptions := textToSpeechV1.NewUpdateVoiceModelOptions(customizationID)
+	Describe("UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions)", func() {
+		UpdateVoiceModelPath := "/v1/customizations/{customization_id}"
+		CustomizationID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        updateVoiceModelPath = strings.Replace(updateVoiceModelPath, "{customization_id}", customizationID, 1)
+		UpdateVoiceModelPath = strings.Replace(UpdateVoiceModelPath, "{customization_id}", CustomizationID, 1)
 		Context("Successfully - Update a custom model", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(updateVoiceModelPath))
+				Expect(req.URL.Path).To(Equal(UpdateVoiceModelPath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -399,37 +400,36 @@ var _ = Describe("TextToSpeechV1", func() {
 			It("Succeed to call UpdateVoiceModel", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.UpdateVoiceModel(updateVoiceModelOptions)
+				UpdateVoiceModelOptions := testService.NewUpdateVoiceModelOptions(CustomizationID)
+				returnValue, returnValueErr := testService.UpdateVoiceModel(UpdateVoiceModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("AddWord(options *AddWordOptions)", func() {
-		addWordPath := "/v1/customizations/{customization_id}/words/{word}"
-        version := "exampleString"
-        customizationID := "exampleString"
-        word := "exampleString"
-        addWordOptions := textToSpeechV1.NewAddWordOptions(customizationID, word)
+	Describe("AddWord(addWordOptions *AddWordOptions)", func() {
+		AddWordPath := "/v1/customizations/{customization_id}/words/{word}"
+		CustomizationID := "exampleString"
+		Word := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        addWordPath = strings.Replace(addWordPath, "{customization_id}", customizationID, 1)
-        addWordPath = strings.Replace(addWordPath, "{word}", word, 1)
+		AddWordPath = strings.Replace(AddWordPath, "{customization_id}", CustomizationID, 1)
+		AddWordPath = strings.Replace(AddWordPath, "{word}", Word, 1)
 		Context("Successfully - Add a custom word", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(addWordPath))
+				Expect(req.URL.Path).To(Equal(AddWordPath))
 				Expect(req.Method).To(Equal("PUT"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -439,35 +439,34 @@ var _ = Describe("TextToSpeechV1", func() {
 			It("Succeed to call AddWord", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.AddWord(addWordOptions)
+				AddWordOptions := testService.NewAddWordOptions(CustomizationID, Word)
+				returnValue, returnValueErr := testService.AddWord(AddWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("AddWords(options *AddWordsOptions)", func() {
-		addWordsPath := "/v1/customizations/{customization_id}/words"
-        version := "exampleString"
-        customizationID := "exampleString"
-        addWordsOptions := textToSpeechV1.NewAddWordsOptions(customizationID)
+	Describe("AddWords(addWordsOptions *AddWordsOptions)", func() {
+		AddWordsPath := "/v1/customizations/{customization_id}/words"
+		CustomizationID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        addWordsPath = strings.Replace(addWordsPath, "{customization_id}", customizationID, 1)
+		AddWordsPath = strings.Replace(AddWordsPath, "{customization_id}", CustomizationID, 1)
 		Context("Successfully - Add custom words", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(addWordsPath))
+				Expect(req.URL.Path).To(Equal(AddWordsPath))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -477,37 +476,36 @@ var _ = Describe("TextToSpeechV1", func() {
 			It("Succeed to call AddWords", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.AddWords(addWordsOptions)
+				AddWordsOptions := testService.NewAddWordsOptions(CustomizationID)
+				returnValue, returnValueErr := testService.AddWords(AddWordsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("DeleteWord(options *DeleteWordOptions)", func() {
-		deleteWordPath := "/v1/customizations/{customization_id}/words/{word}"
-        version := "exampleString"
-        customizationID := "exampleString"
-        word := "exampleString"
-        deleteWordOptions := textToSpeechV1.NewDeleteWordOptions(customizationID, word)
+	Describe("DeleteWord(deleteWordOptions *DeleteWordOptions)", func() {
+		DeleteWordPath := "/v1/customizations/{customization_id}/words/{word}"
+		CustomizationID := "exampleString"
+		Word := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        deleteWordPath = strings.Replace(deleteWordPath, "{customization_id}", customizationID, 1)
-        deleteWordPath = strings.Replace(deleteWordPath, "{word}", word, 1)
+		DeleteWordPath = strings.Replace(DeleteWordPath, "{customization_id}", CustomizationID, 1)
+		DeleteWordPath = strings.Replace(DeleteWordPath, "{word}", Word, 1)
 		Context("Successfully - Delete a custom word", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(deleteWordPath))
+				Expect(req.URL.Path).To(Equal(DeleteWordPath))
 				Expect(req.Method).To(Equal("DELETE"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
@@ -517,110 +515,107 @@ var _ = Describe("TextToSpeechV1", func() {
 			It("Succeed to call DeleteWord", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.DeleteWord(deleteWordOptions)
+				DeleteWordOptions := testService.NewDeleteWordOptions(CustomizationID, Word)
+				returnValue, returnValueErr := testService.DeleteWord(DeleteWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("GetWord(options *GetWordOptions)", func() {
-		getWordPath := "/v1/customizations/{customization_id}/words/{word}"
-        version := "exampleString"
-        customizationID := "exampleString"
-        word := "exampleString"
-        getWordOptions := textToSpeechV1.NewGetWordOptions(customizationID, word)
+	Describe("GetWord(getWordOptions *GetWordOptions)", func() {
+		GetWordPath := "/v1/customizations/{customization_id}/words/{word}"
+		CustomizationID := "exampleString"
+		Word := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        getWordPath = strings.Replace(getWordPath, "{customization_id}", customizationID, 1)
-        getWordPath = strings.Replace(getWordPath, "{word}", word, 1)
+		GetWordPath = strings.Replace(GetWordPath, "{customization_id}", CustomizationID, 1)
+		GetWordPath = strings.Replace(GetWordPath, "{word}", Word, 1)
 		Context("Successfully - Get a custom word", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(getWordPath))
+				Expect(req.URL.Path).To(Equal(GetWordPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"translation":"hello"}`)
 			}))
 			It("Succeed to call GetWord", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.GetWord(getWordOptions)
+				GetWordOptions := testService.NewGetWordOptions(CustomizationID, Word)
+				returnValue, returnValueErr := testService.GetWord(GetWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetGetWordResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetGetWordResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("ListWords(options *ListWordsOptions)", func() {
-		listWordsPath := "/v1/customizations/{customization_id}/words"
-        version := "exampleString"
-        customizationID := "exampleString"
-        listWordsOptions := textToSpeechV1.NewListWordsOptions(customizationID)
+	Describe("ListWords(listWordsOptions *ListWordsOptions)", func() {
+		ListWordsPath := "/v1/customizations/{customization_id}/words"
+		CustomizationID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-        listWordsPath = strings.Replace(listWordsPath, "{customization_id}", customizationID, 1)
+		ListWordsPath = strings.Replace(ListWordsPath, "{customization_id}", CustomizationID, 1)
 		Context("Successfully - List custom words", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(listWordsPath))
+				Expect(req.URL.Path).To(Equal(ListWordsPath))
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `[]`)
 			}))
 			It("Succeed to call ListWords", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.ListWords(listWordsOptions)
+				ListWordsOptions := testService.NewListWordsOptions(CustomizationID)
+				returnValue, returnValueErr := testService.ListWords(ListWordsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-                result := textToSpeechV1.GetListWordsResult(returnValue)
-                Expect(result).ToNot(BeNil())
+				result := testService.GetListWordsResult(returnValue)
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
-	Describe("DeleteUserData(options *DeleteUserDataOptions)", func() {
-		deleteUserDataPath := "/v1/user_data"
-        version := "exampleString"
-        customerID := "exampleString"
-        deleteUserDataOptions := textToSpeechV1.NewDeleteUserDataOptions(customerID)
+	Describe("DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)", func() {
+		DeleteUserDataPath := "/v1/user_data"
+		CustomerID := "exampleString"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -628,26 +623,27 @@ var _ = Describe("TextToSpeechV1", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.Path).To(Equal(deleteUserDataPath))
+				Expect(req.URL.Path).To(Equal(DeleteUserDataPath))
 				Expect(req.Method).To(Equal("DELETE"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
+				res.Header().Set("Content-type", "application/json")
 				fmt.Fprintf(res, `{"hi":"there"}`)
 			}))
 			It("Succeed to call DeleteUserData", func() {
 				defer testServer.Close()
 
-				testService, testServiceErr := textToSpeechV1.NewTextToSpeechV1(&textToSpeechV1.ServiceCredentials{
-					ServiceURL: testServer.URL,
-					Version: version,
-					Username: username,
-					Password: password,
-				})
+				testService, testServiceErr := texttospeechv1.
+					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+						URL:      testServer.URL,
+						Username: username,
+						Password: password,
+					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				returnValue, returnValueErr := testService.DeleteUserData(deleteUserDataOptions)
+				DeleteUserDataOptions := testService.NewDeleteUserDataOptions(CustomerID)
+				returnValue, returnValueErr := testService.DeleteUserData(DeleteUserDataOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})

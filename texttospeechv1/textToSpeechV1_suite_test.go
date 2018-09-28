@@ -1,4 +1,4 @@
-package textToSpeechV1_test
+package texttospeechv1_test
 
 import (
 	"testing"

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"runtime"
 	"strings"
@@ -171,7 +172,11 @@ func (service *WatsonService) Request(req *http.Request, result interface{}) (*D
 	}
 
 	if response.Result == nil {
-		response.Result = resp.Body
+		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return response, err
+		}
+		response.Result = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 	}
 
 	defer resp.Body.Close()

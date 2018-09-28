@@ -1,46 +1,43 @@
 package main
 
 import (
-	"fmt"
-	. "go-sdk/textToSpeechV1"
 	"bytes"
+	"fmt"
 	"os"
+
+	"github.com/ibm-watson/go-sdk/texttospeechv1"
 )
 
 func main() {
 	// Instantiate the Watson Text To Speech service
-	textToSpeech, textToSpeechErr := NewTextToSpeechV1(&ServiceCredentials{
-		ServiceURL: "YOUR SERVICE URL",
-		Version: "2017-09-21",
-		Username: "YOUR SERVICE USERNAME",
-		Password: "YOUR SERVICE PASSWORD",
-	})
+	service, serviceErr := texttospeechv1.
+		NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+			ServiceURL: "YOUR SERVICE URL",
+			APIkey:     "YOUR SERVICE API KEY",
+		})
 
 	// Check successful instantiation
-	if textToSpeechErr != nil {
-		fmt.Println(textToSpeechErr)
-		return
+	if serviceErr != nil {
+		panic(serviceErr)
 	}
-
 
 	/* SYNTHESIZE */
 
-	synthesizeOptions := NewSynthesizeOptions("Hello World").
+	synthesizeOptions := service.NewSynthesizeOptions("Hello World").
 		SetAccept("audio/mp3").
 		SetVoice("en-GB_KateVoice")
 
 	// Call the textToSpeech Synthesize method
-	synthesize, synthesizeErr := textToSpeech.Synthesize(synthesizeOptions)
+	response, responseErr := service.Synthesize(synthesizeOptions)
 
 	// Check successful call
-	if synthesizeErr != nil {
-		fmt.Println(synthesizeErr)
-		return
+	if responseErr != nil {
+		panic(responseErr)
 	}
 
 	// Cast synthesize.Result to the specific dataType returned by Synthesize
 	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	synthesizeResult := GetSynthesizeResult(synthesize)
+	synthesizeResult := service.GetSynthesizeResult(response)
 
 	// Check successful casting
 	if synthesizeResult != nil {
