@@ -1,5 +1,6 @@
-// Package personalityInsightsV3 : Operations and models for the PersonalityInsightsV3 service
-package personalityInsightsV3
+// Package personalityinsightsv3 : Operations and models for the PersonalityInsightsV3 service
+package personalityinsightsv3
+
 /**
  * Copyright 2018 IBM All Rights Reserved.
  *
@@ -17,316 +18,276 @@ package personalityInsightsV3
  */
 
 import (
-    "bytes"
-    "fmt"
-    "io"
-    "runtime"
-    req "github.com/parnurzeal/gorequest"
-    watson "go-sdk"
+	"fmt"
+	core "github.com/ibm-watson/go-sdk/core"
+	"io"
 )
 
 // PersonalityInsightsV3 : The PersonalityInsightsV3 service
 type PersonalityInsightsV3 struct {
-    client *watson.Client
+	service *core.WatsonService
 }
 
-// ServiceCredentials : Service credentials
-type ServiceCredentials struct {
-    ServiceURL string
-    Version string
-    Username string
-    Password string
-    APIkey string
-    IAMtoken string
+// PersonalityInsightsV3Options : Service options
+type PersonalityInsightsV3Options struct {
+	Version        string
+	URL            string
+	Username       string
+	Password       string
+	IAMApiKey      string
+	IAMAccessToken string
+	IAMURL         string
 }
 
 // NewPersonalityInsightsV3 : Instantiate PersonalityInsightsV3
-func NewPersonalityInsightsV3(serviceCreds *ServiceCredentials) (*PersonalityInsightsV3, error) {
-    if serviceCreds.ServiceURL == "" {
-        serviceCreds.ServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
-    }
+func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*PersonalityInsightsV3, error) {
+	if options.URL == "" {
+		options.URL = "https://gateway.watsonplatform.net/personality-insights/api"
+	}
 
-    creds := watson.Credentials(*serviceCreds)
-    client, clientErr := watson.NewClient(&creds, "personality_insights")
+	serviceOptions := &core.ServiceOptions{
+		URL:            options.URL,
+		Version:        options.Version,
+		Username:       options.Username,
+		Password:       options.Password,
+		IAMApiKey:      options.IAMApiKey,
+		IAMAccessToken: options.IAMAccessToken,
+		IAMURL:         options.IAMURL,
+	}
+	service, serviceErr := core.NewWatsonService(serviceOptions, "personality_insights")
+	if serviceErr != nil {
+		return nil, serviceErr
+	}
 
-    if clientErr != nil {
-        return nil, clientErr
-    }
-
-    return &PersonalityInsightsV3{ client: client }, nil
+	return &PersonalityInsightsV3{service: service}, nil
 }
 
 // Profile : Get profile
-func (personalityInsights *PersonalityInsightsV3) Profile(options *ProfileOptions) (*watson.WatsonResponse, []error) {
-    path := "/v3/profile"
-    creds := personalityInsights.client.Creds
-    useTM := personalityInsights.client.UseTM
-    tokenManager := personalityInsights.client.TokenManager
+func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(profileOptions, "profileOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v3/profile"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(personalityInsights.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range profileOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	if profileOptions.ContentType != nil {
+		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
+	}
+	if profileOptions.ContentLanguage != nil {
+		builder.AddHeader("Content-Language", fmt.Sprint(*profileOptions.ContentLanguage))
+	}
+	if profileOptions.AcceptLanguage != nil {
+		builder.AddHeader("Accept-Language", fmt.Sprint(*profileOptions.AcceptLanguage))
+	}
 
-    request.Set("Accept", "application/json")
-    request.Set("Content-Type", fmt.Sprint(options.ContentType))
-    if options.IsContentLanguageSet {
-        request.Set("Content-Language", fmt.Sprint(options.ContentLanguage))
-    }
-    if options.IsAcceptLanguageSet {
-        request.Set("Accept-Language", fmt.Sprint(options.AcceptLanguage))
-    }
-    request.Query("version=" + creds.Version)
-    if options.IsRawScoresSet {
-        request.Query("raw_scores=" + fmt.Sprint(options.RawScores))
-    }
-    if options.IsCsvHeadersSet {
-        request.Query("csv_headers=" + fmt.Sprint(options.CsvHeaders))
-    }
-    if options.IsConsumptionPreferencesSet {
-        request.Query("consumption_preferences=" + fmt.Sprint(options.ConsumptionPreferences))
-    }
-    if options.ContentType == "application/json" {
-        request.Send(options.Content)
-    } else {
-        request.Send(options.Body)
-    }
+	if profileOptions.RawScores != nil {
+		builder.AddQuery("raw_scores", fmt.Sprint(*profileOptions.RawScores))
+	}
+	if profileOptions.CsvHeaders != nil {
+		builder.AddQuery("csv_headers", fmt.Sprint(*profileOptions.CsvHeaders))
+	}
+	if profileOptions.ConsumptionPreferences != nil {
+		builder.AddQuery("consumption_preferences", fmt.Sprint(*profileOptions.ConsumptionPreferences))
+	}
+	builder.AddQuery("version", personalityInsights.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	_, err := builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    response.Result = new(Profile)
-    res, _, err := request.EndStruct(&response.Result)
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := personalityInsights.service.Request(request, new(Profile))
+	return response, err
 }
 
 // GetProfileResult : Cast result of Profile operation
-func GetProfileResult(response *watson.WatsonResponse) *Profile {
-    result, ok := response.Result.(*Profile)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *core.DetailedResponse) *Profile {
+	result, ok := response.Result.(*Profile)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ProfileAsCsv : Get profile as csv
-func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(options *ProfileOptions) (*watson.WatsonResponse, []error) {
-    path := "/v3/profile"
-    creds := personalityInsights.client.Creds
-    useTM := personalityInsights.client.UseTM
-    tokenManager := personalityInsights.client.TokenManager
+func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(profileOptions, "profileOptions"); err != nil {
+		return nil, err
+	}
 
-    request := req.New().Post(creds.ServiceURL + path)
+	pathSegments := []string{"v3/profile"}
+	pathParameters := []string{}
 
-    for headerName, headerValue := range options.Headers {
-        request.Set(headerName, headerValue)
-    }
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(personalityInsights.service.Options.URL, pathSegments, pathParameters)
 
-    request.Set("User-Agent", "watson-apis-go-sdk 0.0.1 " + runtime.GOOS)
+	for headerName, headerValue := range profileOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "text/csv")
+	if profileOptions.ContentType != nil {
+		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
+	}
+	if profileOptions.ContentLanguage != nil {
+		builder.AddHeader("Content-Language", fmt.Sprint(*profileOptions.ContentLanguage))
+	}
+	if profileOptions.AcceptLanguage != nil {
+		builder.AddHeader("Accept-Language", fmt.Sprint(*profileOptions.AcceptLanguage))
+	}
 
-    request.Set("Accept", "text/csv")
-    request.Set("Content-Type", fmt.Sprint(options.ContentType))
-    if options.IsContentLanguageSet {
-        request.Set("Content-Language", fmt.Sprint(options.ContentLanguage))
-    }
-    if options.IsAcceptLanguageSet {
-        request.Set("Accept-Language", fmt.Sprint(options.AcceptLanguage))
-    }
-    request.Query("version=" + creds.Version)
-    if options.IsRawScoresSet {
-        request.Query("raw_scores=" + fmt.Sprint(options.RawScores))
-    }
-    if options.IsCsvHeadersSet {
-        request.Query("csv_headers=" + fmt.Sprint(options.CsvHeaders))
-    }
-    if options.IsConsumptionPreferencesSet {
-        request.Query("consumption_preferences=" + fmt.Sprint(options.ConsumptionPreferences))
-    }
-    if options.ContentType == "application/json" {
-        request.Send(options.Content)
-    } else {
-        request.Send(options.Body)
-    }
+	if profileOptions.RawScores != nil {
+		builder.AddQuery("raw_scores", fmt.Sprint(*profileOptions.RawScores))
+	}
+	if profileOptions.CsvHeaders != nil {
+		builder.AddQuery("csv_headers", fmt.Sprint(*profileOptions.CsvHeaders))
+	}
+	if profileOptions.ConsumptionPreferences != nil {
+		builder.AddQuery("consumption_preferences", fmt.Sprint(*profileOptions.ConsumptionPreferences))
+	}
+	builder.AddQuery("version", personalityInsights.service.Options.Version)
 
-    if useTM {
-        token, tokenErr := tokenManager.GetToken()
+	_, err := builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body)
+	if err != nil {
+		return nil, err
+	}
 
-        if tokenErr != nil {
-            return nil, tokenErr
-        }
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
 
-        request.Set("Authorization", "Bearer " + token)
-    } else {
-        request.SetBasicAuth(creds.Username, creds.Password)
-    }
-
-    response := new(watson.WatsonResponse)
-
-    res, _, err := request.End()
-
-    if err != nil {
-        return nil, err
-    }
-
-    response.Result = res.Body
-    response.Headers = res.Header
-    response.StatusCode = res.StatusCode
-
-    if res.StatusCode < 200 || res.StatusCode >= 300 {
-        buff := new(bytes.Buffer)
-        buff.ReadFrom(res.Body)
-        errStr := buff.String()
-        err = append(err, fmt.Errorf(errStr))
-        return response, err
-    }
-
-    return response, nil
+	response, err := personalityInsights.service.Request(request, new(io.ReadCloser))
+	return response, err
 }
 
 // GetProfileAsCsvResult : Cast result of ProfileAsCsv operation
-func GetProfileAsCsvResult(response *watson.WatsonResponse) io.ReadCloser {
-    result, ok := response.Result.(io.ReadCloser)
-
-    if ok {
-        return result
-    }
-
-    return nil
+func (personalityInsights *PersonalityInsightsV3) GetProfileAsCsvResult(response *core.DetailedResponse) io.ReadCloser {
+	result, ok := response.Result.(io.ReadCloser)
+	if ok {
+		return result
+	}
+	return nil
 }
-
 
 // Behavior : Behavior struct
 type Behavior struct {
 
 	// The unique, non-localized identifier of the characteristic to which the results pertain. IDs have the form `behavior_{value}`.
-	TraitID string `json:"trait_id"`
+	TraitID *string `json:"trait_id" validate:"required"`
 
 	// The user-visible, localized name of the characteristic.
-	Name string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// The category of the characteristic: `behavior` for temporal data.
-	Category string `json:"category"`
+	Category *string `json:"category" validate:"required"`
 
 	// For JSON content that is timestamped, the percentage of timestamped input data that occurred during that day of the week or hour of the day. The range is 0 to 1.
-	Percentage float64 `json:"percentage"`
+	Percentage *float64 `json:"percentage" validate:"required"`
 }
 
 // ConsumptionPreferences : ConsumptionPreferences struct
 type ConsumptionPreferences struct {
 
 	// The unique, non-localized identifier of the consumption preference to which the results pertain. IDs have the form `consumption_preferences_{preference}`.
-	ConsumptionPreferenceID string `json:"consumption_preference_id"`
+	ConsumptionPreferenceID *string `json:"consumption_preference_id" validate:"required"`
 
 	// The user-visible, localized name of the consumption preference.
-	Name string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// The score for the consumption preference: * `0.0`: Unlikely * `0.5`: Neutral * `1.0`: Likely The scores for some preferences are binary and do not allow a neutral value. The score is an indication of preference based on the results inferred from the input text, not a normalized percentile.
-	Score float64 `json:"score"`
+	Score *float64 `json:"score" validate:"required"`
 }
 
 // ConsumptionPreferencesCategory : ConsumptionPreferencesCategory struct
 type ConsumptionPreferencesCategory struct {
 
 	// The unique, non-localized identifier of the consumption preferences category to which the results pertain. IDs have the form `consumption_preferences_{category}`.
-	ConsumptionPreferenceCategoryID string `json:"consumption_preference_category_id"`
+	ConsumptionPreferenceCategoryID *string `json:"consumption_preference_category_id" validate:"required"`
 
 	// The user-visible name of the consumption preferences category.
-	Name string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// Detailed results inferred from the input text for the individual preferences of the category.
-	ConsumptionPreferences []ConsumptionPreferences `json:"consumption_preferences"`
+	ConsumptionPreferences []ConsumptionPreferences `json:"consumption_preferences" validate:"required"`
 }
 
 // Content : Content struct
 type Content struct {
 
 	// An array of `ContentItem` objects that provides the text that is to be analyzed.
-	ContentItems []ContentItem `json:"contentItems"`
+	ContentItems []ContentItem `json:"contentItems" validate:"required"`
 }
 
 // ContentItem : ContentItem struct
 type ContentItem struct {
 
 	// The content that is to be analyzed. The service supports up to 20 MB of content for all `ContentItem` objects combined.
-	Content string `json:"content"`
+	Content *string `json:"content" validate:"required"`
 
 	// A unique identifier for this content item.
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// A timestamp that identifies when this content was created. Specify a value in milliseconds since the UNIX Epoch (January 1, 1970, at 0:00 UTC). Required only for results that include temporal behavior data.
-	Created int64 `json:"created,omitempty"`
+	Created *int64 `json:"created,omitempty"`
 
 	// A timestamp that identifies when this content was last updated. Specify a value in milliseconds since the UNIX Epoch (January 1, 1970, at 0:00 UTC). Required only for results that include temporal behavior data.
-	Updated int64 `json:"updated,omitempty"`
+	Updated *int64 `json:"updated,omitempty"`
 
 	// The MIME type of the content. The default is plain text. The tags are stripped from HTML content before it is analyzed; plain text is processed as submitted.
-	Contenttype string `json:"contenttype,omitempty"`
+	Contenttype *string `json:"contenttype,omitempty"`
 
 	// The language identifier (two-letter ISO 639-1 identifier) for the language of the content item. The default is `en` (English). Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. A language specified with the **Content-Type** parameter overrides the value of this parameter; any content items that specify a different language are ignored. Omit the **Content-Type** parameter to base the language on the most prevalent specification among the content items; again, content items that specify a different language are ignored. You can specify any combination of languages for the input and response content.
-	Language string `json:"language,omitempty"`
+	Language *string `json:"language,omitempty"`
 
 	// The unique ID of the parent content item for this item. Used to identify hierarchical relationships between posts/replies, messages/replies, and so on.
-	Parentid string `json:"parentid,omitempty"`
+	Parentid *string `json:"parentid,omitempty"`
 
 	// Indicates whether this content item is a reply to another content item.
-	Reply bool `json:"reply,omitempty"`
+	Reply *bool `json:"reply,omitempty"`
 
 	// Indicates whether this content item is a forwarded/copied version of another content item.
-	Forward bool `json:"forward,omitempty"`
+	Forward *bool `json:"forward,omitempty"`
 }
 
 // Profile : Profile struct
 type Profile struct {
 
 	// The language model that was used to process the input.
-	ProcessedLanguage string `json:"processed_language"`
+	ProcessedLanguage *string `json:"processed_language" validate:"required"`
 
 	// The number of words from the input that were used to produce the profile.
-	WordCount int64 `json:"word_count"`
+	WordCount *int64 `json:"word_count" validate:"required"`
 
 	// When guidance is appropriate, a string that provides a message that indicates the number of words found and where that value falls in the range of required or suggested number of words.
-	WordCountMessage string `json:"word_count_message,omitempty"`
+	WordCountMessage *string `json:"word_count_message,omitempty"`
 
 	// A recursive array of `Trait` objects that provides detailed results for the Big Five personality characteristics (dimensions and facets) inferred from the input text.
-	Personality []Trait `json:"personality"`
+	Personality []Trait `json:"personality" validate:"required"`
 
 	// Detailed results for the Needs characteristics inferred from the input text.
-	Needs []Trait `json:"needs"`
+	Needs []Trait `json:"needs" validate:"required"`
 
 	// Detailed results for the Values characteristics inferred from the input text.
-	Values []Trait `json:"values"`
+	Values []Trait `json:"values" validate:"required"`
 
 	// For JSON content that is timestamped, detailed results about the social behavior disclosed by the input in terms of temporal characteristics. The results include information about the distribution of the content over the days of the week and the hours of the day.
 	Behavior []Behavior `json:"behavior,omitempty"`
@@ -335,167 +296,141 @@ type Profile struct {
 	ConsumptionPreferences []ConsumptionPreferencesCategory `json:"consumption_preferences,omitempty"`
 
 	// Warning messages associated with the input text submitted with the request. The array is empty if the input generated no warnings.
-	Warnings []Warning `json:"warnings"`
+	Warnings []Warning `json:"warnings" validate:"required"`
 }
 
 // ProfileOptions : The profile options.
 type ProfileOptions struct {
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see [Providing sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an object of type `Content`.
-	Content Content `json:"content,omitempty"`
-
-    // Indicates whether user set optional parameter Content
-    IsContentSet bool
+	Content *Content `json:"content,omitempty"`
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see [Providing sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an object of type `Content`.
-	Body string `json:"body,omitempty"`
-
-    // Indicates whether user set optional parameter Body
-    IsBodySet bool
+	Body *string `json:"body,omitempty"`
 
 	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example, 'text/html;charset=utf-8'.
-	ContentType string `json:"Content-Type"`
+	ContentType *string `json:"Content-Type" validate:"required"`
 
 	// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The effect of the **Content-Language** parameter depends on the **Content-Type** parameter. When **Content-Type** is `text/plain` or `text/html`, **Content-Language** is the only way to specify the language. When **Content-Type** is `application/json`, **Content-Language** overrides a language specified with the `language` parameter of a `ContentItem` object, and content items that specify a different language are ignored; omit this parameter to base the language on the specification of the content items. You can specify any combination of languages for **Content-Language** and **Accept-Language**.
-	ContentLanguage string `json:"Content-Language,omitempty"`
-
-    // Indicates whether user set optional parameter ContentLanguage
-    IsContentLanguageSet bool
+	ContentLanguage *string `json:"Content-Language,omitempty"`
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input and response content.
-	AcceptLanguage string `json:"Accept-Language,omitempty"`
-
-    // Indicates whether user set optional parameter AcceptLanguage
-    IsAcceptLanguageSet bool
+	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
 	// Indicates whether a raw score in addition to a normalized percentile is returned for each characteristic; raw scores are not compared with a sample population. By default, only normalized percentiles are returned.
-	RawScores bool `json:"raw_scores,omitempty"`
-
-    // Indicates whether user set optional parameter RawScores
-    IsRawScoresSet bool
+	RawScores *bool `json:"raw_scores,omitempty"`
 
 	// Indicates whether column labels are returned with a CSV response. By default, no column labels are returned. Applies only when the **Accept** parameter is set to `text/csv`.
-	CsvHeaders bool `json:"csv_headers,omitempty"`
-
-    // Indicates whether user set optional parameter CsvHeaders
-    IsCsvHeadersSet bool
+	CsvHeaders *bool `json:"csv_headers,omitempty"`
 
 	// Indicates whether consumption preferences are returned with the results. By default, no consumption preferences are returned.
-	ConsumptionPreferences bool `json:"consumption_preferences,omitempty"`
+	ConsumptionPreferences *bool `json:"consumption_preferences,omitempty"`
 
-    // Indicates whether user set optional parameter ConsumptionPreferences
-    IsConsumptionPreferencesSet bool
-
-    // Allows users to set headers to be GDPR compliant
-    Headers map[string]string
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
 }
 
 // NewProfileOptionsForContent : Instantiate ProfileOptionsForContent
-func NewProfileOptionsForContent(content Content) *ProfileOptions {
-    return &ProfileOptions{
-        Content: content,
-        ContentType: "application/json",
-    }
+func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForContent(content Content) *ProfileOptions {
+	return &ProfileOptions{
+		Content: &content,
+		ContentType: core.StringPtr("application/json"),
+	}
 }
 
 // SetContent : Allow user to set Content
 func (options *ProfileOptions) SetContent(content Content) *ProfileOptions {
-    options.Content = content
-    options.ContentType = "application/json"
-    return options
+	options.Content = &content
+	options.ContentType = core.StringPtr("application/json")
+	return options
 }
 
 // NewProfileOptionsForHTML : Instantiate ProfileOptionsForHTML
-func NewProfileOptionsForHTML(content string) *ProfileOptions {
-    return &ProfileOptions{
-        Body: content,
-        ContentType: "text/html",
-    }
+func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForHTML(body string) *ProfileOptions {
+	return &ProfileOptions{
+		Body: &body,
+		ContentType: core.StringPtr("text/html"),
+	}
 }
 
 // SetHTML : Allow user to set HTML
-func (options *ProfileOptions) SetHTML(content string) *ProfileOptions {
-    options.Body = content
-    options.ContentType = "text/html"
-    return options
+func (options *ProfileOptions) SetHTML(body string) *ProfileOptions {
+	options.Body = &body
+	options.ContentType = core.StringPtr("text/html")
+	return options
 }
 
 // NewProfileOptionsForPlain : Instantiate ProfileOptionsForPlain
-func NewProfileOptionsForPlain(content string) *ProfileOptions {
-    return &ProfileOptions{
-        Body: content,
-        ContentType: "text/plain",
-    }
+func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForPlain(body string) *ProfileOptions {
+	return &ProfileOptions{
+		Body: &body,
+		ContentType: core.StringPtr("text/plain"),
+	}
 }
 
 // SetPlain : Allow user to set Plain
-func (options *ProfileOptions) SetPlain(content string) *ProfileOptions {
-    options.Body = content
-    options.ContentType = "text/plain"
-    return options
+func (options *ProfileOptions) SetPlain(body string) *ProfileOptions {
+	options.Body = &body
+	options.ContentType = core.StringPtr("text/plain")
+	return options
 }
 
 // SetContentLanguage : Allow user to set ContentLanguage
 func (options *ProfileOptions) SetContentLanguage(param string) *ProfileOptions {
-    options.ContentLanguage = param
-    options.IsContentLanguageSet = true
-    return options
+	options.ContentLanguage = core.StringPtr(param)
+	return options
 }
 
 // SetAcceptLanguage : Allow user to set AcceptLanguage
 func (options *ProfileOptions) SetAcceptLanguage(param string) *ProfileOptions {
-    options.AcceptLanguage = param
-    options.IsAcceptLanguageSet = true
-    return options
+	options.AcceptLanguage = core.StringPtr(param)
+	return options
 }
 
 // SetRawScores : Allow user to set RawScores
 func (options *ProfileOptions) SetRawScores(param bool) *ProfileOptions {
-    options.RawScores = param
-    options.IsRawScoresSet = true
-    return options
+	options.RawScores = core.BoolPtr(param)
+	return options
 }
 
 // SetCsvHeaders : Allow user to set CsvHeaders
 func (options *ProfileOptions) SetCsvHeaders(param bool) *ProfileOptions {
-    options.CsvHeaders = param
-    options.IsCsvHeadersSet = true
-    return options
+	options.CsvHeaders = core.BoolPtr(param)
+	return options
 }
 
 // SetConsumptionPreferences : Allow user to set ConsumptionPreferences
 func (options *ProfileOptions) SetConsumptionPreferences(param bool) *ProfileOptions {
-    options.ConsumptionPreferences = param
-    options.IsConsumptionPreferencesSet = true
-    return options
+	options.ConsumptionPreferences = core.BoolPtr(param)
+	return options
 }
 
 // SetHeaders : Allow user to set Headers
 func (options *ProfileOptions) SetHeaders(param map[string]string) *ProfileOptions {
-    options.Headers = param
-    return options
+	options.Headers = param
+	return options
 }
 
 // Trait : Trait struct
 type Trait struct {
 
 	// The unique, non-localized identifier of the characteristic to which the results pertain. IDs have the form * `big5_{characteristic}` for Big Five personality dimensions * `facet_{characteristic}` for Big Five personality facets * `need_{characteristic}` for Needs *`value_{characteristic}` for Values.
-	TraitID string `json:"trait_id"`
+	TraitID *string `json:"trait_id" validate:"required"`
 
 	// The user-visible, localized name of the characteristic.
-	Name string `json:"name"`
+	Name *string `json:"name" validate:"required"`
 
 	// The category of the characteristic: `personality` for Big Five personality characteristics, `needs` for Needs, and `values` for Values.
-	Category string `json:"category"`
+	Category *string `json:"category" validate:"required"`
 
 	// The normalized percentile score for the characteristic. The range is 0 to 1. For example, if the percentage for Openness is 0.60, the author scored in the 60th percentile; the author is more open than 59 percent of the population and less open than 39 percent of the population.
-	Percentile float64 `json:"percentile"`
+	Percentile *float64 `json:"percentile" validate:"required"`
 
 	// The raw score for the characteristic. The range is 0 to 1. A higher score generally indicates a greater likelihood that the author has that characteristic, but raw scores must be considered in aggregate: The range of values in practice might be much smaller than 0 to 1, so an individual score must be considered in the context of the overall scores and their range. The raw score is computed based on the input and the service model; it is not normalized or compared with a sample population. The raw score enables comparison of the results against a different sampling population and with a custom normalization approach.
-	RawScore float64 `json:"raw_score,omitempty"`
+	RawScore *float64 `json:"raw_score,omitempty"`
 
 	// **`2017-10-13`**: Indicates whether the characteristic is meaningful for the input language. The field is always `true` for all characteristics of English, Spanish, and Japanese input. The field is `false` for the subset of characteristics of Arabic and Korean input for which the service's models are unable to generate meaningful results. **`2016-10-19`**: Not returned.
-	Significant bool `json:"significant,omitempty"`
+	Significant *bool `json:"significant,omitempty"`
 
 	// For `personality` (Big Five) dimensions, more detailed results for the facets of each dimension as inferred from the input text.
 	Children []Trait `json:"children,omitempty"`
@@ -505,8 +440,8 @@ type Trait struct {
 type Warning struct {
 
 	// The identifier of the warning message.
-	WarningID string `json:"warning_id"`
+	WarningID *string `json:"warning_id" validate:"required"`
 
 	// The message associated with the `warning_id`: * `WORD_COUNT_MESSAGE`: "There were {number} words in the input. We need a minimum of 600, preferably 1,200 or more, to compute statistically significant estimates." * `JSON_AS_TEXT`: "Request input was processed as text/plain as indicated, however detected a JSON input. Did you mean application/json?" * `CONTENT_TRUNCATED`: "For maximum accuracy while also optimizing processing time, only the first 250KB of input text (excluding markup) was analyzed. Accuracy levels off at approximately 3,000 words so this did not affect the accuracy of the profile." * `PARTIAL_TEXT_USED`, "The text provided to compute the profile was trimmed for performance reasons. This action does not affect the accuracy of the output, as not all of the input text was required." Applies only when Arabic input text exceeds a threshold at which additional words do not contribute to the accuracy of the profile.
-	Message string `json:"message"`
+	Message *string `json:"message" validate:"required"`
 }

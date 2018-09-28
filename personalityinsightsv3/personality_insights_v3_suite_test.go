@@ -1,4 +1,4 @@
-package personalityInsightsV3_test
+package personalityinsightsv3_test
 
 import (
 	"testing"
