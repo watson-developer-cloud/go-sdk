@@ -172,6 +172,8 @@ func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType str
 	var err error
 	if stream, ok := content.(io.Reader); ok {
 		_, err = io.Copy(writer, stream)
+	} else if stream, ok := content.(*io.ReadCloser); ok {
+		_, err = io.Copy(writer, *stream)
 	} else if IsJSONMimeType(contentType) || IsJSONPatchMimeType(contentType) {
 		err = json.NewEncoder(writer).Encode(content)
 	} else if str, ok := content.(string); ok {
@@ -266,6 +268,8 @@ func (requestBuilder *RequestBuilder) SetBodyContent(contentType string, jsonCon
 				requestBuilder.SetBodyContentString(*strPtr)
 			} else if stream, ok := nonJSONContent.(io.Reader); ok {
 				requestBuilder.SetBodyContentStream(stream)
+			} else if stream, ok := nonJSONContent.(*io.ReadCloser); ok {
+				requestBuilder.SetBodyContentStream(*stream)
 			} else {
 				return requestBuilder, fmt.Errorf("Invalid type for non-JSON body content: %s",
 					reflect.TypeOf(nonJSONContent).String())

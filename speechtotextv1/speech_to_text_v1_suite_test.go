@@ -1,4 +1,4 @@
-package speechToTextV1_test
+package speechtotextv1_test
 
 import (
 	"testing"

@@ -79,6 +79,11 @@ func Float32Ptr(literal float32) *float32 {
 	return &literal
 }
 
+// Float64Ptr : return pointer to float64 literal
+func Float64Ptr(literal float64) *float64 {
+	return &literal
+}
+
 // IsJSONMimeType : Returns true iff the specified mimeType value represents a "JSON" mimetype.
 func IsJSONMimeType(mimeType string) bool {
 	if mimeType == "" {
