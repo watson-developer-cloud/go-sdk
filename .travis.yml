@@ -42,10 +42,10 @@ before_script:
 # failing test, we want to see both. Configure golangci-lint with a
 # .golangci.yml file at the top level of your repo.
 script:
-  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
+  - go test `go list ./... | grep -v examples`
+  # - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
   # - gometalinter.v2 $GOPATH/src/go-sdk/...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
   # - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
-  - go test `go list ./... | grep -v examples`
 
 # TODO Enable semantic release below once we are public.
 # deploy:
