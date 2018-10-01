@@ -29,7 +29,7 @@ before_install:
 install:
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
 # TODO Change URLs for the repo before we are public.
-  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/ibm-watson
+  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/ibm-watson/go-sdk
 
 # Don't email me the results of the test runs.
 notifications:
