@@ -67,7 +67,7 @@ func main() {
 		panic(trucksFileErr)
 	}
 
-	createClassifierOptions := service.NewCreateClassifierOptions("Cars vs Trucks", "cars", *carsFile)
+	createClassifierOptions := service.NewCreateClassifierOptions("Cars vs Trucks", "cars", carsFile)
 	createClassifierOptions.NegativeExamples = trucksFile
 
 	response, responseErr = service.CreateClassifier(createClassifierOptions)
