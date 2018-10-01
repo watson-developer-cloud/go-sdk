@@ -22,6 +22,7 @@ before_install:
   - go get -u github.com/parnurzeal/gorequest
   - go get -u gopkg.in/alecthomas/gometalinter.v2
   - go get -u golang.org/x/lint/golint
+  - go get -u gopkg.in/go-playground/validator.v9
 
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
