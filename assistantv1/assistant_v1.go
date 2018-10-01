@@ -19,11 +19,17 @@ package assistantv1
 
 import (
 	"fmt"
-	core "github.com/ibm-watson/go-sdk/core"
+
 	"github.com/go-openapi/strfmt"
+	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// AssistantV1 : The AssistantV1 service
+// AssistantV1 : Assistant service combines machine learning, natural language understanding, and integrated
+// dialog tools to create conversation flows between your apps and your users.
+//
+// Version: V1
+// See: http://www.ibm.com/watson/developercloud/assistant.html
+//
 type AssistantV1 struct {
 	service *core.WatsonService
 }
@@ -64,21 +70,18 @@ func NewAssistantV1(options *AssistantV1Options) (*AssistantV1, error) {
 
 // Message : Get response to user input
 func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.DetailedResponse, error) {
-	if messageOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "messageOptions")
+	if err := core.ValidateNotNil(messageOptions, "messageOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if messageOptions != nil {
-		err := core.Validate.Struct(messageOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(messageOptions, "messageOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "message" };
-	pathParameters := []string{ *messageOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "message"}
+	pathParameters := []string{*messageOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range messageOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -124,7 +127,7 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	return response, err
 }
 
-// GetMessageResult : Cast result of Message operation
+// GetMessageResult : Retrieve result of Message operation
 func (assistant *AssistantV1) GetMessageResult(response *core.DetailedResponse) *MessageResponse {
 	result, ok := response.Result.(*MessageResponse)
 	if ok {
@@ -135,25 +138,21 @@ func (assistant *AssistantV1) GetMessageResult(response *core.DetailedResponse) 
 
 // CreateWorkspace : Create workspace
 func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions) (*core.DetailedResponse, error) {
-	if createWorkspaceOptions != nil {
-		err := core.Validate.Struct(createWorkspaceOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(createWorkspaceOptions, "createWorkspaceOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces" };
-	pathParameters := []string{  };
+	pathSegments := []string{"v1/workspaces"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -201,7 +200,7 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	return response, err
 }
 
-// GetCreateWorkspaceResult : Cast result of CreateWorkspace operation
+// GetCreateWorkspaceResult : Retrieve result of CreateWorkspace operation
 func (assistant *AssistantV1) GetCreateWorkspaceResult(response *core.DetailedResponse) *Workspace {
 	result, ok := response.Result.(*Workspace)
 	if ok {
@@ -212,27 +211,23 @@ func (assistant *AssistantV1) GetCreateWorkspaceResult(response *core.DetailedRe
 
 // DeleteWorkspace : Delete workspace
 func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions) (*core.DetailedResponse, error) {
-	if deleteWorkspaceOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteWorkspaceOptions")
+	if err := core.ValidateNotNil(deleteWorkspaceOptions, "deleteWorkspaceOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteWorkspaceOptions != nil {
-		err := core.Validate.Struct(deleteWorkspaceOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteWorkspaceOptions, "deleteWorkspaceOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces" };
-	pathParameters := []string{ *deleteWorkspaceOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces"}
+	pathParameters := []string{*deleteWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -246,21 +241,18 @@ func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWork
 
 // GetWorkspace : Get information about a workspace
 func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions) (*core.DetailedResponse, error) {
-	if getWorkspaceOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getWorkspaceOptions")
+	if err := core.ValidateNotNil(getWorkspaceOptions, "getWorkspaceOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if getWorkspaceOptions != nil {
-		err := core.Validate.Struct(getWorkspaceOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(getWorkspaceOptions, "getWorkspaceOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces" };
-	pathParameters := []string{ *getWorkspaceOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces"}
+	pathParameters := []string{*getWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -284,7 +276,7 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 	return response, err
 }
 
-// GetGetWorkspaceResult : Cast result of GetWorkspace operation
+// GetGetWorkspaceResult : Retrieve result of GetWorkspace operation
 func (assistant *AssistantV1) GetGetWorkspaceResult(response *core.DetailedResponse) *WorkspaceExport {
 	result, ok := response.Result.(*WorkspaceExport)
 	if ok {
@@ -295,18 +287,15 @@ func (assistant *AssistantV1) GetGetWorkspaceResult(response *core.DetailedRespo
 
 // ListWorkspaces : List workspaces
 func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) (*core.DetailedResponse, error) {
-	if listWorkspacesOptions != nil {
-		err := core.Validate.Struct(listWorkspacesOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listWorkspacesOptions, "listWorkspacesOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces" };
-	pathParameters := []string{  };
+	pathSegments := []string{"v1/workspaces"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listWorkspacesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -339,7 +328,7 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 	return response, err
 }
 
-// GetListWorkspacesResult : Cast result of ListWorkspaces operation
+// GetListWorkspacesResult : Retrieve result of ListWorkspaces operation
 func (assistant *AssistantV1) GetListWorkspacesResult(response *core.DetailedResponse) *WorkspaceCollection {
 	result, ok := response.Result.(*WorkspaceCollection)
 	if ok {
@@ -350,21 +339,18 @@ func (assistant *AssistantV1) GetListWorkspacesResult(response *core.DetailedRes
 
 // UpdateWorkspace : Update workspace
 func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions) (*core.DetailedResponse, error) {
-	if updateWorkspaceOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateWorkspaceOptions")
+	if err := core.ValidateNotNil(updateWorkspaceOptions, "updateWorkspaceOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if updateWorkspaceOptions != nil {
-		err := core.Validate.Struct(updateWorkspaceOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(updateWorkspaceOptions, "updateWorkspaceOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces" };
-	pathParameters := []string{ *updateWorkspaceOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces"}
+	pathParameters := []string{*updateWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -422,7 +408,7 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	return response, err
 }
 
-// GetUpdateWorkspaceResult : Cast result of UpdateWorkspace operation
+// GetUpdateWorkspaceResult : Retrieve result of UpdateWorkspace operation
 func (assistant *AssistantV1) GetUpdateWorkspaceResult(response *core.DetailedResponse) *Workspace {
 	result, ok := response.Result.(*Workspace)
 	if ok {
@@ -433,28 +419,24 @@ func (assistant *AssistantV1) GetUpdateWorkspaceResult(response *core.DetailedRe
 
 // CreateIntent : Create intent
 func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOptions) (*core.DetailedResponse, error) {
-	if createIntentOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createIntentOptions")
+	if err := core.ValidateNotNil(createIntentOptions, "createIntentOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if createIntentOptions != nil {
-		err := core.Validate.Struct(createIntentOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(createIntentOptions, "createIntentOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents" };
-	pathParameters := []string{ *createIntentOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "intents"}
+	pathParameters := []string{*createIntentOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -481,7 +463,7 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 	return response, err
 }
 
-// GetCreateIntentResult : Cast result of CreateIntent operation
+// GetCreateIntentResult : Retrieve result of CreateIntent operation
 func (assistant *AssistantV1) GetCreateIntentResult(response *core.DetailedResponse) *Intent {
 	result, ok := response.Result.(*Intent)
 	if ok {
@@ -492,27 +474,23 @@ func (assistant *AssistantV1) GetCreateIntentResult(response *core.DetailedRespo
 
 // DeleteIntent : Delete intent
 func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOptions) (*core.DetailedResponse, error) {
-	if deleteIntentOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteIntentOptions")
+	if err := core.ValidateNotNil(deleteIntentOptions, "deleteIntentOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteIntentOptions != nil {
-		err := core.Validate.Struct(deleteIntentOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteIntentOptions, "deleteIntentOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents" };
-	pathParameters := []string{ *deleteIntentOptions.WorkspaceID, *deleteIntentOptions.Intent };
+	pathSegments := []string{"v1/workspaces", "intents"}
+	pathParameters := []string{*deleteIntentOptions.WorkspaceID, *deleteIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -526,21 +504,18 @@ func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOpti
 
 // GetIntent : Get intent
 func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*core.DetailedResponse, error) {
-	if getIntentOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getIntentOptions")
+	if err := core.ValidateNotNil(getIntentOptions, "getIntentOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if getIntentOptions != nil {
-		err := core.Validate.Struct(getIntentOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(getIntentOptions, "getIntentOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents" };
-	pathParameters := []string{ *getIntentOptions.WorkspaceID, *getIntentOptions.Intent };
+	pathSegments := []string{"v1/workspaces", "intents"}
+	pathParameters := []string{*getIntentOptions.WorkspaceID, *getIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -564,7 +539,7 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*co
 	return response, err
 }
 
-// GetGetIntentResult : Cast result of GetIntent operation
+// GetGetIntentResult : Retrieve result of GetIntent operation
 func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse) *IntentExport {
 	result, ok := response.Result.(*IntentExport)
 	if ok {
@@ -575,21 +550,18 @@ func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse
 
 // ListIntents : List intents
 func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions) (*core.DetailedResponse, error) {
-	if listIntentsOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listIntentsOptions")
+	if err := core.ValidateNotNil(listIntentsOptions, "listIntentsOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listIntentsOptions != nil {
-		err := core.Validate.Struct(listIntentsOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listIntentsOptions, "listIntentsOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents" };
-	pathParameters := []string{ *listIntentsOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "intents"}
+	pathParameters := []string{*listIntentsOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listIntentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -625,7 +597,7 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 	return response, err
 }
 
-// GetListIntentsResult : Cast result of ListIntents operation
+// GetListIntentsResult : Retrieve result of ListIntents operation
 func (assistant *AssistantV1) GetListIntentsResult(response *core.DetailedResponse) *IntentCollection {
 	result, ok := response.Result.(*IntentCollection)
 	if ok {
@@ -636,28 +608,24 @@ func (assistant *AssistantV1) GetListIntentsResult(response *core.DetailedRespon
 
 // UpdateIntent : Update intent
 func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOptions) (*core.DetailedResponse, error) {
-	if updateIntentOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateIntentOptions")
+	if err := core.ValidateNotNil(updateIntentOptions, "updateIntentOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if updateIntentOptions != nil {
-		err := core.Validate.Struct(updateIntentOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(updateIntentOptions, "updateIntentOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents" };
-	pathParameters := []string{ *updateIntentOptions.WorkspaceID, *updateIntentOptions.Intent };
+	pathSegments := []string{"v1/workspaces", "intents"}
+	pathParameters := []string{*updateIntentOptions.WorkspaceID, *updateIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -684,7 +652,7 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	return response, err
 }
 
-// GetUpdateIntentResult : Cast result of UpdateIntent operation
+// GetUpdateIntentResult : Retrieve result of UpdateIntent operation
 func (assistant *AssistantV1) GetUpdateIntentResult(response *core.DetailedResponse) *Intent {
 	result, ok := response.Result.(*Intent)
 	if ok {
@@ -695,28 +663,24 @@ func (assistant *AssistantV1) GetUpdateIntentResult(response *core.DetailedRespo
 
 // CreateExample : Create user input example
 func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleOptions) (*core.DetailedResponse, error) {
-	if createExampleOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createExampleOptions")
+	if err := core.ValidateNotNil(createExampleOptions, "createExampleOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if createExampleOptions != nil {
-		err := core.Validate.Struct(createExampleOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(createExampleOptions, "createExampleOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
-	pathParameters := []string{ *createExampleOptions.WorkspaceID, *createExampleOptions.Intent };
+	pathSegments := []string{"v1/workspaces", "intents", "examples"}
+	pathParameters := []string{*createExampleOptions.WorkspaceID, *createExampleOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -740,7 +704,7 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 	return response, err
 }
 
-// GetCreateExampleResult : Cast result of CreateExample operation
+// GetCreateExampleResult : Retrieve result of CreateExample operation
 func (assistant *AssistantV1) GetCreateExampleResult(response *core.DetailedResponse) *Example {
 	result, ok := response.Result.(*Example)
 	if ok {
@@ -751,27 +715,23 @@ func (assistant *AssistantV1) GetCreateExampleResult(response *core.DetailedResp
 
 // DeleteExample : Delete user input example
 func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleOptions) (*core.DetailedResponse, error) {
-	if deleteExampleOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteExampleOptions")
+	if err := core.ValidateNotNil(deleteExampleOptions, "deleteExampleOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteExampleOptions != nil {
-		err := core.Validate.Struct(deleteExampleOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteExampleOptions, "deleteExampleOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
-	pathParameters := []string{ *deleteExampleOptions.WorkspaceID, *deleteExampleOptions.Intent, *deleteExampleOptions.Text };
+	pathSegments := []string{"v1/workspaces", "intents", "examples"}
+	pathParameters := []string{*deleteExampleOptions.WorkspaceID, *deleteExampleOptions.Intent, *deleteExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -785,21 +745,18 @@ func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleO
 
 // GetExample : Get user input example
 func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (*core.DetailedResponse, error) {
-	if getExampleOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getExampleOptions")
+	if err := core.ValidateNotNil(getExampleOptions, "getExampleOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if getExampleOptions != nil {
-		err := core.Validate.Struct(getExampleOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(getExampleOptions, "getExampleOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
-	pathParameters := []string{ *getExampleOptions.WorkspaceID, *getExampleOptions.Intent, *getExampleOptions.Text };
+	pathSegments := []string{"v1/workspaces", "intents", "examples"}
+	pathParameters := []string{*getExampleOptions.WorkspaceID, *getExampleOptions.Intent, *getExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -820,7 +777,7 @@ func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (
 	return response, err
 }
 
-// GetGetExampleResult : Cast result of GetExample operation
+// GetGetExampleResult : Retrieve result of GetExample operation
 func (assistant *AssistantV1) GetGetExampleResult(response *core.DetailedResponse) *Example {
 	result, ok := response.Result.(*Example)
 	if ok {
@@ -831,21 +788,18 @@ func (assistant *AssistantV1) GetGetExampleResult(response *core.DetailedRespons
 
 // ListExamples : List user input examples
 func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOptions) (*core.DetailedResponse, error) {
-	if listExamplesOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listExamplesOptions")
+	if err := core.ValidateNotNil(listExamplesOptions, "listExamplesOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listExamplesOptions != nil {
-		err := core.Validate.Struct(listExamplesOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listExamplesOptions, "listExamplesOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
-	pathParameters := []string{ *listExamplesOptions.WorkspaceID, *listExamplesOptions.Intent };
+	pathSegments := []string{"v1/workspaces", "intents", "examples"}
+	pathParameters := []string{*listExamplesOptions.WorkspaceID, *listExamplesOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -878,7 +832,7 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 	return response, err
 }
 
-// GetListExamplesResult : Cast result of ListExamples operation
+// GetListExamplesResult : Retrieve result of ListExamples operation
 func (assistant *AssistantV1) GetListExamplesResult(response *core.DetailedResponse) *ExampleCollection {
 	result, ok := response.Result.(*ExampleCollection)
 	if ok {
@@ -889,28 +843,24 @@ func (assistant *AssistantV1) GetListExamplesResult(response *core.DetailedRespo
 
 // UpdateExample : Update user input example
 func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleOptions) (*core.DetailedResponse, error) {
-	if updateExampleOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateExampleOptions")
+	if err := core.ValidateNotNil(updateExampleOptions, "updateExampleOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if updateExampleOptions != nil {
-		err := core.Validate.Struct(updateExampleOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(updateExampleOptions, "updateExampleOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "intents", "examples" };
-	pathParameters := []string{ *updateExampleOptions.WorkspaceID, *updateExampleOptions.Intent, *updateExampleOptions.Text };
+	pathSegments := []string{"v1/workspaces", "intents", "examples"}
+	pathParameters := []string{*updateExampleOptions.WorkspaceID, *updateExampleOptions.Intent, *updateExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -934,7 +884,7 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 	return response, err
 }
 
-// GetUpdateExampleResult : Cast result of UpdateExample operation
+// GetUpdateExampleResult : Retrieve result of UpdateExample operation
 func (assistant *AssistantV1) GetUpdateExampleResult(response *core.DetailedResponse) *Example {
 	result, ok := response.Result.(*Example)
 	if ok {
@@ -945,28 +895,24 @@ func (assistant *AssistantV1) GetUpdateExampleResult(response *core.DetailedResp
 
 // CreateCounterexample : Create counterexample
 func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) (*core.DetailedResponse, error) {
-	if createCounterexampleOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createCounterexampleOptions")
+	if err := core.ValidateNotNil(createCounterexampleOptions, "createCounterexampleOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if createCounterexampleOptions != nil {
-		err := core.Validate.Struct(createCounterexampleOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(createCounterexampleOptions, "createCounterexampleOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "counterexamples" };
-	pathParameters := []string{ *createCounterexampleOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "counterexamples"}
+	pathParameters := []string{*createCounterexampleOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -987,7 +933,7 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 	return response, err
 }
 
-// GetCreateCounterexampleResult : Cast result of CreateCounterexample operation
+// GetCreateCounterexampleResult : Retrieve result of CreateCounterexample operation
 func (assistant *AssistantV1) GetCreateCounterexampleResult(response *core.DetailedResponse) *Counterexample {
 	result, ok := response.Result.(*Counterexample)
 	if ok {
@@ -998,27 +944,23 @@ func (assistant *AssistantV1) GetCreateCounterexampleResult(response *core.Detai
 
 // DeleteCounterexample : Delete counterexample
 func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions) (*core.DetailedResponse, error) {
-	if deleteCounterexampleOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteCounterexampleOptions")
+	if err := core.ValidateNotNil(deleteCounterexampleOptions, "deleteCounterexampleOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteCounterexampleOptions != nil {
-		err := core.Validate.Struct(deleteCounterexampleOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteCounterexampleOptions, "deleteCounterexampleOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "counterexamples" };
-	pathParameters := []string{ *deleteCounterexampleOptions.WorkspaceID, *deleteCounterexampleOptions.Text };
+	pathSegments := []string{"v1/workspaces", "counterexamples"}
+	pathParameters := []string{*deleteCounterexampleOptions.WorkspaceID, *deleteCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -1032,21 +974,18 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 
 // GetCounterexample : Get counterexample
 func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) (*core.DetailedResponse, error) {
-	if getCounterexampleOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getCounterexampleOptions")
+	if err := core.ValidateNotNil(getCounterexampleOptions, "getCounterexampleOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if getCounterexampleOptions != nil {
-		err := core.Validate.Struct(getCounterexampleOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(getCounterexampleOptions, "getCounterexampleOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "counterexamples" };
-	pathParameters := []string{ *getCounterexampleOptions.WorkspaceID, *getCounterexampleOptions.Text };
+	pathSegments := []string{"v1/workspaces", "counterexamples"}
+	pathParameters := []string{*getCounterexampleOptions.WorkspaceID, *getCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1067,7 +1006,7 @@ func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCou
 	return response, err
 }
 
-// GetGetCounterexampleResult : Cast result of GetCounterexample operation
+// GetGetCounterexampleResult : Retrieve result of GetCounterexample operation
 func (assistant *AssistantV1) GetGetCounterexampleResult(response *core.DetailedResponse) *Counterexample {
 	result, ok := response.Result.(*Counterexample)
 	if ok {
@@ -1078,21 +1017,18 @@ func (assistant *AssistantV1) GetGetCounterexampleResult(response *core.Detailed
 
 // ListCounterexamples : List counterexamples
 func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *ListCounterexamplesOptions) (*core.DetailedResponse, error) {
-	if listCounterexamplesOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listCounterexamplesOptions")
+	if err := core.ValidateNotNil(listCounterexamplesOptions, "listCounterexamplesOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listCounterexamplesOptions != nil {
-		err := core.Validate.Struct(listCounterexamplesOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listCounterexamplesOptions, "listCounterexamplesOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "counterexamples" };
-	pathParameters := []string{ *listCounterexamplesOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "counterexamples"}
+	pathParameters := []string{*listCounterexamplesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listCounterexamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1125,7 +1061,7 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 	return response, err
 }
 
-// GetListCounterexamplesResult : Cast result of ListCounterexamples operation
+// GetListCounterexamplesResult : Retrieve result of ListCounterexamples operation
 func (assistant *AssistantV1) GetListCounterexamplesResult(response *core.DetailedResponse) *CounterexampleCollection {
 	result, ok := response.Result.(*CounterexampleCollection)
 	if ok {
@@ -1136,28 +1072,24 @@ func (assistant *AssistantV1) GetListCounterexamplesResult(response *core.Detail
 
 // UpdateCounterexample : Update counterexample
 func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions) (*core.DetailedResponse, error) {
-	if updateCounterexampleOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateCounterexampleOptions")
+	if err := core.ValidateNotNil(updateCounterexampleOptions, "updateCounterexampleOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if updateCounterexampleOptions != nil {
-		err := core.Validate.Struct(updateCounterexampleOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(updateCounterexampleOptions, "updateCounterexampleOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "counterexamples" };
-	pathParameters := []string{ *updateCounterexampleOptions.WorkspaceID, *updateCounterexampleOptions.Text };
+	pathSegments := []string{"v1/workspaces", "counterexamples"}
+	pathParameters := []string{*updateCounterexampleOptions.WorkspaceID, *updateCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -1178,7 +1110,7 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 	return response, err
 }
 
-// GetUpdateCounterexampleResult : Cast result of UpdateCounterexample operation
+// GetUpdateCounterexampleResult : Retrieve result of UpdateCounterexample operation
 func (assistant *AssistantV1) GetUpdateCounterexampleResult(response *core.DetailedResponse) *Counterexample {
 	result, ok := response.Result.(*Counterexample)
 	if ok {
@@ -1189,28 +1121,24 @@ func (assistant *AssistantV1) GetUpdateCounterexampleResult(response *core.Detai
 
 // CreateEntity : Create entity
 func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (*core.DetailedResponse, error) {
-	if createEntityOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createEntityOptions")
+	if err := core.ValidateNotNil(createEntityOptions, "createEntityOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if createEntityOptions != nil {
-		err := core.Validate.Struct(createEntityOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(createEntityOptions, "createEntityOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities" };
-	pathParameters := []string{ *createEntityOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "entities"}
+	pathParameters := []string{*createEntityOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -1243,7 +1171,7 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	return response, err
 }
 
-// GetCreateEntityResult : Cast result of CreateEntity operation
+// GetCreateEntityResult : Retrieve result of CreateEntity operation
 func (assistant *AssistantV1) GetCreateEntityResult(response *core.DetailedResponse) *Entity {
 	result, ok := response.Result.(*Entity)
 	if ok {
@@ -1254,27 +1182,23 @@ func (assistant *AssistantV1) GetCreateEntityResult(response *core.DetailedRespo
 
 // DeleteEntity : Delete entity
 func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (*core.DetailedResponse, error) {
-	if deleteEntityOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteEntityOptions")
+	if err := core.ValidateNotNil(deleteEntityOptions, "deleteEntityOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteEntityOptions != nil {
-		err := core.Validate.Struct(deleteEntityOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteEntityOptions, "deleteEntityOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities" };
-	pathParameters := []string{ *deleteEntityOptions.WorkspaceID, *deleteEntityOptions.Entity };
+	pathSegments := []string{"v1/workspaces", "entities"}
+	pathParameters := []string{*deleteEntityOptions.WorkspaceID, *deleteEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -1288,21 +1212,18 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 
 // GetEntity : Get entity
 func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*core.DetailedResponse, error) {
-	if getEntityOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getEntityOptions")
+	if err := core.ValidateNotNil(getEntityOptions, "getEntityOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if getEntityOptions != nil {
-		err := core.Validate.Struct(getEntityOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(getEntityOptions, "getEntityOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities" };
-	pathParameters := []string{ *getEntityOptions.WorkspaceID, *getEntityOptions.Entity };
+	pathSegments := []string{"v1/workspaces", "entities"}
+	pathParameters := []string{*getEntityOptions.WorkspaceID, *getEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1326,7 +1247,7 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*co
 	return response, err
 }
 
-// GetGetEntityResult : Cast result of GetEntity operation
+// GetGetEntityResult : Retrieve result of GetEntity operation
 func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse) *EntityExport {
 	result, ok := response.Result.(*EntityExport)
 	if ok {
@@ -1337,21 +1258,18 @@ func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse
 
 // ListEntities : List entities
 func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOptions) (*core.DetailedResponse, error) {
-	if listEntitiesOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listEntitiesOptions")
+	if err := core.ValidateNotNil(listEntitiesOptions, "listEntitiesOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listEntitiesOptions != nil {
-		err := core.Validate.Struct(listEntitiesOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listEntitiesOptions, "listEntitiesOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities" };
-	pathParameters := []string{ *listEntitiesOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "entities"}
+	pathParameters := []string{*listEntitiesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listEntitiesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1387,7 +1305,7 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 	return response, err
 }
 
-// GetListEntitiesResult : Cast result of ListEntities operation
+// GetListEntitiesResult : Retrieve result of ListEntities operation
 func (assistant *AssistantV1) GetListEntitiesResult(response *core.DetailedResponse) *EntityCollection {
 	result, ok := response.Result.(*EntityCollection)
 	if ok {
@@ -1398,28 +1316,24 @@ func (assistant *AssistantV1) GetListEntitiesResult(response *core.DetailedRespo
 
 // UpdateEntity : Update entity
 func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOptions) (*core.DetailedResponse, error) {
-	if updateEntityOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateEntityOptions")
+	if err := core.ValidateNotNil(updateEntityOptions, "updateEntityOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if updateEntityOptions != nil {
-		err := core.Validate.Struct(updateEntityOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(updateEntityOptions, "updateEntityOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities" };
-	pathParameters := []string{ *updateEntityOptions.WorkspaceID, *updateEntityOptions.Entity };
+	pathSegments := []string{"v1/workspaces", "entities"}
+	pathParameters := []string{*updateEntityOptions.WorkspaceID, *updateEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -1452,7 +1366,7 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 	return response, err
 }
 
-// GetUpdateEntityResult : Cast result of UpdateEntity operation
+// GetUpdateEntityResult : Retrieve result of UpdateEntity operation
 func (assistant *AssistantV1) GetUpdateEntityResult(response *core.DetailedResponse) *Entity {
 	result, ok := response.Result.(*Entity)
 	if ok {
@@ -1463,21 +1377,18 @@ func (assistant *AssistantV1) GetUpdateEntityResult(response *core.DetailedRespo
 
 // ListMentions : List entity mentions
 func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOptions) (*core.DetailedResponse, error) {
-	if listMentionsOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listMentionsOptions")
+	if err := core.ValidateNotNil(listMentionsOptions, "listMentionsOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listMentionsOptions != nil {
-		err := core.Validate.Struct(listMentionsOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listMentionsOptions, "listMentionsOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "mentions" };
-	pathParameters := []string{ *listMentionsOptions.WorkspaceID, *listMentionsOptions.Entity };
+	pathSegments := []string{"v1/workspaces", "entities", "mentions"}
+	pathParameters := []string{*listMentionsOptions.WorkspaceID, *listMentionsOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listMentionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1501,7 +1412,7 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 	return response, err
 }
 
-// GetListMentionsResult : Cast result of ListMentions operation
+// GetListMentionsResult : Retrieve result of ListMentions operation
 func (assistant *AssistantV1) GetListMentionsResult(response *core.DetailedResponse) *EntityMentionCollection {
 	result, ok := response.Result.(*EntityMentionCollection)
 	if ok {
@@ -1512,28 +1423,24 @@ func (assistant *AssistantV1) GetListMentionsResult(response *core.DetailedRespo
 
 // CreateValue : Add entity value
 func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions) (*core.DetailedResponse, error) {
-	if createValueOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createValueOptions")
+	if err := core.ValidateNotNil(createValueOptions, "createValueOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if createValueOptions != nil {
-		err := core.Validate.Struct(createValueOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(createValueOptions, "createValueOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values" };
-	pathParameters := []string{ *createValueOptions.WorkspaceID, *createValueOptions.Entity };
+	pathSegments := []string{"v1/workspaces", "entities", "values"}
+	pathParameters := []string{*createValueOptions.WorkspaceID, *createValueOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -1566,7 +1473,7 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	return response, err
 }
 
-// GetCreateValueResult : Cast result of CreateValue operation
+// GetCreateValueResult : Retrieve result of CreateValue operation
 func (assistant *AssistantV1) GetCreateValueResult(response *core.DetailedResponse) *Value {
 	result, ok := response.Result.(*Value)
 	if ok {
@@ -1577,27 +1484,23 @@ func (assistant *AssistantV1) GetCreateValueResult(response *core.DetailedRespon
 
 // DeleteValue : Delete entity value
 func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions) (*core.DetailedResponse, error) {
-	if deleteValueOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteValueOptions")
+	if err := core.ValidateNotNil(deleteValueOptions, "deleteValueOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteValueOptions != nil {
-		err := core.Validate.Struct(deleteValueOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteValueOptions, "deleteValueOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values" };
-	pathParameters := []string{ *deleteValueOptions.WorkspaceID, *deleteValueOptions.Entity, *deleteValueOptions.Value };
+	pathSegments := []string{"v1/workspaces", "entities", "values"}
+	pathParameters := []string{*deleteValueOptions.WorkspaceID, *deleteValueOptions.Entity, *deleteValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -1611,21 +1514,18 @@ func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions
 
 // GetValue : Get entity value
 func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.DetailedResponse, error) {
-	if getValueOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getValueOptions")
+	if err := core.ValidateNotNil(getValueOptions, "getValueOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if getValueOptions != nil {
-		err := core.Validate.Struct(getValueOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(getValueOptions, "getValueOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values" };
-	pathParameters := []string{ *getValueOptions.WorkspaceID, *getValueOptions.Entity, *getValueOptions.Value };
+	pathSegments := []string{"v1/workspaces", "entities", "values"}
+	pathParameters := []string{*getValueOptions.WorkspaceID, *getValueOptions.Entity, *getValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1649,7 +1549,7 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.
 	return response, err
 }
 
-// GetGetValueResult : Cast result of GetValue operation
+// GetGetValueResult : Retrieve result of GetValue operation
 func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse) *ValueExport {
 	result, ok := response.Result.(*ValueExport)
 	if ok {
@@ -1660,21 +1560,18 @@ func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse)
 
 // ListValues : List entity values
 func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (*core.DetailedResponse, error) {
-	if listValuesOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listValuesOptions")
+	if err := core.ValidateNotNil(listValuesOptions, "listValuesOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listValuesOptions != nil {
-		err := core.Validate.Struct(listValuesOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listValuesOptions, "listValuesOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values" };
-	pathParameters := []string{ *listValuesOptions.WorkspaceID, *listValuesOptions.Entity };
+	pathSegments := []string{"v1/workspaces", "entities", "values"}
+	pathParameters := []string{*listValuesOptions.WorkspaceID, *listValuesOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listValuesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1710,7 +1607,7 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 	return response, err
 }
 
-// GetListValuesResult : Cast result of ListValues operation
+// GetListValuesResult : Retrieve result of ListValues operation
 func (assistant *AssistantV1) GetListValuesResult(response *core.DetailedResponse) *ValueCollection {
 	result, ok := response.Result.(*ValueCollection)
 	if ok {
@@ -1721,28 +1618,24 @@ func (assistant *AssistantV1) GetListValuesResult(response *core.DetailedRespons
 
 // UpdateValue : Update entity value
 func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions) (*core.DetailedResponse, error) {
-	if updateValueOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateValueOptions")
+	if err := core.ValidateNotNil(updateValueOptions, "updateValueOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if updateValueOptions != nil {
-		err := core.Validate.Struct(updateValueOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(updateValueOptions, "updateValueOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values" };
-	pathParameters := []string{ *updateValueOptions.WorkspaceID, *updateValueOptions.Entity, *updateValueOptions.Value };
+	pathSegments := []string{"v1/workspaces", "entities", "values"}
+	pathParameters := []string{*updateValueOptions.WorkspaceID, *updateValueOptions.Entity, *updateValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -1775,7 +1668,7 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	return response, err
 }
 
-// GetUpdateValueResult : Cast result of UpdateValue operation
+// GetUpdateValueResult : Retrieve result of UpdateValue operation
 func (assistant *AssistantV1) GetUpdateValueResult(response *core.DetailedResponse) *Value {
 	result, ok := response.Result.(*Value)
 	if ok {
@@ -1786,28 +1679,24 @@ func (assistant *AssistantV1) GetUpdateValueResult(response *core.DetailedRespon
 
 // CreateSynonym : Add entity value synonym
 func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymOptions) (*core.DetailedResponse, error) {
-	if createSynonymOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createSynonymOptions")
+	if err := core.ValidateNotNil(createSynonymOptions, "createSynonymOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if createSynonymOptions != nil {
-		err := core.Validate.Struct(createSynonymOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(createSynonymOptions, "createSynonymOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
-	pathParameters := []string{ *createSynonymOptions.WorkspaceID, *createSynonymOptions.Entity, *createSynonymOptions.Value };
+	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
+	pathParameters := []string{*createSynonymOptions.WorkspaceID, *createSynonymOptions.Entity, *createSynonymOptions.Value}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -1828,7 +1717,7 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 	return response, err
 }
 
-// GetCreateSynonymResult : Cast result of CreateSynonym operation
+// GetCreateSynonymResult : Retrieve result of CreateSynonym operation
 func (assistant *AssistantV1) GetCreateSynonymResult(response *core.DetailedResponse) *Synonym {
 	result, ok := response.Result.(*Synonym)
 	if ok {
@@ -1839,27 +1728,23 @@ func (assistant *AssistantV1) GetCreateSynonymResult(response *core.DetailedResp
 
 // DeleteSynonym : Delete entity value synonym
 func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions) (*core.DetailedResponse, error) {
-	if deleteSynonymOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteSynonymOptions")
+	if err := core.ValidateNotNil(deleteSynonymOptions, "deleteSynonymOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteSynonymOptions != nil {
-		err := core.Validate.Struct(deleteSynonymOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteSynonymOptions, "deleteSynonymOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
-	pathParameters := []string{ *deleteSynonymOptions.WorkspaceID, *deleteSynonymOptions.Entity, *deleteSynonymOptions.Value, *deleteSynonymOptions.Synonym };
+	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
+	pathParameters := []string{*deleteSynonymOptions.WorkspaceID, *deleteSynonymOptions.Entity, *deleteSynonymOptions.Value, *deleteSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -1873,21 +1758,18 @@ func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymO
 
 // GetSynonym : Get entity value synonym
 func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (*core.DetailedResponse, error) {
-	if getSynonymOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getSynonymOptions")
+	if err := core.ValidateNotNil(getSynonymOptions, "getSynonymOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if getSynonymOptions != nil {
-		err := core.Validate.Struct(getSynonymOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(getSynonymOptions, "getSynonymOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
-	pathParameters := []string{ *getSynonymOptions.WorkspaceID, *getSynonymOptions.Entity, *getSynonymOptions.Value, *getSynonymOptions.Synonym };
+	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
+	pathParameters := []string{*getSynonymOptions.WorkspaceID, *getSynonymOptions.Entity, *getSynonymOptions.Value, *getSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1908,7 +1790,7 @@ func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (
 	return response, err
 }
 
-// GetGetSynonymResult : Cast result of GetSynonym operation
+// GetGetSynonymResult : Retrieve result of GetSynonym operation
 func (assistant *AssistantV1) GetGetSynonymResult(response *core.DetailedResponse) *Synonym {
 	result, ok := response.Result.(*Synonym)
 	if ok {
@@ -1919,21 +1801,18 @@ func (assistant *AssistantV1) GetGetSynonymResult(response *core.DetailedRespons
 
 // ListSynonyms : List entity value synonyms
 func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOptions) (*core.DetailedResponse, error) {
-	if listSynonymsOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listSynonymsOptions")
+	if err := core.ValidateNotNil(listSynonymsOptions, "listSynonymsOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listSynonymsOptions != nil {
-		err := core.Validate.Struct(listSynonymsOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listSynonymsOptions, "listSynonymsOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
-	pathParameters := []string{ *listSynonymsOptions.WorkspaceID, *listSynonymsOptions.Entity, *listSynonymsOptions.Value };
+	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
+	pathParameters := []string{*listSynonymsOptions.WorkspaceID, *listSynonymsOptions.Entity, *listSynonymsOptions.Value}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listSynonymsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1966,7 +1845,7 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 	return response, err
 }
 
-// GetListSynonymsResult : Cast result of ListSynonyms operation
+// GetListSynonymsResult : Retrieve result of ListSynonyms operation
 func (assistant *AssistantV1) GetListSynonymsResult(response *core.DetailedResponse) *SynonymCollection {
 	result, ok := response.Result.(*SynonymCollection)
 	if ok {
@@ -1977,28 +1856,24 @@ func (assistant *AssistantV1) GetListSynonymsResult(response *core.DetailedRespo
 
 // UpdateSynonym : Update entity value synonym
 func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions) (*core.DetailedResponse, error) {
-	if updateSynonymOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateSynonymOptions")
+	if err := core.ValidateNotNil(updateSynonymOptions, "updateSynonymOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if updateSynonymOptions != nil {
-		err := core.Validate.Struct(updateSynonymOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(updateSynonymOptions, "updateSynonymOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "entities", "values", "synonyms" };
-	pathParameters := []string{ *updateSynonymOptions.WorkspaceID, *updateSynonymOptions.Entity, *updateSynonymOptions.Value, *updateSynonymOptions.Synonym };
+	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
+	pathParameters := []string{*updateSynonymOptions.WorkspaceID, *updateSynonymOptions.Entity, *updateSynonymOptions.Value, *updateSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -2019,7 +1894,7 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 	return response, err
 }
 
-// GetUpdateSynonymResult : Cast result of UpdateSynonym operation
+// GetUpdateSynonymResult : Retrieve result of UpdateSynonym operation
 func (assistant *AssistantV1) GetUpdateSynonymResult(response *core.DetailedResponse) *Synonym {
 	result, ok := response.Result.(*Synonym)
 	if ok {
@@ -2030,28 +1905,24 @@ func (assistant *AssistantV1) GetUpdateSynonymResult(response *core.DetailedResp
 
 // CreateDialogNode : Create dialog node
 func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions) (*core.DetailedResponse, error) {
-	if createDialogNodeOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "createDialogNodeOptions")
+	if err := core.ValidateNotNil(createDialogNodeOptions, "createDialogNodeOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if createDialogNodeOptions != nil {
-		err := core.Validate.Struct(createDialogNodeOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(createDialogNodeOptions, "createDialogNodeOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
-	pathParameters := []string{ *createDialogNodeOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
+	pathParameters := []string{*createDialogNodeOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -2123,7 +1994,7 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	return response, err
 }
 
-// GetCreateDialogNodeResult : Cast result of CreateDialogNode operation
+// GetCreateDialogNodeResult : Retrieve result of CreateDialogNode operation
 func (assistant *AssistantV1) GetCreateDialogNodeResult(response *core.DetailedResponse) *DialogNode {
 	result, ok := response.Result.(*DialogNode)
 	if ok {
@@ -2134,27 +2005,23 @@ func (assistant *AssistantV1) GetCreateDialogNodeResult(response *core.DetailedR
 
 // DeleteDialogNode : Delete dialog node
 func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions) (*core.DetailedResponse, error) {
-	if deleteDialogNodeOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteDialogNodeOptions")
+	if err := core.ValidateNotNil(deleteDialogNodeOptions, "deleteDialogNodeOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteDialogNodeOptions != nil {
-		err := core.Validate.Struct(deleteDialogNodeOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteDialogNodeOptions, "deleteDialogNodeOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
-	pathParameters := []string{ *deleteDialogNodeOptions.WorkspaceID, *deleteDialogNodeOptions.DialogNode };
+	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
+	pathParameters := []string{*deleteDialogNodeOptions.WorkspaceID, *deleteDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -2168,21 +2035,18 @@ func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDi
 
 // GetDialogNode : Get dialog node
 func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeOptions) (*core.DetailedResponse, error) {
-	if getDialogNodeOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "getDialogNodeOptions")
+	if err := core.ValidateNotNil(getDialogNodeOptions, "getDialogNodeOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if getDialogNodeOptions != nil {
-		err := core.Validate.Struct(getDialogNodeOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(getDialogNodeOptions, "getDialogNodeOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
-	pathParameters := []string{ *getDialogNodeOptions.WorkspaceID, *getDialogNodeOptions.DialogNode };
+	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
+	pathParameters := []string{*getDialogNodeOptions.WorkspaceID, *getDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2203,7 +2067,7 @@ func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeO
 	return response, err
 }
 
-// GetGetDialogNodeResult : Cast result of GetDialogNode operation
+// GetGetDialogNodeResult : Retrieve result of GetDialogNode operation
 func (assistant *AssistantV1) GetGetDialogNodeResult(response *core.DetailedResponse) *DialogNode {
 	result, ok := response.Result.(*DialogNode)
 	if ok {
@@ -2214,21 +2078,18 @@ func (assistant *AssistantV1) GetGetDialogNodeResult(response *core.DetailedResp
 
 // ListDialogNodes : List dialog nodes
 func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) (*core.DetailedResponse, error) {
-	if listDialogNodesOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listDialogNodesOptions")
+	if err := core.ValidateNotNil(listDialogNodesOptions, "listDialogNodesOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listDialogNodesOptions != nil {
-		err := core.Validate.Struct(listDialogNodesOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listDialogNodesOptions, "listDialogNodesOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
-	pathParameters := []string{ *listDialogNodesOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
+	pathParameters := []string{*listDialogNodesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listDialogNodesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2261,7 +2122,7 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 	return response, err
 }
 
-// GetListDialogNodesResult : Cast result of ListDialogNodes operation
+// GetListDialogNodesResult : Retrieve result of ListDialogNodes operation
 func (assistant *AssistantV1) GetListDialogNodesResult(response *core.DetailedResponse) *DialogNodeCollection {
 	result, ok := response.Result.(*DialogNodeCollection)
 	if ok {
@@ -2272,28 +2133,24 @@ func (assistant *AssistantV1) GetListDialogNodesResult(response *core.DetailedRe
 
 // UpdateDialogNode : Update dialog node
 func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions) (*core.DetailedResponse, error) {
-	if updateDialogNodeOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "updateDialogNodeOptions")
+	if err := core.ValidateNotNil(updateDialogNodeOptions, "updateDialogNodeOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if updateDialogNodeOptions != nil {
-		err := core.Validate.Struct(updateDialogNodeOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(updateDialogNodeOptions, "updateDialogNodeOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "dialog_nodes" };
-	pathParameters := []string{ *updateDialogNodeOptions.WorkspaceID, *updateDialogNodeOptions.DialogNode };
+	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
+	pathParameters := []string{*updateDialogNodeOptions.WorkspaceID, *updateDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	body := make(map[string]interface{})
@@ -2365,7 +2222,7 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	return response, err
 }
 
-// GetUpdateDialogNodeResult : Cast result of UpdateDialogNode operation
+// GetUpdateDialogNodeResult : Retrieve result of UpdateDialogNode operation
 func (assistant *AssistantV1) GetUpdateDialogNodeResult(response *core.DetailedResponse) *DialogNode {
 	result, ok := response.Result.(*DialogNode)
 	if ok {
@@ -2376,30 +2233,25 @@ func (assistant *AssistantV1) GetUpdateDialogNodeResult(response *core.DetailedR
 
 // ListAllLogs : List log events in all workspaces
 func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions) (*core.DetailedResponse, error) {
-	if listAllLogsOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listAllLogsOptions")
+	if err := core.ValidateNotNil(listAllLogsOptions, "listAllLogsOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listAllLogsOptions != nil {
-		err := core.Validate.Struct(listAllLogsOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listAllLogsOptions, "listAllLogsOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/logs" };
-	pathParameters := []string{  };
+	pathSegments := []string{"v1/logs"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listAllLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 
-	if listAllLogsOptions.Filter != nil {
-		builder.AddQuery("filter", fmt.Sprint(*listAllLogsOptions.Filter))
-	}
+	builder.AddQuery("filter", fmt.Sprint(*listAllLogsOptions.Filter))
 	if listAllLogsOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listAllLogsOptions.Sort))
 	}
@@ -2420,7 +2272,7 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 	return response, err
 }
 
-// GetListAllLogsResult : Cast result of ListAllLogs operation
+// GetListAllLogsResult : Retrieve result of ListAllLogs operation
 func (assistant *AssistantV1) GetListAllLogsResult(response *core.DetailedResponse) *LogCollection {
 	result, ok := response.Result.(*LogCollection)
 	if ok {
@@ -2431,21 +2283,18 @@ func (assistant *AssistantV1) GetListAllLogsResult(response *core.DetailedRespon
 
 // ListLogs : List log events in a workspace
 func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.DetailedResponse, error) {
-	if listLogsOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "listLogsOptions")
+	if err := core.ValidateNotNil(listLogsOptions, "listLogsOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if listLogsOptions != nil {
-		err := core.Validate.Struct(listLogsOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(listLogsOptions, "listLogsOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/workspaces", "logs" };
-	pathParameters := []string{ *listLogsOptions.WorkspaceID };
+	pathSegments := []string{"v1/workspaces", "logs"}
+	pathParameters := []string{*listLogsOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2475,7 +2324,7 @@ func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.
 	return response, err
 }
 
-// GetListLogsResult : Cast result of ListLogs operation
+// GetListLogsResult : Retrieve result of ListLogs operation
 func (assistant *AssistantV1) GetListLogsResult(response *core.DetailedResponse) *LogCollection {
 	result, ok := response.Result.(*LogCollection)
 	if ok {
@@ -2486,30 +2335,25 @@ func (assistant *AssistantV1) GetListLogsResult(response *core.DetailedResponse)
 
 // DeleteUserData : Delete labeled data
 func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
-	if deleteUserDataOptions == nil {
-		return nil, fmt.Errorf("Parameter '%s' cannot be nil", "deleteUserDataOptions")
+	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
+		return nil, err
 	}
-	if deleteUserDataOptions != nil {
-		err := core.Validate.Struct(deleteUserDataOptions)
-		if err != nil {
-			return nil, err
-		}
+	if err := core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions"); err != nil {
+		return nil, err
 	}
 
-	pathSegments := []string{ "v1/user_data" };
-	pathParameters := []string{  };
+	pathSegments := []string{"v1/user_data"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters);
+	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 
-	if deleteUserDataOptions.CustomerID != nil {
-		builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
-	}
+	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 	builder.AddQuery("version", assistant.service.Options.Version)
 
 	request, err := builder.Build()
@@ -2567,7 +2411,10 @@ type CounterexampleCollection struct {
 // CreateCounterexample : CreateCounterexample struct
 type CreateCounterexample struct {
 
-	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters - It cannot consist of only whitespace characters - It must be no longer than 1024 characters.
+	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters
+	// - It cannot consist of only whitespace characters
+	// - It must be no longer than 1024 characters.
 	Text *string `json:"text" validate:"required"`
 }
 
@@ -2577,7 +2424,10 @@ type CreateCounterexampleOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters - It cannot consist of only whitespace characters - It must be no longer than 1024 characters.
+	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters
+	// - It cannot consist of only whitespace characters
+	// - It must be no longer than 1024 characters.
 	Text *string `json:"text" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -2588,7 +2438,7 @@ type CreateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
 	return &CreateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -2613,13 +2463,17 @@ func (options *CreateCounterexampleOptions) SetHeaders(param map[string]string) 
 // CreateDialogNode : CreateDialogNode struct
 type CreateDialogNode struct {
 
-	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
+	// The dialog node ID. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 1024 characters.
 	DialogNode *string `json:"dialog_node" validate:"required"`
 
-	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
+	// must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
-	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
+	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
+	// characters, and it must be no longer than 2048 characters.
 	Conditions *string `json:"conditions,omitempty"`
 
 	// The ID of the parent dialog node.
@@ -2628,7 +2482,8 @@ type CreateDialogNode struct {
 	// The ID of the previous dialog node.
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
-	// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	// The output of the dialog node. For more information about how to specify dialog node output, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
@@ -2643,7 +2498,9 @@ type CreateDialogNode struct {
 	// An array of objects describing any actions to be invoked by the dialog node.
 	Actions []DialogNodeAction `json:"actions,omitempty"`
 
-	// The alias used to identify the dialog node. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 64 characters.
+	// The alias used to identify the dialog node. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 64 characters.
 	Title *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
@@ -2664,7 +2521,8 @@ type CreateDialogNode struct {
 	// Whether the user can digress to top-level nodes while filling out slots.
 	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer than 512 characters.
+	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
+	// than 512 characters.
 	UserLabel *string `json:"user_label,omitempty"`
 }
 
@@ -2674,13 +2532,17 @@ type CreateDialogNodeOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
+	// The dialog node ID. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 1024 characters.
 	DialogNode *string `json:"dialog_node" validate:"required"`
 
-	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
+	// must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
-	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
+	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
+	// characters, and it must be no longer than 2048 characters.
 	Conditions *string `json:"conditions,omitempty"`
 
 	// The ID of the parent dialog node.
@@ -2689,7 +2551,8 @@ type CreateDialogNodeOptions struct {
 	// The ID of the previous dialog node.
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
-	// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	// The output of the dialog node. For more information about how to specify dialog node output, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
@@ -2704,7 +2567,9 @@ type CreateDialogNodeOptions struct {
 	// An array of objects describing any actions to be invoked by the dialog node.
 	Actions []DialogNodeAction `json:"actions,omitempty"`
 
-	// The alias used to identify the dialog node. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 64 characters.
+	// The alias used to identify the dialog node. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 64 characters.
 	Title *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
@@ -2725,7 +2590,8 @@ type CreateDialogNodeOptions struct {
 	// Whether the user can digress to top-level nodes while filling out slots.
 	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer than 512 characters.
+	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
+	// than 512 characters.
 	UserLabel *string `json:"user_label,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -2736,7 +2602,7 @@ type CreateDialogNodeOptions struct {
 func (assistant *AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -2863,10 +2729,14 @@ func (options *CreateDialogNodeOptions) SetHeaders(param map[string]string) *Cre
 // CreateEntity : CreateEntity struct
 type CreateEntity struct {
 
-	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
+	// The name of the entity. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
+	// - It cannot begin with the reserved prefix `sys-`.
+	// - It must be no longer than 64 characters.
 	Entity *string `json:"entity" validate:"required"`
 
-	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
+	// be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the value.
@@ -2885,10 +2755,14 @@ type CreateEntityOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
+	// The name of the entity. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
+	// - It cannot begin with the reserved prefix `sys-`.
+	// - It must be no longer than 64 characters.
 	Entity *string `json:"entity" validate:"required"`
 
-	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
+	// be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the value.
@@ -2908,7 +2782,7 @@ type CreateEntityOptions struct {
 func (assistant *AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
 	return &CreateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -2957,7 +2831,10 @@ func (options *CreateEntityOptions) SetHeaders(param map[string]string) *CreateE
 // CreateExample : CreateExample struct
 type CreateExample struct {
 
-	// The text of a user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
+	// The text of a user input example. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 1024 characters.
 	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
@@ -2973,7 +2850,10 @@ type CreateExampleOptions struct {
 	// The intent name.
 	Intent *string `json:"intent" validate:"required"`
 
-	// The text of a user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
+	// The text of a user input example. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 1024 characters.
 	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
@@ -2987,8 +2867,8 @@ type CreateExampleOptions struct {
 func (assistant *AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
 	return &CreateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3025,10 +2905,14 @@ func (options *CreateExampleOptions) SetHeaders(param map[string]string) *Create
 // CreateIntent : CreateIntent struct
 type CreateIntent struct {
 
-	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
+	// The name of the intent. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+	// - It cannot begin with the reserved prefix `sys-`.
+	// - It must be no longer than 128 characters.
 	Intent *string `json:"intent" validate:"required"`
 
-	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
+	// be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
 	// An array of user input examples for the intent.
@@ -3041,10 +2925,14 @@ type CreateIntentOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
+	// The name of the intent. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+	// - It cannot begin with the reserved prefix `sys-`.
+	// - It must be no longer than 128 characters.
 	Intent *string `json:"intent" validate:"required"`
 
-	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
+	// be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
 	// An array of user input examples for the intent.
@@ -3058,7 +2946,7 @@ type CreateIntentOptions struct {
 func (assistant *AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
 	return &CreateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -3104,7 +2992,10 @@ type CreateSynonymOptions struct {
 	// The text of the entity value.
 	Value *string `json:"value" validate:"required"`
 
-	// The text of the synonym. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
+	// The text of the synonym. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	Synonym *string `json:"synonym" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3115,9 +3006,9 @@ type CreateSynonymOptions struct {
 func (assistant *AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
 	return &CreateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -3154,16 +3045,26 @@ func (options *CreateSynonymOptions) SetHeaders(param map[string]string) *Create
 // CreateValue : CreateValue struct
 type CreateValue struct {
 
-	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
+	// The text of the entity value. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
 	Metadata interface{} `json:"metadata,omitempty"`
 
-	// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
+	// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as indicated by
+	// **type**), but not both. A synonym must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
 
-	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to specify a pattern, see the [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
+	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
+	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
+	// specify a pattern, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
@@ -3179,16 +3080,26 @@ type CreateValueOptions struct {
 	// The name of the entity.
 	Entity *string `json:"entity" validate:"required"`
 
-	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
+	// The text of the entity value. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
 	Metadata interface{} `json:"metadata,omitempty"`
 
-	// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
+	// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as indicated by
+	// **type**), but not both. A synonym must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
 
-	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to specify a pattern, see the [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
+	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
+	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
+	// specify a pattern, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
@@ -3202,8 +3113,8 @@ type CreateValueOptions struct {
 func (assistant *AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -3258,10 +3169,12 @@ func (options *CreateValueOptions) SetHeaders(param map[string]string) *CreateVa
 // CreateWorkspaceOptions : The createWorkspace options.
 type CreateWorkspaceOptions struct {
 
-	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 64 characters.
+	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no
+	// longer than 64 characters.
 	Name *string `json:"name,omitempty"`
 
-	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters, and it
+	// must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
 	// The language of the workspace.
@@ -3282,7 +3195,8 @@ type CreateWorkspaceOptions struct {
 	// Any metadata related to the workspace.
 	Metadata interface{} `json:"metadata,omitempty"`
 
-	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
+	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that
+	// workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
 
 	// Global settings for the workspace.
@@ -3380,7 +3294,7 @@ type DeleteCounterexampleOptions struct {
 func (assistant *AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
 	return &DeleteCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3419,7 +3333,7 @@ type DeleteDialogNodeOptions struct {
 func (assistant *AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
 	return &DeleteDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -3458,7 +3372,7 @@ type DeleteEntityOptions struct {
 func (assistant *AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
 	return &DeleteEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -3500,8 +3414,8 @@ type DeleteExampleOptions struct {
 func (assistant *AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
 	return &DeleteExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3546,7 +3460,7 @@ type DeleteIntentOptions struct {
 func (assistant *AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
 	return &DeleteIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -3591,9 +3505,9 @@ type DeleteSynonymOptions struct {
 func (assistant *AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
 	return &DeleteSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -3676,8 +3590,8 @@ type DeleteValueOptions struct {
 func (assistant *AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
 	return &DeleteValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -3749,10 +3663,12 @@ type DialogNode struct {
 	// The ID of the parent dialog node. This property is not returned if the dialog node has no parent.
 	Parent *string `json:"parent,omitempty"`
 
-	// The ID of the previous sibling dialog node. This property is not returned if the dialog node has no previous sibling.
+	// The ID of the previous sibling dialog node. This property is not returned if the dialog node has no previous
+	// sibling.
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
-	// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	// The output of the dialog node. For more information about how to specify dialog node output, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context (if defined) for the dialog node.
@@ -3794,7 +3710,8 @@ type DialogNode struct {
 	// Whether the user can digress to top-level nodes while filling out slots.
 	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer than 512 characters.
+	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
+	// than 512 characters.
 	UserLabel *string `json:"user_label,omitempty"`
 }
 
@@ -3830,7 +3747,26 @@ type DialogNodeCollection struct {
 // DialogNodeNextStep : The next step to execute following this dialog node.
 type DialogNodeNextStep struct {
 
-	// What happens after the dialog node completes. The valid values depend on the node type: - The following values are valid for any node: - `get_user_input` - `skip_user_input` - `jump_to` - If the node is of type `event_handler` and its parent node is of type `slot` or `frame`, additional values are also valid: - if **event_name**=`filled` and the type of the parent node is `slot`: - `reprompt` - `skip_all_slots` - if **event_name**=`nomatch` and the type of the parent node is `slot`: - `reprompt` - `skip_slot` - `skip_all_slots` - if **event_name**=`generic` and the type of the parent node is `frame`: - `reprompt` - `skip_slot` - `skip_all_slots` If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
+	// What happens after the dialog node completes. The valid values depend on the node type:
+	// - The following values are valid for any node:
+	//   - `get_user_input`
+	//   - `skip_user_input`
+	//   - `jump_to`
+	// - If the node is of type `event_handler` and its parent node is of type `slot` or `frame`, additional values are
+	// also valid:
+	//   - if **event_name**=`filled` and the type of the parent node is `slot`:
+	//     - `reprompt`
+	//     - `skip_all_slots`
+	// - if **event_name**=`nomatch` and the type of the parent node is `slot`:
+	//     - `reprompt`
+	//     - `skip_slot`
+	//     - `skip_all_slots`
+	// - if **event_name**=`generic` and the type of the parent node is `frame`:
+	//     - `reprompt`
+	//     - `skip_slot`
+	//     - `skip_all_slots`
+	//
+	// If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
 	Behavior *string `json:"behavior" validate:"required"`
 
 	// The ID of the dialog node to process next. This parameter is required if **behavior**=`jump_to`.
@@ -3840,7 +3776,8 @@ type DialogNodeNextStep struct {
 	Selector *string `json:"selector,omitempty"`
 }
 
-// DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+// DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the
+// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
 type DialogNodeOutput struct {
 
 	// An array of objects describing the output defined for the dialog node.
@@ -3853,13 +3790,15 @@ type DialogNodeOutput struct {
 // DialogNodeOutputGeneric : DialogNodeOutputGeneric struct
 type DialogNodeOutputGeneric struct {
 
-	// The type of response returned by the dialog node. The specified response type must be supported by the client application or channel.
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
 	ResponseType *string `json:"response_type" validate:"required"`
 
 	// A list of one or more objects defining text responses. Required when **response_type**=`text`.
 	Values []DialogNodeOutputTextValuesElement `json:"values,omitempty"`
 
-	// How a response is selected from the list, if more than one response is specified. Valid only when **response_type**=`text`.
+	// How a response is selected from the list, if more than one response is specified. Valid only when
+	// **response_type**=`text`.
 	SelectionPolicy *string `json:"selection_policy,omitempty"`
 
 	// The delimiter to use as a separator between responses when `selection_policy`=`multiline`.
@@ -3868,32 +3807,38 @@ type DialogNodeOutputGeneric struct {
 	// How long to pause, in milliseconds. The valid values are from 0 to 10000. Valid only when **response_type**=`pause`.
 	Time *int64 `json:"time,omitempty"`
 
-	// Whether to send a "user is typing" event during the pause. Ignored if the channel does not support this event. Valid only when **response_type**=`pause`.
+	// Whether to send a "user is typing" event during the pause. Ignored if the channel does not support this event. Valid
+	// only when **response_type**=`pause`.
 	Typing *bool `json:"typing,omitempty"`
 
 	// The URL of the image. Required when **response_type**=`image`.
 	Source *string `json:"source,omitempty"`
 
-	// An optional title to show before the response. Valid only when **response_type**=`image` or `option`. This string must be no longer than 512 characters.
+	// An optional title to show before the response. Valid only when **response_type**=`image` or `option`. This string
+	// must be no longer than 512 characters.
 	Title *string `json:"title,omitempty"`
 
-	// An optional description to show with the response. Valid only when **response_type**=`image` or `option`. This string must be no longer than 256 characters.
+	// An optional description to show with the response. Valid only when **response_type**=`image` or `option`. This
+	// string must be no longer than 256 characters.
 	Description *string `json:"description,omitempty"`
 
 	// The preferred type of control to display, if supported by the channel. Valid only when **response_type**=`option`.
 	Preference *string `json:"preference,omitempty"`
 
-	// An array of objects describing the options from which the user can choose. You can include up to 20 options. Required when **response_type**=`option`.
+	// An array of objects describing the options from which the user can choose. You can include up to 20 options.
+	// Required when **response_type**=`option`.
 	Options []DialogNodeOutputOptionsElement `json:"options,omitempty"`
 
-	// An optional message to be sent to the human agent who will be taking over the conversation. Valid only when **reponse_type**=`connect_to_agent`. This string must be no longer than 256 characters.
+	// An optional message to be sent to the human agent who will be taking over the conversation. Valid only when
+	// **reponse_type**=`connect_to_agent`. This string must be no longer than 256 characters.
 	MessageToHumanAgent *string `json:"message_to_human_agent,omitempty"`
 }
 
 // DialogNodeOutputModifiers : Options that modify how specified output is handled.
 type DialogNodeOutputModifiers struct {
 
-	// Whether values in the output will overwrite output values in an array specified by previously executed dialog nodes. If this option is set to **false**, new values will be appended to previously specified values.
+	// Whether values in the output will overwrite output values in an array specified by previously executed dialog nodes.
+	// If this option is set to **false**, new values will be appended to previously specified values.
 	Overwrite *bool `json:"overwrite,omitempty"`
 }
 
@@ -3903,11 +3848,13 @@ type DialogNodeOutputOptionsElement struct {
 	// The user-facing label for the option.
 	Label *string `json:"label" validate:"required"`
 
-	// An object defining the message input to be sent to the Watson Assistant service if the user selects the corresponding option.
+	// An object defining the message input to be sent to the Watson Assistant service if the user selects the
+	// corresponding option.
 	Value *DialogNodeOutputOptionsElementValue `json:"value" validate:"required"`
 }
 
-// DialogNodeOutputOptionsElementValue : An object defining the message input to be sent to the Watson Assistant service if the user selects the corresponding option.
+// DialogNodeOutputOptionsElementValue : An object defining the message input to be sent to the Watson Assistant service if the user selects the corresponding
+// option.
 type DialogNodeOutputOptionsElementValue struct {
 
 	// The user input.
@@ -3917,7 +3864,9 @@ type DialogNodeOutputOptionsElementValue struct {
 // DialogNodeOutputTextValuesElement : DialogNodeOutputTextValuesElement struct
 type DialogNodeOutputTextValuesElement struct {
 
-	// The text of a response. This string can include newline characters (` `), Markdown tagging, or other special characters, if supported by the channel. It must be no longer than 4096 characters.
+	// The text of a response. This string can include newline characters (`
+	// `), Markdown tagging, or other special characters, if supported by the channel. It must be no longer than 4096
+	// characters.
 	Text *string `json:"text,omitempty"`
 }
 
@@ -3937,7 +3886,11 @@ type DialogNodeVisitedDetails struct {
 // DialogRuntimeResponseGeneric : DialogRuntimeResponseGeneric struct
 type DialogRuntimeResponseGeneric struct {
 
-	// The type of response returned by the dialog node. The specified response type must be supported by the client application or channel. **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Premium users.
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
+	//
+	// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for
+	// Premium users.
 	ResponseType *string `json:"response_type" validate:"required"`
 
 	// The text of the response.
@@ -3970,24 +3923,31 @@ type DialogRuntimeResponseGeneric struct {
 	// A label identifying the topic of the conversation, derived from the **user_label** property of the relevant node.
 	Topic *string `json:"topic,omitempty"`
 
-	// An array of objects describing the possible matching dialog nodes from which the user can choose. **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium users.
+	// An array of objects describing the possible matching dialog nodes from which the user can choose.
+	//
+	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium
+	// users.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 }
 
 // DialogSuggestion : DialogSuggestion struct
 type DialogSuggestion struct {
 
-	// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of the corresponding dialog node.
+	// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of the
+	// corresponding dialog node.
 	Label *string `json:"label" validate:"required"`
 
-	// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user selects the corresponding disambiguation option.
+	// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
+	// selects the corresponding disambiguation option.
 	Value *DialogSuggestionValue `json:"value" validate:"required"`
 
-	// The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding option.
+	// The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding
+	// option.
 	Output interface{} `json:"output,omitempty"`
 }
 
-// DialogSuggestionValue : An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user selects the corresponding disambiguation option.
+// DialogSuggestionValue : An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
+// selects the corresponding disambiguation option.
 type DialogSuggestionValue struct {
 
 	// The user input.
@@ -4126,7 +4086,7 @@ type GetCounterexampleOptions struct {
 func (assistant *AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
 	return &GetCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4174,7 +4134,7 @@ type GetDialogNodeOptions struct {
 func (assistant *AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
 	return &GetDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -4211,7 +4171,8 @@ type GetEntityOptions struct {
 	// The name of the entity.
 	Entity *string `json:"entity" validate:"required"`
 
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
+	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
@@ -4225,7 +4186,7 @@ type GetEntityOptions struct {
 func (assistant *AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
 	return &GetEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -4282,8 +4243,8 @@ type GetExampleOptions struct {
 func (assistant *AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
 	return &GetExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4326,7 +4287,8 @@ type GetIntentOptions struct {
 	// The intent name.
 	Intent *string `json:"intent" validate:"required"`
 
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
+	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
@@ -4340,7 +4302,7 @@ type GetIntentOptions struct {
 func (assistant *AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
 	return &GetIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -4400,9 +4362,9 @@ type GetSynonymOptions struct {
 func (assistant *AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
 	return &GetSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -4454,7 +4416,8 @@ type GetValueOptions struct {
 	// The text of the entity value.
 	Value *string `json:"value" validate:"required"`
 
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
+	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
@@ -4468,8 +4431,8 @@ type GetValueOptions struct {
 func (assistant *AssistantV1) NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
 	return &GetValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -4515,7 +4478,8 @@ type GetWorkspaceOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
+	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
@@ -4559,7 +4523,8 @@ func (options *GetWorkspaceOptions) SetHeaders(param map[string]string) *GetWork
 // InputData : The user input.
 type InputData struct {
 
-	// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
+	// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be
+	// no longer than 2048 characters.
 	Text *string `json:"text" validate:"required"`
 }
 
@@ -4611,10 +4576,14 @@ type IntentExport struct {
 // ListAllLogsOptions : The listAllLogs options.
 type ListAllLogsOptions struct {
 
-	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter query that includes a value for `language`, as well as a value for `workspace_id` or `request.context.metadata.deployment`. For more information, see the [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax).
+	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter
+	// query that includes a value for `language`, as well as a value for `workspace_id` or
+	// `request.context.metadata.deployment`. For more information, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax).
 	Filter *string `json:"filter" validate:"required"`
 
-	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the parameter value with a minus sign (`-`).
+	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
+	// parameter value with a minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -4676,7 +4645,8 @@ type ListCounterexamplesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`).
+	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -4750,7 +4720,8 @@ type ListDialogNodesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`).
+	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -4818,7 +4789,8 @@ type ListEntitiesOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
+	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -4827,7 +4799,8 @@ type ListEntitiesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`).
+	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -4910,7 +4883,8 @@ type ListExamplesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`).
+	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -4927,7 +4901,7 @@ type ListExamplesOptions struct {
 func (assistant *AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
 	return &ListExamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -4985,7 +4959,8 @@ type ListIntentsOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
+	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -4994,7 +4969,8 @@ type ListIntentsOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`).
+	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -5068,10 +5044,12 @@ type ListLogsOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the parameter value with a minus sign (`-`).
+	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
+	// parameter value with a minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
-	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax).
+	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax).
 	Filter *string `json:"filter,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -5136,7 +5114,8 @@ type ListMentionsOptions struct {
 	// The name of the entity.
 	Entity *string `json:"entity" validate:"required"`
 
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
+	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
@@ -5150,7 +5129,7 @@ type ListMentionsOptions struct {
 func (assistant *AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
 	return &ListMentionsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -5202,7 +5181,8 @@ type ListSynonymsOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`).
+	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -5219,8 +5199,8 @@ type ListSynonymsOptions struct {
 func (assistant *AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
 	return &ListSynonymsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -5287,7 +5267,8 @@ type ListValuesOptions struct {
 	// The name of the entity.
 	Entity *string `json:"entity" validate:"required"`
 
-	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only information about the element itself. If **export**=`true`, all content, including subelements, is included.
+	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
+	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
 	Export *bool `json:"export,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -5296,7 +5277,8 @@ type ListValuesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`).
+	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -5313,7 +5295,7 @@ type ListValuesOptions struct {
 func (assistant *AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
 	return &ListValuesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -5380,7 +5362,8 @@ type ListWorkspacesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`).
+	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -5521,19 +5504,24 @@ type MessageOptions struct {
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
 	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
-	// State information for the conversation. Continue a conversation by including the context object from the previous response.
+	// State information for the conversation. Continue a conversation by including the context object from the previous
+	// response.
 	Context *Context `json:"context,omitempty"`
 
-	// Entities to use when evaluating the message. Include entities from the previous response to continue using those entities rather than detecting entities in the new input.
+	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
+	// entities rather than detecting entities in the new input.
 	Entities []RuntimeEntity `json:"entities,omitempty"`
 
-	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those intents rather than trying to recognize intents in the new input.
+	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
+	// intents rather than trying to recognize intents in the new input.
 	Intents []RuntimeIntent `json:"intents,omitempty"`
 
-	// System output. Include the output from the previous response to maintain intermediate information over multiple requests.
+	// System output. Include the output from the previous response to maintain intermediate information over multiple
+	// requests.
 	Output *OutputData `json:"output,omitempty"`
 
-	// Whether to include additional diagnostic information about the dialog nodes that were visited during processing of the message.
+	// Whether to include additional diagnostic information about the dialog nodes that were visited during processing of
+	// the message.
 	NodesVisitedDetails *bool `json:"nodes_visited_details,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -5610,16 +5598,20 @@ type MessageRequest struct {
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
 	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
-	// State information for the conversation. Continue a conversation by including the context object from the previous response.
+	// State information for the conversation. Continue a conversation by including the context object from the previous
+	// response.
 	Context *Context `json:"context,omitempty"`
 
-	// Entities to use when evaluating the message. Include entities from the previous response to continue using those entities rather than detecting entities in the new input.
+	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
+	// entities rather than detecting entities in the new input.
 	Entities []RuntimeEntity `json:"entities,omitempty"`
 
-	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those intents rather than trying to recognize intents in the new input.
+	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
+	// intents rather than trying to recognize intents in the new input.
 	Intents []RuntimeIntent `json:"intents,omitempty"`
 
-	// System output. Include the output from the previous response to maintain intermediate information over multiple requests.
+	// System output. Include the output from the previous response to maintain intermediate information over multiple
+	// requests.
 	Output *OutputData `json:"output,omitempty"`
 }
 
@@ -5648,7 +5640,8 @@ type MessageResponse struct {
 	Actions []DialogNodeAction `json:"actions,omitempty"`
 }
 
-// OutputData : An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the log.
+// OutputData : An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
+// log.
 type OutputData struct {
 
 	// An array of up to 50 messages logged with the request.
@@ -5657,13 +5650,16 @@ type OutputData struct {
 	// An array of responses to the user.
 	Text []string `json:"text" validate:"required"`
 
-	// Output intended for any channel. It is the responsibility of the client application to implement the supported response types.
+	// Output intended for any channel. It is the responsibility of the client application to implement the supported
+	// response types.
 	Generic []DialogRuntimeResponseGeneric `json:"generic,omitempty"`
 
-	// An array of the nodes that were triggered to create the response, in the order in which they were visited. This information is useful for debugging and for tracing the path taken through the node tree.
+	// An array of the nodes that were triggered to create the response, in the order in which they were visited. This
+	// information is useful for debugging and for tracing the path taken through the node tree.
 	NodesVisited []string `json:"nodes_visited,omitempty"`
 
-	// An array of objects containing detailed diagnostic information about the nodes that were triggered during processing of the input message. Included only if **nodes_visited_details** is set to `true` in the message request.
+	// An array of objects containing detailed diagnostic information about the nodes that were triggered during processing
+	// of the input message. Included only if **nodes_visited_details** is set to `true` in the message request.
 	NodesVisitedDetails []DialogNodeVisitedDetails `json:"nodes_visited_details,omitempty"`
 }
 
@@ -5695,7 +5691,8 @@ type RuntimeEntity struct {
 	// An entity detected in the input.
 	Entity *string `json:"entity" validate:"required"`
 
-	// An array of zero-based character offsets that indicate where the detected entity values begin and end in the input text.
+	// An array of zero-based character offsets that indicate where the detected entity values begin and end in the input
+	// text.
 	Location []int64 `json:"location" validate:"required"`
 
 	// The term in the input text that was recognized as an entity value.
@@ -5768,7 +5765,7 @@ type UpdateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
 	return &UpdateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -5811,7 +5808,8 @@ type UpdateDialogNodeOptions struct {
 	// An array of objects describing any actions to be invoked by the dialog node.
 	NewActions []DialogNodeAction `json:"new_actions,omitempty"`
 
-	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
+	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
+	// characters, and it must be no longer than 2048 characters.
 	NewConditions *string `json:"new_conditions,omitempty"`
 
 	// The context for the dialog node.
@@ -5823,16 +5821,20 @@ type UpdateDialogNodeOptions struct {
 	// The location in the dialog context where output is stored.
 	NewVariable *string `json:"new_variable,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer than 512 characters.
+	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
+	// than 512 characters.
 	NewUserLabel *string `json:"new_user_label,omitempty"`
 
 	// The metadata for the dialog node.
 	NewMetadata interface{} `json:"new_metadata,omitempty"`
 
-	// The alias used to identify the dialog node. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 64 characters.
+	// The alias used to identify the dialog node. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 64 characters.
 	NewTitle *string `json:"new_title,omitempty"`
 
-	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
+	// must be no longer than 128 characters.
 	NewDescription *string `json:"new_description,omitempty"`
 
 	// Whether this dialog node can be returned to after a digression.
@@ -5850,13 +5852,16 @@ type UpdateDialogNodeOptions struct {
 	// Whether this top-level dialog node can be digressed into.
 	NewDigressIn *string `json:"new_digress_in,omitempty"`
 
-	// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	// The output of the dialog node. For more information about how to specify dialog node output, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
 	NewOutput *DialogNodeOutput `json:"new_output,omitempty"`
 
 	// The ID of the parent dialog node.
 	NewParent *string `json:"new_parent,omitempty"`
 
-	// The dialog node ID. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters. - It must be no longer than 1024 characters.
+	// The dialog node ID. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 1024 characters.
 	NewDialogNode *string `json:"new_dialog_node,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -5867,7 +5872,7 @@ type UpdateDialogNodeOptions struct {
 func (assistant *AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -6009,7 +6014,10 @@ type UpdateEntityOptions struct {
 	// Whether to use fuzzy matching for the entity.
 	NewFuzzyMatch *bool `json:"new_fuzzy_match,omitempty"`
 
-	// The name of the entity. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, and hyphen characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 64 characters.
+	// The name of the entity. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
+	// - It cannot begin with the reserved prefix `sys-`.
+	// - It must be no longer than 64 characters.
 	NewEntity *string `json:"new_entity,omitempty"`
 
 	// Any metadata related to the entity.
@@ -6018,7 +6026,8 @@ type UpdateEntityOptions struct {
 	// An array of entity values.
 	NewValues []CreateValue `json:"new_values,omitempty"`
 
-	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
+	// be no longer than 128 characters.
 	NewDescription *string `json:"new_description,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6029,7 +6038,7 @@ type UpdateEntityOptions struct {
 func (assistant *AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
 	return &UpdateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -6093,7 +6102,10 @@ type UpdateExampleOptions struct {
 	// The text of the user input example.
 	Text *string `json:"text" validate:"required"`
 
-	// The text of the user input example. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 1024 characters.
+	// The text of the user input example. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 1024 characters.
 	NewText *string `json:"new_text,omitempty"`
 
 	// An array of contextual entity mentions.
@@ -6107,8 +6119,8 @@ type UpdateExampleOptions struct {
 func (assistant *AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
 	return &UpdateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -6157,7 +6169,10 @@ type UpdateIntentOptions struct {
 	// The intent name.
 	Intent *string `json:"intent" validate:"required"`
 
-	// The name of the intent. This string must conform to the following restrictions: - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters. - It cannot begin with the reserved prefix `sys-`. - It must be no longer than 128 characters.
+	// The name of the intent. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+	// - It cannot begin with the reserved prefix `sys-`.
+	// - It must be no longer than 128 characters.
 	NewIntent *string `json:"new_intent,omitempty"`
 
 	// An array of user input examples for the intent.
@@ -6174,7 +6189,7 @@ type UpdateIntentOptions struct {
 func (assistant *AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
 	return &UpdateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -6229,7 +6244,10 @@ type UpdateSynonymOptions struct {
 	// The text of the synonym.
 	Synonym *string `json:"synonym" validate:"required"`
 
-	// The text of the synonym. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
+	// The text of the synonym. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	NewSynonym *string `json:"new_synonym,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6240,9 +6258,9 @@ type UpdateSynonymOptions struct {
 func (assistant *AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
 	return &UpdateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -6294,7 +6312,11 @@ type UpdateValueOptions struct {
 	// The text of the entity value.
 	Value *string `json:"value" validate:"required"`
 
-	// An array of synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following resrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
+	// An array of synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
+	// but not both. A synonym must conform to the following resrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	NewSynonyms []string `json:"new_synonyms,omitempty"`
 
 	// Specifies the type of value.
@@ -6303,10 +6325,16 @@ type UpdateValueOptions struct {
 	// Any metadata related to the entity value.
 	NewMetadata interface{} `json:"new_metadata,omitempty"`
 
-	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to specify a pattern, see the [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
+	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
+	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
+	// specify a pattern, see the
+	// [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
 	NewPatterns []string `json:"new_patterns,omitempty"`
 
-	// The text of the entity value. This string must conform to the following restrictions: - It cannot contain carriage return, newline, or tab characters. - It cannot consist of only whitespace characters. - It must be no longer than 64 characters.
+	// The text of the entity value. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	NewValue *string `json:"new_value,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6317,8 +6345,8 @@ type UpdateValueOptions struct {
 func (assistant *AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -6382,10 +6410,12 @@ type UpdateWorkspaceOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 64 characters.
+	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no
+	// longer than 64 characters.
 	Name *string `json:"name,omitempty"`
 
-	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
+	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters, and it
+	// must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
 	// The language of the workspace.
@@ -6406,13 +6436,20 @@ type UpdateWorkspaceOptions struct {
 	// Any metadata related to the workspace.
 	Metadata interface{} `json:"metadata,omitempty"`
 
-	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
+	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that
+	// workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
 
 	// Global settings for the workspace.
 	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
 
-	// Whether the new data is to be appended to the existing data in the workspace. If **append**=`false`, elements included in the new data completely replace the corresponding existing elements, including all subelements. For example, if the new data includes **entities** and **append**=`false`, all existing entities in the workspace are discarded and replaced with the new entities. If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new data collide with existing elements, the update request fails.
+	// Whether the new data is to be appended to the existing data in the workspace. If **append**=`false`, elements
+	// included in the new data completely replace the corresponding existing elements, including all subelements. For
+	// example, if the new data includes **entities** and **append**=`false`, all existing entities in the workspace are
+	// discarded and replaced with the new entities.
+	//
+	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
+	// data collide with existing elements, the update request fails.
 	Append *bool `json:"append,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6588,7 +6625,8 @@ type Workspace struct {
 	// Any metadata related to the workspace.
 	Metadata interface{} `json:"metadata,omitempty"`
 
-	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
+	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
+	// general service improvements. `true` indicates that workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
 
 	// Global settings for the workspace.
@@ -6632,7 +6670,8 @@ type WorkspaceExport struct {
 	// The current status of the workspace.
 	Status *string `json:"status" validate:"required"`
 
-	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.
+	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that
+	// workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out" validate:"required"`
 
 	// Global settings for the workspace.
@@ -6657,7 +6696,9 @@ type WorkspaceSystemSettings struct {
 	// Workspace settings related to the Watson Assistant tool.
 	Tooling *WorkspaceSystemSettingsTooling `json:"tooling,omitempty"`
 
-	// Workspace settings related to the disambiguation feature. **Note:** This feature is available only to Premium users.
+	// Workspace settings related to the disambiguation feature.
+	//
+	// **Note:** This feature is available only to Premium users.
 	Disambiguation *WorkspaceSystemSettingsDisambiguation `json:"disambiguation,omitempty"`
 
 	// For internal use only.
@@ -6670,13 +6711,15 @@ type WorkspaceSystemSettingsDisambiguation struct {
 	// The text of the introductory prompt that accompanies disambiguation options presented to the user.
 	Prompt *string `json:"prompt,omitempty"`
 
-	// The user-facing label for the option users can select if none of the suggested options is correct. If no value is specified for this property, this option does not appear.
+	// The user-facing label for the option users can select if none of the suggested options is correct. If no value is
+	// specified for this property, this option does not appear.
 	NoneOfTheAbovePrompt *string `json:"none_of_the_above_prompt,omitempty"`
 
 	// Whether the disambiguation feature is enabled for the workspace.
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
+	// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the
+	// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
 	Sensitivity *string `json:"sensitivity,omitempty"`
 }
 
