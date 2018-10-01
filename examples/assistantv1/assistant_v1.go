@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	core "github.com/ibm-watson/go-sdk/core"
+
 	assistant "github.com/ibm-watson/go-sdk/assistantv1"
+	core "github.com/ibm-watson/go-sdk/core"
 )
 
 func main() {

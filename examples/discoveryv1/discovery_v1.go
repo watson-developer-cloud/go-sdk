@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ibm-watson/go-sdk/discoveryv1"
-
 	discovery "github.com/ibm-watson/go-sdk/discoveryv1"
 )
 
 func main() {
 	// Instantiate the Watson Discovery service
-	service, serviceErr := discovery.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+	service, serviceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
 		URL:       "YOUR SERVICE URL",
 		Version:   "2018-03-05",
 		IAMApiKey: "YOUR IAM API KEY",

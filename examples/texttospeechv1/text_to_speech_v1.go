@@ -12,8 +12,8 @@ func main() {
 	// Instantiate the Watson Text To Speech service
 	service, serviceErr := texttospeechv1.
 		NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-			ServiceURL: "YOUR SERVICE URL",
-			APIkey:     "YOUR SERVICE API KEY",
+			URL:       "YOUR SERVICE URL",
+			IAMApiKey: "YOUR SERVICE API KEY",
 		})
 
 	// Check successful instantiation

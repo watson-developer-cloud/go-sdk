@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	core "github.com/ibm-watson/go-sdk/core"
 	languagetranslator "github.com/ibm-watson/go-sdk/languagetranslatorv3"
 )
 
@@ -68,7 +69,7 @@ func main() {
 
 	// Check successful casting
 	if listLanguageResult != nil {
-		PrettyPrint(listLanguageResult, "Identifiable Languages")
+		core.PrettyPrint(listLanguageResult, "Identifiable Languages")
 	}
 
 	/* IDENTIFY */
@@ -89,7 +90,7 @@ func main() {
 
 	// Check successful casting
 	if identifyResult != nil {
-		PrettyPrint(identifyResult, "Identify")
+		core.PrettyPrint(identifyResult, "Identify")
 	}
 
 	/* LIST MODELS */
@@ -112,7 +113,7 @@ func main() {
 
 	// Check successful casting
 	if listModelResult != nil {
-		PrettyPrint(listModelResult, "Models")
+		core.PrettyPrint(listModelResult, "Models")
 	}
 
 	/* CREATE MODEL */
@@ -142,7 +143,7 @@ func main() {
 
 	// Check successful casting
 	if createModelResult != nil {
-		PrettyPrint(createModelResult, "Create Model")
+		core.PrettyPrint(createModelResult, "Create Model")
 	}
 
 	/* GET MODEL */
@@ -161,7 +162,7 @@ func main() {
 
 	// Check successful casting
 	if getModelResult != nil {
-		PrettyPrint(getModelResult, "Get Model")
+		core.PrettyPrint(getModelResult, "Get Model")
 	}
 
 	/* DELETE MODEL */
@@ -180,6 +181,6 @@ func main() {
 
 	// Check successful casting
 	if deleteModelResult != nil {
-		PrettyPrint(deleteModelResult, "Delete Model")
+		core.PrettyPrint(deleteModelResult, "Delete Model")
 	}
 }
