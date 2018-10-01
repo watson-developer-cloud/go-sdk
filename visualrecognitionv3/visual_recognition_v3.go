@@ -26,7 +26,12 @@ import (
 	"strings"
 )
 
-// VisualRecognitionV3 : The VisualRecognitionV3 service
+// VisualRecognitionV3: The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify scenes, objects, and faces
+//  in images you upload to the service. You can create and train a custom classifier to identify subjects that suit
+// your needs.
+//
+// Version: V3
+// See: http://www.ibm.com/watson/developercloud/visual-recognition.html
 type VisualRecognitionV3 struct {
 	service *core.WatsonService
 }
@@ -114,7 +119,7 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 	return response, err
 }
 
-// GetClassifyResult : Cast result of Classify operation
+// GetClassifyResult : Retrieve result of Classify operation
 func (visualRecognition *VisualRecognitionV3) GetClassifyResult(response *core.DetailedResponse) *ClassifiedImages {
 	result, ok := response.Result.(*ClassifiedImages)
 	if ok {
@@ -164,7 +169,7 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *De
 	return response, err
 }
 
-// GetDetectFacesResult : Cast result of DetectFaces operation
+// GetDetectFacesResult : Retrieve result of DetectFaces operation
 func (visualRecognition *VisualRecognitionV3) GetDetectFacesResult(response *core.DetailedResponse) *DetectedFaces {
 	result, ok := response.Result.(*DetectedFaces)
 	if ok {
@@ -195,9 +200,8 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	builder.AddQuery("version", visualRecognition.service.Options.Version)
 
 	builder.AddFormData("name", "", "", fmt.Sprint(*createClassifierOptions.Name))
-	for className, file := range createClassifierOptions.ClassnamePositiveExamples {
-		builder.AddFormData(className+"_positive_examples", "", "application/octet-stream", file)
-	}
+	builder.AddFormData("classname_positive_examples", core.StringNilMapper(createClassifierOptions.ClassnamePositiveExamplesFilename),
+		"application/octet-stream", createClassifierOptions.ClassnamePositiveExamples)
 	if createClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(createClassifierOptions.NegativeExamplesFilename),
 			"application/octet-stream", createClassifierOptions.NegativeExamples)
@@ -212,7 +216,7 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	return response, err
 }
 
-// GetCreateClassifierResult : Cast result of CreateClassifier operation
+// GetCreateClassifierResult : Retrieve result of CreateClassifier operation
 func (visualRecognition *VisualRecognitionV3) GetCreateClassifierResult(response *core.DetailedResponse) *Classifier {
 	result, ok := response.Result.(*Classifier)
 	if ok {
@@ -281,7 +285,7 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 	return response, err
 }
 
-// GetGetClassifierResult : Cast result of GetClassifier operation
+// GetGetClassifierResult : Retrieve result of GetClassifier operation
 func (visualRecognition *VisualRecognitionV3) GetGetClassifierResult(response *core.DetailedResponse) *Classifier {
 	result, ok := response.Result.(*Classifier)
 	if ok {
@@ -321,7 +325,7 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 	return response, err
 }
 
-// GetListClassifiersResult : Cast result of ListClassifiers operation
+// GetListClassifiersResult : Retrieve result of ListClassifiers operation
 func (visualRecognition *VisualRecognitionV3) GetListClassifiersResult(response *core.DetailedResponse) *Classifiers {
 	result, ok := response.Result.(*Classifiers)
 	if ok {
@@ -354,8 +358,9 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.service.Options.Version)
 
-	for className, file := range updateClassifierOptions.ClassnamePositiveExamples {
-		builder.AddFormData(className+"_positive_examples", "", "application/octet-stream", file)
+	if updateClassifierOptions.ClassnamePositiveExamples != nil {
+		builder.AddFormData("classname_positive_examples", core.StringNilMapper(updateClassifierOptions.ClassnamePositiveExamplesFilename),
+			"application/octet-stream", updateClassifierOptions.ClassnamePositiveExamples)
 	}
 	if updateClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(updateClassifierOptions.NegativeExamplesFilename),
@@ -371,7 +376,7 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	return response, err
 }
 
-// GetUpdateClassifierResult : Cast result of UpdateClassifier operation
+// GetUpdateClassifierResult : Retrieve result of UpdateClassifier operation
 func (visualRecognition *VisualRecognitionV3) GetUpdateClassifierResult(response *core.DetailedResponse) *Classifier {
 	result, ok := response.Result.(*Classifier)
 	if ok {
@@ -410,7 +415,7 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 	return response, err
 }
 
-// GetGetCoreMlModelResult : Cast result of GetCoreMlModel operation
+// GetGetCoreMlModelResult : Retrieve result of GetCoreMlModel operation
 func (visualRecognition *VisualRecognitionV3) GetGetCoreMlModelResult(response *core.DetailedResponse) io.ReadCloser {
 	result, ok := response.Result.(io.ReadCloser)
 	if ok {
@@ -464,10 +469,12 @@ type ClassResult struct {
 	// Name of the class.
 	ClassName *string `json:"class" validate:"required"`
 
-	// Confidence score for the property in the range of 0 to 1. A higher score indicates greater likelihood that the class is depicted in the image. The default threshold for returning scores from a classifier is 0.5.
+	// Confidence score for the property in the range of 0 to 1. A higher score indicates greater likelihood that the class
+	// is depicted in the image. The default threshold for returning scores from a classifier is 0.5.
 	Score *float32 `json:"score,omitempty"`
 
-	// Knowledge graph of the property. For example, `/fruit/pome/apple/eating apple/Granny Smith`. Included only if identified.
+	// Knowledge graph of the property. For example, `/fruit/pome/apple/eating apple/Granny Smith`. Included only if
+	// identified.
 	TypeHierarchy *string `json:"type_hierarchy,omitempty"`
 }
 
@@ -483,7 +490,8 @@ type ClassifiedImage struct {
 	// Relative path of the image file if uploaded directly. Not returned when the image is passed by URL.
 	Image *string `json:"image,omitempty"`
 
-	// Information about what might have caused a failure, such as an image that is too large. Not returned when there is no error.
+	// Information about what might have caused a failure, such as an image that is too large. Not returned when there is
+	// no error.
 	Error *ErrorInfo `json:"error,omitempty"`
 
 	// The classifiers.
@@ -502,7 +510,9 @@ type ClassifiedImages struct {
 	// Classified images.
 	Images []ClassifiedImage `json:"images" validate:"required"`
 
-	// Information about what might cause less than optimal output. For example, a request sent with a corrupt .zip file and a list of image URLs will still complete, but does not return the expected output. Not returned when there is no warning.
+	// Information about what might cause less than optimal output. For example, a request sent with a corrupt .zip file
+	// and a list of image URLs will still complete, but does not return the expected output. Not returned when there is no
+	// warning.
 	Warnings []WarningInfo `json:"warnings,omitempty"`
 }
 
@@ -515,7 +525,8 @@ type Classifier struct {
 	// Name of the classifier.
 	Name *string `json:"name" validate:"required"`
 
-	// Unique ID of the account who owns the classifier. Returned when verbose=`true`. Might not be returned by some requests.
+	// Unique ID of the account who owns the classifier. Returned when verbose=`true`. Might not be returned by some
+	// requests.
 	Owner *string `json:"owner,omitempty"`
 
 	// Training status of classifier.
@@ -533,10 +544,12 @@ type Classifier struct {
 	// Classes that define a classifier.
 	Classes []Class `json:"classes,omitempty"`
 
-	// Date and time in Coordinated Universal Time (UTC) that the classifier was updated. Returned when verbose=`true`. Might not be returned by some requests. Identical to `updated` and retained for backward compatibility.
+	// Date and time in Coordinated Universal Time (UTC) that the classifier was updated. Returned when verbose=`true`.
+	// Might not be returned by some requests. Identical to `updated` and retained for backward compatibility.
 	Retrained *strfmt.DateTime `json:"retrained,omitempty"`
 
-	// Date and time in Coordinated Universal Time (UTC) that the classifier was most recently updated. The field matches either `retrained` or `created`.  Returned when verbose=`true`. Might not be returned by some requests.
+	// Date and time in Coordinated Universal Time (UTC) that the classifier was most recently updated. The field matches
+	// either `retrained` or `created`.  Returned when verbose=`true`. Might not be returned by some requests.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
@@ -563,25 +576,49 @@ type Classifiers struct {
 // ClassifyOptions : The classify options.
 type ClassifyOptions struct {
 
-	// An image file (.jpg, .png) or .zip file with images. Maximum image size is 10 MB. Include no more than 20 images and limit the .zip file to 100 MB. Encode the image and .zip file names in UTF-8 if they contain non-ASCII characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters. You can also include an image with the **url** parameter.
+	// An image file (.jpg, .png) or .zip file with images. Maximum image size is 10 MB. Include no more than 20 images and
+	// limit the .zip file to 100 MB. Encode the image and .zip file names in UTF-8 if they contain non-ASCII characters.
+	// The service assumes UTF-8 encoding if it encounters non-ASCII characters.
+	//
+	// You can also include an image with the **url** parameter.
 	ImagesFile *os.File `json:"images_file,omitempty"`
 
 	// The filename for imagesFile.
 	ImagesFilename *string `json:"images_filename,omitempty"`
 
-	// The language of the output class names. The full set of languages is supported for the built-in classifier IDs: `default`, `food`, and `explicit`. The class names of custom classifiers are not translated. The response might not be in the specified language when the requested language is not supported or when there is no translation for the class name.
+	// The language of the output class names. The full set of languages is supported for the built-in classifier IDs:
+	// `default`, `food`, and `explicit`. The class names of custom classifiers are not translated.
+	//
+	// The response might not be in the specified language when the requested language is not supported or when there is no
+	// translation for the class name.
 	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
-	// The URL of an image to analyze. Must be in .jpg, or .png format. The minimum recommended pixel density is 32X32 pixels per inch, and the maximum image size is 10 MB. You can also include images with the **images_file** parameter.
+	// The URL of an image to analyze. Must be in .jpg, or .png format. The minimum recommended pixel density is 32X32
+	// pixels per inch, and the maximum image size is 10 MB.
+	//
+	// You can also include images with the **images_file** parameter.
 	URL *string `json:"url,omitempty"`
 
-	// The minimum score a class must have to be displayed in the response. Set the threshold to `0.0` to ignore the classification score and return all values.
+	// The minimum score a class must have to be displayed in the response. Set the threshold to `0.0` to ignore the
+	// classification score and return all values.
 	Threshold *float32 `json:"threshold,omitempty"`
 
-	// The categories of classifiers to apply. Use `IBM` to classify against the `default` general classifier, and use `me` to classify against your custom classifiers. To analyze the image against both classifier categories, set the value to both `IBM` and `me`. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty. The **classifier_ids** parameter overrides **owners**, so make sure that **classifier_ids** is empty.
+	// The categories of classifiers to apply. Use `IBM` to classify against the `default` general classifier, and use `me`
+	// to classify against your custom classifiers. To analyze the image against both classifier categories, set the value
+	// to both `IBM` and `me`.
+	//
+	// The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty.
+	//
+	// The **classifier_ids** parameter overrides **owners**, so make sure that **classifier_ids** is empty.
 	Owners []string `json:"owners,omitempty"`
 
-	// Which classifiers to apply. Overrides the **owners** parameter. You can specify both custom and built-in classifier IDs. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty. The following built-in classifier IDs require no training: - `default`: Returns classes from thousands of general tags. - `food`: Enhances specificity and accuracy for images of food items. - `explicit`: Evaluates whether the image might be pornographic.
+	// Which classifiers to apply. Overrides the **owners** parameter. You can specify both custom and built-in classifier
+	// IDs. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty.
+	//
+	// The following built-in classifier IDs require no training:
+	// - `default`: Returns classes from thousands of general tags.
+	// - `food`: Enhances specificity and accuracy for images of food items.
+	// - `explicit`: Evaluates whether the image might be pornographic.
 	ClassifierIds []string `json:"classifier_ids,omitempty"`
 
 	// The content type of imagesFile. Values for this parameter can be obtained from the HttpMediaType class.
@@ -597,50 +634,50 @@ func (visualRecognition *VisualRecognitionV3) NewClassifyOptions() *ClassifyOpti
 }
 
 // SetImagesFile : Allow user to set ImagesFile
-func (options *ClassifyOptions) SetImagesFile(param *os.File) *ClassifyOptions {
-	options.ImagesFile = param
+func (options *ClassifyOptions) SetImagesFile(imagesFile *os.File) *ClassifyOptions {
+	options.ImagesFile = imagesFile
 	return options
 }
 
 // SetImagesFilename : Allow user to set ImagesFilename
-func (options *ClassifyOptions) SetImagesFilename(param string) *ClassifyOptions {
-	options.ImagesFilename = core.StringPtr(param)
+func (options *ClassifyOptions) SetImagesFilename(imagesFilename string) *ClassifyOptions {
+	options.ImagesFilename = core.StringPtr(imagesFilename)
 	return options
 }
 
 // SetAcceptLanguage : Allow user to set AcceptLanguage
-func (options *ClassifyOptions) SetAcceptLanguage(param string) *ClassifyOptions {
-	options.AcceptLanguage = core.StringPtr(param)
+func (options *ClassifyOptions) SetAcceptLanguage(acceptLanguage string) *ClassifyOptions {
+	options.AcceptLanguage = core.StringPtr(acceptLanguage)
 	return options
 }
 
 // SetURL : Allow user to set URL
-func (options *ClassifyOptions) SetURL(param string) *ClassifyOptions {
-	options.URL = core.StringPtr(param)
+func (options *ClassifyOptions) SetURL(URL string) *ClassifyOptions {
+	options.URL = core.StringPtr(URL)
 	return options
 }
 
 // SetThreshold : Allow user to set Threshold
-func (options *ClassifyOptions) SetThreshold(param float32) *ClassifyOptions {
-	options.Threshold = core.Float32Ptr(param)
+func (options *ClassifyOptions) SetThreshold(threshold float32) *ClassifyOptions {
+	options.Threshold = core.Float32Ptr(threshold)
 	return options
 }
 
 // SetOwners : Allow user to set Owners
-func (options *ClassifyOptions) SetOwners(param []string) *ClassifyOptions {
-	options.Owners = param
+func (options *ClassifyOptions) SetOwners(owners []string) *ClassifyOptions {
+	options.Owners = owners
 	return options
 }
 
 // SetClassifierIds : Allow user to set ClassifierIds
-func (options *ClassifyOptions) SetClassifierIds(param []string) *ClassifyOptions {
-	options.ClassifierIds = param
+func (options *ClassifyOptions) SetClassifierIds(classifierIds []string) *ClassifyOptions {
+	options.ClassifierIds = classifierIds
 	return options
 }
 
 // SetImagesFileContentType : Allow user to set ImagesFileContentType
-func (options *ClassifyOptions) SetImagesFileContentType(param string) *ClassifyOptions {
-	options.ImagesFileContentType = core.StringPtr(param)
+func (options *ClassifyOptions) SetImagesFileContentType(imagesFileContentType string) *ClassifyOptions {
+	options.ImagesFileContentType = core.StringPtr(imagesFileContentType)
 	return options
 }
 
@@ -656,10 +693,25 @@ type CreateClassifierOptions struct {
 	// The name of the new classifier. Encode special characters in UTF-8.
 	Name *string `json:"name" validate:"required"`
 
-	// A .zip file of images that depict the visual subject of a class in the new classifier. You can include more than one positive example file in a call. Specify the parameter name by appending `_positive_examples` to the class name. For example, `goldenretriever_positive_examples` creates the class **goldenretriever**. Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The maximum number of images is 10,000 images or 100 MB per .zip file. Encode special characters in the file name in UTF-8.
-	ClassnamePositiveExamples map[string]*os.File `json:"classname_positive_examples" validate:"required"`
+	// A .zip file of images that depict the visual subject of a class in the new classifier. You can include more than one
+	// positive example file in a call.
+	//
+	// Specify the parameter name by appending `_positive_examples` to the class name. For example,
+	// `goldenretriever_positive_examples` creates the class **goldenretriever**.
+	//
+	// Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The
+	// maximum number of images is 10,000 images or 100 MB per .zip file.
+	//
+	// Encode special characters in the file name in UTF-8.
+	ClassnamePositiveExamples *os.File `json:"classname_positive_examples" validate:"required"`
 
-	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must contain a minimum of 10 images. Encode special characters in the file name in UTF-8.
+	// The filename for classnamePositiveExamples.
+	ClassnamePositiveExamplesFilename *string `json:"classname_positive_examples_filename,omitempty"`
+
+	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
+	// contain a minimum of 10 images.
+	//
+	// Encode special characters in the file name in UTF-8.
 	NegativeExamples *os.File `json:"negative_examples,omitempty"`
 
 	// The filename for negativeExamples.
@@ -670,36 +722,40 @@ type CreateClassifierOptions struct {
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func (visualRecognition *VisualRecognitionV3) NewCreateClassifierOptions(name string, className string, classnamePositiveExamples os.File) *CreateClassifierOptions {
+func (visualRecognition *VisualRecognitionV3) NewCreateClassifierOptions(name string, classnamePositiveExamples *os.File) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
 		Name: core.StringPtr(name),
-		ClassnamePositiveExamples: map[string]*os.File{
-			className: &classnamePositiveExamples,
-		},
+		ClassnamePositiveExamples: classnamePositiveExamples,
 	}
 }
 
 // SetName : Allow user to set Name
-func (options *CreateClassifierOptions) SetName(param string) *CreateClassifierOptions {
-	options.Name = core.StringPtr(param)
+func (options *CreateClassifierOptions) SetName(name string) *CreateClassifierOptions {
+	options.Name = core.StringPtr(name)
 	return options
 }
 
-// AddClassnamePositiveExamples : Allow user to add ClassnamePositiveExamples
-func (options *CreateClassifierOptions) AddClassnamePositiveExamples(className string, param *os.File) *CreateClassifierOptions {
-	options.ClassnamePositiveExamples[className] = param
+// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *CreateClassifierOptions) SetClassnamePositiveExamples(classnamePositiveExamples *os.File) *CreateClassifierOptions {
+	options.ClassnamePositiveExamples = classnamePositiveExamples
+	return options
+}
+
+// SetClassnamePositiveExamplesFilename : Allow user to set ClassnamePositiveExamplesFilename
+func (options *CreateClassifierOptions) SetClassnamePositiveExamplesFilename(classnamePositiveExamplesFilename string) *CreateClassifierOptions {
+	options.ClassnamePositiveExamplesFilename = core.StringPtr(classnamePositiveExamplesFilename)
 	return options
 }
 
 // SetNegativeExamples : Allow user to set NegativeExamples
-func (options *CreateClassifierOptions) SetNegativeExamples(param *os.File) *CreateClassifierOptions {
-	options.NegativeExamples = param
+func (options *CreateClassifierOptions) SetNegativeExamples(negativeExamples *os.File) *CreateClassifierOptions {
+	options.NegativeExamples = negativeExamples
 	return options
 }
 
 // SetNegativeExamplesFilename : Allow user to set NegativeExamplesFilename
-func (options *CreateClassifierOptions) SetNegativeExamplesFilename(param string) *CreateClassifierOptions {
-	options.NegativeExamplesFilename = core.StringPtr(param)
+func (options *CreateClassifierOptions) SetNegativeExamplesFilename(negativeExamplesFilename string) *CreateClassifierOptions {
+	options.NegativeExamplesFilename = core.StringPtr(negativeExamplesFilename)
 	return options
 }
 
@@ -727,8 +783,8 @@ func (visualRecognition *VisualRecognitionV3) NewDeleteClassifierOptions(classif
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *DeleteClassifierOptions) SetClassifierID(param string) *DeleteClassifierOptions {
-	options.ClassifierID = core.StringPtr(param)
+func (options *DeleteClassifierOptions) SetClassifierID(classifierID string) *DeleteClassifierOptions {
+	options.ClassifierID = core.StringPtr(classifierID)
 	return options
 }
 
@@ -756,8 +812,8 @@ func (visualRecognition *VisualRecognitionV3) NewDeleteUserDataOptions(customerI
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(param string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(param)
+func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	options.CustomerID = core.StringPtr(customerID)
 	return options
 }
 
@@ -770,13 +826,23 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 // DetectFacesOptions : The detectFaces options.
 type DetectFacesOptions struct {
 
-	// An image file (gif, .jpg, .png, .tif.) or .zip file with images. Limit the .zip file to 100 MB. You can include a maximum of 15 images in a request. Encode the image and .zip file names in UTF-8 if they contain non-ASCII characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters. You can also include an image with the **url** parameter.
+	// An image file (gif, .jpg, .png, .tif.) or .zip file with images. Limit the .zip file to 100 MB. You can include a
+	// maximum of 15 images in a request.
+	//
+	// Encode the image and .zip file names in UTF-8 if they contain non-ASCII characters. The service assumes UTF-8
+	// encoding if it encounters non-ASCII characters.
+	//
+	// You can also include an image with the **url** parameter.
 	ImagesFile *os.File `json:"images_file,omitempty"`
 
 	// The filename for imagesFile.
 	ImagesFilename *string `json:"images_filename,omitempty"`
 
-	// The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum recommended pixel density is 32X32 pixels per inch, and the maximum image size is 10 MB. Redirects are followed, so you can use a shortened URL. You can also include images with the **images_file** parameter.
+	// The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum recommended pixel density
+	// is 32X32 pixels per inch, and the maximum image size is 10 MB. Redirects are followed, so you can use a shortened
+	// URL.
+	//
+	// You can also include images with the **images_file** parameter.
 	URL *string `json:"url,omitempty"`
 
 	// The content type of imagesFile. Values for this parameter can be obtained from the HttpMediaType class.
@@ -792,26 +858,26 @@ func (visualRecognition *VisualRecognitionV3) NewDetectFacesOptions() *DetectFac
 }
 
 // SetImagesFile : Allow user to set ImagesFile
-func (options *DetectFacesOptions) SetImagesFile(param *os.File) *DetectFacesOptions {
-	options.ImagesFile = param
+func (options *DetectFacesOptions) SetImagesFile(imagesFile *os.File) *DetectFacesOptions {
+	options.ImagesFile = imagesFile
 	return options
 }
 
 // SetImagesFilename : Allow user to set ImagesFilename
-func (options *DetectFacesOptions) SetImagesFilename(param string) *DetectFacesOptions {
-	options.ImagesFilename = core.StringPtr(param)
+func (options *DetectFacesOptions) SetImagesFilename(imagesFilename string) *DetectFacesOptions {
+	options.ImagesFilename = core.StringPtr(imagesFilename)
 	return options
 }
 
 // SetURL : Allow user to set URL
-func (options *DetectFacesOptions) SetURL(param string) *DetectFacesOptions {
-	options.URL = core.StringPtr(param)
+func (options *DetectFacesOptions) SetURL(URL string) *DetectFacesOptions {
+	options.URL = core.StringPtr(URL)
 	return options
 }
 
 // SetImagesFileContentType : Allow user to set ImagesFileContentType
-func (options *DetectFacesOptions) SetImagesFileContentType(param string) *DetectFacesOptions {
-	options.ImagesFileContentType = core.StringPtr(param)
+func (options *DetectFacesOptions) SetImagesFileContentType(imagesFileContentType string) *DetectFacesOptions {
+	options.ImagesFileContentType = core.StringPtr(imagesFileContentType)
 	return options
 }
 
@@ -830,11 +896,14 @@ type DetectedFaces struct {
 	// The images.
 	Images []ImageWithFaces `json:"images" validate:"required"`
 
-	// Information about what might cause less than optimal output. For example, a request sent with a corrupt .zip file and a list of image URLs will still complete, but does not return the expected output. Not returned when there is no warning.
+	// Information about what might cause less than optimal output. For example, a request sent with a corrupt .zip file
+	// and a list of image URLs will still complete, but does not return the expected output. Not returned when there is no
+	// warning.
 	Warnings []WarningInfo `json:"warnings,omitempty"`
 }
 
-// ErrorInfo : Information about what might have caused a failure, such as an image that is too large. Not returned when there is no error.
+// ErrorInfo : Information about what might have caused a failure, such as an image that is too large. Not returned when there is no
+// error.
 type ErrorInfo struct {
 
 	// HTTP status code.
@@ -869,7 +938,8 @@ type FaceAge struct {
 	// Estimated maximum age.
 	Max *int64 `json:"max,omitempty"`
 
-	// Confidence score in the range of 0 to 1. A higher score indicates greater confidence in the estimated value for the property.
+	// Confidence score in the range of 0 to 1. A higher score indicates greater confidence in the estimated value for the
+	// property.
 	Score *float32 `json:"score,omitempty"`
 }
 
@@ -879,7 +949,8 @@ type FaceGender struct {
 	// Gender identified by the face. For example, `MALE` or `FEMALE`.
 	Gender *string `json:"gender" validate:"required"`
 
-	// Confidence score in the range of 0 to 1. A higher score indicates greater confidence in the estimated value for the property.
+	// Confidence score in the range of 0 to 1. A higher score indicates greater confidence in the estimated value for the
+	// property.
 	Score *float32 `json:"score,omitempty"`
 }
 
@@ -917,8 +988,8 @@ func (visualRecognition *VisualRecognitionV3) NewGetClassifierOptions(classifier
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *GetClassifierOptions) SetClassifierID(param string) *GetClassifierOptions {
-	options.ClassifierID = core.StringPtr(param)
+func (options *GetClassifierOptions) SetClassifierID(classifierID string) *GetClassifierOptions {
+	options.ClassifierID = core.StringPtr(classifierID)
 	return options
 }
 
@@ -946,8 +1017,8 @@ func (visualRecognition *VisualRecognitionV3) NewGetCoreMlModelOptions(classifie
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *GetCoreMlModelOptions) SetClassifierID(param string) *GetCoreMlModelOptions {
-	options.ClassifierID = core.StringPtr(param)
+func (options *GetCoreMlModelOptions) SetClassifierID(classifierID string) *GetCoreMlModelOptions {
+	options.ClassifierID = core.StringPtr(classifierID)
 	return options
 }
 
@@ -972,7 +1043,8 @@ type ImageWithFaces struct {
 	// Fully resolved URL of the image after redirects are followed. Not returned when the image is uploaded.
 	ResolvedURL *string `json:"resolved_url,omitempty"`
 
-	// Information about what might have caused a failure, such as an image that is too large. Not returned when there is no error.
+	// Information about what might have caused a failure, such as an image that is too large. Not returned when there is
+	// no error.
 	Error *ErrorInfo `json:"error,omitempty"`
 }
 
@@ -992,8 +1064,8 @@ func (visualRecognition *VisualRecognitionV3) NewListClassifiersOptions() *ListC
 }
 
 // SetVerbose : Allow user to set Verbose
-func (options *ListClassifiersOptions) SetVerbose(param bool) *ListClassifiersOptions {
-	options.Verbose = core.BoolPtr(param)
+func (options *ListClassifiersOptions) SetVerbose(verbose bool) *ListClassifiersOptions {
+	options.Verbose = core.BoolPtr(verbose)
 	return options
 }
 
@@ -1009,10 +1081,25 @@ type UpdateClassifierOptions struct {
 	// The ID of the classifier.
 	ClassifierID *string `json:"classifier_id" validate:"required"`
 
-	// A .zip file of images that depict the visual subject of a class in the classifier. The positive examples create or update classes in the classifier. You can include more than one positive example file in a call. Specify the parameter name by appending `_positive_examples` to the class name. For example, `goldenretriever_positive_examples` creates the class `goldenretriever`. Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The maximum number of images is 10,000 images or 100 MB per .zip file. Encode special characters in the file name in UTF-8.
-	ClassnamePositiveExamples map[string]*os.File `json:"classname_positive_examples,omitempty"`
+	// A .zip file of images that depict the visual subject of a class in the classifier. The positive examples create or
+	// update classes in the classifier. You can include more than one positive example file in a call.
+	//
+	// Specify the parameter name by appending `_positive_examples` to the class name. For example,
+	// `goldenretriever_positive_examples` creates the class `goldenretriever`.
+	//
+	// Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The
+	// maximum number of images is 10,000 images or 100 MB per .zip file.
+	//
+	// Encode special characters in the file name in UTF-8.
+	ClassnamePositiveExamples *os.File `json:"classname_positive_examples,omitempty"`
 
-	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must contain a minimum of 10 images. Encode special characters in the file name in UTF-8.
+	// The filename for classnamePositiveExamples.
+	ClassnamePositiveExamplesFilename *string `json:"classname_positive_examples_filename,omitempty"`
+
+	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
+	// contain a minimum of 10 images.
+	//
+	// Encode special characters in the file name in UTF-8.
 	NegativeExamples *os.File `json:"negative_examples,omitempty"`
 
 	// The filename for negativeExamples.
@@ -1030,26 +1117,32 @@ func (visualRecognition *VisualRecognitionV3) NewUpdateClassifierOptions(classif
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *UpdateClassifierOptions) SetClassifierID(param string) *UpdateClassifierOptions {
-	options.ClassifierID = core.StringPtr(param)
+func (options *UpdateClassifierOptions) SetClassifierID(classifierID string) *UpdateClassifierOptions {
+	options.ClassifierID = core.StringPtr(classifierID)
 	return options
 }
 
-// AddClassnamePositiveExamples : Allow user to add ClassnamePositiveExamples
-func (options *UpdateClassifierOptions) AddClassnamePositiveExamples(className string, param *os.File) *UpdateClassifierOptions {
-	options.ClassnamePositiveExamples[className] = param
+// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *UpdateClassifierOptions) SetClassnamePositiveExamples(classnamePositiveExamples *os.File) *UpdateClassifierOptions {
+	options.ClassnamePositiveExamples = classnamePositiveExamples
+	return options
+}
+
+// SetClassnamePositiveExamplesFilename : Allow user to set ClassnamePositiveExamplesFilename
+func (options *UpdateClassifierOptions) SetClassnamePositiveExamplesFilename(classnamePositiveExamplesFilename string) *UpdateClassifierOptions {
+	options.ClassnamePositiveExamplesFilename = core.StringPtr(classnamePositiveExamplesFilename)
 	return options
 }
 
 // SetNegativeExamples : Allow user to set NegativeExamples
-func (options *UpdateClassifierOptions) SetNegativeExamples(param *os.File) *UpdateClassifierOptions {
-	options.NegativeExamples = param
+func (options *UpdateClassifierOptions) SetNegativeExamples(negativeExamples *os.File) *UpdateClassifierOptions {
+	options.NegativeExamples = negativeExamples
 	return options
 }
 
 // SetNegativeExamplesFilename : Allow user to set NegativeExamplesFilename
-func (options *UpdateClassifierOptions) SetNegativeExamplesFilename(param string) *UpdateClassifierOptions {
-	options.NegativeExamplesFilename = core.StringPtr(param)
+func (options *UpdateClassifierOptions) SetNegativeExamplesFilename(negativeExamplesFilename string) *UpdateClassifierOptions {
+	options.NegativeExamplesFilename = core.StringPtr(negativeExamplesFilename)
 	return options
 }
 
