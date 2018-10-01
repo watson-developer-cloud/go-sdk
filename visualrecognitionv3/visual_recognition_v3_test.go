@@ -183,7 +183,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				CreateClassifierOptions := testService.
-					NewCreateClassifierOptions("cars vs trucks", "cars", *cars)
+					NewCreateClassifierOptions("cars vs trucks", "cars", cars)
 				returnValue, returnValueErr := testService.CreateClassifier(CreateClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
