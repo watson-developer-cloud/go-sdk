@@ -19,17 +19,15 @@ package assistantv1
 
 import (
 	"fmt"
-
 	"github.com/go-openapi/strfmt"
 	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// AssistantV1 : Assistant service combines machine learning, natural language understanding, and integrated
+// AssistantV1: The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and integrated
 // dialog tools to create conversation flows between your apps and your users.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/assistant.html
-//
 type AssistantV1 struct {
 	service *core.WatsonService
 }
@@ -2438,19 +2436,19 @@ type CreateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
 	return &CreateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateCounterexampleOptions) SetWorkspaceID(param string) *CreateCounterexampleOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *CreateCounterexampleOptions) SetWorkspaceID(workspaceID string) *CreateCounterexampleOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *CreateCounterexampleOptions) SetText(param string) *CreateCounterexampleOptions {
-	options.Text = core.StringPtr(param)
+func (options *CreateCounterexampleOptions) SetText(text string) *CreateCounterexampleOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
@@ -2602,121 +2600,121 @@ type CreateDialogNodeOptions struct {
 func (assistant *AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateDialogNodeOptions) SetWorkspaceID(param string) *CreateDialogNodeOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetWorkspaceID(workspaceID string) *CreateDialogNodeOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetDialogNode : Allow user to set DialogNode
-func (options *CreateDialogNodeOptions) SetDialogNode(param string) *CreateDialogNodeOptions {
-	options.DialogNode = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetDialogNode(dialogNode string) *CreateDialogNodeOptions {
+	options.DialogNode = core.StringPtr(dialogNode)
 	return options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateDialogNodeOptions) SetDescription(param string) *CreateDialogNodeOptions {
-	options.Description = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetDescription(description string) *CreateDialogNodeOptions {
+	options.Description = core.StringPtr(description)
 	return options
 }
 
 // SetConditions : Allow user to set Conditions
-func (options *CreateDialogNodeOptions) SetConditions(param string) *CreateDialogNodeOptions {
-	options.Conditions = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetConditions(conditions string) *CreateDialogNodeOptions {
+	options.Conditions = core.StringPtr(conditions)
 	return options
 }
 
 // SetParent : Allow user to set Parent
-func (options *CreateDialogNodeOptions) SetParent(param string) *CreateDialogNodeOptions {
-	options.Parent = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetParent(parent string) *CreateDialogNodeOptions {
+	options.Parent = core.StringPtr(parent)
 	return options
 }
 
 // SetPreviousSibling : Allow user to set PreviousSibling
-func (options *CreateDialogNodeOptions) SetPreviousSibling(param string) *CreateDialogNodeOptions {
-	options.PreviousSibling = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetPreviousSibling(previousSibling string) *CreateDialogNodeOptions {
+	options.PreviousSibling = core.StringPtr(previousSibling)
 	return options
 }
 
 // SetOutput : Allow user to set Output
-func (options *CreateDialogNodeOptions) SetOutput(param DialogNodeOutput) *CreateDialogNodeOptions {
-	options.Output = &param
+func (options *CreateDialogNodeOptions) SetOutput(output DialogNodeOutput) *CreateDialogNodeOptions {
+	options.Output = &output
 	return options
 }
 
 // SetContext : Allow user to set Context
-func (options *CreateDialogNodeOptions) SetContext(param interface{}) *CreateDialogNodeOptions {
-	options.Context = &param
+func (options *CreateDialogNodeOptions) SetContext(context interface{}) *CreateDialogNodeOptions {
+	options.Context = &context
 	return options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateDialogNodeOptions) SetMetadata(param interface{}) *CreateDialogNodeOptions {
-	options.Metadata = &param
+func (options *CreateDialogNodeOptions) SetMetadata(metadata interface{}) *CreateDialogNodeOptions {
+	options.Metadata = &metadata
 	return options
 }
 
 // SetNextStep : Allow user to set NextStep
-func (options *CreateDialogNodeOptions) SetNextStep(param DialogNodeNextStep) *CreateDialogNodeOptions {
-	options.NextStep = &param
+func (options *CreateDialogNodeOptions) SetNextStep(nextStep DialogNodeNextStep) *CreateDialogNodeOptions {
+	options.NextStep = &nextStep
 	return options
 }
 
 // SetActions : Allow user to set Actions
-func (options *CreateDialogNodeOptions) SetActions(param []DialogNodeAction) *CreateDialogNodeOptions {
-	options.Actions = param
+func (options *CreateDialogNodeOptions) SetActions(actions []DialogNodeAction) *CreateDialogNodeOptions {
+	options.Actions = actions
 	return options
 }
 
 // SetTitle : Allow user to set Title
-func (options *CreateDialogNodeOptions) SetTitle(param string) *CreateDialogNodeOptions {
-	options.Title = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetTitle(title string) *CreateDialogNodeOptions {
+	options.Title = core.StringPtr(title)
 	return options
 }
 
 // SetNodeType : Allow user to set NodeType
-func (options *CreateDialogNodeOptions) SetNodeType(param string) *CreateDialogNodeOptions {
-	options.NodeType = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetNodeType(nodeType string) *CreateDialogNodeOptions {
+	options.NodeType = core.StringPtr(nodeType)
 	return options
 }
 
 // SetEventName : Allow user to set EventName
-func (options *CreateDialogNodeOptions) SetEventName(param string) *CreateDialogNodeOptions {
-	options.EventName = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetEventName(eventName string) *CreateDialogNodeOptions {
+	options.EventName = core.StringPtr(eventName)
 	return options
 }
 
 // SetVariable : Allow user to set Variable
-func (options *CreateDialogNodeOptions) SetVariable(param string) *CreateDialogNodeOptions {
-	options.Variable = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetVariable(variable string) *CreateDialogNodeOptions {
+	options.Variable = core.StringPtr(variable)
 	return options
 }
 
 // SetDigressIn : Allow user to set DigressIn
-func (options *CreateDialogNodeOptions) SetDigressIn(param string) *CreateDialogNodeOptions {
-	options.DigressIn = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetDigressIn(digressIn string) *CreateDialogNodeOptions {
+	options.DigressIn = core.StringPtr(digressIn)
 	return options
 }
 
 // SetDigressOut : Allow user to set DigressOut
-func (options *CreateDialogNodeOptions) SetDigressOut(param string) *CreateDialogNodeOptions {
-	options.DigressOut = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetDigressOut(digressOut string) *CreateDialogNodeOptions {
+	options.DigressOut = core.StringPtr(digressOut)
 	return options
 }
 
 // SetDigressOutSlots : Allow user to set DigressOutSlots
-func (options *CreateDialogNodeOptions) SetDigressOutSlots(param string) *CreateDialogNodeOptions {
-	options.DigressOutSlots = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetDigressOutSlots(digressOutSlots string) *CreateDialogNodeOptions {
+	options.DigressOutSlots = core.StringPtr(digressOutSlots)
 	return options
 }
 
 // SetUserLabel : Allow user to set UserLabel
-func (options *CreateDialogNodeOptions) SetUserLabel(param string) *CreateDialogNodeOptions {
-	options.UserLabel = core.StringPtr(param)
+func (options *CreateDialogNodeOptions) SetUserLabel(userLabel string) *CreateDialogNodeOptions {
+	options.UserLabel = core.StringPtr(userLabel)
 	return options
 }
 
@@ -2782,43 +2780,43 @@ type CreateEntityOptions struct {
 func (assistant *AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
 	return &CreateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateEntityOptions) SetWorkspaceID(param string) *CreateEntityOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *CreateEntityOptions) SetWorkspaceID(workspaceID string) *CreateEntityOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *CreateEntityOptions) SetEntity(param string) *CreateEntityOptions {
-	options.Entity = core.StringPtr(param)
+func (options *CreateEntityOptions) SetEntity(entity string) *CreateEntityOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateEntityOptions) SetDescription(param string) *CreateEntityOptions {
-	options.Description = core.StringPtr(param)
+func (options *CreateEntityOptions) SetDescription(description string) *CreateEntityOptions {
+	options.Description = core.StringPtr(description)
 	return options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateEntityOptions) SetMetadata(param interface{}) *CreateEntityOptions {
-	options.Metadata = &param
+func (options *CreateEntityOptions) SetMetadata(metadata interface{}) *CreateEntityOptions {
+	options.Metadata = &metadata
 	return options
 }
 
 // SetValues : Allow user to set Values
-func (options *CreateEntityOptions) SetValues(param []CreateValue) *CreateEntityOptions {
-	options.Values = param
+func (options *CreateEntityOptions) SetValues(values []CreateValue) *CreateEntityOptions {
+	options.Values = values
 	return options
 }
 
 // SetFuzzyMatch : Allow user to set FuzzyMatch
-func (options *CreateEntityOptions) SetFuzzyMatch(param bool) *CreateEntityOptions {
-	options.FuzzyMatch = core.BoolPtr(param)
+func (options *CreateEntityOptions) SetFuzzyMatch(fuzzyMatch bool) *CreateEntityOptions {
+	options.FuzzyMatch = core.BoolPtr(fuzzyMatch)
 	return options
 }
 
@@ -2867,32 +2865,32 @@ type CreateExampleOptions struct {
 func (assistant *AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
 	return &CreateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateExampleOptions) SetWorkspaceID(param string) *CreateExampleOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *CreateExampleOptions) SetWorkspaceID(workspaceID string) *CreateExampleOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *CreateExampleOptions) SetIntent(param string) *CreateExampleOptions {
-	options.Intent = core.StringPtr(param)
+func (options *CreateExampleOptions) SetIntent(intent string) *CreateExampleOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *CreateExampleOptions) SetText(param string) *CreateExampleOptions {
-	options.Text = core.StringPtr(param)
+func (options *CreateExampleOptions) SetText(text string) *CreateExampleOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
 // SetMentions : Allow user to set Mentions
-func (options *CreateExampleOptions) SetMentions(param []Mentions) *CreateExampleOptions {
-	options.Mentions = param
+func (options *CreateExampleOptions) SetMentions(mentions []Mentions) *CreateExampleOptions {
+	options.Mentions = mentions
 	return options
 }
 
@@ -2946,31 +2944,31 @@ type CreateIntentOptions struct {
 func (assistant *AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
 	return &CreateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateIntentOptions) SetWorkspaceID(param string) *CreateIntentOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *CreateIntentOptions) SetWorkspaceID(workspaceID string) *CreateIntentOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *CreateIntentOptions) SetIntent(param string) *CreateIntentOptions {
-	options.Intent = core.StringPtr(param)
+func (options *CreateIntentOptions) SetIntent(intent string) *CreateIntentOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateIntentOptions) SetDescription(param string) *CreateIntentOptions {
-	options.Description = core.StringPtr(param)
+func (options *CreateIntentOptions) SetDescription(description string) *CreateIntentOptions {
+	options.Description = core.StringPtr(description)
 	return options
 }
 
 // SetExamples : Allow user to set Examples
-func (options *CreateIntentOptions) SetExamples(param []CreateExample) *CreateIntentOptions {
-	options.Examples = param
+func (options *CreateIntentOptions) SetExamples(examples []CreateExample) *CreateIntentOptions {
+	options.Examples = examples
 	return options
 }
 
@@ -3006,33 +3004,33 @@ type CreateSynonymOptions struct {
 func (assistant *AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
 	return &CreateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateSynonymOptions) SetWorkspaceID(param string) *CreateSynonymOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *CreateSynonymOptions) SetWorkspaceID(workspaceID string) *CreateSynonymOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *CreateSynonymOptions) SetEntity(param string) *CreateSynonymOptions {
-	options.Entity = core.StringPtr(param)
+func (options *CreateSynonymOptions) SetEntity(entity string) *CreateSynonymOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *CreateSynonymOptions) SetValue(param string) *CreateSynonymOptions {
-	options.Value = core.StringPtr(param)
+func (options *CreateSynonymOptions) SetValue(value string) *CreateSynonymOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
 // SetSynonym : Allow user to set Synonym
-func (options *CreateSynonymOptions) SetSynonym(param string) *CreateSynonymOptions {
-	options.Synonym = core.StringPtr(param)
+func (options *CreateSynonymOptions) SetSynonym(synonym string) *CreateSynonymOptions {
+	options.Synonym = core.StringPtr(synonym)
 	return options
 }
 
@@ -3113,50 +3111,50 @@ type CreateValueOptions struct {
 func (assistant *AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateValueOptions) SetWorkspaceID(param string) *CreateValueOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *CreateValueOptions) SetWorkspaceID(workspaceID string) *CreateValueOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *CreateValueOptions) SetEntity(param string) *CreateValueOptions {
-	options.Entity = core.StringPtr(param)
+func (options *CreateValueOptions) SetEntity(entity string) *CreateValueOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *CreateValueOptions) SetValue(param string) *CreateValueOptions {
-	options.Value = core.StringPtr(param)
+func (options *CreateValueOptions) SetValue(value string) *CreateValueOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateValueOptions) SetMetadata(param interface{}) *CreateValueOptions {
-	options.Metadata = &param
+func (options *CreateValueOptions) SetMetadata(metadata interface{}) *CreateValueOptions {
+	options.Metadata = &metadata
 	return options
 }
 
 // SetSynonyms : Allow user to set Synonyms
-func (options *CreateValueOptions) SetSynonyms(param []string) *CreateValueOptions {
-	options.Synonyms = param
+func (options *CreateValueOptions) SetSynonyms(synonyms []string) *CreateValueOptions {
+	options.Synonyms = synonyms
 	return options
 }
 
 // SetPatterns : Allow user to set Patterns
-func (options *CreateValueOptions) SetPatterns(param []string) *CreateValueOptions {
-	options.Patterns = param
+func (options *CreateValueOptions) SetPatterns(patterns []string) *CreateValueOptions {
+	options.Patterns = patterns
 	return options
 }
 
 // SetValueType : Allow user to set ValueType
-func (options *CreateValueOptions) SetValueType(param string) *CreateValueOptions {
-	options.ValueType = core.StringPtr(param)
+func (options *CreateValueOptions) SetValueType(valueType string) *CreateValueOptions {
+	options.ValueType = core.StringPtr(valueType)
 	return options
 }
 
@@ -3212,62 +3210,62 @@ func (assistant *AssistantV1) NewCreateWorkspaceOptions() *CreateWorkspaceOption
 }
 
 // SetName : Allow user to set Name
-func (options *CreateWorkspaceOptions) SetName(param string) *CreateWorkspaceOptions {
-	options.Name = core.StringPtr(param)
+func (options *CreateWorkspaceOptions) SetName(name string) *CreateWorkspaceOptions {
+	options.Name = core.StringPtr(name)
 	return options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateWorkspaceOptions) SetDescription(param string) *CreateWorkspaceOptions {
-	options.Description = core.StringPtr(param)
+func (options *CreateWorkspaceOptions) SetDescription(description string) *CreateWorkspaceOptions {
+	options.Description = core.StringPtr(description)
 	return options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *CreateWorkspaceOptions) SetLanguage(param string) *CreateWorkspaceOptions {
-	options.Language = core.StringPtr(param)
+func (options *CreateWorkspaceOptions) SetLanguage(language string) *CreateWorkspaceOptions {
+	options.Language = core.StringPtr(language)
 	return options
 }
 
 // SetIntents : Allow user to set Intents
-func (options *CreateWorkspaceOptions) SetIntents(param []CreateIntent) *CreateWorkspaceOptions {
-	options.Intents = param
+func (options *CreateWorkspaceOptions) SetIntents(intents []CreateIntent) *CreateWorkspaceOptions {
+	options.Intents = intents
 	return options
 }
 
 // SetEntities : Allow user to set Entities
-func (options *CreateWorkspaceOptions) SetEntities(param []CreateEntity) *CreateWorkspaceOptions {
-	options.Entities = param
+func (options *CreateWorkspaceOptions) SetEntities(entities []CreateEntity) *CreateWorkspaceOptions {
+	options.Entities = entities
 	return options
 }
 
 // SetDialogNodes : Allow user to set DialogNodes
-func (options *CreateWorkspaceOptions) SetDialogNodes(param []CreateDialogNode) *CreateWorkspaceOptions {
-	options.DialogNodes = param
+func (options *CreateWorkspaceOptions) SetDialogNodes(dialogNodes []CreateDialogNode) *CreateWorkspaceOptions {
+	options.DialogNodes = dialogNodes
 	return options
 }
 
 // SetCounterexamples : Allow user to set Counterexamples
-func (options *CreateWorkspaceOptions) SetCounterexamples(param []CreateCounterexample) *CreateWorkspaceOptions {
-	options.Counterexamples = param
+func (options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []CreateCounterexample) *CreateWorkspaceOptions {
+	options.Counterexamples = counterexamples
 	return options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateWorkspaceOptions) SetMetadata(param interface{}) *CreateWorkspaceOptions {
-	options.Metadata = &param
+func (options *CreateWorkspaceOptions) SetMetadata(metadata interface{}) *CreateWorkspaceOptions {
+	options.Metadata = &metadata
 	return options
 }
 
 // SetLearningOptOut : Allow user to set LearningOptOut
-func (options *CreateWorkspaceOptions) SetLearningOptOut(param bool) *CreateWorkspaceOptions {
-	options.LearningOptOut = core.BoolPtr(param)
+func (options *CreateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *CreateWorkspaceOptions {
+	options.LearningOptOut = core.BoolPtr(learningOptOut)
 	return options
 }
 
 // SetSystemSettings : Allow user to set SystemSettings
-func (options *CreateWorkspaceOptions) SetSystemSettings(param WorkspaceSystemSettings) *CreateWorkspaceOptions {
-	options.SystemSettings = &param
+func (options *CreateWorkspaceOptions) SetSystemSettings(systemSettings WorkspaceSystemSettings) *CreateWorkspaceOptions {
+	options.SystemSettings = &systemSettings
 	return options
 }
 
@@ -3294,19 +3292,19 @@ type DeleteCounterexampleOptions struct {
 func (assistant *AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
 	return &DeleteCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteCounterexampleOptions) SetWorkspaceID(param string) *DeleteCounterexampleOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *DeleteCounterexampleOptions) SetWorkspaceID(workspaceID string) *DeleteCounterexampleOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *DeleteCounterexampleOptions) SetText(param string) *DeleteCounterexampleOptions {
-	options.Text = core.StringPtr(param)
+func (options *DeleteCounterexampleOptions) SetText(text string) *DeleteCounterexampleOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
@@ -3333,19 +3331,19 @@ type DeleteDialogNodeOptions struct {
 func (assistant *AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
 	return &DeleteDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteDialogNodeOptions) SetWorkspaceID(param string) *DeleteDialogNodeOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *DeleteDialogNodeOptions) SetWorkspaceID(workspaceID string) *DeleteDialogNodeOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetDialogNode : Allow user to set DialogNode
-func (options *DeleteDialogNodeOptions) SetDialogNode(param string) *DeleteDialogNodeOptions {
-	options.DialogNode = core.StringPtr(param)
+func (options *DeleteDialogNodeOptions) SetDialogNode(dialogNode string) *DeleteDialogNodeOptions {
+	options.DialogNode = core.StringPtr(dialogNode)
 	return options
 }
 
@@ -3372,19 +3370,19 @@ type DeleteEntityOptions struct {
 func (assistant *AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
 	return &DeleteEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteEntityOptions) SetWorkspaceID(param string) *DeleteEntityOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *DeleteEntityOptions) SetWorkspaceID(workspaceID string) *DeleteEntityOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *DeleteEntityOptions) SetEntity(param string) *DeleteEntityOptions {
-	options.Entity = core.StringPtr(param)
+func (options *DeleteEntityOptions) SetEntity(entity string) *DeleteEntityOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
@@ -3414,26 +3412,26 @@ type DeleteExampleOptions struct {
 func (assistant *AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
 	return &DeleteExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteExampleOptions) SetWorkspaceID(param string) *DeleteExampleOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *DeleteExampleOptions) SetWorkspaceID(workspaceID string) *DeleteExampleOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *DeleteExampleOptions) SetIntent(param string) *DeleteExampleOptions {
-	options.Intent = core.StringPtr(param)
+func (options *DeleteExampleOptions) SetIntent(intent string) *DeleteExampleOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *DeleteExampleOptions) SetText(param string) *DeleteExampleOptions {
-	options.Text = core.StringPtr(param)
+func (options *DeleteExampleOptions) SetText(text string) *DeleteExampleOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
@@ -3460,19 +3458,19 @@ type DeleteIntentOptions struct {
 func (assistant *AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
 	return &DeleteIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteIntentOptions) SetWorkspaceID(param string) *DeleteIntentOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *DeleteIntentOptions) SetWorkspaceID(workspaceID string) *DeleteIntentOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *DeleteIntentOptions) SetIntent(param string) *DeleteIntentOptions {
-	options.Intent = core.StringPtr(param)
+func (options *DeleteIntentOptions) SetIntent(intent string) *DeleteIntentOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
@@ -3505,33 +3503,33 @@ type DeleteSynonymOptions struct {
 func (assistant *AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
 	return &DeleteSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteSynonymOptions) SetWorkspaceID(param string) *DeleteSynonymOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *DeleteSynonymOptions) SetWorkspaceID(workspaceID string) *DeleteSynonymOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *DeleteSynonymOptions) SetEntity(param string) *DeleteSynonymOptions {
-	options.Entity = core.StringPtr(param)
+func (options *DeleteSynonymOptions) SetEntity(entity string) *DeleteSynonymOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *DeleteSynonymOptions) SetValue(param string) *DeleteSynonymOptions {
-	options.Value = core.StringPtr(param)
+func (options *DeleteSynonymOptions) SetValue(value string) *DeleteSynonymOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
 // SetSynonym : Allow user to set Synonym
-func (options *DeleteSynonymOptions) SetSynonym(param string) *DeleteSynonymOptions {
-	options.Synonym = core.StringPtr(param)
+func (options *DeleteSynonymOptions) SetSynonym(synonym string) *DeleteSynonymOptions {
+	options.Synonym = core.StringPtr(synonym)
 	return options
 }
 
@@ -3559,8 +3557,8 @@ func (assistant *AssistantV1) NewDeleteUserDataOptions(customerID string) *Delet
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(param string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(param)
+func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	options.CustomerID = core.StringPtr(customerID)
 	return options
 }
 
@@ -3590,26 +3588,26 @@ type DeleteValueOptions struct {
 func (assistant *AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
 	return &DeleteValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteValueOptions) SetWorkspaceID(param string) *DeleteValueOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *DeleteValueOptions) SetWorkspaceID(workspaceID string) *DeleteValueOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *DeleteValueOptions) SetEntity(param string) *DeleteValueOptions {
-	options.Entity = core.StringPtr(param)
+func (options *DeleteValueOptions) SetEntity(entity string) *DeleteValueOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *DeleteValueOptions) SetValue(param string) *DeleteValueOptions {
-	options.Value = core.StringPtr(param)
+func (options *DeleteValueOptions) SetValue(value string) *DeleteValueOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
@@ -3637,8 +3635,8 @@ func (assistant *AssistantV1) NewDeleteWorkspaceOptions(workspaceID string) *Del
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteWorkspaceOptions) SetWorkspaceID(param string) *DeleteWorkspaceOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *DeleteWorkspaceOptions) SetWorkspaceID(workspaceID string) *DeleteWorkspaceOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
@@ -4086,25 +4084,25 @@ type GetCounterexampleOptions struct {
 func (assistant *AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
 	return &GetCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetCounterexampleOptions) SetWorkspaceID(param string) *GetCounterexampleOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *GetCounterexampleOptions) SetWorkspaceID(workspaceID string) *GetCounterexampleOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *GetCounterexampleOptions) SetText(param string) *GetCounterexampleOptions {
-	options.Text = core.StringPtr(param)
+func (options *GetCounterexampleOptions) SetText(text string) *GetCounterexampleOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetCounterexampleOptions) SetIncludeAudit(param bool) *GetCounterexampleOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *GetCounterexampleOptions) SetIncludeAudit(includeAudit bool) *GetCounterexampleOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4134,25 +4132,25 @@ type GetDialogNodeOptions struct {
 func (assistant *AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
 	return &GetDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetDialogNodeOptions) SetWorkspaceID(param string) *GetDialogNodeOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *GetDialogNodeOptions) SetWorkspaceID(workspaceID string) *GetDialogNodeOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetDialogNode : Allow user to set DialogNode
-func (options *GetDialogNodeOptions) SetDialogNode(param string) *GetDialogNodeOptions {
-	options.DialogNode = core.StringPtr(param)
+func (options *GetDialogNodeOptions) SetDialogNode(dialogNode string) *GetDialogNodeOptions {
+	options.DialogNode = core.StringPtr(dialogNode)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetDialogNodeOptions) SetIncludeAudit(param bool) *GetDialogNodeOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *GetDialogNodeOptions) SetIncludeAudit(includeAudit bool) *GetDialogNodeOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4186,31 +4184,31 @@ type GetEntityOptions struct {
 func (assistant *AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
 	return &GetEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetEntityOptions) SetWorkspaceID(param string) *GetEntityOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *GetEntityOptions) SetWorkspaceID(workspaceID string) *GetEntityOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *GetEntityOptions) SetEntity(param string) *GetEntityOptions {
-	options.Entity = core.StringPtr(param)
+func (options *GetEntityOptions) SetEntity(entity string) *GetEntityOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetExport : Allow user to set Export
-func (options *GetEntityOptions) SetExport(param bool) *GetEntityOptions {
-	options.Export = core.BoolPtr(param)
+func (options *GetEntityOptions) SetExport(export bool) *GetEntityOptions {
+	options.Export = core.BoolPtr(export)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetEntityOptions) SetIncludeAudit(param bool) *GetEntityOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *GetEntityOptions) SetIncludeAudit(includeAudit bool) *GetEntityOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4243,32 +4241,32 @@ type GetExampleOptions struct {
 func (assistant *AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
 	return &GetExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetExampleOptions) SetWorkspaceID(param string) *GetExampleOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *GetExampleOptions) SetWorkspaceID(workspaceID string) *GetExampleOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *GetExampleOptions) SetIntent(param string) *GetExampleOptions {
-	options.Intent = core.StringPtr(param)
+func (options *GetExampleOptions) SetIntent(intent string) *GetExampleOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *GetExampleOptions) SetText(param string) *GetExampleOptions {
-	options.Text = core.StringPtr(param)
+func (options *GetExampleOptions) SetText(text string) *GetExampleOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetExampleOptions) SetIncludeAudit(param bool) *GetExampleOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *GetExampleOptions) SetIncludeAudit(includeAudit bool) *GetExampleOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4302,31 +4300,31 @@ type GetIntentOptions struct {
 func (assistant *AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
 	return &GetIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetIntentOptions) SetWorkspaceID(param string) *GetIntentOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *GetIntentOptions) SetWorkspaceID(workspaceID string) *GetIntentOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *GetIntentOptions) SetIntent(param string) *GetIntentOptions {
-	options.Intent = core.StringPtr(param)
+func (options *GetIntentOptions) SetIntent(intent string) *GetIntentOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
 // SetExport : Allow user to set Export
-func (options *GetIntentOptions) SetExport(param bool) *GetIntentOptions {
-	options.Export = core.BoolPtr(param)
+func (options *GetIntentOptions) SetExport(export bool) *GetIntentOptions {
+	options.Export = core.BoolPtr(export)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetIntentOptions) SetIncludeAudit(param bool) *GetIntentOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *GetIntentOptions) SetIncludeAudit(includeAudit bool) *GetIntentOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4362,39 +4360,39 @@ type GetSynonymOptions struct {
 func (assistant *AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
 	return &GetSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetSynonymOptions) SetWorkspaceID(param string) *GetSynonymOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *GetSynonymOptions) SetWorkspaceID(workspaceID string) *GetSynonymOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *GetSynonymOptions) SetEntity(param string) *GetSynonymOptions {
-	options.Entity = core.StringPtr(param)
+func (options *GetSynonymOptions) SetEntity(entity string) *GetSynonymOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *GetSynonymOptions) SetValue(param string) *GetSynonymOptions {
-	options.Value = core.StringPtr(param)
+func (options *GetSynonymOptions) SetValue(value string) *GetSynonymOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
 // SetSynonym : Allow user to set Synonym
-func (options *GetSynonymOptions) SetSynonym(param string) *GetSynonymOptions {
-	options.Synonym = core.StringPtr(param)
+func (options *GetSynonymOptions) SetSynonym(synonym string) *GetSynonymOptions {
+	options.Synonym = core.StringPtr(synonym)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetSynonymOptions) SetIncludeAudit(param bool) *GetSynonymOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *GetSynonymOptions) SetIncludeAudit(includeAudit bool) *GetSynonymOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4431,38 +4429,38 @@ type GetValueOptions struct {
 func (assistant *AssistantV1) NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
 	return &GetValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetValueOptions) SetWorkspaceID(param string) *GetValueOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *GetValueOptions) SetWorkspaceID(workspaceID string) *GetValueOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *GetValueOptions) SetEntity(param string) *GetValueOptions {
-	options.Entity = core.StringPtr(param)
+func (options *GetValueOptions) SetEntity(entity string) *GetValueOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *GetValueOptions) SetValue(param string) *GetValueOptions {
-	options.Value = core.StringPtr(param)
+func (options *GetValueOptions) SetValue(value string) *GetValueOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
 // SetExport : Allow user to set Export
-func (options *GetValueOptions) SetExport(param bool) *GetValueOptions {
-	options.Export = core.BoolPtr(param)
+func (options *GetValueOptions) SetExport(export bool) *GetValueOptions {
+	options.Export = core.BoolPtr(export)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetValueOptions) SetIncludeAudit(param bool) *GetValueOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *GetValueOptions) SetIncludeAudit(includeAudit bool) *GetValueOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4497,20 +4495,20 @@ func (assistant *AssistantV1) NewGetWorkspaceOptions(workspaceID string) *GetWor
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetWorkspaceOptions) SetWorkspaceID(param string) *GetWorkspaceOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *GetWorkspaceOptions) SetWorkspaceID(workspaceID string) *GetWorkspaceOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetExport : Allow user to set Export
-func (options *GetWorkspaceOptions) SetExport(param bool) *GetWorkspaceOptions {
-	options.Export = core.BoolPtr(param)
+func (options *GetWorkspaceOptions) SetExport(export bool) *GetWorkspaceOptions {
+	options.Export = core.BoolPtr(export)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetWorkspaceOptions) SetIncludeAudit(param bool) *GetWorkspaceOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *GetWorkspaceOptions) SetIncludeAudit(includeAudit bool) *GetWorkspaceOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4604,26 +4602,26 @@ func (assistant *AssistantV1) NewListAllLogsOptions(filter string) *ListAllLogsO
 }
 
 // SetFilter : Allow user to set Filter
-func (options *ListAllLogsOptions) SetFilter(param string) *ListAllLogsOptions {
-	options.Filter = core.StringPtr(param)
+func (options *ListAllLogsOptions) SetFilter(filter string) *ListAllLogsOptions {
+	options.Filter = core.StringPtr(filter)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListAllLogsOptions) SetSort(param string) *ListAllLogsOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListAllLogsOptions) SetSort(sort string) *ListAllLogsOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListAllLogsOptions) SetPageLimit(param int64) *ListAllLogsOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListAllLogsOptions) SetPageLimit(pageLimit int64) *ListAllLogsOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListAllLogsOptions) SetCursor(param string) *ListAllLogsOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListAllLogsOptions) SetCursor(cursor string) *ListAllLogsOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
@@ -4667,38 +4665,38 @@ func (assistant *AssistantV1) NewListCounterexamplesOptions(workspaceID string) 
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListCounterexamplesOptions) SetWorkspaceID(param string) *ListCounterexamplesOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListCounterexamplesOptions) SetWorkspaceID(workspaceID string) *ListCounterexamplesOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListCounterexamplesOptions) SetPageLimit(param int64) *ListCounterexamplesOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListCounterexamplesOptions) SetPageLimit(pageLimit int64) *ListCounterexamplesOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListCounterexamplesOptions) SetIncludeCount(param bool) *ListCounterexamplesOptions {
-	options.IncludeCount = core.BoolPtr(param)
+func (options *ListCounterexamplesOptions) SetIncludeCount(includeCount bool) *ListCounterexamplesOptions {
+	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListCounterexamplesOptions) SetSort(param string) *ListCounterexamplesOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListCounterexamplesOptions) SetSort(sort string) *ListCounterexamplesOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListCounterexamplesOptions) SetCursor(param string) *ListCounterexamplesOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListCounterexamplesOptions) SetCursor(cursor string) *ListCounterexamplesOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListCounterexamplesOptions) SetIncludeAudit(param bool) *ListCounterexamplesOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListCounterexamplesOptions) SetIncludeAudit(includeAudit bool) *ListCounterexamplesOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4742,38 +4740,38 @@ func (assistant *AssistantV1) NewListDialogNodesOptions(workspaceID string) *Lis
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListDialogNodesOptions) SetWorkspaceID(param string) *ListDialogNodesOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListDialogNodesOptions) SetWorkspaceID(workspaceID string) *ListDialogNodesOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListDialogNodesOptions) SetPageLimit(param int64) *ListDialogNodesOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListDialogNodesOptions) SetPageLimit(pageLimit int64) *ListDialogNodesOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListDialogNodesOptions) SetIncludeCount(param bool) *ListDialogNodesOptions {
-	options.IncludeCount = core.BoolPtr(param)
+func (options *ListDialogNodesOptions) SetIncludeCount(includeCount bool) *ListDialogNodesOptions {
+	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListDialogNodesOptions) SetSort(param string) *ListDialogNodesOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListDialogNodesOptions) SetSort(sort string) *ListDialogNodesOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListDialogNodesOptions) SetCursor(param string) *ListDialogNodesOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListDialogNodesOptions) SetCursor(cursor string) *ListDialogNodesOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListDialogNodesOptions) SetIncludeAudit(param bool) *ListDialogNodesOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListDialogNodesOptions) SetIncludeAudit(includeAudit bool) *ListDialogNodesOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4821,44 +4819,44 @@ func (assistant *AssistantV1) NewListEntitiesOptions(workspaceID string) *ListEn
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListEntitiesOptions) SetWorkspaceID(param string) *ListEntitiesOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListEntitiesOptions) SetWorkspaceID(workspaceID string) *ListEntitiesOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetExport : Allow user to set Export
-func (options *ListEntitiesOptions) SetExport(param bool) *ListEntitiesOptions {
-	options.Export = core.BoolPtr(param)
+func (options *ListEntitiesOptions) SetExport(export bool) *ListEntitiesOptions {
+	options.Export = core.BoolPtr(export)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListEntitiesOptions) SetPageLimit(param int64) *ListEntitiesOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListEntitiesOptions) SetPageLimit(pageLimit int64) *ListEntitiesOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListEntitiesOptions) SetIncludeCount(param bool) *ListEntitiesOptions {
-	options.IncludeCount = core.BoolPtr(param)
+func (options *ListEntitiesOptions) SetIncludeCount(includeCount bool) *ListEntitiesOptions {
+	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListEntitiesOptions) SetSort(param string) *ListEntitiesOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListEntitiesOptions) SetSort(sort string) *ListEntitiesOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListEntitiesOptions) SetCursor(param string) *ListEntitiesOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListEntitiesOptions) SetCursor(cursor string) *ListEntitiesOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListEntitiesOptions) SetIncludeAudit(param bool) *ListEntitiesOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListEntitiesOptions) SetIncludeAudit(includeAudit bool) *ListEntitiesOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4901,49 +4899,49 @@ type ListExamplesOptions struct {
 func (assistant *AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
 	return &ListExamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListExamplesOptions) SetWorkspaceID(param string) *ListExamplesOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListExamplesOptions) SetWorkspaceID(workspaceID string) *ListExamplesOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *ListExamplesOptions) SetIntent(param string) *ListExamplesOptions {
-	options.Intent = core.StringPtr(param)
+func (options *ListExamplesOptions) SetIntent(intent string) *ListExamplesOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListExamplesOptions) SetPageLimit(param int64) *ListExamplesOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListExamplesOptions) SetPageLimit(pageLimit int64) *ListExamplesOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListExamplesOptions) SetIncludeCount(param bool) *ListExamplesOptions {
-	options.IncludeCount = core.BoolPtr(param)
+func (options *ListExamplesOptions) SetIncludeCount(includeCount bool) *ListExamplesOptions {
+	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListExamplesOptions) SetSort(param string) *ListExamplesOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListExamplesOptions) SetSort(sort string) *ListExamplesOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListExamplesOptions) SetCursor(param string) *ListExamplesOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListExamplesOptions) SetCursor(cursor string) *ListExamplesOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListExamplesOptions) SetIncludeAudit(param bool) *ListExamplesOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListExamplesOptions) SetIncludeAudit(includeAudit bool) *ListExamplesOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4991,44 +4989,44 @@ func (assistant *AssistantV1) NewListIntentsOptions(workspaceID string) *ListInt
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListIntentsOptions) SetWorkspaceID(param string) *ListIntentsOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListIntentsOptions) SetWorkspaceID(workspaceID string) *ListIntentsOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetExport : Allow user to set Export
-func (options *ListIntentsOptions) SetExport(param bool) *ListIntentsOptions {
-	options.Export = core.BoolPtr(param)
+func (options *ListIntentsOptions) SetExport(export bool) *ListIntentsOptions {
+	options.Export = core.BoolPtr(export)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListIntentsOptions) SetPageLimit(param int64) *ListIntentsOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListIntentsOptions) SetPageLimit(pageLimit int64) *ListIntentsOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListIntentsOptions) SetIncludeCount(param bool) *ListIntentsOptions {
-	options.IncludeCount = core.BoolPtr(param)
+func (options *ListIntentsOptions) SetIncludeCount(includeCount bool) *ListIntentsOptions {
+	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListIntentsOptions) SetSort(param string) *ListIntentsOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListIntentsOptions) SetSort(sort string) *ListIntentsOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListIntentsOptions) SetCursor(param string) *ListIntentsOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListIntentsOptions) SetCursor(cursor string) *ListIntentsOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListIntentsOptions) SetIncludeAudit(param bool) *ListIntentsOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListIntentsOptions) SetIncludeAudit(includeAudit bool) *ListIntentsOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -5070,32 +5068,32 @@ func (assistant *AssistantV1) NewListLogsOptions(workspaceID string) *ListLogsOp
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListLogsOptions) SetWorkspaceID(param string) *ListLogsOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListLogsOptions) SetWorkspaceID(workspaceID string) *ListLogsOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListLogsOptions) SetSort(param string) *ListLogsOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListLogsOptions) SetSort(sort string) *ListLogsOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *ListLogsOptions) SetFilter(param string) *ListLogsOptions {
-	options.Filter = core.StringPtr(param)
+func (options *ListLogsOptions) SetFilter(filter string) *ListLogsOptions {
+	options.Filter = core.StringPtr(filter)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListLogsOptions) SetPageLimit(param int64) *ListLogsOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListLogsOptions) SetPageLimit(pageLimit int64) *ListLogsOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListLogsOptions) SetCursor(param string) *ListLogsOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListLogsOptions) SetCursor(cursor string) *ListLogsOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
@@ -5129,31 +5127,31 @@ type ListMentionsOptions struct {
 func (assistant *AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
 	return &ListMentionsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListMentionsOptions) SetWorkspaceID(param string) *ListMentionsOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListMentionsOptions) SetWorkspaceID(workspaceID string) *ListMentionsOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *ListMentionsOptions) SetEntity(param string) *ListMentionsOptions {
-	options.Entity = core.StringPtr(param)
+func (options *ListMentionsOptions) SetEntity(entity string) *ListMentionsOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetExport : Allow user to set Export
-func (options *ListMentionsOptions) SetExport(param bool) *ListMentionsOptions {
-	options.Export = core.BoolPtr(param)
+func (options *ListMentionsOptions) SetExport(export bool) *ListMentionsOptions {
+	options.Export = core.BoolPtr(export)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListMentionsOptions) SetIncludeAudit(param bool) *ListMentionsOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListMentionsOptions) SetIncludeAudit(includeAudit bool) *ListMentionsOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -5199,56 +5197,56 @@ type ListSynonymsOptions struct {
 func (assistant *AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
 	return &ListSynonymsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListSynonymsOptions) SetWorkspaceID(param string) *ListSynonymsOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListSynonymsOptions) SetWorkspaceID(workspaceID string) *ListSynonymsOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *ListSynonymsOptions) SetEntity(param string) *ListSynonymsOptions {
-	options.Entity = core.StringPtr(param)
+func (options *ListSynonymsOptions) SetEntity(entity string) *ListSynonymsOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *ListSynonymsOptions) SetValue(param string) *ListSynonymsOptions {
-	options.Value = core.StringPtr(param)
+func (options *ListSynonymsOptions) SetValue(value string) *ListSynonymsOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListSynonymsOptions) SetPageLimit(param int64) *ListSynonymsOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListSynonymsOptions) SetPageLimit(pageLimit int64) *ListSynonymsOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListSynonymsOptions) SetIncludeCount(param bool) *ListSynonymsOptions {
-	options.IncludeCount = core.BoolPtr(param)
+func (options *ListSynonymsOptions) SetIncludeCount(includeCount bool) *ListSynonymsOptions {
+	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListSynonymsOptions) SetSort(param string) *ListSynonymsOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListSynonymsOptions) SetSort(sort string) *ListSynonymsOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListSynonymsOptions) SetCursor(param string) *ListSynonymsOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListSynonymsOptions) SetCursor(cursor string) *ListSynonymsOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListSynonymsOptions) SetIncludeAudit(param bool) *ListSynonymsOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListSynonymsOptions) SetIncludeAudit(includeAudit bool) *ListSynonymsOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -5295,55 +5293,55 @@ type ListValuesOptions struct {
 func (assistant *AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
 	return &ListValuesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListValuesOptions) SetWorkspaceID(param string) *ListValuesOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *ListValuesOptions) SetWorkspaceID(workspaceID string) *ListValuesOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *ListValuesOptions) SetEntity(param string) *ListValuesOptions {
-	options.Entity = core.StringPtr(param)
+func (options *ListValuesOptions) SetEntity(entity string) *ListValuesOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetExport : Allow user to set Export
-func (options *ListValuesOptions) SetExport(param bool) *ListValuesOptions {
-	options.Export = core.BoolPtr(param)
+func (options *ListValuesOptions) SetExport(export bool) *ListValuesOptions {
+	options.Export = core.BoolPtr(export)
 	return options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListValuesOptions) SetPageLimit(param int64) *ListValuesOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListValuesOptions) SetPageLimit(pageLimit int64) *ListValuesOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListValuesOptions) SetIncludeCount(param bool) *ListValuesOptions {
-	options.IncludeCount = core.BoolPtr(param)
+func (options *ListValuesOptions) SetIncludeCount(includeCount bool) *ListValuesOptions {
+	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListValuesOptions) SetSort(param string) *ListValuesOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListValuesOptions) SetSort(sort string) *ListValuesOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListValuesOptions) SetCursor(param string) *ListValuesOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListValuesOptions) SetCursor(cursor string) *ListValuesOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListValuesOptions) SetIncludeAudit(param bool) *ListValuesOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListValuesOptions) SetIncludeAudit(includeAudit bool) *ListValuesOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -5382,32 +5380,32 @@ func (assistant *AssistantV1) NewListWorkspacesOptions() *ListWorkspacesOptions 
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListWorkspacesOptions) SetPageLimit(param int64) *ListWorkspacesOptions {
-	options.PageLimit = core.Int64Ptr(param)
+func (options *ListWorkspacesOptions) SetPageLimit(pageLimit int64) *ListWorkspacesOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
 	return options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListWorkspacesOptions) SetIncludeCount(param bool) *ListWorkspacesOptions {
-	options.IncludeCount = core.BoolPtr(param)
+func (options *ListWorkspacesOptions) SetIncludeCount(includeCount bool) *ListWorkspacesOptions {
+	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListWorkspacesOptions) SetSort(param string) *ListWorkspacesOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListWorkspacesOptions) SetSort(sort string) *ListWorkspacesOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListWorkspacesOptions) SetCursor(param string) *ListWorkspacesOptions {
-	options.Cursor = core.StringPtr(param)
+func (options *ListWorkspacesOptions) SetCursor(cursor string) *ListWorkspacesOptions {
+	options.Cursor = core.StringPtr(cursor)
 	return options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListWorkspacesOptions) SetIncludeAudit(param bool) *ListWorkspacesOptions {
-	options.IncludeAudit = core.BoolPtr(param)
+func (options *ListWorkspacesOptions) SetIncludeAudit(includeAudit bool) *ListWorkspacesOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -5536,50 +5534,50 @@ func (assistant *AssistantV1) NewMessageOptions(workspaceID string) *MessageOpti
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *MessageOptions) SetWorkspaceID(param string) *MessageOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *MessageOptions) SetWorkspaceID(workspaceID string) *MessageOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetInput : Allow user to set Input
-func (options *MessageOptions) SetInput(param InputData) *MessageOptions {
-	options.Input = &param
+func (options *MessageOptions) SetInput(input InputData) *MessageOptions {
+	options.Input = &input
 	return options
 }
 
 // SetAlternateIntents : Allow user to set AlternateIntents
-func (options *MessageOptions) SetAlternateIntents(param bool) *MessageOptions {
-	options.AlternateIntents = core.BoolPtr(param)
+func (options *MessageOptions) SetAlternateIntents(alternateIntents bool) *MessageOptions {
+	options.AlternateIntents = core.BoolPtr(alternateIntents)
 	return options
 }
 
 // SetContext : Allow user to set Context
-func (options *MessageOptions) SetContext(param Context) *MessageOptions {
-	options.Context = &param
+func (options *MessageOptions) SetContext(context Context) *MessageOptions {
+	options.Context = &context
 	return options
 }
 
 // SetEntities : Allow user to set Entities
-func (options *MessageOptions) SetEntities(param []RuntimeEntity) *MessageOptions {
-	options.Entities = param
+func (options *MessageOptions) SetEntities(entities []RuntimeEntity) *MessageOptions {
+	options.Entities = entities
 	return options
 }
 
 // SetIntents : Allow user to set Intents
-func (options *MessageOptions) SetIntents(param []RuntimeIntent) *MessageOptions {
-	options.Intents = param
+func (options *MessageOptions) SetIntents(intents []RuntimeIntent) *MessageOptions {
+	options.Intents = intents
 	return options
 }
 
 // SetOutput : Allow user to set Output
-func (options *MessageOptions) SetOutput(param OutputData) *MessageOptions {
-	options.Output = &param
+func (options *MessageOptions) SetOutput(output OutputData) *MessageOptions {
+	options.Output = &output
 	return options
 }
 
 // SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
-func (options *MessageOptions) SetNodesVisitedDetails(param bool) *MessageOptions {
-	options.NodesVisitedDetails = core.BoolPtr(param)
+func (options *MessageOptions) SetNodesVisitedDetails(nodesVisitedDetails bool) *MessageOptions {
+	options.NodesVisitedDetails = core.BoolPtr(nodesVisitedDetails)
 	return options
 }
 
@@ -5765,25 +5763,25 @@ type UpdateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
 	return &UpdateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateCounterexampleOptions) SetWorkspaceID(param string) *UpdateCounterexampleOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *UpdateCounterexampleOptions) SetWorkspaceID(workspaceID string) *UpdateCounterexampleOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *UpdateCounterexampleOptions) SetText(param string) *UpdateCounterexampleOptions {
-	options.Text = core.StringPtr(param)
+func (options *UpdateCounterexampleOptions) SetText(text string) *UpdateCounterexampleOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
 // SetNewText : Allow user to set NewText
-func (options *UpdateCounterexampleOptions) SetNewText(param string) *UpdateCounterexampleOptions {
-	options.NewText = core.StringPtr(param)
+func (options *UpdateCounterexampleOptions) SetNewText(newText string) *UpdateCounterexampleOptions {
+	options.NewText = core.StringPtr(newText)
 	return options
 }
 
@@ -5872,127 +5870,127 @@ type UpdateDialogNodeOptions struct {
 func (assistant *AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateDialogNodeOptions) SetWorkspaceID(param string) *UpdateDialogNodeOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetWorkspaceID(workspaceID string) *UpdateDialogNodeOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetDialogNode : Allow user to set DialogNode
-func (options *UpdateDialogNodeOptions) SetDialogNode(param string) *UpdateDialogNodeOptions {
-	options.DialogNode = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetDialogNode(dialogNode string) *UpdateDialogNodeOptions {
+	options.DialogNode = core.StringPtr(dialogNode)
 	return options
 }
 
 // SetNodeType : Allow user to set NodeType
-func (options *UpdateDialogNodeOptions) SetNodeType(param string) *UpdateDialogNodeOptions {
-	options.NodeType = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNodeType(nodeType string) *UpdateDialogNodeOptions {
+	options.NodeType = core.StringPtr(nodeType)
 	return options
 }
 
 // SetNewActions : Allow user to set NewActions
-func (options *UpdateDialogNodeOptions) SetNewActions(param []DialogNodeAction) *UpdateDialogNodeOptions {
-	options.NewActions = param
+func (options *UpdateDialogNodeOptions) SetNewActions(newActions []DialogNodeAction) *UpdateDialogNodeOptions {
+	options.NewActions = newActions
 	return options
 }
 
 // SetNewConditions : Allow user to set NewConditions
-func (options *UpdateDialogNodeOptions) SetNewConditions(param string) *UpdateDialogNodeOptions {
-	options.NewConditions = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewConditions(newConditions string) *UpdateDialogNodeOptions {
+	options.NewConditions = core.StringPtr(newConditions)
 	return options
 }
 
 // SetNewContext : Allow user to set NewContext
-func (options *UpdateDialogNodeOptions) SetNewContext(param interface{}) *UpdateDialogNodeOptions {
-	options.NewContext = &param
+func (options *UpdateDialogNodeOptions) SetNewContext(newContext interface{}) *UpdateDialogNodeOptions {
+	options.NewContext = &newContext
 	return options
 }
 
 // SetNewPreviousSibling : Allow user to set NewPreviousSibling
-func (options *UpdateDialogNodeOptions) SetNewPreviousSibling(param string) *UpdateDialogNodeOptions {
-	options.NewPreviousSibling = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewPreviousSibling(newPreviousSibling string) *UpdateDialogNodeOptions {
+	options.NewPreviousSibling = core.StringPtr(newPreviousSibling)
 	return options
 }
 
 // SetNewVariable : Allow user to set NewVariable
-func (options *UpdateDialogNodeOptions) SetNewVariable(param string) *UpdateDialogNodeOptions {
-	options.NewVariable = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewVariable(newVariable string) *UpdateDialogNodeOptions {
+	options.NewVariable = core.StringPtr(newVariable)
 	return options
 }
 
 // SetNewUserLabel : Allow user to set NewUserLabel
-func (options *UpdateDialogNodeOptions) SetNewUserLabel(param string) *UpdateDialogNodeOptions {
-	options.NewUserLabel = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewUserLabel(newUserLabel string) *UpdateDialogNodeOptions {
+	options.NewUserLabel = core.StringPtr(newUserLabel)
 	return options
 }
 
 // SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateDialogNodeOptions) SetNewMetadata(param interface{}) *UpdateDialogNodeOptions {
-	options.NewMetadata = &param
+func (options *UpdateDialogNodeOptions) SetNewMetadata(newMetadata interface{}) *UpdateDialogNodeOptions {
+	options.NewMetadata = &newMetadata
 	return options
 }
 
 // SetNewTitle : Allow user to set NewTitle
-func (options *UpdateDialogNodeOptions) SetNewTitle(param string) *UpdateDialogNodeOptions {
-	options.NewTitle = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewTitle(newTitle string) *UpdateDialogNodeOptions {
+	options.NewTitle = core.StringPtr(newTitle)
 	return options
 }
 
 // SetNewDescription : Allow user to set NewDescription
-func (options *UpdateDialogNodeOptions) SetNewDescription(param string) *UpdateDialogNodeOptions {
-	options.NewDescription = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewDescription(newDescription string) *UpdateDialogNodeOptions {
+	options.NewDescription = core.StringPtr(newDescription)
 	return options
 }
 
 // SetNewDigressOut : Allow user to set NewDigressOut
-func (options *UpdateDialogNodeOptions) SetNewDigressOut(param string) *UpdateDialogNodeOptions {
-	options.NewDigressOut = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewDigressOut(newDigressOut string) *UpdateDialogNodeOptions {
+	options.NewDigressOut = core.StringPtr(newDigressOut)
 	return options
 }
 
 // SetNewEventName : Allow user to set NewEventName
-func (options *UpdateDialogNodeOptions) SetNewEventName(param string) *UpdateDialogNodeOptions {
-	options.NewEventName = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewEventName(newEventName string) *UpdateDialogNodeOptions {
+	options.NewEventName = core.StringPtr(newEventName)
 	return options
 }
 
 // SetNewDigressOutSlots : Allow user to set NewDigressOutSlots
-func (options *UpdateDialogNodeOptions) SetNewDigressOutSlots(param string) *UpdateDialogNodeOptions {
-	options.NewDigressOutSlots = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewDigressOutSlots(newDigressOutSlots string) *UpdateDialogNodeOptions {
+	options.NewDigressOutSlots = core.StringPtr(newDigressOutSlots)
 	return options
 }
 
 // SetNewNextStep : Allow user to set NewNextStep
-func (options *UpdateDialogNodeOptions) SetNewNextStep(param DialogNodeNextStep) *UpdateDialogNodeOptions {
-	options.NewNextStep = &param
+func (options *UpdateDialogNodeOptions) SetNewNextStep(newNextStep DialogNodeNextStep) *UpdateDialogNodeOptions {
+	options.NewNextStep = &newNextStep
 	return options
 }
 
 // SetNewDigressIn : Allow user to set NewDigressIn
-func (options *UpdateDialogNodeOptions) SetNewDigressIn(param string) *UpdateDialogNodeOptions {
-	options.NewDigressIn = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewDigressIn(newDigressIn string) *UpdateDialogNodeOptions {
+	options.NewDigressIn = core.StringPtr(newDigressIn)
 	return options
 }
 
 // SetNewOutput : Allow user to set NewOutput
-func (options *UpdateDialogNodeOptions) SetNewOutput(param DialogNodeOutput) *UpdateDialogNodeOptions {
-	options.NewOutput = &param
+func (options *UpdateDialogNodeOptions) SetNewOutput(newOutput DialogNodeOutput) *UpdateDialogNodeOptions {
+	options.NewOutput = &newOutput
 	return options
 }
 
 // SetNewParent : Allow user to set NewParent
-func (options *UpdateDialogNodeOptions) SetNewParent(param string) *UpdateDialogNodeOptions {
-	options.NewParent = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewParent(newParent string) *UpdateDialogNodeOptions {
+	options.NewParent = core.StringPtr(newParent)
 	return options
 }
 
 // SetNewDialogNode : Allow user to set NewDialogNode
-func (options *UpdateDialogNodeOptions) SetNewDialogNode(param string) *UpdateDialogNodeOptions {
-	options.NewDialogNode = core.StringPtr(param)
+func (options *UpdateDialogNodeOptions) SetNewDialogNode(newDialogNode string) *UpdateDialogNodeOptions {
+	options.NewDialogNode = core.StringPtr(newDialogNode)
 	return options
 }
 
@@ -6038,49 +6036,49 @@ type UpdateEntityOptions struct {
 func (assistant *AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
 	return &UpdateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateEntityOptions) SetWorkspaceID(param string) *UpdateEntityOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *UpdateEntityOptions) SetWorkspaceID(workspaceID string) *UpdateEntityOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *UpdateEntityOptions) SetEntity(param string) *UpdateEntityOptions {
-	options.Entity = core.StringPtr(param)
+func (options *UpdateEntityOptions) SetEntity(entity string) *UpdateEntityOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetNewFuzzyMatch : Allow user to set NewFuzzyMatch
-func (options *UpdateEntityOptions) SetNewFuzzyMatch(param bool) *UpdateEntityOptions {
-	options.NewFuzzyMatch = core.BoolPtr(param)
+func (options *UpdateEntityOptions) SetNewFuzzyMatch(newFuzzyMatch bool) *UpdateEntityOptions {
+	options.NewFuzzyMatch = core.BoolPtr(newFuzzyMatch)
 	return options
 }
 
 // SetNewEntity : Allow user to set NewEntity
-func (options *UpdateEntityOptions) SetNewEntity(param string) *UpdateEntityOptions {
-	options.NewEntity = core.StringPtr(param)
+func (options *UpdateEntityOptions) SetNewEntity(newEntity string) *UpdateEntityOptions {
+	options.NewEntity = core.StringPtr(newEntity)
 	return options
 }
 
 // SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateEntityOptions) SetNewMetadata(param interface{}) *UpdateEntityOptions {
-	options.NewMetadata = &param
+func (options *UpdateEntityOptions) SetNewMetadata(newMetadata interface{}) *UpdateEntityOptions {
+	options.NewMetadata = &newMetadata
 	return options
 }
 
 // SetNewValues : Allow user to set NewValues
-func (options *UpdateEntityOptions) SetNewValues(param []CreateValue) *UpdateEntityOptions {
-	options.NewValues = param
+func (options *UpdateEntityOptions) SetNewValues(newValues []CreateValue) *UpdateEntityOptions {
+	options.NewValues = newValues
 	return options
 }
 
 // SetNewDescription : Allow user to set NewDescription
-func (options *UpdateEntityOptions) SetNewDescription(param string) *UpdateEntityOptions {
-	options.NewDescription = core.StringPtr(param)
+func (options *UpdateEntityOptions) SetNewDescription(newDescription string) *UpdateEntityOptions {
+	options.NewDescription = core.StringPtr(newDescription)
 	return options
 }
 
@@ -6119,38 +6117,38 @@ type UpdateExampleOptions struct {
 func (assistant *AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
 	return &UpdateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateExampleOptions) SetWorkspaceID(param string) *UpdateExampleOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *UpdateExampleOptions) SetWorkspaceID(workspaceID string) *UpdateExampleOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *UpdateExampleOptions) SetIntent(param string) *UpdateExampleOptions {
-	options.Intent = core.StringPtr(param)
+func (options *UpdateExampleOptions) SetIntent(intent string) *UpdateExampleOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *UpdateExampleOptions) SetText(param string) *UpdateExampleOptions {
-	options.Text = core.StringPtr(param)
+func (options *UpdateExampleOptions) SetText(text string) *UpdateExampleOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
 // SetNewText : Allow user to set NewText
-func (options *UpdateExampleOptions) SetNewText(param string) *UpdateExampleOptions {
-	options.NewText = core.StringPtr(param)
+func (options *UpdateExampleOptions) SetNewText(newText string) *UpdateExampleOptions {
+	options.NewText = core.StringPtr(newText)
 	return options
 }
 
 // SetNewMentions : Allow user to set NewMentions
-func (options *UpdateExampleOptions) SetNewMentions(param []Mentions) *UpdateExampleOptions {
-	options.NewMentions = param
+func (options *UpdateExampleOptions) SetNewMentions(newMentions []Mentions) *UpdateExampleOptions {
+	options.NewMentions = newMentions
 	return options
 }
 
@@ -6189,37 +6187,37 @@ type UpdateIntentOptions struct {
 func (assistant *AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
 	return &UpdateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateIntentOptions) SetWorkspaceID(param string) *UpdateIntentOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *UpdateIntentOptions) SetWorkspaceID(workspaceID string) *UpdateIntentOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *UpdateIntentOptions) SetIntent(param string) *UpdateIntentOptions {
-	options.Intent = core.StringPtr(param)
+func (options *UpdateIntentOptions) SetIntent(intent string) *UpdateIntentOptions {
+	options.Intent = core.StringPtr(intent)
 	return options
 }
 
 // SetNewIntent : Allow user to set NewIntent
-func (options *UpdateIntentOptions) SetNewIntent(param string) *UpdateIntentOptions {
-	options.NewIntent = core.StringPtr(param)
+func (options *UpdateIntentOptions) SetNewIntent(newIntent string) *UpdateIntentOptions {
+	options.NewIntent = core.StringPtr(newIntent)
 	return options
 }
 
 // SetNewExamples : Allow user to set NewExamples
-func (options *UpdateIntentOptions) SetNewExamples(param []CreateExample) *UpdateIntentOptions {
-	options.NewExamples = param
+func (options *UpdateIntentOptions) SetNewExamples(newExamples []CreateExample) *UpdateIntentOptions {
+	options.NewExamples = newExamples
 	return options
 }
 
 // SetNewDescription : Allow user to set NewDescription
-func (options *UpdateIntentOptions) SetNewDescription(param string) *UpdateIntentOptions {
-	options.NewDescription = core.StringPtr(param)
+func (options *UpdateIntentOptions) SetNewDescription(newDescription string) *UpdateIntentOptions {
+	options.NewDescription = core.StringPtr(newDescription)
 	return options
 }
 
@@ -6258,39 +6256,39 @@ type UpdateSynonymOptions struct {
 func (assistant *AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
 	return &UpdateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateSynonymOptions) SetWorkspaceID(param string) *UpdateSynonymOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *UpdateSynonymOptions) SetWorkspaceID(workspaceID string) *UpdateSynonymOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *UpdateSynonymOptions) SetEntity(param string) *UpdateSynonymOptions {
-	options.Entity = core.StringPtr(param)
+func (options *UpdateSynonymOptions) SetEntity(entity string) *UpdateSynonymOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *UpdateSynonymOptions) SetValue(param string) *UpdateSynonymOptions {
-	options.Value = core.StringPtr(param)
+func (options *UpdateSynonymOptions) SetValue(value string) *UpdateSynonymOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
 // SetSynonym : Allow user to set Synonym
-func (options *UpdateSynonymOptions) SetSynonym(param string) *UpdateSynonymOptions {
-	options.Synonym = core.StringPtr(param)
+func (options *UpdateSynonymOptions) SetSynonym(synonym string) *UpdateSynonymOptions {
+	options.Synonym = core.StringPtr(synonym)
 	return options
 }
 
 // SetNewSynonym : Allow user to set NewSynonym
-func (options *UpdateSynonymOptions) SetNewSynonym(param string) *UpdateSynonymOptions {
-	options.NewSynonym = core.StringPtr(param)
+func (options *UpdateSynonymOptions) SetNewSynonym(newSynonym string) *UpdateSynonymOptions {
+	options.NewSynonym = core.StringPtr(newSynonym)
 	return options
 }
 
@@ -6345,56 +6343,56 @@ type UpdateValueOptions struct {
 func (assistant *AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateValueOptions) SetWorkspaceID(param string) *UpdateValueOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *UpdateValueOptions) SetWorkspaceID(workspaceID string) *UpdateValueOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *UpdateValueOptions) SetEntity(param string) *UpdateValueOptions {
-	options.Entity = core.StringPtr(param)
+func (options *UpdateValueOptions) SetEntity(entity string) *UpdateValueOptions {
+	options.Entity = core.StringPtr(entity)
 	return options
 }
 
 // SetValue : Allow user to set Value
-func (options *UpdateValueOptions) SetValue(param string) *UpdateValueOptions {
-	options.Value = core.StringPtr(param)
+func (options *UpdateValueOptions) SetValue(value string) *UpdateValueOptions {
+	options.Value = core.StringPtr(value)
 	return options
 }
 
 // SetNewSynonyms : Allow user to set NewSynonyms
-func (options *UpdateValueOptions) SetNewSynonyms(param []string) *UpdateValueOptions {
-	options.NewSynonyms = param
+func (options *UpdateValueOptions) SetNewSynonyms(newSynonyms []string) *UpdateValueOptions {
+	options.NewSynonyms = newSynonyms
 	return options
 }
 
 // SetValueType : Allow user to set ValueType
-func (options *UpdateValueOptions) SetValueType(param string) *UpdateValueOptions {
-	options.ValueType = core.StringPtr(param)
+func (options *UpdateValueOptions) SetValueType(valueType string) *UpdateValueOptions {
+	options.ValueType = core.StringPtr(valueType)
 	return options
 }
 
 // SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateValueOptions) SetNewMetadata(param interface{}) *UpdateValueOptions {
-	options.NewMetadata = &param
+func (options *UpdateValueOptions) SetNewMetadata(newMetadata interface{}) *UpdateValueOptions {
+	options.NewMetadata = &newMetadata
 	return options
 }
 
 // SetNewPatterns : Allow user to set NewPatterns
-func (options *UpdateValueOptions) SetNewPatterns(param []string) *UpdateValueOptions {
-	options.NewPatterns = param
+func (options *UpdateValueOptions) SetNewPatterns(newPatterns []string) *UpdateValueOptions {
+	options.NewPatterns = newPatterns
 	return options
 }
 
 // SetNewValue : Allow user to set NewValue
-func (options *UpdateValueOptions) SetNewValue(param string) *UpdateValueOptions {
-	options.NewValue = core.StringPtr(param)
+func (options *UpdateValueOptions) SetNewValue(newValue string) *UpdateValueOptions {
+	options.NewValue = core.StringPtr(newValue)
 	return options
 }
 
@@ -6464,74 +6462,74 @@ func (assistant *AssistantV1) NewUpdateWorkspaceOptions(workspaceID string) *Upd
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateWorkspaceOptions) SetWorkspaceID(param string) *UpdateWorkspaceOptions {
-	options.WorkspaceID = core.StringPtr(param)
+func (options *UpdateWorkspaceOptions) SetWorkspaceID(workspaceID string) *UpdateWorkspaceOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
 	return options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateWorkspaceOptions) SetName(param string) *UpdateWorkspaceOptions {
-	options.Name = core.StringPtr(param)
+func (options *UpdateWorkspaceOptions) SetName(name string) *UpdateWorkspaceOptions {
+	options.Name = core.StringPtr(name)
 	return options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateWorkspaceOptions) SetDescription(param string) *UpdateWorkspaceOptions {
-	options.Description = core.StringPtr(param)
+func (options *UpdateWorkspaceOptions) SetDescription(description string) *UpdateWorkspaceOptions {
+	options.Description = core.StringPtr(description)
 	return options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *UpdateWorkspaceOptions) SetLanguage(param string) *UpdateWorkspaceOptions {
-	options.Language = core.StringPtr(param)
+func (options *UpdateWorkspaceOptions) SetLanguage(language string) *UpdateWorkspaceOptions {
+	options.Language = core.StringPtr(language)
 	return options
 }
 
 // SetIntents : Allow user to set Intents
-func (options *UpdateWorkspaceOptions) SetIntents(param []CreateIntent) *UpdateWorkspaceOptions {
-	options.Intents = param
+func (options *UpdateWorkspaceOptions) SetIntents(intents []CreateIntent) *UpdateWorkspaceOptions {
+	options.Intents = intents
 	return options
 }
 
 // SetEntities : Allow user to set Entities
-func (options *UpdateWorkspaceOptions) SetEntities(param []CreateEntity) *UpdateWorkspaceOptions {
-	options.Entities = param
+func (options *UpdateWorkspaceOptions) SetEntities(entities []CreateEntity) *UpdateWorkspaceOptions {
+	options.Entities = entities
 	return options
 }
 
 // SetDialogNodes : Allow user to set DialogNodes
-func (options *UpdateWorkspaceOptions) SetDialogNodes(param []CreateDialogNode) *UpdateWorkspaceOptions {
-	options.DialogNodes = param
+func (options *UpdateWorkspaceOptions) SetDialogNodes(dialogNodes []CreateDialogNode) *UpdateWorkspaceOptions {
+	options.DialogNodes = dialogNodes
 	return options
 }
 
 // SetCounterexamples : Allow user to set Counterexamples
-func (options *UpdateWorkspaceOptions) SetCounterexamples(param []CreateCounterexample) *UpdateWorkspaceOptions {
-	options.Counterexamples = param
+func (options *UpdateWorkspaceOptions) SetCounterexamples(counterexamples []CreateCounterexample) *UpdateWorkspaceOptions {
+	options.Counterexamples = counterexamples
 	return options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *UpdateWorkspaceOptions) SetMetadata(param interface{}) *UpdateWorkspaceOptions {
-	options.Metadata = &param
+func (options *UpdateWorkspaceOptions) SetMetadata(metadata interface{}) *UpdateWorkspaceOptions {
+	options.Metadata = &metadata
 	return options
 }
 
 // SetLearningOptOut : Allow user to set LearningOptOut
-func (options *UpdateWorkspaceOptions) SetLearningOptOut(param bool) *UpdateWorkspaceOptions {
-	options.LearningOptOut = core.BoolPtr(param)
+func (options *UpdateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *UpdateWorkspaceOptions {
+	options.LearningOptOut = core.BoolPtr(learningOptOut)
 	return options
 }
 
 // SetSystemSettings : Allow user to set SystemSettings
-func (options *UpdateWorkspaceOptions) SetSystemSettings(param WorkspaceSystemSettings) *UpdateWorkspaceOptions {
-	options.SystemSettings = &param
+func (options *UpdateWorkspaceOptions) SetSystemSettings(systemSettings WorkspaceSystemSettings) *UpdateWorkspaceOptions {
+	options.SystemSettings = &systemSettings
 	return options
 }
 
 // SetAppend : Allow user to set Append
-func (options *UpdateWorkspaceOptions) SetAppend(param bool) *UpdateWorkspaceOptions {
-	options.Append = core.BoolPtr(param)
+func (options *UpdateWorkspaceOptions) SetAppend(append bool) *UpdateWorkspaceOptions {
+	options.Append = core.BoolPtr(append)
 	return options
 }
 
