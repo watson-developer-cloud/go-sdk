@@ -45,13 +45,14 @@ before_script:
 script:
   - env | grep GO
   - pwd
-  - cd $GOPATH/src/github.ibm.com && mv arf ../github.com/ibm-watson
+  - mkdir -p $GOPATH/src/github.com/ibm-watson
+  - mv $GOPATH/src/github.ibm.com/arf/go-sdk $GOPATH/src/github.com/ibm-watson
   - cd $GOPATH/src/github.com/ibm-watson/go-sdk
+  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/ibm-watson/go-sdk
   - pwd
-  - find . -type f
-#  - go test `go list ./... | grep -v examples`
-#  - gometalinter.v2 --errors ./...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
-#  - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
+  - go test `go list ./... | grep -v examples`
+  - gometalinter.v2 --errors ./...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
+  - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
 # - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
 
 # TODO Enable semantic release below once we are public.
