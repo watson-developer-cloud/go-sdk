@@ -21,7 +21,17 @@ import (
 	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// NaturalLanguageUnderstandingV1 : The NaturalLanguageUnderstandingV1 service
+// NaturalLanguageUnderstandingV1 : Analyze various features of text content at scale. Provide text, raw HTML, or a public URL, and IBM Watson Natural
+// Language Understanding will give you results for the features you request. The service cleans HTML content before
+// analysis by default, so the results can ignore most advertisements and other unwanted content.
+//
+// You can create <a target="_blank"
+// href="https://www.ibm.com/watson/developercloud/doc/natural-language-understanding/customizing.html">custom
+// models</a> with Watson Knowledge Studio that can be used to detect custom entities and relations in Natural Language
+// Understanding.
+//
+// Version: V1
+// See: http://www.ibm.com/watson/developercloud/natural-language-understanding.html
 type NaturalLanguageUnderstandingV1 struct {
 	service *core.WatsonService
 }
@@ -69,8 +79,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 		return nil, err
 	}
 
-	pathSegments := []string{ "v1/analyze" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v1/analyze"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
 	builder.ConstructHTTPURL(naturalLanguageUnderstanding.service.Options.URL, pathSegments, pathParameters)
@@ -127,7 +137,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 	return response, err
 }
 
-// GetAnalyzeResult : Cast result of Analyze operation
+// GetAnalyzeResult : Retrieve result of Analyze operation
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetAnalyzeResult(response *core.DetailedResponse) *AnalysisResults {
 	result, ok := response.Result.(*AnalysisResults)
 	if ok {
@@ -145,8 +155,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 		return nil, err
 	}
 
-	pathSegments := []string{ "v1/models" }
-	pathParameters := []string{ *deleteModelOptions.ModelID }
+	pathSegments := []string{"v1/models"}
+	pathParameters := []string{*deleteModelOptions.ModelID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(naturalLanguageUnderstanding.service.Options.URL, pathSegments, pathParameters)
@@ -166,7 +176,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 	return response, err
 }
 
-// GetDeleteModelResult : Cast result of DeleteModel operation
+// GetDeleteModelResult : Retrieve result of DeleteModel operation
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetDeleteModelResult(response *core.DetailedResponse) *DeleteModelResults {
 	result, ok := response.Result.(*DeleteModelResults)
 	if ok {
@@ -181,8 +191,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(l
 		return nil, err
 	}
 
-	pathSegments := []string{ "v1/models" }
-	pathParameters := []string{  }
+	pathSegments := []string{"v1/models"}
+	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(naturalLanguageUnderstanding.service.Options.URL, pathSegments, pathParameters)
@@ -202,7 +212,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(l
 	return response, err
 }
 
-// GetListModelsResult : Cast result of ListModels operation
+// GetListModelsResult : Retrieve result of ListModels operation
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetListModelsResult(response *core.DetailedResponse) *ListModelsResults {
 	result, ok := response.Result.(*ListModelsResults)
 	if ok {
@@ -272,7 +282,9 @@ type AnalyzeOptions struct {
 	// Remove website elements, such as links, ads, etc.
 	Clean *bool `json:"clean,omitempty"`
 
-	// An [XPath query](https://www.w3.org/TR/xpath/) to perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text before it is analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
+	// An [XPath query](https://www.w3.org/TR/xpath/) to perform on `html` or `url` input. Results of the query will be
+	// appended to the cleaned webpage text before it is analyzed. To analyze only the results of the XPath query, set the
+	// `clean` parameter to `false`.
 	Xpath *string `json:"xpath,omitempty"`
 
 	// Whether to use raw HTML content if text cleaning fails.
@@ -281,7 +293,10 @@ type AnalyzeOptions struct {
 	// Whether or not to return the analyzed text.
 	ReturnAnalyzedText *bool `json:"return_analyzed_text,omitempty"`
 
-	// ISO 639-1 code that specifies the language of your text. This overrides automatic language detection. Language support differs depending on the features you include in your analysis. See [Language support](https://www.bluemix.net/docs/services/natural-language-understanding/language-support.html) for more information.
+	// ISO 639-1 code that specifies the language of your text. This overrides automatic language detection. Language
+	// support differs depending on the features you include in your analysis. See [Language
+	// support](https://www.bluemix.net/docs/services/natural-language-understanding/language-support.html) for more
+	// information.
 	Language *string `json:"language,omitempty"`
 
 	// Sets the maximum number of characters that are processed by the service.
@@ -299,62 +314,62 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) NewAnalyzeOp
 }
 
 // SetText : Allow user to set Text
-func (options *AnalyzeOptions) SetText(param string) *AnalyzeOptions {
-	options.Text = core.StringPtr(param)
+func (options *AnalyzeOptions) SetText(text string) *AnalyzeOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
 // SetHTML : Allow user to set HTML
-func (options *AnalyzeOptions) SetHTML(param string) *AnalyzeOptions {
-	options.HTML = core.StringPtr(param)
+func (options *AnalyzeOptions) SetHTML(HTML string) *AnalyzeOptions {
+	options.HTML = core.StringPtr(HTML)
 	return options
 }
 
 // SetURL : Allow user to set URL
-func (options *AnalyzeOptions) SetURL(param string) *AnalyzeOptions {
-	options.URL = core.StringPtr(param)
+func (options *AnalyzeOptions) SetURL(URL string) *AnalyzeOptions {
+	options.URL = core.StringPtr(URL)
 	return options
 }
 
 // SetFeatures : Allow user to set Features
-func (options *AnalyzeOptions) SetFeatures(param Features) *AnalyzeOptions {
-	options.Features = &param
+func (options *AnalyzeOptions) SetFeatures(features Features) *AnalyzeOptions {
+	options.Features = &features
 	return options
 }
 
 // SetClean : Allow user to set Clean
-func (options *AnalyzeOptions) SetClean(param bool) *AnalyzeOptions {
-	options.Clean = core.BoolPtr(param)
+func (options *AnalyzeOptions) SetClean(clean bool) *AnalyzeOptions {
+	options.Clean = core.BoolPtr(clean)
 	return options
 }
 
 // SetXpath : Allow user to set Xpath
-func (options *AnalyzeOptions) SetXpath(param string) *AnalyzeOptions {
-	options.Xpath = core.StringPtr(param)
+func (options *AnalyzeOptions) SetXpath(xpath string) *AnalyzeOptions {
+	options.Xpath = core.StringPtr(xpath)
 	return options
 }
 
 // SetFallbackToRaw : Allow user to set FallbackToRaw
-func (options *AnalyzeOptions) SetFallbackToRaw(param bool) *AnalyzeOptions {
-	options.FallbackToRaw = core.BoolPtr(param)
+func (options *AnalyzeOptions) SetFallbackToRaw(fallbackToRaw bool) *AnalyzeOptions {
+	options.FallbackToRaw = core.BoolPtr(fallbackToRaw)
 	return options
 }
 
 // SetReturnAnalyzedText : Allow user to set ReturnAnalyzedText
-func (options *AnalyzeOptions) SetReturnAnalyzedText(param bool) *AnalyzeOptions {
-	options.ReturnAnalyzedText = core.BoolPtr(param)
+func (options *AnalyzeOptions) SetReturnAnalyzedText(returnAnalyzedText bool) *AnalyzeOptions {
+	options.ReturnAnalyzedText = core.BoolPtr(returnAnalyzedText)
 	return options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *AnalyzeOptions) SetLanguage(param string) *AnalyzeOptions {
-	options.Language = core.StringPtr(param)
+func (options *AnalyzeOptions) SetLanguage(language string) *AnalyzeOptions {
+	options.Language = core.StringPtr(language)
 	return options
 }
 
 // SetLimitTextCharacters : Allow user to set LimitTextCharacters
-func (options *AnalyzeOptions) SetLimitTextCharacters(param int64) *AnalyzeOptions {
-	options.LimitTextCharacters = core.Int64Ptr(param)
+func (options *AnalyzeOptions) SetLimitTextCharacters(limitTextCharacters int64) *AnalyzeOptions {
+	options.LimitTextCharacters = core.Int64Ptr(limitTextCharacters)
 	return options
 }
 
@@ -423,8 +438,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) NewDeleteMod
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *DeleteModelOptions) SetModelID(param string) *DeleteModelOptions {
-	options.ModelID = core.StringPtr(param)
+func (options *DeleteModelOptions) SetModelID(modelID string) *DeleteModelOptions {
+	options.ModelID = core.StringPtr(modelID)
 	return options
 }
 
@@ -481,7 +496,8 @@ type EmotionOptions struct {
 	Targets []string `json:"targets,omitempty"`
 }
 
-// EmotionResult : The detected anger, disgust, fear, joy, or sadness that is conveyed by the content. Emotion information can be returned for detected entities, keywords, or user-specified target phrases found in the text.
+// EmotionResult : The detected anger, disgust, fear, joy, or sadness that is conveyed by the content. Emotion information can be
+// returned for detected entities, keywords, or user-specified target phrases found in the text.
 type EmotionResult struct {
 
 	// The returned emotion results across the document.
@@ -519,7 +535,8 @@ type EntitiesOptions struct {
 	// Set this to `true` to return locations of entity mentions.
 	Mentions *bool `json:"mentions,omitempty"`
 
-	// Enter a [custom model](https://www.bluemix.net/docs/services/natural-language-understanding/customizing.html) ID to override the standard entity detection model.
+	// Enter a [custom model](https://www.bluemix.net/docs/services/natural-language-understanding/customizing.html) ID to
+	// override the standard entity detection model.
 	Model *string `json:"model,omitempty"`
 
 	// Set this to `true` to return sentiment information for detected entities.
@@ -589,7 +606,8 @@ type Features struct {
 	// Whether or not to return the keywords in the analyzed text.
 	Keywords *KeywordsOptions `json:"keywords,omitempty"`
 
-	// Whether or not the author, publication date, and title of the analyzed text should be returned. This parameter is only available for URL and HTML input.
+	// Whether or not the author, publication date, and title of the analyzed text should be returned. This parameter is
+	// only available for URL and HTML input.
 	Metadata *MetadataOptions `json:"metadata,omitempty"`
 
 	// Whether or not to return the relationships between detected entities in the analyzed text.
@@ -661,7 +679,6 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 
 // ListModelsResults : Models available for Relations and Entities features.
 type ListModelsResults struct {
-
 	Models []Model `json:"models,omitempty"`
 }
 
@@ -706,7 +723,6 @@ type Model struct {
 
 // RelationArgument : RelationArgument struct
 type RelationArgument struct {
-
 	Entities []RelationEntity `json:"entities,omitempty"`
 
 	// Character offsets indicating the beginning and end of the mention in the analyzed text.
@@ -729,7 +745,8 @@ type RelationEntity struct {
 // RelationsOptions : An option specifying if the relationships found between entities in the analyzed content should be returned.
 type RelationsOptions struct {
 
-	// Enter a [custom model](https://www.bluemix.net/docs/services/natural-language-understanding/customizing.html) ID to override the default model.
+	// Enter a [custom model](https://www.bluemix.net/docs/services/natural-language-understanding/customizing.html) ID to
+	// override the default model.
 	Model *string `json:"model,omitempty"`
 }
 

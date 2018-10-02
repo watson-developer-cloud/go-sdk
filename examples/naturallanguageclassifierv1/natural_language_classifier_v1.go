@@ -24,17 +24,17 @@ func main() {
 
 	pwd, _ := os.Getwd()
 
-	metadata, metadataErr := os.Open(pwd + "/../resources/weather_training_metadata.json")
+	metadata, metadataErr := os.Open(pwd + "/../../resources/weather_training_metadata.json")
 	if metadataErr != nil {
 		fmt.Println(metadataErr)
 	}
 
-	data, dataErr := os.Open(pwd + "/../resources/weather_training_data.csv")
+	data, dataErr := os.Open(pwd + "/../../resources/weather_training_data.csv")
 	if dataErr != nil {
 		fmt.Println(dataErr)
 	}
 
-	createClassifierOptions := service.NewCreateClassifierOptions(*metadata, *data)
+	createClassifierOptions := service.NewCreateClassifierOptions(metadata, data)
 
 	// Call the natural language classifier CreateClassifier method
 	response, responseErr := service.CreateClassifier(createClassifierOptions)

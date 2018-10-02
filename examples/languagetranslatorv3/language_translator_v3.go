@@ -120,7 +120,7 @@ func main() {
 
 	pwd, _ := os.Getwd()
 
-	glossary, glossaryErr := os.Open(pwd + "/../resources/glossary.tmx")
+	glossary, glossaryErr := os.Open(pwd + "/../../resources/glossary.tmx")
 	fmt.Println(glossary)
 	if glossaryErr != nil {
 		fmt.Println(glossaryErr)

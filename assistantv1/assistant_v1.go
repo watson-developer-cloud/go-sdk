@@ -19,11 +19,12 @@ package assistantv1
 
 import (
 	"fmt"
+
 	"github.com/go-openapi/strfmt"
 	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// AssistantV1: The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and integrated
+// AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and integrated
 // dialog tools to create conversation flows between your apps and your users.
 //
 // Version: V1
@@ -2436,7 +2437,7 @@ type CreateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
 	return &CreateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -2600,7 +2601,7 @@ type CreateDialogNodeOptions struct {
 func (assistant *AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -2780,7 +2781,7 @@ type CreateEntityOptions struct {
 func (assistant *AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
 	return &CreateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -2865,8 +2866,8 @@ type CreateExampleOptions struct {
 func (assistant *AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
 	return &CreateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -2944,7 +2945,7 @@ type CreateIntentOptions struct {
 func (assistant *AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
 	return &CreateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -3004,9 +3005,9 @@ type CreateSynonymOptions struct {
 func (assistant *AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
 	return &CreateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -3111,8 +3112,8 @@ type CreateValueOptions struct {
 func (assistant *AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -3292,7 +3293,7 @@ type DeleteCounterexampleOptions struct {
 func (assistant *AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
 	return &DeleteCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3331,7 +3332,7 @@ type DeleteDialogNodeOptions struct {
 func (assistant *AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
 	return &DeleteDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -3370,7 +3371,7 @@ type DeleteEntityOptions struct {
 func (assistant *AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
 	return &DeleteEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -3412,8 +3413,8 @@ type DeleteExampleOptions struct {
 func (assistant *AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
 	return &DeleteExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3458,7 +3459,7 @@ type DeleteIntentOptions struct {
 func (assistant *AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
 	return &DeleteIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -3503,9 +3504,9 @@ type DeleteSynonymOptions struct {
 func (assistant *AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
 	return &DeleteSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -3588,8 +3589,8 @@ type DeleteValueOptions struct {
 func (assistant *AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
 	return &DeleteValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -4084,7 +4085,7 @@ type GetCounterexampleOptions struct {
 func (assistant *AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
 	return &GetCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4132,7 +4133,7 @@ type GetDialogNodeOptions struct {
 func (assistant *AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
 	return &GetDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -4184,7 +4185,7 @@ type GetEntityOptions struct {
 func (assistant *AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
 	return &GetEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -4241,8 +4242,8 @@ type GetExampleOptions struct {
 func (assistant *AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
 	return &GetExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4300,7 +4301,7 @@ type GetIntentOptions struct {
 func (assistant *AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
 	return &GetIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -4360,9 +4361,9 @@ type GetSynonymOptions struct {
 func (assistant *AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
 	return &GetSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -4429,8 +4430,8 @@ type GetValueOptions struct {
 func (assistant *AssistantV1) NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
 	return &GetValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -4899,7 +4900,7 @@ type ListExamplesOptions struct {
 func (assistant *AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
 	return &ListExamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -5127,7 +5128,7 @@ type ListMentionsOptions struct {
 func (assistant *AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
 	return &ListMentionsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -5197,8 +5198,8 @@ type ListSynonymsOptions struct {
 func (assistant *AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
 	return &ListSynonymsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -5293,7 +5294,7 @@ type ListValuesOptions struct {
 func (assistant *AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
 	return &ListValuesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -5763,7 +5764,7 @@ type UpdateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
 	return &UpdateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -5870,7 +5871,7 @@ type UpdateDialogNodeOptions struct {
 func (assistant *AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -6036,7 +6037,7 @@ type UpdateEntityOptions struct {
 func (assistant *AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
 	return &UpdateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -6117,8 +6118,8 @@ type UpdateExampleOptions struct {
 func (assistant *AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
 	return &UpdateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -6187,7 +6188,7 @@ type UpdateIntentOptions struct {
 func (assistant *AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
 	return &UpdateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -6256,9 +6257,9 @@ type UpdateSynonymOptions struct {
 func (assistant *AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
 	return &UpdateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -6343,8 +6344,8 @@ type UpdateValueOptions struct {
 func (assistant *AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 

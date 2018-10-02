@@ -177,7 +177,7 @@ var _ = Describe("NaturalLanguageClassifierV1", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				createClassifierOptions := testService.NewCreateClassifierOptions(*Metadata, *data)
+				createClassifierOptions := testService.NewCreateClassifierOptions(Metadata, data)
 				returnValue, returnValueErr := testService.CreateClassifier(createClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

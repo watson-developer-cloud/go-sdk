@@ -79,7 +79,7 @@ func main() {
 	toneInput := toneanalyzerv3.ToneInput{
 		Text: core.StringPtr("Team, I know that times are tough! Product sales have been disappointing for the past three quarters. We have a competitive product, but we need to do a better job of selling it!"),
 	}
-	toneOptions = service.NewToneOptionsForToneInput(toneInput)
+	toneOptions = service.NewToneOptionsForJSON(toneInput)
 	response, responseErr = service.Tone(toneOptions)
 
 	if responseErr != nil {

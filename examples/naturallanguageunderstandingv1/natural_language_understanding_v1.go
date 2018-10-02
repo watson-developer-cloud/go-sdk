@@ -27,7 +27,7 @@ func main() {
 	/* ANALYZE */
 
 	pwd, _ := os.Getwd()
-	file, fileErr := ioutil.ReadFile(pwd + "/../resources/energy-policy.html")
+	file, fileErr := ioutil.ReadFile(pwd + "/../../resources/energy-policy.html")
 
 	// Check successful file read
 	if fileErr != nil {

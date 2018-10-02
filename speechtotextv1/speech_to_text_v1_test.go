@@ -765,7 +765,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				returnValue, returnValueErr := testService.AddCorpus(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
-				addCorpusOptions := testService.NewAddCorpusOptions(customizationID, corpusName, *corpus)
+				addCorpusOptions := testService.NewAddCorpusOptions(customizationID, corpusName, corpus)
 				returnValue, returnValueErr = testService.AddCorpus(addCorpusOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

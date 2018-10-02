@@ -5,12 +5,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+
 	core "github.com/ibm-watson/go-sdk/core"
 	"github.com/ibm-watson/go-sdk/personalityinsightsv3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"net/http"
-	"net/http/httptest"
 )
 
 var _ = Describe("PersonalityInsightsV3", func() {

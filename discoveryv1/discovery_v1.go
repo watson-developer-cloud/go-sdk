@@ -19,13 +19,14 @@ package discoveryv1
 
 import (
 	"fmt"
-	"github.com/go-openapi/strfmt"
-	core "github.com/ibm-watson/go-sdk/core"
 	"os"
 	"strings"
+
+	"github.com/go-openapi/strfmt"
+	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// DiscoveryV1: The IBM Watson&trade; Discovery Service is a cognitive search and content analytics engine that you can add to
+// DiscoveryV1 : The IBM Watson&trade; Discovery Service is a cognitive search and content analytics engine that you can add to
 // applications to identify patterns, trends and actionable insights to drive better decision-making. Securely unify
 // structured and unstructured data with pre-enriched content, and use a simplified query language to eliminate the need
 // for manual filtering of results.
@@ -2727,7 +2728,7 @@ type AddDocumentOptions struct {
 func (discovery *DiscoveryV1) NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
 	return &AddDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -2796,7 +2797,7 @@ type AddTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
 	return &AddTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -2987,7 +2988,7 @@ type CreateCollectionOptions struct {
 func (discovery *DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
 	return &CreateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		Name: core.StringPtr(name),
+		Name:          core.StringPtr(name),
 	}
 }
 
@@ -3291,7 +3292,7 @@ type CreateExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string) *CreateExpansionsOptions {
 	return &CreateExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -3345,8 +3346,8 @@ type CreateTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
 	return &CreateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -3500,7 +3501,7 @@ type DeleteAllTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
 	return &DeleteAllTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -3539,7 +3540,7 @@ type DeleteCollectionOptions struct {
 func (discovery *DiscoveryV1) NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
 	return &DeleteCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -3587,7 +3588,7 @@ type DeleteConfigurationOptions struct {
 // NewDeleteConfigurationOptions : Instantiate DeleteConfigurationOptions
 func (discovery *DiscoveryV1) NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
 	return &DeleteConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -3650,7 +3651,7 @@ type DeleteCredentialsOptions struct {
 func (discovery *DiscoveryV1) NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
 	return &DeleteCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -3692,8 +3693,8 @@ type DeleteDocumentOptions struct {
 func (discovery *DiscoveryV1) NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
 	return &DeleteDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -3787,7 +3788,7 @@ type DeleteExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
 	return &DeleteExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -3829,8 +3830,8 @@ type DeleteTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
 	return &DeleteTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -3881,9 +3882,9 @@ type DeleteTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
 	return &DeleteTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
@@ -3996,7 +3997,6 @@ type DocumentCounts struct {
 
 // DocumentSnapshot : DocumentSnapshot struct
 type DocumentSnapshot struct {
-
 	Step *string `json:"step,omitempty"`
 
 	Snapshot interface{} `json:"snapshot,omitempty"`
@@ -4602,7 +4602,6 @@ type Field struct {
 
 // FontSetting : FontSetting struct
 type FontSetting struct {
-
 	Level *int64 `json:"level,omitempty"`
 
 	MinSize *int64 `json:"min_size,omitempty"`
@@ -4633,7 +4632,7 @@ type GetCollectionOptions struct {
 func (discovery *DiscoveryV1) NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
 	return &GetCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -4671,7 +4670,7 @@ type GetConfigurationOptions struct {
 // NewGetConfigurationOptions : Instantiate GetConfigurationOptions
 func (discovery *DiscoveryV1) NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
 	return &GetConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -4711,7 +4710,7 @@ type GetCredentialsOptions struct {
 func (discovery *DiscoveryV1) NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
 	return &GetCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -4753,8 +4752,8 @@ type GetDocumentStatusOptions struct {
 func (discovery *DiscoveryV1) NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
 	return &GetDocumentStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -5038,8 +5037,8 @@ type GetTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
 	return &GetTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -5090,9 +5089,9 @@ type GetTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
 	return &GetTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
@@ -5128,7 +5127,6 @@ func (options *GetTrainingExampleOptions) SetHeaders(param map[string]string) *G
 
 // HTMLSettings : A list of HTML conversion settings.
 type HTMLSettings struct {
-
 	ExcludeTagsCompletely []string `json:"exclude_tags_completely,omitempty"`
 
 	ExcludeTagsKeepContent []string `json:"exclude_tags_keep_content,omitempty"`
@@ -5175,7 +5173,7 @@ type ListCollectionFieldsOptions struct {
 func (discovery *DiscoveryV1) NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
 	return &ListCollectionFieldsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5385,7 +5383,7 @@ type ListExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
 	return &ListExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5463,7 +5461,7 @@ type ListTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
 	return &ListTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5505,8 +5503,8 @@ type ListTrainingExamplesOptions struct {
 func (discovery *DiscoveryV1) NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
 	return &ListTrainingExamplesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -5618,7 +5616,6 @@ type LogQueryResponseResult struct {
 // LogQueryResponseResultDocuments : Object containing result information that was returned by the query used to create this log entry. Only returned with
 // logs of type `query`.
 type LogQueryResponseResultDocuments struct {
-
 	Results []LogQueryResponseResultDocumentsResult `json:"results,omitempty"`
 
 	// The number of results returned in the query associate with this log.
@@ -5694,7 +5691,6 @@ type MetricAggregationResult struct {
 
 // MetricResponse : The response generated from a call to a **metrics** method.
 type MetricResponse struct {
-
 	Aggregations []MetricAggregation `json:"aggregations,omitempty"`
 }
 
@@ -5723,7 +5719,6 @@ type MetricTokenAggregationResult struct {
 
 // MetricTokenResponse : The response generated from a call to a **metrics** method that evaluates tokens.
 type MetricTokenResponse struct {
-
 	Aggregations []MetricTokenAggregation `json:"aggregations,omitempty"`
 }
 
@@ -5901,13 +5896,11 @@ type Notice struct {
 
 // PdfHeadingDetection : PdfHeadingDetection struct
 type PdfHeadingDetection struct {
-
 	Fonts []FontSetting `json:"fonts,omitempty"`
 }
 
 // PdfSettings : A list of PDF conversion settings.
 type PdfSettings struct {
-
 	Heading *PdfHeadingDetection `json:"heading,omitempty"`
 }
 
@@ -5979,7 +5972,7 @@ type QueryEntitiesOptions struct {
 func (discovery *DiscoveryV1) NewQueryEntitiesOptions(environmentID string, collectionID string) *QueryEntitiesOptions {
 	return &QueryEntitiesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6033,7 +6026,6 @@ func (options *QueryEntitiesOptions) SetHeaders(param map[string]string) *QueryE
 
 // QueryEntitiesResponse : An array of entities resulting from the query.
 type QueryEntitiesResponse struct {
-
 	Entities []QueryEntitiesResponseItem `json:"entities,omitempty"`
 }
 
@@ -6255,7 +6247,7 @@ type QueryNoticesOptions struct {
 func (discovery *DiscoveryV1) NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
 	return &QueryNoticesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6381,7 +6373,6 @@ func (options *QueryNoticesOptions) SetHeaders(param map[string]string) *QueryNo
 
 // QueryNoticesResponse : QueryNoticesResponse struct
 type QueryNoticesResponse struct {
-
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	Results []QueryNoticesResult `json:"results,omitempty"`
@@ -6526,7 +6517,7 @@ type QueryOptions struct {
 func (discovery *DiscoveryV1) NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
 	return &QueryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6686,7 +6677,6 @@ type QueryPassages struct {
 
 // QueryRelationsArgument : QueryRelationsArgument struct
 type QueryRelationsArgument struct {
-
 	Entities []QueryEntitiesEntity `json:"entities,omitempty"`
 }
 
@@ -6754,7 +6744,7 @@ type QueryRelationsOptions struct {
 func (discovery *DiscoveryV1) NewQueryRelationsOptions(environmentID string, collectionID string) *QueryRelationsOptions {
 	return &QueryRelationsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6830,13 +6820,11 @@ type QueryRelationsRelationship struct {
 
 // QueryRelationsResponse : QueryRelationsResponse struct
 type QueryRelationsResponse struct {
-
 	Relations []QueryRelationsRelationship `json:"relations,omitempty"`
 }
 
 // QueryResponse : A response containing the documents and aggregations for the query.
 type QueryResponse struct {
-
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	Results []QueryResult `json:"results,omitempty"`
@@ -7145,7 +7133,6 @@ type TopHitsResults struct {
 
 // TrainingDataSet : TrainingDataSet struct
 type TrainingDataSet struct {
-
 	EnvironmentID *string `json:"environment_id,omitempty"`
 
 	CollectionID *string `json:"collection_id,omitempty"`
@@ -7155,7 +7142,6 @@ type TrainingDataSet struct {
 
 // TrainingExample : TrainingExample struct
 type TrainingExample struct {
-
 	DocumentID *string `json:"document_id,omitempty"`
 
 	CrossReference *string `json:"cross_reference,omitempty"`
@@ -7165,13 +7151,11 @@ type TrainingExample struct {
 
 // TrainingExampleList : TrainingExampleList struct
 type TrainingExampleList struct {
-
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
 // TrainingQuery : TrainingQuery struct
 type TrainingQuery struct {
-
 	QueryID *string `json:"query_id,omitempty"`
 
 	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
@@ -7183,7 +7167,6 @@ type TrainingQuery struct {
 
 // TrainingStatus : TrainingStatus struct
 type TrainingStatus struct {
-
 	TotalExamples *int64 `json:"total_examples,omitempty"`
 
 	Available *bool `json:"available,omitempty"`
@@ -7229,7 +7212,7 @@ type UpdateCollectionOptions struct {
 func (discovery *DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string) *UpdateCollectionOptions {
 	return &UpdateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -7304,7 +7287,7 @@ type UpdateConfigurationOptions struct {
 // NewUpdateConfigurationOptions : Instantiate UpdateConfigurationOptions
 func (discovery *DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string) *UpdateConfigurationOptions {
 	return &UpdateConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -7391,7 +7374,7 @@ type UpdateCredentialsOptions struct {
 func (discovery *DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
 	return &UpdateCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -7464,8 +7447,8 @@ type UpdateDocumentOptions struct {
 func (discovery *DiscoveryV1) NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
 	return &UpdateDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -7591,9 +7574,9 @@ type UpdateTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
 	return &UpdateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
@@ -7641,7 +7624,6 @@ func (options *UpdateTrainingExampleOptions) SetHeaders(param map[string]string)
 
 // WordHeadingDetection : WordHeadingDetection struct
 type WordHeadingDetection struct {
-
 	Fonts []FontSetting `json:"fonts,omitempty"`
 
 	Styles []WordStyle `json:"styles,omitempty"`
@@ -7649,13 +7631,11 @@ type WordHeadingDetection struct {
 
 // WordSettings : A list of Word conversion settings.
 type WordSettings struct {
-
 	Heading *WordHeadingDetection `json:"heading,omitempty"`
 }
 
 // WordStyle : WordStyle struct
 type WordStyle struct {
-
 	Level *int64 `json:"level,omitempty"`
 
 	Names []string `json:"names,omitempty"`
@@ -7663,7 +7643,6 @@ type WordStyle struct {
 
 // XPathPatterns : XPathPatterns struct
 type XPathPatterns struct {
-
 	Xpaths []string `json:"xpaths,omitempty"`
 }
 

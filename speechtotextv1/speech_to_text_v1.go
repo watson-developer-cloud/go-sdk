@@ -26,7 +26,7 @@ import (
 	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// SpeechToTextV1 : Speech to Text service provides an API that uses IBM's speech-recognition capabilities to produce
+// SpeechToTextV1 : The IBM&reg; Speech to Text service provides an API that uses IBM's speech-recognition capabilities to produce
 // transcripts of spoken audio. The service can transcribe speech from various languages and audio formats. It addition
 // to basic transcription, the service can produce detailed information about many different aspects of the audio. For
 // most languages, the service supports two sampling rates, broadband and narrowband. It returns all JSON response
@@ -72,7 +72,6 @@ import (
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/speech-to-text.html
-//
 type SpeechToTextV1 struct {
 	service *core.WatsonService
 }
@@ -1798,34 +1797,43 @@ func (speechToText *SpeechToTextV1) NewAddAudioOptionsForWebmcodecsvorbis(audioR
 	}
 }
 
-// SetAudioResource : Allow user to set AudioResource with specified ContentType
+// SetAudioResource : Allow user to set AudioResource with the specified content type
 func (options *AddAudioOptions) SetAudioResource(audioResource io.ReadCloser, contentType string) *AddAudioOptions {
 	options.AudioResource = &audioResource
 	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
+// NewAddAudioOptions : Instantiate AddAudioOptions
+func (speechToText *SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, contentType string) *AddAudioOptions {
+	return &AddAudioOptions{
+		CustomizationID: core.StringPtr(customizationID),
+		AudioName:       core.StringPtr(audioName),
+		ContentType:     core.StringPtr(contentType),
+	}
+}
+
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *AddAudioOptions) SetCustomizationID(param string) *AddAudioOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *AddAudioOptions) SetCustomizationID(customizationID string) *AddAudioOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetAudioName : Allow user to set AudioName
-func (options *AddAudioOptions) SetAudioName(param string) *AddAudioOptions {
-	options.AudioName = core.StringPtr(param)
+func (options *AddAudioOptions) SetAudioName(audioName string) *AddAudioOptions {
+	options.AudioName = core.StringPtr(audioName)
 	return options
 }
 
 // SetContainedContentType : Allow user to set ContainedContentType
-func (options *AddAudioOptions) SetContainedContentType(param string) *AddAudioOptions {
-	options.ContainedContentType = core.StringPtr(param)
+func (options *AddAudioOptions) SetContainedContentType(containedContentType string) *AddAudioOptions {
+	options.ContainedContentType = core.StringPtr(containedContentType)
 	return options
 }
 
 // SetAllowOverwrite : Allow user to set AllowOverwrite
-func (options *AddAudioOptions) SetAllowOverwrite(param bool) *AddAudioOptions {
-	options.AllowOverwrite = core.BoolPtr(param)
+func (options *AddAudioOptions) SetAllowOverwrite(allowOverwrite bool) *AddAudioOptions {
+	options.AllowOverwrite = core.BoolPtr(allowOverwrite)
 	return options
 }
 
@@ -1869,41 +1877,41 @@ type AddCorpusOptions struct {
 }
 
 // NewAddCorpusOptions : Instantiate AddCorpusOptions
-func (speechToText *SpeechToTextV1) NewAddCorpusOptions(customizationID string, corpusName string, corpusFile os.File) *AddCorpusOptions {
+func (speechToText *SpeechToTextV1) NewAddCorpusOptions(customizationID string, corpusName string, corpusFile *os.File) *AddCorpusOptions {
 	return &AddCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
 		CorpusName:      core.StringPtr(corpusName),
-		CorpusFile:      &corpusFile,
+		CorpusFile:      corpusFile,
 	}
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *AddCorpusOptions) SetCustomizationID(param string) *AddCorpusOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *AddCorpusOptions) SetCustomizationID(customizationID string) *AddCorpusOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetCorpusName : Allow user to set CorpusName
-func (options *AddCorpusOptions) SetCorpusName(param string) *AddCorpusOptions {
-	options.CorpusName = core.StringPtr(param)
+func (options *AddCorpusOptions) SetCorpusName(corpusName string) *AddCorpusOptions {
+	options.CorpusName = core.StringPtr(corpusName)
 	return options
 }
 
 // SetCorpusFile : Allow user to set CorpusFile
-func (options *AddCorpusOptions) SetCorpusFile(param *os.File) *AddCorpusOptions {
-	options.CorpusFile = param
+func (options *AddCorpusOptions) SetCorpusFile(corpusFile *os.File) *AddCorpusOptions {
+	options.CorpusFile = corpusFile
 	return options
 }
 
 // SetCorpusFilename : Allow user to set CorpusFilename
-func (options *AddCorpusOptions) SetCorpusFilename(param string) *AddCorpusOptions {
-	options.CorpusFilename = core.StringPtr(param)
+func (options *AddCorpusOptions) SetCorpusFilename(corpusFilename string) *AddCorpusOptions {
+	options.CorpusFilename = core.StringPtr(corpusFilename)
 	return options
 }
 
 // SetAllowOverwrite : Allow user to set AllowOverwrite
-func (options *AddCorpusOptions) SetAllowOverwrite(param bool) *AddCorpusOptions {
-	options.AllowOverwrite = core.BoolPtr(param)
+func (options *AddCorpusOptions) SetAllowOverwrite(allowOverwrite bool) *AddCorpusOptions {
+	options.AllowOverwrite = core.BoolPtr(allowOverwrite)
 	return options
 }
 
@@ -1962,32 +1970,32 @@ func (speechToText *SpeechToTextV1) NewAddWordOptions(customizationID string, wo
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *AddWordOptions) SetCustomizationID(param string) *AddWordOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *AddWordOptions) SetCustomizationID(customizationID string) *AddWordOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetWordName : Allow user to set WordName
-func (options *AddWordOptions) SetWordName(param string) *AddWordOptions {
-	options.WordName = core.StringPtr(param)
+func (options *AddWordOptions) SetWordName(wordName string) *AddWordOptions {
+	options.WordName = core.StringPtr(wordName)
 	return options
 }
 
 // SetWord : Allow user to set Word
-func (options *AddWordOptions) SetWord(param string) *AddWordOptions {
-	options.Word = core.StringPtr(param)
+func (options *AddWordOptions) SetWord(word string) *AddWordOptions {
+	options.Word = core.StringPtr(word)
 	return options
 }
 
 // SetSoundsLike : Allow user to set SoundsLike
-func (options *AddWordOptions) SetSoundsLike(param []string) *AddWordOptions {
-	options.SoundsLike = param
+func (options *AddWordOptions) SetSoundsLike(soundsLike []string) *AddWordOptions {
+	options.SoundsLike = soundsLike
 	return options
 }
 
 // SetDisplayAs : Allow user to set DisplayAs
-func (options *AddWordOptions) SetDisplayAs(param string) *AddWordOptions {
-	options.DisplayAs = core.StringPtr(param)
+func (options *AddWordOptions) SetDisplayAs(displayAs string) *AddWordOptions {
+	options.DisplayAs = core.StringPtr(displayAs)
 	return options
 }
 
@@ -2021,14 +2029,14 @@ func (speechToText *SpeechToTextV1) NewAddWordsOptions(customizationID string, w
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *AddWordsOptions) SetCustomizationID(param string) *AddWordsOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *AddWordsOptions) SetCustomizationID(customizationID string) *AddWordsOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetWords : Allow user to set Words
-func (options *AddWordsOptions) SetWords(param []CustomWord) *AddWordsOptions {
-	options.Words = param
+func (options *AddWordsOptions) SetWords(words []CustomWord) *AddWordsOptions {
+	options.Words = words
 	return options
 }
 
@@ -2154,8 +2162,8 @@ func (speechToText *SpeechToTextV1) NewCheckJobOptions(ID string) *CheckJobOptio
 }
 
 // SetID : Allow user to set ID
-func (options *CheckJobOptions) SetID(param string) *CheckJobOptions {
-	options.ID = core.StringPtr(param)
+func (options *CheckJobOptions) SetID(ID string) *CheckJobOptions {
+	options.ID = core.StringPtr(ID)
 	return options
 }
 
@@ -2247,20 +2255,20 @@ func (speechToText *SpeechToTextV1) NewCreateAcousticModelOptions(name string, b
 }
 
 // SetName : Allow user to set Name
-func (options *CreateAcousticModelOptions) SetName(param string) *CreateAcousticModelOptions {
-	options.Name = core.StringPtr(param)
+func (options *CreateAcousticModelOptions) SetName(name string) *CreateAcousticModelOptions {
+	options.Name = core.StringPtr(name)
 	return options
 }
 
 // SetBaseModelName : Allow user to set BaseModelName
-func (options *CreateAcousticModelOptions) SetBaseModelName(param string) *CreateAcousticModelOptions {
-	options.BaseModelName = core.StringPtr(param)
+func (options *CreateAcousticModelOptions) SetBaseModelName(baseModelName string) *CreateAcousticModelOptions {
+	options.BaseModelName = core.StringPtr(baseModelName)
 	return options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateAcousticModelOptions) SetDescription(param string) *CreateAcousticModelOptions {
-	options.Description = core.StringPtr(param)
+func (options *CreateAcousticModelOptions) SetDescription(description string) *CreateAcousticModelOptions {
+	options.Description = core.StringPtr(description)
 	return options
 }
 
@@ -2509,124 +2517,131 @@ func (speechToText *SpeechToTextV1) NewCreateJobOptionsForWebmcodecsvorbis(audio
 	}
 }
 
-// SetAudio : Allow user to set Audio with specified ContentType
+// SetAudio : Allow user to set Audio with the specified content type
 func (options *CreateJobOptions) SetAudio(audio io.ReadCloser, contentType string) *CreateJobOptions {
 	options.Audio = &audio
 	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
+// NewCreateJobOptions : Instantiate CreateJobOptions
+func (speechToText *SpeechToTextV1) NewCreateJobOptions(contentType string) *CreateJobOptions {
+	return &CreateJobOptions{
+		ContentType: core.StringPtr(contentType),
+	}
+}
+
 // SetModel : Allow user to set Model
-func (options *CreateJobOptions) SetModel(param string) *CreateJobOptions {
-	options.Model = core.StringPtr(param)
+func (options *CreateJobOptions) SetModel(model string) *CreateJobOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
 // SetCallbackURL : Allow user to set CallbackURL
-func (options *CreateJobOptions) SetCallbackURL(param string) *CreateJobOptions {
-	options.CallbackURL = core.StringPtr(param)
+func (options *CreateJobOptions) SetCallbackURL(callbackURL string) *CreateJobOptions {
+	options.CallbackURL = core.StringPtr(callbackURL)
 	return options
 }
 
 // SetEvents : Allow user to set Events
-func (options *CreateJobOptions) SetEvents(param string) *CreateJobOptions {
-	options.Events = core.StringPtr(param)
+func (options *CreateJobOptions) SetEvents(events string) *CreateJobOptions {
+	options.Events = core.StringPtr(events)
 	return options
 }
 
 // SetUserToken : Allow user to set UserToken
-func (options *CreateJobOptions) SetUserToken(param string) *CreateJobOptions {
-	options.UserToken = core.StringPtr(param)
+func (options *CreateJobOptions) SetUserToken(userToken string) *CreateJobOptions {
+	options.UserToken = core.StringPtr(userToken)
 	return options
 }
 
 // SetResultsTTL : Allow user to set ResultsTTL
-func (options *CreateJobOptions) SetResultsTTL(param int64) *CreateJobOptions {
-	options.ResultsTTL = core.Int64Ptr(param)
+func (options *CreateJobOptions) SetResultsTTL(resultsTTL int64) *CreateJobOptions {
+	options.ResultsTTL = core.Int64Ptr(resultsTTL)
 	return options
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *CreateJobOptions) SetCustomizationID(param string) *CreateJobOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *CreateJobOptions) SetCustomizationID(customizationID string) *CreateJobOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetAcousticCustomizationID : Allow user to set AcousticCustomizationID
-func (options *CreateJobOptions) SetAcousticCustomizationID(param string) *CreateJobOptions {
-	options.AcousticCustomizationID = core.StringPtr(param)
+func (options *CreateJobOptions) SetAcousticCustomizationID(acousticCustomizationID string) *CreateJobOptions {
+	options.AcousticCustomizationID = core.StringPtr(acousticCustomizationID)
 	return options
 }
 
 // SetBaseModelVersion : Allow user to set BaseModelVersion
-func (options *CreateJobOptions) SetBaseModelVersion(param string) *CreateJobOptions {
-	options.BaseModelVersion = core.StringPtr(param)
+func (options *CreateJobOptions) SetBaseModelVersion(baseModelVersion string) *CreateJobOptions {
+	options.BaseModelVersion = core.StringPtr(baseModelVersion)
 	return options
 }
 
 // SetCustomizationWeight : Allow user to set CustomizationWeight
-func (options *CreateJobOptions) SetCustomizationWeight(param float64) *CreateJobOptions {
-	options.CustomizationWeight = core.Float64Ptr(param)
+func (options *CreateJobOptions) SetCustomizationWeight(customizationWeight float64) *CreateJobOptions {
+	options.CustomizationWeight = core.Float64Ptr(customizationWeight)
 	return options
 }
 
 // SetInactivityTimeout : Allow user to set InactivityTimeout
-func (options *CreateJobOptions) SetInactivityTimeout(param int64) *CreateJobOptions {
-	options.InactivityTimeout = core.Int64Ptr(param)
+func (options *CreateJobOptions) SetInactivityTimeout(inactivityTimeout int64) *CreateJobOptions {
+	options.InactivityTimeout = core.Int64Ptr(inactivityTimeout)
 	return options
 }
 
 // SetKeywords : Allow user to set Keywords
-func (options *CreateJobOptions) SetKeywords(param []string) *CreateJobOptions {
-	options.Keywords = param
+func (options *CreateJobOptions) SetKeywords(keywords []string) *CreateJobOptions {
+	options.Keywords = keywords
 	return options
 }
 
 // SetKeywordsThreshold : Allow user to set KeywordsThreshold
-func (options *CreateJobOptions) SetKeywordsThreshold(param float32) *CreateJobOptions {
-	options.KeywordsThreshold = core.Float32Ptr(param)
+func (options *CreateJobOptions) SetKeywordsThreshold(keywordsThreshold float32) *CreateJobOptions {
+	options.KeywordsThreshold = core.Float32Ptr(keywordsThreshold)
 	return options
 }
 
 // SetMaxAlternatives : Allow user to set MaxAlternatives
-func (options *CreateJobOptions) SetMaxAlternatives(param int64) *CreateJobOptions {
-	options.MaxAlternatives = core.Int64Ptr(param)
+func (options *CreateJobOptions) SetMaxAlternatives(maxAlternatives int64) *CreateJobOptions {
+	options.MaxAlternatives = core.Int64Ptr(maxAlternatives)
 	return options
 }
 
 // SetWordAlternativesThreshold : Allow user to set WordAlternativesThreshold
-func (options *CreateJobOptions) SetWordAlternativesThreshold(param float32) *CreateJobOptions {
-	options.WordAlternativesThreshold = core.Float32Ptr(param)
+func (options *CreateJobOptions) SetWordAlternativesThreshold(wordAlternativesThreshold float32) *CreateJobOptions {
+	options.WordAlternativesThreshold = core.Float32Ptr(wordAlternativesThreshold)
 	return options
 }
 
 // SetWordConfidence : Allow user to set WordConfidence
-func (options *CreateJobOptions) SetWordConfidence(param bool) *CreateJobOptions {
-	options.WordConfidence = core.BoolPtr(param)
+func (options *CreateJobOptions) SetWordConfidence(wordConfidence bool) *CreateJobOptions {
+	options.WordConfidence = core.BoolPtr(wordConfidence)
 	return options
 }
 
 // SetTimestamps : Allow user to set Timestamps
-func (options *CreateJobOptions) SetTimestamps(param bool) *CreateJobOptions {
-	options.Timestamps = core.BoolPtr(param)
+func (options *CreateJobOptions) SetTimestamps(timestamps bool) *CreateJobOptions {
+	options.Timestamps = core.BoolPtr(timestamps)
 	return options
 }
 
 // SetProfanityFilter : Allow user to set ProfanityFilter
-func (options *CreateJobOptions) SetProfanityFilter(param bool) *CreateJobOptions {
-	options.ProfanityFilter = core.BoolPtr(param)
+func (options *CreateJobOptions) SetProfanityFilter(profanityFilter bool) *CreateJobOptions {
+	options.ProfanityFilter = core.BoolPtr(profanityFilter)
 	return options
 }
 
 // SetSmartFormatting : Allow user to set SmartFormatting
-func (options *CreateJobOptions) SetSmartFormatting(param bool) *CreateJobOptions {
-	options.SmartFormatting = core.BoolPtr(param)
+func (options *CreateJobOptions) SetSmartFormatting(smartFormatting bool) *CreateJobOptions {
+	options.SmartFormatting = core.BoolPtr(smartFormatting)
 	return options
 }
 
 // SetSpeakerLabels : Allow user to set SpeakerLabels
-func (options *CreateJobOptions) SetSpeakerLabels(param bool) *CreateJobOptions {
-	options.SpeakerLabels = core.BoolPtr(param)
+func (options *CreateJobOptions) SetSpeakerLabels(speakerLabels bool) *CreateJobOptions {
+	options.SpeakerLabels = core.BoolPtr(speakerLabels)
 	return options
 }
 
@@ -2679,26 +2694,26 @@ func (speechToText *SpeechToTextV1) NewCreateLanguageModelOptions(name string, b
 }
 
 // SetName : Allow user to set Name
-func (options *CreateLanguageModelOptions) SetName(param string) *CreateLanguageModelOptions {
-	options.Name = core.StringPtr(param)
+func (options *CreateLanguageModelOptions) SetName(name string) *CreateLanguageModelOptions {
+	options.Name = core.StringPtr(name)
 	return options
 }
 
 // SetBaseModelName : Allow user to set BaseModelName
-func (options *CreateLanguageModelOptions) SetBaseModelName(param string) *CreateLanguageModelOptions {
-	options.BaseModelName = core.StringPtr(param)
+func (options *CreateLanguageModelOptions) SetBaseModelName(baseModelName string) *CreateLanguageModelOptions {
+	options.BaseModelName = core.StringPtr(baseModelName)
 	return options
 }
 
 // SetDialect : Allow user to set Dialect
-func (options *CreateLanguageModelOptions) SetDialect(param string) *CreateLanguageModelOptions {
-	options.Dialect = core.StringPtr(param)
+func (options *CreateLanguageModelOptions) SetDialect(dialect string) *CreateLanguageModelOptions {
+	options.Dialect = core.StringPtr(dialect)
 	return options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateLanguageModelOptions) SetDescription(param string) *CreateLanguageModelOptions {
-	options.Description = core.StringPtr(param)
+func (options *CreateLanguageModelOptions) SetDescription(description string) *CreateLanguageModelOptions {
+	options.Description = core.StringPtr(description)
 	return options
 }
 
@@ -2755,8 +2770,8 @@ func (speechToText *SpeechToTextV1) NewDeleteAcousticModelOptions(customizationI
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *DeleteAcousticModelOptions) SetCustomizationID(param string) *DeleteAcousticModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *DeleteAcousticModelOptions) SetCustomizationID(customizationID string) *DeleteAcousticModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -2789,14 +2804,14 @@ func (speechToText *SpeechToTextV1) NewDeleteAudioOptions(customizationID string
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *DeleteAudioOptions) SetCustomizationID(param string) *DeleteAudioOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *DeleteAudioOptions) SetCustomizationID(customizationID string) *DeleteAudioOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetAudioName : Allow user to set AudioName
-func (options *DeleteAudioOptions) SetAudioName(param string) *DeleteAudioOptions {
-	options.AudioName = core.StringPtr(param)
+func (options *DeleteAudioOptions) SetAudioName(audioName string) *DeleteAudioOptions {
+	options.AudioName = core.StringPtr(audioName)
 	return options
 }
 
@@ -2829,14 +2844,14 @@ func (speechToText *SpeechToTextV1) NewDeleteCorpusOptions(customizationID strin
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *DeleteCorpusOptions) SetCustomizationID(param string) *DeleteCorpusOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *DeleteCorpusOptions) SetCustomizationID(customizationID string) *DeleteCorpusOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetCorpusName : Allow user to set CorpusName
-func (options *DeleteCorpusOptions) SetCorpusName(param string) *DeleteCorpusOptions {
-	options.CorpusName = core.StringPtr(param)
+func (options *DeleteCorpusOptions) SetCorpusName(corpusName string) *DeleteCorpusOptions {
+	options.CorpusName = core.StringPtr(corpusName)
 	return options
 }
 
@@ -2864,8 +2879,8 @@ func (speechToText *SpeechToTextV1) NewDeleteJobOptions(ID string) *DeleteJobOpt
 }
 
 // SetID : Allow user to set ID
-func (options *DeleteJobOptions) SetID(param string) *DeleteJobOptions {
-	options.ID = core.StringPtr(param)
+func (options *DeleteJobOptions) SetID(ID string) *DeleteJobOptions {
+	options.ID = core.StringPtr(ID)
 	return options
 }
 
@@ -2894,8 +2909,8 @@ func (speechToText *SpeechToTextV1) NewDeleteLanguageModelOptions(customizationI
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *DeleteLanguageModelOptions) SetCustomizationID(param string) *DeleteLanguageModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *DeleteLanguageModelOptions) SetCustomizationID(customizationID string) *DeleteLanguageModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -2923,8 +2938,8 @@ func (speechToText *SpeechToTextV1) NewDeleteUserDataOptions(customerID string) 
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(param string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(param)
+func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	options.CustomerID = core.StringPtr(customerID)
 	return options
 }
 
@@ -2959,14 +2974,14 @@ func (speechToText *SpeechToTextV1) NewDeleteWordOptions(customizationID string,
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *DeleteWordOptions) SetCustomizationID(param string) *DeleteWordOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *DeleteWordOptions) SetCustomizationID(customizationID string) *DeleteWordOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetWordName : Allow user to set WordName
-func (options *DeleteWordOptions) SetWordName(param string) *DeleteWordOptions {
-	options.WordName = core.StringPtr(param)
+func (options *DeleteWordOptions) SetWordName(wordName string) *DeleteWordOptions {
+	options.WordName = core.StringPtr(wordName)
 	return options
 }
 
@@ -2995,8 +3010,8 @@ func (speechToText *SpeechToTextV1) NewGetAcousticModelOptions(customizationID s
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetAcousticModelOptions) SetCustomizationID(param string) *GetAcousticModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *GetAcousticModelOptions) SetCustomizationID(customizationID string) *GetAcousticModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -3029,14 +3044,14 @@ func (speechToText *SpeechToTextV1) NewGetAudioOptions(customizationID string, a
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetAudioOptions) SetCustomizationID(param string) *GetAudioOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *GetAudioOptions) SetCustomizationID(customizationID string) *GetAudioOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetAudioName : Allow user to set AudioName
-func (options *GetAudioOptions) SetAudioName(param string) *GetAudioOptions {
-	options.AudioName = core.StringPtr(param)
+func (options *GetAudioOptions) SetAudioName(audioName string) *GetAudioOptions {
+	options.AudioName = core.StringPtr(audioName)
 	return options
 }
 
@@ -3069,14 +3084,14 @@ func (speechToText *SpeechToTextV1) NewGetCorpusOptions(customizationID string, 
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetCorpusOptions) SetCustomizationID(param string) *GetCorpusOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *GetCorpusOptions) SetCustomizationID(customizationID string) *GetCorpusOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetCorpusName : Allow user to set CorpusName
-func (options *GetCorpusOptions) SetCorpusName(param string) *GetCorpusOptions {
-	options.CorpusName = core.StringPtr(param)
+func (options *GetCorpusOptions) SetCorpusName(corpusName string) *GetCorpusOptions {
+	options.CorpusName = core.StringPtr(corpusName)
 	return options
 }
 
@@ -3105,8 +3120,8 @@ func (speechToText *SpeechToTextV1) NewGetLanguageModelOptions(customizationID s
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetLanguageModelOptions) SetCustomizationID(param string) *GetLanguageModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *GetLanguageModelOptions) SetCustomizationID(customizationID string) *GetLanguageModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -3134,8 +3149,8 @@ func (speechToText *SpeechToTextV1) NewGetModelOptions(modelID string) *GetModel
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *GetModelOptions) SetModelID(param string) *GetModelOptions {
-	options.ModelID = core.StringPtr(param)
+func (options *GetModelOptions) SetModelID(modelID string) *GetModelOptions {
+	options.ModelID = core.StringPtr(modelID)
 	return options
 }
 
@@ -3170,14 +3185,14 @@ func (speechToText *SpeechToTextV1) NewGetWordOptions(customizationID string, wo
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetWordOptions) SetCustomizationID(param string) *GetWordOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *GetWordOptions) SetCustomizationID(customizationID string) *GetWordOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetWordName : Allow user to set WordName
-func (options *GetWordOptions) SetWordName(param string) *GetWordOptions {
-	options.WordName = core.StringPtr(param)
+func (options *GetWordOptions) SetWordName(wordName string) *GetWordOptions {
+	options.WordName = core.StringPtr(wordName)
 	return options
 }
 
@@ -3289,8 +3304,8 @@ func (speechToText *SpeechToTextV1) NewListAcousticModelsOptions() *ListAcoustic
 }
 
 // SetLanguage : Allow user to set Language
-func (options *ListAcousticModelsOptions) SetLanguage(param string) *ListAcousticModelsOptions {
-	options.Language = core.StringPtr(param)
+func (options *ListAcousticModelsOptions) SetLanguage(language string) *ListAcousticModelsOptions {
+	options.Language = core.StringPtr(language)
 	return options
 }
 
@@ -3319,8 +3334,8 @@ func (speechToText *SpeechToTextV1) NewListAudioOptions(customizationID string) 
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *ListAudioOptions) SetCustomizationID(param string) *ListAudioOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *ListAudioOptions) SetCustomizationID(customizationID string) *ListAudioOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -3349,8 +3364,8 @@ func (speechToText *SpeechToTextV1) NewListCorporaOptions(customizationID string
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *ListCorporaOptions) SetCustomizationID(param string) *ListCorporaOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *ListCorporaOptions) SetCustomizationID(customizationID string) *ListCorporaOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -3378,8 +3393,8 @@ func (speechToText *SpeechToTextV1) NewListLanguageModelsOptions() *ListLanguage
 }
 
 // SetLanguage : Allow user to set Language
-func (options *ListLanguageModelsOptions) SetLanguage(param string) *ListLanguageModelsOptions {
-	options.Language = core.StringPtr(param)
+func (options *ListLanguageModelsOptions) SetLanguage(language string) *ListLanguageModelsOptions {
+	options.Language = core.StringPtr(language)
 	return options
 }
 
@@ -3439,20 +3454,20 @@ func (speechToText *SpeechToTextV1) NewListWordsOptions(customizationID string) 
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *ListWordsOptions) SetCustomizationID(param string) *ListWordsOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *ListWordsOptions) SetCustomizationID(customizationID string) *ListWordsOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetWordType : Allow user to set WordType
-func (options *ListWordsOptions) SetWordType(param string) *ListWordsOptions {
-	options.WordType = core.StringPtr(param)
+func (options *ListWordsOptions) SetWordType(wordType string) *ListWordsOptions {
+	options.WordType = core.StringPtr(wordType)
 	return options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListWordsOptions) SetSort(param string) *ListWordsOptions {
-	options.Sort = core.StringPtr(param)
+func (options *ListWordsOptions) SetSort(sort string) *ListWordsOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
@@ -3719,100 +3734,107 @@ func (speechToText *SpeechToTextV1) NewRecognizeOptionsForWebmcodecsvorbis(audio
 	}
 }
 
-// SetAudio : Allow user to set Audio with specified ContentType
+// SetAudio : Allow user to set Audio with the specified content type
 func (options *RecognizeOptions) SetAudio(audio io.ReadCloser, contentType string) *RecognizeOptions {
 	options.Audio = &audio
 	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
+// NewRecognizeOptions : Instantiate RecognizeOptions
+func (speechToText *SpeechToTextV1) NewRecognizeOptions(contentType string) *RecognizeOptions {
+	return &RecognizeOptions{
+		ContentType: core.StringPtr(contentType),
+	}
+}
+
 // SetModel : Allow user to set Model
-func (options *RecognizeOptions) SetModel(param string) *RecognizeOptions {
-	options.Model = core.StringPtr(param)
+func (options *RecognizeOptions) SetModel(model string) *RecognizeOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *RecognizeOptions) SetCustomizationID(param string) *RecognizeOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *RecognizeOptions) SetCustomizationID(customizationID string) *RecognizeOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetAcousticCustomizationID : Allow user to set AcousticCustomizationID
-func (options *RecognizeOptions) SetAcousticCustomizationID(param string) *RecognizeOptions {
-	options.AcousticCustomizationID = core.StringPtr(param)
+func (options *RecognizeOptions) SetAcousticCustomizationID(acousticCustomizationID string) *RecognizeOptions {
+	options.AcousticCustomizationID = core.StringPtr(acousticCustomizationID)
 	return options
 }
 
 // SetBaseModelVersion : Allow user to set BaseModelVersion
-func (options *RecognizeOptions) SetBaseModelVersion(param string) *RecognizeOptions {
-	options.BaseModelVersion = core.StringPtr(param)
+func (options *RecognizeOptions) SetBaseModelVersion(baseModelVersion string) *RecognizeOptions {
+	options.BaseModelVersion = core.StringPtr(baseModelVersion)
 	return options
 }
 
 // SetCustomizationWeight : Allow user to set CustomizationWeight
-func (options *RecognizeOptions) SetCustomizationWeight(param float64) *RecognizeOptions {
-	options.CustomizationWeight = core.Float64Ptr(param)
+func (options *RecognizeOptions) SetCustomizationWeight(customizationWeight float64) *RecognizeOptions {
+	options.CustomizationWeight = core.Float64Ptr(customizationWeight)
 	return options
 }
 
 // SetInactivityTimeout : Allow user to set InactivityTimeout
-func (options *RecognizeOptions) SetInactivityTimeout(param int64) *RecognizeOptions {
-	options.InactivityTimeout = core.Int64Ptr(param)
+func (options *RecognizeOptions) SetInactivityTimeout(inactivityTimeout int64) *RecognizeOptions {
+	options.InactivityTimeout = core.Int64Ptr(inactivityTimeout)
 	return options
 }
 
 // SetKeywords : Allow user to set Keywords
-func (options *RecognizeOptions) SetKeywords(param []string) *RecognizeOptions {
-	options.Keywords = param
+func (options *RecognizeOptions) SetKeywords(keywords []string) *RecognizeOptions {
+	options.Keywords = keywords
 	return options
 }
 
 // SetKeywordsThreshold : Allow user to set KeywordsThreshold
-func (options *RecognizeOptions) SetKeywordsThreshold(param float32) *RecognizeOptions {
-	options.KeywordsThreshold = core.Float32Ptr(param)
+func (options *RecognizeOptions) SetKeywordsThreshold(keywordsThreshold float32) *RecognizeOptions {
+	options.KeywordsThreshold = core.Float32Ptr(keywordsThreshold)
 	return options
 }
 
 // SetMaxAlternatives : Allow user to set MaxAlternatives
-func (options *RecognizeOptions) SetMaxAlternatives(param int64) *RecognizeOptions {
-	options.MaxAlternatives = core.Int64Ptr(param)
+func (options *RecognizeOptions) SetMaxAlternatives(maxAlternatives int64) *RecognizeOptions {
+	options.MaxAlternatives = core.Int64Ptr(maxAlternatives)
 	return options
 }
 
 // SetWordAlternativesThreshold : Allow user to set WordAlternativesThreshold
-func (options *RecognizeOptions) SetWordAlternativesThreshold(param float32) *RecognizeOptions {
-	options.WordAlternativesThreshold = core.Float32Ptr(param)
+func (options *RecognizeOptions) SetWordAlternativesThreshold(wordAlternativesThreshold float32) *RecognizeOptions {
+	options.WordAlternativesThreshold = core.Float32Ptr(wordAlternativesThreshold)
 	return options
 }
 
 // SetWordConfidence : Allow user to set WordConfidence
-func (options *RecognizeOptions) SetWordConfidence(param bool) *RecognizeOptions {
-	options.WordConfidence = core.BoolPtr(param)
+func (options *RecognizeOptions) SetWordConfidence(wordConfidence bool) *RecognizeOptions {
+	options.WordConfidence = core.BoolPtr(wordConfidence)
 	return options
 }
 
 // SetTimestamps : Allow user to set Timestamps
-func (options *RecognizeOptions) SetTimestamps(param bool) *RecognizeOptions {
-	options.Timestamps = core.BoolPtr(param)
+func (options *RecognizeOptions) SetTimestamps(timestamps bool) *RecognizeOptions {
+	options.Timestamps = core.BoolPtr(timestamps)
 	return options
 }
 
 // SetProfanityFilter : Allow user to set ProfanityFilter
-func (options *RecognizeOptions) SetProfanityFilter(param bool) *RecognizeOptions {
-	options.ProfanityFilter = core.BoolPtr(param)
+func (options *RecognizeOptions) SetProfanityFilter(profanityFilter bool) *RecognizeOptions {
+	options.ProfanityFilter = core.BoolPtr(profanityFilter)
 	return options
 }
 
 // SetSmartFormatting : Allow user to set SmartFormatting
-func (options *RecognizeOptions) SetSmartFormatting(param bool) *RecognizeOptions {
-	options.SmartFormatting = core.BoolPtr(param)
+func (options *RecognizeOptions) SetSmartFormatting(smartFormatting bool) *RecognizeOptions {
+	options.SmartFormatting = core.BoolPtr(smartFormatting)
 	return options
 }
 
 // SetSpeakerLabels : Allow user to set SpeakerLabels
-func (options *RecognizeOptions) SetSpeakerLabels(param bool) *RecognizeOptions {
-	options.SpeakerLabels = core.BoolPtr(param)
+func (options *RecognizeOptions) SetSpeakerLabels(speakerLabels bool) *RecognizeOptions {
+	options.SpeakerLabels = core.BoolPtr(speakerLabels)
 	return options
 }
 
@@ -3848,14 +3870,14 @@ func (speechToText *SpeechToTextV1) NewRegisterCallbackOptions(callbackURL strin
 }
 
 // SetCallbackURL : Allow user to set CallbackURL
-func (options *RegisterCallbackOptions) SetCallbackURL(param string) *RegisterCallbackOptions {
-	options.CallbackURL = core.StringPtr(param)
+func (options *RegisterCallbackOptions) SetCallbackURL(callbackURL string) *RegisterCallbackOptions {
+	options.CallbackURL = core.StringPtr(callbackURL)
 	return options
 }
 
 // SetUserSecret : Allow user to set UserSecret
-func (options *RegisterCallbackOptions) SetUserSecret(param string) *RegisterCallbackOptions {
-	options.UserSecret = core.StringPtr(param)
+func (options *RegisterCallbackOptions) SetUserSecret(userSecret string) *RegisterCallbackOptions {
+	options.UserSecret = core.StringPtr(userSecret)
 	return options
 }
 
@@ -3896,8 +3918,8 @@ func (speechToText *SpeechToTextV1) NewResetAcousticModelOptions(customizationID
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *ResetAcousticModelOptions) SetCustomizationID(param string) *ResetAcousticModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *ResetAcousticModelOptions) SetCustomizationID(customizationID string) *ResetAcousticModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -3926,8 +3948,8 @@ func (speechToText *SpeechToTextV1) NewResetLanguageModelOptions(customizationID
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *ResetLanguageModelOptions) SetCustomizationID(param string) *ResetLanguageModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *ResetLanguageModelOptions) SetCustomizationID(customizationID string) *ResetLanguageModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -4099,14 +4121,14 @@ func (speechToText *SpeechToTextV1) NewTrainAcousticModelOptions(customizationID
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *TrainAcousticModelOptions) SetCustomizationID(param string) *TrainAcousticModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *TrainAcousticModelOptions) SetCustomizationID(customizationID string) *TrainAcousticModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetCustomLanguageModelID : Allow user to set CustomLanguageModelID
-func (options *TrainAcousticModelOptions) SetCustomLanguageModelID(param string) *TrainAcousticModelOptions {
-	options.CustomLanguageModelID = core.StringPtr(param)
+func (options *TrainAcousticModelOptions) SetCustomLanguageModelID(customLanguageModelID string) *TrainAcousticModelOptions {
+	options.CustomLanguageModelID = core.StringPtr(customLanguageModelID)
 	return options
 }
 
@@ -4154,20 +4176,20 @@ func (speechToText *SpeechToTextV1) NewTrainLanguageModelOptions(customizationID
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *TrainLanguageModelOptions) SetCustomizationID(param string) *TrainLanguageModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *TrainLanguageModelOptions) SetCustomizationID(customizationID string) *TrainLanguageModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetWordTypeToAdd : Allow user to set WordTypeToAdd
-func (options *TrainLanguageModelOptions) SetWordTypeToAdd(param string) *TrainLanguageModelOptions {
-	options.WordTypeToAdd = core.StringPtr(param)
+func (options *TrainLanguageModelOptions) SetWordTypeToAdd(wordTypeToAdd string) *TrainLanguageModelOptions {
+	options.WordTypeToAdd = core.StringPtr(wordTypeToAdd)
 	return options
 }
 
 // SetCustomizationWeight : Allow user to set CustomizationWeight
-func (options *TrainLanguageModelOptions) SetCustomizationWeight(param float64) *TrainLanguageModelOptions {
-	options.CustomizationWeight = core.Float64Ptr(param)
+func (options *TrainLanguageModelOptions) SetCustomizationWeight(customizationWeight float64) *TrainLanguageModelOptions {
+	options.CustomizationWeight = core.Float64Ptr(customizationWeight)
 	return options
 }
 
@@ -4195,8 +4217,8 @@ func (speechToText *SpeechToTextV1) NewUnregisterCallbackOptions(callbackURL str
 }
 
 // SetCallbackURL : Allow user to set CallbackURL
-func (options *UnregisterCallbackOptions) SetCallbackURL(param string) *UnregisterCallbackOptions {
-	options.CallbackURL = core.StringPtr(param)
+func (options *UnregisterCallbackOptions) SetCallbackURL(callbackURL string) *UnregisterCallbackOptions {
+	options.CallbackURL = core.StringPtr(callbackURL)
 	return options
 }
 
@@ -4229,14 +4251,14 @@ func (speechToText *SpeechToTextV1) NewUpgradeAcousticModelOptions(customization
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *UpgradeAcousticModelOptions) SetCustomizationID(param string) *UpgradeAcousticModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *UpgradeAcousticModelOptions) SetCustomizationID(customizationID string) *UpgradeAcousticModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
 // SetCustomLanguageModelID : Allow user to set CustomLanguageModelID
-func (options *UpgradeAcousticModelOptions) SetCustomLanguageModelID(param string) *UpgradeAcousticModelOptions {
-	options.CustomLanguageModelID = core.StringPtr(param)
+func (options *UpgradeAcousticModelOptions) SetCustomLanguageModelID(customLanguageModelID string) *UpgradeAcousticModelOptions {
+	options.CustomLanguageModelID = core.StringPtr(customLanguageModelID)
 	return options
 }
 
@@ -4265,8 +4287,8 @@ func (speechToText *SpeechToTextV1) NewUpgradeLanguageModelOptions(customization
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *UpgradeLanguageModelOptions) SetCustomizationID(param string) *UpgradeLanguageModelOptions {
-	options.CustomizationID = core.StringPtr(param)
+func (options *UpgradeLanguageModelOptions) SetCustomizationID(customizationID string) *UpgradeLanguageModelOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 

@@ -24,7 +24,12 @@ import (
 	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// NaturalLanguageClassifierV1 : The NaturalLanguageClassifierV1 service
+// NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to return the top matching predefined
+// classes for short text input. You create and train a classifier to connect predefined classes to example texts so
+// that the service can apply those classes to new inputs.
+//
+// Version: V1
+// See: http://www.ibm.com/watson/developercloud/natural-language-classifier.html
 type NaturalLanguageClassifierV1 struct {
 	service *core.WatsonService
 }
@@ -100,7 +105,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyO
 	return response, err
 }
 
-// GetClassifyResult : Cast result of Classify operation
+// GetClassifyResult : Retrieve result of Classify operation
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifyResult(response *core.DetailedResponse) *Classification {
 	result, ok := response.Result.(*Classification)
 	if ok {
@@ -148,7 +153,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 	return response, err
 }
 
-// GetClassifyCollectionResult : Cast result of ClassifyCollection operation
+// GetClassifyCollectionResult : Retrieve result of ClassifyCollection operation
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifyCollectionResult(response *core.DetailedResponse) *ClassificationCollection {
 	result, ok := response.Result.(*ClassificationCollection)
 	if ok {
@@ -191,7 +196,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(c
 	return response, err
 }
 
-// GetCreateClassifierResult : Cast result of CreateClassifier operation
+// GetCreateClassifierResult : Retrieve result of CreateClassifier operation
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetCreateClassifierResult(response *core.DetailedResponse) *Classifier {
 	result, ok := response.Result.(*Classifier)
 	if ok {
@@ -258,7 +263,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getC
 	return response, err
 }
 
-// GetGetClassifierResult : Cast result of GetClassifier operation
+// GetGetClassifierResult : Retrieve result of GetClassifier operation
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetGetClassifierResult(response *core.DetailedResponse) *Classifier {
 	result, ok := response.Result.(*Classifier)
 	if ok {
@@ -293,7 +298,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(li
 	return response, err
 }
 
-// GetListClassifiersResult : Cast result of ListClassifiers operation
+// GetListClassifiersResult : Retrieve result of ListClassifiers operation
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetListClassifiersResult(response *core.DetailedResponse) *ClassifierList {
 	result, ok := response.Result.(*ClassifierList)
 	if ok {
@@ -337,7 +342,8 @@ type ClassificationCollection struct {
 // ClassifiedClass : Class and confidence.
 type ClassifiedClass struct {
 
-	// A decimal percentage that represents the confidence that Watson has in this class. Higher values represent higher confidences.
+	// A decimal percentage that represents the confidence that Watson has in this class. Higher values represent higher
+	// confidences.
 	Confidence *float64 `json:"confidence,omitempty"`
 
 	// Class label.
@@ -398,14 +404,14 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyCollect
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *ClassifyCollectionOptions) SetClassifierID(param string) *ClassifyCollectionOptions {
-	options.ClassifierID = core.StringPtr(param)
+func (options *ClassifyCollectionOptions) SetClassifierID(classifierID string) *ClassifyCollectionOptions {
+	options.ClassifierID = core.StringPtr(classifierID)
 	return options
 }
 
 // SetCollection : Allow user to set Collection
-func (options *ClassifyCollectionOptions) SetCollection(param []ClassifyInput) *ClassifyCollectionOptions {
-	options.Collection = param
+func (options *ClassifyCollectionOptions) SetCollection(collection []ClassifyInput) *ClassifyCollectionOptions {
+	options.Collection = collection
 	return options
 }
 
@@ -444,14 +450,14 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyOptions
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *ClassifyOptions) SetClassifierID(param string) *ClassifyOptions {
-	options.ClassifierID = core.StringPtr(param)
+func (options *ClassifyOptions) SetClassifierID(classifierID string) *ClassifyOptions {
+	options.ClassifierID = core.StringPtr(classifierID)
 	return options
 }
 
 // SetText : Allow user to set Text
-func (options *ClassifyOptions) SetText(param string) *ClassifyOptions {
-	options.Text = core.StringPtr(param)
+func (options *ClassifyOptions) SetText(text string) *ClassifyOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
@@ -477,13 +483,19 @@ type CollectionItem struct {
 // CreateClassifierOptions : The createClassifier options.
 type CreateClassifierOptions struct {
 
-	// Metadata in JSON format. The metadata identifies the language of the data, and an optional name to identify the classifier. Specify the language with the 2-letter primary language code as assigned in ISO standard 639. Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`), Japanese (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).
+	// Metadata in JSON format. The metadata identifies the language of the data, and an optional name to identify the
+	// classifier. Specify the language with the 2-letter primary language code as assigned in ISO standard 639.
+	//
+	// Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`), Japanese
+	// (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).
 	Metadata *os.File `json:"training_metadata" validate:"required"`
 
 	// The filename for trainingMetadata.
 	MetadataFilename *string `json:"metadata_filename,omitempty"`
 
-	// Training data in CSV format. Each text value must have at least one class. The data can include up to 20,000 records. For details, see [Data preparation](https://console.bluemix.net/docs/services/natural-language-classifier/using-your-data.html).
+	// Training data in CSV format. Each text value must have at least one class. The data can include up to 20,000
+	// records. For details, see [Data
+	// preparation](https://console.bluemix.net/docs/services/natural-language-classifier/using-your-data.html).
 	TrainingData *os.File `json:"training_data" validate:"required"`
 
 	// The filename for trainingData.
@@ -494,34 +506,34 @@ type CreateClassifierOptions struct {
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(metadata os.File, trainingData os.File) *CreateClassifierOptions {
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(metadata *os.File, trainingData *os.File) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
-		Metadata:     &metadata,
-		TrainingData: &trainingData,
+		Metadata:     metadata,
+		TrainingData: trainingData,
 	}
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateClassifierOptions) SetMetadata(param *os.File) *CreateClassifierOptions {
-	options.Metadata = param
+func (options *CreateClassifierOptions) SetMetadata(metadata *os.File) *CreateClassifierOptions {
+	options.Metadata = metadata
 	return options
 }
 
 // SetMetadataFilename : Allow user to set MetadataFilename
-func (options *CreateClassifierOptions) SetMetadataFilename(param string) *CreateClassifierOptions {
-	options.MetadataFilename = core.StringPtr(param)
+func (options *CreateClassifierOptions) SetMetadataFilename(metadataFilename string) *CreateClassifierOptions {
+	options.MetadataFilename = core.StringPtr(metadataFilename)
 	return options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *CreateClassifierOptions) SetTrainingData(param *os.File) *CreateClassifierOptions {
-	options.TrainingData = param
+func (options *CreateClassifierOptions) SetTrainingData(trainingData *os.File) *CreateClassifierOptions {
+	options.TrainingData = trainingData
 	return options
 }
 
 // SetTrainingDataFilename : Allow user to set TrainingDataFilename
-func (options *CreateClassifierOptions) SetTrainingDataFilename(param string) *CreateClassifierOptions {
-	options.TrainingDataFilename = core.StringPtr(param)
+func (options *CreateClassifierOptions) SetTrainingDataFilename(trainingDataFilename string) *CreateClassifierOptions {
+	options.TrainingDataFilename = core.StringPtr(trainingDataFilename)
 	return options
 }
 
@@ -549,8 +561,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewDeleteClassifie
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *DeleteClassifierOptions) SetClassifierID(param string) *DeleteClassifierOptions {
-	options.ClassifierID = core.StringPtr(param)
+func (options *DeleteClassifierOptions) SetClassifierID(classifierID string) *DeleteClassifierOptions {
+	options.ClassifierID = core.StringPtr(classifierID)
 	return options
 }
 
@@ -578,8 +590,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewGetClassifierOp
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *GetClassifierOptions) SetClassifierID(param string) *GetClassifierOptions {
-	options.ClassifierID = core.StringPtr(param)
+func (options *GetClassifierOptions) SetClassifierID(classifierID string) *GetClassifierOptions {
+	options.ClassifierID = core.StringPtr(classifierID)
 	return options
 }
 

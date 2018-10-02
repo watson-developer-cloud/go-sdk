@@ -26,7 +26,7 @@ func main() {
 	pwd, _ := os.Getwd()
 
 	// Open file with mp3 to recognize
-	audio, audioErr := os.Open(pwd + "/../resources/audio_example.mp3")
+	audio, audioErr := os.Open(pwd + "/../../resources/audio_example.mp3")
 	if audioErr != nil {
 		panic(audioErr)
 	}

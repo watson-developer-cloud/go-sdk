@@ -19,12 +19,17 @@ package languagetranslatorv3
 
 import (
 	"fmt"
-	"os"
-
 	core "github.com/ibm-watson/go-sdk/core"
+	"os"
 )
 
-// LanguageTranslatorV3 : The LanguageTranslatorV3 service
+// LanguageTranslatorV3: IBM Watson&trade; Language Translator translates text from one language to another. The service offers multiple IBM
+// provided translation models that you can customize based on your unique terminology and language. Use Language
+// Translator to take news from across the globe and present it in your language, communicate with your customers in
+// their own language, and more.
+//
+// Version: V3
+// See: http://www.ibm.com/watson/developercloud/language-translator.html
 type LanguageTranslatorV3 struct {
 	service *core.WatsonService
 }
@@ -112,7 +117,7 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 	return response, err
 }
 
-// GetTranslateResult : Cast result of Translate operation
+// GetTranslateResult : Retrieve result of Translate operation
 func (languageTranslator *LanguageTranslatorV3) GetTranslateResult(response *core.DetailedResponse) *TranslationResult {
 	result, ok := response.Result.(*TranslationResult)
 	if ok {
@@ -157,7 +162,7 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 	return response, err
 }
 
-// GetIdentifyResult : Cast result of Identify operation
+// GetIdentifyResult : Retrieve result of Identify operation
 func (languageTranslator *LanguageTranslatorV3) GetIdentifyResult(response *core.DetailedResponse) *IdentifiedLanguages {
 	result, ok := response.Result.(*IdentifiedLanguages)
 	if ok {
@@ -193,7 +198,7 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listId
 	return response, err
 }
 
-// GetListIdentifiableLanguagesResult : Cast result of ListIdentifiableLanguages operation
+// GetListIdentifiableLanguagesResult : Retrieve result of ListIdentifiableLanguages operation
 func (languageTranslator *LanguageTranslatorV3) GetListIdentifiableLanguagesResult(response *core.DetailedResponse) *IdentifiableLanguages {
 	result, ok := response.Result.(*IdentifiableLanguages)
 	if ok {
@@ -249,7 +254,7 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 	return response, err
 }
 
-// GetCreateModelResult : Cast result of CreateModel operation
+// GetCreateModelResult : Retrieve result of CreateModel operation
 func (languageTranslator *LanguageTranslatorV3) GetCreateModelResult(response *core.DetailedResponse) *TranslationModel {
 	result, ok := response.Result.(*TranslationModel)
 	if ok {
@@ -288,7 +293,7 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 	return response, err
 }
 
-// GetDeleteModelResult : Cast result of DeleteModel operation
+// GetDeleteModelResult : Retrieve result of DeleteModel operation
 func (languageTranslator *LanguageTranslatorV3) GetDeleteModelResult(response *core.DetailedResponse) *DeleteModelResult {
 	result, ok := response.Result.(*DeleteModelResult)
 	if ok {
@@ -327,7 +332,7 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetMod
 	return response, err
 }
 
-// GetGetModelResult : Cast result of GetModel operation
+// GetGetModelResult : Retrieve result of GetModel operation
 func (languageTranslator *LanguageTranslatorV3) GetGetModelResult(response *core.DetailedResponse) *TranslationModel {
 	result, ok := response.Result.(*TranslationModel)
 	if ok {
@@ -373,7 +378,7 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 	return response, err
 }
 
-// GetListModelsResult : Cast result of ListModels operation
+// GetListModelsResult : Retrieve result of ListModels operation
 func (languageTranslator *LanguageTranslatorV3) GetListModelsResult(response *core.DetailedResponse) *TranslationModels {
 	result, ok := response.Result.(*TranslationModels)
 	if ok {
@@ -385,19 +390,26 @@ func (languageTranslator *LanguageTranslatorV3) GetListModelsResult(response *co
 // CreateModelOptions : The createModel options.
 type CreateModelOptions struct {
 
-	// The model ID of the model to use as the base for customization. To see available models, use the `List models` method. Usually all IBM provided models are customizable. In addition, all your models that have been created via parallel corpus customization, can be further customized with a forced glossary.
+	// The model ID of the model to use as the base for customization. To see available models, use the `List models`
+	// method. Usually all IBM provided models are customizable. In addition, all your models that have been created via
+	// parallel corpus customization, can be further customized with a forced glossary.
 	BaseModelID *string `json:"base_model_id" validate:"required"`
 
-	// An optional model name that you can use to identify the model. Valid characters are letters, numbers, dashes, underscores, spaces and apostrophes. The maximum length is 32 characters.
+	// An optional model name that you can use to identify the model. Valid characters are letters, numbers, dashes,
+	// underscores, spaces and apostrophes. The maximum length is 32 characters.
 	Name *string `json:"name,omitempty"`
 
-	// A TMX file with your customizations. The customizations in the file completely overwrite the domain translaton data, including high frequency or high confidence phrase translations. You can upload only one glossary with a file size less than 10 MB per call. A forced glossary should contain single words or short phrases.
+	// A TMX file with your customizations. The customizations in the file completely overwrite the domain translaton data,
+	// including high frequency or high confidence phrase translations. You can upload only one glossary with a file size
+	// less than 10 MB per call. A forced glossary should contain single words or short phrases.
 	ForcedGlossary *os.File `json:"forced_glossary,omitempty"`
 
 	// The filename for forcedGlossary.
 	ForcedGlossaryFilename *string `json:"forced_glossary_filename,omitempty"`
 
-	// A TMX file with parallel sentences for source and target language. You can upload multiple parallel_corpus files in one request. All uploaded parallel_corpus files combined, your parallel corpus must contain at least 5,000 parallel sentences to train successfully.
+	// A TMX file with parallel sentences for source and target language. You can upload multiple parallel_corpus files in
+	// one request. All uploaded parallel_corpus files combined, your parallel corpus must contain at least 5,000 parallel
+	// sentences to train successfully.
 	ParallelCorpus *os.File `json:"parallel_corpus,omitempty"`
 
 	// The filename for parallelCorpus.
@@ -415,38 +427,38 @@ func (languageTranslator *LanguageTranslatorV3) NewCreateModelOptions(baseModelI
 }
 
 // SetBaseModelID : Allow user to set BaseModelID
-func (options *CreateModelOptions) SetBaseModelID(param string) *CreateModelOptions {
-	options.BaseModelID = core.StringPtr(param)
+func (options *CreateModelOptions) SetBaseModelID(baseModelID string) *CreateModelOptions {
+	options.BaseModelID = core.StringPtr(baseModelID)
 	return options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateModelOptions) SetName(param string) *CreateModelOptions {
-	options.Name = core.StringPtr(param)
+func (options *CreateModelOptions) SetName(name string) *CreateModelOptions {
+	options.Name = core.StringPtr(name)
 	return options
 }
 
 // SetForcedGlossary : Allow user to set ForcedGlossary
-func (options *CreateModelOptions) SetForcedGlossary(param *os.File) *CreateModelOptions {
-	options.ForcedGlossary = param
+func (options *CreateModelOptions) SetForcedGlossary(forcedGlossary *os.File) *CreateModelOptions {
+	options.ForcedGlossary = forcedGlossary
 	return options
 }
 
 // SetForcedGlossaryFilename : Allow user to set ForcedGlossaryFilename
-func (options *CreateModelOptions) SetForcedGlossaryFilename(param string) *CreateModelOptions {
-	options.ForcedGlossaryFilename = core.StringPtr(param)
+func (options *CreateModelOptions) SetForcedGlossaryFilename(forcedGlossaryFilename string) *CreateModelOptions {
+	options.ForcedGlossaryFilename = core.StringPtr(forcedGlossaryFilename)
 	return options
 }
 
 // SetParallelCorpus : Allow user to set ParallelCorpus
-func (options *CreateModelOptions) SetParallelCorpus(param *os.File) *CreateModelOptions {
-	options.ParallelCorpus = param
+func (options *CreateModelOptions) SetParallelCorpus(parallelCorpus *os.File) *CreateModelOptions {
+	options.ParallelCorpus = parallelCorpus
 	return options
 }
 
 // SetParallelCorpusFilename : Allow user to set ParallelCorpusFilename
-func (options *CreateModelOptions) SetParallelCorpusFilename(param string) *CreateModelOptions {
-	options.ParallelCorpusFilename = core.StringPtr(param)
+func (options *CreateModelOptions) SetParallelCorpusFilename(parallelCorpusFilename string) *CreateModelOptions {
+	options.ParallelCorpusFilename = core.StringPtr(parallelCorpusFilename)
 	return options
 }
 
@@ -474,8 +486,8 @@ func (languageTranslator *LanguageTranslatorV3) NewDeleteModelOptions(modelID st
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *DeleteModelOptions) SetModelID(param string) *DeleteModelOptions {
-	options.ModelID = core.StringPtr(param)
+func (options *DeleteModelOptions) SetModelID(modelID string) *DeleteModelOptions {
+	options.ModelID = core.StringPtr(modelID)
 	return options
 }
 
@@ -510,8 +522,8 @@ func (languageTranslator *LanguageTranslatorV3) NewGetModelOptions(modelID strin
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *GetModelOptions) SetModelID(param string) *GetModelOptions {
-	options.ModelID = core.StringPtr(param)
+func (options *GetModelOptions) SetModelID(modelID string) *GetModelOptions {
+	options.ModelID = core.StringPtr(modelID)
 	return options
 }
 
@@ -573,8 +585,8 @@ func (languageTranslator *LanguageTranslatorV3) NewIdentifyOptions(text string) 
 }
 
 // SetText : Allow user to set Text
-func (options *IdentifyOptions) SetText(param string) *IdentifyOptions {
-	options.Text = core.StringPtr(param)
+func (options *IdentifyOptions) SetText(text string) *IdentifyOptions {
+	options.Text = core.StringPtr(text)
 	return options
 }
 
@@ -611,7 +623,9 @@ type ListModelsOptions struct {
 	// Specify a language code to filter results by target language.
 	Target *string `json:"target,omitempty"`
 
-	// If the default parameter isn't specified, the service will return all models (default and non-default) for each language pair. To return only default models, set this to `true`. To return only non-default models, set this to `false`. There is exactly one default model per language pair, the IBM provided base model.
+	// If the default parameter isn't specified, the service will return all models (default and non-default) for each
+	// language pair. To return only default models, set this to `true`. To return only non-default models, set this to
+	// `false`. There is exactly one default model per language pair, the IBM provided base model.
 	DefaultModels *bool `json:"default,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -624,20 +638,20 @@ func (languageTranslator *LanguageTranslatorV3) NewListModelsOptions() *ListMode
 }
 
 // SetSource : Allow user to set Source
-func (options *ListModelsOptions) SetSource(param string) *ListModelsOptions {
-	options.Source = core.StringPtr(param)
+func (options *ListModelsOptions) SetSource(source string) *ListModelsOptions {
+	options.Source = core.StringPtr(source)
 	return options
 }
 
 // SetTarget : Allow user to set Target
-func (options *ListModelsOptions) SetTarget(param string) *ListModelsOptions {
-	options.Target = core.StringPtr(param)
+func (options *ListModelsOptions) SetTarget(target string) *ListModelsOptions {
+	options.Target = core.StringPtr(target)
 	return options
 }
 
 // SetDefaultModels : Allow user to set DefaultModels
-func (options *ListModelsOptions) SetDefaultModels(param bool) *ListModelsOptions {
-	options.DefaultModels = core.BoolPtr(param)
+func (options *ListModelsOptions) SetDefaultModels(defaultModels bool) *ListModelsOptions {
+	options.DefaultModels = core.BoolPtr(defaultModels)
 	return options
 }
 
@@ -653,13 +667,17 @@ type TranslateOptions struct {
 	// Input text in UTF-8 encoding. Multiple entries will result in multiple translations in the response.
 	Text []string `json:"text" validate:"required"`
 
-	// Model ID of the translation model to use. If this is specified, the **source** and **target** parameters will be ignored. The method requires either a model ID or both the **source** and **target** parameters.
+	// Model ID of the translation model to use. If this is specified, the **source** and **target** parameters will be
+	// ignored. The method requires either a model ID or both the **source** and **target** parameters.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// Language code of the source text language. Use with `target` as an alternative way to select a translation model. When `source` and `target` are set, and a model ID is not set, the system chooses a default model for the language pair (usually the model based on the news domain).
+	// Language code of the source text language. Use with `target` as an alternative way to select a translation model.
+	// When `source` and `target` are set, and a model ID is not set, the system chooses a default model for the language
+	// pair (usually the model based on the news domain).
 	Source *string `json:"source,omitempty"`
 
-	// Language code of the translation target language. Use with source as an alternative way to select a translation model.
+	// Language code of the translation target language. Use with source as an alternative way to select a translation
+	// model.
 	Target *string `json:"target,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -674,26 +692,26 @@ func (languageTranslator *LanguageTranslatorV3) NewTranslateOptions(text []strin
 }
 
 // SetText : Allow user to set Text
-func (options *TranslateOptions) SetText(param []string) *TranslateOptions {
-	options.Text = param
+func (options *TranslateOptions) SetText(text []string) *TranslateOptions {
+	options.Text = text
 	return options
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *TranslateOptions) SetModelID(param string) *TranslateOptions {
-	options.ModelID = core.StringPtr(param)
+func (options *TranslateOptions) SetModelID(modelID string) *TranslateOptions {
+	options.ModelID = core.StringPtr(modelID)
 	return options
 }
 
 // SetSource : Allow user to set Source
-func (options *TranslateOptions) SetSource(param string) *TranslateOptions {
-	options.Source = core.StringPtr(param)
+func (options *TranslateOptions) SetSource(source string) *TranslateOptions {
+	options.Source = core.StringPtr(source)
 	return options
 }
 
 // SetTarget : Allow user to set Target
-func (options *TranslateOptions) SetTarget(param string) *TranslateOptions {
-	options.Target = core.StringPtr(param)
+func (options *TranslateOptions) SetTarget(target string) *TranslateOptions {
+	options.Target = core.StringPtr(target)
 	return options
 }
 
@@ -725,19 +743,23 @@ type TranslationModel struct {
 	// Translation target language code.
 	Target *string `json:"target,omitempty"`
 
-	// Model ID of the base model that was used to customize the model. If the model is not a custom model, this will be an empty string.
+	// Model ID of the base model that was used to customize the model. If the model is not a custom model, this will be an
+	// empty string.
 	BaseModelID *string `json:"base_model_id,omitempty"`
 
 	// The domain of the translation model.
 	Domain *string `json:"domain,omitempty"`
 
-	// Whether this model can be used as a base for customization. Customized models are not further customizable, and some base models are not customizable.
+	// Whether this model can be used as a base for customization. Customized models are not further customizable, and some
+	// base models are not customizable.
 	Customizable *bool `json:"customizable,omitempty"`
 
-	// Whether or not the model is a default model. A default model is the model for a given language pair that will be used when that language pair is specified in the source and target parameters.
+	// Whether or not the model is a default model. A default model is the model for a given language pair that will be
+	// used when that language pair is specified in the source and target parameters.
 	DefaultModel *bool `json:"default_model,omitempty"`
 
-	// Either an empty string, indicating the model is not a custom model, or the ID of the service instance that created the model.
+	// Either an empty string, indicating the model is not a custom model, or the ID of the service instance that created
+	// the model.
 	Owner *string `json:"owner,omitempty"`
 
 	// Availability of a model.
