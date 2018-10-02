@@ -28,7 +28,8 @@ before_install:
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
 install:
-  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
+#  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
+  - cd appscan && make asoc-tool && cd ..
 # TODO Change URLs for the repo before we are public.
 #  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/ibm-watson/go-sdk
 
@@ -37,7 +38,7 @@ notifications:
   email: false
 
 before_script:
- - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
+# - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
 
 # script always runs to completion (set +e). If we have linter issues AND a
 # failing test, we want to see both. Configure golangci-lint with a
@@ -54,6 +55,7 @@ script:
   - gometalinter.v2 --errors ./...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
   - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
 #  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
+  - chmod a+x ./appscan/ASOC.sh  
   - ./appscan/ASOC.sh
 
 # TODO Enable semantic release below once we are public.
