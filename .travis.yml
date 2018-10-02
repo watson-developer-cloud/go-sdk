@@ -45,7 +45,8 @@ before_script:
 script:
   - env | grep GO
   - pwd
-  - cd $GOPATH/src && mv github.ibm.com github.com && mv github.com/arf github.com/ibm-watson
+  - cd $GOPATH/src && mv github.ibm.com github.com 
+  - cd $GOPATH/src/github.com && mv arf ibm-watson
   - cd $GOPATH/src/github.com/ibm-watson/go-sdk
   - pwd
   - find . -type f
