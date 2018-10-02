@@ -23,7 +23,7 @@ import (
 	"os"
 )
 
-// LanguageTranslatorV3: IBM Watson&trade; Language Translator translates text from one language to another. The service offers multiple IBM
+// LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The service offers multiple IBM
 // provided translation models that you can customize based on your unique terminology and language. Use Language
 // Translator to take news from across the globe and present it in your language, communicate with your customers in
 // their own language, and more.
@@ -69,6 +69,7 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (*LanguageTra
 }
 
 // Translate : Translate
+// Translates the input text from the source language to the target language.
 func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *TranslateOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(translateOptions, "translateOptions cannot be nil"); err != nil {
 		return nil, err
@@ -127,6 +128,7 @@ func (languageTranslator *LanguageTranslatorV3) GetTranslateResult(response *cor
 }
 
 // Identify : Identify language
+// Identifies the language of the input text.
 func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *IdentifyOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(identifyOptions, "identifyOptions cannot be nil"); err != nil {
 		return nil, err
@@ -172,6 +174,8 @@ func (languageTranslator *LanguageTranslatorV3) GetIdentifyResult(response *core
 }
 
 // ListIdentifiableLanguages : List identifiable languages
+// Lists the languages that the service can identify. Returns the language code (for example, `en` for English or `es`
+// for Spanish) and name of each language.
 func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listIdentifiableLanguagesOptions, "listIdentifiableLanguagesOptions"); err != nil {
 		return nil, err
@@ -208,6 +212,18 @@ func (languageTranslator *LanguageTranslatorV3) GetListIdentifiableLanguagesResu
 }
 
 // CreateModel : Create model
+// Uploads Translation Memory eXchange (TMX) files to customize a translation model.
+//
+// You can either customize a model with a forced glossary or with a corpus that contains parallel sentences. To create
+// a model that is customized with a parallel corpus <b>and</b> a forced glossary, proceed in two steps: customize with
+// a parallel corpus first and then customize the resulting model with a glossary. Depending on the type of
+// customization and the size of the uploaded corpora, training can range from minutes for a glossary to several hours
+// for a large parallel corpus. You can upload a single forced glossary file and this file must be less than <b>10
+// MB</b>. You can upload multiple parallel corpora tmx files. The cumulative file size of all uploaded files is limited
+// to <b>250 MB</b>. To successfully train with a parallel corpus you must have at least <b>5,000 parallel sentences</b>
+// in your corpus.
+//
+// You can have a <b>maxium of 10 custom models per language pair</b>.
 func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *CreateModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createModelOptions, "createModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -264,6 +280,7 @@ func (languageTranslator *LanguageTranslatorV3) GetCreateModelResult(response *c
 }
 
 // DeleteModel : Delete model
+// Deletes a custom translation model.
 func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *DeleteModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteModelOptions, "deleteModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -303,6 +320,8 @@ func (languageTranslator *LanguageTranslatorV3) GetDeleteModelResult(response *c
 }
 
 // GetModel : Get model details
+// Gets information about a translation model, including training status for custom models. Use this API call to poll
+// the status of your customization request. A successfully completed training will have a status of `available`.
 func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getModelOptions, "getModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -342,6 +361,7 @@ func (languageTranslator *LanguageTranslatorV3) GetGetModelResult(response *core
 }
 
 // ListModels : List models
+// Lists available translation models.
 func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
 		return nil, err

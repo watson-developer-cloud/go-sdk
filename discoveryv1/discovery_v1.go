@@ -19,11 +19,10 @@ package discoveryv1
 
 import (
 	"fmt"
-	"os"
-	"strings"
-
 	"github.com/go-openapi/strfmt"
 	core "github.com/ibm-watson/go-sdk/core"
+	"os"
+	"strings"
 )
 
 // DiscoveryV1 : The IBM Watson&trade; Discovery Service is a cognitive search and content analytics engine that you can add to
@@ -72,6 +71,10 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (*DiscoveryV1, error) {
 }
 
 // CreateEnvironment : Create an environment
+// Creates a new environment for private data. An environment must be created before collections can be created.
+//
+// **Note**: You can create only one environment for private data per service instance. An attempt to create another
+// environment results in an error.
 func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *CreateEnvironmentOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createEnvironmentOptions, "createEnvironmentOptions cannot be nil"); err != nil {
 		return nil, err
@@ -205,6 +208,7 @@ func (discovery *DiscoveryV1) GetGetEnvironmentResult(response *core.DetailedRes
 }
 
 // ListEnvironments : List environments
+// List existing environments for the service instance.
 func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvironmentsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listEnvironmentsOptions, "listEnvironmentsOptions"); err != nil {
 		return nil, err
@@ -245,6 +249,7 @@ func (discovery *DiscoveryV1) GetListEnvironmentsResult(response *core.DetailedR
 }
 
 // ListFields : List fields across collections
+// Gets a list of the unique fields (and their types) stored in the indexes of the specified collections.
 func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listFieldsOptions, "listFieldsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -286,6 +291,8 @@ func (discovery *DiscoveryV1) GetListFieldsResult(response *core.DetailedRespons
 }
 
 // UpdateEnvironment : Update an environment
+// Updates an environment. The environment's **name** and  **description** parameters can be changed. You must specify a
+// **name** for the environment.
 func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *UpdateEnvironmentOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateEnvironmentOptions, "updateEnvironmentOptions cannot be nil"); err != nil {
 		return nil, err
@@ -338,6 +345,15 @@ func (discovery *DiscoveryV1) GetUpdateEnvironmentResult(response *core.Detailed
 }
 
 // CreateConfiguration : Add configuration
+// Creates a new configuration.
+//
+// If the input configuration contains the **configuration_id**, **created**, or **updated** properties, then they are
+// ignored and overridden by the system, and an error is not returned so that the overridden fields do not need to be
+// removed when copying a configuration.
+//
+// The configuration can contain unrecognized JSON fields. Any such fields are ignored and do not generate an error.
+// This makes it easier to use newer configuration files with older versions of the API and the service. It also makes
+// it possible for the tooling to add additional metadata and information to the configuration.
 func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *CreateConfigurationOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createConfigurationOptions, "createConfigurationOptions cannot be nil"); err != nil {
 		return nil, err
@@ -402,6 +418,10 @@ func (discovery *DiscoveryV1) GetCreateConfigurationResult(response *core.Detail
 }
 
 // DeleteConfiguration : Delete a configuration
+// The deletion is performed unconditionally. A configuration deletion request succeeds even if the configuration is
+// referenced by a collection or document ingestion. However, documents that have already been submitted for processing
+// continue to use the deleted configuration. Documents are always processed with a snapshot of the configuration as it
+// existed at the time the document was submitted.
 func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *DeleteConfigurationOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteConfigurationOptions, "deleteConfigurationOptions cannot be nil"); err != nil {
 		return nil, err
@@ -480,6 +500,7 @@ func (discovery *DiscoveryV1) GetGetConfigurationResult(response *core.DetailedR
 }
 
 // ListConfigurations : List configurations
+// Lists existing configurations for the service instance.
 func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *ListConfigurationsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listConfigurationsOptions, "listConfigurationsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -523,6 +544,13 @@ func (discovery *DiscoveryV1) GetListConfigurationsResult(response *core.Detaile
 }
 
 // UpdateConfiguration : Update a configuration
+// Replaces an existing configuration.
+//   * Completely replaces the original configuration.
+//   * The **configuration_id**, **updated**, and **created** fields are accepted in the request, but they are ignored,
+// and an error is not generated. It is also acceptable for users to submit an updated configuration with none of the
+// three properties.
+//   * Documents are processed with a snapshot of the configuration as it was at the time the document was submitted to
+// be ingested. This means that already submitted documents will not see any updates made to the configuration.
 func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *UpdateConfigurationOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateConfigurationOptions, "updateConfigurationOptions cannot be nil"); err != nil {
 		return nil, err
@@ -587,6 +615,8 @@ func (discovery *DiscoveryV1) GetUpdateConfigurationResult(response *core.Detail
 }
 
 // TestConfigurationInEnvironment : Test configuration
+// Runs a sample document through the default or your configuration and returns diagnostic information designed to help
+// you understand how the document was processed. The document is not added to the index.
 func (discovery *DiscoveryV1) TestConfigurationInEnvironment(testConfigurationInEnvironmentOptions *TestConfigurationInEnvironmentOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(testConfigurationInEnvironmentOptions, "testConfigurationInEnvironmentOptions cannot be nil"); err != nil {
 		return nil, err
@@ -783,6 +813,7 @@ func (discovery *DiscoveryV1) GetGetCollectionResult(response *core.DetailedResp
 }
 
 // ListCollectionFields : List collection fields
+// Gets a list of the unique fields (and their types) stored in the index.
 func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *ListCollectionFieldsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listCollectionFieldsOptions, "listCollectionFieldsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -822,6 +853,7 @@ func (discovery *DiscoveryV1) GetListCollectionFieldsResult(response *core.Detai
 }
 
 // ListCollections : List collections
+// Lists existing collections for the service instance.
 func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollectionsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listCollectionsOptions, "listCollectionsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -920,6 +952,9 @@ func (discovery *DiscoveryV1) GetUpdateCollectionResult(response *core.DetailedR
 }
 
 // CreateExpansions : Create or update expansion list
+// Create or replace the Expansion list for this collection. The maximum number of expanded terms per collection is
+// `500`.
+// The current expansion list is replaced with the uploaded content.
 func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateExpansionsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createExpansionsOptions, "createExpansionsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -969,6 +1004,8 @@ func (discovery *DiscoveryV1) GetCreateExpansionsResult(response *core.DetailedR
 }
 
 // DeleteExpansions : Delete the expansion list
+// Remove the expansion information for this collection. The expansion list must be deleted to disable query expansion
+// for a collection.
 func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteExpansionsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteExpansionsOptions, "deleteExpansionsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -999,6 +1036,8 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 }
 
 // ListExpansions : Get the expansion list
+// Returns the current expansion list for the specified collection. If an expansion list is not specified, an object
+// with empty expansion arrays is returned.
 func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansionsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listExpansionsOptions, "listExpansionsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1038,6 +1077,25 @@ func (discovery *DiscoveryV1) GetListExpansionsResult(response *core.DetailedRes
 }
 
 // AddDocument : Add a document
+// Add a document to a collection with optional metadata.
+//
+//   * The **version** query parameter is still required.
+//
+//   * Returns immediately after the system has accepted the document for processing.
+//
+//   * The user must provide document content, metadata, or both. If the request is missing both document content and
+// metadata, it is rejected.
+//
+//   * The user can set the **Content-Type** parameter on the **file** part to indicate the media type of the document.
+// If the **Content-Type** parameter is missing or is one of the generic media types (for example,
+// `application/octet-stream`), then the service attempts to automatically detect the document's media type.
+//
+//   * The following field names are reserved and will be filtered out if present after normalization: `id`, `score`,
+// `highlight`, and any field with the prefix of: `_`, `+`, or `-`
+//
+//   * Fields with empty name values after normalization are filtered out before indexing.
+//
+//   * Fields containing the following characters after normalization are filtered out before indexing: `#` and `,`.
 func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addDocumentOptions, "addDocumentOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1088,6 +1146,8 @@ func (discovery *DiscoveryV1) GetAddDocumentResult(response *core.DetailedRespon
 }
 
 // DeleteDocument : Delete a document
+// If the given document ID is invalid, or if the document is not found, then the a success response is returned (HTTP
+// status code `200`) with the status set to 'deleted'.
 func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1127,6 +1187,9 @@ func (discovery *DiscoveryV1) GetDeleteDocumentResult(response *core.DetailedRes
 }
 
 // GetDocumentStatus : Get document details
+// Fetch status details about a submitted document. **Note:** this operation does not return the document itself.
+// Instead, it returns only the document's processing status and any notices (warnings or errors) that were generated
+// when the document was ingested. Use the query API to retrieve the actual document content.
 func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getDocumentStatusOptions, "getDocumentStatusOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1166,6 +1229,7 @@ func (discovery *DiscoveryV1) GetGetDocumentStatusResult(response *core.Detailed
 }
 
 // UpdateDocument : Update a document
+// Replace an existing document. Starts ingesting a document with optional metadata.
 func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1216,6 +1280,8 @@ func (discovery *DiscoveryV1) GetUpdateDocumentResult(response *core.DetailedRes
 }
 
 // FederatedQuery : Query documents in multiple collections
+// See the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more
+// details.
 func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQueryOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(federatedQueryOptions, "federatedQueryOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1311,6 +1377,10 @@ func (discovery *DiscoveryV1) GetFederatedQueryResult(response *core.DetailedRes
 }
 
 // FederatedQueryNotices : Query multiple collection system notices
+// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated when
+// ingesting documents and performing relevance training. See the [Discovery service
+// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
+// language.
 func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions *FederatedQueryNoticesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(federatedQueryNoticesOptions, "federatedQueryNoticesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1391,6 +1461,9 @@ func (discovery *DiscoveryV1) GetFederatedQueryNoticesResult(response *core.Deta
 }
 
 // Query : Query your collection
+// After your content is uploaded and enriched by the Discovery service, you can build queries to search your content.
+// For details, see the [Discovery service
+// documentation](https://console.bluemix.net/docs/services/discovery/using.html).
 func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryOptions, "queryOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1488,6 +1561,8 @@ func (discovery *DiscoveryV1) GetQueryResult(response *core.DetailedResponse) *Q
 }
 
 // QueryEntities : Knowledge Graph entity query
+// See the [Knowledge Graph documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for
+// more details.
 func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryEntitiesOptions, "queryEntitiesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1549,6 +1624,10 @@ func (discovery *DiscoveryV1) GetQueryEntitiesResult(response *core.DetailedResp
 }
 
 // QueryNotices : Query system notices
+// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated when
+// ingesting documents and performing relevance training. See the [Discovery service
+// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
+// language.
 func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryNoticesOptions, "queryNoticesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1640,6 +1719,8 @@ func (discovery *DiscoveryV1) GetQueryNoticesResult(response *core.DetailedRespo
 }
 
 // QueryRelations : Knowledge Graph relationship query
+// See the [Knowledge Graph documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for
+// more details.
 func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelationsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryRelationsOptions, "queryRelationsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1704,6 +1785,7 @@ func (discovery *DiscoveryV1) GetQueryRelationsResult(response *core.DetailedRes
 }
 
 // AddTrainingData : Add query to training data
+// Adds a query to the training data for this collection. The query can contain a filter and natural language query.
 func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainingDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addTrainingDataOptions, "addTrainingDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1759,6 +1841,7 @@ func (discovery *DiscoveryV1) GetAddTrainingDataResult(response *core.DetailedRe
 }
 
 // CreateTrainingExample : Add example to training data query
+// Adds a example to this training data query.
 func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions *CreateTrainingExampleOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createTrainingExampleOptions, "createTrainingExampleOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1814,6 +1897,7 @@ func (discovery *DiscoveryV1) GetCreateTrainingExampleResult(response *core.Deta
 }
 
 // DeleteAllTrainingData : Delete all training data
+// Deletes all training data from a collection.
 func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions *DeleteAllTrainingDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteAllTrainingDataOptions, "deleteAllTrainingDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1844,6 +1928,7 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 }
 
 // DeleteTrainingData : Delete a training data query
+// Removes the training data query and all associated examples from the training data set.
 func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *DeleteTrainingDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteTrainingDataOptions, "deleteTrainingDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1874,6 +1959,7 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 }
 
 // DeleteTrainingExample : Delete example for training data query
+// Deletes the example document with the given ID from the training data query.
 func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions *DeleteTrainingExampleOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteTrainingExampleOptions, "deleteTrainingExampleOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1904,6 +1990,7 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 }
 
 // GetTrainingData : Get details about a query
+// Gets details for a specific training data query, including the query string and all examples.
 func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainingDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getTrainingDataOptions, "getTrainingDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1943,6 +2030,7 @@ func (discovery *DiscoveryV1) GetGetTrainingDataResult(response *core.DetailedRe
 }
 
 // GetTrainingExample : Get details for training data example
+// Gets the details for this training example.
 func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetTrainingExampleOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getTrainingExampleOptions, "getTrainingExampleOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1982,6 +2070,7 @@ func (discovery *DiscoveryV1) GetGetTrainingExampleResult(response *core.Detaile
 }
 
 // ListTrainingData : List training data
+// Lists the training data for the specified collection.
 func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listTrainingDataOptions, "listTrainingDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2021,6 +2110,7 @@ func (discovery *DiscoveryV1) GetListTrainingDataResult(response *core.DetailedR
 }
 
 // ListTrainingExamples : List examples for a training data query
+// List all examples for this training data query.
 func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *ListTrainingExamplesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listTrainingExamplesOptions, "listTrainingExamplesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2060,6 +2150,7 @@ func (discovery *DiscoveryV1) GetListTrainingExamplesResult(response *core.Detai
 }
 
 // UpdateTrainingExample : Change label or cross reference for example
+// Changes the label or cross reference query for this training data example.
 func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions *UpdateTrainingExampleOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateTrainingExampleOptions, "updateTrainingExampleOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2112,6 +2203,12 @@ func (discovery *DiscoveryV1) GetUpdateTrainingExampleResult(response *core.Deta
 }
 
 // DeleteUserData : Delete labeled data
+// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
+// customer ID.
+//
+// You associate a customer ID with data by passing the **X-Watson-Metadata** header with a request that passes data.
+// For more information about personal data and customer IDs, see [Information
+// security](https://console.bluemix.net/docs/services/discovery/information-security.html).
 func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2144,6 +2241,8 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 }
 
 // CreateEvent : Create event
+// The **Events** API can be used to create log entries that are associated with specific queries. For example, you can
+// record which documents in the results set were \"clicked\" by a user and when that click occured.
 func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createEventOptions, "createEventOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2196,6 +2295,9 @@ func (discovery *DiscoveryV1) GetCreateEventResult(response *core.DetailedRespon
 }
 
 // GetMetricsEventRate : Percentage of queries with an associated event
+// The percentage of queries using the **natural_language_query** parameter that have a corresponding \"click\" event
+// over a specified time window.  This metric requires having integrated event tracking in your application using the
+// **Events** API.
 func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *GetMetricsEventRateOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(getMetricsEventRateOptions, "getMetricsEventRateOptions"); err != nil {
 		return nil, err
@@ -2242,6 +2344,7 @@ func (discovery *DiscoveryV1) GetGetMetricsEventRateResult(response *core.Detail
 }
 
 // GetMetricsQuery : Number of queries over time
+// Total number of queries using the **natural_language_query** parameter over a specific time window.
 func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetricsQueryOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(getMetricsQueryOptions, "getMetricsQueryOptions"); err != nil {
 		return nil, err
@@ -2288,6 +2391,9 @@ func (discovery *DiscoveryV1) GetGetMetricsQueryResult(response *core.DetailedRe
 }
 
 // GetMetricsQueryEvent : Number of queries with an event over time
+// Total number of queries using the **natural_language_query** parameter that have a corresponding \"click\" event over
+// a specified time window. This metric requires having integrated event tracking in your application using the
+// **Events** API.
 func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *GetMetricsQueryEventOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(getMetricsQueryEventOptions, "getMetricsQueryEventOptions"); err != nil {
 		return nil, err
@@ -2334,6 +2440,8 @@ func (discovery *DiscoveryV1) GetGetMetricsQueryEventResult(response *core.Detai
 }
 
 // GetMetricsQueryNoResults : Number of queries with no search results over time
+// Total number of queries using the **natural_language_query** parameter that have no results returned over a specified
+// time window.
 func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsOptions *GetMetricsQueryNoResultsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(getMetricsQueryNoResultsOptions, "getMetricsQueryNoResultsOptions"); err != nil {
 		return nil, err
@@ -2380,6 +2488,9 @@ func (discovery *DiscoveryV1) GetGetMetricsQueryNoResultsResult(response *core.D
 }
 
 // GetMetricsQueryTokenEvent : Most frequent query tokens with an event
+// The most frequent query tokens parsed from the **natural_language_query** parameter and their corresponding \"click\"
+// event rate within the recording period (queries and events are stored for 30 days). A query token is an individual
+// word or unigram within the query string.
 func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(getMetricsQueryTokenEventOptions, "getMetricsQueryTokenEventOptions"); err != nil {
 		return nil, err
@@ -2420,6 +2531,8 @@ func (discovery *DiscoveryV1) GetGetMetricsQueryTokenEventResult(response *core.
 }
 
 // QueryLog : Search the query and event log
+// Searches the query and event log to find query sessions that match the specified criteria. Searching the **logs**
+// endpoint uses the standard Discovery query syntax for the parameters that are supported.
 func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(queryLogOptions, "queryLogOptions"); err != nil {
 		return nil, err
@@ -2472,6 +2585,10 @@ func (discovery *DiscoveryV1) GetQueryLogResult(response *core.DetailedResponse)
 }
 
 // CreateCredentials : Create credentials
+// Creates a set of credentials to connect to a remote source. Created credentials are used in a configuration to
+// associate a collection with the remote source.
+//
+// **Note:** All credentials are sent over an encrypted connection and encrypted at rest.
 func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *CreateCredentialsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createCredentialsOptions, "createCredentialsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2524,6 +2641,7 @@ func (discovery *DiscoveryV1) GetCreateCredentialsResult(response *core.Detailed
 }
 
 // DeleteCredentials : Delete credentials
+// Deletes a set of stored credentials from your Discovery instance.
 func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *DeleteCredentialsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteCredentialsOptions, "deleteCredentialsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2563,6 +2681,10 @@ func (discovery *DiscoveryV1) GetDeleteCredentialsResult(response *core.Detailed
 }
 
 // GetCredentials : View Credentials
+// Returns details about the specified credentials.
+//
+//  **Note:** Secure credential information such as a password or SSH key is never returned and must be obtained from
+// the source system.
 func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentialsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getCredentialsOptions, "getCredentialsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2602,6 +2724,9 @@ func (discovery *DiscoveryV1) GetGetCredentialsResult(response *core.DetailedRes
 }
 
 // ListCredentials : List credentials
+// List all the source credentials that have been created for this service instance.
+//
+//  **Note:**  All credentials are sent over an encrypted connection and encrypted at rest.
 func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCredentialsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listCredentialsOptions, "listCredentialsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2641,6 +2766,9 @@ func (discovery *DiscoveryV1) GetListCredentialsResult(response *core.DetailedRe
 }
 
 // UpdateCredentials : Update credentials
+// Updates an existing set of source credentials.
+//
+// **Note:** All credentials are sent over an encrypted connection and encrypted at rest.
 func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *UpdateCredentialsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateCredentialsOptions, "updateCredentialsOptions cannot be nil"); err != nil {
 		return nil, err

@@ -26,7 +26,7 @@ import (
 	"strings"
 )
 
-// VisualRecognitionV3: The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify scenes, objects, and faces
+// VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify scenes, objects, and faces
 //  in images you upload to the service. You can create and train a custom classifier to identify subjects that suit
 // your needs.
 //
@@ -67,6 +67,7 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (*VisualRecogni
 }
 
 // Classify : Classify images
+// Classify images with built-in or custom classifiers.
 func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *ClassifyOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(classifyOptions, "classifyOptions cannot be nil"); err != nil {
 		return nil, err
@@ -129,6 +130,17 @@ func (visualRecognition *VisualRecognitionV3) GetClassifyResult(response *core.D
 }
 
 // DetectFaces : Detect faces in images
+// **Important:** On April 2, 2018, the identity information in the response to calls to the Face model was removed. The
+// identity information refers to the `name` of the person, `score`, and `type_hierarchy` knowledge graph. For details
+// about the enhanced Face model, see the [Release
+// notes](https://console.bluemix.net/docs/services/visual-recognition/release-notes.html#2april2018).
+//
+// Analyze and get data about faces in images. Responses can include estimated age and gender. This feature uses a
+// built-in model, so no training is necessary. The Detect faces method does not support general biometric facial
+// recognition.
+//
+// Supported image formats include .gif, .jpg, .png, and .tif. The maximum image size is 10 MB. The minimum recommended
+// pixel density is 32X32 pixels per inch.
 func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *DetectFacesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(detectFacesOptions, "detectFacesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -179,6 +191,12 @@ func (visualRecognition *VisualRecognitionV3) GetDetectFacesResult(response *cor
 }
 
 // CreateClassifier : Create a classifier
+// Train a new multi-faceted classifier on the uploaded image data. Create your custom classifier with positive or
+// negative examples. Include at least two sets of examples, either two positive example files or one positive and one
+// negative file. You can upload a maximum of 256 MB per call.
+//
+// Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
+// names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
 func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierOptions *CreateClassifierOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createClassifierOptions, "createClassifierOptions cannot be nil"); err != nil {
 		return nil, err
@@ -200,9 +218,8 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	builder.AddQuery("version", visualRecognition.service.Options.Version)
 
 	builder.AddFormData("name", "", "", fmt.Sprint(*createClassifierOptions.Name))
-	for className, file := range createClassifierOptions.ClassnamePositiveExamples {
-		builder.AddFormData(className+"_positive_examples", "", "application/octet-stream", file)
-	}
+	builder.AddFormData("classname_positive_examples", core.StringNilMapper(createClassifierOptions.ClassnamePositiveExamplesFilename),
+		"application/octet-stream", createClassifierOptions.ClassnamePositiveExamples)
 	if createClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(createClassifierOptions.NegativeExamplesFilename),
 			"application/octet-stream", createClassifierOptions.NegativeExamples)
@@ -257,6 +274,7 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 }
 
 // GetClassifier : Retrieve classifier details
+// Retrieve information about a custom classifier.
 func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions *GetClassifierOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getClassifierOptions, "getClassifierOptions cannot be nil"); err != nil {
 		return nil, err
@@ -336,6 +354,16 @@ func (visualRecognition *VisualRecognitionV3) GetListClassifiersResult(response 
 }
 
 // UpdateClassifier : Update a classifier
+// Update a custom classifier by adding new positive or negative classes (examples) or by adding new images to existing
+// classes. You must supply at least one set of positive or negative examples. For details, see [Updating custom
+// classifiers](https://console.bluemix.net/docs/services/visual-recognition/customizing.html#updating-custom-classifiers).
+//
+// Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
+// names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
+//
+// **Tip:** Don't make retraining calls on a classifier until the status is ready. When you submit retraining requests
+// in parallel, the last request overwrites the previous requests. The retrained property shows the last time the
+// classifier retraining finished.
 func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierOptions *UpdateClassifierOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateClassifierOptions, "updateClassifierOptions cannot be nil"); err != nil {
 		return nil, err
@@ -359,8 +387,9 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.service.Options.Version)
 
-	for className, file := range updateClassifierOptions.ClassnamePositiveExamples {
-		builder.AddFormData(className+"_positive_examples", "", "application/octet-stream", file)
+	if updateClassifierOptions.ClassnamePositiveExamples != nil {
+		builder.AddFormData("classname_positive_examples", core.StringNilMapper(updateClassifierOptions.ClassnamePositiveExamplesFilename),
+			"application/octet-stream", updateClassifierOptions.ClassnamePositiveExamples)
 	}
 	if updateClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(updateClassifierOptions.NegativeExamplesFilename),
@@ -386,6 +415,8 @@ func (visualRecognition *VisualRecognitionV3) GetUpdateClassifierResult(response
 }
 
 // GetCoreMlModel : Retrieve a Core ML model of a classifier
+// Download a Core ML model file (.mlmodel) of a custom classifier that returns <tt>\"core_ml_enabled\": true</tt> in
+// the classifier details.
 func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptions *GetCoreMlModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getCoreMlModelOptions, "getCoreMlModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -425,6 +456,12 @@ func (visualRecognition *VisualRecognitionV3) GetGetCoreMlModelResult(response *
 }
 
 // DeleteUserData : Delete labeled data
+// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
+// customer ID.
+//
+// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
+// more information about personal data and customer IDs, see [Information
+// security](https://console.bluemix.net/docs/services/visual-recognition/information-security.html).
 func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -703,7 +740,10 @@ type CreateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	ClassnamePositiveExamples map[string]*os.File `json:"classname_positive_examples" validate:"required"`
+	ClassnamePositiveExamples *os.File `json:"classname_positive_examples" validate:"required"`
+
+	// The filename for classnamePositiveExamples.
+	ClassnamePositiveExamplesFilename *string `json:"classname_positive_examples_filename,omitempty"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
@@ -719,12 +759,10 @@ type CreateClassifierOptions struct {
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func (visualRecognition *VisualRecognitionV3) NewCreateClassifierOptions(name string, className string, classnamePositiveExamples *os.File) *CreateClassifierOptions {
+func (visualRecognition *VisualRecognitionV3) NewCreateClassifierOptions(name string, classnamePositiveExamples *os.File) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
-		Name: core.StringPtr(name),
-		ClassnamePositiveExamples: map[string]*os.File{
-			className: classnamePositiveExamples,
-		},
+		Name:                      core.StringPtr(name),
+		ClassnamePositiveExamples: classnamePositiveExamples,
 	}
 }
 
@@ -734,9 +772,15 @@ func (options *CreateClassifierOptions) SetName(name string) *CreateClassifierOp
 	return options
 }
 
-// AddClassnamePositiveExamples : Allow user to add ClassnamePositiveExamples
-func (options *CreateClassifierOptions) AddClassnamePositiveExamples(className string, file *os.File) *CreateClassifierOptions {
-	options.ClassnamePositiveExamples[className] = file
+// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *CreateClassifierOptions) SetClassnamePositiveExamples(classnamePositiveExamples *os.File) *CreateClassifierOptions {
+	options.ClassnamePositiveExamples = classnamePositiveExamples
+	return options
+}
+
+// SetClassnamePositiveExamplesFilename : Allow user to set ClassnamePositiveExamplesFilename
+func (options *CreateClassifierOptions) SetClassnamePositiveExamplesFilename(classnamePositiveExamplesFilename string) *CreateClassifierOptions {
+	options.ClassnamePositiveExamplesFilename = core.StringPtr(classnamePositiveExamplesFilename)
 	return options
 }
 
@@ -1084,7 +1128,10 @@ type UpdateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	ClassnamePositiveExamples map[string]*os.File `json:"classname_positive_examples,omitempty"`
+	ClassnamePositiveExamples *os.File `json:"classname_positive_examples,omitempty"`
+
+	// The filename for classnamePositiveExamples.
+	ClassnamePositiveExamplesFilename *string `json:"classname_positive_examples_filename,omitempty"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
@@ -1112,9 +1159,15 @@ func (options *UpdateClassifierOptions) SetClassifierID(classifierID string) *Up
 	return options
 }
 
-// AddClassnamePositiveExamples : Allow user to add ClassnamePositiveExamples
-func (options *UpdateClassifierOptions) AddClassnamePositiveExamples(className string, file *os.File) *UpdateClassifierOptions {
-	options.ClassnamePositiveExamples[className] = file
+// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *UpdateClassifierOptions) SetClassnamePositiveExamples(classnamePositiveExamples *os.File) *UpdateClassifierOptions {
+	options.ClassnamePositiveExamples = classnamePositiveExamples
+	return options
+}
+
+// SetClassnamePositiveExamplesFilename : Allow user to set ClassnamePositiveExamplesFilename
+func (options *UpdateClassifierOptions) SetClassnamePositiveExamplesFilename(classnamePositiveExamplesFilename string) *UpdateClassifierOptions {
+	options.ClassnamePositiveExamplesFilename = core.StringPtr(classnamePositiveExamplesFilename)
 	return options
 }
 

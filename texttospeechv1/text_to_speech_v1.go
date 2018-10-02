@@ -23,7 +23,7 @@ import (
 	"io"
 )
 
-// TextToSpeechV1: ### Service Overview
+// TextToSpeechV1 : ### Service Overview
 // The IBM&reg; Text to Speech service provides an API that uses IBM's speech-synthesis capabilities to synthesize text
 // into natural-sounding speech in a variety of languages, dialects, and voices. The service supports at least one male
 // or female voice, sometimes both, for each language. The audio is streamed back to the client with minimal delay. For
@@ -106,6 +106,9 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) 
 }
 
 // GetVoice : Get a voice
+// Gets information about the specified voice. The information includes the name, language, gender, and other details
+// about the voice. Specify a customization ID to obtain information for that custom voice model of the specified voice.
+// To list information about all available voices, use the **List voices** method.
 func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceOptions, "getVoiceOptions cannot be nil"); err != nil {
 		return nil, err
@@ -148,6 +151,8 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedRes
 }
 
 // ListVoices : List voices
+// Lists all voices available for use with the service. The information includes the name, language, gender, and other
+// details about the voice. To see information about a specific voice, use the **Get a voice** method.
 func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoicesOptions, "listVoicesOptions"); err != nil {
 		return nil, err
@@ -183,6 +188,16 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 }
 
 // Synthesize : Synthesize audio
+// Synthesizes text to spoken audio, returning the synthesized audio stream as an array of bytes. You can pass a maximum
+// of 5 KB of text.  Use the `Accept` header or the `accept` query parameter to specify the requested format (MIME type)
+// of the response audio. By default, the service uses `audio/ogg;codecs=opus`. For detailed information about the
+// supported audio formats and sampling rates, see [Specifying an audio
+// format](https://console.bluemix.net/docs/services/text-to-speech/http.html#format).
+//
+// If a request includes invalid query parameters, the service returns a `Warnings` response header that provides
+// messages about the invalid parameters. The warning includes a descriptive message and a list of invalid argument
+// strings. For example, a message such as `\"Unknown arguments:\"` or `\"Unknown url query arguments:\"` followed by a
+// list of the form `\"invalid_arg_1, invalid_arg_2.\"` The request succeeds despite the warnings.
 func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(synthesizeOptions, "synthesizeOptions cannot be nil"); err != nil {
 		return nil, err
@@ -241,6 +256,11 @@ func (textToSpeech *TextToSpeechV1) GetSynthesizeResult(response *core.DetailedR
 }
 
 // GetPronunciation : Get pronunciation
+// Gets the phonetic pronunciation for the specified word. You can request the pronunciation for a specific format. You
+// can also request the pronunciation for a specific voice to see the default translation for the language of that voice
+// or for a specific custom voice model to see the translation for that voice model.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getPronunciationOptions, "getPronunciationOptions cannot be nil"); err != nil {
 		return nil, err
@@ -290,6 +310,11 @@ func (textToSpeech *TextToSpeechV1) GetGetPronunciationResult(response *core.Det
 }
 
 // CreateVoiceModel : Create a custom model
+// Creates a new empty custom voice model. You must specify a name for the new custom model. You can optionally specify
+// the language and a description for the new model. The model is owned by the instance of the service whose credentials
+// are used to create it.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createVoiceModelOptions, "createVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -344,6 +369,10 @@ func (textToSpeech *TextToSpeechV1) GetCreateVoiceModelResult(response *core.Det
 }
 
 // DeleteVoiceModel : Delete a custom model
+// Deletes the specified custom voice model. You must use credentials for the instance of the service that owns a model
+// to delete it.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -372,6 +401,11 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 }
 
 // GetVoiceModel : Get a custom model
+// Gets all information about a specified custom voice model. In addition to metadata such as the name and description
+// of the voice model, the output includes the words and their translations as defined in the model. To see just the
+// metadata for a voice model, use the **List custom models** method.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -410,6 +444,12 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.Detail
 }
 
 // ListVoiceModels : List custom models
+// Lists metadata such as the name and description for all custom voice models that are owned by an instance of the
+// service. Specify a language to list the voice models for that language only. To see the words in addition to the
+// metadata for a specific voice model, use the **List a custom model** method. You must use credentials for the
+// instance of the service that owns a model to list information about it.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoiceModelsOptions, "listVoiceModelsOptions"); err != nil {
 		return nil, err
@@ -449,6 +489,12 @@ func (textToSpeech *TextToSpeechV1) GetListVoiceModelsResult(response *core.Deta
 }
 
 // UpdateVoiceModel : Update a custom model
+// Updates information for the specified custom voice model. You can update metadata such as the name and description of
+// the voice model. You can also update the words in the model and their translations. Adding a new translation for a
+// word that already exists in a custom model overwrites the word's existing translation. A custom model can contain no
+// more than 20,000 entries. You must use credentials for the instance of the service that owns a model to update it.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateVoiceModelOptions, "updateVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -494,6 +540,11 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 }
 
 // AddWord : Add a custom word
+// Adds a single word and its translation to the specified custom voice model. Adding a new translation for a word that
+// already exists in a custom model overwrites the word's existing translation. A custom model can contain no more than
+// 20,000 entries. You must use credentials for the instance of the service that owns a model to add a word to it.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -535,6 +586,12 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 }
 
 // AddWords : Add custom words
+// Adds one or more words and their translations to the specified custom voice model. Adding a new translation for a
+// word that already exists in a custom model overwrites the word's existing translation. A custom model can contain no
+// more than 20,000 entries. You must use credentials for the instance of the service that owns a model to add words to
+// it.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -574,6 +631,10 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 }
 
 // DeleteWord : Delete a custom word
+// Deletes a single word from the specified custom voice model. You must use credentials for the instance of the service
+// that owns a model to delete its words.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -602,6 +663,10 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 }
 
 // GetWord : Get a custom word
+// Gets the translation for a single word from the specified custom model. The output shows the translation as it is
+// defined in the model. You must use credentials for the instance of the service that owns a model to list its words.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -640,6 +705,11 @@ func (textToSpeech *TextToSpeechV1) GetGetWordResult(response *core.DetailedResp
 }
 
 // ListWords : List custom words
+// Lists all of the words and their translations for the specified custom voice model. The output shows the translations
+// as they are defined in the model. You must use credentials for the instance of the service that owns a model to list
+// its words.
+//
+// **Note:** This method is currently a beta release.
 func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -678,6 +748,14 @@ func (textToSpeech *TextToSpeechV1) GetListWordsResult(response *core.DetailedRe
 }
 
 // DeleteUserData : Delete labeled data
+// Deletes all data that is associated with a specified customer ID. The method deletes all data for the customer ID,
+// regardless of the method by which the information was added. The method has no effect if no data is associated with
+// the customer ID. You must issue the request with credentials for the same instance of the service that was used to
+// associate the customer ID with the data.
+//
+// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
+// For more information about customer IDs and about using this method, see [Information
+// security](https://console.bluemix.net/docs/services/text-to-speech/information-security.html).
 func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -736,7 +814,7 @@ type AddWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewAddWordOptions(customizationID string, word string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -938,7 +1016,7 @@ type DeleteWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewDeleteWordOptions(customizationID string, word string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1110,7 +1188,7 @@ type GetWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewGetWordOptions(customizationID string, word string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 

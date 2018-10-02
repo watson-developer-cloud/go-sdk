@@ -18,10 +18,9 @@ package naturallanguageclassifierv1
  */
 
 import (
-	"os"
-
 	"github.com/go-openapi/strfmt"
 	core "github.com/ibm-watson/go-sdk/core"
+	"os"
 )
 
 // NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to return the top matching predefined
@@ -67,6 +66,8 @@ func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options)
 }
 
 // Classify : Classify a phrase
+// Returns label information for the input. The status must be `Available` before you can use the classifier to classify
+// text.
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyOptions *ClassifyOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(classifyOptions, "classifyOptions cannot be nil"); err != nil {
 		return nil, err
@@ -115,6 +116,10 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifyResult(
 }
 
 // ClassifyCollection : Classify multiple phrases
+// Returns label information for multiple phrases. The status must be `Available` before you can use the classifier to
+// classify text.
+//
+// Note that classifying Japanese texts is a beta feature.
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection(classifyCollectionOptions *ClassifyCollectionOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(classifyCollectionOptions, "classifyCollectionOptions cannot be nil"); err != nil {
 		return nil, err
@@ -163,6 +168,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifyCollect
 }
 
 // CreateClassifier : Create classifier
+// Sends data to create and train a classifier and returns information about the new classifier.
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(createClassifierOptions *CreateClassifierOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createClassifierOptions, "createClassifierOptions cannot be nil"); err != nil {
 		return nil, err
@@ -235,6 +241,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(d
 }
 
 // GetClassifier : Get information about a classifier
+// Returns status and other information about a classifier.
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getClassifierOptions *GetClassifierOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getClassifierOptions, "getClassifierOptions cannot be nil"); err != nil {
 		return nil, err
@@ -273,6 +280,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetGetClassifierRe
 }
 
 // ListClassifiers : List classifiers
+// Returns an empty array if no classifiers are available.
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions"); err != nil {
 		return nil, err

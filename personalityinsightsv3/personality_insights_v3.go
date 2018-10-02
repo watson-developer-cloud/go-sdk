@@ -19,13 +19,11 @@ package personalityinsightsv3
 
 import (
 	"fmt"
-	"io"
-
 	core "github.com/ibm-watson/go-sdk/core"
+	"io"
 )
 
-//
-// The IBM Watson&trade; Personality Insights service enables applications to derive insights from social media,
+// PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights from social media,
 // enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals'
 // intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as
 // email, text messages, tweets, and forum posts.
@@ -43,7 +41,6 @@ import (
 //
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/personality-insights.html
-//
 type PersonalityInsightsV3 struct {
 	service *core.WatsonService
 }
@@ -83,6 +80,23 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 }
 
 // Profile : Get profile
+// Generates a personality profile for the author of the input text. The service accepts a maximum of 20 MB of input
+// content, but it requires much less text to produce an accurate profile; for more information, see [Providing
+// sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient). The service
+// analyzes text in Arabic, English, Japanese, Korean, or Spanish and returns its results in a variety of languages. You
+// can provide plain text, HTML, or JSON input by specifying the **Content-Type** parameter; the default is
+// `text/plain`. Request a JSON or comma-separated values (CSV) response by specifying the **Accept** parameter; CSV
+// output includes a fixed number of columns and optional headers.
+//
+// Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8; per the HTTP
+// specification, the default encoding for plain text and HTML is ISO-8859-1 (effectively, the ASCII character set).
+// When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
+// encoding of the input text; for example: `Content-Type: text/plain;charset=utf-8`.
+//
+// For detailed information about calling the service and the responses it can generate, see [Requesting a
+// profile](https://console.bluemix.net/docs/services/personality-insights/input.html), [Understanding a JSON
+// profile](https://console.bluemix.net/docs/services/personality-insights/output.html), and [Understanding a CSV
+// profile](https://console.bluemix.net/docs/services/personality-insights/output-csv.html).
 func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -146,6 +160,23 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 }
 
 // ProfileAsCsv : Get profile as csv
+// Generates a personality profile for the author of the input text. The service accepts a maximum of 20 MB of input
+// content, but it requires much less text to produce an accurate profile; for more information, see [Providing
+// sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient). The service
+// analyzes text in Arabic, English, Japanese, Korean, or Spanish and returns its results in a variety of languages. You
+// can provide plain text, HTML, or JSON input by specifying the **Content-Type** parameter; the default is
+// `text/plain`. Request a JSON or comma-separated values (CSV) response by specifying the **Accept** parameter; CSV
+// output includes a fixed number of columns and optional headers.
+//
+// Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8; per the HTTP
+// specification, the default encoding for plain text and HTML is ISO-8859-1 (effectively, the ASCII character set).
+// When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
+// encoding of the input text; for example: `Content-Type: text/plain;charset=utf-8`.
+//
+// For detailed information about calling the service and the responses it can generate, see [Requesting a
+// profile](https://console.bluemix.net/docs/services/personality-insights/input.html), [Understanding a JSON
+// profile](https://console.bluemix.net/docs/services/personality-insights/output.html), and [Understanding a CSV
+// profile](https://console.bluemix.net/docs/services/personality-insights/output-csv.html).
 func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -413,14 +444,14 @@ func (options *ProfileOptions) SetContent(content Content) *ProfileOptions {
 // NewProfileOptionsForHTML : Instantiate ProfileOptionsForHTML
 func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForHTML(body string) *ProfileOptions {
 	return &ProfileOptions{
-		Body:        &body,
+		Body:        core.StringPtr(body),
 		ContentType: core.StringPtr("text/html"),
 	}
 }
 
 // SetHTML : Allow user to set HTML
 func (options *ProfileOptions) SetHTML(body string) *ProfileOptions {
-	options.Body = &body
+	options.Body = core.StringPtr(body)
 	options.ContentType = core.StringPtr("text/html")
 	return options
 }
@@ -428,45 +459,59 @@ func (options *ProfileOptions) SetHTML(body string) *ProfileOptions {
 // NewProfileOptionsForPlain : Instantiate ProfileOptionsForPlain
 func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForPlain(body string) *ProfileOptions {
 	return &ProfileOptions{
-		Body:        &body,
+		Body:        core.StringPtr(body),
 		ContentType: core.StringPtr("text/plain"),
 	}
 }
 
 // SetPlain : Allow user to set Plain
 func (options *ProfileOptions) SetPlain(body string) *ProfileOptions {
-	options.Body = &body
+	options.Body = core.StringPtr(body)
 	options.ContentType = core.StringPtr("text/plain")
 	return options
 }
 
+// SetBody : Allow user to set Body with the specified content type
+func (options *ProfileOptions) SetBody(body string, contentType string) *ProfileOptions {
+	options.Body = core.StringPtr(body)
+	options.ContentType = core.StringPtr(contentType)
+	return options
+}
+
+// NewProfileOptions : Instantiate ProfileOptions
+func (personalityInsights *PersonalityInsightsV3) NewProfileOptions(contentType string) *ProfileOptions {
+	return &ProfileOptions{
+		ContentType: core.StringPtr(contentType),
+	}
+}
+
 // SetContentLanguage : Allow user to set ContentLanguage
-func (options *ProfileOptions) SetContentLanguage(param string) *ProfileOptions {
-	options.ContentLanguage = core.StringPtr(param)
+func (options *ProfileOptions) SetContentLanguage(contentLanguage string) *ProfileOptions {
+	options.ContentLanguage = core.StringPtr(contentLanguage)
 	return options
 }
 
 // SetAcceptLanguage : Allow user to set AcceptLanguage
-func (options *ProfileOptions) SetAcceptLanguage(param string) *ProfileOptions {
-	options.AcceptLanguage = core.StringPtr(param)
+func (options *ProfileOptions) SetAcceptLanguage(acceptLanguage string) *ProfileOptions {
+	options.AcceptLanguage = core.StringPtr(acceptLanguage)
 	return options
 }
 
 // SetRawScores : Allow user to set RawScores
-func (options *ProfileOptions) SetRawScores(param bool) *ProfileOptions {
-	options.RawScores = core.BoolPtr(param)
+func (options *ProfileOptions) SetRawScores(rawScores bool) *ProfileOptions {
+	options.RawScores = core.BoolPtr(rawScores)
 	return options
 }
 
 // SetCsvHeaders : Allow user to set CsvHeaders
-func (options *ProfileOptions) SetCsvHeaders(param bool) *ProfileOptions {
-	options.CsvHeaders = core.BoolPtr(param)
+func (options *ProfileOptions) SetCsvHeaders(csvHeaders bool) *ProfileOptions {
+	options.CsvHeaders = core.BoolPtr(csvHeaders)
 	return options
 }
 
 // SetConsumptionPreferences : Allow user to set ConsumptionPreferences
-func (options *ProfileOptions) SetConsumptionPreferences(param bool) *ProfileOptions {
-	options.ConsumptionPreferences = core.BoolPtr(param)
+func (options *ProfileOptions) SetConsumptionPreferences(consumptionPreferences bool) *ProfileOptions {
+	options.ConsumptionPreferences = core.BoolPtr(consumptionPreferences)
 	return options
 }
 
