@@ -21,7 +21,7 @@ clone-repo:
 
 # Generates the irx file for icp-cert-manager
 generate-irx:
-	cd $(GOPATH)/src/github.ibm.com/arf/go-sdk
+	cd $(GOPATH)/src/github.com/ibm-watson/go-sdk
 	$(HOME)/tool/bin/appscan.sh prepare -oso
 
 # Login to the AppScan API
