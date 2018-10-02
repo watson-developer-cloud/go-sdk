@@ -30,28 +30,29 @@ before_install:
 install:
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
 # TODO Change URLs for the repo before we are public.
-  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/ibm-watson/go-sdk
+#  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/ibm-watson/go-sdk
 
 # Don't email me the results of the test runs.
 notifications:
   email: false
 
 before_script:
-- 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
+# - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
 
 # script always runs to completion (set +e). If we have linter issues AND a
 # failing test, we want to see both. Configure golangci-lint with a
 # .golangci.yml file at the top level of your repo.
 script:
-  - pwd
   - env | grep GO
+  - pwd
+  - cd $GOPATH/src && mv github.ibm.com github.com && mv github.com/arf github.com/ibm-watson
   - cd $GOPATH/src/github.com/ibm-watson/go-sdk
   - pwd
   - find . -type f
   - go test `go list ./... | grep -v examples`
   - gometalinter.v2 --errors ./...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
   - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
-  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
+# - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
 
 # TODO Enable semantic release below once we are public.
 # deploy:
