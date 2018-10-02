@@ -37,7 +37,7 @@ notifications:
   email: false
 
 before_script:
-# - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
+ - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
 
 # script always runs to completion (set +e). If we have linter issues AND a
 # failing test, we want to see both. Configure golangci-lint with a
@@ -53,7 +53,8 @@ script:
   - go test `go list ./... | grep -v examples`
   - gometalinter.v2 --errors ./...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
   - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
-# - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
+#  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
+  - ./appscan/ASOC.sh
 
 # TODO Enable semantic release below once we are public.
 # deploy:
