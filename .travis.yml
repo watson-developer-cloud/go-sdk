@@ -24,7 +24,6 @@ before_install:
   - go get -u gopkg.in/alecthomas/gometalinter.v2
   - go get -u golang.org/x/lint/golint
   - go get -u gopkg.in/go-playground/validator.v9
-  - go get -u gopkg.in/check.v1
 
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
@@ -44,9 +43,10 @@ before_script:
 # failing test, we want to see both. Configure golangci-lint with a
 # .golangci.yml file at the top level of your repo.
 script:
+  - go install `go list ./... | grep -v examples`
   - go test `go list ./... | grep -v examples`
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
-  - gometalinter.v2 $GOPATH/src/go-sdk/...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
+  - gometalinter.v2 ./...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
   - $GOPATH/bin/ginkgo -r  # Run all the tests (based on testing detailed in SDK README.md)
 
 # TODO Enable semantic release below once we are public.
