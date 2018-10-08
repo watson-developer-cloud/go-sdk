@@ -16,6 +16,17 @@ before_install:
   - go get -u gopkg.in/alecthomas/gometalinter.v2
   - go get -u golang.org/x/lint/golint
 
+# Rename directories so that we're building in $HOME/gopath/src/github.com/ibm-watson/go-sdk
+# When the go-sdk repo is moved to the ibm-watson org on github.com, we can remove these steps
+  - env | grep GO
+  - pwd
+  - mkdir -p $GOPATH/src/github.com/ibm-watson
+  - mv $GOPATH/src/github.ibm.com/arf/go-sdk $GOPATH/src/github.com/ibm-watson
+  - cd $GOPATH/src/github.com/ibm-watson/go-sdk
+  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/ibm-watson/go-sdk
+  - pwd
+
+
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
 install:
@@ -30,15 +41,6 @@ notifications:
 
 before_script:
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
-# Rename directories so that we're building in $HOME/gopath/src/github.com/ibm-watson/go-sdk
-# When the go-sdk repo is moved to the ibm-watson org on github.com, we can remove these steps
-  - env | grep GO
-  - pwd
-  - mkdir -p $GOPATH/src/github.com/ibm-watson
-  - mv $GOPATH/src/github.ibm.com/arf/go-sdk $GOPATH/src/github.com/ibm-watson
-  - cd $GOPATH/src/github.com/ibm-watson/go-sdk
-  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/ibm-watson/go-sdk
-  - pwd
 
 # script always runs to completion (set +e). If we have linter issues AND a
 # failing test, we want to see both. Configure golangci-lint with a
