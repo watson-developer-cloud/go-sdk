@@ -10,12 +10,13 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 * [Before you begin](#before-you-begin)
 * [Installation](#installation)
-* [Examples](#examples)
 * [Running in IBM Cloud](#running-in-ibm-cloud)
 * [Authentication](#authentication)
 	* [Getting-credentials](#getting-credentials)
 	* [IAM](#iam)
 	* [Username-and-password](#username-and-password)
+* [Use](#use)
+* [Examples](#examples)
 * [Tests](#tests)
 * [Contributing](#contributing)
 * [License](#license)
@@ -30,20 +31,8 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 Get SDK package:
 ```bash
-go get github.com/watson-developer-cloud/go-sdk
+go get github.com/ibm-watson/go-sdk
 ```
-
-Import the specific service package you want to use in your Go program:
-```go
-import (
-  . "github.com/watson-developer-cloud/go-sdk/discoveryV1"
-)
-```
-(Learn about Go [import types](https://medium.com/golangspec/import-declarations-in-go-8de0fd3ae8ff))
-
-## Examples
-
-The [examples](https://github.ibm.com/arf/go-sdk/tree/master/examples) folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
 
 ## Running in IBM Cloud
 
@@ -76,52 +65,120 @@ You supply either an IAM service **API key** or an **access token**:
 
 ```go
 // In the constructor, letting the SDK manage the IAM token
-discovery, discoveryErr := NewDiscoveryV1(&ServiceCredentials{
-  ServiceURL: "<service_url>",
-  Version: "2018-02-16",
-  APIkey: "<api_key>",
-})
+discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
+		URL:       "<service_url>",
+		Version:   "2018-03-05",
+		IAMApiKey: "<apikey>",
+	})
 ```
 
 **Supplying the access token**
 
 ```go
 // In the constructor, assuming control of managing IAM token
-discovery, discoveryErr := NewDiscoveryV1(&ServiceCredentials{
-  ServiceURL: "<service_url>",
-  Version: "2018-02-16",
-  IAMtoken: "<iam_token>",
-})
+discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
+		URL:            "<service_url>",
+		Version:        "2018-03-05",
+		IAMAccessToken: "<IAM_access_token>",
+	})
 ```
 
 ### Username and password
 
 ```go
 // In the constructor
-discovery, discoveryErr := NewDiscoveryV1(&ServiceCredentials{
-  ServiceURL: "<service_url>",
-  Version: "2018-02-16",
-  Username: "<username>",
-  Password: "<password>",
-})
+discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
+		URL:      "<service_url>",
+		Version:  "2018-03-05",
+		Username: "<username>",
+		Password: "<password>",
+	})
 ```
 
+## Use
+Apply these general steps for services present in various packages
+1. Import the service package
+2. Create a new service instance and pass in credentials with either of [authentication](#authentication) ways
+3. Invoke API methods using service instance. For a successful response, it will contain HTTP status code, response headers and API result
+4. Handle responses and errors
+
+```go
+
+package main
+
+import (
+"fmt"
+"github.com/ibm-watson/go-sdk/discoveryv1"
+)
+
+func main() {
+// Instantiate the Watson Discovery service
+service, serviceErr := discoveryv1.
+  NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+    URL:       "YOUR SERVICE URL",
+    Version:   "2018-03-05",
+    IAMApiKey: "YOUR APIKEY",
+  })
+
+// Check successful instantiation
+if serviceErr != nil {
+  panic(serviceErr)
+}
+
+/* LIST ENVIRONMENTS EXAMPLE*/
+
+// Create a new ListEnvironmentsOptions, these are helper methods.
+listEnvironmentsOptions := service.NewListEnvironmentsOptions()
+
+// Call the discovery ListEnvironments method
+response, responseErr := service.ListEnvironments(listEnvironmentsOptions)
+// Or you can directly pass in the model options
+// response, responseErr := service.ListEnvironments(&discoveryv1.ListEnvironmentsOptions{})
+
+// Check successful call
+if responseErr != nil {
+  panic(responseErr)
+}
+
+// This will return the `DetailedResponse`
+fmt.Println(response)
+// Get the HTTP status code
+response.GetStatusCode()
+// Get the response headers
+response.GetHeaders()
+// Get the API response
+response.GetResult()
+
+// Cast response to the specific dataType returned by ListEnvironments
+// NOTE: most methods have a corresponding Get<methodName>Result() function
+listEnvironmentResult := service.GetListEnvironmentsResult(response)
+
+if listEnvironmentResult != nil {
+  fmt.Println(listEnvironmentResult.Environments[0])
+  }
+}
+```
+
+## Examples
+
+The [examples](https://github.ibm.com/arf/go-sdk/tree/master/examples) folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
+
 ## Tests
-Testing is implemented using the [Ginkgo](https://onsi.github.io/ginkgo/) framework.
 
 Run all test suites:
 ```bash
-ginkgo -r
+go test ./...
 ```
 
 Get code coverage for each test suite:
 ```bash
-ginkgo -r -cover
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out
 ```
 
 Run a specific test suite:
 ```bash
-ginkgo -cover discoveryV1/
+go test ./assistantv1
 ```
 
 ## Contributing
