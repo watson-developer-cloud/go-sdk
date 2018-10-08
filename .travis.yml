@@ -12,22 +12,14 @@ go:
 before_install:
   - nvm install 8.3
   - npm install -g npm@6.x
-  - go get -u github.com/onsi/ginkgo/ginkgo
-  - go get -u github.com/onsi/gomega/...
-  - go get -u gopkg.in/check.v1
-  - go get -u github.com/modocache/gover
-  - go get -u github.com/cloudfoundry-community/go-cfenv
-  - go get -u github.com/go-resty/resty
-  - go get -u github.com/stretchr/testify/assert
-  - go get -u github.com/go-openapi/strfmt
-  - go get -u github.com/parnurzeal/gorequest
+  - go get -u github.com/golang/dep/cmd/dep
   - go get -u gopkg.in/alecthomas/gometalinter.v2
   - go get -u golang.org/x/lint/golint
-  - go get -u gopkg.in/go-playground/validator.v9
 
 # Skip the install step. Don't `go get` dependencies. Only build with the code
 # in vendor/
 install:
+  - dep ensure
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
 # TODO Change URLs for the repo before we are public.
 #  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/ibm-watson/go-sdk
