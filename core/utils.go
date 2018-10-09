@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"strings"
 
 	validator "gopkg.in/go-playground/validator.v9"
 )
@@ -123,4 +124,11 @@ func PrettyPrint(result interface{}, resultName string) {
 	if err == nil {
 		fmt.Printf("%v:\n%+v\n\n", resultName, string(output))
 	}
+}
+
+// CreateFormPartName - creates a parameterized name for a multipart form part based on
+// a template and a key name and value.
+func CreateFormPartName(template string, keyName string, keyValue string) string {
+	toBeReplaced := "{" + keyName + "}"
+	return strings.Replace(template, toBeReplaced, keyValue, 1)
 }

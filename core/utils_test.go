@@ -90,3 +90,10 @@ func TestValidateStruct(t *testing.T) {
 	err := ValidateStruct(badStruct, "badStruct")
 	assert.NotNil(t, err, "Should have a validation error!")
 }
+
+func TestCreateFormPartName(t *testing.T) {
+	assert.Equal(t, "class1_positive_examples", CreateFormPartName("{classname}_positive_examples", "classname", "class1"))
+	assert.Equal(t, "class2_positive_examples", CreateFormPartName("{classname}_positive_examples", "classname", "class2"))
+	assert.Equal(t, "this_is_a_test", CreateFormPartName("this_is_{word}_test", "word", "a"))
+	assert.Equal(t, "this_is_not_a_test", CreateFormPartName("this_is_{word}_test", "word", "not_a"))
+}
