@@ -98,8 +98,8 @@ discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
 ## Use
 Apply these general steps for services present in various packages
 1. Import the service package
-2. Create a new service instance and pass in credentials with either of [authentication](#authentication) ways
-3. Invoke API methods using service instance. For a successful response, it will contain HTTP status code, response headers and API result
+2. Create a new service instance and pass in credentials using either of [authentication](#authentication) methods
+3. Invoke API methods using the service instance. For a successful response, it will contain the HTTP status code, response headers and API result
 4. Handle responses and errors
 
 ```go
