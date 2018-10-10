@@ -37,6 +37,18 @@ func TestRequestResponseAsJSON(t *testing.T) {
 	assert.Equal(t, "wonder woman", *detailedResponse.Result.(*Foo).Name)
 }
 
+func TestDisableSSLverification(t *testing.T) {
+	options := &ServiceOptions{
+		URL:      "test.com",
+		Username: "xxx",
+		Password: "yyy",
+	}
+	service, _ := NewWatsonService(options, "watson")
+	assert.Nil(t, service.client.Transport)
+	service.DisableSSLVerification()
+	assert.NotNil(t, service.client.Transport)
+}
+
 func TestAuthentication(t *testing.T) {
 	encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte("xxx:yyy"))
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
