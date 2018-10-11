@@ -44,9 +44,9 @@ func TestDisableSSLverification(t *testing.T) {
 		Password: "yyy",
 	}
 	service, _ := NewWatsonService(options, "watson")
-	assert.Nil(t, service.client.Transport)
+	assert.Nil(t, service.Client.Transport)
 	service.DisableSSLVerification()
-	assert.NotNil(t, service.client.Transport)
+	assert.NotNil(t, service.Client.Transport)
 }
 
 func TestAuthentication(t *testing.T) {
