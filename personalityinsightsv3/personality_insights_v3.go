@@ -23,10 +23,10 @@ import (
 	"io"
 )
 
-// PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights from social media,
-// enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals'
-// intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as
-// email, text messages, tweets, and forum posts.
+// PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights
+// from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer
+// individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital
+// communications such as email, text messages, tweets, and forum posts.
 //
 // The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their
 // personality characteristics. The service can infer consumption preferences based on the results of its analysis and,
@@ -42,7 +42,7 @@ import (
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/personality-insights.html
 type PersonalityInsightsV3 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // PersonalityInsightsV3Options : Service options
@@ -76,7 +76,7 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 		return nil, serviceErr
 	}
 
-	return &PersonalityInsightsV3{service: service}, nil
+	return &PersonalityInsightsV3{Service: service}, nil
 }
 
 // Profile : Get profile
@@ -93,10 +93,10 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 // When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
 // encoding of the input text; for example: `Content-Type: text/plain;charset=utf-8`.
 //
-// For detailed information about calling the service and the responses it can generate, see [Requesting a
-// profile](https://console.bluemix.net/docs/services/personality-insights/input.html), [Understanding a JSON
-// profile](https://console.bluemix.net/docs/services/personality-insights/output.html), and [Understanding a CSV
-// profile](https://console.bluemix.net/docs/services/personality-insights/output-csv.html).
+// **See also:**
+// * [Requesting a profile](https://console.bluemix.net/docs/services/personality-insights/input.html)
+// * [Understanding a JSON profile](https://console.bluemix.net/docs/services/personality-insights/output.html)
+// * [Understanding a CSV profile](https://console.bluemix.net/docs/services/personality-insights/output-csv.html).
 func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(personalityInsights.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(personalityInsights.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range profileOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -134,7 +134,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 	if profileOptions.ConsumptionPreferences != nil {
 		builder.AddQuery("consumption_preferences", fmt.Sprint(*profileOptions.ConsumptionPreferences))
 	}
-	builder.AddQuery("version", personalityInsights.service.Options.Version)
+	builder.AddQuery("version", personalityInsights.Service.Options.Version)
 
 	_, err := builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body)
 	if err != nil {
@@ -146,7 +146,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 		return nil, err
 	}
 
-	response, err := personalityInsights.service.Request(request, new(Profile))
+	response, err := personalityInsights.Service.Request(request, new(Profile))
 	return response, err
 }
 
@@ -173,10 +173,10 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
 // encoding of the input text; for example: `Content-Type: text/plain;charset=utf-8`.
 //
-// For detailed information about calling the service and the responses it can generate, see [Requesting a
-// profile](https://console.bluemix.net/docs/services/personality-insights/input.html), [Understanding a JSON
-// profile](https://console.bluemix.net/docs/services/personality-insights/output.html), and [Understanding a CSV
-// profile](https://console.bluemix.net/docs/services/personality-insights/output-csv.html).
+// **See also:**
+// * [Requesting a profile](https://console.bluemix.net/docs/services/personality-insights/input.html)
+// * [Understanding a JSON profile](https://console.bluemix.net/docs/services/personality-insights/output.html)
+// * [Understanding a CSV profile](https://console.bluemix.net/docs/services/personality-insights/output-csv.html).
 func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -189,7 +189,7 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(personalityInsights.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(personalityInsights.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range profileOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -214,7 +214,7 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 	if profileOptions.ConsumptionPreferences != nil {
 		builder.AddQuery("consumption_preferences", fmt.Sprint(*profileOptions.ConsumptionPreferences))
 	}
-	builder.AddQuery("version", personalityInsights.service.Options.Version)
+	builder.AddQuery("version", personalityInsights.Service.Options.Version)
 
 	_, err := builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body)
 	if err != nil {
@@ -226,7 +226,7 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 		return nil, err
 	}
 
-	response, err := personalityInsights.service.Request(request, new(io.ReadCloser))
+	response, err := personalityInsights.Service.Request(request, new(io.ReadCloser))
 	return response, err
 }
 
@@ -339,6 +339,29 @@ type ContentItem struct {
 	Forward *bool `json:"forward,omitempty"`
 }
 
+// Constants associated with the ContentItem.Contenttype property.
+// The MIME type of the content. The default is plain text. The tags are stripped from HTML content before it is
+// analyzed; plain text is processed as submitted.
+const (
+	ContentItem_Contenttype_TextHTML  = "text/html"
+	ContentItem_Contenttype_TextPlain = "text/plain"
+)
+
+// Constants associated with the ContentItem.Language property.
+// The language identifier (two-letter ISO 639-1 identifier) for the language of the content item. The default is `en`
+// (English). Regional variants are treated as their parent language; for example, `en-US` is interpreted as `en`. A
+// language specified with the **Content-Type** parameter overrides the value of this parameter; any content items that
+// specify a different language are ignored. Omit the **Content-Type** parameter to base the language on the most
+// prevalent specification among the content items; again, content items that specify a different language are ignored.
+// You can specify any combination of languages for the input and response content.
+const (
+	ContentItem_Language_Ar = "ar"
+	ContentItem_Language_En = "en"
+	ContentItem_Language_Es = "es"
+	ContentItem_Language_Ja = "ja"
+	ContentItem_Language_Ko = "ko"
+)
+
 // Profile : Profile struct
 type Profile struct {
 
@@ -376,6 +399,16 @@ type Profile struct {
 	// generated no warnings.
 	Warnings []Warning `json:"warnings" validate:"required"`
 }
+
+// Constants associated with the Profile.ProcessedLanguage property.
+// The language model that was used to process the input.
+const (
+	Profile_ProcessedLanguage_Ar = "ar"
+	Profile_ProcessedLanguage_En = "en"
+	Profile_ProcessedLanguage_Es = "es"
+	Profile_ProcessedLanguage_Ja = "ja"
+	Profile_ProcessedLanguage_Ko = "ko"
+)
 
 // ProfileOptions : The profile options.
 type ProfileOptions struct {
@@ -426,63 +459,74 @@ type ProfileOptions struct {
 	Headers map[string]string
 }
 
-// NewProfileOptionsForContent : Instantiate ProfileOptionsForContent
-func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForContent(content Content) *ProfileOptions {
-	return &ProfileOptions{
-		Content:     &content,
-		ContentType: core.StringPtr("application/json"),
-	}
-}
+// Constants associated with the ProfileOptions.ContentType property.
+// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
+// 'text/html;charset=utf-8'.
+const (
+	ProfileOptions_ContentType_ApplicationJSON = "application/json"
+	ProfileOptions_ContentType_TextHTML        = "text/html"
+	ProfileOptions_ContentType_TextPlain       = "text/plain"
+)
 
-// SetContent : Allow user to set Content
-func (options *ProfileOptions) SetContent(content Content) *ProfileOptions {
-	options.Content = &content
-	options.ContentType = core.StringPtr("application/json")
-	return options
-}
+// Constants associated with the ProfileOptions.ContentLanguage property.
+// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are
+// treated as their parent language; for example, `en-US` is interpreted as `en`.
+//
+// The effect of the **Content-Language** parameter depends on the **Content-Type** parameter. When **Content-Type** is
+// `text/plain` or `text/html`, **Content-Language** is the only way to specify the language. When **Content-Type** is
+// `application/json`, **Content-Language** overrides a language specified with the `language` parameter of a
+// `ContentItem` object, and content items that specify a different language are ignored; omit this parameter to base
+// the language on the specification of the content items. You can specify any combination of languages for
+// **Content-Language** and **Accept-Language**.
+const (
+	ProfileOptions_ContentLanguage_Ar = "ar"
+	ProfileOptions_ContentLanguage_En = "en"
+	ProfileOptions_ContentLanguage_Es = "es"
+	ProfileOptions_ContentLanguage_Ja = "ja"
+	ProfileOptions_ContentLanguage_Ko = "ko"
+)
 
-// NewProfileOptionsForHTML : Instantiate ProfileOptionsForHTML
-func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForHTML(body string) *ProfileOptions {
-	return &ProfileOptions{
-		Body:        core.StringPtr(body),
-		ContentType: core.StringPtr("text/html"),
-	}
-}
-
-// SetHTML : Allow user to set HTML
-func (options *ProfileOptions) SetHTML(body string) *ProfileOptions {
-	options.Body = core.StringPtr(body)
-	options.ContentType = core.StringPtr("text/html")
-	return options
-}
-
-// NewProfileOptionsForPlain : Instantiate ProfileOptionsForPlain
-func (personalityInsights *PersonalityInsightsV3) NewProfileOptionsForPlain(body string) *ProfileOptions {
-	return &ProfileOptions{
-		Body:        core.StringPtr(body),
-		ContentType: core.StringPtr("text/plain"),
-	}
-}
-
-// SetPlain : Allow user to set Plain
-func (options *ProfileOptions) SetPlain(body string) *ProfileOptions {
-	options.Body = core.StringPtr(body)
-	options.ContentType = core.StringPtr("text/plain")
-	return options
-}
-
-// SetBody : Allow user to set Body with the specified content type
-func (options *ProfileOptions) SetBody(body string, contentType string) *ProfileOptions {
-	options.Body = core.StringPtr(body)
-	options.ContentType = core.StringPtr(contentType)
-	return options
-}
+// Constants associated with the ProfileOptions.AcceptLanguage property.
+// The desired language of the response. For two-character arguments, regional variants are treated as their parent
+// language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input and
+// response content.
+const (
+	ProfileOptions_AcceptLanguage_Ar   = "ar"
+	ProfileOptions_AcceptLanguage_De   = "de"
+	ProfileOptions_AcceptLanguage_En   = "en"
+	ProfileOptions_AcceptLanguage_Es   = "es"
+	ProfileOptions_AcceptLanguage_Fr   = "fr"
+	ProfileOptions_AcceptLanguage_It   = "it"
+	ProfileOptions_AcceptLanguage_Ja   = "ja"
+	ProfileOptions_AcceptLanguage_Ko   = "ko"
+	ProfileOptions_AcceptLanguage_PtBr = "pt-br"
+	ProfileOptions_AcceptLanguage_ZhCn = "zh-cn"
+	ProfileOptions_AcceptLanguage_ZhTw = "zh-tw"
+)
 
 // NewProfileOptions : Instantiate ProfileOptions
 func (personalityInsights *PersonalityInsightsV3) NewProfileOptions(contentType string) *ProfileOptions {
 	return &ProfileOptions{
 		ContentType: core.StringPtr(contentType),
 	}
+}
+
+// SetContent : Allow user to set Content
+func (options *ProfileOptions) SetContent(content *Content) *ProfileOptions {
+	options.Content = content
+	return options
+}
+
+// SetBody : Allow user to set Body
+func (options *ProfileOptions) SetBody(body string) *ProfileOptions {
+	options.Body = core.StringPtr(body)
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *ProfileOptions) SetContentType(contentType string) *ProfileOptions {
+	options.ContentType = core.StringPtr(contentType)
+	return options
 }
 
 // SetContentLanguage : Allow user to set ContentLanguage
@@ -564,6 +608,15 @@ type Trait struct {
 	Children []Trait `json:"children,omitempty"`
 }
 
+// Constants associated with the Trait.Category property.
+// The category of the characteristic: `personality` for Big Five personality characteristics, `needs` for Needs, and
+// `values` for Values.
+const (
+	Trait_Category_Needs       = "needs"
+	Trait_Category_Personality = "personality"
+	Trait_Category_Values      = "values"
+)
+
 // Warning : Warning struct
 type Warning struct {
 
@@ -583,3 +636,12 @@ type Warning struct {
 	// input text exceeds a threshold at which additional words do not contribute to the accuracy of the profile.
 	Message *string `json:"message" validate:"required"`
 }
+
+// Constants associated with the Warning.WarningID property.
+// The identifier of the warning message.
+const (
+	Warning_WarningID_CONTENTTRUNCATED = "CONTENT_TRUNCATED"
+	Warning_WarningID_JSONASTEXT       = "JSON_AS_TEXT"
+	Warning_WarningID_PARTIALTEXTUSED  = "PARTIAL_TEXT_USED"
+	Warning_WarningID_WORDCOUNTMESSAGE = "WORD_COUNT_MESSAGE"
+)
