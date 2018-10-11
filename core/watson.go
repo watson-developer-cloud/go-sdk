@@ -2,6 +2,7 @@ package core
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -126,6 +127,14 @@ func (service *WatsonService) SetDefaultHeaders(headers http.Header) {
 // SetHTTPClient updates the client handling the requests
 func (service *WatsonService) SetHTTPClient(client *http.Client) {
 	service.client = client
+}
+
+// DisableSSLVerification skips SSL verification
+func (service *WatsonService) DisableSSLVerification() {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	service.client.Transport = tr
 }
 
 // Request performs the HTTP request
