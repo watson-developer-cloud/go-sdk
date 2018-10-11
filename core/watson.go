@@ -180,7 +180,7 @@ func (service *WatsonService) Request(req *http.Request, result interface{}) (*D
 		}
 	}
 
-	if response.Result == nil {
+	if response.Result == nil && result != nil {
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return response, err
