@@ -63,7 +63,7 @@ var _ = Describe("NaturalLanguageUnderstandingV1", func() {
 	Describe("Analyze(analyzeOptions *AnalyzeOptions)", func() {
 		AnalyzePath := "/v1/analyze"
 		version := "exampleString"
-		Features := naturallanguageunderstandingv1.Features{}
+		Features := &naturallanguageunderstandingv1.Features{}
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
