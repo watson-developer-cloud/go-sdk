@@ -1152,7 +1152,6 @@ var _ = Describe("DiscoveryV1", func() {
 		federatedQueryPath := "/v1/environments/{environment_id}/query"
 		version := "exampleString"
 		environmentID := "exampleString"
-		collectionIds := []string{}
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -1162,7 +1161,7 @@ var _ = Describe("DiscoveryV1", func() {
 				defer GinkgoRecover()
 
 				Expect(req.URL.Path).To(Equal(federatedQueryPath))
-				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
@@ -1180,7 +1179,7 @@ var _ = Describe("DiscoveryV1", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				federatedQueryOptions := testService.NewFederatedQueryOptions(environmentID, collectionIds)
+				federatedQueryOptions := testService.NewFederatedQueryOptions(environmentID)
 				returnValue, returnValueErr := testService.FederatedQuery(federatedQueryOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -1248,7 +1247,7 @@ var _ = Describe("DiscoveryV1", func() {
 
 				Expect(req.URL.String()).To(Equal(queryPath + "?version=" + version))
 				Expect(req.URL.Path).To(Equal(queryPath))
-				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
@@ -1900,7 +1899,7 @@ var _ = Describe("DiscoveryV1", func() {
 		createEventPath := "/v1/events"
 		version := "exampleString"
 		typeVar := "exampleString"
-		data := discoveryv1.EventData{
+		data := &discoveryv1.EventData{
 			EnvironmentID: core.StringPtr("xxx"),
 			SessionToken:  core.StringPtr("yyy"),
 			CollectionID:  core.StringPtr("zzz"),
