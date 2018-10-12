@@ -5,7 +5,7 @@ please ask a question on [dW Answers][dw] or [Stack Overflow][stackoverflow].
 
 # Issues
 
-If you encounter an issue with the Go SDK, you are welcome to submit a [bug report](https://github.com/ibm-watson/go-sdk/issues).
+If you encounter an issue with the Go SDK, you are welcome to submit a [bug report](https://github.com/watson-developer-cloud/go-sdk/issues).
 Before that, please search for similar issues. It's possible somebody has encountered this issue already.
 
 # Pull Requests
@@ -21,7 +21,7 @@ If you want to contribute to the repository, here's a quick guide:
   ```sh
   mkdir $GOPATH/{src,bin,pkg}
   ```
-  4. Clone the respository into `src/github.com/ibm-watson` directory
+  4. Clone the respository into `src/github.com/watson-developer-cloud` directory
   5. Use [dep][dep] dependency manager.
   On MacOS you can install or upgrade to the latest released version of [dep][dep] with Homebrew
   ```sh
