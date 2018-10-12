@@ -31,7 +31,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 Get SDK package:
 ```bash
-go get github.com/watson-developer-cloud/go-sdk
+go get -u github.com/watson-developer-cloud/go-sdk/...
 ```
 
 ## Running in IBM Cloud

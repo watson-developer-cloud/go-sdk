@@ -3,9 +3,6 @@ node_js: "8.3"
 sudo: required
 dist: trusty
 
-# Only the last two Go releases are supported by the Go team with security
-# updates. Any older versions be considered deprecated. Don't bother testing
-# with them.
 go:
   - 1.10.x
 
@@ -16,42 +13,23 @@ before_install:
   - go get -u gopkg.in/alecthomas/gometalinter.v2
   - go get -u golang.org/x/lint/golint
 
-# Rename directories so that we're building in $HOME/gopath/src/github.com/watson-developer-cloud/go-sdk
-# When the go-sdk repo is moved to the watson-developer-cloud org on github.com, we can remove these steps
-  - env | grep GO
-  - pwd
-  - mkdir -p $GOPATH/src/github.com/watson-developer-cloud
-  - mv $GOPATH/src/github.ibm.com/arf/go-sdk $GOPATH/src/github.com/watson-developer-cloud
-  - cd $GOPATH/src/github.com/watson-developer-cloud/go-sdk
-  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/watson-developer-cloud/go-sdk
-  - pwd
-
-
-# Skip the install step. Don't `go get` dependencies. Only build with the code
-# in vendor/
 install:
   - dep ensure
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
-# TODO Change URLs for the repo before we are public.
-#  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/watson-developer-cloud/go-sdk
+  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.com:watson-developer-cloud/go-sdk.git $GOPATH/src/github.com/watson-developer-cloud/go-sdk
 
-# Don't email me the results of the test runs.
 notifications:
   email: false
 
 before_script:
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
 
-# script always runs to completion (set +e). If we have linter issues AND a
-# failing test, we want to see both. Configure golangci-lint with a
-# .golangci.yml file at the top level of your repo.
 script:
   - go test `go list ./... | grep -v examples`
   - gometalinter.v2 --errors ./...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
 
-# TODO Enable semantic release below once we are public.
-# deploy:
-# - provider: script
-#   skip_cleanup: true
-#   script: npx travis-deploy-once "npx semantic-release --debug"
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: npx semantic-release --debug
