@@ -3,9 +3,9 @@ package assistantv2_test
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/ibm-watson/go-sdk/assistantv2"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/assistantv2"
 	"net/http"
 	"net/http/httptest"
 	"strings"

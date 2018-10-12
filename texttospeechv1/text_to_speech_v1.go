@@ -19,7 +19,7 @@ package texttospeechv1
 
 import (
 	"fmt"
-	core "github.com/ibm-watson/go-sdk/core"
+	core "github.com/watson-developer-cloud/go-sdk/core"
 	"io"
 )
 
@@ -892,7 +892,7 @@ const (
 func (textToSpeech *TextToSpeechV1) NewAddWordOptions(customizationID string, word string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1109,7 +1109,7 @@ type DeleteWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewDeleteWordOptions(customizationID string, word string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1160,20 +1160,20 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
-	GetPronunciationOptions_Voice_DeDEBirgitVoice = "de-DE_BirgitVoice"
-	GetPronunciationOptions_Voice_DeDEDieterVoice = "de-DE_DieterVoice"
-	GetPronunciationOptions_Voice_EnGBKateVoice = "en-GB_KateVoice"
-	GetPronunciationOptions_Voice_EnUSAllisonVoice = "en-US_AllisonVoice"
-	GetPronunciationOptions_Voice_EnUSLisaVoice = "en-US_LisaVoice"
-	GetPronunciationOptions_Voice_EnUSMichaelVoice = "en-US_MichaelVoice"
-	GetPronunciationOptions_Voice_EsESEnriqueVoice = "es-ES_EnriqueVoice"
-	GetPronunciationOptions_Voice_EsESLauraVoice = "es-ES_LauraVoice"
-	GetPronunciationOptions_Voice_EsLASofiaVoice = "es-LA_SofiaVoice"
-	GetPronunciationOptions_Voice_EsUSSofiaVoice = "es-US_SofiaVoice"
-	GetPronunciationOptions_Voice_FrFRReneeVoice = "fr-FR_ReneeVoice"
+	GetPronunciationOptions_Voice_DeDEBirgitVoice    = "de-DE_BirgitVoice"
+	GetPronunciationOptions_Voice_DeDEDieterVoice    = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_EnGBKateVoice      = "en-GB_KateVoice"
+	GetPronunciationOptions_Voice_EnUSAllisonVoice   = "en-US_AllisonVoice"
+	GetPronunciationOptions_Voice_EnUSLisaVoice      = "en-US_LisaVoice"
+	GetPronunciationOptions_Voice_EnUSMichaelVoice   = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EsESEnriqueVoice   = "es-ES_EnriqueVoice"
+	GetPronunciationOptions_Voice_EsESLauraVoice     = "es-ES_LauraVoice"
+	GetPronunciationOptions_Voice_EsLASofiaVoice     = "es-LA_SofiaVoice"
+	GetPronunciationOptions_Voice_EsUSSofiaVoice     = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFRReneeVoice     = "fr-FR_ReneeVoice"
 	GetPronunciationOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
-	GetPronunciationOptions_Voice_JaJPEmiVoice = "ja-JP_EmiVoice"
-	GetPronunciationOptions_Voice_PtBRIsabelaVoice = "pt-BR_IsabelaVoice"
+	GetPronunciationOptions_Voice_JaJPEmiVoice       = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_PtBRIsabelaVoice   = "pt-BR_IsabelaVoice"
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
@@ -1269,20 +1269,20 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
-	GetVoiceOptions_Voice_DeDEBirgitVoice = "de-DE_BirgitVoice"
-	GetVoiceOptions_Voice_DeDEDieterVoice = "de-DE_DieterVoice"
-	GetVoiceOptions_Voice_EnGBKateVoice = "en-GB_KateVoice"
-	GetVoiceOptions_Voice_EnUSAllisonVoice = "en-US_AllisonVoice"
-	GetVoiceOptions_Voice_EnUSLisaVoice = "en-US_LisaVoice"
-	GetVoiceOptions_Voice_EnUSMichaelVoice = "en-US_MichaelVoice"
-	GetVoiceOptions_Voice_EsESEnriqueVoice = "es-ES_EnriqueVoice"
-	GetVoiceOptions_Voice_EsESLauraVoice = "es-ES_LauraVoice"
-	GetVoiceOptions_Voice_EsLASofiaVoice = "es-LA_SofiaVoice"
-	GetVoiceOptions_Voice_EsUSSofiaVoice = "es-US_SofiaVoice"
-	GetVoiceOptions_Voice_FrFRReneeVoice = "fr-FR_ReneeVoice"
+	GetVoiceOptions_Voice_DeDEBirgitVoice    = "de-DE_BirgitVoice"
+	GetVoiceOptions_Voice_DeDEDieterVoice    = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_EnGBKateVoice      = "en-GB_KateVoice"
+	GetVoiceOptions_Voice_EnUSAllisonVoice   = "en-US_AllisonVoice"
+	GetVoiceOptions_Voice_EnUSLisaVoice      = "en-US_LisaVoice"
+	GetVoiceOptions_Voice_EnUSMichaelVoice   = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EsESEnriqueVoice   = "es-ES_EnriqueVoice"
+	GetVoiceOptions_Voice_EsESLauraVoice     = "es-ES_LauraVoice"
+	GetVoiceOptions_Voice_EsLASofiaVoice     = "es-LA_SofiaVoice"
+	GetVoiceOptions_Voice_EsUSSofiaVoice     = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFRReneeVoice     = "fr-FR_ReneeVoice"
 	GetVoiceOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
-	GetVoiceOptions_Voice_JaJPEmiVoice = "ja-JP_EmiVoice"
-	GetVoiceOptions_Voice_PtBRIsabelaVoice = "pt-BR_IsabelaVoice"
+	GetVoiceOptions_Voice_JaJPEmiVoice       = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_PtBRIsabelaVoice   = "pt-BR_IsabelaVoice"
 )
 
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
@@ -1328,7 +1328,7 @@ type GetWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewGetWordOptions(customizationID string, word string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1494,38 +1494,38 @@ type SynthesizeOptions struct {
 // and sampling rates, see [Specifying an audio
 // format](https://console.bluemix.net/docs/services/text-to-speech/http.html#format).
 const (
-	SynthesizeOptions_Accept_AudioBasic = "audio/basic"
-	SynthesizeOptions_Accept_AudioFlac = "audio/flac"
-	SynthesizeOptions_Accept_AudioL16RateNnnn = "audio/l16;rate=nnnn"
-	SynthesizeOptions_Accept_AudioMp3 = "audio/mp3"
-	SynthesizeOptions_Accept_AudioMpeg = "audio/mpeg"
-	SynthesizeOptions_Accept_AudioMulawRateNnnn = "audio/mulaw;rate=nnnn"
-	SynthesizeOptions_Accept_AudioOgg = "audio/ogg"
-	SynthesizeOptions_Accept_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
-	SynthesizeOptions_Accept_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
-	SynthesizeOptions_Accept_AudioWav = "audio/wav"
-	SynthesizeOptions_Accept_AudioWebm = "audio/webm"
-	SynthesizeOptions_Accept_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
+	SynthesizeOptions_Accept_AudioBasic            = "audio/basic"
+	SynthesizeOptions_Accept_AudioFlac             = "audio/flac"
+	SynthesizeOptions_Accept_AudioL16RateNnnn      = "audio/l16;rate=nnnn"
+	SynthesizeOptions_Accept_AudioMp3              = "audio/mp3"
+	SynthesizeOptions_Accept_AudioMpeg             = "audio/mpeg"
+	SynthesizeOptions_Accept_AudioMulawRateNnnn    = "audio/mulaw;rate=nnnn"
+	SynthesizeOptions_Accept_AudioOgg              = "audio/ogg"
+	SynthesizeOptions_Accept_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
+	SynthesizeOptions_Accept_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
+	SynthesizeOptions_Accept_AudioWav              = "audio/wav"
+	SynthesizeOptions_Accept_AudioWebm             = "audio/webm"
+	SynthesizeOptions_Accept_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
 	SynthesizeOptions_Accept_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
 )
 
 // Constants associated with the SynthesizeOptions.Voice property.
 // The voice to use for synthesis.
 const (
-	SynthesizeOptions_Voice_DeDEBirgitVoice = "de-DE_BirgitVoice"
-	SynthesizeOptions_Voice_DeDEDieterVoice = "de-DE_DieterVoice"
-	SynthesizeOptions_Voice_EnGBKateVoice = "en-GB_KateVoice"
-	SynthesizeOptions_Voice_EnUSAllisonVoice = "en-US_AllisonVoice"
-	SynthesizeOptions_Voice_EnUSLisaVoice = "en-US_LisaVoice"
-	SynthesizeOptions_Voice_EnUSMichaelVoice = "en-US_MichaelVoice"
-	SynthesizeOptions_Voice_EsESEnriqueVoice = "es-ES_EnriqueVoice"
-	SynthesizeOptions_Voice_EsESLauraVoice = "es-ES_LauraVoice"
-	SynthesizeOptions_Voice_EsLASofiaVoice = "es-LA_SofiaVoice"
-	SynthesizeOptions_Voice_EsUSSofiaVoice = "es-US_SofiaVoice"
-	SynthesizeOptions_Voice_FrFRReneeVoice = "fr-FR_ReneeVoice"
+	SynthesizeOptions_Voice_DeDEBirgitVoice    = "de-DE_BirgitVoice"
+	SynthesizeOptions_Voice_DeDEDieterVoice    = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_EnGBKateVoice      = "en-GB_KateVoice"
+	SynthesizeOptions_Voice_EnUSAllisonVoice   = "en-US_AllisonVoice"
+	SynthesizeOptions_Voice_EnUSLisaVoice      = "en-US_LisaVoice"
+	SynthesizeOptions_Voice_EnUSMichaelVoice   = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EsESEnriqueVoice   = "es-ES_EnriqueVoice"
+	SynthesizeOptions_Voice_EsESLauraVoice     = "es-ES_LauraVoice"
+	SynthesizeOptions_Voice_EsLASofiaVoice     = "es-LA_SofiaVoice"
+	SynthesizeOptions_Voice_EsUSSofiaVoice     = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFRReneeVoice     = "fr-FR_ReneeVoice"
 	SynthesizeOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
-	SynthesizeOptions_Voice_JaJPEmiVoice = "ja-JP_EmiVoice"
-	SynthesizeOptions_Voice_PtBRIsabelaVoice = "pt-BR_IsabelaVoice"
+	SynthesizeOptions_Voice_JaJPEmiVoice       = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_PtBRIsabelaVoice   = "pt-BR_IsabelaVoice"
 )
 
 // NewSynthesizeOptions : Instantiate SynthesizeOptions

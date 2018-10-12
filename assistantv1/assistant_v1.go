@@ -20,7 +20,7 @@ package assistantv1
 import (
 	"fmt"
 	"github.com/go-openapi/strfmt"
-	core "github.com/ibm-watson/go-sdk/core"
+	core "github.com/watson-developer-cloud/go-sdk/core"
 )
 
 // AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and

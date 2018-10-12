@@ -20,7 +20,7 @@ package visualrecognitionv3
 import (
 	"fmt"
 	"github.com/go-openapi/strfmt"
-	core "github.com/ibm-watson/go-sdk/core"
+	core "github.com/watson-developer-cloud/go-sdk/core"
 	"io"
 	"os"
 	"strings"
@@ -218,9 +218,9 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	builder.AddFormData("name", "", "", fmt.Sprint(*createClassifierOptions.Name))
-	for key, value := range createClassifierOptions.ClassnamePositiveExamples {
+	for key, value := range createClassifierOptions.PositiveExamples {
 		partName := core.CreateFormPartName("{classname}_positive_examples", "classname", key)
-		builder.AddFormData(partName, "", "application/octet-stream", value)
+		builder.AddFormData(partName, core.StringNilMapper(createClassifierOptions.PositiveExamplesFilename[key]), "application/octet-stream", value)
 	}
 	if createClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(createClassifierOptions.NegativeExamplesFilename),
@@ -373,8 +373,8 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	if err := core.ValidateStruct(updateClassifierOptions, "updateClassifierOptions"); err != nil {
 		return nil, err
 	}
-	if (updateClassifierOptions.ClassnamePositiveExamples == nil) && (updateClassifierOptions.NegativeExamples == nil) {
-		return nil, fmt.Errorf("At least one of classnamePositiveExamples or negativeExamples must be supplied")
+	if (updateClassifierOptions.PositiveExamples == nil) && (updateClassifierOptions.NegativeExamples == nil) {
+		return nil, fmt.Errorf("At least one of positiveExamples or negativeExamples must be supplied")
 	}
 
 	pathSegments := []string{"v3/classifiers"}
@@ -389,9 +389,9 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
-	for key, value := range updateClassifierOptions.ClassnamePositiveExamples {
+	for key, value := range updateClassifierOptions.PositiveExamples {
 		partName := core.CreateFormPartName("{classname}_positive_examples", "classname", key)
-		builder.AddFormData(partName, "", "application/octet-stream", value)
+		builder.AddFormData(partName, core.StringNilMapper(updateClassifierOptions.PositiveExamplesFilename[key]), "application/octet-stream", value)
 	}
 	if updateClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(updateClassifierOptions.NegativeExamplesFilename),
@@ -771,7 +771,10 @@ type CreateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	ClassnamePositiveExamples map[string]*os.File `json:"classname_positive_examples" validate:"required"`
+	PositiveExamples map[string]*os.File `json:"positive_examples" validate:"required"`
+
+	// The filename for positiveExamples.
+	PositiveExamplesFilename map[string]*string `json:"positive_examples_filename,omitempty"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
@@ -799,12 +802,21 @@ func (options *CreateClassifierOptions) SetName(name string) *CreateClassifierOp
 	return options
 }
 
-// AddClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
-func (options *CreateClassifierOptions) AddClassnamePositiveExamples(classname string, classnamePositiveExamples *os.File) *CreateClassifierOptions {
-	if options.ClassnamePositiveExamples == nil {
-		options.ClassnamePositiveExamples = make(map[string]*os.File)
+// AddPositiveExamples : Allow user to add a new entry to the PositiveExamples map
+func (options *CreateClassifierOptions) AddPositiveExamples(classname string, positiveExamples *os.File) *CreateClassifierOptions {
+	if options.PositiveExamples == nil {
+		options.PositiveExamples = make(map[string]*os.File)
 	}
-	options.ClassnamePositiveExamples[classname] = classnamePositiveExamples
+	options.PositiveExamples[classname] = positiveExamples
+	return options
+}
+
+// AddPositiveExamplesFilename : Allow user to add a new entry to the PositiveExamplesFilename map
+func (options *CreateClassifierOptions) AddPositiveExamplesFilename(classname string, positiveExamplesFilename string) *CreateClassifierOptions {
+	if options.PositiveExamplesFilename == nil {
+		options.PositiveExamplesFilename = make(map[string]*string)
+	}
+	options.PositiveExamplesFilename[classname] = core.StringPtr(positiveExamplesFilename)
 	return options
 }
 
@@ -1152,7 +1164,10 @@ type UpdateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	ClassnamePositiveExamples map[string]*os.File `json:"classname_positive_examples,omitempty"`
+	PositiveExamples map[string]*os.File `json:"positive_examples,omitempty"`
+
+	// The filename for positiveExamples.
+	PositiveExamplesFilename map[string]*string `json:"positive_examples_filename,omitempty"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
@@ -1180,12 +1195,21 @@ func (options *UpdateClassifierOptions) SetClassifierID(classifierID string) *Up
 	return options
 }
 
-// AddClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
-func (options *UpdateClassifierOptions) AddClassnamePositiveExamples(classname string, classnamePositiveExamples *os.File) *UpdateClassifierOptions {
-	if options.ClassnamePositiveExamples == nil {
-		options.ClassnamePositiveExamples = make(map[string]*os.File)
+// AddPositiveExamples : Allow user to add a new entry to the PositiveExamples map
+func (options *UpdateClassifierOptions) AddPositiveExamples(classname string, positiveExamples *os.File) *UpdateClassifierOptions {
+	if options.PositiveExamples == nil {
+		options.PositiveExamples = make(map[string]*os.File)
 	}
-	options.ClassnamePositiveExamples[classname] = classnamePositiveExamples
+	options.PositiveExamples[classname] = positiveExamples
+	return options
+}
+
+// AddPositiveExamplesFilename : Allow user to add a new entry to the PositiveExamplesFilename map
+func (options *UpdateClassifierOptions) AddPositiveExamplesFilename(classname string, positiveExamplesFilename string) *UpdateClassifierOptions {
+	if options.PositiveExamplesFilename == nil {
+		options.PositiveExamplesFilename = make(map[string]*string)
+	}
+	options.PositiveExamplesFilename[classname] = core.StringPtr(positiveExamplesFilename)
 	return options
 }
 

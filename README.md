@@ -1,5 +1,5 @@
 # Watson Developer Cloud Go SDK
-[![Build Status](https://travis.ibm.com/arf/go-sdk.svg?token=6j6JNApX8A5cz4TRmgtB&branch=master)](https://travis.ibm.com/arf/go-sdk)
+[![Build Status](https://travis-ci.org/watson-developer-cloud/go-sdk.svg)](https://travis-ci.org/watson-developer-cloud/go-sdk)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 
@@ -25,13 +25,13 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 ## Before you begin
 
-* You need an [IBM Cloud](https://console.bluemix.net/developer/watson/dashboard) account.
+* You need an [IBM Cloud][ibm-cloud-onboarding] account.
 
 ## Installation
 
 Get SDK package:
 ```bash
-go get github.com/ibm-watson/go-sdk
+go get github.com/watson-developer-cloud/go-sdk
 ```
 
 ## Running in IBM Cloud
@@ -108,9 +108,10 @@ package main
 
 import (
 "fmt"
-"github.com/ibm-watson/go-sdk/discoveryv1"
+"github.com/watson-developer-cloud/go-sdk/discoveryv1"
 )
 
+// Creates a Discovery service instance and does a list of environments
 func main() {
 // Instantiate the Watson Discovery service
 service, serviceErr := discoveryv1.
@@ -124,8 +125,6 @@ service, serviceErr := discoveryv1.
 if serviceErr != nil {
   panic(serviceErr)
 }
-
-/* LIST ENVIRONMENTS EXAMPLE*/
 
 // Create a new ListEnvironmentsOptions, these are helper methods.
 listEnvironmentsOptions := service.NewListEnvironmentsOptions()
@@ -161,7 +160,7 @@ if listEnvironmentResult != nil {
 
 ## Examples
 
-The [examples](https://github.ibm.com/arf/go-sdk/tree/master/examples) folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
+The [examples][examples] folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
 
 ## Tests
 
@@ -183,8 +182,13 @@ go test ./assistantv1
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.ibm.com/arf/go-sdk/tree/master/CONTRIBUTING.md).
+See [CONTRIBUTING][CONTRIBUTING].
 
 ## License
 
-This library is licensed under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0).
+This library is licensed under the [Apache 2.0 license][license].
+
+[ibm-cloud-onboarding]: http://console.bluemix.net/registration?target=/developer/watson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Go
+[examples]: https://github.com/watson-developer-cloud/go-sdk/tree/master/examples
+[CONTRIBUTING]: https://github.com/watson-developer-cloud/go-sdk/blob/master/.github/CONTRIBUTING.md
+[license]: http://www.apache.org/licenses/LICENSE-2.0

@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/ibm-watson/go-sdk/core"
+	"github.com/watson-developer-cloud/go-sdk/core"
 	"os"
 
-	discovery "github.com/ibm-watson/go-sdk/discoveryv1"
+	discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
 )
 
 func main() {

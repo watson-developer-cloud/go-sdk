@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/ibm-watson/go-sdk/core"
-	"github.com/ibm-watson/go-sdk/personalityinsightsv3"
+	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 )
 
 func main() {

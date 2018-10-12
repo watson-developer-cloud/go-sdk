@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ibm-watson/go-sdk/core"
-	nlc "github.com/ibm-watson/go-sdk/naturallanguageclassifierv1"
+	"github.com/watson-developer-cloud/go-sdk/core"
+	nlc "github.com/watson-developer-cloud/go-sdk/naturallanguageclassifierv1"
 )
 
 func main() {

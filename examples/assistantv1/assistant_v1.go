@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	assistant "github.com/ibm-watson/go-sdk/assistantv1"
-	core "github.com/ibm-watson/go-sdk/core"
+	assistant "github.com/watson-developer-cloud/go-sdk/assistantv1"
+	core "github.com/watson-developer-cloud/go-sdk/core"
 )
 
 func main() {

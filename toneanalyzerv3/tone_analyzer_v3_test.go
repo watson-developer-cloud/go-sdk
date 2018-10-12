@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/ibm-watson/go-sdk/toneanalyzerv3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
 )
 
 var _ = Describe("ToneAnalyzerV3", func() {

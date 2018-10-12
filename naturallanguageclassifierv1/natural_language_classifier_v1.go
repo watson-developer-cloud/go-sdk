@@ -19,7 +19,7 @@ package naturallanguageclassifierv1
 
 import (
 	"github.com/go-openapi/strfmt"
-	core "github.com/ibm-watson/go-sdk/core"
+	core "github.com/watson-developer-cloud/go-sdk/core"
 	"os"
 )
 
