@@ -16,7 +16,6 @@ before_install:
 install:
   - dep ensure
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
-  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.com:watson-developer-cloud/go-sdk.git $GOPATH/src/github.com/watson-developer-cloud/go-sdk
 
 notifications:
   email: false
