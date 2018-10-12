@@ -26,14 +26,14 @@ import (
 	"strings"
 )
 
-// VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify scenes, objects, and faces
-//  in images you upload to the service. You can create and train a custom classifier to identify subjects that suit
-// your needs.
+// VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
+// scenes, objects, and faces  in images you upload to the service. You can create and train a custom classifier to
+// identify subjects that suit your needs.
 //
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/visual-recognition.html
 type VisualRecognitionV3 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // VisualRecognitionV3Options : Service options
@@ -63,7 +63,7 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (*VisualRecogni
 		return nil, serviceErr
 	}
 
-	return &VisualRecognitionV3{service: service}, nil
+	return &VisualRecognitionV3{Service: service}, nil
 }
 
 // Classify : Classify images
@@ -83,7 +83,7 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range classifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -92,7 +92,7 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 	if classifyOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*classifyOptions.AcceptLanguage))
 	}
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	if classifyOptions.ImagesFile != nil {
 		builder.AddFormData("images_file", core.StringNilMapper(classifyOptions.ImagesFilename),
@@ -116,7 +116,7 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, new(ClassifiedImages))
+	response, err := visualRecognition.Service.Request(request, new(ClassifiedImages))
 	return response, err
 }
 
@@ -156,13 +156,13 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *De
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range detectFacesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	if detectFacesOptions.ImagesFile != nil {
 		builder.AddFormData("images_file", core.StringNilMapper(detectFacesOptions.ImagesFilename),
@@ -177,7 +177,7 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *De
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, new(DetectedFaces))
+	response, err := visualRecognition.Service.Request(request, new(DetectedFaces))
 	return response, err
 }
 
@@ -209,17 +209,18 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	builder.AddFormData("name", "", "", fmt.Sprint(*createClassifierOptions.Name))
-	for className, file := range createClassifierOptions.ClassnamePositiveExamples {
-		builder.AddFormData(className+"_positive_examples", "", "application/octet-stream", file)
+	for key, value := range createClassifierOptions.ClassnamePositiveExamples {
+		partName := core.CreateFormPartName("{classname}_positive_examples", "classname", key)
+		builder.AddFormData(partName, "", "application/octet-stream", value)
 	}
 	if createClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(createClassifierOptions.NegativeExamplesFilename),
@@ -231,7 +232,7 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, new(Classifier))
+	response, err := visualRecognition.Service.Request(request, new(Classifier))
 	return response, err
 }
 
@@ -257,20 +258,20 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, nil)
+	response, err := visualRecognition.Service.Request(request, nil)
 	return response, err
 }
 
@@ -288,20 +289,20 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 	pathParameters := []string{*getClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, new(Classifier))
+	response, err := visualRecognition.Service.Request(request, new(Classifier))
 	return response, err
 }
 
@@ -324,7 +325,7 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -334,14 +335,14 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 	if listClassifiersOptions.Verbose != nil {
 		builder.AddQuery("verbose", fmt.Sprint(*listClassifiersOptions.Verbose))
 	}
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, new(Classifiers))
+	response, err := visualRecognition.Service.Request(request, new(Classifiers))
 	return response, err
 }
 
@@ -380,16 +381,17 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	pathParameters := []string{*updateClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
-	for className, file := range updateClassifierOptions.ClassnamePositiveExamples {
-		builder.AddFormData(className+"_positive_examples", "", "application/octet-stream", file)
+	for key, value := range updateClassifierOptions.ClassnamePositiveExamples {
+		partName := core.CreateFormPartName("{classname}_positive_examples", "classname", key)
+		builder.AddFormData(partName, "", "application/octet-stream", value)
 	}
 	if updateClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(updateClassifierOptions.NegativeExamplesFilename),
@@ -401,7 +403,7 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, new(Classifier))
+	response, err := visualRecognition.Service.Request(request, new(Classifier))
 	return response, err
 }
 
@@ -429,20 +431,20 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 	pathParameters := []string{*getCoreMlModelOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getCoreMlModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/octet-stream")
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, new(io.ReadCloser))
+	response, err := visualRecognition.Service.Request(request, new(io.ReadCloser))
 	return response, err
 }
 
@@ -474,7 +476,7 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(visualRecognition.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -482,14 +484,14 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
-	builder.AddQuery("version", visualRecognition.service.Options.Version)
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := visualRecognition.service.Request(request, nil)
+	response, err := visualRecognition.Service.Request(request, nil)
 	return response, err
 }
 
@@ -572,7 +574,7 @@ type Classifier struct {
 	// Whether the classifier can be downloaded as a Core ML model after the training status is `ready`.
 	CoreMlEnabled *bool `json:"core_ml_enabled,omitempty"`
 
-	// If classifier training has failed, this field may explain why.
+	// If classifier training has failed, this field might explain why.
 	Explanation *string `json:"explanation,omitempty"`
 
 	// Date and time in Coordinated Universal Time (UTC) that the classifier was created.
@@ -589,6 +591,15 @@ type Classifier struct {
 	// either `retrained` or `created`.  Returned when verbose=`true`. Might not be returned by some requests.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
+
+// Constants associated with the Classifier.Status property.
+// Training status of classifier.
+const (
+	Classifier_Status_Failed     = "failed"
+	Classifier_Status_Ready      = "ready"
+	Classifier_Status_Retraining = "retraining"
+	Classifier_Status_Training   = "training"
+)
 
 // ClassifierResult : Classifier and score combination.
 type ClassifierResult struct {
@@ -664,6 +675,26 @@ type ClassifyOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ClassifyOptions.AcceptLanguage property.
+// The language of the output class names. The full set of languages is supported for the built-in classifier IDs:
+// `default`, `food`, and `explicit`. The class names of custom classifiers are not translated.
+//
+// The response might not be in the specified language when the requested language is not supported or when there is no
+// translation for the class name.
+const (
+	ClassifyOptions_AcceptLanguage_Ar   = "ar"
+	ClassifyOptions_AcceptLanguage_De   = "de"
+	ClassifyOptions_AcceptLanguage_En   = "en"
+	ClassifyOptions_AcceptLanguage_Es   = "es"
+	ClassifyOptions_AcceptLanguage_Fr   = "fr"
+	ClassifyOptions_AcceptLanguage_It   = "it"
+	ClassifyOptions_AcceptLanguage_Ja   = "ja"
+	ClassifyOptions_AcceptLanguage_Ko   = "ko"
+	ClassifyOptions_AcceptLanguage_PtBr = "pt-br"
+	ClassifyOptions_AcceptLanguage_ZhCn = "zh-cn"
+	ClassifyOptions_AcceptLanguage_ZhTw = "zh-tw"
+)
 
 // NewClassifyOptions : Instantiate ClassifyOptions
 func (visualRecognition *VisualRecognitionV3) NewClassifyOptions() *ClassifyOptions {
@@ -756,12 +787,9 @@ type CreateClassifierOptions struct {
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func (visualRecognition *VisualRecognitionV3) NewCreateClassifierOptions(name string, className string, classnamePositiveExamples *os.File) *CreateClassifierOptions {
+func (visualRecognition *VisualRecognitionV3) NewCreateClassifierOptions(name string) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
 		Name: core.StringPtr(name),
-		ClassnamePositiveExamples: map[string]*os.File{
-			className: classnamePositiveExamples,
-		},
 	}
 }
 
@@ -771,9 +799,12 @@ func (options *CreateClassifierOptions) SetName(name string) *CreateClassifierOp
 	return options
 }
 
-// AddClassnamePositiveExamples : Allow user to add ClassnamePositiveExamples
-func (options *CreateClassifierOptions) AddClassnamePositiveExamples(className string, file *os.File) *CreateClassifierOptions {
-	options.ClassnamePositiveExamples[className] = file
+// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *CreateClassifierOptions) SetClassnamePositiveExamples(classname string, classnamePositiveExamples *os.File) *CreateClassifierOptions {
+	if options.ClassnamePositiveExamples == nil {
+		options.ClassnamePositiveExamples = make(map[string]*os.File)
+	}
+	options.ClassnamePositiveExamples[classname] = classnamePositiveExamples
 	return options
 }
 
@@ -1149,9 +1180,12 @@ func (options *UpdateClassifierOptions) SetClassifierID(classifierID string) *Up
 	return options
 }
 
-// AddClassnamePositiveExamples : Allow user to add ClassnamePositiveExamples
-func (options *UpdateClassifierOptions) AddClassnamePositiveExamples(className string, file *os.File) *UpdateClassifierOptions {
-	options.ClassnamePositiveExamples[className] = file
+// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *UpdateClassifierOptions) SetClassnamePositiveExamples(classname string, classnamePositiveExamples *os.File) *UpdateClassifierOptions {
+	if options.ClassnamePositiveExamples == nil {
+		options.ClassnamePositiveExamples = make(map[string]*os.File)
+	}
+	options.ClassnamePositiveExamples[classname] = classnamePositiveExamples
 	return options
 }
 
