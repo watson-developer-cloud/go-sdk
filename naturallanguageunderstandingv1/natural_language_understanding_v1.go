@@ -21,9 +21,10 @@ import (
 	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// NaturalLanguageUnderstandingV1 : Analyze various features of text content at scale. Provide text, raw HTML, or a public URL, and IBM Watson Natural
-// Language Understanding will give you results for the features you request. The service cleans HTML content before
-// analysis by default, so the results can ignore most advertisements and other unwanted content.
+// NaturalLanguageUnderstandingV1 : Analyze various features of text content at scale. Provide text, raw HTML, or a
+// public URL, and IBM Watson Natural Language Understanding will give you results for the features you request. The
+// service cleans HTML content before analysis by default, so the results can ignore most advertisements and other
+// unwanted content.
 //
 // You can create <a target="_blank"
 // href="https://www.ibm.com/watson/developercloud/doc/natural-language-understanding/customizing.html">custom
@@ -33,7 +34,7 @@ import (
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/natural-language-understanding.html
 type NaturalLanguageUnderstandingV1 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // NaturalLanguageUnderstandingV1Options : Service options
@@ -67,7 +68,7 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 		return nil, serviceErr
 	}
 
-	return &NaturalLanguageUnderstandingV1{service: service}, nil
+	return &NaturalLanguageUnderstandingV1{Service: service}, nil
 }
 
 // Analyze : Analyze text, HTML, or a public webpage
@@ -121,14 +122,14 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(naturalLanguageUnderstanding.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range analyzeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", naturalLanguageUnderstanding.service.Options.Version)
+	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if analyzeOptions.Text != nil {
@@ -171,7 +172,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 		return nil, err
 	}
 
-	response, err := naturalLanguageUnderstanding.service.Request(request, new(AnalysisResults))
+	response, err := naturalLanguageUnderstanding.Service.Request(request, new(AnalysisResults))
 	return response, err
 }
 
@@ -198,20 +199,20 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 	pathParameters := []string{*deleteModelOptions.ModelID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(naturalLanguageUnderstanding.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", naturalLanguageUnderstanding.service.Options.Version)
+	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := naturalLanguageUnderstanding.service.Request(request, new(DeleteModelResults))
+	response, err := naturalLanguageUnderstanding.Service.Request(request, new(DeleteModelResults))
 	return response, err
 }
 
@@ -236,20 +237,20 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(l
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(naturalLanguageUnderstanding.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", naturalLanguageUnderstanding.service.Options.Version)
+	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := naturalLanguageUnderstanding.service.Request(request, new(ListModelsResults))
+	response, err := naturalLanguageUnderstanding.Service.Request(request, new(ListModelsResults))
 	return response, err
 }
 
@@ -348,9 +349,9 @@ type AnalyzeOptions struct {
 }
 
 // NewAnalyzeOptions : Instantiate AnalyzeOptions
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) NewAnalyzeOptions(features Features) *AnalyzeOptions {
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) NewAnalyzeOptions(features *Features) *AnalyzeOptions {
 	return &AnalyzeOptions{
-		Features: &features,
+		Features: features,
 	}
 }
 
@@ -373,8 +374,8 @@ func (options *AnalyzeOptions) SetURL(URL string) *AnalyzeOptions {
 }
 
 // SetFeatures : Allow user to set Features
-func (options *AnalyzeOptions) SetFeatures(features Features) *AnalyzeOptions {
-	options.Features = &features
+func (options *AnalyzeOptions) SetFeatures(features *Features) *AnalyzeOptions {
+	options.Features = features
 	return options
 }
 

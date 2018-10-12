@@ -38,9 +38,9 @@ type ServiceOptions struct {
 type WatsonService struct {
 	Options        *ServiceOptions
 	DefaultHeaders http.Header
-	tokenManager   *TokenManager
-	client         *http.Client
-	userAgent      string
+	TokenManager   *TokenManager
+	Client         *http.Client
+	UserAgent      string
 }
 
 // NewWatsonService Instantiate a Watson Service
@@ -48,7 +48,7 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 	service := WatsonService{
 		Options: options,
 
-		client: &http.Client{
+		Client: &http.Client{
 			Timeout: time.Second * 30,
 		},
 	}
@@ -56,7 +56,7 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 	const sdkVersion = "0.0.1" // TODO: would there be a bumpversion?
 	var userAgent = "watson-apis-go-sdk-" + sdkVersion
 	userAgent += "-" + runtime.GOOS
-	service.userAgent = userAgent
+	service.UserAgent = userAgent
 
 	if options.Username != "" && options.Password != "" {
 		if options.Username == APIKey && !strings.HasPrefix(options.Password, ICPPrefix) {
@@ -89,27 +89,27 @@ func (service *WatsonService) SetTokenManager(iamAPIKey string, iamAccessToken s
 	service.Options.IAMAccessToken = iamAccessToken
 	service.Options.IAMURL = iamURL
 	tokenManager := NewTokenManager(iamAPIKey, iamURL, iamAccessToken)
-	service.tokenManager = tokenManager
+	service.TokenManager = tokenManager
 }
 
 // SetIAMAccessToken Sets the IAM access token
 func (service *WatsonService) SetIAMAccessToken(iamAccessToken string) {
-	if service.tokenManager != nil {
-		service.tokenManager.SetAccessToken(iamAccessToken)
+	if service.TokenManager != nil {
+		service.TokenManager.SetAccessToken(iamAccessToken)
 	} else {
 		tokenManager := NewTokenManager("", "", iamAccessToken)
-		service.tokenManager = tokenManager
+		service.TokenManager = tokenManager
 	}
 	service.Options.IAMAccessToken = iamAccessToken
 }
 
 // SetIAMAPIKey Sets the IAM API key
 func (service *WatsonService) SetIAMAPIKey(iamAPIKey string) {
-	if service.tokenManager != nil {
-		service.tokenManager.SetIAMAPIKey(iamAPIKey)
+	if service.TokenManager != nil {
+		service.TokenManager.SetIAMAPIKey(iamAPIKey)
 	} else {
 		tokenManager := NewTokenManager(iamAPIKey, "", "")
-		service.tokenManager = tokenManager
+		service.TokenManager = tokenManager
 	}
 	service.Options.IAMApiKey = iamAPIKey
 }
@@ -126,7 +126,7 @@ func (service *WatsonService) SetDefaultHeaders(headers http.Header) {
 
 // SetHTTPClient updates the client handling the requests
 func (service *WatsonService) SetHTTPClient(client *http.Client) {
-	service.client = client
+	service.Client = client
 }
 
 // DisableSSLVerification skips SSL verification
@@ -134,7 +134,7 @@ func (service *WatsonService) DisableSSLVerification() {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
-	service.client.Transport = tr
+	service.Client.Transport = tr
 }
 
 // Request performs the HTTP request
@@ -147,15 +147,15 @@ func (service *WatsonService) Request(req *http.Request, result interface{}) (*D
 	}
 
 	// Add authentication
-	if service.tokenManager != nil {
-		token := service.tokenManager.GetToken()
+	if service.TokenManager != nil {
+		token := service.TokenManager.GetToken()
 		req.Header.Add(Authorization, fmt.Sprintf(`%s %s`, Bearer, token))
 	} else if service.Options.Username != "" && service.Options.Password != "" {
 		req.SetBasicAuth(service.Options.Username, service.Options.Password)
 	}
 
 	// Perform the request
-	resp, err := service.client.Do(req)
+	resp, err := service.Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -180,7 +180,7 @@ func (service *WatsonService) Request(req *http.Request, result interface{}) (*D
 		}
 	}
 
-	if response.Result == nil {
+	if response.Result == nil && result != nil {
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return response, err

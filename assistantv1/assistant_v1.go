@@ -23,13 +23,13 @@ import (
 	core "github.com/ibm-watson/go-sdk/core"
 )
 
-// AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and integrated
-// dialog tools to create conversation flows between your apps and your users.
+// AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
+// integrated dialog tools to create conversation flows between your apps and your users.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/assistant.html
 type AssistantV1 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // AssistantV1Options : Service options
@@ -63,7 +63,7 @@ func NewAssistantV1(options *AssistantV1Options) (*AssistantV1, error) {
 		return nil, serviceErr
 	}
 
-	return &AssistantV1{service: service}, nil
+	return &AssistantV1{Service: service}, nil
 }
 
 // Message : Get response to user input
@@ -82,7 +82,7 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	pathParameters := []string{*messageOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range messageOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -93,7 +93,7 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	if messageOptions.NodesVisitedDetails != nil {
 		builder.AddQuery("nodes_visited_details", fmt.Sprint(*messageOptions.NodesVisitedDetails))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if messageOptions.Input != nil {
@@ -124,7 +124,7 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(MessageResponse))
+	response, err := assistant.Service.Request(request, new(MessageResponse))
 	return response, err
 }
 
@@ -151,14 +151,14 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createWorkspaceOptions.Name != nil {
@@ -201,7 +201,7 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Workspace))
+	response, err := assistant.Service.Request(request, new(Workspace))
 	return response, err
 }
 
@@ -230,20 +230,20 @@ func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWork
 	pathParameters := []string{*deleteWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -264,7 +264,7 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 	pathParameters := []string{*getWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -277,14 +277,14 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 	if getWorkspaceOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getWorkspaceOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(WorkspaceExport))
+	response, err := assistant.Service.Request(request, new(WorkspaceExport))
 	return response, err
 }
 
@@ -310,7 +310,7 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listWorkspacesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -332,14 +332,14 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 	if listWorkspacesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listWorkspacesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(WorkspaceCollection))
+	response, err := assistant.Service.Request(request, new(WorkspaceCollection))
 	return response, err
 }
 
@@ -369,7 +369,7 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	pathParameters := []string{*updateWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -380,7 +380,7 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	if updateWorkspaceOptions.Append != nil {
 		builder.AddQuery("append", fmt.Sprint(*updateWorkspaceOptions.Append))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateWorkspaceOptions.Name != nil {
@@ -423,7 +423,7 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Workspace))
+	response, err := assistant.Service.Request(request, new(Workspace))
 	return response, err
 }
 
@@ -452,14 +452,14 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 	pathParameters := []string{*createIntentOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createIntentOptions.Intent != nil {
@@ -481,7 +481,7 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Intent))
+	response, err := assistant.Service.Request(request, new(Intent))
 	return response, err
 }
 
@@ -510,20 +510,20 @@ func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOpti
 	pathParameters := []string{*deleteIntentOptions.WorkspaceID, *deleteIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -544,7 +544,7 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*co
 	pathParameters := []string{*getIntentOptions.WorkspaceID, *getIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -557,14 +557,14 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*co
 	if getIntentOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getIntentOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(IntentExport))
+	response, err := assistant.Service.Request(request, new(IntentExport))
 	return response, err
 }
 
@@ -594,7 +594,7 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 	pathParameters := []string{*listIntentsOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listIntentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -619,14 +619,14 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 	if listIntentsOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listIntentsOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(IntentCollection))
+	response, err := assistant.Service.Request(request, new(IntentCollection))
 	return response, err
 }
 
@@ -656,14 +656,14 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	pathParameters := []string{*updateIntentOptions.WorkspaceID, *updateIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateIntentOptions.NewIntent != nil {
@@ -685,7 +685,7 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Intent))
+	response, err := assistant.Service.Request(request, new(Intent))
 	return response, err
 }
 
@@ -714,14 +714,14 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 	pathParameters := []string{*createExampleOptions.WorkspaceID, *createExampleOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createExampleOptions.Text != nil {
@@ -740,7 +740,7 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Example))
+	response, err := assistant.Service.Request(request, new(Example))
 	return response, err
 }
 
@@ -769,20 +769,20 @@ func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleO
 	pathParameters := []string{*deleteExampleOptions.WorkspaceID, *deleteExampleOptions.Intent, *deleteExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -802,7 +802,7 @@ func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (
 	pathParameters := []string{*getExampleOptions.WorkspaceID, *getExampleOptions.Intent, *getExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -812,14 +812,14 @@ func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (
 	if getExampleOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getExampleOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Example))
+	response, err := assistant.Service.Request(request, new(Example))
 	return response, err
 }
 
@@ -848,7 +848,7 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 	pathParameters := []string{*listExamplesOptions.WorkspaceID, *listExamplesOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -870,14 +870,14 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 	if listExamplesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listExamplesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(ExampleCollection))
+	response, err := assistant.Service.Request(request, new(ExampleCollection))
 	return response, err
 }
 
@@ -906,14 +906,14 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 	pathParameters := []string{*updateExampleOptions.WorkspaceID, *updateExampleOptions.Intent, *updateExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateExampleOptions.NewText != nil {
@@ -932,7 +932,7 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Example))
+	response, err := assistant.Service.Request(request, new(Example))
 	return response, err
 }
 
@@ -961,14 +961,14 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 	pathParameters := []string{*createCounterexampleOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createCounterexampleOptions.Text != nil {
@@ -984,7 +984,7 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Counterexample))
+	response, err := assistant.Service.Request(request, new(Counterexample))
 	return response, err
 }
 
@@ -1013,20 +1013,20 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 	pathParameters := []string{*deleteCounterexampleOptions.WorkspaceID, *deleteCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1046,7 +1046,7 @@ func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCou
 	pathParameters := []string{*getCounterexampleOptions.WorkspaceID, *getCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1056,14 +1056,14 @@ func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCou
 	if getCounterexampleOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getCounterexampleOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Counterexample))
+	response, err := assistant.Service.Request(request, new(Counterexample))
 	return response, err
 }
 
@@ -1092,7 +1092,7 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 	pathParameters := []string{*listCounterexamplesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listCounterexamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1114,14 +1114,14 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 	if listCounterexamplesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listCounterexamplesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(CounterexampleCollection))
+	response, err := assistant.Service.Request(request, new(CounterexampleCollection))
 	return response, err
 }
 
@@ -1150,14 +1150,14 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 	pathParameters := []string{*updateCounterexampleOptions.WorkspaceID, *updateCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateCounterexampleOptions.NewText != nil {
@@ -1173,7 +1173,7 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Counterexample))
+	response, err := assistant.Service.Request(request, new(Counterexample))
 	return response, err
 }
 
@@ -1202,14 +1202,14 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	pathParameters := []string{*createEntityOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createEntityOptions.Entity != nil {
@@ -1237,7 +1237,7 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Entity))
+	response, err := assistant.Service.Request(request, new(Entity))
 	return response, err
 }
 
@@ -1266,20 +1266,20 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 	pathParameters := []string{*deleteEntityOptions.WorkspaceID, *deleteEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1300,7 +1300,7 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*co
 	pathParameters := []string{*getEntityOptions.WorkspaceID, *getEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1313,14 +1313,14 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*co
 	if getEntityOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getEntityOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(EntityExport))
+	response, err := assistant.Service.Request(request, new(EntityExport))
 	return response, err
 }
 
@@ -1350,7 +1350,7 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 	pathParameters := []string{*listEntitiesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listEntitiesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1375,14 +1375,14 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 	if listEntitiesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listEntitiesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(EntityCollection))
+	response, err := assistant.Service.Request(request, new(EntityCollection))
 	return response, err
 }
 
@@ -1412,14 +1412,14 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 	pathParameters := []string{*updateEntityOptions.WorkspaceID, *updateEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateEntityOptions.NewFuzzyMatch != nil {
@@ -1447,7 +1447,7 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Entity))
+	response, err := assistant.Service.Request(request, new(Entity))
 	return response, err
 }
 
@@ -1477,7 +1477,7 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 	pathParameters := []string{*listMentionsOptions.WorkspaceID, *listMentionsOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listMentionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1490,14 +1490,14 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 	if listMentionsOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listMentionsOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(EntityMentionCollection))
+	response, err := assistant.Service.Request(request, new(EntityMentionCollection))
 	return response, err
 }
 
@@ -1526,14 +1526,14 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	pathParameters := []string{*createValueOptions.WorkspaceID, *createValueOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createValueOptions.Value != nil {
@@ -1561,7 +1561,7 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Value))
+	response, err := assistant.Service.Request(request, new(Value))
 	return response, err
 }
 
@@ -1590,20 +1590,20 @@ func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions
 	pathParameters := []string{*deleteValueOptions.WorkspaceID, *deleteValueOptions.Entity, *deleteValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1623,7 +1623,7 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.
 	pathParameters := []string{*getValueOptions.WorkspaceID, *getValueOptions.Entity, *getValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1636,14 +1636,14 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.
 	if getValueOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getValueOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(ValueExport))
+	response, err := assistant.Service.Request(request, new(ValueExport))
 	return response, err
 }
 
@@ -1672,7 +1672,7 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 	pathParameters := []string{*listValuesOptions.WorkspaceID, *listValuesOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listValuesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1697,14 +1697,14 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 	if listValuesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listValuesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(ValueCollection))
+	response, err := assistant.Service.Request(request, new(ValueCollection))
 	return response, err
 }
 
@@ -1734,14 +1734,14 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	pathParameters := []string{*updateValueOptions.WorkspaceID, *updateValueOptions.Entity, *updateValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateValueOptions.NewSynonyms != nil {
@@ -1769,7 +1769,7 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Value))
+	response, err := assistant.Service.Request(request, new(Value))
 	return response, err
 }
 
@@ -1798,14 +1798,14 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 	pathParameters := []string{*createSynonymOptions.WorkspaceID, *createSynonymOptions.Entity, *createSynonymOptions.Value}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createSynonymOptions.Synonym != nil {
@@ -1821,7 +1821,7 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Synonym))
+	response, err := assistant.Service.Request(request, new(Synonym))
 	return response, err
 }
 
@@ -1850,20 +1850,20 @@ func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymO
 	pathParameters := []string{*deleteSynonymOptions.WorkspaceID, *deleteSynonymOptions.Entity, *deleteSynonymOptions.Value, *deleteSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1883,7 +1883,7 @@ func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (
 	pathParameters := []string{*getSynonymOptions.WorkspaceID, *getSynonymOptions.Entity, *getSynonymOptions.Value, *getSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1893,14 +1893,14 @@ func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (
 	if getSynonymOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getSynonymOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Synonym))
+	response, err := assistant.Service.Request(request, new(Synonym))
 	return response, err
 }
 
@@ -1929,7 +1929,7 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 	pathParameters := []string{*listSynonymsOptions.WorkspaceID, *listSynonymsOptions.Entity, *listSynonymsOptions.Value}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listSynonymsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1951,14 +1951,14 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 	if listSynonymsOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listSynonymsOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(SynonymCollection))
+	response, err := assistant.Service.Request(request, new(SynonymCollection))
 	return response, err
 }
 
@@ -1987,14 +1987,14 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 	pathParameters := []string{*updateSynonymOptions.WorkspaceID, *updateSynonymOptions.Entity, *updateSynonymOptions.Value, *updateSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateSynonymOptions.NewSynonym != nil {
@@ -2010,7 +2010,7 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(Synonym))
+	response, err := assistant.Service.Request(request, new(Synonym))
 	return response, err
 }
 
@@ -2039,14 +2039,14 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	pathParameters := []string{*createDialogNodeOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createDialogNodeOptions.DialogNode != nil {
@@ -2113,7 +2113,7 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(DialogNode))
+	response, err := assistant.Service.Request(request, new(DialogNode))
 	return response, err
 }
 
@@ -2142,20 +2142,20 @@ func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDi
 	pathParameters := []string{*deleteDialogNodeOptions.WorkspaceID, *deleteDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -2175,7 +2175,7 @@ func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeO
 	pathParameters := []string{*getDialogNodeOptions.WorkspaceID, *getDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2185,14 +2185,14 @@ func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeO
 	if getDialogNodeOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getDialogNodeOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(DialogNode))
+	response, err := assistant.Service.Request(request, new(DialogNode))
 	return response, err
 }
 
@@ -2221,7 +2221,7 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 	pathParameters := []string{*listDialogNodesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listDialogNodesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2243,14 +2243,14 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 	if listDialogNodesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listDialogNodesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(DialogNodeCollection))
+	response, err := assistant.Service.Request(request, new(DialogNodeCollection))
 	return response, err
 }
 
@@ -2279,14 +2279,14 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	pathParameters := []string{*updateDialogNodeOptions.WorkspaceID, *updateDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateDialogNodeOptions.NodeType != nil {
@@ -2353,7 +2353,7 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(DialogNode))
+	response, err := assistant.Service.Request(request, new(DialogNode))
 	return response, err
 }
 
@@ -2383,7 +2383,7 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listAllLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2400,14 +2400,14 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 	if listAllLogsOptions.Cursor != nil {
 		builder.AddQuery("cursor", fmt.Sprint(*listAllLogsOptions.Cursor))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(LogCollection))
+	response, err := assistant.Service.Request(request, new(LogCollection))
 	return response, err
 }
 
@@ -2437,7 +2437,7 @@ func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.
 	pathParameters := []string{*listLogsOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2456,14 +2456,14 @@ func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.
 	if listLogsOptions.Cursor != nil {
 		builder.AddQuery("cursor", fmt.Sprint(*listLogsOptions.Cursor))
 	}
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, new(LogCollection))
+	response, err := assistant.Service.Request(request, new(LogCollection))
 	return response, err
 }
 
@@ -2495,7 +2495,7 @@ func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2503,14 +2503,14 @@ func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
-	builder.AddQuery("version", assistant.service.Options.Version)
+	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := assistant.service.Request(request, nil)
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
 }
 
@@ -2675,6 +2675,55 @@ type CreateDialogNode struct {
 	UserLabel *string `json:"user_label,omitempty"`
 }
 
+// Constants associated with the CreateDialogNode.NodeType property.
+// How the dialog node is processed.
+const (
+	CreateDialogNode_NodeType_EventHandler      = "event_handler"
+	CreateDialogNode_NodeType_Folder            = "folder"
+	CreateDialogNode_NodeType_Frame             = "frame"
+	CreateDialogNode_NodeType_ResponseCondition = "response_condition"
+	CreateDialogNode_NodeType_Slot              = "slot"
+	CreateDialogNode_NodeType_Standard          = "standard"
+)
+
+// Constants associated with the CreateDialogNode.EventName property.
+// How an `event_handler` node is processed.
+const (
+	CreateDialogNode_EventName_DigressionReturnPrompt   = "digression_return_prompt"
+	CreateDialogNode_EventName_Filled                   = "filled"
+	CreateDialogNode_EventName_FilledMultiple           = "filled_multiple"
+	CreateDialogNode_EventName_Focus                    = "focus"
+	CreateDialogNode_EventName_Generic                  = "generic"
+	CreateDialogNode_EventName_Input                    = "input"
+	CreateDialogNode_EventName_Nomatch                  = "nomatch"
+	CreateDialogNode_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
+	CreateDialogNode_EventName_Validate                 = "validate"
+)
+
+// Constants associated with the CreateDialogNode.DigressIn property.
+// Whether this top-level dialog node can be digressed into.
+const (
+	CreateDialogNode_DigressIn_DoesNotReturn = "does_not_return"
+	CreateDialogNode_DigressIn_NotAvailable  = "not_available"
+	CreateDialogNode_DigressIn_Returns       = "returns"
+)
+
+// Constants associated with the CreateDialogNode.DigressOut property.
+// Whether this dialog node can be returned to after a digression.
+const (
+	CreateDialogNode_DigressOut_AllowAll            = "allow_all"
+	CreateDialogNode_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
+	CreateDialogNode_DigressOut_AllowReturning      = "allow_returning"
+)
+
+// Constants associated with the CreateDialogNode.DigressOutSlots property.
+// Whether the user can digress to top-level nodes while filling out slots.
+const (
+	CreateDialogNode_DigressOutSlots_AllowAll       = "allow_all"
+	CreateDialogNode_DigressOutSlots_AllowReturning = "allow_returning"
+	CreateDialogNode_DigressOutSlots_NotAllowed     = "not_allowed"
+)
+
 // CreateDialogNodeOptions : The createDialogNode options.
 type CreateDialogNodeOptions struct {
 
@@ -2747,6 +2796,55 @@ type CreateDialogNodeOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the CreateDialogNodeOptions.NodeType property.
+// How the dialog node is processed.
+const (
+	CreateDialogNodeOptions_NodeType_EventHandler      = "event_handler"
+	CreateDialogNodeOptions_NodeType_Folder            = "folder"
+	CreateDialogNodeOptions_NodeType_Frame             = "frame"
+	CreateDialogNodeOptions_NodeType_ResponseCondition = "response_condition"
+	CreateDialogNodeOptions_NodeType_Slot              = "slot"
+	CreateDialogNodeOptions_NodeType_Standard          = "standard"
+)
+
+// Constants associated with the CreateDialogNodeOptions.EventName property.
+// How an `event_handler` node is processed.
+const (
+	CreateDialogNodeOptions_EventName_DigressionReturnPrompt   = "digression_return_prompt"
+	CreateDialogNodeOptions_EventName_Filled                   = "filled"
+	CreateDialogNodeOptions_EventName_FilledMultiple           = "filled_multiple"
+	CreateDialogNodeOptions_EventName_Focus                    = "focus"
+	CreateDialogNodeOptions_EventName_Generic                  = "generic"
+	CreateDialogNodeOptions_EventName_Input                    = "input"
+	CreateDialogNodeOptions_EventName_Nomatch                  = "nomatch"
+	CreateDialogNodeOptions_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
+	CreateDialogNodeOptions_EventName_Validate                 = "validate"
+)
+
+// Constants associated with the CreateDialogNodeOptions.DigressIn property.
+// Whether this top-level dialog node can be digressed into.
+const (
+	CreateDialogNodeOptions_DigressIn_DoesNotReturn = "does_not_return"
+	CreateDialogNodeOptions_DigressIn_NotAvailable  = "not_available"
+	CreateDialogNodeOptions_DigressIn_Returns       = "returns"
+)
+
+// Constants associated with the CreateDialogNodeOptions.DigressOut property.
+// Whether this dialog node can be returned to after a digression.
+const (
+	CreateDialogNodeOptions_DigressOut_AllowAll            = "allow_all"
+	CreateDialogNodeOptions_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
+	CreateDialogNodeOptions_DigressOut_AllowReturning      = "allow_returning"
+)
+
+// Constants associated with the CreateDialogNodeOptions.DigressOutSlots property.
+// Whether the user can digress to top-level nodes while filling out slots.
+const (
+	CreateDialogNodeOptions_DigressOutSlots_AllowAll       = "allow_all"
+	CreateDialogNodeOptions_DigressOutSlots_AllowReturning = "allow_returning"
+	CreateDialogNodeOptions_DigressOutSlots_NotAllowed     = "not_allowed"
+)
+
 // NewCreateDialogNodeOptions : Instantiate CreateDialogNodeOptions
 func (assistant *AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
@@ -2792,26 +2890,26 @@ func (options *CreateDialogNodeOptions) SetPreviousSibling(previousSibling strin
 }
 
 // SetOutput : Allow user to set Output
-func (options *CreateDialogNodeOptions) SetOutput(output DialogNodeOutput) *CreateDialogNodeOptions {
-	options.Output = &output
+func (options *CreateDialogNodeOptions) SetOutput(output *DialogNodeOutput) *CreateDialogNodeOptions {
+	options.Output = output
 	return options
 }
 
 // SetContext : Allow user to set Context
 func (options *CreateDialogNodeOptions) SetContext(context interface{}) *CreateDialogNodeOptions {
-	options.Context = &context
+	options.Context = context
 	return options
 }
 
 // SetMetadata : Allow user to set Metadata
 func (options *CreateDialogNodeOptions) SetMetadata(metadata interface{}) *CreateDialogNodeOptions {
-	options.Metadata = &metadata
+	options.Metadata = metadata
 	return options
 }
 
 // SetNextStep : Allow user to set NextStep
-func (options *CreateDialogNodeOptions) SetNextStep(nextStep DialogNodeNextStep) *CreateDialogNodeOptions {
-	options.NextStep = &nextStep
+func (options *CreateDialogNodeOptions) SetNextStep(nextStep *DialogNodeNextStep) *CreateDialogNodeOptions {
+	options.NextStep = nextStep
 	return options
 }
 
@@ -2955,7 +3053,7 @@ func (options *CreateEntityOptions) SetDescription(description string) *CreateEn
 
 // SetMetadata : Allow user to set Metadata
 func (options *CreateEntityOptions) SetMetadata(metadata interface{}) *CreateEntityOptions {
-	options.Metadata = &metadata
+	options.Metadata = metadata
 	return options
 }
 
@@ -3220,6 +3318,13 @@ type CreateValue struct {
 	ValueType *string `json:"type,omitempty"`
 }
 
+// Constants associated with the CreateValue.ValueType property.
+// Specifies the type of value.
+const (
+	CreateValue_ValueType_Patterns = "patterns"
+	CreateValue_ValueType_Synonyms = "synonyms"
+)
+
 // CreateValueOptions : The createValue options.
 type CreateValueOptions struct {
 
@@ -3258,6 +3363,13 @@ type CreateValueOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the CreateValueOptions.ValueType property.
+// Specifies the type of value.
+const (
+	CreateValueOptions_ValueType_Patterns = "patterns"
+	CreateValueOptions_ValueType_Synonyms = "synonyms"
+)
+
 // NewCreateValueOptions : Instantiate CreateValueOptions
 func (assistant *AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
@@ -3287,7 +3399,7 @@ func (options *CreateValueOptions) SetValue(value string) *CreateValueOptions {
 
 // SetMetadata : Allow user to set Metadata
 func (options *CreateValueOptions) SetMetadata(metadata interface{}) *CreateValueOptions {
-	options.Metadata = &metadata
+	options.Metadata = metadata
 	return options
 }
 
@@ -3404,7 +3516,7 @@ func (options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []Crea
 
 // SetMetadata : Allow user to set Metadata
 func (options *CreateWorkspaceOptions) SetMetadata(metadata interface{}) *CreateWorkspaceOptions {
-	options.Metadata = &metadata
+	options.Metadata = metadata
 	return options
 }
 
@@ -3415,8 +3527,8 @@ func (options *CreateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *C
 }
 
 // SetSystemSettings : Allow user to set SystemSettings
-func (options *CreateWorkspaceOptions) SetSystemSettings(systemSettings WorkspaceSystemSettings) *CreateWorkspaceOptions {
-	options.SystemSettings = &systemSettings
+func (options *CreateWorkspaceOptions) SetSystemSettings(systemSettings *WorkspaceSystemSettings) *CreateWorkspaceOptions {
+	options.SystemSettings = systemSettings
 	return options
 }
 
@@ -3864,6 +3976,55 @@ type DialogNode struct {
 	UserLabel *string `json:"user_label,omitempty"`
 }
 
+// Constants associated with the DialogNode.NodeType property.
+// How the dialog node is processed.
+const (
+	DialogNode_NodeType_EventHandler      = "event_handler"
+	DialogNode_NodeType_Folder            = "folder"
+	DialogNode_NodeType_Frame             = "frame"
+	DialogNode_NodeType_ResponseCondition = "response_condition"
+	DialogNode_NodeType_Slot              = "slot"
+	DialogNode_NodeType_Standard          = "standard"
+)
+
+// Constants associated with the DialogNode.EventName property.
+// How an `event_handler` node is processed.
+const (
+	DialogNode_EventName_DigressionReturnPrompt   = "digression_return_prompt"
+	DialogNode_EventName_Filled                   = "filled"
+	DialogNode_EventName_FilledMultiple           = "filled_multiple"
+	DialogNode_EventName_Focus                    = "focus"
+	DialogNode_EventName_Generic                  = "generic"
+	DialogNode_EventName_Input                    = "input"
+	DialogNode_EventName_Nomatch                  = "nomatch"
+	DialogNode_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
+	DialogNode_EventName_Validate                 = "validate"
+)
+
+// Constants associated with the DialogNode.DigressIn property.
+// Whether this top-level dialog node can be digressed into.
+const (
+	DialogNode_DigressIn_DoesNotReturn = "does_not_return"
+	DialogNode_DigressIn_NotAvailable  = "not_available"
+	DialogNode_DigressIn_Returns       = "returns"
+)
+
+// Constants associated with the DialogNode.DigressOut property.
+// Whether this dialog node can be returned to after a digression.
+const (
+	DialogNode_DigressOut_AllowAll            = "allow_all"
+	DialogNode_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
+	DialogNode_DigressOut_AllowReturning      = "allow_returning"
+)
+
+// Constants associated with the DialogNode.DigressOutSlots property.
+// Whether the user can digress to top-level nodes while filling out slots.
+const (
+	DialogNode_DigressOutSlots_AllowAll       = "allow_all"
+	DialogNode_DigressOutSlots_AllowReturning = "allow_returning"
+	DialogNode_DigressOutSlots_NotAllowed     = "not_allowed"
+)
+
 // DialogNodeAction : DialogNodeAction struct
 type DialogNodeAction struct {
 
@@ -3882,6 +4043,13 @@ type DialogNodeAction struct {
 	// The name of the context variable that the client application will use to pass in credentials for the action.
 	Credentials *string `json:"credentials,omitempty"`
 }
+
+// Constants associated with the DialogNodeAction.ActionType property.
+// The type of action to invoke.
+const (
+	DialogNodeAction_ActionType_Client = "client"
+	DialogNodeAction_ActionType_Server = "server"
+)
 
 // DialogNodeCollection : An array of dialog nodes.
 type DialogNodeCollection struct {
@@ -3924,6 +4092,45 @@ type DialogNodeNextStep struct {
 	// Which part of the dialog node to process next.
 	Selector *string `json:"selector,omitempty"`
 }
+
+// Constants associated with the DialogNodeNextStep.Behavior property.
+// What happens after the dialog node completes. The valid values depend on the node type:
+// - The following values are valid for any node:
+//   - `get_user_input`
+//   - `skip_user_input`
+//   - `jump_to`
+// - If the node is of type `event_handler` and its parent node is of type `slot` or `frame`, additional values are also
+// valid:
+//   - if **event_name**=`filled` and the type of the parent node is `slot`:
+//     - `reprompt`
+//     - `skip_all_slots`
+// - if **event_name**=`nomatch` and the type of the parent node is `slot`:
+//     - `reprompt`
+//     - `skip_slot`
+//     - `skip_all_slots`
+// - if **event_name**=`generic` and the type of the parent node is `frame`:
+//     - `reprompt`
+//     - `skip_slot`
+//     - `skip_all_slots`
+//
+// If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
+const (
+	DialogNodeNextStep_Behavior_GetUserInput  = "get_user_input"
+	DialogNodeNextStep_Behavior_JumpTo        = "jump_to"
+	DialogNodeNextStep_Behavior_Reprompt      = "reprompt"
+	DialogNodeNextStep_Behavior_SkipAllSlots  = "skip_all_slots"
+	DialogNodeNextStep_Behavior_SkipSlot      = "skip_slot"
+	DialogNodeNextStep_Behavior_SkipUserInput = "skip_user_input"
+)
+
+// Constants associated with the DialogNodeNextStep.Selector property.
+// Which part of the dialog node to process next.
+const (
+	DialogNodeNextStep_Selector_Body      = "body"
+	DialogNodeNextStep_Selector_Client    = "client"
+	DialogNodeNextStep_Selector_Condition = "condition"
+	DialogNodeNextStep_Selector_UserInput = "user_input"
+)
 
 // DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the
 // [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
@@ -3982,6 +4189,33 @@ type DialogNodeOutputGeneric struct {
 	// **reponse_type**=`connect_to_agent`. This string must be no longer than 256 characters.
 	MessageToHumanAgent *string `json:"message_to_human_agent,omitempty"`
 }
+
+// Constants associated with the DialogNodeOutputGeneric.ResponseType property.
+// The type of response returned by the dialog node. The specified response type must be supported by the client
+// application or channel.
+const (
+	DialogNodeOutputGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
+	DialogNodeOutputGeneric_ResponseType_Image          = "image"
+	DialogNodeOutputGeneric_ResponseType_Option         = "option"
+	DialogNodeOutputGeneric_ResponseType_Pause          = "pause"
+	DialogNodeOutputGeneric_ResponseType_Text           = "text"
+)
+
+// Constants associated with the DialogNodeOutputGeneric.SelectionPolicy property.
+// How a response is selected from the list, if more than one response is specified. Valid only when
+// **response_type**=`text`.
+const (
+	DialogNodeOutputGeneric_SelectionPolicy_Multiline  = "multiline"
+	DialogNodeOutputGeneric_SelectionPolicy_Random     = "random"
+	DialogNodeOutputGeneric_SelectionPolicy_Sequential = "sequential"
+)
+
+// Constants associated with the DialogNodeOutputGeneric.Preference property.
+// The preferred type of control to display, if supported by the channel. Valid only when **response_type**=`option`.
+const (
+	DialogNodeOutputGeneric_Preference_Button   = "button"
+	DialogNodeOutputGeneric_Preference_Dropdown = "dropdown"
+)
 
 // DialogNodeOutputModifiers : Options that modify how specified output is handled.
 type DialogNodeOutputModifiers struct {
@@ -4078,6 +4312,28 @@ type DialogRuntimeResponseGeneric struct {
 	// users.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 }
+
+// Constants associated with the DialogRuntimeResponseGeneric.ResponseType property.
+// The type of response returned by the dialog node. The specified response type must be supported by the client
+// application or channel.
+//
+// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Premium
+// users.
+const (
+	DialogRuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
+	DialogRuntimeResponseGeneric_ResponseType_Image          = "image"
+	DialogRuntimeResponseGeneric_ResponseType_Option         = "option"
+	DialogRuntimeResponseGeneric_ResponseType_Pause          = "pause"
+	DialogRuntimeResponseGeneric_ResponseType_Suggestion     = "suggestion"
+	DialogRuntimeResponseGeneric_ResponseType_Text           = "text"
+)
+
+// Constants associated with the DialogRuntimeResponseGeneric.Preference property.
+// The preferred type of control to display.
+const (
+	DialogRuntimeResponseGeneric_Preference_Button   = "button"
+	DialogRuntimeResponseGeneric_Preference_Dropdown = "dropdown"
+)
 
 // DialogSuggestion : DialogSuggestion struct
 type DialogSuggestion struct {
@@ -5611,6 +5867,14 @@ type LogMessage struct {
 	Msg *string `json:"msg" validate:"required"`
 }
 
+// Constants associated with the LogMessage.Level property.
+// The severity of the log message.
+const (
+	LogMessage_Level_Error = "error"
+	LogMessage_Level_Info  = "info"
+	LogMessage_Level_Warn  = "warn"
+)
+
 // LogPagination : The pagination data for the returned objects.
 type LogPagination struct {
 
@@ -5691,8 +5955,8 @@ func (options *MessageOptions) SetWorkspaceID(workspaceID string) *MessageOption
 }
 
 // SetInput : Allow user to set Input
-func (options *MessageOptions) SetInput(input InputData) *MessageOptions {
-	options.Input = &input
+func (options *MessageOptions) SetInput(input *InputData) *MessageOptions {
+	options.Input = input
 	return options
 }
 
@@ -5703,8 +5967,8 @@ func (options *MessageOptions) SetAlternateIntents(alternateIntents bool) *Messa
 }
 
 // SetContext : Allow user to set Context
-func (options *MessageOptions) SetContext(context Context) *MessageOptions {
-	options.Context = &context
+func (options *MessageOptions) SetContext(context *Context) *MessageOptions {
+	options.Context = context
 	return options
 }
 
@@ -5721,8 +5985,8 @@ func (options *MessageOptions) SetIntents(intents []RuntimeIntent) *MessageOptio
 }
 
 // SetOutput : Allow user to set Output
-func (options *MessageOptions) SetOutput(output OutputData) *MessageOptions {
-	options.Output = &output
+func (options *MessageOptions) SetOutput(output *OutputData) *MessageOptions {
+	options.Output = output
 	return options
 }
 
@@ -6017,6 +6281,55 @@ type UpdateDialogNodeOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the UpdateDialogNodeOptions.NodeType property.
+// How the dialog node is processed.
+const (
+	UpdateDialogNodeOptions_NodeType_EventHandler      = "event_handler"
+	UpdateDialogNodeOptions_NodeType_Folder            = "folder"
+	UpdateDialogNodeOptions_NodeType_Frame             = "frame"
+	UpdateDialogNodeOptions_NodeType_ResponseCondition = "response_condition"
+	UpdateDialogNodeOptions_NodeType_Slot              = "slot"
+	UpdateDialogNodeOptions_NodeType_Standard          = "standard"
+)
+
+// Constants associated with the UpdateDialogNodeOptions.NewDigressOut property.
+// Whether this dialog node can be returned to after a digression.
+const (
+	UpdateDialogNodeOptions_NewDigressOut_AllowAll            = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOut_AllowAllNeverReturn = "allow_all_never_return"
+	UpdateDialogNodeOptions_NewDigressOut_AllowReturning      = "allow_returning"
+)
+
+// Constants associated with the UpdateDialogNodeOptions.NewEventName property.
+// How an `event_handler` node is processed.
+const (
+	UpdateDialogNodeOptions_NewEventName_DigressionReturnPrompt   = "digression_return_prompt"
+	UpdateDialogNodeOptions_NewEventName_Filled                   = "filled"
+	UpdateDialogNodeOptions_NewEventName_FilledMultiple           = "filled_multiple"
+	UpdateDialogNodeOptions_NewEventName_Focus                    = "focus"
+	UpdateDialogNodeOptions_NewEventName_Generic                  = "generic"
+	UpdateDialogNodeOptions_NewEventName_Input                    = "input"
+	UpdateDialogNodeOptions_NewEventName_Nomatch                  = "nomatch"
+	UpdateDialogNodeOptions_NewEventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
+	UpdateDialogNodeOptions_NewEventName_Validate                 = "validate"
+)
+
+// Constants associated with the UpdateDialogNodeOptions.NewDigressOutSlots property.
+// Whether the user can digress to top-level nodes while filling out slots.
+const (
+	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll       = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOutSlots_AllowReturning = "allow_returning"
+	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed     = "not_allowed"
+)
+
+// Constants associated with the UpdateDialogNodeOptions.NewDigressIn property.
+// Whether this top-level dialog node can be digressed into.
+const (
+	UpdateDialogNodeOptions_NewDigressIn_DoesNotReturn = "does_not_return"
+	UpdateDialogNodeOptions_NewDigressIn_NotAvailable  = "not_available"
+	UpdateDialogNodeOptions_NewDigressIn_Returns       = "returns"
+)
+
 // NewUpdateDialogNodeOptions : Instantiate UpdateDialogNodeOptions
 func (assistant *AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
@@ -6057,7 +6370,7 @@ func (options *UpdateDialogNodeOptions) SetNewConditions(newConditions string) *
 
 // SetNewContext : Allow user to set NewContext
 func (options *UpdateDialogNodeOptions) SetNewContext(newContext interface{}) *UpdateDialogNodeOptions {
-	options.NewContext = &newContext
+	options.NewContext = newContext
 	return options
 }
 
@@ -6081,7 +6394,7 @@ func (options *UpdateDialogNodeOptions) SetNewUserLabel(newUserLabel string) *Up
 
 // SetNewMetadata : Allow user to set NewMetadata
 func (options *UpdateDialogNodeOptions) SetNewMetadata(newMetadata interface{}) *UpdateDialogNodeOptions {
-	options.NewMetadata = &newMetadata
+	options.NewMetadata = newMetadata
 	return options
 }
 
@@ -6116,8 +6429,8 @@ func (options *UpdateDialogNodeOptions) SetNewDigressOutSlots(newDigressOutSlots
 }
 
 // SetNewNextStep : Allow user to set NewNextStep
-func (options *UpdateDialogNodeOptions) SetNewNextStep(newNextStep DialogNodeNextStep) *UpdateDialogNodeOptions {
-	options.NewNextStep = &newNextStep
+func (options *UpdateDialogNodeOptions) SetNewNextStep(newNextStep *DialogNodeNextStep) *UpdateDialogNodeOptions {
+	options.NewNextStep = newNextStep
 	return options
 }
 
@@ -6128,8 +6441,8 @@ func (options *UpdateDialogNodeOptions) SetNewDigressIn(newDigressIn string) *Up
 }
 
 // SetNewOutput : Allow user to set NewOutput
-func (options *UpdateDialogNodeOptions) SetNewOutput(newOutput DialogNodeOutput) *UpdateDialogNodeOptions {
-	options.NewOutput = &newOutput
+func (options *UpdateDialogNodeOptions) SetNewOutput(newOutput *DialogNodeOutput) *UpdateDialogNodeOptions {
+	options.NewOutput = newOutput
 	return options
 }
 
@@ -6217,7 +6530,7 @@ func (options *UpdateEntityOptions) SetNewEntity(newEntity string) *UpdateEntity
 
 // SetNewMetadata : Allow user to set NewMetadata
 func (options *UpdateEntityOptions) SetNewMetadata(newMetadata interface{}) *UpdateEntityOptions {
-	options.NewMetadata = &newMetadata
+	options.NewMetadata = newMetadata
 	return options
 }
 
@@ -6490,6 +6803,13 @@ type UpdateValueOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the UpdateValueOptions.ValueType property.
+// Specifies the type of value.
+const (
+	UpdateValueOptions_ValueType_Patterns = "patterns"
+	UpdateValueOptions_ValueType_Synonyms = "synonyms"
+)
+
 // NewUpdateValueOptions : Instantiate UpdateValueOptions
 func (assistant *AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
@@ -6531,7 +6851,7 @@ func (options *UpdateValueOptions) SetValueType(valueType string) *UpdateValueOp
 
 // SetNewMetadata : Allow user to set NewMetadata
 func (options *UpdateValueOptions) SetNewMetadata(newMetadata interface{}) *UpdateValueOptions {
-	options.NewMetadata = &newMetadata
+	options.NewMetadata = newMetadata
 	return options
 }
 
@@ -6662,7 +6982,7 @@ func (options *UpdateWorkspaceOptions) SetCounterexamples(counterexamples []Crea
 
 // SetMetadata : Allow user to set Metadata
 func (options *UpdateWorkspaceOptions) SetMetadata(metadata interface{}) *UpdateWorkspaceOptions {
-	options.Metadata = &metadata
+	options.Metadata = metadata
 	return options
 }
 
@@ -6673,8 +6993,8 @@ func (options *UpdateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *U
 }
 
 // SetSystemSettings : Allow user to set SystemSettings
-func (options *UpdateWorkspaceOptions) SetSystemSettings(systemSettings WorkspaceSystemSettings) *UpdateWorkspaceOptions {
-	options.SystemSettings = &systemSettings
+func (options *UpdateWorkspaceOptions) SetSystemSettings(systemSettings *WorkspaceSystemSettings) *UpdateWorkspaceOptions {
+	options.SystemSettings = systemSettings
 	return options
 }
 
@@ -6715,6 +7035,13 @@ type Value struct {
 	ValueType *string `json:"type" validate:"required"`
 }
 
+// Constants associated with the Value.ValueType property.
+// Specifies the type of value.
+const (
+	Value_ValueType_Patterns = "patterns"
+	Value_ValueType_Synonyms = "synonyms"
+)
+
 // ValueCollection : ValueCollection struct
 type ValueCollection struct {
 
@@ -6749,6 +7076,13 @@ type ValueExport struct {
 	// Specifies the type of value.
 	ValueType *string `json:"type" validate:"required"`
 }
+
+// Constants associated with the ValueExport.ValueType property.
+// Specifies the type of value.
+const (
+	ValueExport_ValueType_Patterns = "patterns"
+	ValueExport_ValueType_Synonyms = "synonyms"
+)
 
 // Workspace : Workspace struct
 type Workspace struct {
@@ -6839,6 +7173,16 @@ type WorkspaceExport struct {
 	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
 }
 
+// Constants associated with the WorkspaceExport.Status property.
+// The current status of the workspace.
+const (
+	WorkspaceExport_Status_Available   = "Available"
+	WorkspaceExport_Status_Failed      = "Failed"
+	WorkspaceExport_Status_NonExistent = "Non Existent"
+	WorkspaceExport_Status_Training    = "Training"
+	WorkspaceExport_Status_Unavailable = "Unavailable"
+)
+
 // WorkspaceSystemSettings : WorkspaceSystemSettings struct
 type WorkspaceSystemSettings struct {
 
@@ -6871,6 +7215,14 @@ type WorkspaceSystemSettingsDisambiguation struct {
 	// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
 	Sensitivity *string `json:"sensitivity,omitempty"`
 }
+
+// Constants associated with the WorkspaceSystemSettingsDisambiguation.Sensitivity property.
+// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the
+// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
+const (
+	WorkspaceSystemSettingsDisambiguation_Sensitivity_Auto = "auto"
+	WorkspaceSystemSettingsDisambiguation_Sensitivity_High = "high"
+)
 
 // WorkspaceSystemSettingsTooling : WorkspaceSystemSettingsTooling struct
 type WorkspaceSystemSettingsTooling struct {

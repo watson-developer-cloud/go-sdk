@@ -23,14 +23,14 @@ import (
 	"os"
 )
 
-// NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to return the top matching predefined
-// classes for short text input. You create and train a classifier to connect predefined classes to example texts so
-// that the service can apply those classes to new inputs.
+// NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to
+// return the top matching predefined classes for short text input. You create and train a classifier to connect
+// predefined classes to example texts so that the service can apply those classes to new inputs.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/natural-language-classifier.html
 type NaturalLanguageClassifierV1 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // NaturalLanguageClassifierV1Options : Service options
@@ -62,7 +62,7 @@ func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options)
 		return nil, serviceErr
 	}
 
-	return &NaturalLanguageClassifierV1{service: service}, nil
+	return &NaturalLanguageClassifierV1{Service: service}, nil
 }
 
 // Classify : Classify a phrase
@@ -80,7 +80,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyO
 	pathParameters := []string{*classifyOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range classifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -102,7 +102,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyO
 		return nil, err
 	}
 
-	response, err := naturalLanguageClassifier.service.Request(request, new(Classification))
+	response, err := naturalLanguageClassifier.Service.Request(request, new(Classification))
 	return response, err
 }
 
@@ -132,7 +132,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 	pathParameters := []string{*classifyCollectionOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range classifyCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -154,7 +154,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 		return nil, err
 	}
 
-	response, err := naturalLanguageClassifier.service.Request(request, new(ClassificationCollection))
+	response, err := naturalLanguageClassifier.Service.Request(request, new(ClassificationCollection))
 	return response, err
 }
 
@@ -181,7 +181,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(c
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -198,7 +198,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(c
 		return nil, err
 	}
 
-	response, err := naturalLanguageClassifier.service.Request(request, new(Classifier))
+	response, err := naturalLanguageClassifier.Service.Request(request, new(Classifier))
 	return response, err
 }
 
@@ -224,7 +224,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(d
 	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -236,7 +236,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(d
 		return nil, err
 	}
 
-	response, err := naturalLanguageClassifier.service.Request(request, nil)
+	response, err := naturalLanguageClassifier.Service.Request(request, nil)
 	return response, err
 }
 
@@ -254,7 +254,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getC
 	pathParameters := []string{*getClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -266,7 +266,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getC
 		return nil, err
 	}
 
-	response, err := naturalLanguageClassifier.service.Request(request, new(Classifier))
+	response, err := naturalLanguageClassifier.Service.Request(request, new(Classifier))
 	return response, err
 }
 
@@ -290,7 +290,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(li
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -302,7 +302,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(li
 		return nil, err
 	}
 
-	response, err := naturalLanguageClassifier.service.Request(request, new(ClassifierList))
+	response, err := naturalLanguageClassifier.Service.Request(request, new(ClassifierList))
 	return response, err
 }
 
@@ -382,6 +382,16 @@ type Classifier struct {
 	// The language used for the classifier.
 	Language *string `json:"language,omitempty"`
 }
+
+// Constants associated with the Classifier.Status property.
+// The state of the classifier.
+const (
+	Classifier_Status_Available   = "Available"
+	Classifier_Status_Failed      = "Failed"
+	Classifier_Status_NonExistent = "Non Existent"
+	Classifier_Status_Training    = "Training"
+	Classifier_Status_Unavailable = "Unavailable"
+)
 
 // ClassifierList : List of available classifiers.
 type ClassifierList struct {

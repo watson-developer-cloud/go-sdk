@@ -25,54 +25,27 @@ import (
 	"strings"
 )
 
-// SpeechToTextV1 : The IBM&reg; Speech to Text service provides an API that uses IBM's speech-recognition capabilities to produce
-// transcripts of spoken audio. The service can transcribe speech from various languages and audio formats. It addition
-// to basic transcription, the service can produce detailed information about many different aspects of the audio. For
-// most languages, the service supports two sampling rates, broadband and narrowband. It returns all JSON response
-// content in the UTF-8 character set.
+// SpeechToTextV1 : The IBM&reg; Speech to Text service provides APIs that use IBM's speech-recognition capabilities to
+// produce transcripts of spoken audio. The service can transcribe speech from various languages and audio formats. It
+// addition to basic transcription, the service can produce detailed information about many different aspects of the
+// audio. For most languages, the service supports two sampling rates, broadband and narrowband. It returns all JSON
+// response content in the UTF-8 character set.
 //
-//  For more information about the service, see the [IBM&reg; Cloud
-// documentation](https://console.bluemix.net/docs/services/speech-to-text/index.html).
+// For speech recognition, the service supports synchronous and asynchronous HTTP Representational State Transfer (REST)
+// interfaces. It also supports a WebSocket interface that provides a full-duplex, low-latency communication channel:
+// Clients send requests and audio to the service and receive results over a single connection in an asynchronous
+// fashion.
 //
-// ### API usage guidelines
-// * **Audio formats:** The service accepts audio in many formats (MIME types). See [Audio
-// formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
-// * **HTTP interfaces:** The service provides two HTTP Representational State Transfer (REST) interfaces for speech
-// recognition. The basic interface includes a single synchronous method. The asynchronous interface provides multiple
-// methods that use registered callbacks and polling for non-blocking recognition. See [The HTTP
-// interface](https://console.bluemix.net/docs/services/speech-to-text/http.html) and [The asynchronous HTTP
-// interface](https://console.bluemix.net/docs/services/speech-to-text/async.html).
-// * **WebSocket interface:** The service also offers a WebSocket interface for speech recognition. The WebSocket
-// interface provides a full-duplex, low-latency communication channel. Clients send requests and audio to the service
-// and receive results over a single connection in an asynchronous fashion. See [The WebSocket
-// interface](https://console.bluemix.net/docs/services/speech-to-text/websockets.html).
-// * **Customization:** The service offers two customization interfaces. Use language model customization to expand the
-// vocabulary of a base model with domain-specific terminology. Use acoustic model customization to adapt a base model
-// for the acoustic characteristics of your audio. Language model customization is generally available for production
-// use by most supported languages; acoustic model customization is beta functionality that is available for all
-// supported languages. See [The customization
-// interface](https://console.bluemix.net/docs/services/speech-to-text/custom.html).
-// * **Customization IDs:** Many methods accept a customization ID to identify a custom language or custom acoustic
-// model. Customization IDs are Globally Unique Identifiers (GUIDs). They are hexadecimal strings that have the format
-// `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`.
-// * **`X-Watson-Learning-Opt-Out`:** By default, all Watson services log requests and their results. Logging is done
-// only to improve the services for future users. The logged data is not shared or made public. To prevent IBM from
-// accessing your data for general service improvements, set the `X-Watson-Learning-Opt-Out` request header to `true`
-// for all requests. You must set the header on each request that you do not want IBM to access for general service
-// improvements.
-//
-//   Methods of the customization interface do not log corpora, words, and audio resources that you use to build custom
-// models. Your training data is never used to improve the service's base models. However, the service does log such
-// data when a custom model is used with a recognition request. You must set the `X-Watson-Learning-Opt-Out` request
-// header to `true` to prevent IBM from accessing the data to improve the service.
-// * **`X-Watson-Metadata`**: This header allows you to associate a customer ID with data that is passed with a request.
-// If necessary, you can use the **Delete labeled data** method to delete the data for a customer ID. See [Information
-// security](https://console.bluemix.net/docs/services/speech-to-text/information-security.html).
+// The service also offers two customization interfaces. Use language model customization to expand the vocabulary of a
+// base model with domain-specific terminology. Use acoustic model customization to adapt a base model for the acoustic
+// characteristics of your audio. Language model customization is generally available for production use with most
+// supported languages; acoustic model customization is beta functionality that is available for all supported
+// languages.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/speech-to-text.html
 type SpeechToTextV1 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // SpeechToTextV1Options : Service options
@@ -104,12 +77,14 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (*SpeechToTextV1, error) 
 		return nil, serviceErr
 	}
 
-	return &SpeechToTextV1{service: service}, nil
+	return &SpeechToTextV1{Service: service}, nil
 }
 
 // GetModel : Get a model
 // Gets information for a single specified language model that is available for use with the service. The information
 // includes the name of the model and its minimum sampling rate in Hertz, among other things.
+//
+// **See also:** [Languages and models](https://console.bluemix.net/docs/services/speech-to-text/input.html#models).
 func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getModelOptions, "getModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -122,7 +97,7 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 	pathParameters := []string{*getModelOptions.ModelID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -134,7 +109,7 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(SpeechModel))
+	response, err := speechToText.Service.Request(request, new(SpeechModel))
 	return response, err
 }
 
@@ -150,6 +125,8 @@ func (speechToText *SpeechToTextV1) GetGetModelResult(response *core.DetailedRes
 // ListModels : List models
 // Lists all language models that are available for use with the service. The information includes the name of the model
 // and its minimum sampling rate in Hertz, among other things.
+//
+// **See also:** [Languages and models](https://console.bluemix.net/docs/services/speech-to-text/input.html#models).
 func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
 		return nil, err
@@ -159,7 +136,7 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -171,7 +148,7 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(SpeechModels))
+	response, err := speechToText.Service.Request(request, new(SpeechModels))
 	return response, err
 }
 
@@ -190,6 +167,9 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // endianness of the incoming audio and, for audio that includes multiple channels, downmixes the audio to one-channel
 // mono during transcoding. (For the `audio/l16` format, you can specify the endianness.)
 //
+// **See also:** [Making a basic HTTP
+// request](https://console.bluemix.net/docs/services/speech-to-text/http.html#HTTP-basic).
+//
 // ### Streaming mode
 //
 //  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header to
@@ -198,10 +178,14 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // connection (status code 400) if no speech is detected for `inactivity_timeout` seconds of audio (not processing
 // time); use the `inactivity_timeout` parameter to change the default of 30 seconds.
 //
+// **See also:**
+// * [Audio transmission](https://console.bluemix.net/docs/services/speech-to-text/input.html#transmission)
+// * [Timeouts](https://console.bluemix.net/docs/services/speech-to-text/input.html#timeouts).
+//
 // ### Audio formats (content types)
 //
 //  Use the `Content-Type` header to specify the audio format (MIME type) of the audio. The service accepts the
-// following formats:
+// following formats, including specifying the sampling rate, channels, and endianness where indicated.
 // * `audio/basic` (Use only with narrowband models.)
 // * `audio/flac`
 // * `audio/l16` (Specify the sampling rate (`rate`) and optionally the number of channels (`channels`) and endianness
@@ -217,9 +201,7 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // * `audio/webm;codecs=opus`
 // * `audio/webm;codecs=vorbis`
 //
-// For information about the supported audio formats, including specifying the sampling rate, channels, and endianness
-// for the indicated formats, see [Audio
-// formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
+// **See also:** [Audio formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
 //
 // ### Multipart speech recognition
 //
@@ -231,7 +213,7 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // with the request are greater than the 8 KB limit imposed by most HTTP servers and proxies. You can encounter this
 // limit, for example, if you want to spot a very large number of keywords.
 //
-// For information about submitting a multipart request, see [Making a multipart HTTP
+// **See also:** [Making a multipart HTTP
 // request](https://console.bluemix.net/docs/services/speech-to-text/http.html#HTTP-multi).
 func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(recognizeOptions, "recognizeOptions cannot be nil"); err != nil {
@@ -245,7 +227,7 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range recognizeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -311,7 +293,7 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(SpeechRecognitionResults))
+	response, err := speechToText.Service.Request(request, new(SpeechRecognitionResults))
 	return response, err
 }
 
@@ -332,7 +314,10 @@ func (speechToText *SpeechToTextV1) GetRecognizeResult(response *core.DetailedRe
 // You can use the method to retrieve the results of any job, regardless of whether it was submitted with a callback URL
 // and the `recognitions.completed_with_results` event, and you can retrieve the results multiple times for as long as
 // they remain available. Use the **Check jobs** method to request information about the most recent jobs associated
-// with the calling user.
+// with the caller.
+//
+// **See also:** [Checking the status and retrieving the results of a
+// job](https://console.bluemix.net/docs/services/speech-to-text/async.html#job).
 func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(checkJobOptions, "checkJobOptions cannot be nil"); err != nil {
 		return nil, err
@@ -345,7 +330,7 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 	pathParameters := []string{*checkJobOptions.ID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range checkJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -357,7 +342,7 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(RecognitionJob))
+	response, err := speechToText.Service.Request(request, new(RecognitionJob))
 	return response, err
 }
 
@@ -376,6 +361,9 @@ func (speechToText *SpeechToTextV1) GetCheckJobResult(response *core.DetailedRes
 // URL and a user token, the user token for the job. To obtain the results for a job whose status is `completed` or not
 // one of the latest 100 outstanding jobs, use the **Check a job** method. A job and its results remain available until
 // you delete them with the **Delete a job** method or until the job's time to live expires, whichever comes first.
+//
+// **See also:** [Checking the status of the latest
+// jobs](https://console.bluemix.net/docs/services/speech-to-text/async.html#jobs).
 func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(checkJobsOptions, "checkJobsOptions"); err != nil {
 		return nil, err
@@ -385,7 +373,7 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range checkJobsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -397,7 +385,7 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(RecognitionJobs))
+	response, err := speechToText.Service.Request(request, new(RecognitionJobs))
 	return response, err
 }
 
@@ -424,9 +412,7 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 //
 // The two approaches are not mutually exclusive. You can poll the service for job status or obtain results from the
 // service manually even if you include a callback URL. In both cases, you can include the `results_ttl` parameter to
-// specify how long the results are to remain available after the job is complete. For detailed usage information about
-// the two approaches, including callback notifications, see [Creating a
-// job](https://console.bluemix.net/docs/services/speech-to-text/async.html#create). Using the HTTPS **Check a job**
+// specify how long the results are to remain available after the job is complete. Using the HTTPS **Check a job**
 // method to retrieve results is more secure than receiving them via callback notification over HTTP because it provides
 // confidentiality in addition to authentication and data integrity.
 //
@@ -438,12 +424,26 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 // * `results_ttl`
 //
 // The service imposes a data size limit of 100 MB. It automatically detects the endianness of the incoming audio and,
-// for audio that includes multiple channels, downmixes the audio to one-channel mono during transcoding. (For the
-// `audio/l16` format, you can specify the endianness.)
+// for audio that includes multiple channels, downmixes the audio to one-channel mono during transcoding.
+//
+// **See also:** [Creating a job](https://console.bluemix.net/docs/services/speech-to-text/async.html#create).
+//
+// ### Streaming mode
+//
+//  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header to
+// `chunked` to use streaming mode. In streaming mode, the server closes the connection (status code 408) if the service
+// receives no data chunk for 30 seconds and it has no audio to transcribe for 30 seconds. The server also closes the
+// connection (status code 400) if no speech is detected for `inactivity_timeout` seconds of audio (not processing
+// time); use the `inactivity_timeout` parameter to change the default of 30 seconds.
+//
+// **See also:**
+// * [Audio transmission](https://console.bluemix.net/docs/services/speech-to-text/input.html#transmission)
+// * [Timeouts](https://console.bluemix.net/docs/services/speech-to-text/input.html#timeouts)
 //
 // ### Audio formats (content types)
 //
-//  Use the `Content-Type` parameter to specify the audio format (MIME type) of the audio:
+//  Use the `Content-Type` header to specify the audio format (MIME type) of the audio. The service accepts the
+// following formats, including specifying the sampling rate, channels, and endianness where indicated.
 // * `audio/basic` (Use only with narrowband models.)
 // * `audio/flac`
 // * `audio/l16` (Specify the sampling rate (`rate`) and optionally the number of channels (`channels`) and endianness
@@ -459,9 +459,7 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 // * `audio/webm;codecs=opus`
 // * `audio/webm;codecs=vorbis`
 //
-// For information about the supported audio formats, including specifying the sampling rate, channels, and endianness
-// for the indicated formats, see [Audio
-// formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
+// **See also:** [Audio formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
 func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createJobOptions, "createJobOptions cannot be nil"); err != nil {
 		return nil, err
@@ -474,7 +472,7 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -552,7 +550,7 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(RecognitionJob))
+	response, err := speechToText.Service.Request(request, new(RecognitionJob))
 	return response, err
 }
 
@@ -569,6 +567,8 @@ func (speechToText *SpeechToTextV1) GetCreateJobResult(response *core.DetailedRe
 // Deletes the specified job. You cannot delete a job that the service is actively processing. Once you delete a job,
 // its results are no longer available. The service automatically deletes a job and its results when the time to live
 // for the results expires. You must submit the request with the service credentials of the user who created the job.
+//
+// **See also:** [Deleting a job](https://console.bluemix.net/docs/services/speech-to-text/async.html#delete).
 func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteJobOptions, "deleteJobOptions cannot be nil"); err != nil {
 		return nil, err
@@ -581,7 +581,7 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 	pathParameters := []string{*deleteJobOptions.ID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -593,7 +593,7 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -621,8 +621,10 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 // for HTTP communications.
 //
 // After you successfully register a callback URL, you can use it with an indefinite number of recognition requests. You
-// can register a maximum of 20 callback URLS in a one-hour span of time. For more information, see [Registering a
-// callback URL](https://console.bluemix.net/docs/services/speech-to-text/async.html#register).
+// can register a maximum of 20 callback URLS in a one-hour span of time.
+//
+// **See also:** [Registering a callback
+// URL](https://console.bluemix.net/docs/services/speech-to-text/async.html#register).
 func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *RegisterCallbackOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(registerCallbackOptions, "registerCallbackOptions cannot be nil"); err != nil {
 		return nil, err
@@ -635,7 +637,7 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range registerCallbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -652,7 +654,7 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(RegisterStatus))
+	response, err := speechToText.Service.Request(request, new(RegisterStatus))
 	return response, err
 }
 
@@ -668,6 +670,9 @@ func (speechToText *SpeechToTextV1) GetRegisterCallbackResult(response *core.Det
 // UnregisterCallback : Unregister a callback
 // Unregisters a callback URL that was previously white-listed with a **Register a callback** request for use with the
 // asynchronous interface. Once unregistered, the URL can no longer be used with asynchronous recognition requests.
+//
+// **See also:** [Unregistering a callback
+// URL](https://console.bluemix.net/docs/services/speech-to-text/async.html#unregister).
 func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions *UnregisterCallbackOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(unregisterCallbackOptions, "unregisterCallbackOptions cannot be nil"); err != nil {
 		return nil, err
@@ -680,7 +685,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range unregisterCallbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -694,7 +699,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -702,6 +707,9 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 // Creates a new custom language model for a specified base model. The custom language model can be used only with the
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
+//
+// **See also:** [Create a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-create.html#createModel).
 func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptions *CreateLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createLanguageModelOptions, "createLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -714,7 +722,7 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -745,7 +753,7 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(LanguageModel))
+	response, err := speechToText.Service.Request(request, new(LanguageModel))
 	return response, err
 }
 
@@ -762,6 +770,9 @@ func (speechToText *SpeechToTextV1) GetCreateLanguageModelResult(response *core.
 // Deletes an existing custom language model. The custom model cannot be deleted if another request, such as adding a
 // corpus to the model, is currently being processed. You must use credentials for the instance of the service that owns
 // a model to delete it.
+//
+// **See also:** [Deleting a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-models.html#deleteModel).
 func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptions *DeleteLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteLanguageModelOptions, "deleteLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -774,7 +785,7 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 	pathParameters := []string{*deleteLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -786,13 +797,16 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
 // GetLanguageModel : Get a custom language model
 // Gets information about a specified custom language model. You must use credentials for the instance of the service
 // that owns a model to list information about it.
+//
+// **See also:** [Listing custom language
+// models](https://console.bluemix.net/docs/services/speech-to-text/language-models.html#listModels).
 func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *GetLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getLanguageModelOptions, "getLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -805,7 +819,7 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 	pathParameters := []string{*getLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -817,7 +831,7 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(LanguageModel))
+	response, err := speechToText.Service.Request(request, new(LanguageModel))
 	return response, err
 }
 
@@ -835,6 +849,9 @@ func (speechToText *SpeechToTextV1) GetGetLanguageModelResult(response *core.Det
 // parameter to see all custom language models for the specified language. Omit the parameter to see all custom language
 // models for all languages. You must use credentials for the instance of the service that owns a model to list
 // information about it.
+//
+// **See also:** [Listing custom language
+// models](https://console.bluemix.net/docs/services/speech-to-text/language-models.html#listModels).
 func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions *ListLanguageModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listLanguageModelsOptions, "listLanguageModelsOptions"); err != nil {
 		return nil, err
@@ -844,7 +861,7 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listLanguageModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -860,7 +877,7 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(LanguageModels))
+	response, err := speechToText.Service.Request(request, new(LanguageModels))
 	return response, err
 }
 
@@ -878,6 +895,9 @@ func (speechToText *SpeechToTextV1) GetListLanguageModelsResult(response *core.D
 // initializes the model to its state when it was first created. Metadata such as the name and language of the model are
 // preserved, but the model's words resource is removed and must be re-created. You must use credentials for the
 // instance of the service that owns a model to reset it.
+//
+// **See also:** [Resetting a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-models.html#resetModel).
 func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions *ResetLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(resetLanguageModelOptions, "resetLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -890,7 +910,7 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 	pathParameters := []string{*resetLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range resetLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -902,7 +922,7 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -928,6 +948,9 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 // request to add a corpus or words to the model.
 // * No training data (corpora or words) have been added to the custom model.
 // * One or more words that were added to the custom model have invalid sounds-like pronunciations that you must fix.
+//
+// **See also:** [Train the custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-create.html#trainModel).
 func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions *TrainLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainLanguageModelOptions, "trainLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -940,7 +963,7 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 	pathParameters := []string{*trainLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range trainLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -959,7 +982,7 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -976,8 +999,8 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 // complete, the model resumes the status that it had prior to upgrade. The service cannot accept subsequent requests
 // for the model until the upgrade completes.
 //
-// For more information, see [Upgrading custom
-// models](https://console.bluemix.net/docs/services/speech-to-text/custom-upgrade.html).
+// **See also:** [Upgrading a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/custom-upgrade.html#upgradeLanguage).
 func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOptions *UpgradeLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(upgradeLanguageModelOptions, "upgradeLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -990,7 +1013,7 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 	pathParameters := []string{*upgradeLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range upgradeLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1002,7 +1025,7 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1014,9 +1037,7 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 //
 // Submit a plain text file that contains sample sentences from the domain of interest to enable the service to extract
 // words in context. The more sentences you add that represent the context in which speakers use words from the domain,
-// the better the service's recognition accuracy. For guidelines about adding a corpus text file and for information
-// about how the service parses a corpus file, see [Preparing a corpus text
-// file](https://console.bluemix.net/docs/services/speech-to-text/language-resource.html#prepareCorpus).
+// the better the service's recognition accuracy.
 //
 // The call returns an HTTP 201 response code if the corpus is valid. The service then asynchronously processes the
 // contents of the corpus and automatically extracts new words that it finds. This can take on the order of a minute or
@@ -1038,6 +1059,12 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 // The service limits the overall amount of data that you can add to a custom model to a maximum of 10 million total
 // words from all corpora combined. Also, you can add no more than 30 thousand custom (OOV) words to a model; this
 // includes words that the service extracts from corpora and words that you add directly.
+//
+// **See also:**
+// * [Working with
+// corpora](https://console.bluemix.net/docs/services/speech-to-text/language-resource.html#workingCorpora)
+// * [Add corpora to the custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-create.html#addCorpora).
 func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addCorpusOptions, "addCorpusOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1050,7 +1077,7 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 	pathParameters := []string{*addCorpusOptions.CustomizationID, *addCorpusOptions.CorpusName}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range addCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1069,7 +1096,7 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1079,6 +1106,9 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 // they have been modified in some way with the **Add custom words** or **Add a custom word** method. Removing a corpus
 // does not affect the custom model until you train the model with the **Train a custom language model** method. You
 // must use credentials for the instance of the service that owns a model to delete its corpora.
+//
+// **See also:** [Deleting a corpus from a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-corpora.html#deleteCorpus).
 func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorpusOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteCorpusOptions, "deleteCorpusOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1091,7 +1121,7 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 	pathParameters := []string{*deleteCorpusOptions.CustomizationID, *deleteCorpusOptions.CorpusName}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1103,7 +1133,7 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1111,6 +1141,9 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 // Gets information about a corpus from a custom language model. The information includes the total number of words and
 // out-of-vocabulary (OOV) words, name, and status of the corpus. You must use credentials for the instance of the
 // service that owns a model to list its corpora.
+//
+// **See also:** [Listing corpora for a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-corpora.html#listCorpora).
 func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getCorpusOptions, "getCorpusOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1123,7 +1156,7 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 	pathParameters := []string{*getCorpusOptions.CustomizationID, *getCorpusOptions.CorpusName}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1135,7 +1168,7 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(Corpus))
+	response, err := speechToText.Service.Request(request, new(Corpus))
 	return response, err
 }
 
@@ -1152,6 +1185,9 @@ func (speechToText *SpeechToTextV1) GetGetCorpusResult(response *core.DetailedRe
 // Lists information about all corpora from a custom language model. The information includes the total number of words
 // and out-of-vocabulary (OOV) words, name, and status of each corpus. You must use credentials for the instance of the
 // service that owns a model to list its corpora.
+//
+// **See also:** [Listing corpora for a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-corpora.html#listCorpora).
 func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listCorporaOptions, "listCorporaOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1164,7 +1200,7 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 	pathParameters := []string{*listCorporaOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listCorporaOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1176,7 +1212,7 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(Corpora))
+	response, err := speechToText.Service.Request(request, new(Corpora))
 	return response, err
 }
 
@@ -1204,18 +1240,21 @@ func (speechToText *SpeechToTextV1) GetListCorporaResult(response *core.Detailed
 // * The `sounds_like` field provides an array of one or more pronunciations for the word. Use the parameter to specify
 // how the word can be pronounced by users. Use the parameter for words that are difficult to pronounce, foreign words,
 // acronyms, and so on. For example, you might specify that the word `IEEE` can sound like `i triple e`. You can specify
-// a maximum of five sounds-like pronunciations for a word. For information about pronunciation rules, see [Using the
-// sounds_like field](https://console.bluemix.net/docs/services/speech-to-text/language-resource.html#soundsLike).
+// a maximum of five sounds-like pronunciations for a word.
 // * The `display_as` field provides a different way of spelling the word in a transcript. Use the parameter when you
 // want the word to appear different from its usual representation or from its spelling in corpora training data. For
-// example, you might indicate that the word `IBM(trademark)` is to be displayed as `IBM&trade;`. For more information,
-// see [Using the display_as
-// field](https://console.bluemix.net/docs/services/speech-to-text/language-resource.html#displayAs).
+// example, you might indicate that the word `IBM(trademark)` is to be displayed as `IBM&trade;`.
 //
 //
 // If you add a custom word that already exists in the words resource for the custom model, the new definition
 // overwrites the existing data for the word. If the service encounters an error, it does not add the word to the words
 // resource. Use the **List a custom word** method to review the word that you add.
+//
+// **See also:**
+// * [Working with custom
+// words](https://console.bluemix.net/docs/services/speech-to-text/language-resource.html#workingWords)
+// * [Add words to the custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-create.html#addWords).
 func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1228,7 +1267,7 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 	pathParameters := []string{*addWordOptions.CustomizationID, *addWordOptions.WordName}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range addWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1256,7 +1295,7 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1276,13 +1315,10 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 // * The `sounds_like` field provides an array of one or more pronunciations for the word. Use the parameter to specify
 // how the word can be pronounced by users. Use the parameter for words that are difficult to pronounce, foreign words,
 // acronyms, and so on. For example, you might specify that the word `IEEE` can sound like `i triple e`. You can specify
-// a maximum of five sounds-like pronunciations for a word. For information about pronunciation rules, see [Using the
-// sounds_like field](https://console.bluemix.net/docs/services/speech-to-text/language-resource.html#soundsLike).
+// a maximum of five sounds-like pronunciations for a word.
 // * The `display_as` field provides a different way of spelling the word in a transcript. Use the parameter when you
 // want the word to appear different from its usual representation or from its spelling in corpora training data. For
-// example, you might indicate that the word `IBM(trademark)` is to be displayed as `IBM&trade;`. For more information,
-// see [Using the display_as
-// field](https://console.bluemix.net/docs/services/speech-to-text/language-resource.html#displayAs).
+// example, you might indicate that the word `IBM(trademark)` is to be displayed as `IBM&trade;`.
 //
 //
 // If you add a custom word that already exists in the words resource for the custom model, the new definition
@@ -1301,6 +1337,12 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 // You can use the **List custom words** or **List a custom word** method to review the words that you add. Words with
 // an invalid `sounds_like` field include an `error` field that describes the problem. You can use other words-related
 // methods to correct errors, eliminate typos, and modify how words are pronounced as needed.
+//
+// **See also:**
+// * [Working with custom
+// words](https://console.bluemix.net/docs/services/speech-to-text/language-resource.html#workingWords)
+// * [Add words to the custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-create.html#addWords).
 func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1313,7 +1355,7 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 	pathParameters := []string{*addWordsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range addWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1335,7 +1377,7 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1345,6 +1387,9 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 // only the custom pronunciation for the word; the word remains in the base vocabulary. Removing a custom word does not
 // affect the custom model until you train the model with the **Train a custom language model** method. You must use
 // credentials for the instance of the service that owns a model to delete its words.
+//
+// **See also:** [Deleting a word from a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-words.html#deleteWord).
 func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1357,7 +1402,7 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 	pathParameters := []string{*deleteWordOptions.CustomizationID, *deleteWordOptions.WordName}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1369,13 +1414,16 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
 // GetWord : Get a custom word
 // Gets information about a custom word from a custom language model. You must use credentials for the instance of the
 // service that owns a model to query information about its words.
+//
+// **See also:** [Listing words from a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-words.html#listWords).
 func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1388,7 +1436,7 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (*co
 	pathParameters := []string{*getWordOptions.CustomizationID, *getWordOptions.WordName}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1400,7 +1448,7 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (*co
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(Word))
+	response, err := speechToText.Service.Request(request, new(Word))
 	return response, err
 }
 
@@ -1419,6 +1467,9 @@ func (speechToText *SpeechToTextV1) GetGetWordResult(response *core.DetailedResp
 // were extracted from corpora. You can also indicate the order in which the service is to return words; by default,
 // words are listed in ascending alphabetical order. You must use credentials for the instance of the service that owns
 // a model to query information about its words.
+//
+// **See also:** [Listing words from a custom language
+// model](https://console.bluemix.net/docs/services/speech-to-text/language-words.html#listWords).
 func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1431,7 +1482,7 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 	pathParameters := []string{*listWordsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1450,7 +1501,7 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(Words))
+	response, err := speechToText.Service.Request(request, new(Words))
 	return response, err
 }
 
@@ -1467,6 +1518,9 @@ func (speechToText *SpeechToTextV1) GetListWordsResult(response *core.DetailedRe
 // Creates a new custom acoustic model for a specified base model. The custom acoustic model can be used only with the
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
+//
+// **See also:** [Create a custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/acoustic-create.html#createModel).
 func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptions *CreateAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createAcousticModelOptions, "createAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1479,7 +1533,7 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1507,7 +1561,7 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(AcousticModel))
+	response, err := speechToText.Service.Request(request, new(AcousticModel))
 	return response, err
 }
 
@@ -1524,6 +1578,9 @@ func (speechToText *SpeechToTextV1) GetCreateAcousticModelResult(response *core.
 // Deletes an existing custom acoustic model. The custom model cannot be deleted if another request, such as adding an
 // audio resource to the model, is currently being processed. You must use credentials for the instance of the service
 // that owns a model to delete it.
+//
+// **See also:** [Deleting a custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/acoustic-models.html#deleteModel).
 func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptions *DeleteAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteAcousticModelOptions, "deleteAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1536,7 +1593,7 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 	pathParameters := []string{*deleteAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1548,13 +1605,16 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
 // GetAcousticModel : Get a custom acoustic model
 // Gets information about a specified custom acoustic model. You must use credentials for the instance of the service
 // that owns a model to list information about it.
+//
+// **See also:** [Listing custom acoustic
+// models](https://console.bluemix.net/docs/services/speech-to-text/acoustic-models.html#listModels).
 func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *GetAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getAcousticModelOptions, "getAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1567,7 +1627,7 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 	pathParameters := []string{*getAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1579,7 +1639,7 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(AcousticModel))
+	response, err := speechToText.Service.Request(request, new(AcousticModel))
 	return response, err
 }
 
@@ -1597,6 +1657,9 @@ func (speechToText *SpeechToTextV1) GetGetAcousticModelResult(response *core.Det
 // parameter to see all custom acoustic models for the specified language. Omit the parameter to see all custom acoustic
 // models for all languages. You must use credentials for the instance of the service that owns a model to list
 // information about it.
+//
+// **See also:** [Listing custom acoustic
+// models](https://console.bluemix.net/docs/services/speech-to-text/acoustic-models.html#listModels).
 func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions *ListAcousticModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listAcousticModelsOptions, "listAcousticModelsOptions"); err != nil {
 		return nil, err
@@ -1606,7 +1669,7 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listAcousticModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1622,7 +1685,7 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(AcousticModels))
+	response, err := speechToText.Service.Request(request, new(AcousticModels))
 	return response, err
 }
 
@@ -1640,6 +1703,9 @@ func (speechToText *SpeechToTextV1) GetListAcousticModelsResult(response *core.D
 // initializes the model to its state when it was first created. Metadata such as the name and language of the model are
 // preserved, but the model's audio resources are removed and must be re-created. You must use credentials for the
 // instance of the service that owns a model to reset it.
+//
+// **See also:** [Resetting a custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/acoustic-models.html#resetModel).
 func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions *ResetAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(resetAcousticModelOptions, "resetAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1652,7 +1718,7 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 	pathParameters := []string{*resetAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range resetAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1664,7 +1730,7 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1689,15 +1755,17 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 // You can use the optional `custom_language_model_id` parameter to specify the GUID of a separately created custom
 // language model that is to be used during training. Specify a custom language model if you have verbatim
 // transcriptions of the audio files that you have added to the custom model or you have either corpora (text files) or
-// a list of words that are relevant to the contents of the audio files. For information about creating a separate
-// custom language model, see [Creating a custom language
-// model](https://console.bluemix.net/docs/services/speech-to-text/language-create.html).
+// a list of words that are relevant to the contents of the audio files. For more information, see the **Create a custom
+// language model** method.
 //
 // Training can fail to start for the following reasons:
 // * The service is currently handling another request for the custom model, such as another training request or a
 // request to add audio resources to the model.
 // * The custom model contains less than 10 minutes or more than 50 hours of audio data.
 // * One or more of the custom model's audio resources is invalid.
+//
+// **See also:** [Train the custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/acoustic-create.html#trainModel).
 func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions *TrainAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainAcousticModelOptions, "trainAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1710,7 +1778,7 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 	pathParameters := []string{*trainAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range trainAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1726,7 +1794,7 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1749,8 +1817,8 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 // must be upgraded before the custom acoustic model can be upgraded. Omit the parameter if the custom acoustic model
 // was not trained with a custom language model.
 //
-// For more information, see [Upgrading custom
-// models](https://console.bluemix.net/docs/services/speech-to-text/custom-upgrade.html).
+// **See also:** [Upgrading a custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/custom-upgrade.html#upgradeAcoustic).
 func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOptions *UpgradeAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(upgradeAcousticModelOptions, "upgradeAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1763,7 +1831,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 	pathParameters := []string{*upgradeAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range upgradeAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1779,7 +1847,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1812,10 +1880,14 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 // and it returns the status of the resource. Use a loop to check the status of the audio every few seconds until it
 // becomes `ok`.
 //
+// **See also:** [Add audio to the custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/acoustic-create.html#addAudio).
+//
 // ### Content types for audio-type resources
 //
 //  You can add an individual audio file in any format that the service supports for speech recognition. For an
-// audio-type resource, use the `Content-Type` parameter to specify the audio format (MIME type) of the audio file:
+// audio-type resource, use the `Content-Type` parameter to specify the audio format (MIME type) of the audio file,
+// including specifying the sampling rate, channels, and endianness where indicated.
 // * `audio/basic` (Use only with narrowband models.)
 // * `audio/flac`
 // * `audio/l16` (Specify the sampling rate (`rate`) and optionally the number of channels (`channels`) and endianness
@@ -1831,9 +1903,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 // * `audio/webm;codecs=opus`
 // * `audio/webm;codecs=vorbis`
 //
-// For information about the supported audio formats, including specifying the sampling rate, channels, and endianness
-// for the indicated formats, see [Audio
-// formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
+// **See also:** [Audio formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
 //
 // **Note:** The sampling rate of an audio file must match the sampling rate of the base model for the custom model: for
 // broadband models, at least 16 kHz; for narrowband models, at least 8 kHz. If the sampling rate of the audio is higher
@@ -1872,7 +1942,7 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 	pathParameters := []string{*addAudioOptions.CustomizationID, *addAudioOptions.AudioName}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range addAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1899,7 +1969,7 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1909,6 +1979,9 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 // Removing an audio resource does not affect the custom model until you train the model on its updated data by using
 // the **Train a custom acoustic model** method. You must use credentials for the instance of the service that owns a
 // model to delete its audio resources.
+//
+// **See also:** [Deleting an audio resource from a custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/acoustic-audio.html#deleteAudio).
 func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteAudioOptions, "deleteAudioOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1921,7 +1994,7 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 	pathParameters := []string{*deleteAudioOptions.CustomizationID, *deleteAudioOptions.AudioName}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1933,7 +2006,7 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1953,6 +2026,9 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 // `container` field.
 //
 // You must use credentials for the instance of the service that owns a model to list its audio resources.
+//
+// **See also:** [Listing audio resources for a custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/acoustic-audio.html#listAudio).
 func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getAudioOptions, "getAudioOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1965,7 +2041,7 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 	pathParameters := []string{*getAudioOptions.CustomizationID, *getAudioOptions.AudioName}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1977,7 +2053,7 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(AudioListing))
+	response, err := speechToText.Service.Request(request, new(AudioListing))
 	return response, err
 }
 
@@ -1996,6 +2072,9 @@ func (speechToText *SpeechToTextV1) GetGetAudioResult(response *core.DetailedRes
 // resource, which is important for checking the service's analysis of the resource in response to a request to add it
 // to the custom acoustic model. You must use credentials for the instance of the service that owns a model to list its
 // audio resources.
+//
+// **See also:** [Listing audio resources for a custom acoustic
+// model](https://console.bluemix.net/docs/services/speech-to-text/acoustic-audio.html#listAudio).
 func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listAudioOptions, "listAudioOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2008,7 +2087,7 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 	pathParameters := []string{*listAudioOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2020,7 +2099,7 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, new(AudioResources))
+	response, err := speechToText.Service.Request(request, new(AudioResources))
 	return response, err
 }
 
@@ -2040,7 +2119,8 @@ func (speechToText *SpeechToTextV1) GetListAudioResult(response *core.DetailedRe
 // associate the customer ID with the data.
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
-// For more information about customer IDs and about using this method, see [Information
+//
+// **See also:** [Information
 // security](https://console.bluemix.net/docs/services/speech-to-text/information-security.html).
 func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
@@ -2054,7 +2134,7 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2068,7 +2148,7 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 		return nil, err
 	}
 
-	response, err := speechToText.service.Request(request, nil)
+	response, err := speechToText.Service.Request(request, nil)
 	return response, err
 }
 
@@ -2123,6 +2203,24 @@ type AcousticModel struct {
 	Warnings *string `json:"warnings,omitempty"`
 }
 
+// Constants associated with the AcousticModel.Status property.
+// The current status of the custom acoustic model:
+// * `pending` indicates that the model was created but is waiting either for training data to be added or for the
+// service to finish analyzing added data.
+// * `ready` indicates that the model contains data and is ready to be trained.
+// * `training` indicates that the model is currently being trained.
+// * `available` indicates that the model is trained and ready to use.
+// * `upgrading` indicates that the model is currently being upgraded.
+// * `failed` indicates that training of the model failed.
+const (
+	AcousticModel_Status_Available = "available"
+	AcousticModel_Status_Failed    = "failed"
+	AcousticModel_Status_Pending   = "pending"
+	AcousticModel_Status_Ready     = "ready"
+	AcousticModel_Status_Training  = "training"
+	AcousticModel_Status_Upgrading = "upgrading"
+)
+
 // AcousticModels : AcousticModels struct
 type AcousticModels struct {
 
@@ -2147,7 +2245,7 @@ type AddAudioOptions struct {
 	AudioName *string `json:"audio_name" validate:"required"`
 
 	// The audio resource that is to be added to the custom acoustic model, an individual audio file or an archive file.
-	AudioResource *io.ReadCloser `json:"audio_resource,omitempty"`
+	AudioResource *io.ReadCloser `json:"audio_resource" validate:"required"`
 
 	// The type of the input.
 	ContentType *string `json:"Content-Type" validate:"required"`
@@ -2167,243 +2265,53 @@ type AddAudioOptions struct {
 	Headers map[string]string
 }
 
-// NewAddAudioOptionsForZip : Instantiate AddAudioOptionsForZip
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForZip(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("application/zip"),
-	}
-}
+// Constants associated with the AddAudioOptions.ContentType property.
+// The type of the input.
+const (
+	AddAudioOptions_ContentType_ApplicationGzip       = "application/gzip"
+	AddAudioOptions_ContentType_ApplicationZip        = "application/zip"
+	AddAudioOptions_ContentType_AudioBasic            = "audio/basic"
+	AddAudioOptions_ContentType_AudioFlac             = "audio/flac"
+	AddAudioOptions_ContentType_AudioL16              = "audio/l16"
+	AddAudioOptions_ContentType_AudioMp3              = "audio/mp3"
+	AddAudioOptions_ContentType_AudioMpeg             = "audio/mpeg"
+	AddAudioOptions_ContentType_AudioMulaw            = "audio/mulaw"
+	AddAudioOptions_ContentType_AudioOgg              = "audio/ogg"
+	AddAudioOptions_ContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
+	AddAudioOptions_ContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
+	AddAudioOptions_ContentType_AudioWav              = "audio/wav"
+	AddAudioOptions_ContentType_AudioWebm             = "audio/webm"
+	AddAudioOptions_ContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
+	AddAudioOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
 
-// SetZip : Allow user to set Zip
-func (options *AddAudioOptions) SetZip(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("application/zip")
-	return options
-}
-
-// NewAddAudioOptionsForGzip : Instantiate AddAudioOptionsForGzip
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForGzip(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("application/gzip"),
-	}
-}
-
-// SetGzip : Allow user to set Gzip
-func (options *AddAudioOptions) SetGzip(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("application/gzip")
-	return options
-}
-
-// NewAddAudioOptionsForBasic : Instantiate AddAudioOptionsForBasic
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForBasic(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/basic"),
-	}
-}
-
-// SetBasic : Allow user to set Basic
-func (options *AddAudioOptions) SetBasic(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/basic")
-	return options
-}
-
-// NewAddAudioOptionsForFlac : Instantiate AddAudioOptionsForFlac
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForFlac(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/flac"),
-	}
-}
-
-// SetFlac : Allow user to set Flac
-func (options *AddAudioOptions) SetFlac(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/flac")
-	return options
-}
-
-// NewAddAudioOptionsForL16 : Instantiate AddAudioOptionsForL16
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForL16(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/l16"),
-	}
-}
-
-// SetL16 : Allow user to set L16
-func (options *AddAudioOptions) SetL16(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/l16")
-	return options
-}
-
-// NewAddAudioOptionsForMp3 : Instantiate AddAudioOptionsForMp3
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForMp3(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/mp3"),
-	}
-}
-
-// SetMp3 : Allow user to set Mp3
-func (options *AddAudioOptions) SetMp3(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/mp3")
-	return options
-}
-
-// NewAddAudioOptionsForMpeg : Instantiate AddAudioOptionsForMpeg
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForMpeg(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/mpeg"),
-	}
-}
-
-// SetMpeg : Allow user to set Mpeg
-func (options *AddAudioOptions) SetMpeg(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/mpeg")
-	return options
-}
-
-// NewAddAudioOptionsForMulaw : Instantiate AddAudioOptionsForMulaw
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForMulaw(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/mulaw"),
-	}
-}
-
-// SetMulaw : Allow user to set Mulaw
-func (options *AddAudioOptions) SetMulaw(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/mulaw")
-	return options
-}
-
-// NewAddAudioOptionsForOgg : Instantiate AddAudioOptionsForOgg
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForOgg(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/ogg"),
-	}
-}
-
-// SetOgg : Allow user to set Ogg
-func (options *AddAudioOptions) SetOgg(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/ogg")
-	return options
-}
-
-// NewAddAudioOptionsForOggcodecsopus : Instantiate AddAudioOptionsForOggcodecsopus
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForOggcodecsopus(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/ogg;codecs=opus"),
-	}
-}
-
-// SetOggcodecsopus : Allow user to set Oggcodecsopus
-func (options *AddAudioOptions) SetOggcodecsopus(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/ogg;codecs=opus")
-	return options
-}
-
-// NewAddAudioOptionsForOggcodecsvorbis : Instantiate AddAudioOptionsForOggcodecsvorbis
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForOggcodecsvorbis(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/ogg;codecs=vorbis"),
-	}
-}
-
-// SetOggcodecsvorbis : Allow user to set Oggcodecsvorbis
-func (options *AddAudioOptions) SetOggcodecsvorbis(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/ogg;codecs=vorbis")
-	return options
-}
-
-// NewAddAudioOptionsForWav : Instantiate AddAudioOptionsForWav
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForWav(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/wav"),
-	}
-}
-
-// SetWav : Allow user to set Wav
-func (options *AddAudioOptions) SetWav(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/wav")
-	return options
-}
-
-// NewAddAudioOptionsForWebm : Instantiate AddAudioOptionsForWebm
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForWebm(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/webm"),
-	}
-}
-
-// SetWebm : Allow user to set Webm
-func (options *AddAudioOptions) SetWebm(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/webm")
-	return options
-}
-
-// NewAddAudioOptionsForWebmcodecsopus : Instantiate AddAudioOptionsForWebmcodecsopus
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForWebmcodecsopus(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/webm;codecs=opus"),
-	}
-}
-
-// SetWebmcodecsopus : Allow user to set Webmcodecsopus
-func (options *AddAudioOptions) SetWebmcodecsopus(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/webm;codecs=opus")
-	return options
-}
-
-// NewAddAudioOptionsForWebmcodecsvorbis : Instantiate AddAudioOptionsForWebmcodecsvorbis
-func (speechToText *SpeechToTextV1) NewAddAudioOptionsForWebmcodecsvorbis(audioResource io.ReadCloser) *AddAudioOptions {
-	return &AddAudioOptions{
-		AudioResource: &audioResource,
-		ContentType:   core.StringPtr("audio/webm;codecs=vorbis"),
-	}
-}
-
-// SetWebmcodecsvorbis : Allow user to set Webmcodecsvorbis
-func (options *AddAudioOptions) SetWebmcodecsvorbis(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr("audio/webm;codecs=vorbis")
-	return options
-}
-
-// SetAudioResource : Allow user to set AudioResource with the specified content type
-func (options *AddAudioOptions) SetAudioResource(audioResource io.ReadCloser, contentType string) *AddAudioOptions {
-	options.AudioResource = &audioResource
-	options.ContentType = core.StringPtr(contentType)
-	return options
-}
+// Constants associated with the AddAudioOptions.ContainedContentType property.
+// For an archive-type resource, specifies the format of the audio files contained in the archive file. The parameter
+// accepts all of the audio formats supported for use with speech recognition, including the `rate`, `channels`, and
+// `endianness` parameters that are used with some formats. For a complete list of supported audio formats, see [Audio
+// formats](/docs/services/speech-to-text/input.html#formats).
+const (
+	AddAudioOptions_ContainedContentType_AudioBasic            = "audio/basic"
+	AddAudioOptions_ContainedContentType_AudioFlac             = "audio/flac"
+	AddAudioOptions_ContainedContentType_AudioL16              = "audio/l16"
+	AddAudioOptions_ContainedContentType_AudioMp3              = "audio/mp3"
+	AddAudioOptions_ContainedContentType_AudioMpeg             = "audio/mpeg"
+	AddAudioOptions_ContainedContentType_AudioMulaw            = "audio/mulaw"
+	AddAudioOptions_ContainedContentType_AudioOgg              = "audio/ogg"
+	AddAudioOptions_ContainedContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
+	AddAudioOptions_ContainedContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
+	AddAudioOptions_ContainedContentType_AudioWav              = "audio/wav"
+	AddAudioOptions_ContainedContentType_AudioWebm             = "audio/webm"
+	AddAudioOptions_ContainedContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
+	AddAudioOptions_ContainedContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
 
 // NewAddAudioOptions : Instantiate AddAudioOptions
-func (speechToText *SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, contentType string) *AddAudioOptions {
+func (speechToText *SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, audioResource io.ReadCloser, contentType string) *AddAudioOptions {
 	return &AddAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
 		AudioName:       core.StringPtr(audioName),
+		AudioResource:   &audioResource,
 		ContentType:     core.StringPtr(contentType),
 	}
 }
@@ -2417,6 +2325,18 @@ func (options *AddAudioOptions) SetCustomizationID(customizationID string) *AddA
 // SetAudioName : Allow user to set AudioName
 func (options *AddAudioOptions) SetAudioName(audioName string) *AddAudioOptions {
 	options.AudioName = core.StringPtr(audioName)
+	return options
+}
+
+// SetAudioResource : Allow user to set AudioResource
+func (options *AddAudioOptions) SetAudioResource(audioResource io.ReadCloser) *AddAudioOptions {
+	options.AudioResource = &audioResource
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *AddAudioOptions) SetContentType(contentType string) *AddAudioOptions {
+	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -2666,6 +2586,29 @@ type AudioDetails struct {
 	Compression *string `json:"compression,omitempty"`
 }
 
+// Constants associated with the AudioDetails.Type property.
+// The type of the audio resource:
+// * `audio` for an individual audio file
+// * `archive` for an archive (**.zip** or **.tar.gz**) file that contains audio files
+// * `undetermined` for a resource that the service cannot validate (for example, if the user mistakenly passes a file
+// that does not contain audio, such as a JPEG file).
+const (
+	AudioDetails_Type_Archive      = "archive"
+	AudioDetails_Type_Audio        = "audio"
+	AudioDetails_Type_Undetermined = "undetermined"
+)
+
+// Constants associated with the AudioDetails.Compression property.
+// **For an archive-type resource,** the format of the compressed archive:
+// * `zip` for a **.zip** file
+// * `gzip` for a **.tar.gz** file
+//
+// Omitted for an audio-type resource.
+const (
+	AudioDetails_Compression_Gzip = "gzip"
+	AudioDetails_Compression_Zip  = "zip"
+)
+
 // AudioListing : AudioListing struct
 type AudioListing struct {
 
@@ -2700,6 +2643,22 @@ type AudioListing struct {
 	Audio []AudioResource `json:"audio,omitempty"`
 }
 
+// Constants associated with the AudioListing.Status property.
+// **For an audio-type resource,** the status of the resource:
+// * `ok` indicates that the service has successfully analyzed the audio data. The data can be used to train the custom
+// model.
+// * `being_processed` indicates that the service is still analyzing the audio data. The service cannot accept requests
+// to add new audio resources or to train the custom model until its analysis is complete.
+// * `invalid` indicates that the audio data is not valid for training the custom model (possibly because it has the
+// wrong format or sampling rate, or because it is corrupted).
+//
+// Omitted for an archive-type resource.
+const (
+	AudioListing_Status_BeingProcessed = "being_processed"
+	AudioListing_Status_Invalid        = "invalid"
+	AudioListing_Status_Ok             = "ok"
+)
+
 // AudioResource : AudioResource struct
 type AudioResource struct {
 
@@ -2726,6 +2685,21 @@ type AudioResource struct {
 	// any of its audio files are invalid.
 	Status *string `json:"status" validate:"required"`
 }
+
+// Constants associated with the AudioResource.Status property.
+// The status of the audio resource:
+// * `ok` indicates that the service has successfully analyzed the audio data. The data can be used to train the custom
+// model.
+// * `being_processed` indicates that the service is still analyzing the audio data. The service cannot accept requests
+// to add new audio resources or to train the custom model until its analysis is complete.
+// * `invalid` indicates that the audio data is not valid for training the custom model (possibly because it has the
+// wrong format or sampling rate, or because it is corrupted). For an archive file, the entire archive is invalid if any
+// of its audio files are invalid.
+const (
+	AudioResource_Status_BeingProcessed = "being_processed"
+	AudioResource_Status_Invalid        = "invalid"
+	AudioResource_Status_Ok             = "ok"
+)
 
 // AudioResources : AudioResources struct
 type AudioResources struct {
@@ -2819,6 +2793,19 @@ type Corpus struct {
 	Error *string `json:"error,omitempty"`
 }
 
+// Constants associated with the Corpus.Status property.
+// The status of the corpus:
+// * `analyzed` indicates that the service has successfully analyzed the corpus; the custom model can be trained with
+// data from the corpus.
+// * `being_processed` indicates that the service is still analyzing the corpus; the service cannot accept requests to
+// add new corpora or words, or to train the custom model.
+// * `undetermined` indicates that the service encountered an error while processing the corpus.
+const (
+	Corpus_Status_Analyzed       = "analyzed"
+	Corpus_Status_BeingProcessed = "being_processed"
+	Corpus_Status_Undetermined   = "undetermined"
+)
+
 // CreateAcousticModelOptions : The createAcousticModel options.
 type CreateAcousticModelOptions struct {
 
@@ -2840,6 +2827,31 @@ type CreateAcousticModelOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the CreateAcousticModelOptions.BaseModelName property.
+// The name of the base language model that is to be customized by the new custom acoustic model. The new custom model
+// can be used only with the base model that it customizes. To determine whether a base model supports acoustic model
+// customization, refer to [Language support for
+// customization](https://console.bluemix.net/docs/services/speech-to-text/custom.html#languageSupport).
+const (
+	CreateAcousticModelOptions_BaseModelName_ArARBroadbandModel  = "ar-AR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_DeDEBroadbandModel  = "de-DE_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EnGBBroadbandModel  = "en-GB_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EnGBNarrowbandModel = "en-GB_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EnUSBroadbandModel  = "en-US_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EnUSNarrowbandModel = "en-US_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsESBroadbandModel  = "es-ES_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsESNarrowbandModel = "es-ES_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_FrFRBroadbandModel  = "fr-FR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_JaJPBroadbandModel  = "ja-JP_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_JaJPNarrowbandModel = "ja-JP_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_KoKRBroadbandModel  = "ko-KR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_KoKRNarrowbandModel = "ko-KR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_PtBRBroadbandModel  = "pt-BR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_PtBRNarrowbandModel = "pt-BR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_ZhCNBroadbandModel  = "zh-CN_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_ZhCNNarrowbandModel = "zh-CN_NarrowbandModel"
+)
 
 // NewCreateAcousticModelOptions : Instantiate CreateAcousticModelOptions
 func (speechToText *SpeechToTextV1) NewCreateAcousticModelOptions(name string, baseModelName string) *CreateAcousticModelOptions {
@@ -2877,7 +2889,7 @@ func (options *CreateAcousticModelOptions) SetHeaders(param map[string]string) *
 type CreateJobOptions struct {
 
 	// The audio to transcribe in the format specified by the `Content-Type` header.
-	Audio *io.ReadCloser `json:"audio,omitempty"`
+	Audio *io.ReadCloser `json:"audio" validate:"required"`
 
 	// The type of the input.
 	ContentType *string `json:"Content-Type" validate:"required"`
@@ -2923,19 +2935,21 @@ type CreateJobOptions struct {
 	// The customization ID (GUID) of a custom language model that is to be used with the recognition request. The base
 	// model of the specified custom language model must match the model specified with the `model` parameter. You must
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
-	// default, no custom language model is used.
+	// default, no custom language model is used. See [Custom
+	// models](https://console.bluemix.net/docs/services/speech-to-text/input.html#custom).
 	CustomizationID *string `json:"customization_id,omitempty"`
 
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
-	// default, no custom acoustic model is used.
+	// default, no custom acoustic model is used. See [Custom
+	// models](https://console.bluemix.net/docs/services/speech-to-text/input.html#custom).
 	AcousticCustomizationID *string `json:"acoustic_customization_id,omitempty"`
 
 	// The version of the specified base model that is to be used with recognition request. Multiple versions of a base
 	// model can exist when a model is updated for internal improvements. The parameter is intended primarily for use with
 	// custom models that have been upgraded for a new base model. The default value depends on whether the parameter is
-	// used with or without a custom model. For more information, see [Base model
+	// used with or without a custom model. See [Base model
 	// version](https://console.bluemix.net/docs/services/speech-to-text/input.html#version).
 	BaseModelVersion *string `json:"base_model_version,omitempty"`
 
@@ -2950,57 +2964,67 @@ type CreateJobOptions struct {
 	// The default value yields the best performance in general. Assign a higher value if your audio makes frequent use of
 	// OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
+	//
+	// See [Custom models](https://console.bluemix.net/docs/services/speech-to-text/input.html#custom).
 	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
 	// The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
-	// simply walks away. Use `-1` for infinity.
+	// simply walks away. Use `-1` for infinity. See
+	// [Timeouts](https://console.bluemix.net/docs/services/speech-to-text/input.html#timeouts).
 	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
 	// also specify a keywords threshold. You can spot a maximum of 1000 keywords. Omit the parameter or specify an empty
-	// array if you do not need to spot keywords.
+	// array if you do not need to spot keywords. See [Keyword
+	// spotting](https://console.bluemix.net/docs/services/speech-to-text/output.html#keyword_spotting).
 	Keywords []string `json:"keywords,omitempty"`
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
 	// confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. No keyword spotting
-	// is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords.
+	// is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords. See
+	// [Keyword spotting](https://console.bluemix.net/docs/services/speech-to-text/output.html#keyword_spotting).
 	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
 
 	// The maximum number of alternative transcripts that the service is to return. By default, a single transcription is
-	// returned.
+	// returned. See [Maximum
+	// alternatives](https://console.bluemix.net/docs/services/speech-to-text/output.html#max_alternatives).
 	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
 
 	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known
 	// as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the
 	// threshold. Specify a probability between 0.0 and 1.0. No alternative words are computed if you omit the parameter.
+	// See [Word alternatives](https://console.bluemix.net/docs/services/speech-to-text/output.html#word_alternatives).
 	WordAlternativesThreshold *float32 `json:"word_alternatives_threshold,omitempty"`
 
 	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, no word
-	// confidence measures are returned.
+	// confidence measures are returned. See [Word
+	// confidence](https://console.bluemix.net/docs/services/speech-to-text/output.html#word_confidence).
 	WordConfidence *bool `json:"word_confidence,omitempty"`
 
-	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned.
+	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned. See [Word
+	// timestamps](https://console.bluemix.net/docs/services/speech-to-text/output.html#word_timestamps).
 	Timestamps *bool `json:"timestamps,omitempty"`
 
 	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words
 	// with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English
-	// transcription only.
+	// transcription only. See [Profanity
+	// filtering](https://console.bluemix.net/docs/services/speech-to-text/output.html#profanity_filter).
 	ProfanityFilter *bool `json:"profanity_filter,omitempty"`
 
 	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and
 	// internet addresses into more readable, conventional representations in the final transcript of a recognition
 	// request. For US English, the service also converts certain keyword strings to punctuation symbols. By default, no
-	// smart formatting is performed. Applies to US English and Spanish transcription only.
+	// smart formatting is performed. Applies to US English and Spanish transcription only. See [Smart
+	// formatting](https://console.bluemix.net/docs/services/speech-to-text/output.html#smart_formatting).
 	SmartFormatting *bool `json:"smart_formatting,omitempty"`
 
 	// If `true`, the response includes labels that identify which words were spoken by which participants in a
 	// multi-person exchange. By default, no speaker labels are returned. Setting `speaker_labels` to `true` forces the
-	// `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
-	//
-	//  To determine whether a language model supports speaker labels, use the **Get models** method and check that the
-	// attribute `speaker_labels` is set to `true`. You can also refer to [Speaker
+	// `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter. To determine
+	// whether a language model supports speaker labels, use the **Get models** method and check that the attribute
+	// `speaker_labels` is set to `true`. See [Speaker
 	// labels](https://console.bluemix.net/docs/services/speech-to-text/output.html#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
 
@@ -3008,213 +3032,87 @@ type CreateJobOptions struct {
 	Headers map[string]string
 }
 
-// NewCreateJobOptionsForBasic : Instantiate CreateJobOptionsForBasic
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForBasic(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/basic"),
-	}
-}
+// Constants associated with the CreateJobOptions.ContentType property.
+// The type of the input.
+const (
+	CreateJobOptions_ContentType_AudioBasic            = "audio/basic"
+	CreateJobOptions_ContentType_AudioFlac             = "audio/flac"
+	CreateJobOptions_ContentType_AudioL16              = "audio/l16"
+	CreateJobOptions_ContentType_AudioMp3              = "audio/mp3"
+	CreateJobOptions_ContentType_AudioMpeg             = "audio/mpeg"
+	CreateJobOptions_ContentType_AudioMulaw            = "audio/mulaw"
+	CreateJobOptions_ContentType_AudioOgg              = "audio/ogg"
+	CreateJobOptions_ContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
+	CreateJobOptions_ContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
+	CreateJobOptions_ContentType_AudioWav              = "audio/wav"
+	CreateJobOptions_ContentType_AudioWebm             = "audio/webm"
+	CreateJobOptions_ContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
+	CreateJobOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
 
-// SetBasic : Allow user to set Basic
-func (options *CreateJobOptions) SetBasic(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/basic")
-	return options
-}
+// Constants associated with the CreateJobOptions.Model property.
+// The identifier of the model that is to be used for the recognition request.
+const (
+	CreateJobOptions_Model_ArARBroadbandModel  = "ar-AR_BroadbandModel"
+	CreateJobOptions_Model_DeDEBroadbandModel  = "de-DE_BroadbandModel"
+	CreateJobOptions_Model_EnGBBroadbandModel  = "en-GB_BroadbandModel"
+	CreateJobOptions_Model_EnGBNarrowbandModel = "en-GB_NarrowbandModel"
+	CreateJobOptions_Model_EnUSBroadbandModel  = "en-US_BroadbandModel"
+	CreateJobOptions_Model_EnUSNarrowbandModel = "en-US_NarrowbandModel"
+	CreateJobOptions_Model_EsESBroadbandModel  = "es-ES_BroadbandModel"
+	CreateJobOptions_Model_EsESNarrowbandModel = "es-ES_NarrowbandModel"
+	CreateJobOptions_Model_FrFRBroadbandModel  = "fr-FR_BroadbandModel"
+	CreateJobOptions_Model_JaJPBroadbandModel  = "ja-JP_BroadbandModel"
+	CreateJobOptions_Model_JaJPNarrowbandModel = "ja-JP_NarrowbandModel"
+	CreateJobOptions_Model_KoKRBroadbandModel  = "ko-KR_BroadbandModel"
+	CreateJobOptions_Model_KoKRNarrowbandModel = "ko-KR_NarrowbandModel"
+	CreateJobOptions_Model_PtBRBroadbandModel  = "pt-BR_BroadbandModel"
+	CreateJobOptions_Model_PtBRNarrowbandModel = "pt-BR_NarrowbandModel"
+	CreateJobOptions_Model_ZhCNBroadbandModel  = "zh-CN_BroadbandModel"
+	CreateJobOptions_Model_ZhCNNarrowbandModel = "zh-CN_NarrowbandModel"
+)
 
-// NewCreateJobOptionsForFlac : Instantiate CreateJobOptionsForFlac
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForFlac(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/flac"),
-	}
-}
-
-// SetFlac : Allow user to set Flac
-func (options *CreateJobOptions) SetFlac(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/flac")
-	return options
-}
-
-// NewCreateJobOptionsForL16 : Instantiate CreateJobOptionsForL16
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForL16(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/l16"),
-	}
-}
-
-// SetL16 : Allow user to set L16
-func (options *CreateJobOptions) SetL16(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/l16")
-	return options
-}
-
-// NewCreateJobOptionsForMp3 : Instantiate CreateJobOptionsForMp3
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForMp3(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/mp3"),
-	}
-}
-
-// SetMp3 : Allow user to set Mp3
-func (options *CreateJobOptions) SetMp3(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/mp3")
-	return options
-}
-
-// NewCreateJobOptionsForMpeg : Instantiate CreateJobOptionsForMpeg
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForMpeg(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/mpeg"),
-	}
-}
-
-// SetMpeg : Allow user to set Mpeg
-func (options *CreateJobOptions) SetMpeg(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/mpeg")
-	return options
-}
-
-// NewCreateJobOptionsForMulaw : Instantiate CreateJobOptionsForMulaw
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForMulaw(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/mulaw"),
-	}
-}
-
-// SetMulaw : Allow user to set Mulaw
-func (options *CreateJobOptions) SetMulaw(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/mulaw")
-	return options
-}
-
-// NewCreateJobOptionsForOgg : Instantiate CreateJobOptionsForOgg
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForOgg(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/ogg"),
-	}
-}
-
-// SetOgg : Allow user to set Ogg
-func (options *CreateJobOptions) SetOgg(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/ogg")
-	return options
-}
-
-// NewCreateJobOptionsForOggcodecsopus : Instantiate CreateJobOptionsForOggcodecsopus
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForOggcodecsopus(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/ogg;codecs=opus"),
-	}
-}
-
-// SetOggcodecsopus : Allow user to set Oggcodecsopus
-func (options *CreateJobOptions) SetOggcodecsopus(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/ogg;codecs=opus")
-	return options
-}
-
-// NewCreateJobOptionsForOggcodecsvorbis : Instantiate CreateJobOptionsForOggcodecsvorbis
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForOggcodecsvorbis(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/ogg;codecs=vorbis"),
-	}
-}
-
-// SetOggcodecsvorbis : Allow user to set Oggcodecsvorbis
-func (options *CreateJobOptions) SetOggcodecsvorbis(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/ogg;codecs=vorbis")
-	return options
-}
-
-// NewCreateJobOptionsForWav : Instantiate CreateJobOptionsForWav
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForWav(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/wav"),
-	}
-}
-
-// SetWav : Allow user to set Wav
-func (options *CreateJobOptions) SetWav(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/wav")
-	return options
-}
-
-// NewCreateJobOptionsForWebm : Instantiate CreateJobOptionsForWebm
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForWebm(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/webm"),
-	}
-}
-
-// SetWebm : Allow user to set Webm
-func (options *CreateJobOptions) SetWebm(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/webm")
-	return options
-}
-
-// NewCreateJobOptionsForWebmcodecsopus : Instantiate CreateJobOptionsForWebmcodecsopus
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForWebmcodecsopus(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/webm;codecs=opus"),
-	}
-}
-
-// SetWebmcodecsopus : Allow user to set Webmcodecsopus
-func (options *CreateJobOptions) SetWebmcodecsopus(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/webm;codecs=opus")
-	return options
-}
-
-// NewCreateJobOptionsForWebmcodecsvorbis : Instantiate CreateJobOptionsForWebmcodecsvorbis
-func (speechToText *SpeechToTextV1) NewCreateJobOptionsForWebmcodecsvorbis(audio io.ReadCloser) *CreateJobOptions {
-	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/webm;codecs=vorbis"),
-	}
-}
-
-// SetWebmcodecsvorbis : Allow user to set Webmcodecsvorbis
-func (options *CreateJobOptions) SetWebmcodecsvorbis(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/webm;codecs=vorbis")
-	return options
-}
-
-// SetAudio : Allow user to set Audio with the specified content type
-func (options *CreateJobOptions) SetAudio(audio io.ReadCloser, contentType string) *CreateJobOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr(contentType)
-	return options
-}
+// Constants associated with the CreateJobOptions.Events property.
+// If the job includes a callback URL, a comma-separated list of notification events to which to subscribe. Valid events
+// are
+// * `recognitions.started` generates a callback notification when the service begins to process the job.
+// * `recognitions.completed` generates a callback notification when the job is complete. You must use the **Check a
+// job** method to retrieve the results before they time out or are deleted.
+// * `recognitions.completed_with_results` generates a callback notification when the job is complete. The notification
+// includes the results of the request.
+// * `recognitions.failed` generates a callback notification if the service experiences an error while processing the
+// job.
+//
+// The `recognitions.completed` and `recognitions.completed_with_results` events are incompatible. You can specify only
+// of the two events.
+//
+// If the job includes a callback URL, omit the parameter to subscribe to the default events: `recognitions.started`,
+// `recognitions.completed`, and `recognitions.failed`. If the job does not include a callback URL, omit the parameter.
+const (
+	CreateJobOptions_Events_RecognitionsCompleted            = "recognitions.completed"
+	CreateJobOptions_Events_RecognitionsCompletedWithResults = "recognitions.completed_with_results"
+	CreateJobOptions_Events_RecognitionsFailed               = "recognitions.failed"
+	CreateJobOptions_Events_RecognitionsStarted              = "recognitions.started"
+)
 
 // NewCreateJobOptions : Instantiate CreateJobOptions
-func (speechToText *SpeechToTextV1) NewCreateJobOptions(contentType string) *CreateJobOptions {
+func (speechToText *SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser, contentType string) *CreateJobOptions {
 	return &CreateJobOptions{
+		Audio:       &audio,
 		ContentType: core.StringPtr(contentType),
 	}
+}
+
+// SetAudio : Allow user to set Audio
+func (options *CreateJobOptions) SetAudio(audio io.ReadCloser) *CreateJobOptions {
+	options.Audio = &audio
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *CreateJobOptions) SetContentType(contentType string) *CreateJobOptions {
+	options.ContentType = core.StringPtr(contentType)
+	return options
 }
 
 // SetModel : Allow user to set Model
@@ -3370,6 +3268,29 @@ type CreateLanguageModelOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the CreateLanguageModelOptions.BaseModelName property.
+// The name of the base language model that is to be customized by the new custom language model. The new custom model
+// can be used only with the base model that it customizes. To determine whether a base model supports language model
+// customization, request information about the base model and check that the attribute `custom_language_model` is set
+// to `true`, or refer to [Language support for
+// customization](https://console.bluemix.net/docs/services/speech-to-text/custom.html#languageSupport).
+const (
+	CreateLanguageModelOptions_BaseModelName_DeDEBroadbandModel  = "de-DE_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EnGBBroadbandModel  = "en-GB_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EnGBNarrowbandModel = "en-GB_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EnUSBroadbandModel  = "en-US_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EnUSNarrowbandModel = "en-US_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsESBroadbandModel  = "es-ES_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsESNarrowbandModel = "es-ES_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_FrFRBroadbandModel  = "fr-FR_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_JaJPBroadbandModel  = "ja-JP_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_JaJPNarrowbandModel = "ja-JP_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_KoKRBroadbandModel  = "ko-KR_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_KoKRNarrowbandModel = "ko-KR_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_PtBRBroadbandModel  = "pt-BR_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_PtBRNarrowbandModel = "pt-BR_NarrowbandModel"
+)
 
 // NewCreateLanguageModelOptions : Instantiate CreateLanguageModelOptions
 func (speechToText *SpeechToTextV1) NewCreateLanguageModelOptions(name string, baseModelName string) *CreateLanguageModelOptions {
@@ -3827,6 +3748,28 @@ type GetModelOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the GetModelOptions.ModelID property.
+// The identifier of the model in the form of its name from the output of the **Get models** method.
+const (
+	GetModelOptions_ModelID_ArARBroadbandModel  = "ar-AR_BroadbandModel"
+	GetModelOptions_ModelID_DeDEBroadbandModel  = "de-DE_BroadbandModel"
+	GetModelOptions_ModelID_EnGBBroadbandModel  = "en-GB_BroadbandModel"
+	GetModelOptions_ModelID_EnGBNarrowbandModel = "en-GB_NarrowbandModel"
+	GetModelOptions_ModelID_EnUSBroadbandModel  = "en-US_BroadbandModel"
+	GetModelOptions_ModelID_EnUSNarrowbandModel = "en-US_NarrowbandModel"
+	GetModelOptions_ModelID_EsESBroadbandModel  = "es-ES_BroadbandModel"
+	GetModelOptions_ModelID_EsESNarrowbandModel = "es-ES_NarrowbandModel"
+	GetModelOptions_ModelID_FrFRBroadbandModel  = "fr-FR_BroadbandModel"
+	GetModelOptions_ModelID_JaJPBroadbandModel  = "ja-JP_BroadbandModel"
+	GetModelOptions_ModelID_JaJPNarrowbandModel = "ja-JP_NarrowbandModel"
+	GetModelOptions_ModelID_KoKRBroadbandModel  = "ko-KR_BroadbandModel"
+	GetModelOptions_ModelID_KoKRNarrowbandModel = "ko-KR_NarrowbandModel"
+	GetModelOptions_ModelID_PtBRBroadbandModel  = "pt-BR_BroadbandModel"
+	GetModelOptions_ModelID_PtBRNarrowbandModel = "pt-BR_NarrowbandModel"
+	GetModelOptions_ModelID_ZhCNBroadbandModel  = "zh-CN_BroadbandModel"
+	GetModelOptions_ModelID_ZhCNNarrowbandModel = "zh-CN_NarrowbandModel"
+)
+
 // NewGetModelOptions : Instantiate GetModelOptions
 func (speechToText *SpeechToTextV1) NewGetModelOptions(modelID string) *GetModelOptions {
 	return &GetModelOptions{
@@ -3962,6 +3905,24 @@ type LanguageModel struct {
 	// detected`, where `parameters` is a list that includes a quoted string for each unknown parameter.
 	Warnings *string `json:"warnings,omitempty"`
 }
+
+// Constants associated with the LanguageModel.Status property.
+// The current status of the custom language model:
+// * `pending` indicates that the model was created but is waiting either for training data to be added or for the
+// service to finish analyzing added data.
+// * `ready` indicates that the model contains data and is ready to be trained.
+// * `training` indicates that the model is currently being trained.
+// * `available` indicates that the model is trained and ready to use.
+// * `upgrading` indicates that the model is currently being upgraded.
+// * `failed` indicates that training of the model failed.
+const (
+	LanguageModel_Status_Available = "available"
+	LanguageModel_Status_Failed    = "failed"
+	LanguageModel_Status_Pending   = "pending"
+	LanguageModel_Status_Ready     = "ready"
+	LanguageModel_Status_Training  = "training"
+	LanguageModel_Status_Upgrading = "upgrading"
+)
 
 // LanguageModels : LanguageModels struct
 type LanguageModels struct {
@@ -4132,6 +4093,28 @@ type ListWordsOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the ListWordsOptions.WordType property.
+// The type of words to be listed from the custom language model's words resource:
+// * `all` (the default) shows all words.
+// * `user` shows only custom words that were added or modified by the user.
+// * `corpora` shows only OOV that were extracted from corpora.
+const (
+	ListWordsOptions_WordType_All     = "all"
+	ListWordsOptions_WordType_Corpora = "corpora"
+	ListWordsOptions_WordType_User    = "user"
+)
+
+// Constants associated with the ListWordsOptions.Sort property.
+// Indicates the order in which the words are to be listed, `alphabetical` or by `count`. You can prepend an optional
+// `+` or `-` to an argument to indicate whether the results are to be sorted in ascending or descending order. By
+// default, words are sorted in ascending alphabetical order. For alphabetical ordering, the lexicographical precedence
+// is numeric values, uppercase letters, and lowercase letters. For count ordering, values with the same count are
+// ordered alphabetically. With cURL, URL encode the `+` symbol as `%2B`.
+const (
+	ListWordsOptions_Sort_Alphabetical = "alphabetical"
+	ListWordsOptions_Sort_Count        = "count"
+)
+
 // NewListWordsOptions : Instantiate ListWordsOptions
 func (speechToText *SpeechToTextV1) NewListWordsOptions(customizationID string) *ListWordsOptions {
 	return &ListWordsOptions{
@@ -4208,6 +4191,23 @@ type RecognitionJob struct {
 	Warnings []string `json:"warnings,omitempty"`
 }
 
+// Constants associated with the RecognitionJob.Status property.
+// The current status of the job:
+// * `waiting`: The service is preparing the job for processing. The service returns this status when the job is
+// initially created or when it is waiting for capacity to process the job. The job remains in this state until the
+// service has the capacity to begin processing it.
+// * `processing`: The service is actively processing the job.
+// * `completed`: The service has finished processing the job. If the job specified a callback URL and the event
+// `recognitions.completed_with_results`, the service sent the results with the callback notification; otherwise, you
+// must retrieve the results by checking the individual job.
+// * `failed`: The job failed.
+const (
+	RecognitionJob_Status_Completed  = "completed"
+	RecognitionJob_Status_Failed     = "failed"
+	RecognitionJob_Status_Processing = "processing"
+	RecognitionJob_Status_Waiting    = "waiting"
+)
+
 // RecognitionJobs : RecognitionJobs struct
 type RecognitionJobs struct {
 
@@ -4220,7 +4220,7 @@ type RecognitionJobs struct {
 type RecognizeOptions struct {
 
 	// The audio to transcribe in the format specified by the `Content-Type` header.
-	Audio *io.ReadCloser `json:"audio,omitempty"`
+	Audio *io.ReadCloser `json:"audio" validate:"required"`
 
 	// The type of the input.
 	ContentType *string `json:"Content-Type" validate:"required"`
@@ -4231,19 +4231,21 @@ type RecognizeOptions struct {
 	// The customization ID (GUID) of a custom language model that is to be used with the recognition request. The base
 	// model of the specified custom language model must match the model specified with the `model` parameter. You must
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
-	// default, no custom language model is used.
+	// default, no custom language model is used. See [Custom
+	// models](https://console.bluemix.net/docs/services/speech-to-text/input.html#custom).
 	CustomizationID *string `json:"customization_id,omitempty"`
 
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
-	// default, no custom acoustic model is used.
+	// default, no custom acoustic model is used. See [Custom
+	// models](https://console.bluemix.net/docs/services/speech-to-text/input.html#custom).
 	AcousticCustomizationID *string `json:"acoustic_customization_id,omitempty"`
 
 	// The version of the specified base model that is to be used with recognition request. Multiple versions of a base
 	// model can exist when a model is updated for internal improvements. The parameter is intended primarily for use with
 	// custom models that have been upgraded for a new base model. The default value depends on whether the parameter is
-	// used with or without a custom model. For more information, see [Base model
+	// used with or without a custom model. See [Base model
 	// version](https://console.bluemix.net/docs/services/speech-to-text/input.html#version).
 	BaseModelVersion *string `json:"base_model_version,omitempty"`
 
@@ -4258,57 +4260,67 @@ type RecognizeOptions struct {
 	// The default value yields the best performance in general. Assign a higher value if your audio makes frequent use of
 	// OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
+	//
+	// See [Custom models](https://console.bluemix.net/docs/services/speech-to-text/input.html#custom).
 	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
 	// The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
-	// simply walks away. Use `-1` for infinity.
+	// simply walks away. Use `-1` for infinity. See
+	// [Timeouts](https://console.bluemix.net/docs/services/speech-to-text/input.html#timeouts).
 	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
 	// also specify a keywords threshold. You can spot a maximum of 1000 keywords. Omit the parameter or specify an empty
-	// array if you do not need to spot keywords.
+	// array if you do not need to spot keywords. See [Keyword
+	// spotting](https://console.bluemix.net/docs/services/speech-to-text/output.html#keyword_spotting).
 	Keywords []string `json:"keywords,omitempty"`
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
 	// confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. No keyword spotting
-	// is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords.
+	// is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords. See
+	// [Keyword spotting](https://console.bluemix.net/docs/services/speech-to-text/output.html#keyword_spotting).
 	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
 
 	// The maximum number of alternative transcripts that the service is to return. By default, a single transcription is
-	// returned.
+	// returned. See [Maximum
+	// alternatives](https://console.bluemix.net/docs/services/speech-to-text/output.html#max_alternatives).
 	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
 
 	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known
 	// as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the
 	// threshold. Specify a probability between 0.0 and 1.0. No alternative words are computed if you omit the parameter.
+	// See [Word alternatives](https://console.bluemix.net/docs/services/speech-to-text/output.html#word_alternatives).
 	WordAlternativesThreshold *float32 `json:"word_alternatives_threshold,omitempty"`
 
 	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, no word
-	// confidence measures are returned.
+	// confidence measures are returned. See [Word
+	// confidence](https://console.bluemix.net/docs/services/speech-to-text/output.html#word_confidence).
 	WordConfidence *bool `json:"word_confidence,omitempty"`
 
-	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned.
+	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned. See [Word
+	// timestamps](https://console.bluemix.net/docs/services/speech-to-text/output.html#word_timestamps).
 	Timestamps *bool `json:"timestamps,omitempty"`
 
 	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words
 	// with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English
-	// transcription only.
+	// transcription only. See [Profanity
+	// filtering](https://console.bluemix.net/docs/services/speech-to-text/output.html#profanity_filter).
 	ProfanityFilter *bool `json:"profanity_filter,omitempty"`
 
 	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and
 	// internet addresses into more readable, conventional representations in the final transcript of a recognition
 	// request. For US English, the service also converts certain keyword strings to punctuation symbols. By default, no
-	// smart formatting is performed. Applies to US English and Spanish transcription only.
+	// smart formatting is performed. Applies to US English and Spanish transcription only. See [Smart
+	// formatting](https://console.bluemix.net/docs/services/speech-to-text/output.html#smart_formatting).
 	SmartFormatting *bool `json:"smart_formatting,omitempty"`
 
 	// If `true`, the response includes labels that identify which words were spoken by which participants in a
 	// multi-person exchange. By default, no speaker labels are returned. Setting `speaker_labels` to `true` forces the
-	// `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
-	//
-	//  To determine whether a language model supports speaker labels, use the **Get models** method and check that the
-	// attribute `speaker_labels` is set to `true`. You can also refer to [Speaker
+	// `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter. To determine
+	// whether a language model supports speaker labels, use the **Get models** method and check that the attribute
+	// `speaker_labels` is set to `true`. See [Speaker
 	// labels](https://console.bluemix.net/docs/services/speech-to-text/output.html#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
 
@@ -4316,213 +4328,64 @@ type RecognizeOptions struct {
 	Headers map[string]string
 }
 
-// NewRecognizeOptionsForBasic : Instantiate RecognizeOptionsForBasic
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForBasic(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/basic"),
-	}
-}
+// Constants associated with the RecognizeOptions.ContentType property.
+// The type of the input.
+const (
+	RecognizeOptions_ContentType_AudioBasic            = "audio/basic"
+	RecognizeOptions_ContentType_AudioFlac             = "audio/flac"
+	RecognizeOptions_ContentType_AudioL16              = "audio/l16"
+	RecognizeOptions_ContentType_AudioMp3              = "audio/mp3"
+	RecognizeOptions_ContentType_AudioMpeg             = "audio/mpeg"
+	RecognizeOptions_ContentType_AudioMulaw            = "audio/mulaw"
+	RecognizeOptions_ContentType_AudioOgg              = "audio/ogg"
+	RecognizeOptions_ContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
+	RecognizeOptions_ContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
+	RecognizeOptions_ContentType_AudioWav              = "audio/wav"
+	RecognizeOptions_ContentType_AudioWebm             = "audio/webm"
+	RecognizeOptions_ContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
+	RecognizeOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
 
-// SetBasic : Allow user to set Basic
-func (options *RecognizeOptions) SetBasic(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/basic")
-	return options
-}
-
-// NewRecognizeOptionsForFlac : Instantiate RecognizeOptionsForFlac
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForFlac(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/flac"),
-	}
-}
-
-// SetFlac : Allow user to set Flac
-func (options *RecognizeOptions) SetFlac(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/flac")
-	return options
-}
-
-// NewRecognizeOptionsForL16 : Instantiate RecognizeOptionsForL16
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForL16(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/l16"),
-	}
-}
-
-// SetL16 : Allow user to set L16
-func (options *RecognizeOptions) SetL16(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/l16")
-	return options
-}
-
-// NewRecognizeOptionsForMp3 : Instantiate RecognizeOptionsForMp3
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForMp3(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/mp3"),
-	}
-}
-
-// SetMp3 : Allow user to set Mp3
-func (options *RecognizeOptions) SetMp3(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/mp3")
-	return options
-}
-
-// NewRecognizeOptionsForMpeg : Instantiate RecognizeOptionsForMpeg
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForMpeg(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/mpeg"),
-	}
-}
-
-// SetMpeg : Allow user to set Mpeg
-func (options *RecognizeOptions) SetMpeg(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/mpeg")
-	return options
-}
-
-// NewRecognizeOptionsForMulaw : Instantiate RecognizeOptionsForMulaw
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForMulaw(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/mulaw"),
-	}
-}
-
-// SetMulaw : Allow user to set Mulaw
-func (options *RecognizeOptions) SetMulaw(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/mulaw")
-	return options
-}
-
-// NewRecognizeOptionsForOgg : Instantiate RecognizeOptionsForOgg
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForOgg(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/ogg"),
-	}
-}
-
-// SetOgg : Allow user to set Ogg
-func (options *RecognizeOptions) SetOgg(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/ogg")
-	return options
-}
-
-// NewRecognizeOptionsForOggcodecsopus : Instantiate RecognizeOptionsForOggcodecsopus
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForOggcodecsopus(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/ogg;codecs=opus"),
-	}
-}
-
-// SetOggcodecsopus : Allow user to set Oggcodecsopus
-func (options *RecognizeOptions) SetOggcodecsopus(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/ogg;codecs=opus")
-	return options
-}
-
-// NewRecognizeOptionsForOggcodecsvorbis : Instantiate RecognizeOptionsForOggcodecsvorbis
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForOggcodecsvorbis(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/ogg;codecs=vorbis"),
-	}
-}
-
-// SetOggcodecsvorbis : Allow user to set Oggcodecsvorbis
-func (options *RecognizeOptions) SetOggcodecsvorbis(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/ogg;codecs=vorbis")
-	return options
-}
-
-// NewRecognizeOptionsForWav : Instantiate RecognizeOptionsForWav
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForWav(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/wav"),
-	}
-}
-
-// SetWav : Allow user to set Wav
-func (options *RecognizeOptions) SetWav(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/wav")
-	return options
-}
-
-// NewRecognizeOptionsForWebm : Instantiate RecognizeOptionsForWebm
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForWebm(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/webm"),
-	}
-}
-
-// SetWebm : Allow user to set Webm
-func (options *RecognizeOptions) SetWebm(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/webm")
-	return options
-}
-
-// NewRecognizeOptionsForWebmcodecsopus : Instantiate RecognizeOptionsForWebmcodecsopus
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForWebmcodecsopus(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/webm;codecs=opus"),
-	}
-}
-
-// SetWebmcodecsopus : Allow user to set Webmcodecsopus
-func (options *RecognizeOptions) SetWebmcodecsopus(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/webm;codecs=opus")
-	return options
-}
-
-// NewRecognizeOptionsForWebmcodecsvorbis : Instantiate RecognizeOptionsForWebmcodecsvorbis
-func (speechToText *SpeechToTextV1) NewRecognizeOptionsForWebmcodecsvorbis(audio io.ReadCloser) *RecognizeOptions {
-	return &RecognizeOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr("audio/webm;codecs=vorbis"),
-	}
-}
-
-// SetWebmcodecsvorbis : Allow user to set Webmcodecsvorbis
-func (options *RecognizeOptions) SetWebmcodecsvorbis(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr("audio/webm;codecs=vorbis")
-	return options
-}
-
-// SetAudio : Allow user to set Audio with the specified content type
-func (options *RecognizeOptions) SetAudio(audio io.ReadCloser, contentType string) *RecognizeOptions {
-	options.Audio = &audio
-	options.ContentType = core.StringPtr(contentType)
-	return options
-}
+// Constants associated with the RecognizeOptions.Model property.
+// The identifier of the model that is to be used for the recognition request.
+const (
+	RecognizeOptions_Model_ArARBroadbandModel  = "ar-AR_BroadbandModel"
+	RecognizeOptions_Model_DeDEBroadbandModel  = "de-DE_BroadbandModel"
+	RecognizeOptions_Model_EnGBBroadbandModel  = "en-GB_BroadbandModel"
+	RecognizeOptions_Model_EnGBNarrowbandModel = "en-GB_NarrowbandModel"
+	RecognizeOptions_Model_EnUSBroadbandModel  = "en-US_BroadbandModel"
+	RecognizeOptions_Model_EnUSNarrowbandModel = "en-US_NarrowbandModel"
+	RecognizeOptions_Model_EsESBroadbandModel  = "es-ES_BroadbandModel"
+	RecognizeOptions_Model_EsESNarrowbandModel = "es-ES_NarrowbandModel"
+	RecognizeOptions_Model_FrFRBroadbandModel  = "fr-FR_BroadbandModel"
+	RecognizeOptions_Model_JaJPBroadbandModel  = "ja-JP_BroadbandModel"
+	RecognizeOptions_Model_JaJPNarrowbandModel = "ja-JP_NarrowbandModel"
+	RecognizeOptions_Model_KoKRBroadbandModel  = "ko-KR_BroadbandModel"
+	RecognizeOptions_Model_KoKRNarrowbandModel = "ko-KR_NarrowbandModel"
+	RecognizeOptions_Model_PtBRBroadbandModel  = "pt-BR_BroadbandModel"
+	RecognizeOptions_Model_PtBRNarrowbandModel = "pt-BR_NarrowbandModel"
+	RecognizeOptions_Model_ZhCNBroadbandModel  = "zh-CN_BroadbandModel"
+	RecognizeOptions_Model_ZhCNNarrowbandModel = "zh-CN_NarrowbandModel"
+)
 
 // NewRecognizeOptions : Instantiate RecognizeOptions
-func (speechToText *SpeechToTextV1) NewRecognizeOptions(contentType string) *RecognizeOptions {
+func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser, contentType string) *RecognizeOptions {
 	return &RecognizeOptions{
+		Audio:       &audio,
 		ContentType: core.StringPtr(contentType),
 	}
+}
+
+// SetAudio : Allow user to set Audio
+func (options *RecognizeOptions) SetAudio(audio io.ReadCloser) *RecognizeOptions {
+	options.Audio = &audio
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *RecognizeOptions) SetContentType(contentType string) *RecognizeOptions {
+	options.ContentType = core.StringPtr(contentType)
+	return options
 }
 
 // SetModel : Allow user to set Model
@@ -4675,6 +4538,15 @@ type RegisterStatus struct {
 	// The callback URL that is successfully registered.
 	URL *string `json:"url" validate:"required"`
 }
+
+// Constants associated with the RegisterStatus.Status property.
+// The current status of the job:
+// * `created` if the callback URL was successfully white-listed as a result of the call.
+// * `already created` if the URL was already white-listed.
+const (
+	RegisterStatus_Status_AlreadyCreated = "already created"
+	RegisterStatus_Status_Created        = "created"
+)
 
 // ResetAcousticModelOptions : The resetAcousticModel options.
 type ResetAcousticModelOptions struct {
@@ -4944,6 +4816,17 @@ type TrainLanguageModelOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the TrainLanguageModelOptions.WordTypeToAdd property.
+// The type of words from the custom language model's words resource on which to train the model:
+// * `all` (the default) trains the model on all new words, regardless of whether they were extracted from corpora or
+// were added or modified by the user.
+// * `user` trains the model only on new words that were added or modified by the user; the model is not trained on new
+// words extracted from corpora.
+const (
+	TrainLanguageModelOptions_WordTypeToAdd_All  = "all"
+	TrainLanguageModelOptions_WordTypeToAdd_User = "user"
+)
 
 // NewTrainLanguageModelOptions : Instantiate TrainLanguageModelOptions
 func (speechToText *SpeechToTextV1) NewTrainLanguageModelOptions(customizationID string) *TrainLanguageModelOptions {

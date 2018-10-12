@@ -52,7 +52,9 @@ var _ = Describe("PersonalityInsightsV3", func() {
 
 				// First test with invalid (incomplete) input
 				content := new(personalityinsightsv3.Content)
-				profileOptions := testService.NewProfileOptionsForContent(*content)
+				profileOptions := testService.
+					NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_TextPlain).
+					SetContent(content)
 				returnValue, returnValueErr = testService.Profile(profileOptions)
 				Expect(returnValueErr).ToNot(BeNil())
 				Expect(returnValue).To(BeNil())
@@ -62,7 +64,9 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				theContent := "theContent"
 				contentItem.Content = &theContent
 				content.ContentItems = []personalityinsightsv3.ContentItem{*contentItem}
-				profileOptions = testService.NewProfileOptionsForContent(*content)
+				profileOptions = testService.
+					NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_ApplicationJSON).
+					SetContent(content)
 				returnValue, returnValueErr = testService.Profile(profileOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -109,8 +113,9 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				returnValue, returnValueErr := testService.ProfileAsCsv(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
-				html := "html"
-				profileAsCsvOptions := testService.NewProfileOptionsForHTML(html)
+				profileAsCsvOptions := testService.
+					NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_TextHTML).
+					SetBody("html")
 				returnValue, returnValueErr = testService.ProfileAsCsv(profileAsCsvOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

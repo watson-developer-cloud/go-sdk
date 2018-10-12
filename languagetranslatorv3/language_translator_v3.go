@@ -23,15 +23,15 @@ import (
 	"os"
 )
 
-// LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The service offers multiple IBM
-// provided translation models that you can customize based on your unique terminology and language. Use Language
-// Translator to take news from across the globe and present it in your language, communicate with your customers in
-// their own language, and more.
+// LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The
+// service offers multiple IBM provided translation models that you can customize based on your unique terminology and
+// language. Use Language Translator to take news from across the globe and present it in your language, communicate
+// with your customers in their own language, and more.
 //
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/language-translator.html
 type LanguageTranslatorV3 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // LanguageTranslatorV3Options : Service options
@@ -65,7 +65,7 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (*LanguageTra
 		return nil, serviceErr
 	}
 
-	return &LanguageTranslatorV3{service: service}, nil
+	return &LanguageTranslatorV3{Service: service}, nil
 }
 
 // Translate : Translate
@@ -82,14 +82,14 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(languageTranslator.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range translateOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", languageTranslator.service.Options.Version)
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if translateOptions.Text != nil {
@@ -114,7 +114,7 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 		return nil, err
 	}
 
-	response, err := languageTranslator.service.Request(request, new(TranslationResult))
+	response, err := languageTranslator.Service.Request(request, new(TranslationResult))
 	return response, err
 }
 
@@ -141,14 +141,14 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(languageTranslator.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range identifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "text/plain")
-	builder.AddQuery("version", languageTranslator.service.Options.Version)
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	_, err := builder.SetBodyContent("text/plain", nil, nil, identifyOptions.Text)
 	if err != nil {
@@ -160,7 +160,7 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 		return nil, err
 	}
 
-	response, err := languageTranslator.service.Request(request, new(IdentifiedLanguages))
+	response, err := languageTranslator.Service.Request(request, new(IdentifiedLanguages))
 	return response, err
 }
 
@@ -185,20 +185,20 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listId
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(languageTranslator.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listIdentifiableLanguagesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.service.Options.Version)
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := languageTranslator.service.Request(request, new(IdentifiableLanguages))
+	response, err := languageTranslator.Service.Request(request, new(IdentifiableLanguages))
 	return response, err
 }
 
@@ -239,7 +239,7 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(languageTranslator.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -250,7 +250,7 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 	if createModelOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*createModelOptions.Name))
 	}
-	builder.AddQuery("version", languageTranslator.service.Options.Version)
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	if createModelOptions.ForcedGlossary != nil {
 		builder.AddFormData("forced_glossary", core.StringNilMapper(createModelOptions.ForcedGlossaryFilename),
@@ -266,7 +266,7 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 		return nil, err
 	}
 
-	response, err := languageTranslator.service.Request(request, new(TranslationModel))
+	response, err := languageTranslator.Service.Request(request, new(TranslationModel))
 	return response, err
 }
 
@@ -293,20 +293,20 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 	pathParameters := []string{*deleteModelOptions.ModelID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(languageTranslator.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.service.Options.Version)
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := languageTranslator.service.Request(request, new(DeleteModelResult))
+	response, err := languageTranslator.Service.Request(request, new(DeleteModelResult))
 	return response, err
 }
 
@@ -334,20 +334,20 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetMod
 	pathParameters := []string{*getModelOptions.ModelID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(languageTranslator.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.service.Options.Version)
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := languageTranslator.service.Request(request, new(TranslationModel))
+	response, err := languageTranslator.Service.Request(request, new(TranslationModel))
 	return response, err
 }
 
@@ -371,7 +371,7 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(languageTranslator.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -387,14 +387,14 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 	if listModelsOptions.DefaultModels != nil {
 		builder.AddQuery("default", fmt.Sprint(*listModelsOptions.DefaultModels))
 	}
-	builder.AddQuery("version", languageTranslator.service.Options.Version)
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := languageTranslator.service.Request(request, new(TranslationModels))
+	response, err := languageTranslator.Service.Request(request, new(TranslationModels))
 	return response, err
 }
 
@@ -785,6 +785,21 @@ type TranslationModel struct {
 	// Availability of a model.
 	Status *string `json:"status,omitempty"`
 }
+
+// Constants associated with the TranslationModel.Status property.
+// Availability of a model.
+const (
+	TranslationModel_Status_Available = "available"
+	TranslationModel_Status_Deleted = "deleted"
+	TranslationModel_Status_Dispatching = "dispatching"
+	TranslationModel_Status_Error = "error"
+	TranslationModel_Status_Publishing = "publishing"
+	TranslationModel_Status_Queued = "queued"
+	TranslationModel_Status_Trained = "trained"
+	TranslationModel_Status_Training = "training"
+	TranslationModel_Status_Uploaded = "uploaded"
+	TranslationModel_Status_Uploading = "uploading"
+)
 
 // TranslationModels : The response type for listing existing translation models.
 type TranslationModels struct {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/ibm-watson/go-sdk/core"
 	"os"
 
 	discovery "github.com/ibm-watson/go-sdk/discoveryv1"
@@ -47,14 +48,20 @@ func main() {
 
 	/* ADD DOCUMENT */
 
-	file, err := os.Open("<PATH TO YOUR FILE>")
-	if err != nil {
-		panic(err)
+	environmentID := "<YOUR ENVIRONEMNT ID>"
+	collectionID := "<YOUR COLLECTION ID>"
+
+	pwd, _ := os.Getwd()
+	file, fileErr := os.Open(pwd + "/../../resources/example.html")
+
+	if fileErr != nil {
+		panic(fileErr)
 	}
 
-	addDocumentOptions := service.NewAddDocumentOptions("<ENVIRONMENT ID>",
-		"<COLLECTION ID>").
-		SetFile(file)
+	addDocumentOptions := service.NewAddDocumentOptions(environmentID,
+		collectionID).
+		SetFile(file).
+		SetMetadata("{\"Creator\": \"Johnny Appleseed\", \"Subject\": \"Apples\" }")
 
 	response, responseErr = service.AddDocument(addDocumentOptions)
 
@@ -64,13 +71,13 @@ func main() {
 
 	defer file.Close()
 
-	fmt.Println(response)
+	core.PrettyPrint(response.GetResult(), "Add document: ")
 
 	/* QUERY */
 
-	queryOptions := service.NewQueryOptions("<ENVIRONMENT ID>", "<COLLECTION ID>").
+	queryOptions := service.NewQueryOptions(environmentID, collectionID).
 		SetFilter("extracted_metadata.sha1::9181d244*").
-		SetReturnFields([]string{"extracted_metadata.sha1"})
+		SetReturnFields("extracted_metadata.sha1")
 
 	response, responseErr = service.Query(queryOptions)
 	if responseErr != nil {

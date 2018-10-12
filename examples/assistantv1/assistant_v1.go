@@ -89,7 +89,7 @@ func main() {
 
 	// 	/* MESSAGE */
 
-	inputData := assistant.InputData{
+	inputData := &assistant.InputData{
 		Text: core.StringPtr("Hello, how are you?"),
 	}
 
@@ -108,7 +108,7 @@ func main() {
 
 	// To continue with the same assistant, pass in the context from the previous call
 	conversationID := service.GetMessageResult(response).Context.ConversationID
-	context := assistant.Context{
+	context := &assistant.Context{
 		ConversationID: conversationID,
 	}
 

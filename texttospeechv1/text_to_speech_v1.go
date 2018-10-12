@@ -24,53 +24,25 @@ import (
 )
 
 // TextToSpeechV1 : ### Service Overview
-// The IBM&reg; Text to Speech service provides an API that uses IBM's speech-synthesis capabilities to synthesize text
+// The IBM&reg; Text to Speech service provides APIs that use IBM's speech-synthesis capabilities to synthesize text
 // into natural-sounding speech in a variety of languages, dialects, and voices. The service supports at least one male
-// or female voice, sometimes both, for each language. The audio is streamed back to the client with minimal delay. For
-// more information about the service, see the [IBM&reg; Cloud
-// documentation](https://console.bluemix.net/docs/services/text-to-speech/index.html).
+// or female voice, sometimes both, for each language. The audio is streamed back to the client with minimal delay.
 //
-// ### API usage guidelines
-// * **Audio formats:** The service can produce audio in many formats (MIME types). See [Specifying an audio
-// format](https://console.bluemix.net/docs/services/text-to-speech/http.html#format).
-// * **SSML:** Many methods refer to the Speech Synthesis Markup Language (SSML). SSML is an XML-based markup language
-// that provides text annotation for speech-synthesis applications. See [Using
-// SSML](https://console.bluemix.net/docs/services/text-to-speech/SSML.html) and [Using IBM
-// SPR](https://console.bluemix.net/docs/services/text-to-speech/SPRs.html).
-// * **Word translations:** Many customization methods accept sounds-like or phonetic translations for words. Phonetic
-// translations are based on the SSML phoneme format for representing a word. You can specify them in standard
-// International Phonetic Alphabet (IPA) representation
+// For speech synthesis, the service supports a synchronous HTTP Representational State Transfer (REST) interface. It
+// also supports a WebSocket interface that provides both plain text and SSML input, including the SSML &lt;mark&gt;
+// element and word timings. SSML is an XML-based markup language that provides text annotation for speech-synthesis
+// applications.
 //
-//   &lt;phoneme alphabet="ipa" ph="t&#601;m&#712;&#593;to"&gt;&lt;/phoneme&gt;
-//
-//   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
-//
-//   &lt;phoneme alphabet="ibm" ph="1gAstroEntxrYFXs"&gt;&lt;/phoneme&gt;
-//
-//   See [Understanding customization](https://console.bluemix.net/docs/services/text-to-speech/custom-intro.html).
-// * **WebSocket interface:** The service also offers a WebSocket interface for speech synthesis. The WebSocket
-// interface supports both plain text and SSML input, including the SSML &lt;mark&gt; element and word timings. See [The
-// WebSocket interface](https://console.bluemix.net/docs/services/text-to-speech/websockets.html).
-// * **Customization IDs:** Many methods accept a customization ID, which is a Globally Unique Identifier (GUID).
-// Customization IDs are hexadecimal strings that have the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`.
-// * **`X-Watson-Learning-Opt-Out`:** By default, all Watson services log requests and their results. Logging is done
-// only to improve the services for future users. The logged data is not shared or made public. To prevent IBM from
-// accessing your data for general service improvements, set the `X-Watson-Learning-Opt-Out` request header to `true`
-// for all requests. You must set the header on each request that you do not want IBM to access for general service
-// improvements.
-//
-//   Methods of the customization interface do not log words and translations that you use to build custom voice models.
-// Your training data is never used to improve the service's base models. However, the service does log such data when a
-// custom model is used with a synthesize request. You must set the `X-Watson-Learning-Opt-Out` request header to `true`
-// to prevent IBM from accessing the data to improve the service.
-// * **`X-Watson-Metadata`:** This header allows you to associate a customer ID with data that is passed with a request.
-// If necessary, you can use the **Delete labeled data** method to delete the data for a customer ID. See [Information
-// security](https://console.bluemix.net/docs/services/text-to-speech/information-security.html).
+// The service also offers a customization interface. You can use the interface to define sounds-like or phonetic
+// translations for words. A sounds-like translation consists of one or more words that, when combined, sound like the
+// word. A phonetic translation is based on the SSML phoneme format for representing a word. You can specify a phonetic
+// translation in standard International Phonetic Alphabet (IPA) representation or in the proprietary IBM Symbolic
+// Phonetic Representation (SPR).
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/text-to-speech.html
 type TextToSpeechV1 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // TextToSpeechV1Options : Service options
@@ -102,13 +74,15 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) 
 		return nil, serviceErr
 	}
 
-	return &TextToSpeechV1{service: service}, nil
+	return &TextToSpeechV1{Service: service}, nil
 }
 
 // GetVoice : Get a voice
 // Gets information about the specified voice. The information includes the name, language, gender, and other details
 // about the voice. Specify a customization ID to obtain information for that custom voice model of the specified voice.
 // To list information about all available voices, use the **List voices** method.
+//
+// **See also:** [Specifying a voice](https://console.bluemix.net/docs/services/text-to-speech/http.html#voices).
 func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceOptions, "getVoiceOptions cannot be nil"); err != nil {
 		return nil, err
@@ -121,7 +95,7 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 	pathParameters := []string{*getVoiceOptions.Voice}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getVoiceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -137,7 +111,7 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(Voice))
+	response, err := textToSpeech.Service.Request(request, new(Voice))
 	return response, err
 }
 
@@ -153,6 +127,8 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedRes
 // ListVoices : List voices
 // Lists all voices available for use with the service. The information includes the name, language, gender, and other
 // details about the voice. To see information about a specific voice, use the **Get a voice** method.
+//
+// **See also:** [Specifying a voice](https://console.bluemix.net/docs/services/text-to-speech/http.html#voices).
 func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoicesOptions, "listVoicesOptions"); err != nil {
 		return nil, err
@@ -162,7 +138,7 @@ func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOpti
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listVoicesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -174,7 +150,7 @@ func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOpti
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(Voices))
+	response, err := textToSpeech.Service.Request(request, new(Voices))
 	return response, err
 }
 
@@ -190,14 +166,15 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 // Synthesize : Synthesize audio
 // Synthesizes text to spoken audio, returning the synthesized audio stream as an array of bytes. You can pass a maximum
 // of 5 KB of text.  Use the `Accept` header or the `accept` query parameter to specify the requested format (MIME type)
-// of the response audio. By default, the service uses `audio/ogg;codecs=opus`. For detailed information about the
-// supported audio formats and sampling rates, see [Specifying an audio
-// format](https://console.bluemix.net/docs/services/text-to-speech/http.html#format).
+// of the response audio. By default, the service uses `audio/ogg;codecs=opus`.
 //
 // If a request includes invalid query parameters, the service returns a `Warnings` response header that provides
 // messages about the invalid parameters. The warning includes a descriptive message and a list of invalid argument
 // strings. For example, a message such as `\"Unknown arguments:\"` or `\"Unknown url query arguments:\"` followed by a
 // list of the form `\"invalid_arg_1, invalid_arg_2.\"` The request succeeds despite the warnings.
+//
+// **See also:** [Synthesizing text to
+// audio](https://console.bluemix.net/docs/services/text-to-speech/http.html#synthesize).
 func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(synthesizeOptions, "synthesizeOptions cannot be nil"); err != nil {
 		return nil, err
@@ -210,7 +187,7 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range synthesizeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -242,7 +219,7 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(io.ReadCloser))
+	response, err := textToSpeech.Service.Request(request, new(io.ReadCloser))
 	return response, err
 }
 
@@ -261,6 +238,9 @@ func (textToSpeech *TextToSpeechV1) GetSynthesizeResult(response *core.DetailedR
 // or for a specific custom voice model to see the translation for that voice model.
 //
 // **Note:** This method is currently a beta release.
+//
+// **See also:** [Querying a word from a
+// language](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordsQueryLanguage).
 func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getPronunciationOptions, "getPronunciationOptions cannot be nil"); err != nil {
 		return nil, err
@@ -273,7 +253,7 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getPronunciationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -296,7 +276,7 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(Pronunciation))
+	response, err := textToSpeech.Service.Request(request, new(Pronunciation))
 	return response, err
 }
 
@@ -315,6 +295,9 @@ func (textToSpeech *TextToSpeechV1) GetGetPronunciationResult(response *core.Det
 // are used to create it.
 //
 // **Note:** This method is currently a beta release.
+//
+// **See also:** [Creating a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsCreate).
 func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createVoiceModelOptions, "createVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -327,7 +310,7 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *Cr
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -355,7 +338,7 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *Cr
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(VoiceModel))
+	response, err := textToSpeech.Service.Request(request, new(VoiceModel))
 	return response, err
 }
 
@@ -373,6 +356,9 @@ func (textToSpeech *TextToSpeechV1) GetCreateVoiceModelResult(response *core.Det
 // to delete it.
 //
 // **Note:** This method is currently a beta release.
+//
+// **See also:** [Deleting a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsDelete).
 func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -385,7 +371,7 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 	pathParameters := []string{*deleteVoiceModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -396,7 +382,7 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, nil)
+	response, err := textToSpeech.Service.Request(request, nil)
 	return response, err
 }
 
@@ -406,6 +392,9 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 // metadata for a voice model, use the **List custom models** method.
 //
 // **Note:** This method is currently a beta release.
+//
+// **See also:** [Querying a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsQuery).
 func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -418,7 +407,7 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoice
 	pathParameters := []string{*getVoiceModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -430,7 +419,7 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoice
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(VoiceModel))
+	response, err := textToSpeech.Service.Request(request, new(VoiceModel))
 	return response, err
 }
 
@@ -450,6 +439,9 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.Detail
 // instance of the service that owns a model to list information about it.
 //
 // **Note:** This method is currently a beta release.
+//
+// **See also:** [Querying all custom
+// models](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsQueryAll).
 func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoiceModelsOptions, "listVoiceModelsOptions"); err != nil {
 		return nil, err
@@ -459,7 +451,7 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *List
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listVoiceModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -475,7 +467,7 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *List
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(VoiceModels))
+	response, err := textToSpeech.Service.Request(request, new(VoiceModels))
 	return response, err
 }
 
@@ -494,7 +486,24 @@ func (textToSpeech *TextToSpeechV1) GetListVoiceModelsResult(response *core.Deta
 // word that already exists in a custom model overwrites the word's existing translation. A custom model can contain no
 // more than 20,000 entries. You must use credentials for the instance of the service that owns a model to update it.
 //
+// You can define sounds-like or phonetic translations for words. A sounds-like translation consists of one or more
+// words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme format for
+// representing a word. You can specify them in standard International Phonetic Alphabet (IPA) representation
+//
+//   <code>&lt;phoneme alphabet=\"ipa\" ph=\"t&#601;m&#712;&#593;to\"&gt;&lt;/phoneme&gt;</code>
+//
+//   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
+//
+//   <code>&lt;phoneme alphabet=\"ibm\" ph=\"1gAstroEntxrYFXs\"&gt;&lt;/phoneme&gt;</code>
+//
 // **Note:** This method is currently a beta release.
+//
+// **See also:**
+// * [Updating a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsUpdate)
+// * [Adding words to a Japanese custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Understanding customization](https://console.bluemix.net/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateVoiceModelOptions, "updateVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -507,7 +516,7 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 	pathParameters := []string{*updateVoiceModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -535,7 +544,7 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, nil)
+	response, err := textToSpeech.Service.Request(request, nil)
 	return response, err
 }
 
@@ -544,7 +553,24 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 // already exists in a custom model overwrites the word's existing translation. A custom model can contain no more than
 // 20,000 entries. You must use credentials for the instance of the service that owns a model to add a word to it.
 //
+// You can define sounds-like or phonetic translations for words. A sounds-like translation consists of one or more
+// words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme format for
+// representing a word. You can specify them in standard International Phonetic Alphabet (IPA) representation
+//
+//   <code>&lt;phoneme alphabet=\"ipa\" ph=\"t&#601;m&#712;&#593;to\"&gt;&lt;/phoneme&gt;</code>
+//
+//   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
+//
+//   <code>&lt;phoneme alphabet=\"ibm\" ph=\"1gAstroEntxrYFXs\"&gt;&lt;/phoneme&gt;</code>
+//
 // **Note:** This method is currently a beta release.
+//
+// **See also:**
+// * [Adding a single word to a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordAdd)
+// * [Adding words to a Japanese custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Understanding customization](https://console.bluemix.net/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -557,7 +583,7 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 	pathParameters := []string{*addWordOptions.CustomizationID, *addWordOptions.Word}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range addWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -581,7 +607,7 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, nil)
+	response, err := textToSpeech.Service.Request(request, nil)
 	return response, err
 }
 
@@ -591,7 +617,24 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 // more than 20,000 entries. You must use credentials for the instance of the service that owns a model to add words to
 // it.
 //
+// You can define sounds-like or phonetic translations for words. A sounds-like translation consists of one or more
+// words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme format for
+// representing a word. You can specify them in standard International Phonetic Alphabet (IPA) representation
+//
+//   <code>&lt;phoneme alphabet=\"ipa\" ph=\"t&#601;m&#712;&#593;to\"&gt;&lt;/phoneme&gt;</code>
+//
+//   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
+//
+//   <code>&lt;phoneme alphabet=\"ibm\" ph=\"1gAstroEntxrYFXs\"&gt;&lt;/phoneme&gt;</code>
+//
 // **Note:** This method is currently a beta release.
+//
+// **See also:**
+// * [Adding multiple words to a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordsAdd)
+// * [Adding words to a Japanese custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Understanding customization](https://console.bluemix.net/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -604,7 +647,7 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 	pathParameters := []string{*addWordsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range addWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -626,7 +669,7 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, nil)
+	response, err := textToSpeech.Service.Request(request, nil)
 	return response, err
 }
 
@@ -635,6 +678,9 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 // that owns a model to delete its words.
 //
 // **Note:** This method is currently a beta release.
+//
+// **See also:** [Deleting a word from a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordDelete).
 func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -647,7 +693,7 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 	pathParameters := []string{*deleteWordOptions.CustomizationID, *deleteWordOptions.Word}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -658,7 +704,7 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, nil)
+	response, err := textToSpeech.Service.Request(request, nil)
 	return response, err
 }
 
@@ -667,6 +713,9 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 // defined in the model. You must use credentials for the instance of the service that owns a model to list its words.
 //
 // **Note:** This method is currently a beta release.
+//
+// **See also:** [Querying a single word from a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordQueryModel).
 func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -679,7 +728,7 @@ func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*co
 	pathParameters := []string{*getWordOptions.CustomizationID, *getWordOptions.Word}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -691,7 +740,7 @@ func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*co
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(Translation))
+	response, err := textToSpeech.Service.Request(request, new(Translation))
 	return response, err
 }
 
@@ -710,6 +759,9 @@ func (textToSpeech *TextToSpeechV1) GetGetWordResult(response *core.DetailedResp
 // its words.
 //
 // **Note:** This method is currently a beta release.
+//
+// **See also:** [Querying all words from a custom
+// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordsQueryModel).
 func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -722,7 +774,7 @@ func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions
 	pathParameters := []string{*listWordsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -734,7 +786,7 @@ func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, new(Words))
+	response, err := textToSpeech.Service.Request(request, new(Words))
 	return response, err
 }
 
@@ -754,7 +806,8 @@ func (textToSpeech *TextToSpeechV1) GetListWordsResult(response *core.DetailedRe
 // associate the customer ID with the data.
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
-// For more information about customer IDs and about using this method, see [Information
+//
+// **See also:** [Information
 // security](https://console.bluemix.net/docs/services/text-to-speech/information-security.html).
 func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
@@ -768,7 +821,7 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(textToSpeech.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -781,7 +834,7 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 		return nil, err
 	}
 
-	response, err := textToSpeech.service.Request(request, nil)
+	response, err := textToSpeech.Service.Request(request, nil)
 	return response, err
 }
 
@@ -810,11 +863,36 @@ type AddWordOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the AddWordOptions.PartOfSpeech property.
+// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
+// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
+// create multiple entries with different parts of speech for the same word. For more information, see [Working with
+// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+const (
+	AddWordOptions_PartOfSpeech_Dosi = "Dosi"
+	AddWordOptions_PartOfSpeech_Fuku = "Fuku"
+	AddWordOptions_PartOfSpeech_Gobi = "Gobi"
+	AddWordOptions_PartOfSpeech_Hoka = "Hoka"
+	AddWordOptions_PartOfSpeech_Jodo = "Jodo"
+	AddWordOptions_PartOfSpeech_Josi = "Josi"
+	AddWordOptions_PartOfSpeech_Kato = "Kato"
+	AddWordOptions_PartOfSpeech_Kedo = "Kedo"
+	AddWordOptions_PartOfSpeech_Keyo = "Keyo"
+	AddWordOptions_PartOfSpeech_Kigo = "Kigo"
+	AddWordOptions_PartOfSpeech_Koyu = "Koyu"
+	AddWordOptions_PartOfSpeech_Mesi = "Mesi"
+	AddWordOptions_PartOfSpeech_Reta = "Reta"
+	AddWordOptions_PartOfSpeech_Stbi = "Stbi"
+	AddWordOptions_PartOfSpeech_Stto = "Stto"
+	AddWordOptions_PartOfSpeech_Stzo = "Stzo"
+	AddWordOptions_PartOfSpeech_Suji = "Suji"
+)
+
 // NewAddWordOptions : Instantiate AddWordOptions
 func (textToSpeech *TextToSpeechV1) NewAddWordOptions(customizationID string, word string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word:            core.StringPtr(word),
+		Word: core.StringPtr(word),
 	}
 }
 
@@ -907,6 +985,21 @@ type CreateVoiceModelOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the CreateVoiceModelOptions.Language property.
+// The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
+const (
+	CreateVoiceModelOptions_Language_DeDE = "de-DE"
+	CreateVoiceModelOptions_Language_EnGB = "en-GB"
+	CreateVoiceModelOptions_Language_EnUS = "en-US"
+	CreateVoiceModelOptions_Language_EsES = "es-ES"
+	CreateVoiceModelOptions_Language_EsLA = "es-LA"
+	CreateVoiceModelOptions_Language_EsUS = "es-US"
+	CreateVoiceModelOptions_Language_FrFR = "fr-FR"
+	CreateVoiceModelOptions_Language_ItIT = "it-IT"
+	CreateVoiceModelOptions_Language_JaJP = "ja-JP"
+	CreateVoiceModelOptions_Language_PtBR = "pt-BR"
+)
 
 // NewCreateVoiceModelOptions : Instantiate CreateVoiceModelOptions
 func (textToSpeech *TextToSpeechV1) NewCreateVoiceModelOptions(name string) *CreateVoiceModelOptions {
@@ -1016,7 +1109,7 @@ type DeleteWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewDeleteWordOptions(customizationID string, word string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word:            core.StringPtr(word),
+		Word: core.StringPtr(word),
 	}
 }
 
@@ -1062,6 +1155,34 @@ type GetPronunciationOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the GetPronunciationOptions.Voice property.
+// A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
+// (for example, `en-US`) return the same translation.
+const (
+	GetPronunciationOptions_Voice_DeDEBirgitVoice = "de-DE_BirgitVoice"
+	GetPronunciationOptions_Voice_DeDEDieterVoice = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_EnGBKateVoice = "en-GB_KateVoice"
+	GetPronunciationOptions_Voice_EnUSAllisonVoice = "en-US_AllisonVoice"
+	GetPronunciationOptions_Voice_EnUSLisaVoice = "en-US_LisaVoice"
+	GetPronunciationOptions_Voice_EnUSMichaelVoice = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EsESEnriqueVoice = "es-ES_EnriqueVoice"
+	GetPronunciationOptions_Voice_EsESLauraVoice = "es-ES_LauraVoice"
+	GetPronunciationOptions_Voice_EsLASofiaVoice = "es-LA_SofiaVoice"
+	GetPronunciationOptions_Voice_EsUSSofiaVoice = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFRReneeVoice = "fr-FR_ReneeVoice"
+	GetPronunciationOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
+	GetPronunciationOptions_Voice_JaJPEmiVoice = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_PtBRIsabelaVoice = "pt-BR_IsabelaVoice"
+)
+
+// Constants associated with the GetPronunciationOptions.Format property.
+// The phoneme format in which to return the pronunciation. Omit the parameter to obtain the pronunciation in the
+// default format.
+const (
+	GetPronunciationOptions_Format_Ibm = "ibm"
+	GetPronunciationOptions_Format_Ipa = "ipa"
+)
 
 // NewGetPronunciationOptions : Instantiate GetPronunciationOptions
 func (textToSpeech *TextToSpeechV1) NewGetPronunciationOptions(text string) *GetPronunciationOptions {
@@ -1145,6 +1266,25 @@ type GetVoiceOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the GetVoiceOptions.Voice property.
+// The voice for which information is to be returned.
+const (
+	GetVoiceOptions_Voice_DeDEBirgitVoice = "de-DE_BirgitVoice"
+	GetVoiceOptions_Voice_DeDEDieterVoice = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_EnGBKateVoice = "en-GB_KateVoice"
+	GetVoiceOptions_Voice_EnUSAllisonVoice = "en-US_AllisonVoice"
+	GetVoiceOptions_Voice_EnUSLisaVoice = "en-US_LisaVoice"
+	GetVoiceOptions_Voice_EnUSMichaelVoice = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EsESEnriqueVoice = "es-ES_EnriqueVoice"
+	GetVoiceOptions_Voice_EsESLauraVoice = "es-ES_LauraVoice"
+	GetVoiceOptions_Voice_EsLASofiaVoice = "es-LA_SofiaVoice"
+	GetVoiceOptions_Voice_EsUSSofiaVoice = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFRReneeVoice = "fr-FR_ReneeVoice"
+	GetVoiceOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
+	GetVoiceOptions_Voice_JaJPEmiVoice = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_PtBRIsabelaVoice = "pt-BR_IsabelaVoice"
+)
+
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
 func (textToSpeech *TextToSpeechV1) NewGetVoiceOptions(voice string) *GetVoiceOptions {
 	return &GetVoiceOptions{
@@ -1188,7 +1328,7 @@ type GetWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewGetWordOptions(customizationID string, word string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word:            core.StringPtr(word),
+		Word: core.StringPtr(word),
 	}
 }
 
@@ -1220,6 +1360,22 @@ type ListVoiceModelsOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListVoiceModelsOptions.Language property.
+// The language for which custom voice models that are owned by the requesting service credentials are to be returned.
+// Omit the parameter to see all custom voice models that are owned by the requester.
+const (
+	ListVoiceModelsOptions_Language_DeDE = "de-DE"
+	ListVoiceModelsOptions_Language_EnGB = "en-GB"
+	ListVoiceModelsOptions_Language_EnUS = "en-US"
+	ListVoiceModelsOptions_Language_EsES = "es-ES"
+	ListVoiceModelsOptions_Language_EsLA = "es-LA"
+	ListVoiceModelsOptions_Language_EsUS = "es-US"
+	ListVoiceModelsOptions_Language_FrFR = "fr-FR"
+	ListVoiceModelsOptions_Language_ItIT = "it-IT"
+	ListVoiceModelsOptions_Language_JaJP = "ja-JP"
+	ListVoiceModelsOptions_Language_PtBR = "pt-BR"
+)
 
 // NewListVoiceModelsOptions : Instantiate ListVoiceModelsOptions
 func (textToSpeech *TextToSpeechV1) NewListVoiceModelsOptions() *ListVoiceModelsOptions {
@@ -1331,6 +1487,47 @@ type SynthesizeOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the SynthesizeOptions.Accept property.
+// The requested audio format (MIME type) of the audio. You can use the `Accept` header or the `accept` query parameter
+// to specify the audio format. (For the `audio/l16` format, you can optionally specify `endianness=big-endian` or
+// `endianness=little-endian`; the default is little endian.) For detailed information about the supported audio formats
+// and sampling rates, see [Specifying an audio
+// format](https://console.bluemix.net/docs/services/text-to-speech/http.html#format).
+const (
+	SynthesizeOptions_Accept_AudioBasic = "audio/basic"
+	SynthesizeOptions_Accept_AudioFlac = "audio/flac"
+	SynthesizeOptions_Accept_AudioL16RateNnnn = "audio/l16;rate=nnnn"
+	SynthesizeOptions_Accept_AudioMp3 = "audio/mp3"
+	SynthesizeOptions_Accept_AudioMpeg = "audio/mpeg"
+	SynthesizeOptions_Accept_AudioMulawRateNnnn = "audio/mulaw;rate=nnnn"
+	SynthesizeOptions_Accept_AudioOgg = "audio/ogg"
+	SynthesizeOptions_Accept_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
+	SynthesizeOptions_Accept_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
+	SynthesizeOptions_Accept_AudioWav = "audio/wav"
+	SynthesizeOptions_Accept_AudioWebm = "audio/webm"
+	SynthesizeOptions_Accept_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
+	SynthesizeOptions_Accept_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
+
+// Constants associated with the SynthesizeOptions.Voice property.
+// The voice to use for synthesis.
+const (
+	SynthesizeOptions_Voice_DeDEBirgitVoice = "de-DE_BirgitVoice"
+	SynthesizeOptions_Voice_DeDEDieterVoice = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_EnGBKateVoice = "en-GB_KateVoice"
+	SynthesizeOptions_Voice_EnUSAllisonVoice = "en-US_AllisonVoice"
+	SynthesizeOptions_Voice_EnUSLisaVoice = "en-US_LisaVoice"
+	SynthesizeOptions_Voice_EnUSMichaelVoice = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EsESEnriqueVoice = "es-ES_EnriqueVoice"
+	SynthesizeOptions_Voice_EsESLauraVoice = "es-ES_LauraVoice"
+	SynthesizeOptions_Voice_EsLASofiaVoice = "es-LA_SofiaVoice"
+	SynthesizeOptions_Voice_EsUSSofiaVoice = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFRReneeVoice = "fr-FR_ReneeVoice"
+	SynthesizeOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
+	SynthesizeOptions_Voice_JaJPEmiVoice = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_PtBRIsabelaVoice = "pt-BR_IsabelaVoice"
+)
+
 // NewSynthesizeOptions : Instantiate SynthesizeOptions
 func (textToSpeech *TextToSpeechV1) NewSynthesizeOptions(text string) *SynthesizeOptions {
 	return &SynthesizeOptions{
@@ -1382,6 +1579,31 @@ type Translation struct {
 	// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 }
+
+// Constants associated with the Translation.PartOfSpeech property.
+// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
+// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
+// create multiple entries with different parts of speech for the same word. For more information, see [Working with
+// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+const (
+	Translation_PartOfSpeech_Dosi = "Dosi"
+	Translation_PartOfSpeech_Fuku = "Fuku"
+	Translation_PartOfSpeech_Gobi = "Gobi"
+	Translation_PartOfSpeech_Hoka = "Hoka"
+	Translation_PartOfSpeech_Jodo = "Jodo"
+	Translation_PartOfSpeech_Josi = "Josi"
+	Translation_PartOfSpeech_Kato = "Kato"
+	Translation_PartOfSpeech_Kedo = "Kedo"
+	Translation_PartOfSpeech_Keyo = "Keyo"
+	Translation_PartOfSpeech_Kigo = "Kigo"
+	Translation_PartOfSpeech_Koyu = "Koyu"
+	Translation_PartOfSpeech_Mesi = "Mesi"
+	Translation_PartOfSpeech_Reta = "Reta"
+	Translation_PartOfSpeech_Stbi = "Stbi"
+	Translation_PartOfSpeech_Stto = "Stto"
+	Translation_PartOfSpeech_Stzo = "Stzo"
+	Translation_PartOfSpeech_Suji = "Suji"
+)
 
 // UpdateVoiceModelOptions : The updateVoiceModel options.
 type UpdateVoiceModelOptions struct {
@@ -1539,6 +1761,31 @@ type Word struct {
 	// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 }
+
+// Constants associated with the Word.PartOfSpeech property.
+// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
+// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
+// create multiple entries with different parts of speech for the same word. For more information, see [Working with
+// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+const (
+	Word_PartOfSpeech_Dosi = "Dosi"
+	Word_PartOfSpeech_Fuku = "Fuku"
+	Word_PartOfSpeech_Gobi = "Gobi"
+	Word_PartOfSpeech_Hoka = "Hoka"
+	Word_PartOfSpeech_Jodo = "Jodo"
+	Word_PartOfSpeech_Josi = "Josi"
+	Word_PartOfSpeech_Kato = "Kato"
+	Word_PartOfSpeech_Kedo = "Kedo"
+	Word_PartOfSpeech_Keyo = "Keyo"
+	Word_PartOfSpeech_Kigo = "Kigo"
+	Word_PartOfSpeech_Koyu = "Koyu"
+	Word_PartOfSpeech_Mesi = "Mesi"
+	Word_PartOfSpeech_Reta = "Reta"
+	Word_PartOfSpeech_Stbi = "Stbi"
+	Word_PartOfSpeech_Stto = "Stto"
+	Word_PartOfSpeech_Stzo = "Stzo"
+	Word_PartOfSpeech_Suji = "Suji"
+)
 
 // Words : Words struct
 type Words struct {

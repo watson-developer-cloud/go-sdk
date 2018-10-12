@@ -25,7 +25,7 @@ func main() {
 
 	// Open file with image to classify
 	pwd, _ := os.Getwd()
-	imageFile, imageFileErr := os.Open(pwd + "/../resources/kitty.jpg")
+	imageFile, imageFileErr := os.Open(pwd + "/../../resources/kitty.jpg")
 
 	// Check successful file read
 	if imageFileErr != nil {
@@ -57,17 +57,19 @@ func main() {
 
 	/* CREATE CLASSIFIER */
 
-	carsFile, carsFileErr := os.Open(pwd + "/../resources/cars.zip")
+	carsFile, carsFileErr := os.Open(pwd + "/../../resources/cars.zip")
 	if carsFileErr != nil {
 		panic(carsFileErr)
 	}
 
-	trucksFile, trucksFileErr := os.Open(pwd + "/../resources/trucks.zip")
+	trucksFile, trucksFileErr := os.Open(pwd + "/../../resources/trucks.zip")
 	if trucksFileErr != nil {
 		panic(trucksFileErr)
 	}
 
-	createClassifierOptions := service.NewCreateClassifierOptions("Cars vs Trucks", "cars", carsFile)
+	createClassifierOptions := service.
+		NewCreateClassifierOptions("Cars vs Trucks").
+		AddClassnamePositiveExamples("cars", carsFile)
 	createClassifierOptions.NegativeExamples = trucksFile
 
 	response, responseErr = service.CreateClassifier(createClassifierOptions)
@@ -81,7 +83,7 @@ func main() {
 	}
 
 	// Test classifier
-	imageFile, imageFileErr = os.Open(pwd + "/../resources/car.jpg")
+	imageFile, imageFileErr = os.Open(pwd + "/../../resources/car.jpg")
 	if imageFileErr != nil {
 		panic(imageFileErr)
 	}
@@ -101,7 +103,7 @@ func main() {
 
 	// /* DETECT FACES */
 
-	imageFile, imageFileErr = os.Open(pwd + "/../resources/face.jpg")
+	imageFile, imageFileErr = os.Open(pwd + "/../../resources/face.jpg")
 	if imageFileErr != nil {
 		panic(imageFileErr)
 	}

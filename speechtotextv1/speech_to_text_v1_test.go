@@ -9,8 +9,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ibm-watson/go-sdk/core"
-
 	"github.com/cloudfoundry-community/go-cfenv"
 	"github.com/ibm-watson/go-sdk/speechtotextv1"
 	. "github.com/onsi/ginkgo"
@@ -179,7 +177,8 @@ var _ = Describe("SpeechToTextV1", func() {
 				if err != nil {
 					panic(err)
 				}
-				recognizeOptions := testService.NewRecognizeOptionsForWav(file)
+				recognizeOptions := testService.
+					NewRecognizeOptions(file, speechtotextv1.RecognizeOptions_ContentType_AudioWav)
 				returnValue, returnValueErr = testService.Recognize(recognizeOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -309,7 +308,8 @@ var _ = Describe("SpeechToTextV1", func() {
 				if err != nil {
 					panic(err)
 				}
-				createJobOptions := testService.NewCreateJobOptionsForWav(file)
+				createJobOptions := testService.
+					NewCreateJobOptions(file, speechtotextv1.CreateJobOptions_ContentType_AudioWav)
 				returnValue, returnValueErr = testService.CreateJob(createJobOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -1433,9 +1433,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				if err != nil {
 					panic(err)
 				}
-				addAudioOptions := testService.NewAddAudioOptionsForWav(file)
-				addAudioOptions.CustomizationID = core.StringPtr(customizationID)
-				addAudioOptions.AudioName = core.StringPtr(audioName)
+				addAudioOptions := testService.
+					NewAddAudioOptions(customizationID,
+						audioName,
+						file,
+						speechtotextv1.AddAudioOptions_ContentType_AudioWav)
 				returnValue, returnValueErr = testService.AddAudio(addAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

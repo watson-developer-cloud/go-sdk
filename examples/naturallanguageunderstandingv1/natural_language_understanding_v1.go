@@ -34,7 +34,7 @@ func main() {
 		panic(fileErr)
 	}
 
-	analyzeOptions := service.NewAnalyzeOptions(nlu.Features{
+	analyzeOptions := service.NewAnalyzeOptions(&nlu.Features{
 		Entities: &nlu.EntitiesOptions{},
 		Keywords: &nlu.KeywordsOptions{},
 	}).

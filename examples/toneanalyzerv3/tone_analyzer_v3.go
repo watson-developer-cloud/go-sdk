@@ -60,7 +60,8 @@ func main() {
 	/* TONE */
 
 	// Call the toneAnalyzer Tone method
-	toneOptions := service.NewToneOptionsForPlain("I am very happy. It is a good day")
+	toneOptions := service.NewToneOptions(toneanalyzerv3.ToneOptions_ContentType_TextPlain).
+		SetBody("I am very happy. It is a good day")
 	response, responseErr = service.Tone(toneOptions)
 
 	if responseErr != nil {
@@ -76,10 +77,12 @@ func main() {
 	}
 
 	// Call the toneAnalyzer Tone method
-	toneInput := toneanalyzerv3.ToneInput{
+	toneInput := &toneanalyzerv3.ToneInput{
 		Text: core.StringPtr("Team, I know that times are tough! Product sales have been disappointing for the past three quarters. We have a competitive product, but we need to do a better job of selling it!"),
 	}
-	toneOptions = service.NewToneOptionsForToneInput(toneInput)
+	toneOptions = service.
+		NewToneOptions(toneanalyzerv3.ToneOptions_ContentType_ApplicationJSON).
+		SetToneInput(toneInput)
 	response, responseErr = service.Tone(toneOptions)
 
 	if responseErr != nil {
@@ -96,11 +99,12 @@ func main() {
 
 	// Call the toneAnalyzer Tone method
 	pwd, _ := os.Getwd()
-	htmlByte, htmlByteErr := ioutil.ReadFile(pwd + "/../resources/tone-example.html")
+	htmlByte, htmlByteErr := ioutil.ReadFile(pwd + "/../../resources/tone-example.html")
 	if htmlByteErr != nil {
 		panic(htmlByteErr)
 	}
-	toneOptions = service.NewToneOptionsForHTML(string(htmlByte))
+	toneOptions = service.NewToneOptions(toneanalyzerv3.ToneOptions_ContentType_TextHTML).
+		SetBody(string(htmlByte))
 	response, responseErr = service.Tone(toneOptions)
 
 	if responseErr != nil {

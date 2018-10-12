@@ -25,15 +25,15 @@ import (
 	"strings"
 )
 
-// DiscoveryV1 : The IBM Watson&trade; Discovery Service is a cognitive search and content analytics engine that you can add to
-// applications to identify patterns, trends and actionable insights to drive better decision-making. Securely unify
-// structured and unstructured data with pre-enriched content, and use a simplified query language to eliminate the need
-// for manual filtering of results.
+// DiscoveryV1 : The IBM Watson&trade; Discovery Service is a cognitive search and content analytics engine that you can
+// add to applications to identify patterns, trends and actionable insights to drive better decision-making. Securely
+// unify structured and unstructured data with pre-enriched content, and use a simplified query language to eliminate
+// the need for manual filtering of results.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/discovery.html
 type DiscoveryV1 struct {
-	service *core.WatsonService
+	Service *core.WatsonService
 }
 
 // DiscoveryV1Options : Service options
@@ -67,7 +67,7 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (*DiscoveryV1, error) {
 		return nil, serviceErr
 	}
 
-	return &DiscoveryV1{service: service}, nil
+	return &DiscoveryV1{Service: service}, nil
 }
 
 // CreateEnvironment : Create an environment
@@ -87,14 +87,14 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createEnvironmentOptions.Name != nil {
@@ -116,7 +116,7 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Environment))
+	response, err := discovery.Service.Request(request, new(Environment))
 	return response, err
 }
 
@@ -142,20 +142,20 @@ func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *Delete
 	pathParameters := []string{*deleteEnvironmentOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(DeleteEnvironmentResponse))
+	response, err := discovery.Service.Request(request, new(DeleteEnvironmentResponse))
 	return response, err
 }
 
@@ -181,20 +181,20 @@ func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironme
 	pathParameters := []string{*getEnvironmentOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Environment))
+	response, err := discovery.Service.Request(request, new(Environment))
 	return response, err
 }
 
@@ -218,7 +218,7 @@ func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvi
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listEnvironmentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -228,14 +228,14 @@ func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvi
 	if listEnvironmentsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listEnvironmentsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(ListEnvironmentsResponse))
+	response, err := discovery.Service.Request(request, new(ListEnvironmentsResponse))
 	return response, err
 }
 
@@ -262,7 +262,7 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 	pathParameters := []string{*listFieldsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listFieldsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -270,14 +270,14 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("collection_ids", strings.Join(listFieldsOptions.CollectionIds, ","))
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(ListCollectionFieldsResponse))
+	response, err := discovery.Service.Request(request, new(ListCollectionFieldsResponse))
 	return response, err
 }
 
@@ -305,14 +305,14 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 	pathParameters := []string{*updateEnvironmentOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateEnvironmentOptions.Name != nil {
@@ -320,6 +320,9 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 	}
 	if updateEnvironmentOptions.Description != nil {
 		body["description"] = updateEnvironmentOptions.Description
+	}
+	if updateEnvironmentOptions.Size != nil {
+		body["size"] = updateEnvironmentOptions.Size
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -331,7 +334,7 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Environment))
+	response, err := discovery.Service.Request(request, new(Environment))
 	return response, err
 }
 
@@ -366,14 +369,14 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 	pathParameters := []string{*createConfigurationOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createConfigurationOptions.Name != nil {
@@ -404,7 +407,7 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Configuration))
+	response, err := discovery.Service.Request(request, new(Configuration))
 	return response, err
 }
 
@@ -434,20 +437,20 @@ func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *De
 	pathParameters := []string{*deleteConfigurationOptions.EnvironmentID, *deleteConfigurationOptions.ConfigurationID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(DeleteConfigurationResponse))
+	response, err := discovery.Service.Request(request, new(DeleteConfigurationResponse))
 	return response, err
 }
 
@@ -473,20 +476,20 @@ func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfi
 	pathParameters := []string{*getConfigurationOptions.EnvironmentID, *getConfigurationOptions.ConfigurationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Configuration))
+	response, err := discovery.Service.Request(request, new(Configuration))
 	return response, err
 }
 
@@ -513,7 +516,7 @@ func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *List
 	pathParameters := []string{*listConfigurationsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listConfigurationsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -523,14 +526,14 @@ func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *List
 	if listConfigurationsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listConfigurationsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(ListConfigurationsResponse))
+	response, err := discovery.Service.Request(request, new(ListConfigurationsResponse))
 	return response, err
 }
 
@@ -563,14 +566,14 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 	pathParameters := []string{*updateConfigurationOptions.EnvironmentID, *updateConfigurationOptions.ConfigurationID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateConfigurationOptions.Name != nil {
@@ -601,7 +604,7 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Configuration))
+	response, err := discovery.Service.Request(request, new(Configuration))
 	return response, err
 }
 
@@ -632,7 +635,7 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(testConfigurationIn
 	pathParameters := []string{*testConfigurationInEnvironmentOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range testConfigurationInEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -645,7 +648,7 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(testConfigurationIn
 	if testConfigurationInEnvironmentOptions.ConfigurationID != nil {
 		builder.AddQuery("configuration_id", fmt.Sprint(*testConfigurationInEnvironmentOptions.ConfigurationID))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	if testConfigurationInEnvironmentOptions.Configuration != nil {
 		builder.AddFormData("configuration", "", "", fmt.Sprint(*testConfigurationInEnvironmentOptions.Configuration))
@@ -663,7 +666,7 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(testConfigurationIn
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(TestDocument))
+	response, err := discovery.Service.Request(request, new(TestDocument))
 	return response, err
 }
 
@@ -689,14 +692,14 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 	pathParameters := []string{*createCollectionOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createCollectionOptions.Name != nil {
@@ -721,7 +724,7 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Collection))
+	response, err := discovery.Service.Request(request, new(Collection))
 	return response, err
 }
 
@@ -747,20 +750,20 @@ func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCo
 	pathParameters := []string{*deleteCollectionOptions.EnvironmentID, *deleteCollectionOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(DeleteCollectionResponse))
+	response, err := discovery.Service.Request(request, new(DeleteCollectionResponse))
 	return response, err
 }
 
@@ -786,20 +789,20 @@ func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionO
 	pathParameters := []string{*getCollectionOptions.EnvironmentID, *getCollectionOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Collection))
+	response, err := discovery.Service.Request(request, new(Collection))
 	return response, err
 }
 
@@ -826,20 +829,20 @@ func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *
 	pathParameters := []string{*listCollectionFieldsOptions.EnvironmentID, *listCollectionFieldsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listCollectionFieldsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(ListCollectionFieldsResponse))
+	response, err := discovery.Service.Request(request, new(ListCollectionFieldsResponse))
 	return response, err
 }
 
@@ -866,7 +869,7 @@ func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollec
 	pathParameters := []string{*listCollectionsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listCollectionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -876,14 +879,14 @@ func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollec
 	if listCollectionsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listCollectionsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(ListCollectionsResponse))
+	response, err := discovery.Service.Request(request, new(ListCollectionsResponse))
 	return response, err
 }
 
@@ -909,14 +912,14 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 	pathParameters := []string{*updateCollectionOptions.EnvironmentID, *updateCollectionOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateCollectionOptions.Name != nil {
@@ -938,7 +941,7 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Collection))
+	response, err := discovery.Service.Request(request, new(Collection))
 	return response, err
 }
 
@@ -967,14 +970,14 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 	pathParameters := []string{*createExpansionsOptions.EnvironmentID, *createExpansionsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createExpansionsOptions.Expansions != nil {
@@ -990,7 +993,7 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Expansions))
+	response, err := discovery.Service.Request(request, new(Expansions))
 	return response, err
 }
 
@@ -1018,20 +1021,20 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 	pathParameters := []string{*deleteExpansionsOptions.EnvironmentID, *deleteExpansionsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, nil)
+	response, err := discovery.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1050,20 +1053,20 @@ func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansio
 	pathParameters := []string{*listExpansionsOptions.EnvironmentID, *listExpansionsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Expansions))
+	response, err := discovery.Service.Request(request, new(Expansions))
 	return response, err
 }
 
@@ -1111,13 +1114,13 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 	pathParameters := []string{*addDocumentOptions.EnvironmentID, *addDocumentOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range addDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	if addDocumentOptions.File != nil {
 		builder.AddFormData("file", core.StringNilMapper(addDocumentOptions.Filename),
@@ -1132,7 +1135,7 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(DocumentAccepted))
+	response, err := discovery.Service.Request(request, new(DocumentAccepted))
 	return response, err
 }
 
@@ -1160,20 +1163,20 @@ func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocume
 	pathParameters := []string{*deleteDocumentOptions.EnvironmentID, *deleteDocumentOptions.CollectionID, *deleteDocumentOptions.DocumentID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(DeleteDocumentResponse))
+	response, err := discovery.Service.Request(request, new(DeleteDocumentResponse))
 	return response, err
 }
 
@@ -1202,20 +1205,20 @@ func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDoc
 	pathParameters := []string{*getDocumentStatusOptions.EnvironmentID, *getDocumentStatusOptions.CollectionID, *getDocumentStatusOptions.DocumentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getDocumentStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(DocumentStatus))
+	response, err := discovery.Service.Request(request, new(DocumentStatus))
 	return response, err
 }
 
@@ -1245,13 +1248,13 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 	pathParameters := []string{*updateDocumentOptions.EnvironmentID, *updateDocumentOptions.CollectionID, *updateDocumentOptions.DocumentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	if updateDocumentOptions.File != nil {
 		builder.AddFormData("file", core.StringNilMapper(updateDocumentOptions.Filename),
@@ -1266,7 +1269,7 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(DocumentAccepted))
+	response, err := discovery.Service.Request(request, new(DocumentAccepted))
 	return response, err
 }
 
@@ -1279,9 +1282,10 @@ func (discovery *DiscoveryV1) GetUpdateDocumentResult(response *core.DetailedRes
 	return nil
 }
 
-// FederatedQuery : Query documents in multiple collections
-// See the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more
-// details.
+// FederatedQuery : Long environment queries
+// Complex queries might be too long for a standard method query. By using this method, you can construct longer
+// queries. However, these queries may take longer to complete than the standard method. For details, see the [Discovery
+// service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
 func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQueryOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(federatedQueryOptions, "federatedQueryOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1293,77 +1297,91 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	pathSegments := []string{"v1/environments", "query"}
 	pathParameters := []string{*federatedQueryOptions.EnvironmentID}
 
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range federatedQueryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	if federatedQueryOptions.LoggingOptOut != nil {
+		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*federatedQueryOptions.LoggingOptOut))
+	}
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
-	builder.AddQuery("collection_ids", strings.Join(federatedQueryOptions.CollectionIds, ","))
+	body := make(map[string]interface{})
 	if federatedQueryOptions.Filter != nil {
-		builder.AddQuery("filter", fmt.Sprint(*federatedQueryOptions.Filter))
+		body["filter"] = federatedQueryOptions.Filter
 	}
 	if federatedQueryOptions.Query != nil {
-		builder.AddQuery("query", fmt.Sprint(*federatedQueryOptions.Query))
+		body["query"] = federatedQueryOptions.Query
 	}
 	if federatedQueryOptions.NaturalLanguageQuery != nil {
-		builder.AddQuery("natural_language_query", fmt.Sprint(*federatedQueryOptions.NaturalLanguageQuery))
-	}
-	if federatedQueryOptions.Aggregation != nil {
-		builder.AddQuery("aggregation", fmt.Sprint(*federatedQueryOptions.Aggregation))
-	}
-	if federatedQueryOptions.Count != nil {
-		builder.AddQuery("count", fmt.Sprint(*federatedQueryOptions.Count))
-	}
-	if federatedQueryOptions.ReturnFields != nil {
-		builder.AddQuery("return", strings.Join(federatedQueryOptions.ReturnFields, ","))
-	}
-	if federatedQueryOptions.Offset != nil {
-		builder.AddQuery("offset", fmt.Sprint(*federatedQueryOptions.Offset))
-	}
-	if federatedQueryOptions.Sort != nil {
-		builder.AddQuery("sort", strings.Join(federatedQueryOptions.Sort, ","))
-	}
-	if federatedQueryOptions.Highlight != nil {
-		builder.AddQuery("highlight", fmt.Sprint(*federatedQueryOptions.Highlight))
-	}
-	if federatedQueryOptions.Deduplicate != nil {
-		builder.AddQuery("deduplicate", fmt.Sprint(*federatedQueryOptions.Deduplicate))
-	}
-	if federatedQueryOptions.DeduplicateField != nil {
-		builder.AddQuery("deduplicate.field", fmt.Sprint(*federatedQueryOptions.DeduplicateField))
-	}
-	if federatedQueryOptions.Similar != nil {
-		builder.AddQuery("similar", fmt.Sprint(*federatedQueryOptions.Similar))
-	}
-	if federatedQueryOptions.SimilarDocumentIds != nil {
-		builder.AddQuery("similar.document_ids", strings.Join(federatedQueryOptions.SimilarDocumentIds, ","))
-	}
-	if federatedQueryOptions.SimilarFields != nil {
-		builder.AddQuery("similar.fields", strings.Join(federatedQueryOptions.SimilarFields, ","))
+		body["natural_language_query"] = federatedQueryOptions.NaturalLanguageQuery
 	}
 	if federatedQueryOptions.Passages != nil {
-		builder.AddQuery("passages", fmt.Sprint(*federatedQueryOptions.Passages))
+		body["passages"] = federatedQueryOptions.Passages
+	}
+	if federatedQueryOptions.Aggregation != nil {
+		body["aggregation"] = federatedQueryOptions.Aggregation
+	}
+	if federatedQueryOptions.Count != nil {
+		body["count"] = federatedQueryOptions.Count
+	}
+	if federatedQueryOptions.ReturnFields != nil {
+		body["return"] = federatedQueryOptions.ReturnFields
+	}
+	if federatedQueryOptions.Offset != nil {
+		body["offset"] = federatedQueryOptions.Offset
+	}
+	if federatedQueryOptions.Sort != nil {
+		body["sort"] = federatedQueryOptions.Sort
+	}
+	if federatedQueryOptions.Highlight != nil {
+		body["highlight"] = federatedQueryOptions.Highlight
 	}
 	if federatedQueryOptions.PassagesFields != nil {
-		builder.AddQuery("passages.fields", strings.Join(federatedQueryOptions.PassagesFields, ","))
+		body["passages.fields"] = federatedQueryOptions.PassagesFields
 	}
 	if federatedQueryOptions.PassagesCount != nil {
-		builder.AddQuery("passages.count", fmt.Sprint(*federatedQueryOptions.PassagesCount))
+		body["passages.count"] = federatedQueryOptions.PassagesCount
 	}
 	if federatedQueryOptions.PassagesCharacters != nil {
-		builder.AddQuery("passages.characters", fmt.Sprint(*federatedQueryOptions.PassagesCharacters))
+		body["passages.characters"] = federatedQueryOptions.PassagesCharacters
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	if federatedQueryOptions.Deduplicate != nil {
+		body["deduplicate"] = federatedQueryOptions.Deduplicate
+	}
+	if federatedQueryOptions.DeduplicateField != nil {
+		body["deduplicate.field"] = federatedQueryOptions.DeduplicateField
+	}
+	if federatedQueryOptions.CollectionIds != nil {
+		body["collection_ids"] = federatedQueryOptions.CollectionIds
+	}
+	if federatedQueryOptions.Similar != nil {
+		body["similar"] = federatedQueryOptions.Similar
+	}
+	if federatedQueryOptions.SimilarDocumentIds != nil {
+		body["similar.document_ids"] = federatedQueryOptions.SimilarDocumentIds
+	}
+	if federatedQueryOptions.SimilarFields != nil {
+		body["similar.fields"] = federatedQueryOptions.SimilarFields
+	}
+	if federatedQueryOptions.Bias != nil {
+		body["bias"] = federatedQueryOptions.Bias
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(QueryResponse))
+	response, err := discovery.Service.Request(request, new(QueryResponse))
 	return response, err
 }
 
@@ -1393,7 +1411,7 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	pathParameters := []string{*federatedQueryNoticesOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range federatedQueryNoticesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1440,14 +1458,14 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	if federatedQueryNoticesOptions.SimilarFields != nil {
 		builder.AddQuery("similar.fields", strings.Join(federatedQueryNoticesOptions.SimilarFields, ","))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(QueryNoticesResponse))
+	response, err := discovery.Service.Request(request, new(QueryNoticesResponse))
 	return response, err
 }
 
@@ -1460,10 +1478,10 @@ func (discovery *DiscoveryV1) GetFederatedQueryNoticesResult(response *core.Deta
 	return nil
 }
 
-// Query : Query your collection
-// After your content is uploaded and enriched by the Discovery service, you can build queries to search your content.
-// For details, see the [Discovery service
-// documentation](https://console.bluemix.net/docs/services/discovery/using.html).
+// Query : Long collection queries
+// Complex queries might be too long for a standard method query. By using this method, you can construct longer
+// queries. However, these queries may take longer to complete than the standard method. For details, see the [Discovery
+// service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
 func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryOptions, "queryOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1475,79 +1493,91 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 	pathSegments := []string{"v1/environments", "collections", "query"}
 	pathParameters := []string{*queryOptions.EnvironmentID, *queryOptions.CollectionID}
 
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range queryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
 	if queryOptions.LoggingOptOut != nil {
 		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*queryOptions.LoggingOptOut))
 	}
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
+	body := make(map[string]interface{})
 	if queryOptions.Filter != nil {
-		builder.AddQuery("filter", fmt.Sprint(*queryOptions.Filter))
+		body["filter"] = queryOptions.Filter
 	}
 	if queryOptions.Query != nil {
-		builder.AddQuery("query", fmt.Sprint(*queryOptions.Query))
+		body["query"] = queryOptions.Query
 	}
 	if queryOptions.NaturalLanguageQuery != nil {
-		builder.AddQuery("natural_language_query", fmt.Sprint(*queryOptions.NaturalLanguageQuery))
+		body["natural_language_query"] = queryOptions.NaturalLanguageQuery
 	}
 	if queryOptions.Passages != nil {
-		builder.AddQuery("passages", fmt.Sprint(*queryOptions.Passages))
+		body["passages"] = queryOptions.Passages
 	}
 	if queryOptions.Aggregation != nil {
-		builder.AddQuery("aggregation", fmt.Sprint(*queryOptions.Aggregation))
+		body["aggregation"] = queryOptions.Aggregation
 	}
 	if queryOptions.Count != nil {
-		builder.AddQuery("count", fmt.Sprint(*queryOptions.Count))
+		body["count"] = queryOptions.Count
 	}
 	if queryOptions.ReturnFields != nil {
-		builder.AddQuery("return", strings.Join(queryOptions.ReturnFields, ","))
+		body["return"] = queryOptions.ReturnFields
 	}
 	if queryOptions.Offset != nil {
-		builder.AddQuery("offset", fmt.Sprint(*queryOptions.Offset))
+		body["offset"] = queryOptions.Offset
 	}
 	if queryOptions.Sort != nil {
-		builder.AddQuery("sort", strings.Join(queryOptions.Sort, ","))
+		body["sort"] = queryOptions.Sort
 	}
 	if queryOptions.Highlight != nil {
-		builder.AddQuery("highlight", fmt.Sprint(*queryOptions.Highlight))
+		body["highlight"] = queryOptions.Highlight
 	}
 	if queryOptions.PassagesFields != nil {
-		builder.AddQuery("passages.fields", strings.Join(queryOptions.PassagesFields, ","))
+		body["passages.fields"] = queryOptions.PassagesFields
 	}
 	if queryOptions.PassagesCount != nil {
-		builder.AddQuery("passages.count", fmt.Sprint(*queryOptions.PassagesCount))
+		body["passages.count"] = queryOptions.PassagesCount
 	}
 	if queryOptions.PassagesCharacters != nil {
-		builder.AddQuery("passages.characters", fmt.Sprint(*queryOptions.PassagesCharacters))
+		body["passages.characters"] = queryOptions.PassagesCharacters
 	}
 	if queryOptions.Deduplicate != nil {
-		builder.AddQuery("deduplicate", fmt.Sprint(*queryOptions.Deduplicate))
+		body["deduplicate"] = queryOptions.Deduplicate
 	}
 	if queryOptions.DeduplicateField != nil {
-		builder.AddQuery("deduplicate.field", fmt.Sprint(*queryOptions.DeduplicateField))
+		body["deduplicate.field"] = queryOptions.DeduplicateField
+	}
+	if queryOptions.CollectionIds != nil {
+		body["collection_ids"] = queryOptions.CollectionIds
 	}
 	if queryOptions.Similar != nil {
-		builder.AddQuery("similar", fmt.Sprint(*queryOptions.Similar))
+		body["similar"] = queryOptions.Similar
 	}
 	if queryOptions.SimilarDocumentIds != nil {
-		builder.AddQuery("similar.document_ids", strings.Join(queryOptions.SimilarDocumentIds, ","))
+		body["similar.document_ids"] = queryOptions.SimilarDocumentIds
 	}
 	if queryOptions.SimilarFields != nil {
-		builder.AddQuery("similar.fields", strings.Join(queryOptions.SimilarFields, ","))
+		body["similar.fields"] = queryOptions.SimilarFields
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	if queryOptions.Bias != nil {
+		body["bias"] = queryOptions.Bias
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(QueryResponse))
+	response, err := discovery.Service.Request(request, new(QueryResponse))
 	return response, err
 }
 
@@ -1575,14 +1605,14 @@ func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesO
 	pathParameters := []string{*queryEntitiesOptions.EnvironmentID, *queryEntitiesOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range queryEntitiesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if queryEntitiesOptions.Feature != nil {
@@ -1610,7 +1640,7 @@ func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesO
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(QueryEntitiesResponse))
+	response, err := discovery.Service.Request(request, new(QueryEntitiesResponse))
 	return response, err
 }
 
@@ -1640,7 +1670,7 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 	pathParameters := []string{*queryNoticesOptions.EnvironmentID, *queryNoticesOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range queryNoticesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1698,14 +1728,14 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 	if queryNoticesOptions.SimilarFields != nil {
 		builder.AddQuery("similar.fields", strings.Join(queryNoticesOptions.SimilarFields, ","))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(QueryNoticesResponse))
+	response, err := discovery.Service.Request(request, new(QueryNoticesResponse))
 	return response, err
 }
 
@@ -1733,14 +1763,14 @@ func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelatio
 	pathParameters := []string{*queryRelationsOptions.EnvironmentID, *queryRelationsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range queryRelationsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if queryRelationsOptions.Entities != nil {
@@ -1771,7 +1801,7 @@ func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelatio
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(QueryRelationsResponse))
+	response, err := discovery.Service.Request(request, new(QueryRelationsResponse))
 	return response, err
 }
 
@@ -1798,14 +1828,14 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 	pathParameters := []string{*addTrainingDataOptions.EnvironmentID, *addTrainingDataOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range addTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if addTrainingDataOptions.NaturalLanguageQuery != nil {
@@ -1827,7 +1857,7 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(TrainingQuery))
+	response, err := discovery.Service.Request(request, new(TrainingQuery))
 	return response, err
 }
 
@@ -1854,14 +1884,14 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 	pathParameters := []string{*createTrainingExampleOptions.EnvironmentID, *createTrainingExampleOptions.CollectionID, *createTrainingExampleOptions.QueryID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createTrainingExampleOptions.DocumentID != nil {
@@ -1883,7 +1913,7 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(TrainingExample))
+	response, err := discovery.Service.Request(request, new(TrainingExample))
 	return response, err
 }
 
@@ -1910,20 +1940,20 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 	pathParameters := []string{*deleteAllTrainingDataOptions.EnvironmentID, *deleteAllTrainingDataOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteAllTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, nil)
+	response, err := discovery.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1941,20 +1971,20 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 	pathParameters := []string{*deleteTrainingDataOptions.EnvironmentID, *deleteTrainingDataOptions.CollectionID, *deleteTrainingDataOptions.QueryID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, nil)
+	response, err := discovery.Service.Request(request, nil)
 	return response, err
 }
 
@@ -1972,20 +2002,20 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 	pathParameters := []string{*deleteTrainingExampleOptions.EnvironmentID, *deleteTrainingExampleOptions.CollectionID, *deleteTrainingExampleOptions.QueryID, *deleteTrainingExampleOptions.ExampleID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, nil)
+	response, err := discovery.Service.Request(request, nil)
 	return response, err
 }
 
@@ -2003,20 +2033,20 @@ func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainin
 	pathParameters := []string{*getTrainingDataOptions.EnvironmentID, *getTrainingDataOptions.CollectionID, *getTrainingDataOptions.QueryID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(TrainingQuery))
+	response, err := discovery.Service.Request(request, new(TrainingQuery))
 	return response, err
 }
 
@@ -2043,20 +2073,20 @@ func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetT
 	pathParameters := []string{*getTrainingExampleOptions.EnvironmentID, *getTrainingExampleOptions.CollectionID, *getTrainingExampleOptions.QueryID, *getTrainingExampleOptions.ExampleID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(TrainingExample))
+	response, err := discovery.Service.Request(request, new(TrainingExample))
 	return response, err
 }
 
@@ -2083,20 +2113,20 @@ func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrai
 	pathParameters := []string{*listTrainingDataOptions.EnvironmentID, *listTrainingDataOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(TrainingDataSet))
+	response, err := discovery.Service.Request(request, new(TrainingDataSet))
 	return response, err
 }
 
@@ -2123,20 +2153,20 @@ func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *
 	pathParameters := []string{*listTrainingExamplesOptions.EnvironmentID, *listTrainingExamplesOptions.CollectionID, *listTrainingExamplesOptions.QueryID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listTrainingExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(TrainingExampleList))
+	response, err := discovery.Service.Request(request, new(TrainingExampleList))
 	return response, err
 }
 
@@ -2163,14 +2193,14 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 	pathParameters := []string{*updateTrainingExampleOptions.EnvironmentID, *updateTrainingExampleOptions.CollectionID, *updateTrainingExampleOptions.QueryID, *updateTrainingExampleOptions.ExampleID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateTrainingExampleOptions.CrossReference != nil {
@@ -2189,7 +2219,7 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(TrainingExample))
+	response, err := discovery.Service.Request(request, new(TrainingExample))
 	return response, err
 }
 
@@ -2221,7 +2251,7 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2229,14 +2259,14 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, nil)
+	response, err := discovery.Service.Request(request, nil)
 	return response, err
 }
 
@@ -2255,14 +2285,14 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createEventOptions.Type != nil {
@@ -2281,7 +2311,7 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(CreateEventResponse))
+	response, err := discovery.Service.Request(request, new(CreateEventResponse))
 	return response, err
 }
 
@@ -2307,7 +2337,7 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getMetricsEventRateOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2323,14 +2353,14 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 	if getMetricsEventRateOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsEventRateOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(MetricResponse))
+	response, err := discovery.Service.Request(request, new(MetricResponse))
 	return response, err
 }
 
@@ -2354,7 +2384,7 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getMetricsQueryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2370,14 +2400,14 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 	if getMetricsQueryOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(MetricResponse))
+	response, err := discovery.Service.Request(request, new(MetricResponse))
 	return response, err
 }
 
@@ -2403,7 +2433,7 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getMetricsQueryEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2419,14 +2449,14 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 	if getMetricsQueryEventOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryEventOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(MetricResponse))
+	response, err := discovery.Service.Request(request, new(MetricResponse))
 	return response, err
 }
 
@@ -2451,7 +2481,7 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getMetricsQueryNoResultsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2467,14 +2497,14 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 	if getMetricsQueryNoResultsOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryNoResultsOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(MetricResponse))
+	response, err := discovery.Service.Request(request, new(MetricResponse))
 	return response, err
 }
 
@@ -2500,7 +2530,7 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEven
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getMetricsQueryTokenEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2510,14 +2540,14 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEven
 	if getMetricsQueryTokenEventOptions.Count != nil {
 		builder.AddQuery("count", fmt.Sprint(*getMetricsQueryTokenEventOptions.Count))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(MetricTokenResponse))
+	response, err := discovery.Service.Request(request, new(MetricTokenResponse))
 	return response, err
 }
 
@@ -2542,7 +2572,7 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (*core.
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range queryLogOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2564,14 +2594,14 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (*core.
 	if queryLogOptions.Sort != nil {
 		builder.AddQuery("sort", strings.Join(queryLogOptions.Sort, ","))
 	}
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(LogQueryResponse))
+	response, err := discovery.Service.Request(request, new(LogQueryResponse))
 	return response, err
 }
 
@@ -2601,14 +2631,14 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 	pathParameters := []string{*createCredentialsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range createCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if createCredentialsOptions.SourceType != nil {
@@ -2627,7 +2657,7 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Credentials))
+	response, err := discovery.Service.Request(request, new(Credentials))
 	return response, err
 }
 
@@ -2654,20 +2684,20 @@ func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *Delete
 	pathParameters := []string{*deleteCredentialsOptions.EnvironmentID, *deleteCredentialsOptions.CredentialID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(DeleteCredentials))
+	response, err := discovery.Service.Request(request, new(DeleteCredentials))
 	return response, err
 }
 
@@ -2697,20 +2727,20 @@ func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentia
 	pathParameters := []string{*getCredentialsOptions.EnvironmentID, *getCredentialsOptions.CredentialID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range getCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Credentials))
+	response, err := discovery.Service.Request(request, new(Credentials))
 	return response, err
 }
 
@@ -2739,20 +2769,20 @@ func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCreden
 	pathParameters := []string{*listCredentialsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range listCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(CredentialsList))
+	response, err := discovery.Service.Request(request, new(CredentialsList))
 	return response, err
 }
 
@@ -2781,14 +2811,14 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 	pathParameters := []string{*updateCredentialsOptions.EnvironmentID, *updateCredentialsOptions.CredentialID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.service.Options.URL, pathSegments, pathParameters)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range updateCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.service.Options.Version)
+	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	body := make(map[string]interface{})
 	if updateCredentialsOptions.SourceType != nil {
@@ -2807,7 +2837,7 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 		return nil, err
 	}
 
-	response, err := discovery.service.Request(request, new(Credentials))
+	response, err := discovery.Service.Request(request, new(Credentials))
 	return response, err
 }
 
@@ -3021,6 +3051,14 @@ type Collection struct {
 	SourceCrawl *SourceStatus `json:"source_crawl,omitempty"`
 }
 
+// Constants associated with the Collection.Status property.
+// The status of the collection.
+const (
+	Collection_Status_Active      = "active"
+	Collection_Status_Maintenance = "maintenance"
+	Collection_Status_Pending     = "pending"
+)
+
 // CollectionDiskUsage : Summary of the disk usage statistics for this collection.
 type CollectionDiskUsage struct {
 
@@ -3111,6 +3149,21 @@ type CreateCollectionOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the CreateCollectionOptions.Language property.
+// The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
+const (
+	CreateCollectionOptions_Language_Ar = "ar"
+	CreateCollectionOptions_Language_De = "de"
+	CreateCollectionOptions_Language_En = "en"
+	CreateCollectionOptions_Language_Es = "es"
+	CreateCollectionOptions_Language_Fr = "fr"
+	CreateCollectionOptions_Language_It = "it"
+	CreateCollectionOptions_Language_Ja = "ja"
+	CreateCollectionOptions_Language_Ko = "ko"
+	CreateCollectionOptions_Language_Nl = "nl"
+	CreateCollectionOptions_Language_Pt = "pt"
+)
 
 // NewCreateCollectionOptions : Instantiate CreateCollectionOptions
 func (discovery *DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
@@ -3211,8 +3264,8 @@ func (options *CreateConfigurationOptions) SetDescription(description string) *C
 }
 
 // SetConversions : Allow user to set Conversions
-func (options *CreateConfigurationOptions) SetConversions(conversions Conversions) *CreateConfigurationOptions {
-	options.Conversions = &conversions
+func (options *CreateConfigurationOptions) SetConversions(conversions *Conversions) *CreateConfigurationOptions {
+	options.Conversions = conversions
 	return options
 }
 
@@ -3229,8 +3282,8 @@ func (options *CreateConfigurationOptions) SetNormalizations(normalizations []No
 }
 
 // SetSource : Allow user to set Source
-func (options *CreateConfigurationOptions) SetSource(source Source) *CreateConfigurationOptions {
-	options.Source = &source
+func (options *CreateConfigurationOptions) SetSource(source *Source) *CreateConfigurationOptions {
+	options.Source = source
 	return options
 }
 
@@ -3261,6 +3314,17 @@ type CreateCredentialsOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the CreateCredentialsOptions.SourceType property.
+// The source that this credentials object connects to.
+// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
+// -  `salesforce` indicates the credentials are used to connect to Salesforce.
+// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+const (
+	CreateCredentialsOptions_SourceType_Box        = "box"
+	CreateCredentialsOptions_SourceType_Salesforce = "salesforce"
+	CreateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
+)
+
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
 func (discovery *DiscoveryV1) NewCreateCredentialsOptions(environmentID string) *CreateCredentialsOptions {
 	return &CreateCredentialsOptions{
@@ -3281,8 +3345,8 @@ func (options *CreateCredentialsOptions) SetSourceType(sourceType string) *Creat
 }
 
 // SetCredentialDetails : Allow user to set CredentialDetails
-func (options *CreateCredentialsOptions) SetCredentialDetails(credentialDetails CredentialDetails) *CreateCredentialsOptions {
-	options.CredentialDetails = &credentialDetails
+func (options *CreateCredentialsOptions) SetCredentialDetails(credentialDetails *CredentialDetails) *CreateCredentialsOptions {
+	options.CredentialDetails = credentialDetails
 	return options
 }
 
@@ -3301,12 +3365,29 @@ type CreateEnvironmentOptions struct {
 	// Description of the environment.
 	Description *string `json:"description,omitempty"`
 
-	// Size of the environment.
+	// Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the
+	// default is `S`.
 	Size *string `json:"size,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the CreateEnvironmentOptions.Size property.
+// Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the default
+// is `S`.
+const (
+	CreateEnvironmentOptions_Size_L    = "L"
+	CreateEnvironmentOptions_Size_LT   = "LT"
+	CreateEnvironmentOptions_Size_M    = "M"
+	CreateEnvironmentOptions_Size_ML   = "ML"
+	CreateEnvironmentOptions_Size_MS   = "MS"
+	CreateEnvironmentOptions_Size_S    = "S"
+	CreateEnvironmentOptions_Size_XL   = "XL"
+	CreateEnvironmentOptions_Size_XS   = "XS"
+	CreateEnvironmentOptions_Size_XXL  = "XXL"
+	CreateEnvironmentOptions_Size_XXXL = "XXXL"
+)
 
 // NewCreateEnvironmentOptions : Instantiate CreateEnvironmentOptions
 func (discovery *DiscoveryV1) NewCreateEnvironmentOptions(name string) *CreateEnvironmentOptions {
@@ -3352,11 +3433,17 @@ type CreateEventOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the CreateEventOptions.Type property.
+// The event type to be created.
+const (
+	CreateEventOptions_Type_Click = "click"
+)
+
 // NewCreateEventOptions : Instantiate CreateEventOptions
-func (discovery *DiscoveryV1) NewCreateEventOptions(typeVar string, data EventData) *CreateEventOptions {
+func (discovery *DiscoveryV1) NewCreateEventOptions(typeVar string, data *EventData) *CreateEventOptions {
 	return &CreateEventOptions{
 		Type: core.StringPtr(typeVar),
-		Data: &data,
+		Data: data,
 	}
 }
 
@@ -3367,8 +3454,8 @@ func (options *CreateEventOptions) SetType(typeVar string) *CreateEventOptions {
 }
 
 // SetData : Allow user to set Data
-func (options *CreateEventOptions) SetData(data EventData) *CreateEventOptions {
-	options.Data = &data
+func (options *CreateEventOptions) SetData(data *EventData) *CreateEventOptions {
+	options.Data = data
 	return options
 }
 
@@ -3387,6 +3474,12 @@ type CreateEventResponse struct {
 	// Query event data object.
 	Data *EventData `json:"data,omitempty"`
 }
+
+// Constants associated with the CreateEventResponse.Type property.
+// The event type that was created.
+const (
+	CreateEventResponse_Type_Click = "click"
+)
 
 // CreateExpansionsOptions : The createExpansions options.
 type CreateExpansionsOptions struct {
@@ -3587,6 +3680,19 @@ type CredentialDetails struct {
 	Password *string `json:"password,omitempty"`
 }
 
+// Constants associated with the CredentialDetails.CredentialType property.
+// The authentication method for this credentials definition. The  **credential_type** specified must be supported by
+// the **source_type**. The following combinations are possible:
+//
+// -  `"source_type": "box"` - valid `credential_type`s: `oauth2`
+// -  `"source_type": "salesforce"` - valid `credential_type`s: `username_password`
+// -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml`.
+const (
+	CredentialDetails_CredentialType_Oauth2           = "oauth2"
+	CredentialDetails_CredentialType_Saml             = "saml"
+	CredentialDetails_CredentialType_UsernamePassword = "username_password"
+)
+
 // Credentials : Object containing credential information.
 type Credentials struct {
 
@@ -3604,6 +3710,17 @@ type Credentials struct {
 	// Obtain credentials for your source from the administrator of the source.
 	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 }
+
+// Constants associated with the Credentials.SourceType property.
+// The source that this credentials object connects to.
+// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
+// -  `salesforce` indicates the credentials are used to connect to Salesforce.
+// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+const (
+	Credentials_SourceType_Box        = "box"
+	Credentials_SourceType_Salesforce = "salesforce"
+	Credentials_SourceType_Sharepoint = "sharepoint"
+)
 
 // CredentialsList : CredentialsList struct
 type CredentialsList struct {
@@ -3700,6 +3817,12 @@ type DeleteCollectionResponse struct {
 	Status *string `json:"status" validate:"required"`
 }
 
+// Constants associated with the DeleteCollectionResponse.Status property.
+// The status of the collection. The status of a successful deletion operation is `deleted`.
+const (
+	DeleteCollectionResponse_Status_Deleted = "deleted"
+)
+
 // DeleteConfigurationOptions : The deleteConfiguration options.
 type DeleteConfigurationOptions struct {
 
@@ -3752,6 +3875,12 @@ type DeleteConfigurationResponse struct {
 	Notices []Notice `json:"notices,omitempty"`
 }
 
+// Constants associated with the DeleteConfigurationResponse.Status property.
+// Status of the configuration. A deleted configuration has the status deleted.
+const (
+	DeleteConfigurationResponse_Status_Deleted = "deleted"
+)
+
 // DeleteCredentials : Object returned after credentials are deleted.
 type DeleteCredentials struct {
 
@@ -3761,6 +3890,12 @@ type DeleteCredentials struct {
 	// The status of the deletion request.
 	Status *string `json:"status,omitempty"`
 }
+
+// Constants associated with the DeleteCredentials.Status property.
+// The status of the deletion request.
+const (
+	DeleteCredentials_Status_Deleted = "deleted"
+)
 
 // DeleteCredentialsOptions : The deleteCredentials options.
 type DeleteCredentialsOptions struct {
@@ -3860,6 +3995,12 @@ type DeleteDocumentResponse struct {
 	Status *string `json:"status,omitempty"`
 }
 
+// Constants associated with the DeleteDocumentResponse.Status property.
+// Status of the document. A deleted document has the status deleted.
+const (
+	DeleteDocumentResponse_Status_Deleted = "deleted"
+)
+
 // DeleteEnvironmentOptions : The deleteEnvironment options.
 type DeleteEnvironmentOptions struct {
 
@@ -3898,6 +4039,12 @@ type DeleteEnvironmentResponse struct {
 	// Status of the environment.
 	Status *string `json:"status" validate:"required"`
 }
+
+// Constants associated with the DeleteEnvironmentResponse.Status property.
+// Status of the environment.
+const (
+	DeleteEnvironmentResponse_Status_Deleted = "deleted"
+)
 
 // DeleteExpansionsOptions : The deleteExpansions options.
 type DeleteExpansionsOptions struct {
@@ -4110,6 +4257,12 @@ type DocumentAccepted struct {
 	Notices []Notice `json:"notices,omitempty"`
 }
 
+// Constants associated with the DocumentAccepted.Status property.
+// Status of the document in the ingestion process.
+const (
+	DocumentAccepted_Status_Processing = "processing"
+)
+
 // DocumentCounts : DocumentCounts struct
 type DocumentCounts struct {
 
@@ -4129,6 +4282,16 @@ type DocumentSnapshot struct {
 
 	Snapshot interface{} `json:"snapshot,omitempty"`
 }
+
+// Constants associated with the DocumentSnapshot.Step property.
+const (
+	DocumentSnapshot_Step_EnrichmentsOutput        = "enrichments_output"
+	DocumentSnapshot_Step_HTMLInput                = "html_input"
+	DocumentSnapshot_Step_HTMLOutput               = "html_output"
+	DocumentSnapshot_Step_JSONNormalizationsOutput = "json_normalizations_output"
+	DocumentSnapshot_Step_JSONOutput               = "json_output"
+	DocumentSnapshot_Step_NormalizationsOutput     = "normalizations_output"
+)
 
 // DocumentStatus : Status information about a submitted document.
 type DocumentStatus struct {
@@ -4163,6 +4326,24 @@ type DocumentStatus struct {
 	// Array of notices produced by the document-ingestion process.
 	Notices []Notice `json:"notices" validate:"required"`
 }
+
+// Constants associated with the DocumentStatus.Status property.
+// Status of the document in the ingestion process.
+const (
+	DocumentStatus_Status_Available            = "available"
+	DocumentStatus_Status_AvailableWithNotices = "available with notices"
+	DocumentStatus_Status_Failed               = "failed"
+	DocumentStatus_Status_Processing           = "processing"
+)
+
+// Constants associated with the DocumentStatus.FileType property.
+// The type of the original source file.
+const (
+	DocumentStatus_FileType_HTML = "html"
+	DocumentStatus_FileType_JSON = "json"
+	DocumentStatus_FileType_Pdf  = "pdf"
+	DocumentStatus_FileType_Word = "word"
+)
 
 // Enrichment : Enrichment struct
 type Enrichment struct {
@@ -4219,6 +4400,23 @@ type EnrichmentOptions struct {
 	Model *string `json:"model,omitempty"`
 }
 
+// Constants associated with the EnrichmentOptions.Language property.
+// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language detection
+// performed by the service. Valid codes are `ar` (Arabic), `en` (English), `fr` (French), `de` (German), `it`
+// (Italian), `pt` (Portuguese), `ru` (Russian), `es` (Spanish), and `sv` (Swedish). **Note:** Not all features support
+// all languages, automatic detection is recommended.
+const (
+	EnrichmentOptions_Language_Ar = "ar"
+	EnrichmentOptions_Language_De = "de"
+	EnrichmentOptions_Language_En = "en"
+	EnrichmentOptions_Language_Es = "es"
+	EnrichmentOptions_Language_Fr = "fr"
+	EnrichmentOptions_Language_It = "it"
+	EnrichmentOptions_Language_Pt = "pt"
+	EnrichmentOptions_Language_Ru = "ru"
+	EnrichmentOptions_Language_Sv = "sv"
+)
+
 // Environment : Details about an environment.
 type Environment struct {
 
@@ -4237,18 +4435,52 @@ type Environment struct {
 	// Date of most recent environment update, in the format `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
-	// Status of the environment.
+	// Current status of the environment. `resizing` is displayed when a request to increase the environment size has been
+	// made, but is still in the process of being completed.
 	Status *string `json:"status,omitempty"`
 
 	// If `true`, the environment contains read-only collections that are maintained by IBM.
 	ReadOnly *bool `json:"read_only,omitempty"`
 
-	// Size of the environment.
+	// Current size of the environment.
 	Size *string `json:"size,omitempty"`
+
+	// The new size requested for this environment. Only returned when the environment *status* is `resizing`.
+	//
+	// *Note:* Querying and indexing can still be performed during an environment upsize.
+	RequestedSize *string `json:"requested_size,omitempty"`
 
 	// Details about the resource usage and capacity of the environment.
 	IndexCapacity *IndexCapacity `json:"index_capacity,omitempty"`
+
+	// Information about Continuous Relevancy Training for this environment.
+	SearchStatus *SearchStatus `json:"search_status,omitempty"`
 }
+
+// Constants associated with the Environment.Status property.
+// Current status of the environment. `resizing` is displayed when a request to increase the environment size has been
+// made, but is still in the process of being completed.
+const (
+	Environment_Status_Active      = "active"
+	Environment_Status_Maintenance = "maintenance"
+	Environment_Status_Pending     = "pending"
+	Environment_Status_Resizing    = "resizing"
+)
+
+// Constants associated with the Environment.Size property.
+// Current size of the environment.
+const (
+	Environment_Size_L    = "L"
+	Environment_Size_LT   = "LT"
+	Environment_Size_M    = "M"
+	Environment_Size_ML   = "ML"
+	Environment_Size_MS   = "MS"
+	Environment_Size_S    = "S"
+	Environment_Size_XL   = "XL"
+	Environment_Size_XS   = "XS"
+	Environment_Size_XXL  = "XXL"
+	Environment_Size_XXXL = "XXXL"
+)
 
 // EnvironmentDocuments : Summary of the document usage statistics for the environment.
 type EnvironmentDocuments struct {
@@ -4327,9 +4559,8 @@ type FederatedQueryNoticesOptions struct {
 	// A comma-separated list of collection IDs to be queried against.
 	CollectionIds []string `json:"collection_ids" validate:"required"`
 
-	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content.
-	// Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data
-	// set.
+	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
+	// metadata-type searches and for assessing the concepts in the data set.
 	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
@@ -4341,28 +4572,27 @@ type FederatedQueryNoticesOptions struct {
 	// understanding. You cannot use **natural_language_query** and **query** at the same time.
 	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
-	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are
-	// useful for building applications, because you can use them to build lists, tables, and time series. For a full list
-	// of possible aggregrations, see the Query reference.
+	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
+	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
 	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
 	Count *int64 `json:"count,omitempty"`
 
-	// A comma separated list of the portion of the document hierarchy to return.
+	// A comma-separated list of the portion of the document hierarchy to return.
 	ReturnFields []string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
-	// is 10, and the offset is 8, it returns the last two results.
+	// is 10 and the offset is 8, it returns the last two results.
 	Offset *int64 `json:"offset,omitempty"`
 
-	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by
+	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
 	Sort []string `json:"sort,omitempty"`
 
-	// When true a highlight field is returned for each result which contains the fields that match the query with
-	// `<em></em>` tags around the matching query terms. Defaults to false.
+	// When true, a highlight field is returned for each result which contains the fields which match the query with
+	// `<em></em>` tags around the matching query terms.
 	Highlight *bool `json:"highlight,omitempty"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
@@ -4374,15 +4604,15 @@ type FederatedQueryNoticesOptions struct {
 	// **similar.document_ids** parameter.
 	Similar *bool `json:"similar,omitempty"`
 
-	// A comma-separated list of document IDs that will be used to find similar documents.
+	// A comma-separated list of document IDs to find similar documents.
 	//
-	// **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the
-	// document similarity search to include the natural language query. Other query parameters, such as **filter** and
-	// **query** are subsequently applied and reduce the query scope.
+	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
+	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
+	// reduce the scope.
 	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
-	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If
-	// not specified, the entire document is used for comparison.
+	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
+	// specified, the entire document is used for comparison.
 	SimilarFields []string `json:"similar.fields,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -4499,12 +4729,8 @@ type FederatedQueryOptions struct {
 	// The ID of the environment.
 	EnvironmentID *string `json:"environment_id" validate:"required"`
 
-	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string `json:"collection_ids" validate:"required"`
-
-	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content.
-	// Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data
-	// set.
+	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
+	// metadata-type searches and for assessing the concepts in the data set.
 	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
@@ -4516,29 +4742,42 @@ type FederatedQueryOptions struct {
 	// understanding. You cannot use **natural_language_query** and **query** at the same time.
 	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
-	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are
-	// useful for building applications, because you can use them to build lists, tables, and time series. For a full list
-	// of possible aggregrations, see the Query reference.
+	// A passages query that returns the most relevant passages from the results.
+	Passages *bool `json:"passages,omitempty"`
+
+	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
+	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
 	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
 	Count *int64 `json:"count,omitempty"`
 
-	// A comma separated list of the portion of the document hierarchy to return.
-	ReturnFields []string `json:"return,omitempty"`
+	// A comma-separated list of the portion of the document hierarchy to return.
+	ReturnFields *string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
-	// is 10, and the offset is 8, it returns the last two results.
+	// is 10 and the offset is 8, it returns the last two results.
 	Offset *int64 `json:"offset,omitempty"`
 
-	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by
+	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
-	// prefix is specified.
-	Sort []string `json:"sort,omitempty"`
+	// prefix is specified. This parameter cannot be used in the same query as the **bias** parameter.
+	Sort *string `json:"sort,omitempty"`
 
-	// When true a highlight field is returned for each result which contains the fields that match the query with
-	// `<em></em>` tags around the matching query terms. Defaults to false.
+	// When true, a highlight field is returned for each result which contains the fields which match the query with
+	// `<em></em>` tags around the matching query terms.
 	Highlight *bool `json:"highlight,omitempty"`
+
+	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
+	// fields are included.
+	PassagesFields *string `json:"passages.fields,omitempty"`
+
+	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
+	// default is `10`. The maximum is `100`.
+	PassagesCount *int64 `json:"passages.count,omitempty"`
+
+	// The approximate number of characters that any one passage will have.
+	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
 	// When `true` and used with a Watson Discovery News collection, duplicate results (based on the contents of the
 	// **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not
@@ -4550,57 +4789,48 @@ type FederatedQueryOptions struct {
 	// functionality.
 	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
+	// A comma-separated list of collection IDs to be queried against. Required when querying multiple collections, invalid
+	// when performing a single collection query.
+	CollectionIds *string `json:"collection_ids,omitempty"`
+
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
 	Similar *bool `json:"similar,omitempty"`
 
-	// A comma-separated list of document IDs that will be used to find similar documents.
+	// A comma-separated list of document IDs to find similar documents.
 	//
-	// **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the
-	// document similarity search to include the natural language query. Other query parameters, such as **filter** and
-	// **query** are subsequently applied and reduce the query scope.
-	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
+	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
+	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
+	// reduce the scope.
+	SimilarDocumentIds *string `json:"similar.document_ids,omitempty"`
 
-	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If
-	// not specified, the entire document is used for comparison.
-	SimilarFields []string `json:"similar.fields,omitempty"`
+	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
+	// specified, the entire document is used for comparison.
+	SimilarFields *string `json:"similar.fields,omitempty"`
 
-	// A passages query that returns the most relevant passages from the results.
-	Passages *bool `json:"passages,omitempty"`
+	// Field which the returned results will be biased against. The specified field must be either a **date** or **number**
+	// format. When a **date** type field is specified returned results are biased towards field values closer to the
+	// current date. When a **number** type field is specified, returned results are biased towards higher field values.
+	// This parameter cannot be used in the same query as the **sort** parameter.
+	Bias *string `json:"bias,omitempty"`
 
-	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
-	// fields are included.
-	PassagesFields []string `json:"passages.fields,omitempty"`
-
-	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
-	// default is `10`. The maximum is `100`.
-	PassagesCount *int64 `json:"passages.count,omitempty"`
-
-	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The
-	// maximum is `2000`.
-	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
+	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
+	LoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewFederatedQueryOptions : Instantiate FederatedQueryOptions
-func (discovery *DiscoveryV1) NewFederatedQueryOptions(environmentID string, collectionIds []string) *FederatedQueryOptions {
+func (discovery *DiscoveryV1) NewFederatedQueryOptions(environmentID string) *FederatedQueryOptions {
 	return &FederatedQueryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionIds: collectionIds,
 	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *FederatedQueryOptions) SetEnvironmentID(environmentID string) *FederatedQueryOptions {
 	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
-}
-
-// SetCollectionIds : Allow user to set CollectionIds
-func (options *FederatedQueryOptions) SetCollectionIds(collectionIds []string) *FederatedQueryOptions {
-	options.CollectionIds = collectionIds
 	return options
 }
 
@@ -4622,6 +4852,12 @@ func (options *FederatedQueryOptions) SetNaturalLanguageQuery(naturalLanguageQue
 	return options
 }
 
+// SetPassages : Allow user to set Passages
+func (options *FederatedQueryOptions) SetPassages(passages bool) *FederatedQueryOptions {
+	options.Passages = core.BoolPtr(passages)
+	return options
+}
+
 // SetAggregation : Allow user to set Aggregation
 func (options *FederatedQueryOptions) SetAggregation(aggregation string) *FederatedQueryOptions {
 	options.Aggregation = core.StringPtr(aggregation)
@@ -4635,8 +4871,8 @@ func (options *FederatedQueryOptions) SetCount(count int64) *FederatedQueryOptio
 }
 
 // SetReturnFields : Allow user to set ReturnFields
-func (options *FederatedQueryOptions) SetReturnFields(returnFields []string) *FederatedQueryOptions {
-	options.ReturnFields = returnFields
+func (options *FederatedQueryOptions) SetReturnFields(returnFields string) *FederatedQueryOptions {
+	options.ReturnFields = core.StringPtr(returnFields)
 	return options
 }
 
@@ -4647,14 +4883,32 @@ func (options *FederatedQueryOptions) SetOffset(offset int64) *FederatedQueryOpt
 }
 
 // SetSort : Allow user to set Sort
-func (options *FederatedQueryOptions) SetSort(sort []string) *FederatedQueryOptions {
-	options.Sort = sort
+func (options *FederatedQueryOptions) SetSort(sort string) *FederatedQueryOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
 // SetHighlight : Allow user to set Highlight
 func (options *FederatedQueryOptions) SetHighlight(highlight bool) *FederatedQueryOptions {
 	options.Highlight = core.BoolPtr(highlight)
+	return options
+}
+
+// SetPassagesFields : Allow user to set PassagesFields
+func (options *FederatedQueryOptions) SetPassagesFields(passagesFields string) *FederatedQueryOptions {
+	options.PassagesFields = core.StringPtr(passagesFields)
+	return options
+}
+
+// SetPassagesCount : Allow user to set PassagesCount
+func (options *FederatedQueryOptions) SetPassagesCount(passagesCount int64) *FederatedQueryOptions {
+	options.PassagesCount = core.Int64Ptr(passagesCount)
+	return options
+}
+
+// SetPassagesCharacters : Allow user to set PassagesCharacters
+func (options *FederatedQueryOptions) SetPassagesCharacters(passagesCharacters int64) *FederatedQueryOptions {
+	options.PassagesCharacters = core.Int64Ptr(passagesCharacters)
 	return options
 }
 
@@ -4670,6 +4924,12 @@ func (options *FederatedQueryOptions) SetDeduplicateField(deduplicateField strin
 	return options
 }
 
+// SetCollectionIds : Allow user to set CollectionIds
+func (options *FederatedQueryOptions) SetCollectionIds(collectionIds string) *FederatedQueryOptions {
+	options.CollectionIds = core.StringPtr(collectionIds)
+	return options
+}
+
 // SetSimilar : Allow user to set Similar
 func (options *FederatedQueryOptions) SetSimilar(similar bool) *FederatedQueryOptions {
 	options.Similar = core.BoolPtr(similar)
@@ -4677,38 +4937,26 @@ func (options *FederatedQueryOptions) SetSimilar(similar bool) *FederatedQueryOp
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
-func (options *FederatedQueryOptions) SetSimilarDocumentIds(similarDocumentIds []string) *FederatedQueryOptions {
-	options.SimilarDocumentIds = similarDocumentIds
+func (options *FederatedQueryOptions) SetSimilarDocumentIds(similarDocumentIds string) *FederatedQueryOptions {
+	options.SimilarDocumentIds = core.StringPtr(similarDocumentIds)
 	return options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
-func (options *FederatedQueryOptions) SetSimilarFields(similarFields []string) *FederatedQueryOptions {
-	options.SimilarFields = similarFields
+func (options *FederatedQueryOptions) SetSimilarFields(similarFields string) *FederatedQueryOptions {
+	options.SimilarFields = core.StringPtr(similarFields)
 	return options
 }
 
-// SetPassages : Allow user to set Passages
-func (options *FederatedQueryOptions) SetPassages(passages bool) *FederatedQueryOptions {
-	options.Passages = core.BoolPtr(passages)
+// SetBias : Allow user to set Bias
+func (options *FederatedQueryOptions) SetBias(bias string) *FederatedQueryOptions {
+	options.Bias = core.StringPtr(bias)
 	return options
 }
 
-// SetPassagesFields : Allow user to set PassagesFields
-func (options *FederatedQueryOptions) SetPassagesFields(passagesFields []string) *FederatedQueryOptions {
-	options.PassagesFields = passagesFields
-	return options
-}
-
-// SetPassagesCount : Allow user to set PassagesCount
-func (options *FederatedQueryOptions) SetPassagesCount(passagesCount int64) *FederatedQueryOptions {
-	options.PassagesCount = core.Int64Ptr(passagesCount)
-	return options
-}
-
-// SetPassagesCharacters : Allow user to set PassagesCharacters
-func (options *FederatedQueryOptions) SetPassagesCharacters(passagesCharacters int64) *FederatedQueryOptions {
-	options.PassagesCharacters = core.Int64Ptr(passagesCharacters)
+// SetLoggingOptOut : Allow user to set LoggingOptOut
+func (options *FederatedQueryOptions) SetLoggingOptOut(loggingOptOut bool) *FederatedQueryOptions {
+	options.LoggingOptOut = core.BoolPtr(loggingOptOut)
 	return options
 }
 
@@ -4727,6 +4975,22 @@ type Field struct {
 	// The type of the field.
 	FieldType *string `json:"type,omitempty"`
 }
+
+// Constants associated with the Field.FieldType property.
+// The type of the field.
+const (
+	Field_FieldType_Binary  = "binary"
+	Field_FieldType_Boolean = "boolean"
+	Field_FieldType_Byte    = "byte"
+	Field_FieldType_Date    = "date"
+	Field_FieldType_Double  = "double"
+	Field_FieldType_Float   = "float"
+	Field_FieldType_Integer = "integer"
+	Field_FieldType_Long    = "long"
+	Field_FieldType_Nested  = "nested"
+	Field_FieldType_Short   = "short"
+	Field_FieldType_String  = "string"
+)
 
 // FontSetting : FontSetting struct
 type FontSetting struct {
@@ -4954,20 +5218,26 @@ type GetMetricsEventRateOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the GetMetricsEventRateOptions.ResultType property.
+// The type of result to consider when calculating the metric.
+const (
+	GetMetricsEventRateOptions_ResultType_Document = "document"
+)
+
 // NewGetMetricsEventRateOptions : Instantiate GetMetricsEventRateOptions
 func (discovery *DiscoveryV1) NewGetMetricsEventRateOptions() *GetMetricsEventRateOptions {
 	return &GetMetricsEventRateOptions{}
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetMetricsEventRateOptions) SetStartTime(startTime strfmt.DateTime) *GetMetricsEventRateOptions {
-	options.StartTime = &startTime
+func (options *GetMetricsEventRateOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsEventRateOptions {
+	options.StartTime = startTime
 	return options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetMetricsEventRateOptions) SetEndTime(endTime strfmt.DateTime) *GetMetricsEventRateOptions {
-	options.EndTime = &endTime
+func (options *GetMetricsEventRateOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsEventRateOptions {
+	options.EndTime = endTime
 	return options
 }
 
@@ -4999,20 +5269,26 @@ type GetMetricsQueryEventOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the GetMetricsQueryEventOptions.ResultType property.
+// The type of result to consider when calculating the metric.
+const (
+	GetMetricsQueryEventOptions_ResultType_Document = "document"
+)
+
 // NewGetMetricsQueryEventOptions : Instantiate GetMetricsQueryEventOptions
 func (discovery *DiscoveryV1) NewGetMetricsQueryEventOptions() *GetMetricsQueryEventOptions {
 	return &GetMetricsQueryEventOptions{}
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetMetricsQueryEventOptions) SetStartTime(startTime strfmt.DateTime) *GetMetricsQueryEventOptions {
-	options.StartTime = &startTime
+func (options *GetMetricsQueryEventOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryEventOptions {
+	options.StartTime = startTime
 	return options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetMetricsQueryEventOptions) SetEndTime(endTime strfmt.DateTime) *GetMetricsQueryEventOptions {
-	options.EndTime = &endTime
+func (options *GetMetricsQueryEventOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryEventOptions {
+	options.EndTime = endTime
 	return options
 }
 
@@ -5044,20 +5320,26 @@ type GetMetricsQueryNoResultsOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the GetMetricsQueryNoResultsOptions.ResultType property.
+// The type of result to consider when calculating the metric.
+const (
+	GetMetricsQueryNoResultsOptions_ResultType_Document = "document"
+)
+
 // NewGetMetricsQueryNoResultsOptions : Instantiate GetMetricsQueryNoResultsOptions
 func (discovery *DiscoveryV1) NewGetMetricsQueryNoResultsOptions() *GetMetricsQueryNoResultsOptions {
 	return &GetMetricsQueryNoResultsOptions{}
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetMetricsQueryNoResultsOptions) SetStartTime(startTime strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
-	options.StartTime = &startTime
+func (options *GetMetricsQueryNoResultsOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
+	options.StartTime = startTime
 	return options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetMetricsQueryNoResultsOptions) SetEndTime(endTime strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
-	options.EndTime = &endTime
+func (options *GetMetricsQueryNoResultsOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
+	options.EndTime = endTime
 	return options
 }
 
@@ -5089,20 +5371,26 @@ type GetMetricsQueryOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the GetMetricsQueryOptions.ResultType property.
+// The type of result to consider when calculating the metric.
+const (
+	GetMetricsQueryOptions_ResultType_Document = "document"
+)
+
 // NewGetMetricsQueryOptions : Instantiate GetMetricsQueryOptions
 func (discovery *DiscoveryV1) NewGetMetricsQueryOptions() *GetMetricsQueryOptions {
 	return &GetMetricsQueryOptions{}
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetMetricsQueryOptions) SetStartTime(startTime strfmt.DateTime) *GetMetricsQueryOptions {
-	options.StartTime = &startTime
+func (options *GetMetricsQueryOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryOptions {
+	options.StartTime = startTime
 	return options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetMetricsQueryOptions) SetEndTime(endTime strfmt.DateTime) *GetMetricsQueryOptions {
-	options.EndTime = &endTime
+func (options *GetMetricsQueryOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryOptions {
+	options.EndTime = endTime
 	return options
 }
 
@@ -5741,6 +6029,34 @@ type LogQueryResponseResult struct {
 	ResultType *string `json:"result_type,omitempty"`
 }
 
+// Constants associated with the LogQueryResponseResult.DocumentType property.
+// The type of log entry returned.
+//
+//  **query** indicates that the log represents the results of a call to the single collection **query** method.
+//
+//  **event** indicates that the log represents  a call to the **events** API.
+const (
+	LogQueryResponseResult_DocumentType_Event = "event"
+	LogQueryResponseResult_DocumentType_Query = "query"
+)
+
+// Constants associated with the LogQueryResponseResult.EventType property.
+// The type of event that this object respresents. Possible values are
+//
+//  -  `query` the log of a query to a collection
+//
+//  -  `click` the result of a call to the **events** endpoint.
+const (
+	LogQueryResponseResult_EventType_Click = "click"
+	LogQueryResponseResult_EventType_Query = "query"
+)
+
+// Constants associated with the LogQueryResponseResult.ResultType property.
+// The type of result that this **event** is associated with. Only returned with logs of type `event`.
+const (
+	LogQueryResponseResult_ResultType_Document = "document"
+)
+
 // LogQueryResponseResultDocuments : Object containing result information that was returned by the query used to create this log entry. Only returned with
 // logs of type `query`.
 type LogQueryResponseResultDocuments struct {
@@ -5996,6 +6312,37 @@ type NormalizationOperation struct {
 	DestinationField *string `json:"destination_field,omitempty"`
 }
 
+// Constants associated with the NormalizationOperation.Operation property.
+// Identifies what type of operation to perform.
+//
+// **copy** - Copies the value of the **source_field** to the **destination_field** field. If the **destination_field**
+// already exists, then the value of the **source_field** overwrites the original value of the **destination_field**.
+//
+// **move** - Renames (moves) the **source_field** to the **destination_field**. If the **destination_field** already
+// exists, then the value of the **source_field** overwrites the original value of the **destination_field**. Rename is
+// identical to copy, except that the **source_field** is removed after the value has been copied to the
+// **destination_field** (it is the same as a _copy_ followed by a _remove_).
+//
+// **merge** - Merges the value of the **source_field** with the value of the **destination_field**. The
+// **destination_field** is converted into an array if it is not already an array, and the value of the **source_field**
+// is appended to the array. This operation removes the **source_field** after the merge. If the **source_field** does
+// not exist in the current document, then the **destination_field** is still converted into an array (if it is not an
+// array already). This conversion ensures the type for **destination_field** is consistent across all documents.
+//
+// **remove** - Deletes the **source_field** field. The **destination_field** is ignored for this operation.
+//
+// **remove_nulls** - Removes all nested null (blank) field values from the JSON tree. **source_field** and
+// **destination_field** are ignored by this operation because _remove_nulls_ operates on the entire JSON tree.
+// Typically, **remove_nulls** is invoked as the last normalization operation (if it is invoked at all, it can be
+// time-expensive).
+const (
+	NormalizationOperation_Operation_Copy        = "copy"
+	NormalizationOperation_Operation_Merge       = "merge"
+	NormalizationOperation_Operation_Move        = "move"
+	NormalizationOperation_Operation_Remove      = "remove"
+	NormalizationOperation_Operation_RemoveNulls = "remove_nulls"
+)
+
 // Notice : A notice produced for the collection.
 type Notice struct {
 
@@ -6021,6 +6368,13 @@ type Notice struct {
 	// The description of the notice.
 	Description *string `json:"description,omitempty"`
 }
+
+// Constants associated with the Notice.Severity property.
+// Severity level of the notice.
+const (
+	Notice_Severity_Error   = "error"
+	Notice_Severity_Warning = "warning"
+)
 
 // PdfHeadingDetection : PdfHeadingDetection struct
 type PdfHeadingDetection struct {
@@ -6123,14 +6477,14 @@ func (options *QueryEntitiesOptions) SetFeature(feature string) *QueryEntitiesOp
 }
 
 // SetEntity : Allow user to set Entity
-func (options *QueryEntitiesOptions) SetEntity(entity QueryEntitiesEntity) *QueryEntitiesOptions {
-	options.Entity = &entity
+func (options *QueryEntitiesOptions) SetEntity(entity *QueryEntitiesEntity) *QueryEntitiesOptions {
+	options.Entity = entity
 	return options
 }
 
 // SetContext : Allow user to set Context
-func (options *QueryEntitiesOptions) SetContext(context QueryEntitiesContext) *QueryEntitiesOptions {
-	options.Context = &context
+func (options *QueryEntitiesOptions) SetContext(context *QueryEntitiesContext) *QueryEntitiesOptions {
+	options.Context = context
 	return options
 }
 
@@ -6218,9 +6572,8 @@ type QueryFilterType struct {
 // QueryLogOptions : The queryLog options.
 type QueryLogOptions struct {
 
-	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content.
-	// Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data
-	// set.
+	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
+	// metadata-type searches and for assessing the concepts in the data set.
 	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
@@ -6232,10 +6585,10 @@ type QueryLogOptions struct {
 	Count *int64 `json:"count,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
-	// is 10, and the offset is 8, it returns the last two results.
+	// is 10 and the offset is 8, it returns the last two results.
 	Offset *int64 `json:"offset,omitempty"`
 
-	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by
+	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
 	Sort []string `json:"sort,omitempty"`
@@ -6294,9 +6647,8 @@ type QueryNoticesOptions struct {
 	// The ID of the collection.
 	CollectionID *string `json:"collection_id" validate:"required"`
 
-	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content.
-	// Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data
-	// set.
+	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
+	// metadata-type searches and for assessing the concepts in the data set.
 	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
@@ -6311,40 +6663,37 @@ type QueryNoticesOptions struct {
 	// A passages query that returns the most relevant passages from the results.
 	Passages *bool `json:"passages,omitempty"`
 
-	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are
-	// useful for building applications, because you can use them to build lists, tables, and time series. For a full list
-	// of possible aggregrations, see the Query reference.
+	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
+	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
 	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
 	Count *int64 `json:"count,omitempty"`
 
-	// A comma separated list of the portion of the document hierarchy to return.
+	// A comma-separated list of the portion of the document hierarchy to return.
 	ReturnFields []string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
-	// is 10, and the offset is 8, it returns the last two results.
+	// is 10 and the offset is 8, it returns the last two results.
 	Offset *int64 `json:"offset,omitempty"`
 
-	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by
+	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
 	Sort []string `json:"sort,omitempty"`
 
-	// When true a highlight field is returned for each result which contains the fields that match the query with
-	// `<em></em>` tags around the matching query terms. Defaults to false.
+	// When true, a highlight field is returned for each result which contains the fields which match the query with
+	// `<em></em>` tags around the matching query terms.
 	Highlight *bool `json:"highlight,omitempty"`
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
 	// fields are included.
 	PassagesFields []string `json:"passages.fields,omitempty"`
 
-	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
-	// default is `10`. The maximum is `100`.
+	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found.
 	PassagesCount *int64 `json:"passages.count,omitempty"`
 
-	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The
-	// maximum is `2000`.
+	// The approximate number of characters that any one passage will have.
 	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
@@ -6356,15 +6705,15 @@ type QueryNoticesOptions struct {
 	// **similar.document_ids** parameter.
 	Similar *bool `json:"similar,omitempty"`
 
-	// A comma-separated list of document IDs that will be used to find similar documents.
+	// A comma-separated list of document IDs to find similar documents.
 	//
-	// **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the
-	// document similarity search to include the natural language query. Other query parameters, such as **filter** and
-	// **query** are subsequently applied and reduce the query scope.
+	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
+	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
+	// reduce the scope.
 	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
 
-	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If
-	// not specified, the entire document is used for comparison.
+	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
+	// specified, the entire document is used for comparison.
 	SimilarFields []string `json:"similar.fields,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6547,6 +6896,15 @@ type QueryNoticesResult struct {
 	Notices []Notice `json:"notices,omitempty"`
 }
 
+// Constants associated with the QueryNoticesResult.FileType property.
+// The type of the original source file.
+const (
+	QueryNoticesResult_FileType_HTML = "html"
+	QueryNoticesResult_FileType_JSON = "json"
+	QueryNoticesResult_FileType_Pdf  = "pdf"
+	QueryNoticesResult_FileType_Word = "word"
+)
+
 // QueryOptions : The query options.
 type QueryOptions struct {
 
@@ -6556,9 +6914,8 @@ type QueryOptions struct {
 	// The ID of the collection.
 	CollectionID *string `json:"collection_id" validate:"required"`
 
-	// A cacheable query that limits the documents returned to exclude any documents that don't mention the query content.
-	// Filter searches are better for metadata type searches and when you are trying to get a sense of concepts in the data
-	// set.
+	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
+	// metadata-type searches and for assessing the concepts in the data set.
 	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
@@ -6573,40 +6930,38 @@ type QueryOptions struct {
 	// A passages query that returns the most relevant passages from the results.
 	Passages *bool `json:"passages,omitempty"`
 
-	// An aggregation search uses combinations of filters and query search to return an exact answer. Aggregations are
-	// useful for building applications, because you can use them to build lists, tables, and time series. For a full list
-	// of possible aggregrations, see the Query reference.
+	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
+	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
 	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
 	Count *int64 `json:"count,omitempty"`
 
-	// A comma separated list of the portion of the document hierarchy to return.
-	ReturnFields []string `json:"return,omitempty"`
+	// A comma-separated list of the portion of the document hierarchy to return.
+	ReturnFields *string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
-	// is 10, and the offset is 8, it returns the last two results.
+	// is 10 and the offset is 8, it returns the last two results.
 	Offset *int64 `json:"offset,omitempty"`
 
-	// A comma separated list of fields in the document to sort on. You can optionally specify a sort direction by
+	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
-	// prefix is specified.
-	Sort []string `json:"sort,omitempty"`
+	// prefix is specified. This parameter cannot be used in the same query as the **bias** parameter.
+	Sort *string `json:"sort,omitempty"`
 
-	// When true a highlight field is returned for each result which contains the fields that match the query with
-	// `<em></em>` tags around the matching query terms. Defaults to false.
+	// When true, a highlight field is returned for each result which contains the fields which match the query with
+	// `<em></em>` tags around the matching query terms.
 	Highlight *bool `json:"highlight,omitempty"`
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
 	// fields are included.
-	PassagesFields []string `json:"passages.fields,omitempty"`
+	PassagesFields *string `json:"passages.fields,omitempty"`
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
 	// default is `10`. The maximum is `100`.
 	PassagesCount *int64 `json:"passages.count,omitempty"`
 
-	// The approximate number of characters that any one passage will have. The default is `400`. The minimum is `50`. The
-	// maximum is `2000`.
+	// The approximate number of characters that any one passage will have.
 	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
 	// When `true` and used with a Watson Discovery News collection, duplicate results (based on the contents of the
@@ -6619,20 +6974,30 @@ type QueryOptions struct {
 	// functionality.
 	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
+	// A comma-separated list of collection IDs to be queried against. Required when querying multiple collections, invalid
+	// when performing a single collection query.
+	CollectionIds *string `json:"collection_ids,omitempty"`
+
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
 	Similar *bool `json:"similar,omitempty"`
 
-	// A comma-separated list of document IDs that will be used to find similar documents.
+	// A comma-separated list of document IDs to find similar documents.
 	//
-	// **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope of the
-	// document similarity search to include the natural language query. Other query parameters, such as **filter** and
-	// **query** are subsequently applied and reduce the query scope.
-	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
+	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
+	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
+	// reduce the scope.
+	SimilarDocumentIds *string `json:"similar.document_ids,omitempty"`
 
-	// A comma-separated list of field names that will be used as a basis for comparison to identify similar documents. If
-	// not specified, the entire document is used for comparison.
-	SimilarFields []string `json:"similar.fields,omitempty"`
+	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
+	// specified, the entire document is used for comparison.
+	SimilarFields *string `json:"similar.fields,omitempty"`
+
+	// Field which the returned results will be biased against. The specified field must be either a **date** or **number**
+	// format. When a **date** type field is specified returned results are biased towards field values closer to the
+	// current date. When a **number** type field is specified, returned results are biased towards higher field values.
+	// This parameter cannot be used in the same query as the **sort** parameter.
+	Bias *string `json:"bias,omitempty"`
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
 	LoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
@@ -6698,8 +7063,8 @@ func (options *QueryOptions) SetCount(count int64) *QueryOptions {
 }
 
 // SetReturnFields : Allow user to set ReturnFields
-func (options *QueryOptions) SetReturnFields(returnFields []string) *QueryOptions {
-	options.ReturnFields = returnFields
+func (options *QueryOptions) SetReturnFields(returnFields string) *QueryOptions {
+	options.ReturnFields = core.StringPtr(returnFields)
 	return options
 }
 
@@ -6710,8 +7075,8 @@ func (options *QueryOptions) SetOffset(offset int64) *QueryOptions {
 }
 
 // SetSort : Allow user to set Sort
-func (options *QueryOptions) SetSort(sort []string) *QueryOptions {
-	options.Sort = sort
+func (options *QueryOptions) SetSort(sort string) *QueryOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
@@ -6722,8 +7087,8 @@ func (options *QueryOptions) SetHighlight(highlight bool) *QueryOptions {
 }
 
 // SetPassagesFields : Allow user to set PassagesFields
-func (options *QueryOptions) SetPassagesFields(passagesFields []string) *QueryOptions {
-	options.PassagesFields = passagesFields
+func (options *QueryOptions) SetPassagesFields(passagesFields string) *QueryOptions {
+	options.PassagesFields = core.StringPtr(passagesFields)
 	return options
 }
 
@@ -6751,6 +7116,12 @@ func (options *QueryOptions) SetDeduplicateField(deduplicateField string) *Query
 	return options
 }
 
+// SetCollectionIds : Allow user to set CollectionIds
+func (options *QueryOptions) SetCollectionIds(collectionIds string) *QueryOptions {
+	options.CollectionIds = core.StringPtr(collectionIds)
+	return options
+}
+
 // SetSimilar : Allow user to set Similar
 func (options *QueryOptions) SetSimilar(similar bool) *QueryOptions {
 	options.Similar = core.BoolPtr(similar)
@@ -6758,14 +7129,20 @@ func (options *QueryOptions) SetSimilar(similar bool) *QueryOptions {
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
-func (options *QueryOptions) SetSimilarDocumentIds(similarDocumentIds []string) *QueryOptions {
-	options.SimilarDocumentIds = similarDocumentIds
+func (options *QueryOptions) SetSimilarDocumentIds(similarDocumentIds string) *QueryOptions {
+	options.SimilarDocumentIds = core.StringPtr(similarDocumentIds)
 	return options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
-func (options *QueryOptions) SetSimilarFields(similarFields []string) *QueryOptions {
-	options.SimilarFields = similarFields
+func (options *QueryOptions) SetSimilarFields(similarFields string) *QueryOptions {
+	options.SimilarFields = core.StringPtr(similarFields)
+	return options
+}
+
+// SetBias : Allow user to set Bias
+func (options *QueryOptions) SetBias(bias string) *QueryOptions {
+	options.Bias = core.StringPtr(bias)
 	return options
 }
 
@@ -6851,7 +7228,8 @@ type QueryRelationsOptions struct {
 	Context *QueryEntitiesContext `json:"context,omitempty"`
 
 	// The sorting method for the relationships, can be `score` or `frequency`. `frequency` is the number of unique times
-	// each entity is identified. The default is `score`.
+	// each entity is identified. The default is `score`. This parameter cannot be used in the same query as the **bias**
+	// parameter.
 	Sort *string `json:"sort,omitempty"`
 
 	// Filters to apply to the relationship query.
@@ -6867,6 +7245,15 @@ type QueryRelationsOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the QueryRelationsOptions.Sort property.
+// The sorting method for the relationships, can be `score` or `frequency`. `frequency` is the number of unique times
+// each entity is identified. The default is `score`. This parameter cannot be used in the same query as the **bias**
+// parameter.
+const (
+	QueryRelationsOptions_Sort_Frequency = "frequency"
+	QueryRelationsOptions_Sort_Score     = "score"
+)
 
 // NewQueryRelationsOptions : Instantiate QueryRelationsOptions
 func (discovery *DiscoveryV1) NewQueryRelationsOptions(environmentID string, collectionID string) *QueryRelationsOptions {
@@ -6895,8 +7282,8 @@ func (options *QueryRelationsOptions) SetEntities(entities []QueryRelationsEntit
 }
 
 // SetContext : Allow user to set Context
-func (options *QueryRelationsOptions) SetContext(context QueryEntitiesContext) *QueryRelationsOptions {
-	options.Context = &context
+func (options *QueryRelationsOptions) SetContext(context *QueryEntitiesContext) *QueryRelationsOptions {
+	options.Context = context
 	return options
 }
 
@@ -6907,8 +7294,8 @@ func (options *QueryRelationsOptions) SetSort(sort string) *QueryRelationsOption
 }
 
 // SetFilter : Allow user to set Filter
-func (options *QueryRelationsOptions) SetFilter(filter QueryRelationsFilter) *QueryRelationsOptions {
-	options.Filter = &filter
+func (options *QueryRelationsOptions) SetFilter(filter *QueryRelationsFilter) *QueryRelationsOptions {
+	options.Filter = filter
 	return options
 }
 
@@ -7002,6 +7389,32 @@ type QueryResultMetadata struct {
 	Confidence *float64 `json:"confidence,omitempty"`
 }
 
+// SearchStatus : Information about the Continuous Relevancy Training for this environment.
+type SearchStatus struct {
+
+	// Current scope of the training. Always returned as `environment`.
+	Scope *string `json:"scope,omitempty"`
+
+	// The current status of Continuous Relevancy Training for this environment.
+	Status *string `json:"status,omitempty"`
+
+	// Long description of the current Continuous Relevancy Training status.
+	StatusDescription *string `json:"status_description,omitempty"`
+
+	// The date stamp of the most recent completed training for this environment.
+	LastTrained *strfmt.Date `json:"last_trained,omitempty"`
+}
+
+// Constants associated with the SearchStatus.Status property.
+// The current status of Continuous Relevancy Training for this environment.
+const (
+	SearchStatus_Status_INSUFFICENTDATA = "INSUFFICENT_DATA"
+	SearchStatus_Status_NOTAPPLICABLE   = "NOT_APPLICABLE"
+	SearchStatus_Status_NODATA          = "NO_DATA"
+	SearchStatus_Status_TRAINED         = "TRAINED"
+	SearchStatus_Status_TRAINING        = "TRAINING"
+)
+
 // SegmentSettings : A list of Document Segmentation settings.
 type SegmentSettings struct {
 
@@ -7032,6 +7445,17 @@ type Source struct {
 	// The **options** object defines which items to crawl from the source system.
 	Options *SourceOptions `json:"options,omitempty"`
 }
+
+// Constants associated with the Source.Type property.
+// The type of source to connect to.
+// -  `box` indicates the configuration is to connect an instance of Enterprise Box.
+// -  `salesforce` indicates the configuration is to connect to Salesforce.
+// -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
+const (
+	Source_Type_Box        = "box"
+	Source_Type_Salesforce = "salesforce"
+	Source_Type_Sharepoint = "sharepoint"
+)
 
 // SourceOptions : The **options** object defines which items to crawl from the source system.
 type SourceOptions struct {
@@ -7104,6 +7528,18 @@ type SourceSchedule struct {
 	Frequency *string `json:"frequency,omitempty"`
 }
 
+// Constants associated with the SourceSchedule.Frequency property.
+// The crawl schedule in the specified **time_zone**.
+//
+// -  `daily`: Runs every day between 00:00 and 06:00.
+// -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
+// -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
+const (
+	SourceSchedule_Frequency_Daily   = "daily"
+	SourceSchedule_Frequency_Monthly = "monthly"
+	SourceSchedule_Frequency_Weekly  = "weekly"
+)
+
 // SourceStatus : Object containing source crawl status information.
 type SourceStatus struct {
 
@@ -7120,6 +7556,23 @@ type SourceStatus struct {
 	// Date in UTC format indicating when the last crawl was attempted. If `null`, no crawl was completed.
 	LastUpdated *strfmt.DateTime `json:"last_updated,omitempty"`
 }
+
+// Constants associated with the SourceStatus.Status property.
+// The current status of the source crawl for this collection. This field returns `not_configured` if the default
+// configuration for this source does not have a **source** object defined.
+//
+// -  `running` indicates that a crawl to fetch more documents is in progress.
+// -  `complete` indicates that the crawl has completed with no errors.
+// -  `complete_with_notices` indicates that some notices were generated during the crawl. Notices can be checked by
+// using the **notices** query method.
+// -  `stopped` indicates that the crawl has stopped but is not complete.
+const (
+	SourceStatus_Status_Complete            = "complete"
+	SourceStatus_Status_CompleteWithNotices = "complete_with_notices"
+	SourceStatus_Status_NotConfigured       = "not_configured"
+	SourceStatus_Status_Running             = "running"
+	SourceStatus_Status_Stopped             = "stopped"
+)
 
 // TestConfigurationInEnvironmentOptions : The testConfigurationInEnvironment options.
 type TestConfigurationInEnvironmentOptions struct {
@@ -7164,6 +7617,18 @@ type TestConfigurationInEnvironmentOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the TestConfigurationInEnvironmentOptions.Step property.
+// Specify to only run the input document through the given step instead of running the input document through the
+// entire ingestion workflow. Valid values are `convert`, `enrich`, and `normalize`.
+const (
+	TestConfigurationInEnvironmentOptions_Step_EnrichmentsOutput        = "enrichments_output"
+	TestConfigurationInEnvironmentOptions_Step_HTMLInput                = "html_input"
+	TestConfigurationInEnvironmentOptions_Step_HTMLOutput               = "html_output"
+	TestConfigurationInEnvironmentOptions_Step_JSONNormalizationsOutput = "json_normalizations_output"
+	TestConfigurationInEnvironmentOptions_Step_JSONOutput               = "json_output"
+	TestConfigurationInEnvironmentOptions_Step_NormalizationsOutput     = "normalizations_output"
+)
 
 // NewTestConfigurationInEnvironmentOptions : Instantiate TestConfigurationInEnvironmentOptions
 func (discovery *DiscoveryV1) NewTestConfigurationInEnvironmentOptions(environmentID string) *TestConfigurationInEnvironmentOptions {
@@ -7445,8 +7910,8 @@ func (options *UpdateConfigurationOptions) SetDescription(description string) *U
 }
 
 // SetConversions : Allow user to set Conversions
-func (options *UpdateConfigurationOptions) SetConversions(conversions Conversions) *UpdateConfigurationOptions {
-	options.Conversions = &conversions
+func (options *UpdateConfigurationOptions) SetConversions(conversions *Conversions) *UpdateConfigurationOptions {
+	options.Conversions = conversions
 	return options
 }
 
@@ -7463,8 +7928,8 @@ func (options *UpdateConfigurationOptions) SetNormalizations(normalizations []No
 }
 
 // SetSource : Allow user to set Source
-func (options *UpdateConfigurationOptions) SetSource(source Source) *UpdateConfigurationOptions {
-	options.Source = &source
+func (options *UpdateConfigurationOptions) SetSource(source *Source) *UpdateConfigurationOptions {
+	options.Source = source
 	return options
 }
 
@@ -7498,6 +7963,17 @@ type UpdateCredentialsOptions struct {
 	Headers map[string]string
 }
 
+// Constants associated with the UpdateCredentialsOptions.SourceType property.
+// The source that this credentials object connects to.
+// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
+// -  `salesforce` indicates the credentials are used to connect to Salesforce.
+// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+const (
+	UpdateCredentialsOptions_SourceType_Box        = "box"
+	UpdateCredentialsOptions_SourceType_Salesforce = "salesforce"
+	UpdateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
+)
+
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
 func (discovery *DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
 	return &UpdateCredentialsOptions{
@@ -7525,8 +8001,8 @@ func (options *UpdateCredentialsOptions) SetSourceType(sourceType string) *Updat
 }
 
 // SetCredentialDetails : Allow user to set CredentialDetails
-func (options *UpdateCredentialsOptions) SetCredentialDetails(credentialDetails CredentialDetails) *UpdateCredentialsOptions {
-	options.CredentialDetails = &credentialDetails
+func (options *UpdateCredentialsOptions) SetCredentialDetails(credentialDetails *CredentialDetails) *UpdateCredentialsOptions {
+	options.CredentialDetails = credentialDetails
 	return options
 }
 
@@ -7640,9 +8116,27 @@ type UpdateEnvironmentOptions struct {
 	// Description of the environment.
 	Description *string `json:"description,omitempty"`
 
+	// Size that the environment should be increased to. Environment size cannot be modified when using a Lite plan.
+	// Environment size can only increased and not decreased.
+	Size *string `json:"size,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the UpdateEnvironmentOptions.Size property.
+// Size that the environment should be increased to. Environment size cannot be modified when using a Lite plan.
+// Environment size can only increased and not decreased.
+const (
+	UpdateEnvironmentOptions_Size_L    = "L"
+	UpdateEnvironmentOptions_Size_M    = "M"
+	UpdateEnvironmentOptions_Size_ML   = "ML"
+	UpdateEnvironmentOptions_Size_MS   = "MS"
+	UpdateEnvironmentOptions_Size_S    = "S"
+	UpdateEnvironmentOptions_Size_XL   = "XL"
+	UpdateEnvironmentOptions_Size_XXL  = "XXL"
+	UpdateEnvironmentOptions_Size_XXXL = "XXXL"
+)
 
 // NewUpdateEnvironmentOptions : Instantiate UpdateEnvironmentOptions
 func (discovery *DiscoveryV1) NewUpdateEnvironmentOptions(environmentID string) *UpdateEnvironmentOptions {
@@ -7666,6 +8160,12 @@ func (options *UpdateEnvironmentOptions) SetName(name string) *UpdateEnvironment
 // SetDescription : Allow user to set Description
 func (options *UpdateEnvironmentOptions) SetDescription(description string) *UpdateEnvironmentOptions {
 	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetSize : Allow user to set Size
+func (options *UpdateEnvironmentOptions) SetSize(size string) *UpdateEnvironmentOptions {
+	options.Size = core.StringPtr(size)
 	return options
 }
 

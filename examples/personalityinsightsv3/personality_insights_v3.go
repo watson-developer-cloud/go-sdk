@@ -31,7 +31,7 @@ func main() {
 	// Read txt file with example speech
 	pwd, _ := os.Getwd()
 	fileName := "personality-v3.txt"
-	file, fileErr := ioutil.ReadFile(pwd + "/../resources/" + fileName)
+	file, fileErr := ioutil.ReadFile(pwd + "/../../resources/" + fileName)
 
 	// Check successful file read
 	if fileErr != nil {
@@ -39,7 +39,9 @@ func main() {
 	}
 
 	// Create a new ProfileOptions for ContentType "text/plain"
-	profileOptions := service.NewProfileOptionsForPlain(string(file))
+	profileOptions := service.
+		NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_TextPlain)
+	profileOptions.SetBody(string(file))
 	profileOptions.ContentLanguage = core.StringPtr("en")
 	profileOptions.AcceptLanguage = core.StringPtr("en")
 
@@ -62,7 +64,7 @@ func main() {
 
 	// Read JSON file with example tweets
 	fileName = "personality-v3.json"
-	file, fileErr = ioutil.ReadFile(pwd + "/../resources/" + fileName)
+	file, fileErr = ioutil.ReadFile(pwd + "/../../resources/" + fileName)
 
 	// Check successful file read
 	if fileErr != nil {
@@ -96,7 +98,7 @@ func main() {
 
 	// Read txt file with example speech
 	fileName = "personality-v3.txt"
-	file, fileErr = ioutil.ReadFile(pwd + "/../resources/" + fileName)
+	file, fileErr = ioutil.ReadFile(pwd + "/../../resources/" + fileName)
 
 	// Check successful file read
 	if fileErr != nil {
@@ -104,7 +106,7 @@ func main() {
 	}
 
 	// Set text/plain of profileOptions
-	profileOptions.SetPlain(string(file))
+	profileOptions.SetBody(string(file))
 
 	// Call the personality insights ProfileAsCsv method
 	response, responseErr = service.ProfileAsCsv(profileOptions)
