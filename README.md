@@ -1,5 +1,5 @@
 # Watson Developer Cloud Go SDK
-[![Build Status](https://travis-ci.org/watson-developer-cloud/go-sdk.svg)](https://travis-ci.org/watson-developer-cloud/go-sdk)
+[![Build Status](https://travis-ci.org/watson-developer-cloud/go-sdk.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/go-sdk)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 
@@ -31,7 +31,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 Get SDK package:
 ```bash
-go get github.com/watson-developer-cloud/go-sdk
+go get -u github.com/watson-developer-cloud/go-sdk/...
 ```
 
 ## Running in IBM Cloud
