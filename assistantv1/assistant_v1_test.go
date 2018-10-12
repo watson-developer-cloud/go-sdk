@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/cloudfoundry-community/go-cfenv"
-	"github.com/ibm-watson/go-sdk/assistantv1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/assistantv1"
 )
 
 var _ = Describe("AssistantV1", func() {

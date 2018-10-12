@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/ibm-watson/go-sdk/core"
-	"github.com/ibm-watson/go-sdk/visualrecognitionv3"
+	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
 )
 
 func main() {
@@ -69,7 +69,8 @@ func main() {
 
 	createClassifierOptions := service.
 		NewCreateClassifierOptions("Cars vs Trucks").
-		AddClassnamePositiveExamples("cars", carsFile)
+		AddPositiveExamples("cars", carsFile).
+		AddPositiveExamplesFilename("cars", "cars.zip")
 	createClassifierOptions.NegativeExamples = trucksFile
 
 	response, responseErr = service.CreateClassifier(createClassifierOptions)

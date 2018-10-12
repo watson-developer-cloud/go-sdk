@@ -11,9 +11,9 @@ import (
 	"strings"
 
 	"github.com/cloudfoundry-community/go-cfenv"
-	"github.com/ibm-watson/go-sdk/visualrecognitionv3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
 )
 
 var _ = Describe("VisualRecognitionV3", func() {
@@ -184,7 +184,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 
 				CreateClassifierOptions := testService.
 					NewCreateClassifierOptions("cars vs trucks").
-					AddClassnamePositiveExamples("cars", cars)
+					AddPositiveExamples("cars", cars).
+					AddPositiveExamplesFilename("cars", "cars.zip")
 				returnValue, returnValueErr := testService.CreateClassifier(CreateClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

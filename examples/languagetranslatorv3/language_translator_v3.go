@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	core "github.com/ibm-watson/go-sdk/core"
-	languagetranslator "github.com/ibm-watson/go-sdk/languagetranslatorv3"
+	core "github.com/watson-developer-cloud/go-sdk/core"
+	languagetranslator "github.com/watson-developer-cloud/go-sdk/languagetranslatorv3"
 )
 
 func main() {

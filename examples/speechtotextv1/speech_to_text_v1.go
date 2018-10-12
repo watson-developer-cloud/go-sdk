@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/ibm-watson/go-sdk/core"
-	"github.com/ibm-watson/go-sdk/speechtotextv1"
+	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
 )
 
 func main() {

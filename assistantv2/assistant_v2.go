@@ -18,7 +18,7 @@ package assistantv2
  */
 
 import (
-	core "github.com/ibm-watson/go-sdk/core"
+	core "github.com/watson-developer-cloud/go-sdk/core"
 )
 
 // AssistantV2 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
@@ -255,7 +255,7 @@ type DeleteSessionOptions struct {
 func (assistant *AssistantV2) NewDeleteSessionOptions(assistantID string, sessionID string) *DeleteSessionOptions {
 	return &DeleteSessionOptions{
 		AssistantID: core.StringPtr(assistantID),
-		SessionID: core.StringPtr(sessionID),
+		SessionID:   core.StringPtr(sessionID),
 	}
 }
 
@@ -291,8 +291,8 @@ type DialogLogMessage struct {
 // The severity of the log message.
 const (
 	DialogLogMessage_Level_Error = "error"
-	DialogLogMessage_Level_Info = "info"
-	DialogLogMessage_Level_Warn = "warn"
+	DialogLogMessage_Level_Info  = "info"
+	DialogLogMessage_Level_Warn  = "warn"
 )
 
 // DialogNodeAction : DialogNodeAction struct
@@ -406,17 +406,17 @@ type DialogRuntimeResponseGeneric struct {
 // users.
 const (
 	DialogRuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	DialogRuntimeResponseGeneric_ResponseType_Image = "image"
-	DialogRuntimeResponseGeneric_ResponseType_Option = "option"
-	DialogRuntimeResponseGeneric_ResponseType_Pause = "pause"
-	DialogRuntimeResponseGeneric_ResponseType_Suggestion = "suggestion"
-	DialogRuntimeResponseGeneric_ResponseType_Text = "text"
+	DialogRuntimeResponseGeneric_ResponseType_Image          = "image"
+	DialogRuntimeResponseGeneric_ResponseType_Option         = "option"
+	DialogRuntimeResponseGeneric_ResponseType_Pause          = "pause"
+	DialogRuntimeResponseGeneric_ResponseType_Suggestion     = "suggestion"
+	DialogRuntimeResponseGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the DialogRuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	DialogRuntimeResponseGeneric_Preference_Button = "button"
+	DialogRuntimeResponseGeneric_Preference_Button   = "button"
 	DialogRuntimeResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -558,7 +558,7 @@ type MessageOptions struct {
 func (assistant *AssistantV2) NewMessageOptions(assistantID string, sessionID string) *MessageOptions {
 	return &MessageOptions{
 		AssistantID: core.StringPtr(assistantID),
-		SessionID: core.StringPtr(sessionID),
+		SessionID:   core.StringPtr(sessionID),
 	}
 }
 
@@ -635,7 +635,7 @@ type MessageOutputDebug struct {
 // completed by itself or got interrupted.
 const (
 	MessageOutputDebug_BranchExitedReason_Completed = "completed"
-	MessageOutputDebug_BranchExitedReason_Fallback = "fallback"
+	MessageOutputDebug_BranchExitedReason_Fallback  = "fallback"
 )
 
 // MessageResponse : A response from the Watson Assistant service.

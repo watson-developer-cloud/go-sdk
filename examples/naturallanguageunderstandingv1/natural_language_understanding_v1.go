@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	core "github.com/ibm-watson/go-sdk/core"
-	nlu "github.com/ibm-watson/go-sdk/naturallanguageunderstandingv1"
+	core "github.com/watson-developer-cloud/go-sdk/core"
+	nlu "github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
 )
 
 func main() {

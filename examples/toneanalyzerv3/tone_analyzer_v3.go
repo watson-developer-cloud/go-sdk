@@ -4,8 +4,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/ibm-watson/go-sdk/core"
-	"github.com/ibm-watson/go-sdk/toneanalyzerv3"
+	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
 )
 
 func main() {

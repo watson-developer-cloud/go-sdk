@@ -19,7 +19,7 @@ package languagetranslatorv3
 
 import (
 	"fmt"
-	core "github.com/ibm-watson/go-sdk/core"
+	core "github.com/watson-developer-cloud/go-sdk/core"
 	"os"
 )
 
@@ -789,16 +789,16 @@ type TranslationModel struct {
 // Constants associated with the TranslationModel.Status property.
 // Availability of a model.
 const (
-	TranslationModel_Status_Available = "available"
-	TranslationModel_Status_Deleted = "deleted"
+	TranslationModel_Status_Available   = "available"
+	TranslationModel_Status_Deleted     = "deleted"
 	TranslationModel_Status_Dispatching = "dispatching"
-	TranslationModel_Status_Error = "error"
-	TranslationModel_Status_Publishing = "publishing"
-	TranslationModel_Status_Queued = "queued"
-	TranslationModel_Status_Trained = "trained"
-	TranslationModel_Status_Training = "training"
-	TranslationModel_Status_Uploaded = "uploaded"
-	TranslationModel_Status_Uploading = "uploading"
+	TranslationModel_Status_Error       = "error"
+	TranslationModel_Status_Publishing  = "publishing"
+	TranslationModel_Status_Queued      = "queued"
+	TranslationModel_Status_Trained     = "trained"
+	TranslationModel_Status_Training    = "training"
+	TranslationModel_Status_Uploaded    = "uploaded"
+	TranslationModel_Status_Uploading   = "uploading"
 )
 
 // TranslationModels : The response type for listing existing translation models.

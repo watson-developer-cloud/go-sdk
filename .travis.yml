@@ -16,14 +16,14 @@ before_install:
   - go get -u gopkg.in/alecthomas/gometalinter.v2
   - go get -u golang.org/x/lint/golint
 
-# Rename directories so that we're building in $HOME/gopath/src/github.com/ibm-watson/go-sdk
-# When the go-sdk repo is moved to the ibm-watson org on github.com, we can remove these steps
+# Rename directories so that we're building in $HOME/gopath/src/github.com/watson-developer-cloud/go-sdk
+# When the go-sdk repo is moved to the watson-developer-cloud org on github.com, we can remove these steps
   - env | grep GO
   - pwd
-  - mkdir -p $GOPATH/src/github.com/ibm-watson
-  - mv $GOPATH/src/github.ibm.com/arf/go-sdk $GOPATH/src/github.com/ibm-watson
-  - cd $GOPATH/src/github.com/ibm-watson/go-sdk
-  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/ibm-watson/go-sdk
+  - mkdir -p $GOPATH/src/github.com/watson-developer-cloud
+  - mv $GOPATH/src/github.ibm.com/arf/go-sdk $GOPATH/src/github.com/watson-developer-cloud
+  - cd $GOPATH/src/github.com/watson-developer-cloud/go-sdk
+  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/watson-developer-cloud/go-sdk
   - pwd
 
 
@@ -33,7 +33,7 @@ install:
   - dep ensure
   - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
 # TODO Change URLs for the repo before we are public.
-#  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/ibm-watson/go-sdk
+#  - git clone --depth=1 --branch=$TRAVIS_BRANCH git@github.ibm.com:arf/go-sdk.git $GOPATH/src/github.com/watson-developer-cloud/go-sdk
 
 # Don't email me the results of the test runs.
 notifications:

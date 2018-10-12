@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ibm-watson/go-sdk/texttospeechv1"
+	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
 )
 
 func main() {

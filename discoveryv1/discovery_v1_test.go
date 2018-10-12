@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	cfenv "github.com/cloudfoundry-community/go-cfenv"
-	"github.com/ibm-watson/go-sdk/core"
+	"github.com/watson-developer-cloud/go-sdk/core"
 
-	discoveryv1 "github.com/ibm-watson/go-sdk/discoveryv1"
+	discoveryv1 "github.com/watson-developer-cloud/go-sdk/discoveryv1"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

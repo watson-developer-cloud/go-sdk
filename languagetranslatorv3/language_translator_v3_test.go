@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/cloudfoundry-community/go-cfenv"
-	languagetranslatorv3 "github.com/ibm-watson/go-sdk/languagetranslatorv3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	languagetranslatorv3 "github.com/watson-developer-cloud/go-sdk/languagetranslatorv3"
 )
 
 var _ = Describe("LanguageTranslatorV3", func() {

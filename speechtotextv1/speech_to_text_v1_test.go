@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/cloudfoundry-community/go-cfenv"
-	"github.com/ibm-watson/go-sdk/speechtotextv1"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
 )
 
 var _ = Describe("SpeechToTextV1", func() {

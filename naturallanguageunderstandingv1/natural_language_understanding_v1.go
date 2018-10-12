@@ -18,18 +18,16 @@ package naturallanguageunderstandingv1
  */
 
 import (
-	core "github.com/ibm-watson/go-sdk/core"
+	core "github.com/watson-developer-cloud/go-sdk/core"
 )
 
 // NaturalLanguageUnderstandingV1 : Analyze various features of text content at scale. Provide text, raw HTML, or a
-// public URL, and IBM Watson Natural Language Understanding will give you results for the features you request. The
+// public URL and IBM Watson Natural Language Understanding will give you results for the features you request. The
 // service cleans HTML content before analysis by default, so the results can ignore most advertisements and other
 // unwanted content.
 //
-// You can create <a target="_blank"
-// href="https://www.ibm.com/watson/developercloud/doc/natural-language-understanding/customizing.html">custom
-// models</a> with Watson Knowledge Studio that can be used to detect custom entities and relations in Natural Language
-// Understanding.
+// You can create [custom models](/docs/services/natural-language-understanding/customizing.html) with Watson Knowledge
+// Studio to detect custom entities and relations in Natural Language Understanding.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/natural-language-understanding.html
@@ -721,6 +719,8 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 
 // ListModelsResults : Models available for Relations and Entities features.
 type ListModelsResults struct {
+
+	// An array of available models.
 	Models []Model `json:"models,omitempty"`
 }
 
@@ -765,6 +765,8 @@ type Model struct {
 
 // RelationArgument : RelationArgument struct
 type RelationArgument struct {
+
+	// An array of extracted entities.
 	Entities []RelationEntity `json:"entities,omitempty"`
 
 	// Character offsets indicating the beginning and end of the mention in the analyzed text.
@@ -843,6 +845,7 @@ type SemanticRolesObject struct {
 	// Object text.
 	Text *string `json:"text,omitempty"`
 
+	// An array of extracted keywords.
 	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
 }
 
@@ -881,8 +884,10 @@ type SemanticRolesSubject struct {
 	// Text that corresponds to the subject role.
 	Text *string `json:"text,omitempty"`
 
+	// An array of extracted entities.
 	Entities []SemanticRolesEntity `json:"entities,omitempty"`
 
+	// An array of extracted keywords.
 	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
 }
 
