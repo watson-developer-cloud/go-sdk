@@ -69,7 +69,7 @@ func main() {
 
 	createClassifierOptions := service.
 		NewCreateClassifierOptions("Cars vs Trucks").
-		SetClassnamePositiveExamples("cars", carsFile)
+		AddClassnamePositiveExamples("cars", carsFile)
 	createClassifierOptions.NegativeExamples = trucksFile
 
 	response, responseErr = service.CreateClassifier(createClassifierOptions)

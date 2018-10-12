@@ -184,7 +184,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 
 				CreateClassifierOptions := testService.
 					NewCreateClassifierOptions("cars vs trucks").
-					SetClassnamePositiveExamples("cars", cars)
+					AddClassnamePositiveExamples("cars", cars)
 				returnValue, returnValueErr := testService.CreateClassifier(CreateClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

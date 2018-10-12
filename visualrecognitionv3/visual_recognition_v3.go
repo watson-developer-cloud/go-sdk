@@ -799,8 +799,8 @@ func (options *CreateClassifierOptions) SetName(name string) *CreateClassifierOp
 	return options
 }
 
-// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
-func (options *CreateClassifierOptions) SetClassnamePositiveExamples(classname string, classnamePositiveExamples *os.File) *CreateClassifierOptions {
+// AddClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *CreateClassifierOptions) AddClassnamePositiveExamples(classname string, classnamePositiveExamples *os.File) *CreateClassifierOptions {
 	if options.ClassnamePositiveExamples == nil {
 		options.ClassnamePositiveExamples = make(map[string]*os.File)
 	}
@@ -1180,8 +1180,8 @@ func (options *UpdateClassifierOptions) SetClassifierID(classifierID string) *Up
 	return options
 }
 
-// SetClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
-func (options *UpdateClassifierOptions) SetClassnamePositiveExamples(classname string, classnamePositiveExamples *os.File) *UpdateClassifierOptions {
+// AddClassnamePositiveExamples : Allow user to set ClassnamePositiveExamples
+func (options *UpdateClassifierOptions) AddClassnamePositiveExamples(classname string, classnamePositiveExamples *os.File) *UpdateClassifierOptions {
 	if options.ClassnamePositiveExamples == nil {
 		options.ClassnamePositiveExamples = make(map[string]*os.File)
 	}
