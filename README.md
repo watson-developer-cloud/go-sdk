@@ -188,7 +188,7 @@ See [CONTRIBUTING][CONTRIBUTING].
 
 This library is licensed under the [Apache 2.0 license][license].
 
-[ibm-cloud-onboarding]: http://console.bluemix.net/registration?target=/developer/watson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Go
+[ibm-cloud-onboarding]: http://console.bluemix.net/registration?target=%2Fdeveloper%2Fwatson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Go
 [examples]: https://github.com/watson-developer-cloud/go-sdk/tree/master/examples
 [CONTRIBUTING]: https://github.com/watson-developer-cloud/go-sdk/blob/master/.github/CONTRIBUTING.md
 [license]: http://www.apache.org/licenses/LICENSE-2.0
