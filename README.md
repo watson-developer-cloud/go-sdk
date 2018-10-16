@@ -180,6 +180,9 @@ Run a specific test suite:
 go test ./assistantv1
 ```
 
+## Note on package names
+ourpackagenamesdonotincludewordseparatorsbecauseofthegolanguageconventionshorrificmindnumblyterribledecisiontonotsupportanywordseparationoptionsinpackagenames.reallygoyouwanttheonlywaytodisplayNaturalLanguageUnderstandingtobenaturallanguageunderstanding?yourealizethatwordseparationhasexponentialtimecomplexityright?forshamego.forshame.&lt;/rant&gt;
+
 ## Contributing
 
 See [CONTRIBUTING][CONTRIBUTING].
