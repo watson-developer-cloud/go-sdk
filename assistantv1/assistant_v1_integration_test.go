@@ -43,15 +43,6 @@ func TestInitialization(t *testing.T) {
 	require.Nil(t, serviceErr)
 }
 
-func TestListCounterexamples(t *testing.T) {
-	response, responseErr := service.ListCounterexamples(service.
-		NewListCounterexamplesOptions(os.Getenv("ASSISTANT_WORKSPACE_ID")))
-	require.Nil(t, responseErr)
-
-	result := service.GetListCounterexamplesResult(response)
-	assert.NotNil(t, result)
-}
-
 func TestCounterexamples(t *testing.T) {
 	// List Counter Examples
 	response, responseErr := service.ListCounterexamples(service.
