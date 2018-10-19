@@ -1,3 +1,5 @@
+// +build !integration
+
 package languagetranslatorv3_test
 
 import (
