@@ -17,6 +17,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 	* [Username-and-password](#username-and-password)
 * [Use](#use)
 * [Examples](#examples)
+* [AssistantV2](#assistantv2)
 * [Tests](#tests)
 * [Contributing](#contributing)
 * [License](#license)
@@ -161,6 +162,9 @@ if listEnvironmentResult != nil {
 ## Examples
 
 The [examples][examples] folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
+
+## AssistantV2
+Watson Assistant v2 API is released in beta. For details, see the ["Introducing Watson Assistant"](https://www.ibm.com/blogs/watson/2018/03/the-future-of-watson-conversation-watson-assistant/) blog post.
 
 ## Tests
 
