@@ -1,3 +1,5 @@
+// +build !integration
+
 package assistantv2_test
 
 import (
