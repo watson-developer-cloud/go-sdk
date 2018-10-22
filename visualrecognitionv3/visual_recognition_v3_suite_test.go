@@ -1,3 +1,5 @@
+// +build !integration
+
 package visualrecognitionv3_test
 
 import (
