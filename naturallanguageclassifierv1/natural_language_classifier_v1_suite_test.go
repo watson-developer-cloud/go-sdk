@@ -1,3 +1,5 @@
+// +build !integration
+
 package naturallanguageclassifierv1_test
 
 import (
