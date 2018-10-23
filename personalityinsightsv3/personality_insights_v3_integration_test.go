@@ -20,7 +20,6 @@ package personalityinsightsv3_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
