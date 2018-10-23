@@ -356,13 +356,4 @@ func TestDeleteOperations(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 	assert.NotNil(t, response)
-
-	// Delete environment
-	// response, responseErr = service.DeleteEnvironment(
-	// 	&discoveryv1.DeleteEnvironmentOptions{
-	// 		EnvironmentID: environmentID,
-	// 	},
-	// )
-	// assert.Nil(t, responseErr)
-	// assert.NotNil(t, response)
 }
