@@ -22,24 +22,26 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/watson-developer-cloud/go-sdk/assistantv1"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"os"
 	"testing"
 )
 
-var service *AssistantV1
+var service *assistantv1.AssistantV1
 var serviceErr error
 
 func TestInitialization(t *testing.T) {
 	err := godotenv.Load("../.env")
 	require.Nil(t, err)
 
-	service, serviceErr = NewAssistantV1(&AssistantV1Options{
-		URL:      os.Getenv("ASSISTANT_URL"),
-		Version:  "2018-09-20",
-		Username: os.Getenv("ASSISTANT_USERNAME"),
-		Password: os.Getenv("ASSISTANT_PASSWORD"),
-	})
+	service, serviceErr = assistantv1.
+		NewAssistantV1(&assistantv1.AssistantV1Options{
+			URL:      os.Getenv("ASSISTANT_URL"),
+			Version:  "2018-09-20",
+			Username: os.Getenv("ASSISTANT_USERNAME"),
+			Password: os.Getenv("ASSISTANT_PASSWORD"),
+		})
 	require.Nil(t, serviceErr)
 }
 
@@ -87,7 +89,7 @@ func TestCounterexamples(t *testing.T) {
 func TestEntity(t *testing.T) {
 	// List entities
 	response, responseErr := service.ListEntities(
-		&ListEntitiesOptions{
+		&assistantv1.ListEntitiesOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 		},
 	)
@@ -98,14 +100,14 @@ func TestEntity(t *testing.T) {
 
 	// Create entity
 	response, responseErr = service.CreateEntity(
-		&CreateEntityOptions{
+		&assistantv1.CreateEntityOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
-			Values: []CreateValue{
-				CreateValue{
+			Values: []assistantv1.CreateValue{
+				assistantv1.CreateValue{
 					Value: core.StringPtr("expresso"),
 				},
-				CreateValue{
+				assistantv1.CreateValue{
 					Value: core.StringPtr("latte"),
 				},
 			},
@@ -118,7 +120,7 @@ func TestEntity(t *testing.T) {
 
 	//Get entity
 	response, responseErr = service.GetEntity(
-		&GetEntityOptions{
+		&assistantv1.GetEntityOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Export:      core.BoolPtr(true),
@@ -131,7 +133,7 @@ func TestEntity(t *testing.T) {
 
 	// Update entity
 	response, responseErr = service.UpdateEntity(
-		&UpdateEntityOptions{
+		&assistantv1.UpdateEntityOptions{
 			WorkspaceID:    core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:         core.StringPtr("coffee"),
 			NewDescription: core.StringPtr("cafe"),
@@ -146,7 +148,7 @@ func TestEntity(t *testing.T) {
 func TestValues(t *testing.T) {
 	// List values
 	response, responseErr := service.ListValues(
-		&ListValuesOptions{
+		&assistantv1.ListValuesOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 		},
@@ -158,7 +160,7 @@ func TestValues(t *testing.T) {
 
 	// Create value
 	response, responseErr = service.CreateValue(
-		&CreateValueOptions{
+		&assistantv1.CreateValueOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("mocha"),
@@ -171,7 +173,7 @@ func TestValues(t *testing.T) {
 
 	//Get value
 	response, responseErr = service.GetValue(
-		&GetValueOptions{
+		&assistantv1.GetValueOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("mocha"),
@@ -184,7 +186,7 @@ func TestValues(t *testing.T) {
 
 	// Update value
 	response, responseErr = service.UpdateValue(
-		&UpdateValueOptions{
+		&assistantv1.UpdateValueOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("mocha"),
@@ -200,7 +202,7 @@ func TestValues(t *testing.T) {
 func TestListMentions(t *testing.T) {
 	// List mentions
 	response, responseErr := service.ListMentions(
-		&ListMentionsOptions{
+		&assistantv1.ListMentionsOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 		},
@@ -214,7 +216,7 @@ func TestListMentions(t *testing.T) {
 func TestSynonyms(t *testing.T) {
 	// List synonyms
 	response, responseErr := service.ListSynonyms(
-		&ListSynonymsOptions{
+		&assistantv1.ListSynonymsOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
@@ -227,7 +229,7 @@ func TestSynonyms(t *testing.T) {
 
 	// Create synonym
 	response, responseErr = service.CreateSynonym(
-		&CreateSynonymOptions{
+		&assistantv1.CreateSynonymOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
@@ -241,7 +243,7 @@ func TestSynonyms(t *testing.T) {
 
 	//Get synonym
 	response, responseErr = service.GetSynonym(
-		&GetSynonymOptions{
+		&assistantv1.GetSynonymOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
@@ -255,7 +257,7 @@ func TestSynonyms(t *testing.T) {
 
 	// Update synonym
 	response, responseErr = service.UpdateSynonym(
-		&UpdateSynonymOptions{
+		&assistantv1.UpdateSynonymOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
@@ -270,7 +272,7 @@ func TestSynonyms(t *testing.T) {
 
 	// Delete synonym
 	response, responseErr = service.DeleteSynonym(
-		&DeleteSynonymOptions{
+		&assistantv1.DeleteSynonymOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
@@ -281,7 +283,7 @@ func TestSynonyms(t *testing.T) {
 
 	// Delete value
 	response, responseErr = service.DeleteValue(
-		&DeleteValueOptions{
+		&assistantv1.DeleteValueOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
@@ -291,7 +293,7 @@ func TestSynonyms(t *testing.T) {
 
 	// Delete entity
 	response, responseErr = service.DeleteEntity(
-		&DeleteEntityOptions{
+		&assistantv1.DeleteEntityOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 		},
@@ -302,7 +304,7 @@ func TestSynonyms(t *testing.T) {
 func TestIntents(t *testing.T) {
 	// List intents
 	response, responseErr := service.ListIntents(
-		&ListIntentsOptions{
+		&assistantv1.ListIntentsOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 		},
 	)
@@ -313,7 +315,7 @@ func TestIntents(t *testing.T) {
 
 	// Create intent
 	response, responseErr = service.CreateIntent(
-		&CreateIntentOptions{
+		&assistantv1.CreateIntentOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hello"),
 			Description: core.StringPtr("greetings"),
@@ -326,7 +328,7 @@ func TestIntents(t *testing.T) {
 
 	//Get intent
 	response, responseErr = service.GetIntent(
-		&GetIntentOptions{
+		&assistantv1.GetIntentOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hello"),
 		},
@@ -338,7 +340,7 @@ func TestIntents(t *testing.T) {
 
 	// Update intent
 	response, responseErr = service.UpdateIntent(
-		&UpdateIntentOptions{
+		&assistantv1.UpdateIntentOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hello"),
 			NewIntent:   core.StringPtr("hi"),
@@ -353,7 +355,7 @@ func TestIntents(t *testing.T) {
 func TestExamples(t *testing.T) {
 	// List examples
 	response, responseErr := service.ListExamples(
-		&ListExamplesOptions{
+		&assistantv1.ListExamplesOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 		},
@@ -365,7 +367,7 @@ func TestExamples(t *testing.T) {
 
 	// Create example
 	response, responseErr = service.CreateExample(
-		&CreateExampleOptions{
+		&assistantv1.CreateExampleOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 			Text:        core.StringPtr("Howdy"),
@@ -378,7 +380,7 @@ func TestExamples(t *testing.T) {
 
 	//Get example
 	response, responseErr = service.GetExample(
-		&GetExampleOptions{
+		&assistantv1.GetExampleOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 			Text:        core.StringPtr("Howdy"),
@@ -391,7 +393,7 @@ func TestExamples(t *testing.T) {
 
 	// Update example
 	response, responseErr = service.UpdateExample(
-		&UpdateExampleOptions{
+		&assistantv1.UpdateExampleOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 			Text:        core.StringPtr("Howdy"),
@@ -405,7 +407,7 @@ func TestExamples(t *testing.T) {
 
 	// Delete example
 	response, responseErr = service.DeleteExample(
-		&DeleteExampleOptions{
+		&assistantv1.DeleteExampleOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 			Text:        core.StringPtr("Hello there!"),
@@ -415,7 +417,7 @@ func TestExamples(t *testing.T) {
 
 	// Delete intent
 	response, responseErr = service.DeleteIntent(
-		&DeleteIntentOptions{
+		&assistantv1.DeleteIntentOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 		},
@@ -426,7 +428,7 @@ func TestExamples(t *testing.T) {
 func TestDialogNodes(t *testing.T) {
 	// List dialog nodes
 	response, responseErr := service.ListDialogNodes(
-		&ListDialogNodesOptions{
+		&assistantv1.ListDialogNodesOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 		},
 	)
@@ -437,16 +439,16 @@ func TestDialogNodes(t *testing.T) {
 
 	// Create dialog node
 	response, responseErr = service.CreateDialogNode(
-		&CreateDialogNodeOptions{
+		&assistantv1.CreateDialogNodeOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			DialogNode:  core.StringPtr("greeting"),
 			Conditions:  core.StringPtr("#hello"),
-			Output: &DialogNodeOutput{
-				Generic: []DialogNodeOutputGeneric{
-					DialogNodeOutputGeneric{
-						ResponseType: core.StringPtr(DialogNodeOutputGeneric_ResponseType_Text),
-						Values: []DialogNodeOutputTextValuesElement{
-							DialogNodeOutputTextValuesElement{
+			Output: &assistantv1.DialogNodeOutput{
+				Generic: []assistantv1.DialogNodeOutputGeneric{
+					assistantv1.DialogNodeOutputGeneric{
+						ResponseType: core.StringPtr(assistantv1.DialogNodeOutputGeneric_ResponseType_Text),
+						Values: []assistantv1.DialogNodeOutputTextValuesElement{
+							assistantv1.DialogNodeOutputTextValuesElement{
 								Text: core.StringPtr("Hi! How can I help you?"),
 							},
 						},
@@ -463,7 +465,7 @@ func TestDialogNodes(t *testing.T) {
 
 	//Get dialog node
 	response, responseErr = service.GetDialogNode(
-		&GetDialogNodeOptions{
+		&assistantv1.GetDialogNodeOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			DialogNode:  core.StringPtr("greeting"),
 		},
@@ -475,7 +477,7 @@ func TestDialogNodes(t *testing.T) {
 
 	// Update dialog node
 	response, responseErr = service.UpdateDialogNode(
-		&UpdateDialogNodeOptions{
+		&assistantv1.UpdateDialogNodeOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			DialogNode:  core.StringPtr("greeting"),
 			NewTitle:    core.StringPtr("Greeting."),
@@ -488,7 +490,7 @@ func TestDialogNodes(t *testing.T) {
 
 	// Delete dialog node
 	response, responseErr = service.DeleteDialogNode(
-		&DeleteDialogNodeOptions{
+		&assistantv1.DeleteDialogNodeOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			DialogNode:  core.StringPtr("greeting"),
 		},
@@ -499,7 +501,7 @@ func TestDialogNodes(t *testing.T) {
 func TestWorkspaces(t *testing.T) {
 	// List workspaces
 	response, responseErr := service.ListWorkspaces(
-		&ListWorkspacesOptions{},
+		&assistantv1.ListWorkspacesOptions{},
 	)
 	assert.Nil(t, responseErr)
 
@@ -508,7 +510,7 @@ func TestWorkspaces(t *testing.T) {
 
 	// Create workspace
 	response, responseErr = service.CreateWorkspace(
-		&CreateWorkspaceOptions{
+		&assistantv1.CreateWorkspaceOptions{
 			Name:        core.StringPtr("API test"),
 			Description: core.StringPtr("Example workspace created via API"),
 		},
@@ -520,7 +522,7 @@ func TestWorkspaces(t *testing.T) {
 
 	//Get workspace
 	response, responseErr = service.GetWorkspace(
-		&GetWorkspaceOptions{
+		&assistantv1.GetWorkspaceOptions{
 			WorkspaceID: core.StringPtr(*createWorkspace.WorkspaceID),
 		},
 	)
@@ -531,7 +533,7 @@ func TestWorkspaces(t *testing.T) {
 
 	// Update workspace
 	response, responseErr = service.UpdateWorkspace(
-		&UpdateWorkspaceOptions{
+		&assistantv1.UpdateWorkspaceOptions{
 			WorkspaceID: core.StringPtr(*createWorkspace.WorkspaceID),
 			Name:        core.StringPtr("Updated workspace for GO"),
 			Description: core.StringPtr("Example workspace updated via API"),
@@ -544,7 +546,7 @@ func TestWorkspaces(t *testing.T) {
 
 	// Delete workspace
 	response, responseErr = service.DeleteWorkspace(
-		&DeleteWorkspaceOptions{
+		&assistantv1.DeleteWorkspaceOptions{
 			WorkspaceID: core.StringPtr(*createWorkspace.WorkspaceID),
 		},
 	)
@@ -553,9 +555,9 @@ func TestWorkspaces(t *testing.T) {
 
 func TestMessage(t *testing.T) {
 	response, responseErr := service.Message(
-		&MessageOptions{
+		&assistantv1.MessageOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
-			Input: &InputData{
+			Input: &assistantv1.InputData{
 				Text: core.StringPtr("Hello World"),
 			},
 		},
@@ -569,7 +571,7 @@ func TestMessage(t *testing.T) {
 func TestLogs(t *testing.T) {
 	// List logs
 	response, responseErr := service.ListLogs(
-		&ListLogsOptions{
+		&assistantv1.ListLogsOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 		},
 	)
@@ -580,7 +582,7 @@ func TestLogs(t *testing.T) {
 
 	// list all logs
 	response, responseErr = service.ListAllLogs(
-		&ListAllLogsOptions{
+		&assistantv1.ListAllLogsOptions{
 			Filter: core.StringPtr("language::en,request.context.metadata.deployment::testDeployment"),
 		},
 	)
