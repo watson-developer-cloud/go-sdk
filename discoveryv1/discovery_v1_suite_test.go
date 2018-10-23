@@ -1,3 +1,5 @@
+// +build !integration
+
 package discoveryv1_test
 
 import (
