@@ -70,7 +70,6 @@ func TestAnalyze(t *testing.T) {
 
 func TestListModels(t *testing.T) {
 	// list models
-	t.Skip("Skip list models temporarily")
 	response, responseErr := service.ListModels(
 		&naturallanguageunderstandingv1.ListModelsOptions{},
 	)

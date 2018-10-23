@@ -31,7 +31,7 @@ import (
 
 var service *speechtotextv1.SpeechToTextV1
 var serviceErr error
-var customizationID *string
+var languageModel *speechtotextv1.LanguageModel
 
 func TestInitialization(t *testing.T) {
 	err := godotenv.Load("../.env")
@@ -140,14 +140,14 @@ func TestLanguageModel(t *testing.T) {
 	assert.NotNil(t, getLanguageModel)
 
 	// store in global variable
-	customizationID = createLanguageModel.CustomizationID
+	languageModel = getLanguageModel
 }
 
 func TestCorpora(t *testing.T) {
 	// List corpora
 	response, responseErr := service.ListCorpora(
 		&speechtotextv1.ListCorporaOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -156,7 +156,10 @@ func TestCorpora(t *testing.T) {
 	assert.NotNil(t, listCorpora)
 
 	// Add corpora
-	t.Skip("Skipping the rest of the corpora tests")
+	if *languageModel.Status != "Available" {
+		t.Skip("Skipping the rest of the corpora tests")
+	}
+
 	pwd, _ := os.Getwd()
 	corpusFile, corpusFileErr := os.Open(pwd + "/../resources/corpus-short-1.txt")
 	if corpusFileErr != nil {
@@ -164,7 +167,7 @@ func TestCorpora(t *testing.T) {
 	}
 	response, responseErr = service.AddCorpus(
 		&speechtotextv1.AddCorpusOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			CorpusName:      core.StringPtr("corpus for GO"),
 			CorpusFile:      corpusFile,
 		},
@@ -174,7 +177,7 @@ func TestCorpora(t *testing.T) {
 	// Get corpus
 	response, responseErr = service.GetCorpus(
 		&speechtotextv1.GetCorpusOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			CorpusName:      core.StringPtr("corpus for GO"),
 		},
 	)
@@ -186,7 +189,7 @@ func TestCorpora(t *testing.T) {
 	// Delete corpus
 	response, responseErr = service.DeleteCorpus(
 		&speechtotextv1.DeleteCorpusOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			CorpusName:      core.StringPtr("corpus for GO"),
 		},
 	)
@@ -197,7 +200,7 @@ func TestWords(t *testing.T) {
 	// List words
 	response, responseErr := service.ListWords(
 		&speechtotextv1.ListWordsOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -205,11 +208,14 @@ func TestWords(t *testing.T) {
 	listWords := service.GetListWordsResult(response)
 	assert.NotNil(t, listWords)
 
-	t.Skip("Skipping the rest of the words tests")
+	if *languageModel.Status != "Available" {
+		t.Skip("Skipping the rest of the words tests")
+	}
+
 	// Add words
 	response, responseErr = service.AddWords(
 		&speechtotextv1.AddWordsOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			Words: []speechtotextv1.CustomWord{
 				speechtotextv1.CustomWord{
 					Word:       core.StringPtr("HHonors"),
@@ -228,7 +234,7 @@ func TestWords(t *testing.T) {
 	// Add word
 	response, responseErr = service.AddWord(
 		&speechtotextv1.AddWordOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			WordName:        core.StringPtr("NCAA"),
 			SoundsLike:      []string{"N. C. A. A.", "N. C. double A."},
 			DisplayAs:       core.StringPtr("NCAA"),
@@ -239,7 +245,7 @@ func TestWords(t *testing.T) {
 	// Get word
 	response, responseErr = service.GetWord(
 		&speechtotextv1.GetWordOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			WordName:        core.StringPtr("NCAA"),
 		},
 	)
@@ -251,7 +257,7 @@ func TestWords(t *testing.T) {
 	// Delete word
 	response, responseErr = service.DeleteWord(
 		&speechtotextv1.DeleteWordOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			WordName:        core.StringPtr("NCAA"),
 		},
 	)
@@ -302,6 +308,7 @@ func TestAcousticModel(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
+	t.Skip("Skip upgrade acoustic model")
 	response, responseErr = service.UpgradeAcousticModel(
 		&speechtotextv1.UpgradeAcousticModelOptions{
 			CustomizationID: createAcousticModel.CustomizationID,
@@ -311,25 +318,20 @@ func TestAcousticModel(t *testing.T) {
 }
 
 func TestAudio(t *testing.T) {
+	if *languageModel.Status != "Available" {
+		t.Skip("Skipping the rest of the audio tests")
+	}
+
 	// List audio
 	response, responseErr := service.ListAudio(
 		&speechtotextv1.ListAudioOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 		},
 	)
 
 	listAudio := service.GetListAudioResult(response)
 	assert.NotNil(t, listAudio)
 
-	// Delete language model
-	response, responseErr = service.DeleteLanguageModel(
-		&speechtotextv1.DeleteLanguageModelOptions{
-			CustomizationID: customizationID,
-		},
-	)
-	assert.Nil(t, responseErr)
-
-	t.Skip("Skipping the rest of audio tests")
 	// Add audio
 	pwd, _ := os.Getwd()
 
@@ -341,7 +343,7 @@ func TestAudio(t *testing.T) {
 	}
 	response, responseErr = service.AddAudio(
 		&speechtotextv1.AddAudioOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			AudioName:       core.StringPtr("audio1"),
 			AudioResource:   &audioFile,
 			ContentType:     core.StringPtr(speechtotextv1.AddAudioOptions_ContentType_AudioWav),
@@ -352,7 +354,7 @@ func TestAudio(t *testing.T) {
 	// Get audio
 	response, responseErr = service.GetAudio(
 		&speechtotextv1.GetAudioOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			AudioName:       core.StringPtr("audio1"),
 		},
 	)
@@ -363,8 +365,18 @@ func TestAudio(t *testing.T) {
 	// Delete audio
 	response, responseErr = service.DeleteAudio(
 		&speechtotextv1.DeleteAudioOptions{
-			CustomizationID: customizationID,
+			CustomizationID: languageModel.CustomizationID,
 			AudioName:       core.StringPtr("audio1"),
+		},
+	)
+	assert.Nil(t, responseErr)
+}
+
+func TestDeleteLanguageModel(t *testing.T) {
+	// Delete language model
+	_, responseErr := service.DeleteLanguageModel(
+		&speechtotextv1.DeleteLanguageModelOptions{
+			CustomizationID: languageModel.CustomizationID,
 		},
 	)
 	assert.Nil(t, responseErr)

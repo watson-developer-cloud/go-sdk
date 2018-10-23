@@ -25,7 +25,7 @@ func main() {
 	/* CREATE SESSION */
 
 	assistantID := "<YOUR ASSISTANT ID>"
-	// Call the assistant ListWorkspaces method
+	// Call the assistant CreateSession method
 	response, responseErr := service.
 		CreateSession(&assistantv2.CreateSessionOptions{
 			AssistantID: core.StringPtr(assistantID),
