@@ -1,6 +1,6 @@
 // +build integration
 
-package assistantv1
+package assistantv1_test
 
 /**
  * Copyright 2018 IBM All Rights Reserved.
