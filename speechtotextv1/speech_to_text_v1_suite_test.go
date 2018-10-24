@@ -1,3 +1,5 @@
+// +build !integration
+
 package speechtotextv1_test
 
 import (

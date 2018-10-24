@@ -1,3 +1,5 @@
+// +build !integration
+
 package naturallanguageunderstandingv1_test
 
 import (
