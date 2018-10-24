@@ -1,3 +1,5 @@
+// +build !integration
+
 package toneanalyzerv3_test
 
 import (

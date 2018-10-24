@@ -1,33 +1,30 @@
 language: go
-node_js: "8.3"
+node_js: '8.3'
 sudo: required
 dist: trusty
-
 go:
-  - 1.10.x
-
+- 1.10.x
 before_install:
-  - nvm install 8.3
-  - npm install -g npm@6.x
-  - go get -u github.com/golang/dep/cmd/dep
-  - go get -u gopkg.in/alecthomas/gometalinter.v2
-  - go get -u golang.org/x/lint/golint
-
+- openssl aes-256-cbc -K $encrypted_56d12e7424aa_key -iv $encrypted_56d12e7424aa_iv
+  -in .env.enc -out .env -d
+- nvm install 8.3
+- npm install -g npm@6.x
+- go get -u github.com/golang/dep/cmd/dep
+- go get -u gopkg.in/alecthomas/gometalinter.v2
+- go get -u golang.org/x/lint/golint
 install:
-  - dep ensure
-  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi'
-
+- dep ensure
+- if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd
+  ../; fi
 notifications:
   email: false
-
 before_script:
-  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi'
-
+- if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi
 script:
-  - go test `go list ./... | grep -v examples`
-  - gometalinter.v2 --errors ./...  # run a bunch of code checkers/linters in parallel NOTE: Only golint enabled for now
-  - 'if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi'
-
+- go test `go list ./... | grep -v examples`
+- go test `go list ./... | grep -v core` -v -tags=integration
+- gometalinter.v2 --errors ./...
+- if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi
 deploy:
 - provider: script
   skip_cleanup: true

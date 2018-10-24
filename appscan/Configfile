@@ -10,7 +10,7 @@ APPSCAN_CLIENT_URL ?= https://appscan.ibmcloud.com/api/SCX/StaticAnalyzer/SAClie
 OS ?= linux
 APPSCAN_TOOL := $(APPSCAN_CLIENT_URL)$(OS)
 
-GIT_REPO ?= git@github.ibm.com:arf/go-sdk.git
+GIT_REPO ?= git@github.com:watson-developer-cloud/go-sdk.git
 
 PROJECT_NAME ?= go-sdk
 

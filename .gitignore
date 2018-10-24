@@ -5,6 +5,7 @@ credentials.txt
 *.coverprofile
 node_modules/
 .project
+.env
 
 # ignore vendor/
 vendor/
