@@ -4047,8 +4047,10 @@ type DialogNodeAction struct {
 // Constants associated with the DialogNodeAction.ActionType property.
 // The type of action to invoke.
 const (
-	DialogNodeAction_ActionType_Client = "client"
-	DialogNodeAction_ActionType_Server = "server"
+	DialogNodeAction_ActionType_Client        = "client"
+	DialogNodeAction_ActionType_CloudFunction = "cloud_function"
+	DialogNodeAction_ActionType_Server        = "server"
+	DialogNodeAction_ActionType_WebAction     = "web_action"
 )
 
 // DialogNodeCollection : An array of dialog nodes.
