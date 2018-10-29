@@ -1006,6 +1006,56 @@ func (discovery *DiscoveryV1) GetCreateExpansionsResult(response *core.DetailedR
 	return nil
 }
 
+// CreateTokenizationDictionary : Create tokenization dictionary
+// Upload a custom tokenization dictionary to use with the specified collection.
+func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createTokenizationDictionaryOptions, "createTokenizationDictionaryOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createTokenizationDictionaryOptions, "createTokenizationDictionaryOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
+	pathParameters := []string{*createTokenizationDictionaryOptions.EnvironmentID, *createTokenizationDictionaryOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createTokenizationDictionaryOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	body := make(map[string]interface{})
+	if createTokenizationDictionaryOptions.TokenizationRules != nil {
+		body["tokenization_rules"] = createTokenizationDictionaryOptions.TokenizationRules
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, new(TokenDictStatusResponse))
+	return response, err
+}
+
+// GetCreateTokenizationDictionaryResult : Retrieve result of CreateTokenizationDictionary operation
+func (discovery *DiscoveryV1) GetCreateTokenizationDictionaryResult(response *core.DetailedResponse) *TokenDictStatusResponse {
+	result, ok := response.Result.(*TokenDictStatusResponse)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // DeleteExpansions : Delete the expansion list
 // Remove the expansion information for this collection. The expansion list must be deleted to disable query expansion
 // for a collection.
@@ -1036,6 +1086,77 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 
 	response, err := discovery.Service.Request(request, nil)
 	return response, err
+}
+
+// DeleteTokenizationDictionary : Delete tokenization dictionary
+// Delete the tokenization dictionary from the collection.
+func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDictionaryOptions *DeleteTokenizationDictionaryOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteTokenizationDictionaryOptions, "deleteTokenizationDictionaryOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteTokenizationDictionaryOptions, "deleteTokenizationDictionaryOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
+	pathParameters := []string{*deleteTokenizationDictionaryOptions.EnvironmentID, *deleteTokenizationDictionaryOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteTokenizationDictionaryOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, nil)
+	return response, err
+}
+
+// GetTokenizationDictionaryStatus : Get tokenization dictionary status
+// Returns the current status of the tokenization dictionary for the specified collection.
+func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getTokenizationDictionaryStatusOptions, "getTokenizationDictionaryStatusOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getTokenizationDictionaryStatusOptions, "getTokenizationDictionaryStatusOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
+	pathParameters := []string{*getTokenizationDictionaryStatusOptions.EnvironmentID, *getTokenizationDictionaryStatusOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getTokenizationDictionaryStatusOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, new(TokenDictStatusResponse))
+	return response, err
+}
+
+// GetGetTokenizationDictionaryStatusResult : Retrieve result of GetTokenizationDictionaryStatus operation
+func (discovery *DiscoveryV1) GetGetTokenizationDictionaryStatusResult(response *core.DetailedResponse) *TokenDictStatusResponse {
+	result, ok := response.Result.(*TokenDictStatusResponse)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // ListExpansions : Get the expansion list
@@ -3541,6 +3662,55 @@ func (options *CreateExpansionsOptions) SetHeaders(param map[string]string) *Cre
 	return options
 }
 
+// CreateTokenizationDictionaryOptions : The createTokenizationDictionary options.
+type CreateTokenizationDictionaryOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// An array of tokenization rules. Each rule contains, the original `text` string, component `tokens`, any alternate
+	// character set `readings`, and which `part_of_speech` the text is from.
+	TokenizationRules []TokenDictRule `json:"tokenization_rules,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewCreateTokenizationDictionaryOptions : Instantiate CreateTokenizationDictionaryOptions
+func (discovery *DiscoveryV1) NewCreateTokenizationDictionaryOptions(environmentID string, collectionID string) *CreateTokenizationDictionaryOptions {
+	return &CreateTokenizationDictionaryOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *CreateTokenizationDictionaryOptions) SetEnvironmentID(environmentID string) *CreateTokenizationDictionaryOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *CreateTokenizationDictionaryOptions) SetCollectionID(collectionID string) *CreateTokenizationDictionaryOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetTokenizationRules : Allow user to set TokenizationRules
+func (options *CreateTokenizationDictionaryOptions) SetTokenizationRules(tokenizationRules []TokenDictRule) *CreateTokenizationDictionaryOptions {
+	options.TokenizationRules = tokenizationRules
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateTokenizationDictionaryOptions) SetHeaders(param map[string]string) *CreateTokenizationDictionaryOptions {
+	options.Headers = param
+	return options
+}
+
 // CreateTrainingExampleOptions : The createTrainingExample options.
 type CreateTrainingExampleOptions struct {
 
@@ -4081,6 +4251,45 @@ func (options *DeleteExpansionsOptions) SetCollectionID(collectionID string) *De
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteExpansionsOptions) SetHeaders(param map[string]string) *DeleteExpansionsOptions {
+	options.Headers = param
+	return options
+}
+
+// DeleteTokenizationDictionaryOptions : The deleteTokenizationDictionary options.
+type DeleteTokenizationDictionaryOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteTokenizationDictionaryOptions : Instantiate DeleteTokenizationDictionaryOptions
+func (discovery *DiscoveryV1) NewDeleteTokenizationDictionaryOptions(environmentID string, collectionID string) *DeleteTokenizationDictionaryOptions {
+	return &DeleteTokenizationDictionaryOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteTokenizationDictionaryOptions) SetEnvironmentID(environmentID string) *DeleteTokenizationDictionaryOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteTokenizationDictionaryOptions) SetCollectionID(collectionID string) *DeleteTokenizationDictionaryOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteTokenizationDictionaryOptions) SetHeaders(param map[string]string) *DeleteTokenizationDictionaryOptions {
 	options.Headers = param
 	return options
 }
@@ -5429,6 +5638,45 @@ func (options *GetMetricsQueryTokenEventOptions) SetCount(count int64) *GetMetri
 
 // SetHeaders : Allow user to set Headers
 func (options *GetMetricsQueryTokenEventOptions) SetHeaders(param map[string]string) *GetMetricsQueryTokenEventOptions {
+	options.Headers = param
+	return options
+}
+
+// GetTokenizationDictionaryStatusOptions : The getTokenizationDictionaryStatus options.
+type GetTokenizationDictionaryStatusOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetTokenizationDictionaryStatusOptions : Instantiate GetTokenizationDictionaryStatusOptions
+func (discovery *DiscoveryV1) NewGetTokenizationDictionaryStatusOptions(environmentID string, collectionID string) *GetTokenizationDictionaryStatusOptions {
+	return &GetTokenizationDictionaryStatusOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetTokenizationDictionaryStatusOptions) SetEnvironmentID(environmentID string) *GetTokenizationDictionaryStatusOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetTokenizationDictionaryStatusOptions) SetCollectionID(collectionID string) *GetTokenizationDictionaryStatusOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetTokenizationDictionaryStatusOptions) SetHeaders(param map[string]string) *GetTokenizationDictionaryStatusOptions {
 	options.Headers = param
 	return options
 }
@@ -7713,6 +7961,40 @@ type TestDocument struct {
 	// An array of notice messages about the preview operation.
 	Notices []Notice `json:"notices,omitempty"`
 }
+
+// TokenDictRule : An object defining a single tokenizaion rule.
+type TokenDictRule struct {
+
+	// The string to tokenize.
+	Text *string `json:"text,omitempty"`
+
+	// Array of tokens that the `text` field is split into when found.
+	Tokens []string `json:"tokens,omitempty"`
+
+	// Array of tokens that represent the content of the `text` field in an alternate character set.
+	Readings []string `json:"readings,omitempty"`
+
+	// The part of speech that the `text` string belongs to. For example `noun`. Custom parts of speech can be specified.
+	PartOfSpeech *string `json:"part_of_speech,omitempty"`
+}
+
+// TokenDictStatusResponse : Object describing the current status of the tokenization dictionary.
+type TokenDictStatusResponse struct {
+
+	// Current tokenization dictionary status for the specified collection.
+	Status *string `json:"status,omitempty"`
+
+	// The type for this dictionary. Always returns `tokenization_dictionary`.
+	Type *string `json:"type,omitempty"`
+}
+
+// Constants associated with the TokenDictStatusResponse.Status property.
+// Current tokenization dictionary status for the specified collection.
+const (
+	TokenDictStatusResponse_Status_Active   = "active"
+	TokenDictStatusResponse_Status_NotFound = "not found"
+	TokenDictStatusResponse_Status_Pending  = "pending"
+)
 
 // TopHitsResults : TopHitsResults struct
 type TopHitsResults struct {
