@@ -2399,4 +2399,144 @@ var _ = Describe("DiscoveryV1", func() {
 			})
 		})
 	})
+	Describe("CreateTokenizationDictionary(createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions)", func() {
+		createTokenizationDictionaryPath := "/v1/environments/{environment_id}/collections/{collection_id}/word_lists/tokenization_dictionary"
+		version := "exampleString"
+		environmentID := "exampleString"
+		collectionID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(createTokenizationDictionaryPath, "{environment_id}", environmentID, 1)
+		Path = strings.Replace(Path, "{collection_id}", collectionID, 1)
+		Context("Successfully - Create tokenization dictionary", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"status": "ready"}`)
+			}))
+			It("Succeed to call CreateTokenizationDictionary", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.CreateTokenizationDictionary(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				createTokenizationDictionaryOptions := testService.NewCreateTokenizationDictionaryOptions(environmentID, collectionID)
+				returnValue, returnValueErr = testService.CreateTokenizationDictionary(createTokenizationDictionaryOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetCreateTokenizationDictionaryResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("DeleteTokenizationDictionary(deleteTokenizationDictionaryOptions *DeleteTokenizationDictionaryOptions)", func() {
+		deleteTokenizationDictionaryPath := "/v1/environments/{environment_id}/collections/{collection_id}/word_lists/tokenization_dictionary"
+		version := "exampleString"
+		environmentID := "exampleString"
+		collectionID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(deleteTokenizationDictionaryPath, "{environment_id}", environmentID, 1)
+		Path = strings.Replace(Path, "{collection_id}", collectionID, 1)
+		Context("Successfully - Delete tokenization dictionary", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+			}))
+			It("Succeed to call DeleteTokenizationDictionary", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.DeleteTokenizationDictionary(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				deleteTokenizationDictionaryOptions := testService.NewDeleteTokenizationDictionaryOptions(environmentID, collectionID)
+				returnValue, returnValueErr = testService.DeleteTokenizationDictionary(deleteTokenizationDictionaryOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions)", func() {
+		getTokenizationDictionaryStatusPath := "/v1/environments/{environment_id}/collections/{collection_id}/word_lists/tokenization_dictionary"
+		version := "exampleString"
+		environmentID := "exampleString"
+		collectionID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(getTokenizationDictionaryStatusPath, "{environment_id}", environmentID, 1)
+		Path = strings.Replace(Path, "{collection_id}", collectionID, 1)
+		Context("Successfully - Get tokenization dictionary status", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"status": "ready"}`)
+			}))
+			It("Succeed to call GetTokenizationDictionaryStatus", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.GetTokenizationDictionaryStatus(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				getTokenizationDictionaryStatusOptions := testService.NewGetTokenizationDictionaryStatusOptions(environmentID, collectionID)
+				returnValue, returnValueErr = testService.GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetGetTokenizationDictionaryStatusResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 })

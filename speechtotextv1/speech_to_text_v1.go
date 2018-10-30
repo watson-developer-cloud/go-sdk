@@ -33,8 +33,7 @@ import (
 //
 // For speech recognition, the service supports synchronous and asynchronous HTTP Representational State Transfer (REST)
 // interfaces. It also supports a WebSocket interface that provides a full-duplex, low-latency communication channel:
-// Clients send requests and audio to the service and receive results over a single connection in an asynchronous
-// fashion.
+// Clients send requests and audio to the service and receive results over a single connection asynchronously.
 //
 // The service also offers two customization interfaces. Use language model customization to expand the vocabulary of a
 // base model with domain-specific terminology. Use acoustic model customization to adapt a base model for the acoustic
@@ -165,7 +164,7 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // Sends audio and returns transcription results for a recognition request. Returns only the final results; to enable
 // interim results, use the WebSocket API. The service imposes a data size limit of 100 MB. It automatically detects the
 // endianness of the incoming audio and, for audio that includes multiple channels, downmixes the audio to one-channel
-// mono during transcoding. (For the `audio/l16` format, you can specify the endianness.)
+// mono during transcoding.
 //
 // **See also:** [Making a basic HTTP
 // request](https://console.bluemix.net/docs/services/speech-to-text/http.html#HTTP-basic).
@@ -184,15 +183,22 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 //
 // ### Audio formats (content types)
 //
-//  Use the `Content-Type` header to specify the audio format (MIME type) of the audio. The service accepts the
-// following formats, including specifying the sampling rate, channels, and endianness where indicated.
-// * `audio/basic` (Use only with narrowband models.)
+//  The service accepts audio in the following formats (MIME types).
+// * For formats that are labeled **Required**, you must use the `Content-Type` header with the request to specify the
+// format of the audio.
+// * For all other formats, you can omit the `Content-Type` header or specify `application/octet-stream` with the header
+// to have the service automatically detect the format of the audio. (With the `curl` command, you can specify either
+// `\"Content-Type:\"` or `\"Content-Type: application/octet-stream\"`.)
+//
+// Where indicated, the format that you specify must include the sampling rate and can optionally include the number of
+// channels and the endianness of the audio.
+// * `audio/basic` (**Required.** Use only with narrowband models.)
 // * `audio/flac`
-// * `audio/l16` (Specify the sampling rate (`rate`) and optionally the number of channels (`channels`) and endianness
-// (`endianness`) of the audio.)
+// * `audio/l16` (**Required.** Specify the sampling rate (`rate`) and optionally the number of channels (`channels`)
+// and endianness (`endianness`) of the audio.)
 // * `audio/mp3`
 // * `audio/mpeg`
-// * `audio/mulaw` (Specify the sampling rate (`rate`) of the audio.)
+// * `audio/mulaw` (**Required.** Specify the sampling rate (`rate`) of the audio.)
 // * `audio/ogg` (The service automatically detects the codec of the input audio.)
 // * `audio/ogg;codecs=opus`
 // * `audio/ogg;codecs=vorbis`
@@ -202,6 +208,9 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // * `audio/webm;codecs=vorbis`
 //
 // **See also:** [Audio formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
+//
+// **Note:** You must pass a content type when using any of the Watson SDKs. The SDKs require the content-type parameter
+// for all audio formats.
 //
 // ### Multipart speech recognition
 //
@@ -240,8 +249,8 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	if recognizeOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*recognizeOptions.Model))
 	}
-	if recognizeOptions.CustomizationID != nil {
-		builder.AddQuery("customization_id", fmt.Sprint(*recognizeOptions.CustomizationID))
+	if recognizeOptions.LanguageCustomizationID != nil {
+		builder.AddQuery("language_customization_id", fmt.Sprint(*recognizeOptions.LanguageCustomizationID))
 	}
 	if recognizeOptions.AcousticCustomizationID != nil {
 		builder.AddQuery("acoustic_customization_id", fmt.Sprint(*recognizeOptions.AcousticCustomizationID))
@@ -281,6 +290,9 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	}
 	if recognizeOptions.SpeakerLabels != nil {
 		builder.AddQuery("speaker_labels", fmt.Sprint(*recognizeOptions.SpeakerLabels))
+	}
+	if recognizeOptions.CustomizationID != nil {
+		builder.AddQuery("customization_id", fmt.Sprint(*recognizeOptions.CustomizationID))
 	}
 
 	_, err := builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio)
@@ -442,15 +454,22 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 //
 // ### Audio formats (content types)
 //
-//  Use the `Content-Type` header to specify the audio format (MIME type) of the audio. The service accepts the
-// following formats, including specifying the sampling rate, channels, and endianness where indicated.
-// * `audio/basic` (Use only with narrowband models.)
+//  The service accepts audio in the following formats (MIME types).
+// * For formats that are labeled **Required**, you must use the `Content-Type` header with the request to specify the
+// format of the audio.
+// * For all other formats, you can omit the `Content-Type` header or specify `application/octet-stream` with the header
+// to have the service automatically detect the format of the audio. (With the `curl` command, you can specify either
+// `\"Content-Type:\"` or `\"Content-Type: application/octet-stream\"`.)
+//
+// Where indicated, the format that you specify must include the sampling rate and can optionally include the number of
+// channels and the endianness of the audio.
+// * `audio/basic` (**Required.** Use only with narrowband models.)
 // * `audio/flac`
-// * `audio/l16` (Specify the sampling rate (`rate`) and optionally the number of channels (`channels`) and endianness
-// (`endianness`) of the audio.)
+// * `audio/l16` (**Required.** Specify the sampling rate (`rate`) and optionally the number of channels (`channels`)
+// and endianness (`endianness`) of the audio.)
 // * `audio/mp3`
 // * `audio/mpeg`
-// * `audio/mulaw` (Specify the sampling rate (`rate`) of the audio.)
+// * `audio/mulaw` (**Required.** Specify the sampling rate (`rate`) of the audio.)
 // * `audio/ogg` (The service automatically detects the codec of the input audio.)
 // * `audio/ogg;codecs=opus`
 // * `audio/ogg;codecs=vorbis`
@@ -460,6 +479,9 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 // * `audio/webm;codecs=vorbis`
 //
 // **See also:** [Audio formats](https://console.bluemix.net/docs/services/speech-to-text/audio-formats.html).
+//
+// **Note:** You must pass a content type when using any of the Watson SDKs. The SDKs require the content-type parameter
+// for all audio formats.
 func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createJobOptions, "createJobOptions cannot be nil"); err != nil {
 		return nil, err
@@ -497,8 +519,8 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 	if createJobOptions.ResultsTTL != nil {
 		builder.AddQuery("results_ttl", fmt.Sprint(*createJobOptions.ResultsTTL))
 	}
-	if createJobOptions.CustomizationID != nil {
-		builder.AddQuery("customization_id", fmt.Sprint(*createJobOptions.CustomizationID))
+	if createJobOptions.LanguageCustomizationID != nil {
+		builder.AddQuery("language_customization_id", fmt.Sprint(*createJobOptions.LanguageCustomizationID))
 	}
 	if createJobOptions.AcousticCustomizationID != nil {
 		builder.AddQuery("acoustic_customization_id", fmt.Sprint(*createJobOptions.AcousticCustomizationID))
@@ -538,6 +560,9 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 	}
 	if createJobOptions.SpeakerLabels != nil {
 		builder.AddQuery("speaker_labels", fmt.Sprint(*createJobOptions.SpeakerLabels))
+	}
+	if createJobOptions.CustomizationID != nil {
+		builder.AddQuery("customization_id", fmt.Sprint(*createJobOptions.CustomizationID))
 	}
 
 	_, err := builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio)
@@ -2233,8 +2258,8 @@ type AcousticModels struct {
 // AddAudioOptions : The addAudio options.
 type AddAudioOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The name of the new audio resource for the custom acoustic model. Use a localized name that matches the language of
@@ -2361,8 +2386,8 @@ func (options *AddAudioOptions) SetHeaders(param map[string]string) *AddAudioOpt
 // AddCorpusOptions : The addCorpus options.
 type AddCorpusOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The name of the new corpus for the custom language model. Use a localized name that matches the language of the
@@ -2375,8 +2400,8 @@ type AddCorpusOptions struct {
 	CorpusName *string `json:"corpus_name" validate:"required"`
 
 	// A plain text file that contains the training data for the corpus. Encode the file in UTF-8 if it contains non-ASCII
-	// characters; the service assumes UTF-8 encoding if it encounters non-ASCII characters. With cURL, use the
-	// `--data-binary` option to upload the file for the request.
+	// characters; the service assumes UTF-8 encoding if it encounters non-ASCII characters. With the `curl` command, use
+	// the `--data-binary` option to upload the file for the request.
 	CorpusFile *os.File `json:"corpus_file" validate:"required"`
 
 	// The filename for corpusFile.
@@ -2439,8 +2464,8 @@ func (options *AddCorpusOptions) SetHeaders(param map[string]string) *AddCorpusO
 // AddWordOptions : The addWord options.
 type AddWordOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The custom word for the custom language model. When you add or update a custom word with the **Add a custom word**
@@ -2523,8 +2548,8 @@ func (options *AddWordOptions) SetHeaders(param map[string]string) *AddWordOptio
 // AddWordsOptions : The addWords options.
 type AddWordsOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// An array of objects that provides information about each custom word that is to be added to or updated in the custom
@@ -2716,7 +2741,7 @@ type AudioResources struct {
 // CheckJobOptions : The checkJob options.
 type CheckJobOptions struct {
 
-	// The ID of the asynchronous job.
+	// The identifier of the asynchronous job that is to be used for the request.
 	ID *string `json:"id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -2888,7 +2913,7 @@ func (options *CreateAcousticModelOptions) SetHeaders(param map[string]string) *
 // CreateJobOptions : The createJob options.
 type CreateJobOptions struct {
 
-	// The audio to transcribe in the format specified by the `Content-Type` header.
+	// The audio to transcribe.
 	Audio *io.ReadCloser `json:"audio" validate:"required"`
 
 	// The type of the input.
@@ -2937,7 +2962,9 @@ type CreateJobOptions struct {
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
 	// default, no custom language model is used. See [Custom
 	// models](https://console.bluemix.net/docs/services/speech-to-text/input.html#custom).
-	CustomizationID *string `json:"customization_id,omitempty"`
+	//
+	// **Note:** Use this parameter instead of the deprecated `customization_id` parameter.
+	LanguageCustomizationID *string `json:"language_customization_id,omitempty"`
 
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
@@ -3028,6 +3055,10 @@ type CreateJobOptions struct {
 	// labels](https://console.bluemix.net/docs/services/speech-to-text/output.html#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
 
+	// **Deprecated.** Use the `language_customization_id` parameter to specify the customization ID (GUID) of a custom
+	// language model that is to be used with the recognition request. Do not specify both parameters with a request.
+	CustomizationID *string `json:"customization_id,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -3035,19 +3066,20 @@ type CreateJobOptions struct {
 // Constants associated with the CreateJobOptions.ContentType property.
 // The type of the input.
 const (
-	CreateJobOptions_ContentType_AudioBasic            = "audio/basic"
-	CreateJobOptions_ContentType_AudioFlac             = "audio/flac"
-	CreateJobOptions_ContentType_AudioL16              = "audio/l16"
-	CreateJobOptions_ContentType_AudioMp3              = "audio/mp3"
-	CreateJobOptions_ContentType_AudioMpeg             = "audio/mpeg"
-	CreateJobOptions_ContentType_AudioMulaw            = "audio/mulaw"
-	CreateJobOptions_ContentType_AudioOgg              = "audio/ogg"
-	CreateJobOptions_ContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
-	CreateJobOptions_ContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
-	CreateJobOptions_ContentType_AudioWav              = "audio/wav"
-	CreateJobOptions_ContentType_AudioWebm             = "audio/webm"
-	CreateJobOptions_ContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
-	CreateJobOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+	CreateJobOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
+	CreateJobOptions_ContentType_AudioBasic             = "audio/basic"
+	CreateJobOptions_ContentType_AudioFlac              = "audio/flac"
+	CreateJobOptions_ContentType_AudioL16               = "audio/l16"
+	CreateJobOptions_ContentType_AudioMp3               = "audio/mp3"
+	CreateJobOptions_ContentType_AudioMpeg              = "audio/mpeg"
+	CreateJobOptions_ContentType_AudioMulaw             = "audio/mulaw"
+	CreateJobOptions_ContentType_AudioOgg               = "audio/ogg"
+	CreateJobOptions_ContentType_AudioOggCodecsOpus     = "audio/ogg;codecs=opus"
+	CreateJobOptions_ContentType_AudioOggCodecsVorbis   = "audio/ogg;codecs=vorbis"
+	CreateJobOptions_ContentType_AudioWav               = "audio/wav"
+	CreateJobOptions_ContentType_AudioWebm              = "audio/webm"
+	CreateJobOptions_ContentType_AudioWebmCodecsOpus    = "audio/webm;codecs=opus"
+	CreateJobOptions_ContentType_AudioWebmCodecsVorbis  = "audio/webm;codecs=vorbis"
 )
 
 // Constants associated with the CreateJobOptions.Model property.
@@ -3145,9 +3177,9 @@ func (options *CreateJobOptions) SetResultsTTL(resultsTTL int64) *CreateJobOptio
 	return options
 }
 
-// SetCustomizationID : Allow user to set CustomizationID
-func (options *CreateJobOptions) SetCustomizationID(customizationID string) *CreateJobOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
+// SetLanguageCustomizationID : Allow user to set LanguageCustomizationID
+func (options *CreateJobOptions) SetLanguageCustomizationID(languageCustomizationID string) *CreateJobOptions {
+	options.LanguageCustomizationID = core.StringPtr(languageCustomizationID)
 	return options
 }
 
@@ -3226,6 +3258,12 @@ func (options *CreateJobOptions) SetSmartFormatting(smartFormatting bool) *Creat
 // SetSpeakerLabels : Allow user to set SpeakerLabels
 func (options *CreateJobOptions) SetSpeakerLabels(speakerLabels bool) *CreateJobOptions {
 	options.SpeakerLabels = core.BoolPtr(speakerLabels)
+	return options
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *CreateJobOptions) SetCustomizationID(customizationID string) *CreateJobOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
 	return options
 }
 
@@ -3361,8 +3399,8 @@ type CustomWord struct {
 // DeleteAcousticModelOptions : The deleteAcousticModel options.
 type DeleteAcousticModelOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3391,8 +3429,8 @@ func (options *DeleteAcousticModelOptions) SetHeaders(param map[string]string) *
 // DeleteAudioOptions : The deleteAudio options.
 type DeleteAudioOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The name of the audio resource for the custom acoustic model.
@@ -3431,8 +3469,8 @@ func (options *DeleteAudioOptions) SetHeaders(param map[string]string) *DeleteAu
 // DeleteCorpusOptions : The deleteCorpus options.
 type DeleteCorpusOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The name of the corpus for the custom language model.
@@ -3471,7 +3509,7 @@ func (options *DeleteCorpusOptions) SetHeaders(param map[string]string) *DeleteC
 // DeleteJobOptions : The deleteJob options.
 type DeleteJobOptions struct {
 
-	// The ID of the asynchronous job.
+	// The identifier of the asynchronous job that is to be used for the request.
 	ID *string `json:"id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3500,8 +3538,8 @@ func (options *DeleteJobOptions) SetHeaders(param map[string]string) *DeleteJobO
 // DeleteLanguageModelOptions : The deleteLanguageModel options.
 type DeleteLanguageModelOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3559,8 +3597,8 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 // DeleteWordOptions : The deleteWord options.
 type DeleteWordOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The custom word for the custom language model. When you add or update a custom word with the **Add a custom word**
@@ -3601,8 +3639,8 @@ func (options *DeleteWordOptions) SetHeaders(param map[string]string) *DeleteWor
 // GetAcousticModelOptions : The getAcousticModel options.
 type GetAcousticModelOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3631,8 +3669,8 @@ func (options *GetAcousticModelOptions) SetHeaders(param map[string]string) *Get
 // GetAudioOptions : The getAudio options.
 type GetAudioOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The name of the audio resource for the custom acoustic model.
@@ -3671,8 +3709,8 @@ func (options *GetAudioOptions) SetHeaders(param map[string]string) *GetAudioOpt
 // GetCorpusOptions : The getCorpus options.
 type GetCorpusOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The name of the corpus for the custom language model.
@@ -3711,8 +3749,8 @@ func (options *GetCorpusOptions) SetHeaders(param map[string]string) *GetCorpusO
 // GetLanguageModelOptions : The getLanguageModel options.
 type GetLanguageModelOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3792,8 +3830,8 @@ func (options *GetModelOptions) SetHeaders(param map[string]string) *GetModelOpt
 // GetWordOptions : The getWord options.
 type GetWordOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The custom word for the custom language model. When you add or update a custom word with the **Add a custom word**
@@ -3965,8 +4003,8 @@ func (options *ListAcousticModelsOptions) SetHeaders(param map[string]string) *L
 // ListAudioOptions : The listAudio options.
 type ListAudioOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3995,8 +4033,8 @@ func (options *ListAudioOptions) SetHeaders(param map[string]string) *ListAudioO
 // ListCorporaOptions : The listCorpora options.
 type ListCorporaOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -4072,8 +4110,8 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 // ListWordsOptions : The listWords options.
 type ListWordsOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The type of words to be listed from the custom language model's words resource:
@@ -4086,7 +4124,7 @@ type ListWordsOptions struct {
 	// `+` or `-` to an argument to indicate whether the results are to be sorted in ascending or descending order. By
 	// default, words are sorted in ascending alphabetical order. For alphabetical ordering, the lexicographical precedence
 	// is numeric values, uppercase letters, and lowercase letters. For count ordering, values with the same count are
-	// ordered alphabetically. With cURL, URL encode the `+` symbol as `%2B`.
+	// ordered alphabetically. With the `curl` command, URL encode the `+` symbol as `%2B`.
 	Sort *string `json:"sort,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -4109,7 +4147,7 @@ const (
 // `+` or `-` to an argument to indicate whether the results are to be sorted in ascending or descending order. By
 // default, words are sorted in ascending alphabetical order. For alphabetical ordering, the lexicographical precedence
 // is numeric values, uppercase letters, and lowercase letters. For count ordering, values with the same count are
-// ordered alphabetically. With cURL, URL encode the `+` symbol as `%2B`.
+// ordered alphabetically. With the `curl` command, URL encode the `+` symbol as `%2B`.
 const (
 	ListWordsOptions_Sort_Alphabetical = "alphabetical"
 	ListWordsOptions_Sort_Count        = "count"
@@ -4219,7 +4257,7 @@ type RecognitionJobs struct {
 // RecognizeOptions : The recognize options.
 type RecognizeOptions struct {
 
-	// The audio to transcribe in the format specified by the `Content-Type` header.
+	// The audio to transcribe.
 	Audio *io.ReadCloser `json:"audio" validate:"required"`
 
 	// The type of the input.
@@ -4233,7 +4271,9 @@ type RecognizeOptions struct {
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
 	// default, no custom language model is used. See [Custom
 	// models](https://console.bluemix.net/docs/services/speech-to-text/input.html#custom).
-	CustomizationID *string `json:"customization_id,omitempty"`
+	//
+	// **Note:** Use this parameter instead of the deprecated `customization_id` parameter.
+	LanguageCustomizationID *string `json:"language_customization_id,omitempty"`
 
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
@@ -4324,6 +4364,10 @@ type RecognizeOptions struct {
 	// labels](https://console.bluemix.net/docs/services/speech-to-text/output.html#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
 
+	// **Deprecated.** Use the `language_customization_id` parameter to specify the customization ID (GUID) of a custom
+	// language model that is to be used with the recognition request. Do not specify both parameters with a request.
+	CustomizationID *string `json:"customization_id,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -4331,19 +4375,20 @@ type RecognizeOptions struct {
 // Constants associated with the RecognizeOptions.ContentType property.
 // The type of the input.
 const (
-	RecognizeOptions_ContentType_AudioBasic            = "audio/basic"
-	RecognizeOptions_ContentType_AudioFlac             = "audio/flac"
-	RecognizeOptions_ContentType_AudioL16              = "audio/l16"
-	RecognizeOptions_ContentType_AudioMp3              = "audio/mp3"
-	RecognizeOptions_ContentType_AudioMpeg             = "audio/mpeg"
-	RecognizeOptions_ContentType_AudioMulaw            = "audio/mulaw"
-	RecognizeOptions_ContentType_AudioOgg              = "audio/ogg"
-	RecognizeOptions_ContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
-	RecognizeOptions_ContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
-	RecognizeOptions_ContentType_AudioWav              = "audio/wav"
-	RecognizeOptions_ContentType_AudioWebm             = "audio/webm"
-	RecognizeOptions_ContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
-	RecognizeOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+	RecognizeOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
+	RecognizeOptions_ContentType_AudioBasic             = "audio/basic"
+	RecognizeOptions_ContentType_AudioFlac              = "audio/flac"
+	RecognizeOptions_ContentType_AudioL16               = "audio/l16"
+	RecognizeOptions_ContentType_AudioMp3               = "audio/mp3"
+	RecognizeOptions_ContentType_AudioMpeg              = "audio/mpeg"
+	RecognizeOptions_ContentType_AudioMulaw             = "audio/mulaw"
+	RecognizeOptions_ContentType_AudioOgg               = "audio/ogg"
+	RecognizeOptions_ContentType_AudioOggCodecsOpus     = "audio/ogg;codecs=opus"
+	RecognizeOptions_ContentType_AudioOggCodecsVorbis   = "audio/ogg;codecs=vorbis"
+	RecognizeOptions_ContentType_AudioWav               = "audio/wav"
+	RecognizeOptions_ContentType_AudioWebm              = "audio/webm"
+	RecognizeOptions_ContentType_AudioWebmCodecsOpus    = "audio/webm;codecs=opus"
+	RecognizeOptions_ContentType_AudioWebmCodecsVorbis  = "audio/webm;codecs=vorbis"
 )
 
 // Constants associated with the RecognizeOptions.Model property.
@@ -4394,9 +4439,9 @@ func (options *RecognizeOptions) SetModel(model string) *RecognizeOptions {
 	return options
 }
 
-// SetCustomizationID : Allow user to set CustomizationID
-func (options *RecognizeOptions) SetCustomizationID(customizationID string) *RecognizeOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
+// SetLanguageCustomizationID : Allow user to set LanguageCustomizationID
+func (options *RecognizeOptions) SetLanguageCustomizationID(languageCustomizationID string) *RecognizeOptions {
+	options.LanguageCustomizationID = core.StringPtr(languageCustomizationID)
 	return options
 }
 
@@ -4478,6 +4523,12 @@ func (options *RecognizeOptions) SetSpeakerLabels(speakerLabels bool) *Recognize
 	return options
 }
 
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *RecognizeOptions) SetCustomizationID(customizationID string) *RecognizeOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeOptions {
 	options.Headers = param
@@ -4551,8 +4602,8 @@ const (
 // ResetAcousticModelOptions : The resetAcousticModel options.
 type ResetAcousticModelOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -4581,8 +4632,8 @@ func (options *ResetAcousticModelOptions) SetHeaders(param map[string]string) *R
 // ResetLanguageModelOptions : The resetLanguageModel options.
 type ResetLanguageModelOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -4667,18 +4718,18 @@ type SpeechRecognitionAlternative struct {
 	// A transcription of the audio.
 	Transcript *string `json:"transcript" validate:"required"`
 
-	// A score that indicates the service's confidence in the transcript in the range of 0.0 to 1.0. Returned only for the
-	// best alternative and only with results marked as final.
+	// A score that indicates the service's confidence in the transcript in the range of 0.0 to 1.0. A confidence score is
+	// returned only for the best alternative and only with results marked as final.
 	Confidence *float64 `json:"confidence,omitempty"`
 
 	// Time alignments for each word from the transcript as a list of lists. Each inner list consists of three elements:
 	// the word followed by its start and end time in seconds, for example: `[["hello",0.0,1.2],["world",1.2,2.5]]`.
-	// Returned only for the best alternative.
+	// Timestamps are returned only for the best alternative.
 	Timestamps []string `json:"timestamps,omitempty"`
 
 	// A confidence score for each word of the transcript as a list of lists. Each inner list consists of two elements: the
-	// word and its confidence score in the range of 0.0 to 1.0, for example: `[["hello",0.95],["world",0.866]]`. Returned
-	// only for the best alternative and only with results marked as final.
+	// word and its confidence score in the range of 0.0 to 1.0, for example: `[["hello",0.95],["world",0.866]]`.
+	// Confidence scores are returned only for the best alternative and only with results marked as final.
 	WordConfidence []string `json:"word_confidence,omitempty"`
 }
 
@@ -4706,19 +4757,20 @@ type SpeechRecognitionResult struct {
 // SpeechRecognitionResults : SpeechRecognitionResults struct
 type SpeechRecognitionResults struct {
 
-	// An array that can include interim and final results (interim results are returned only if supported by the method).
-	// Final results are guaranteed not to change; interim results might be replaced by further interim results and final
-	// results. The service periodically sends updates to the results list; the `result_index` is set to the lowest index
-	// in the array that has changed; it is incremented for new results.
+	// An array of `SpeechRecognitionResult` objects that can include interim and final results (interim results are
+	// returned only if supported by the method). Final results are guaranteed not to change; interim results might be
+	// replaced by further interim results and final results. The service periodically sends updates to the results list;
+	// the `result_index` is set to the lowest index in the array that has changed; it is incremented for new results.
 	Results []SpeechRecognitionResult `json:"results,omitempty"`
 
 	// An index that indicates a change point in the `results` array. The service increments the index only for additional
 	// results that it sends for new audio for the same request.
 	ResultIndex *int64 `json:"result_index,omitempty"`
 
-	// An array that identifies which words were spoken by which speakers in a multi-person exchange. Returned in the
-	// response only if `speaker_labels` is `true`. When interim results are also requested for methods that support them,
-	// it is possible for a `SpeechRecognitionResults` object to include only the `speaker_labels` field.
+	// An array of `SpeakerLabelsResult` objects that identifies which words were spoken by which speakers in a
+	// multi-person exchange. The array is returned only if the `speaker_labels` parameter is `true`. When interim results
+	// are also requested for methods that support them, it is possible for a `SpeechRecognitionResults` object to include
+	// only the `speaker_labels` field.
 	SpeakerLabels []SpeakerLabelsResult `json:"speaker_labels,omitempty"`
 
 	// An array of warning messages associated with the request:
@@ -4749,8 +4801,8 @@ type SupportedFeatures struct {
 // TrainAcousticModelOptions : The trainAcousticModel options.
 type TrainAcousticModelOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The customization ID (GUID) of a custom language model that is to be used during training of the custom acoustic
@@ -4790,8 +4842,8 @@ func (options *TrainAcousticModelOptions) SetHeaders(param map[string]string) *T
 // TrainLanguageModelOptions : The trainLanguageModel options.
 type TrainLanguageModelOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The type of words from the custom language model's words resource on which to train the model:
@@ -4891,8 +4943,8 @@ func (options *UnregisterCallbackOptions) SetHeaders(param map[string]string) *U
 // UpgradeAcousticModelOptions : The upgradeAcousticModel options.
 type UpgradeAcousticModelOptions struct {
 
-	// The customization ID (GUID) of the custom acoustic model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// If the custom acoustic model was trained with a custom language model, the customization ID (GUID) of that custom
@@ -4931,8 +4983,8 @@ func (options *UpgradeAcousticModelOptions) SetHeaders(param map[string]string) 
 // UpgradeLanguageModelOptions : The upgradeLanguageModel options.
 type UpgradeLanguageModelOptions struct {
 
-	// The customization ID (GUID) of the custom language model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with service credentials created for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant

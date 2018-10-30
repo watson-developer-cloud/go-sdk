@@ -336,6 +336,71 @@ func TestQuery(t *testing.T) {
 	assert.NotNil(t, query)
 }
 
+func TestTokenizationDictionary(t *testing.T) {
+	// get tokenization dictionary status
+	response, responseErr := service.GetTokenizationDictionaryStatus(
+		&discoveryv1.GetTokenizationDictionaryStatusOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  core.StringPtr(os.Getenv("DISCOVERY_COLLECTION_JP")),
+		},
+	)
+
+	getTokenizationDictionaryStatus := service.GetGetTokenizationDictionaryStatusResult(response)
+	assert.NotNil(t, getTokenizationDictionaryStatus)
+
+	t.Skip("Skipping the rest of the tokenization dictionary tests")
+	// Create collection in Japanese as create tokenization dictionary is only supported in JA
+	response, responseErr = service.CreateCollection(
+		&discoveryv1.CreateCollectionOptions{
+			EnvironmentID: environmentID,
+			Name:          core.StringPtr("Test Tokenization Dictionary For Golang"),
+			Language:      core.StringPtr(discoveryv1.CreateCollectionOptions_Language_Ja),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	testCollection := service.GetCreateCollectionResult(response)
+	assert.NotNil(t, testCollection)
+
+	// create tokenization dictionary
+	response, responseErr = service.CreateTokenizationDictionary(
+		&discoveryv1.CreateTokenizationDictionaryOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  core.StringPtr(os.Getenv("DISCOVERY_COLLECTION_JP")),
+			TokenizationRules: []discoveryv1.TokenDictRule{
+				discoveryv1.TokenDictRule{
+					Text:         core.StringPtr("token"),
+					Tokens:       []string{"token 1", "token 2"},
+					Readings:     []string{"reading 1", "reading 2"},
+					PartOfSpeech: core.StringPtr("noun"),
+				},
+			},
+		},
+	)
+
+	createTokenizationDictionary := service.GetCreateTokenizationDictionaryResult(response)
+	assert.NotNil(t, createTokenizationDictionary)
+
+	// delete tokenization dictionary
+	response, responseErr = service.DeleteTokenizationDictionary(
+		&discoveryv1.DeleteTokenizationDictionaryOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  testCollection.CollectionID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	// Delete collection
+	response, responseErr = service.DeleteCollection(
+		&discoveryv1.DeleteCollectionOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  testCollection.CollectionID,
+		},
+	)
+	assert.Nil(t, responseErr)
+	assert.NotNil(t, response)
+}
+
 func TestDeleteOperations(t *testing.T) {
 	// Delete collection
 	response, responseErr := service.DeleteCollection(
