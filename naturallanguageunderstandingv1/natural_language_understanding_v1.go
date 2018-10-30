@@ -70,44 +70,8 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 }
 
 // Analyze : Analyze text, HTML, or a public webpage
-// Analyzes text, HTML, or a public webpage with one or more text analysis features.
-//
-// ### Concepts
-// Identify general concepts that are referenced or alluded to in your content. Concepts that are detected typically
-// have an associated link to a DBpedia resource.
-//
-// ### Emotion
-// Detect anger, disgust, fear, joy, or sadness that is conveyed by your content. Emotion information can be returned
-// for detected entities, keywords, or user-specified target phrases found in the text.
-//
-// ### Entities
-// Detect important people, places, geopolitical entities and other types of entities in your content. Entity detection
-// recognizes consecutive coreferences of each entity. For example, analysis of the following text would count \"Barack
-// Obama\" and \"He\" as the same entity:
-//
-// \"Barack Obama was the 44th President of the United States. He took office in January 2009.\"
-//
-// ### Keywords
-// Determine the most important keywords in your content. Keyword phrases are organized by relevance in the results.
-//
-// ### Metadata
-// Get author information, publication date, and the title of your text/HTML content.
-//
-// ### Relations
-// Recognize when two entities are related, and identify the type of relation.  For example, you can identify an
-// \"awardedTo\" relation between an award and its recipient.
-//
-// ### Semantic Roles
-// Parse sentences into subject-action-object form, and identify entities and keywords that are subjects or objects of
-// an action.
-//
-// ### Sentiment
-// Determine whether your content conveys postive or negative sentiment. Sentiment information can be returned for
-// detected entities, keywords, or user-specified target phrases found in the text.
-//
-// ### Categories
-// Categorize your content into a hierarchical 5-level taxonomy. For example, \"Leonardo DiCaprio won an Oscar\" returns
-// \"/art and entertainment/movies and tv/movies\" as the most confident classification.
+// Analyzes text, HTML, or a public webpage with one or more text analysis features, including categories, concepts,
+// emotion, entities, keywords, metadata, relations, semantic roles, and sentiment.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(analyzeOptions *AnalyzeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(analyzeOptions, "analyzeOptions cannot be nil"); err != nil {
 		return nil, err
@@ -426,7 +390,9 @@ type Author struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// CategoriesOptions : The hierarchical 5-level taxonomy the content is categorized into.
+// CategoriesOptions : Returns a five-level taxonomy of the content. The top three categories are returned.
+//
+// Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 type CategoriesOptions struct {
 }
 
@@ -440,7 +406,10 @@ type CategoriesResult struct {
 	Score *float64 `json:"score,omitempty"`
 }
 
-// ConceptsOptions : Whether or not to analyze content for general concepts that are referenced or alluded to.
+// ConceptsOptions : Returns high-level concepts in the content. For example, a research paper about deep learning might return the
+// concept, "Artificial Intelligence" although the term is not mentioned.
+//
+// Supported languages: English, French, German, Japanese, Korean, Portuguese, Spanish.
 type ConceptsOptions struct {
 
 	// Maximum number of concepts to return.
@@ -526,7 +495,11 @@ type DocumentSentimentResults struct {
 	Score *float64 `json:"score,omitempty"`
 }
 
-// EmotionOptions : Whether or not to return emotion analysis of the content.
+// EmotionOptions : Detects anger, disgust, fear, joy, or sadness that is conveyed in the content or by the context around target phrases
+// specified in the targets parameter. You can analyze emotion for detected entities with `entities.emotion` and for
+// keywords with `keywords.emotion`.
+//
+// Supported languages: English.
 type EmotionOptions struct {
 
 	// Set this to `false` to hide document-level emotion results.
@@ -566,7 +539,11 @@ type EmotionScores struct {
 	Sadness *float64 `json:"sadness,omitempty"`
 }
 
-// EntitiesOptions : Whether or not to return important people, places, geopolitical, and other entities detected in the analyzed content.
+// EntitiesOptions : Identifies people, cities, organizations, and other entities in the content. See [Entity types and
+// subtypes](/docs/services/natural-language-understanding/entity-types.html).
+//
+// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
+// Arabic, Chinese, and Dutch custom models are also supported.
 type EntitiesOptions struct {
 
 	// Maximum number of entities to return.
@@ -634,32 +611,57 @@ type FeatureSentimentResults struct {
 // Features : Analysis features and options.
 type Features struct {
 
-	// Whether or not to return the concepts that are mentioned in the analyzed text.
+	// Returns high-level concepts in the content. For example, a research paper about deep learning might return the
+	// concept, "Artificial Intelligence" although the term is not mentioned.
+	//
+	// Supported languages: English, French, German, Japanese, Korean, Portuguese, Spanish.
 	Concepts *ConceptsOptions `json:"concepts,omitempty"`
 
-	// Whether or not to extract the emotions implied in the analyzed text.
+	// Detects anger, disgust, fear, joy, or sadness that is conveyed in the content or by the context around target
+	// phrases specified in the targets parameter. You can analyze emotion for detected entities with `entities.emotion`
+	// and for keywords with `keywords.emotion`.
+	//
+	// Supported languages: English
 	Emotion *EmotionOptions `json:"emotion,omitempty"`
 
-	// Whether or not to extract detected entity objects from the analyzed text.
+	// Identifies people, cities, organizations, and other entities in the content. See [Entity types and
+	// subtypes](/docs/services/natural-language-understanding/entity-types.html).
+	//
+	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
+	// Arabic, Chinese, and Dutch custom models are also supported.
 	Entities *EntitiesOptions `json:"entities,omitempty"`
 
-	// Whether or not to return the keywords in the analyzed text.
+	// Returns important keywords in the content.
+	//
+	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 	Keywords *KeywordsOptions `json:"keywords,omitempty"`
 
-	// Whether or not the author, publication date, and title of the analyzed text should be returned. This parameter is
-	// only available for URL and HTML input.
+	// Returns information from the document, including author name, title, RSS/ATOM feeds, prominent page image, and
+	// publication date. Supports URL and HTML input types only.
 	Metadata *MetadataOptions `json:"metadata,omitempty"`
 
-	// Whether or not to return the relationships between detected entities in the analyzed text.
+	// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
+	// might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
+	// types](/docs/services/natural-language-understanding/relations.html).
+	//
+	// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
+	// Portuguese custom models are also supported.
 	Relations *RelationsOptions `json:"relations,omitempty"`
 
-	// Whether or not to return the subject-action-object relations from the analyzed text.
+	// Parses sentences into subject, action, and object form.
+	//
+	// Supported languages: English, German, Japanese, Korean, Spanish.
 	SemanticRoles *SemanticRolesOptions `json:"semantic_roles,omitempty"`
 
-	// Whether or not to return the overall sentiment of the analyzed text.
+	// Analyzes the general sentiment of your content or the sentiment toward specific target phrases. You can analyze
+	// sentiment for detected entities with `entities.sentiment` and for keywords with `keywords.sentiment`.
+	//
+	//  Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish
 	Sentiment *SentimentOptions `json:"sentiment,omitempty"`
 
-	// Whether or not to return the high level category the content is categorized as (i.e. news, art).
+	// Returns a five-level taxonomy of the content. The top three categories are returned.
+	//
+	// Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 	Categories *CategoriesOptions `json:"categories,omitempty"`
 }
 
@@ -670,7 +672,9 @@ type Feed struct {
 	Link *string `json:"link,omitempty"`
 }
 
-// KeywordsOptions : An option indicating whether or not important keywords from the analyzed content should be returned.
+// KeywordsOptions : Returns important keywords in the content.
+//
+// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 type KeywordsOptions struct {
 
 	// Maximum number of keywords to return.
@@ -724,7 +728,8 @@ type ListModelsResults struct {
 	Models []Model `json:"models,omitempty"`
 }
 
-// MetadataOptions : The Authors, Publication Date, and Title of the document. Supports URL and HTML input types.
+// MetadataOptions : Returns information from the document, including author name, title, RSS/ATOM feeds, prominent page image, and
+// publication date. Supports URL and HTML input types only.
 type MetadataOptions struct {
 }
 
@@ -786,11 +791,16 @@ type RelationEntity struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// RelationsOptions : An option specifying if the relationships found between entities in the analyzed content should be returned.
+// RelationsOptions : Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
+// might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
+// types](/docs/services/natural-language-understanding/relations.html).
+//
+// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
+// Portuguese custom models are also supported.
 type RelationsOptions struct {
 
-	// Enter a [custom model](https://www.bluemix.net/docs/services/natural-language-understanding/customizing.html) ID to
-	// override the default model.
+	// Enter a [custom model](/docs/services/natural-language-understanding/customizing.html) ID to override the default
+	// model.
 	Model *string `json:"model,omitempty"`
 }
 
@@ -849,7 +859,9 @@ type SemanticRolesObject struct {
 	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
 }
 
-// SemanticRolesOptions : An option specifying whether or not to identify the subjects, actions, and verbs in the analyzed content.
+// SemanticRolesOptions : Parses sentences into subject, action, and object form.
+//
+// Supported languages: English, German, Japanese, Korean, Spanish.
 type SemanticRolesOptions struct {
 
 	// Maximum number of semantic_roles results to return.
@@ -901,7 +913,10 @@ type SemanticRolesVerb struct {
 	Tense *string `json:"tense,omitempty"`
 }
 
-// SentimentOptions : An option specifying if sentiment of detected entities, keywords, or phrases should be returned.
+// SentimentOptions : Analyzes the general sentiment of your content or the sentiment toward specific target phrases. You can analyze
+// sentiment for detected entities with `entities.sentiment` and for keywords with `keywords.sentiment`.
+//
+//  Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish.
 type SentimentOptions struct {
 
 	// Set this to `false` to hide document-level sentiment results.
