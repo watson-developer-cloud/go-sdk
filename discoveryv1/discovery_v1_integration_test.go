@@ -337,6 +337,7 @@ func TestQuery(t *testing.T) {
 }
 
 func TestTokenizationDictionary(t *testing.T) {
+	t.Skip("Skipping the tokenization dictionary tests")
 	// get tokenization dictionary status
 	response, responseErr := service.GetTokenizationDictionaryStatus(
 		&discoveryv1.GetTokenizationDictionaryStatusOptions{
@@ -348,7 +349,6 @@ func TestTokenizationDictionary(t *testing.T) {
 	getTokenizationDictionaryStatus := service.GetGetTokenizationDictionaryStatusResult(response)
 	assert.NotNil(t, getTokenizationDictionaryStatus)
 
-	t.Skip("Skipping the rest of the tokenization dictionary tests")
 	// Create collection in Japanese as create tokenization dictionary is only supported in JA
 	response, responseErr = service.CreateCollection(
 		&discoveryv1.CreateCollectionOptions{
