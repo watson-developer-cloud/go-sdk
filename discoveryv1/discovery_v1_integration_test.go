@@ -40,10 +40,9 @@ func TestInitialization(t *testing.T) {
 
 	service, serviceErr = discoveryv1.
 		NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-			URL:      os.Getenv("DISCOVERY_URL"),
-			Version:  "2018-03-05",
-			Username: os.Getenv("DISCOVERY_USERNAME"),
-			Password: os.Getenv("DISCOVERY_PASSWORD"),
+			URL:       os.Getenv("DISCOVERY_URL"),
+			Version:   "2018-03-05",
+			IAMApiKey: os.Getenv("DISCOVERY_IAMAPIKEY"),
 		})
 	environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
 	require.Nil(t, serviceErr)
@@ -337,20 +336,8 @@ func TestQuery(t *testing.T) {
 }
 
 func TestTokenizationDictionary(t *testing.T) {
-	t.Skip("Skipping the tokenization dictionary tests")
-	// get tokenization dictionary status
-	response, responseErr := service.GetTokenizationDictionaryStatus(
-		&discoveryv1.GetTokenizationDictionaryStatusOptions{
-			EnvironmentID: environmentID,
-			CollectionID:  core.StringPtr(os.Getenv("DISCOVERY_COLLECTION_JP")),
-		},
-	)
-
-	getTokenizationDictionaryStatus := service.GetGetTokenizationDictionaryStatusResult(response)
-	assert.NotNil(t, getTokenizationDictionaryStatus)
-
 	// Create collection in Japanese as create tokenization dictionary is only supported in JA
-	response, responseErr = service.CreateCollection(
+	response, responseErr := service.CreateCollection(
 		&discoveryv1.CreateCollectionOptions{
 			EnvironmentID: environmentID,
 			Name:          core.StringPtr("Test Tokenization Dictionary For Golang"),
@@ -366,7 +353,7 @@ func TestTokenizationDictionary(t *testing.T) {
 	response, responseErr = service.CreateTokenizationDictionary(
 		&discoveryv1.CreateTokenizationDictionaryOptions{
 			EnvironmentID: environmentID,
-			CollectionID:  core.StringPtr(os.Getenv("DISCOVERY_COLLECTION_JP")),
+			CollectionID:  testCollection.CollectionID,
 			TokenizationRules: []discoveryv1.TokenDictRule{
 				discoveryv1.TokenDictRule{
 					Text:         core.StringPtr("token"),
@@ -381,6 +368,17 @@ func TestTokenizationDictionary(t *testing.T) {
 	createTokenizationDictionary := service.GetCreateTokenizationDictionaryResult(response)
 	assert.NotNil(t, createTokenizationDictionary)
 
+	// get tokenization dictionary status
+	response, responseErr = service.GetTokenizationDictionaryStatus(
+		&discoveryv1.GetTokenizationDictionaryStatusOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  testCollection.CollectionID,
+		},
+	)
+
+	getTokenizationDictionaryStatus := service.GetGetTokenizationDictionaryStatusResult(response)
+	assert.NotNil(t, getTokenizationDictionaryStatus)
+
 	// delete tokenization dictionary
 	response, responseErr = service.DeleteTokenizationDictionary(
 		&discoveryv1.DeleteTokenizationDictionaryOptions{
@@ -388,7 +386,6 @@ func TestTokenizationDictionary(t *testing.T) {
 			CollectionID:  testCollection.CollectionID,
 		},
 	)
-	assert.Nil(t, responseErr)
 
 	// Delete collection
 	response, responseErr = service.DeleteCollection(
