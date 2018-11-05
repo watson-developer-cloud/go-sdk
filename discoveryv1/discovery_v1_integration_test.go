@@ -19,6 +19,7 @@ package discoveryv1_test
  */
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -386,36 +387,52 @@ func TestTokenizationDictionary(t *testing.T) {
 			CollectionID:  testCollection.CollectionID,
 		},
 	)
-
-	// Delete collection
-	response, responseErr = service.DeleteCollection(
-		&discoveryv1.DeleteCollectionOptions{
-			EnvironmentID: environmentID,
-			CollectionID:  testCollection.CollectionID,
-		},
-	)
-	assert.Nil(t, responseErr)
-	assert.NotNil(t, response)
 }
 
 func TestDeleteOperations(t *testing.T) {
-	// Delete collection
-	response, responseErr := service.DeleteCollection(
-		&discoveryv1.DeleteCollectionOptions{
+	// Delete all collections
+	response, responseErr := service.ListCollections(
+		&discoveryv1.ListCollectionsOptions{
 			EnvironmentID: environmentID,
-			CollectionID:  collectionID,
 		},
 	)
 	assert.Nil(t, responseErr)
-	assert.NotNil(t, response)
 
-	// Delete configuration
-	response, responseErr = service.DeleteConfiguration(
-		&discoveryv1.DeleteConfigurationOptions{
-			EnvironmentID:   environmentID,
-			ConfigurationID: configurationID,
+	listCollection := service.GetListCollectionsResult(response)
+	assert.NotNil(t, listCollection)
+
+	for _, collection := range listCollection.Collections {
+		fmt.Println("Deleting collection " + *collection.Name)
+		// delete the collection
+		service.DeleteCollection(
+			&discoveryv1.DeleteCollectionOptions{
+				EnvironmentID: environmentID,
+				CollectionID:  collection.CollectionID,
+			},
+		)
+	}
+
+	// Delete all configurations
+	response, responseErr = service.ListConfigurations(
+		&discoveryv1.ListConfigurationsOptions{
+			EnvironmentID: environmentID,
 		},
 	)
 	assert.Nil(t, responseErr)
-	assert.NotNil(t, response)
+
+	listConfigurations := service.GetListConfigurationsResult(response)
+	assert.NotNil(t, listConfigurations)
+
+	for _, configuration := range listConfigurations.Configurations {
+		// delete the configuration
+		if *configuration.Name != "Default Configuration" {
+			fmt.Println("Deleting configuration " + *configuration.Name)
+			service.DeleteConfiguration(
+				&discoveryv1.DeleteConfigurationOptions{
+					EnvironmentID:   environmentID,
+					ConfigurationID: configuration.ConfigurationID,
+				},
+			)
+		}
+	}
 }
