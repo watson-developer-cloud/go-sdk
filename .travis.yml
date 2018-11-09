@@ -9,12 +9,15 @@ before_install:
   -in .env.enc -out .env -d
 - nvm install 8.3
 - npm install -g npm@6.x
+- sudo apt-get update
+- sudo apt-get install python
 - go get -u github.com/golang/dep/cmd/dep
 - go get -u gopkg.in/alecthomas/gometalinter.v2
 - go get -u golang.org/x/lint/golint
 install:
 - dep ensure
 - npm install semantic-release@13.1.1
+- pip install --user bumpversion
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd
   ../; fi
 notifications:
@@ -29,4 +32,5 @@ script:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: npx semantic-release --repository-url https://${GH_TOKEN}@github.com/watson-developer-cloud/go-sdk --debug
+  script: npx semantic-release --repository-url https://${GH_TOKEN}@github.com/watson-developer-cloud/go-sdk
+    --debug
