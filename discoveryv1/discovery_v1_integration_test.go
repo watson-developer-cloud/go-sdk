@@ -19,6 +19,7 @@ package discoveryv1_test
  */
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -40,10 +41,9 @@ func TestInitialization(t *testing.T) {
 
 	service, serviceErr = discoveryv1.
 		NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-			URL:      os.Getenv("DISCOVERY_URL"),
-			Version:  "2018-03-05",
-			Username: os.Getenv("DISCOVERY_USERNAME"),
-			Password: os.Getenv("DISCOVERY_PASSWORD"),
+			URL:       os.Getenv("DISCOVERY_URL"),
+			Version:   "2018-03-05",
+			IAMApiKey: os.Getenv("DISCOVERY_IAMAPIKEY"),
 		})
 	environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
 	require.Nil(t, serviceErr)
@@ -337,20 +337,8 @@ func TestQuery(t *testing.T) {
 }
 
 func TestTokenizationDictionary(t *testing.T) {
-	t.Skip("Skipping the tokenization dictionary tests")
-	// get tokenization dictionary status
-	response, responseErr := service.GetTokenizationDictionaryStatus(
-		&discoveryv1.GetTokenizationDictionaryStatusOptions{
-			EnvironmentID: environmentID,
-			CollectionID:  core.StringPtr(os.Getenv("DISCOVERY_COLLECTION_JP")),
-		},
-	)
-
-	getTokenizationDictionaryStatus := service.GetGetTokenizationDictionaryStatusResult(response)
-	assert.NotNil(t, getTokenizationDictionaryStatus)
-
 	// Create collection in Japanese as create tokenization dictionary is only supported in JA
-	response, responseErr = service.CreateCollection(
+	response, responseErr := service.CreateCollection(
 		&discoveryv1.CreateCollectionOptions{
 			EnvironmentID: environmentID,
 			Name:          core.StringPtr("Test Tokenization Dictionary For Golang"),
@@ -366,7 +354,7 @@ func TestTokenizationDictionary(t *testing.T) {
 	response, responseErr = service.CreateTokenizationDictionary(
 		&discoveryv1.CreateTokenizationDictionaryOptions{
 			EnvironmentID: environmentID,
-			CollectionID:  core.StringPtr(os.Getenv("DISCOVERY_COLLECTION_JP")),
+			CollectionID:  testCollection.CollectionID,
 			TokenizationRules: []discoveryv1.TokenDictRule{
 				discoveryv1.TokenDictRule{
 					Text:         core.StringPtr("token"),
@@ -381,6 +369,17 @@ func TestTokenizationDictionary(t *testing.T) {
 	createTokenizationDictionary := service.GetCreateTokenizationDictionaryResult(response)
 	assert.NotNil(t, createTokenizationDictionary)
 
+	// get tokenization dictionary status
+	response, responseErr = service.GetTokenizationDictionaryStatus(
+		&discoveryv1.GetTokenizationDictionaryStatusOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  testCollection.CollectionID,
+		},
+	)
+
+	getTokenizationDictionaryStatus := service.GetGetTokenizationDictionaryStatusResult(response)
+	assert.NotNil(t, getTokenizationDictionaryStatus)
+
 	// delete tokenization dictionary
 	response, responseErr = service.DeleteTokenizationDictionary(
 		&discoveryv1.DeleteTokenizationDictionaryOptions{
@@ -388,37 +387,52 @@ func TestTokenizationDictionary(t *testing.T) {
 			CollectionID:  testCollection.CollectionID,
 		},
 	)
-	assert.Nil(t, responseErr)
-
-	// Delete collection
-	response, responseErr = service.DeleteCollection(
-		&discoveryv1.DeleteCollectionOptions{
-			EnvironmentID: environmentID,
-			CollectionID:  testCollection.CollectionID,
-		},
-	)
-	assert.Nil(t, responseErr)
-	assert.NotNil(t, response)
 }
 
 func TestDeleteOperations(t *testing.T) {
-	// Delete collection
-	response, responseErr := service.DeleteCollection(
-		&discoveryv1.DeleteCollectionOptions{
+	// Delete all collections
+	response, responseErr := service.ListCollections(
+		&discoveryv1.ListCollectionsOptions{
 			EnvironmentID: environmentID,
-			CollectionID:  collectionID,
 		},
 	)
 	assert.Nil(t, responseErr)
-	assert.NotNil(t, response)
 
-	// Delete configuration
-	response, responseErr = service.DeleteConfiguration(
-		&discoveryv1.DeleteConfigurationOptions{
-			EnvironmentID:   environmentID,
-			ConfigurationID: configurationID,
+	listCollection := service.GetListCollectionsResult(response)
+	assert.NotNil(t, listCollection)
+
+	for _, collection := range listCollection.Collections {
+		fmt.Println("Deleting collection " + *collection.Name)
+		// delete the collection
+		service.DeleteCollection(
+			&discoveryv1.DeleteCollectionOptions{
+				EnvironmentID: environmentID,
+				CollectionID:  collection.CollectionID,
+			},
+		)
+	}
+
+	// Delete all configurations
+	response, responseErr = service.ListConfigurations(
+		&discoveryv1.ListConfigurationsOptions{
+			EnvironmentID: environmentID,
 		},
 	)
 	assert.Nil(t, responseErr)
-	assert.NotNil(t, response)
+
+	listConfigurations := service.GetListConfigurationsResult(response)
+	assert.NotNil(t, listConfigurations)
+
+	for _, configuration := range listConfigurations.Configurations {
+		// delete the configuration
+		if *configuration.Name != "Default Configuration" {
+			fmt.Println("Deleting configuration " + *configuration.Name)
+			service.DeleteConfiguration(
+				&discoveryv1.DeleteConfigurationOptions{
+					EnvironmentID:   environmentID,
+					ConfigurationID: configuration.ConfigurationID,
+				},
+			)
+		}
+	}
 }

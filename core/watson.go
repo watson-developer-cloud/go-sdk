@@ -53,8 +53,7 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 		},
 	}
 
-	const sdkVersion = "0.0.1" // TODO: would there be a bumpversion?
-	var userAgent = "watson-apis-go-sdk-" + sdkVersion
+	var userAgent = "watson-apis-go-sdk-" + Version
 	userAgent += "-" + runtime.GOOS
 	service.UserAgent = userAgent
 
