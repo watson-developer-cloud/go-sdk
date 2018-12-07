@@ -27,7 +27,7 @@ import (
 // service cleans HTML content before analysis by default, so the results can ignore most advertisements and other
 // unwanted content.
 //
-// You can create [custom models](/docs/services/natural-language-understanding/customizing.html) with Watson Knowledge
+// You can create [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) with Watson Knowledge
 // Studio to detect custom entities and relations in Natural Language Understanding.
 //
 // Version: V1
@@ -197,7 +197,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetDeleteMod
 }
 
 // ListModels : List models
-// Lists Watson Knowledge Studio [custom models](/docs/services/natural-language-understanding/customizing.html) that
+// Lists Watson Knowledge Studio [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) that
 // are deployed to your Natural Language Understanding service.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
@@ -295,10 +295,10 @@ type AnalyzeOptions struct {
 	Features *Features `json:"features" validate:"required"`
 
 	// Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning, see the [Analyzing
-	// webpages](/docs/services/natural-language-understanding/analyzing-webpages.html) documentation.
+	// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html) documentation.
 	Clean *bool `json:"clean,omitempty"`
 
-	// An [XPath query](/docs/services/natural-language-understanding/analyzing-webpages.html#xpath) to perform on `html`
+	// An [XPath query](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html#xpath) to perform on `html`
 	// or `url` input. Results of the query will be appended to the cleaned webpage text before it is analyzed. To analyze
 	// only the results of the XPath query, set the `clean` parameter to `false`.
 	Xpath *string `json:"xpath,omitempty"`
@@ -416,7 +416,7 @@ type CategoriesOptions struct {
 type CategoriesResult struct {
 
 	// The path to the category through the 5-level taxonomy hierarchy. For the complete list of categories, see the
-	// [Categories hierarchy](/docs/services/natural-language-understanding/categories.html#categories-hierarchy)
+	// [Categories hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding/categories.html#categories-hierarchy)
 	// documentation.
 	Label *string `json:"label,omitempty"`
 
@@ -558,7 +558,7 @@ type EmotionScores struct {
 }
 
 // EntitiesOptions : Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-// subtypes](/docs/services/natural-language-understanding/entity-types.html).
+// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
 //
 // Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 // Arabic, Chinese, and Dutch custom models are also supported.
@@ -643,7 +643,7 @@ type Features struct {
 	Emotion *EmotionOptions `json:"emotion,omitempty"`
 
 	// Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-	// subtypes](/docs/services/natural-language-understanding/entity-types.html).
+	// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
 	//
 	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 	// Arabic, Chinese, and Dutch custom models are also supported.
@@ -660,7 +660,7 @@ type Features struct {
 
 	// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 	// might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-	// types](/docs/services/natural-language-understanding/relations.html).
+	// types](https://cloud.ibm.com/docs/services/natural-language-understanding/relations.html).
 	//
 	// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
 	// Portuguese custom models are also supported.
@@ -827,13 +827,13 @@ type RelationEntity struct {
 
 // RelationsOptions : Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 // might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-// types](/docs/services/natural-language-understanding/relations.html).
+// types](https://cloud.ibm.com/docs/services/natural-language-understanding/relations.html).
 //
 // Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
 // Portuguese custom models are also supported.
 type RelationsOptions struct {
 
-	// Enter a [custom model](/docs/services/natural-language-understanding/customizing.html) ID to override the default
+	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to override the default
 	// model.
 	Model *string `json:"model,omitempty"`
 }
