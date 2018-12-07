@@ -29,8 +29,8 @@ import (
 // communications. Businesses can use the service to learn the tone of their customers' communications and to respond to
 // each customer appropriately, or to understand and improve their customer conversations.
 //
-// **Note:** Request logging is disabled for the Tone Analyzer service. The service neither logs nor retains data from
-// requests and responses, regardless of whether the `X-Watson-Learning-Opt-Out` request header is set.
+// **Note:** Request logging is disabled for the Tone Analyzer service. Regardless of whether you set the
+// `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/tone-analyzer.html
@@ -88,7 +88,7 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (*ToneAnalyzerV3, error) 
 // removes HTML tags and analyzes only the textual content.
 //
 // **See also:** [Using the general-purpose
-// endpoint](https://console.bluemix.net/docs/services/tone-analyzer/using-tone.html#using-the-general-purpose-endpoint).
+// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone.html#using-the-general-purpose-endpoint).
 func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(toneOptions, "toneOptions cannot be nil"); err != nil {
 		return nil, err
@@ -159,7 +159,7 @@ func (toneAnalyzer *ToneAnalyzerV3) GetToneResult(response *core.DetailedRespons
 // characters. Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8.
 //
 // **See also:** [Using the customer-engagement
-// endpoint](https://console.bluemix.net/docs/services/tone-analyzer/using-tone-chat.html#using-the-customer-engagement-endpoint).
+// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone-chat.html#using-the-customer-engagement-endpoint).
 func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(toneChatOptions, "toneChatOptions cannot be nil"); err != nil {
 		return nil, err
@@ -214,7 +214,7 @@ func (toneAnalyzer *ToneAnalyzerV3) GetToneChatResult(response *core.DetailedRes
 	return nil
 }
 
-// DocumentAnalysis : DocumentAnalysis struct
+// DocumentAnalysis : An object of type `DocumentAnalysis` that provides the results of the analysis for the full input document.
 type DocumentAnalysis struct {
 
 	// **`2017-09-21`:** An array of `ToneScore` objects that provides the results of the analysis for each qualifying tone
@@ -420,7 +420,7 @@ type ToneOptions struct {
 
 	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
 	// 'text/plain;charset=utf-8'.
-	ContentType *string `json:"Content-Type" validate:"required"`
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// Indicates whether the service is to return an analysis of each individual sentence in addition to its analysis of
 	// the full document. If `true` (the default), the service returns results for each sentence.

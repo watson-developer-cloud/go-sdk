@@ -687,17 +687,13 @@ type TranslateOptions struct {
 	// Input text in UTF-8 encoding. Multiple entries will result in multiple translations in the response.
 	Text []string `json:"text" validate:"required"`
 
-	// Model ID of the translation model to use. If this is specified, the **source** and **target** parameters will be
-	// ignored. The method requires either a model ID or both the **source** and **target** parameters.
+	// A globally unique string that identifies the underlying model that is used for translation.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// Language code of the source text language. Use with `target` as an alternative way to select a translation model.
-	// When `source` and `target` are set, and a model ID is not set, the system chooses a default model for the language
-	// pair (usually the model based on the news domain).
+	// Translation source language code.
 	Source *string `json:"source,omitempty"`
 
-	// Language code of the translation target language. Use with source as an alternative way to select a translation
-	// model.
+	// Translation target language code.
 	Target *string `json:"target,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant

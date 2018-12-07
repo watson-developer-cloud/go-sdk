@@ -67,7 +67,7 @@ func NewAssistantV1(options *AssistantV1Options) (*AssistantV1, error) {
 }
 
 // Message : Get response to user input
-// Get a response to a user's input.
+// Send user input to a workspace and receive a response.
 //
 // There is no rate limit for this operation.
 func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.DetailedResponse, error) {
@@ -276,6 +276,9 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 	}
 	if getWorkspaceOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getWorkspaceOptions.IncludeAudit))
+	}
+	if getWorkspaceOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*getWorkspaceOptions.Sort))
 	}
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1187,7 +1190,7 @@ func (assistant *AssistantV1) GetUpdateCounterexampleResult(response *core.Detai
 }
 
 // CreateEntity : Create entity
-// Create a new entity.
+// Create a new entity, or enable a system entity.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (*core.DetailedResponse, error) {
@@ -1251,7 +1254,7 @@ func (assistant *AssistantV1) GetCreateEntityResult(response *core.DetailedRespo
 }
 
 // DeleteEntity : Delete entity
-// Delete an entity from a workspace.
+// Delete an entity from a workspace, or disable a system entity.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (*core.DetailedResponse, error) {
@@ -2532,6 +2535,9 @@ type Context struct {
 
 	// For internal use only.
 	System *SystemResponse `json:"system,omitempty"`
+
+	// Metadata related to the message.
+	Metadata *MessageContextMetadata `json:"metadata,omitempty"`
 }
 
 // Counterexample : Counterexample struct
@@ -2641,7 +2647,7 @@ type CreateDialogNode struct {
 	// The metadata for the dialog node.
 	Metadata interface{} `json:"metadata,omitempty"`
 
-	// The next step to be executed in dialog processing.
+	// The next step to execute following this dialog node.
 	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
 
 	// An array of objects describing any actions to be invoked by the dialog node.
@@ -2759,7 +2765,7 @@ type CreateDialogNodeOptions struct {
 	// The metadata for the dialog node.
 	Metadata interface{} `json:"metadata,omitempty"`
 
-	// The next step to be executed in dialog processing.
+	// The next step to execute following this dialog node.
 	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
 
 	// An array of objects describing any actions to be invoked by the dialog node.
@@ -2978,8 +2984,10 @@ type CreateEntity struct {
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
-	// - It cannot begin with the reserved prefix `sys-`.
 	// - It must be no longer than 64 characters.
+	//
+	// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity that
+	// you want to enable. (Any entity content specified with the request is ignored.).
 	Entity *string `json:"entity" validate:"required"`
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
@@ -3004,8 +3012,10 @@ type CreateEntityOptions struct {
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
-	// - It cannot begin with the reserved prefix `sys-`.
 	// - It must be no longer than 64 characters.
+	//
+	// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity that
+	// you want to enable. (Any entity content specified with the request is ignored.).
 	Entity *string `json:"entity" validate:"required"`
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
@@ -3447,7 +3457,7 @@ type CreateWorkspaceOptions struct {
 	// An array of objects defining the entities for the workspace.
 	Entities []CreateEntity `json:"entities,omitempty"`
 
-	// An array of objects defining the nodes in the workspace dialog.
+	// An array of objects defining the nodes in the dialog.
 	DialogNodes []CreateDialogNode `json:"dialog_nodes,omitempty"`
 
 	// An array of objects defining input examples that have been marked as irrelevant input.
@@ -4892,9 +4902,20 @@ type GetWorkspaceOptions struct {
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
 	IncludeAudit *bool `json:"include_audit,omitempty"`
 
+	// Indicates how the returned workspace data will be sorted. This parameter is valid only if **export**=`true`. Specify
+	// `sort=stable` to sort all workspace objects by unique identifier, in ascending alphabetical order.
+	Sort *string `json:"sort,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the GetWorkspaceOptions.Sort property.
+// Indicates how the returned workspace data will be sorted. This parameter is valid only if **export**=`true`. Specify
+// `sort=stable` to sort all workspace objects by unique identifier, in ascending alphabetical order.
+const (
+	GetWorkspaceOptions_Sort_Stable = "stable"
+)
 
 // NewGetWorkspaceOptions : Instantiate GetWorkspaceOptions
 func (assistant *AssistantV1) NewGetWorkspaceOptions(workspaceID string) *GetWorkspaceOptions {
@@ -4918,6 +4939,12 @@ func (options *GetWorkspaceOptions) SetExport(export bool) *GetWorkspaceOptions 
 // SetIncludeAudit : Allow user to set IncludeAudit
 func (options *GetWorkspaceOptions) SetIncludeAudit(includeAudit bool) *GetWorkspaceOptions {
 	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *GetWorkspaceOptions) SetSort(sort string) *GetWorkspaceOptions {
+	options.Sort = core.StringPtr(sort)
 	return options
 }
 
@@ -5052,8 +5079,8 @@ type ListCounterexamplesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
-	// sign (`-`).
+	// The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
+	// minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -5065,6 +5092,14 @@ type ListCounterexamplesOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListCounterexamplesOptions.Sort property.
+// The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
+// minus sign (`-`).
+const (
+	ListCounterexamplesOptions_Sort_Text    = "text"
+	ListCounterexamplesOptions_Sort_Updated = "updated"
+)
 
 // NewListCounterexamplesOptions : Instantiate ListCounterexamplesOptions
 func (assistant *AssistantV1) NewListCounterexamplesOptions(workspaceID string) *ListCounterexamplesOptions {
@@ -5127,8 +5162,8 @@ type ListDialogNodesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
-	// sign (`-`).
+	// The attribute by which returned dialog nodes will be sorted. To reverse the sort order, prefix the value with a
+	// minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -5140,6 +5175,14 @@ type ListDialogNodesOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListDialogNodesOptions.Sort property.
+// The attribute by which returned dialog nodes will be sorted. To reverse the sort order, prefix the value with a minus
+// sign (`-`).
+const (
+	ListDialogNodesOptions_Sort_DialogNode = "dialog_node"
+	ListDialogNodesOptions_Sort_Updated    = "updated"
+)
 
 // NewListDialogNodesOptions : Instantiate ListDialogNodesOptions
 func (assistant *AssistantV1) NewListDialogNodesOptions(workspaceID string) *ListDialogNodesOptions {
@@ -5206,7 +5249,7 @@ type ListEntitiesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
@@ -5219,6 +5262,14 @@ type ListEntitiesOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListEntitiesOptions.Sort property.
+// The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
+// sign (`-`).
+const (
+	ListEntitiesOptions_Sort_Entity  = "entity"
+	ListEntitiesOptions_Sort_Updated = "updated"
+)
 
 // NewListEntitiesOptions : Instantiate ListEntitiesOptions
 func (assistant *AssistantV1) NewListEntitiesOptions(workspaceID string) *ListEntitiesOptions {
@@ -5290,7 +5341,7 @@ type ListExamplesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
@@ -5303,6 +5354,14 @@ type ListExamplesOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListExamplesOptions.Sort property.
+// The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
+// sign (`-`).
+const (
+	ListExamplesOptions_Sort_Text    = "text"
+	ListExamplesOptions_Sort_Updated = "updated"
+)
 
 // NewListExamplesOptions : Instantiate ListExamplesOptions
 func (assistant *AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
@@ -5376,7 +5435,7 @@ type ListIntentsOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
@@ -5389,6 +5448,14 @@ type ListIntentsOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListIntentsOptions.Sort property.
+// The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus sign
+// (`-`).
+const (
+	ListIntentsOptions_Sort_Intent  = "intent"
+	ListIntentsOptions_Sort_Updated = "updated"
+)
 
 // NewListIntentsOptions : Instantiate ListIntentsOptions
 func (assistant *AssistantV1) NewListIntentsOptions(workspaceID string) *ListIntentsOptions {
@@ -5588,8 +5655,8 @@ type ListSynonymsOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
-	// sign (`-`).
+	// The attribute by which returned entity value synonyms will be sorted. To reverse the sort order, prefix the value
+	// with a minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -5601,6 +5668,14 @@ type ListSynonymsOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListSynonymsOptions.Sort property.
+// The attribute by which returned entity value synonyms will be sorted. To reverse the sort order, prefix the value
+// with a minus sign (`-`).
+const (
+	ListSynonymsOptions_Sort_Synonym = "synonym"
+	ListSynonymsOptions_Sort_Updated = "updated"
+)
 
 // NewListSynonymsOptions : Instantiate ListSynonymsOptions
 func (assistant *AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
@@ -5684,8 +5759,8 @@ type ListValuesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
-	// sign (`-`).
+	// The attribute by which returned entity values will be sorted. To reverse the sort order, prefix the value with a
+	// minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
 	// A token identifying the page of results to retrieve.
@@ -5697,6 +5772,14 @@ type ListValuesOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListValuesOptions.Sort property.
+// The attribute by which returned entity values will be sorted. To reverse the sort order, prefix the value with a
+// minus sign (`-`).
+const (
+	ListValuesOptions_Sort_Updated = "updated"
+	ListValuesOptions_Sort_Value   = "value"
+)
 
 // NewListValuesOptions : Instantiate ListValuesOptions
 func (assistant *AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
@@ -5769,7 +5852,7 @@ type ListWorkspacesOptions struct {
 	// Whether to include information about the number of records returned.
 	IncludeCount *bool `json:"include_count,omitempty"`
 
-	// The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus
+	// The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
 
@@ -5782,6 +5865,14 @@ type ListWorkspacesOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListWorkspacesOptions.Sort property.
+// The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
+// sign (`-`).
+const (
+	ListWorkspacesOptions_Sort_Name    = "name"
+	ListWorkspacesOptions_Sort_Updated = "updated"
+)
 
 // NewListWorkspacesOptions : Instantiate ListWorkspacesOptions
 func (assistant *AssistantV1) NewListWorkspacesOptions() *ListWorkspacesOptions {
@@ -5837,10 +5928,10 @@ type LogCollection struct {
 // LogExport : LogExport struct
 type LogExport struct {
 
-	// A request received by the workspace, including the user input and context.
+	// A message request formatted for the Watson Assistant service.
 	Request *MessageRequest `json:"request" validate:"required"`
 
-	// The response sent by the workspace, including the output text, detected intents and entities, and context.
+	// A response from the Watson Assistant service.
 	Response *MessageResponse `json:"response" validate:"required"`
 
 	// A unique identifier for the logged event.
@@ -5900,6 +5991,20 @@ type Mentions struct {
 	Location []int64 `json:"location" validate:"required"`
 }
 
+// MessageContextMetadata : Metadata related to the message.
+type MessageContextMetadata struct {
+
+	// A label identifying the deployment environment, used for filtering log data. This string cannot contain carriage
+	// return, newline, or tab characters.
+	Deployment *string `json:"deployment,omitempty"`
+
+	// A string value that identifies the user who is interacting with the workspace. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For Plus and Premium plans, this user ID is
+	// used to identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab
+	// characters.
+	UserID *string `json:"user_id,omitempty"`
+}
+
 // MessageInput : The text of the user input.
 type MessageInput struct {
 
@@ -5913,14 +6018,13 @@ type MessageOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// An input object that includes the input text.
+	// The user input.
 	Input *InputData `json:"input,omitempty"`
 
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
 	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
-	// State information for the conversation. Continue a conversation by including the context object from the previous
-	// response.
+	// State information for the conversation. To maintain state, include the context from the previous response.
 	Context *Context `json:"context,omitempty"`
 
 	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
@@ -5931,8 +6035,8 @@ type MessageOptions struct {
 	// intents rather than trying to recognize intents in the new input.
 	Intents []RuntimeIntent `json:"intents,omitempty"`
 
-	// System output. Include the output from the previous response to maintain intermediate information over multiple
-	// requests.
+	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
+	// log.
 	Output *OutputData `json:"output,omitempty"`
 
 	// Whether to include additional diagnostic information about the dialog nodes that were visited during processing of
@@ -6007,14 +6111,13 @@ func (options *MessageOptions) SetHeaders(param map[string]string) *MessageOptio
 // MessageRequest : A message request formatted for the Watson Assistant service.
 type MessageRequest struct {
 
-	// An input object that includes the input text.
+	// The user input.
 	Input *InputData `json:"input,omitempty"`
 
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
 	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
-	// State information for the conversation. Continue a conversation by including the context object from the previous
-	// response.
+	// State information for the conversation. To maintain state, include the context from the previous response.
 	Context *Context `json:"context,omitempty"`
 
 	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
@@ -6025,15 +6128,15 @@ type MessageRequest struct {
 	// intents rather than trying to recognize intents in the new input.
 	Intents []RuntimeIntent `json:"intents,omitempty"`
 
-	// System output. Include the output from the previous response to maintain intermediate information over multiple
-	// requests.
+	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
+	// log.
 	Output *OutputData `json:"output,omitempty"`
 }
 
 // MessageResponse : A response from the Watson Assistant service.
 type MessageResponse struct {
 
-	// The user input from the request.
+	// The text of the user input.
 	Input *MessageInput `json:"input,omitempty"`
 
 	// An array of intents recognized in the user input, sorted in descending order of confidence.
@@ -6045,10 +6148,11 @@ type MessageResponse struct {
 	// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
 	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
-	// State information for the conversation.
+	// State information for the conversation. To maintain state, include the context from the previous response.
 	Context *Context `json:"context" validate:"required"`
 
-	// Output from the dialog, including the response to the user, the nodes that were triggered, and log messages.
+	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
+	// log.
 	Output *OutputData `json:"output" validate:"required"`
 
 	// An array of objects describing any actions requested by the dialog node.
@@ -6261,7 +6365,7 @@ type UpdateDialogNodeOptions struct {
 	// Whether the user can digress to top-level nodes while filling out slots.
 	NewDigressOutSlots *string `json:"new_digress_out_slots,omitempty"`
 
-	// The next step to be executed in dialog processing.
+	// The next step to execute following this dialog node.
 	NewNextStep *DialogNodeNextStep `json:"new_next_step,omitempty"`
 
 	// Whether this top-level dialog node can be digressed into.
@@ -6898,7 +7002,7 @@ type UpdateWorkspaceOptions struct {
 	// An array of objects defining the entities for the workspace.
 	Entities []CreateEntity `json:"entities,omitempty"`
 
-	// An array of objects defining the nodes in the workspace dialog.
+	// An array of objects defining the nodes in the dialog.
 	DialogNodes []CreateDialogNode `json:"dialog_nodes,omitempty"`
 
 	// An array of objects defining input examples that have been marked as irrelevant input.
@@ -7050,7 +7154,7 @@ type ValueCollection struct {
 	// An array of entity values.
 	Values []ValueExport `json:"values" validate:"required"`
 
-	// An object defining the pagination data for the returned objects.
+	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
@@ -7101,7 +7205,7 @@ type Workspace struct {
 	// The timestamp for the last update to the workspace.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
-	// The workspace ID.
+	// The workspace ID of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The description of the workspace.
@@ -7124,7 +7228,7 @@ type WorkspaceCollection struct {
 	// An array of objects describing the workspaces associated with the service instance.
 	Workspaces []Workspace `json:"workspaces" validate:"required"`
 
-	// An object defining the pagination data for the returned objects.
+	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
@@ -7149,7 +7253,7 @@ type WorkspaceExport struct {
 	// The timestamp for the last update to the workspace.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
-	// The workspace ID.
+	// The workspace ID of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The current status of the workspace.

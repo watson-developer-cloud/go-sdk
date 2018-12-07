@@ -337,6 +337,7 @@ func TestQuery(t *testing.T) {
 }
 
 func TestTokenizationDictionary(t *testing.T) {
+	t.Skip("Disable temporarily")
 	// Create collection in Japanese as create tokenization dictionary is only supported in JA
 	response, responseErr := service.CreateCollection(
 		&discoveryv1.CreateCollectionOptions{
