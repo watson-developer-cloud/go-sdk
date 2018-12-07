@@ -32,9 +32,9 @@ import (
 // personality characteristics. The service can infer consumption preferences based on the results of its analysis and,
 // for JSON content that is timestamped, can report temporal behavior.
 // * For information about the meaning of the models that the service uses to describe personality characteristics, see
-// [Personality models](/docs/services/personality-insights/models.html).
+// [Personality models](https://cloud.ibm.com/docs/services/personality-insights/models.html).
 // * For information about the meaning of the consumption preferences, see [Consumption
-// preferences](/docs/services/personality-insights/preferences.html).
+// preferences](https://cloud.ibm.com/docs/services/personality-insights/preferences.html).
 //
 // **Note:** Request logging is disabled for the Personality Insights service. Regardless of whether you set the
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
@@ -85,8 +85,8 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 // English, Japanese, Korean, or Spanish. It can return its results in a variety of languages.
 //
 // **See also:**
-// * [Requesting a profile](/docs/services/personality-insights/input.html)
-// * [Providing sufficient input](/docs/services/personality-insights/input.html#sufficient)
+// * [Requesting a profile](https://cloud.ibm.com/docs/services/personality-insights/input.html)
+// * [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient)
 //
 // ### Content types
 //
@@ -99,7 +99,7 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 // When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
 // encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
 //
-// **See also:** [Specifying request and response formats](/docs/services/personality-insights/input.html#formats)
+// **See also:** [Specifying request and response formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
 //
 // ### Accept types
 //
@@ -108,8 +108,8 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 // request optional column headers for CSV output.
 //
 // **See also:**
-// * [Understanding a JSON profile](/docs/services/personality-insights/output.html)
-// * [Understanding a CSV profile](/docs/services/personality-insights/output-csv.html).
+// * [Understanding a JSON profile](https://cloud.ibm.com/docs/services/personality-insights/output.html)
+// * [Understanding a CSV profile](https://cloud.ibm.com/docs/services/personality-insights/output-csv.html).
 func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -178,8 +178,8 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // English, Japanese, Korean, or Spanish. It can return its results in a variety of languages.
 //
 // **See also:**
-// * [Requesting a profile](/docs/services/personality-insights/input.html)
-// * [Providing sufficient input](/docs/services/personality-insights/input.html#sufficient)
+// * [Requesting a profile](https://cloud.ibm.com/docs/services/personality-insights/input.html)
+// * [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient)
 //
 // ### Content types
 //
@@ -192,7 +192,7 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
 // encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
 //
-// **See also:** [Specifying request and response formats](/docs/services/personality-insights/input.html#formats)
+// **See also:** [Specifying request and response formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
 //
 // ### Accept types
 //
@@ -201,8 +201,8 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // request optional column headers for CSV output.
 //
 // **See also:**
-// * [Understanding a JSON profile](/docs/services/personality-insights/output.html)
-// * [Understanding a CSV profile](/docs/services/personality-insights/output-csv.html).
+// * [Understanding a JSON profile](https://cloud.ibm.com/docs/services/personality-insights/output.html)
+// * [Understanding a CSV profile](https://cloud.ibm.com/docs/services/personality-insights/output-csv.html).
 func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -440,12 +440,12 @@ const (
 type ProfileOptions struct {
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
-	// [Providing sufficient input](/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an
+	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an
 	// object of type `Content`.
 	Content *Content `json:"content,omitempty"`
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
-	// [Providing sufficient input](/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an
+	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an
 	// object of type `Content`.
 	Body *string `json:"body,omitempty"`
 

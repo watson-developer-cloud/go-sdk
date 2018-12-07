@@ -83,7 +83,7 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (*SpeechToTextV1, error) 
 // Gets information for a single specified language model that is available for use with the service. The information
 // includes the name of the model and its minimum sampling rate in Hertz, among other things.
 //
-// **See also:** [Languages and models](/docs/services/speech-to-text/input.html#models).
+// **See also:** [Languages and models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#models).
 func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getModelOptions, "getModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -125,7 +125,7 @@ func (speechToText *SpeechToTextV1) GetGetModelResult(response *core.DetailedRes
 // Lists all language models that are available for use with the service. The information includes the name of the model
 // and its minimum sampling rate in Hertz, among other things.
 //
-// **See also:** [Languages and models](/docs/services/speech-to-text/input.html#models).
+// **See also:** [Languages and models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#models).
 func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
 		return nil, err
@@ -166,7 +166,7 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // and, for audio that includes multiple channels, downmixes the audio to one-channel mono during transcoding. The
 // method returns only final results; to enable interim results, use the WebSocket API.
 //
-// **See also:** [Making a basic HTTP request](/docs/services/speech-to-text/http.html#HTTP-basic).
+// **See also:** [Making a basic HTTP request](https://cloud.ibm.com/docs/services/speech-to-text/http.html#HTTP-basic).
 //
 // ### Streaming mode
 //
@@ -177,8 +177,8 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // time); use the `inactivity_timeout` parameter to change the default of 30 seconds.
 //
 // **See also:**
-// * [Audio transmission](/docs/services/speech-to-text/input.html#transmission)
-// * [Timeouts](/docs/services/speech-to-text/input.html#timeouts)
+// * [Audio transmission](https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission)
+// * [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts)
 //
 // ### Audio formats (content types)
 //
@@ -206,7 +206,7 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // * `audio/webm;codecs=opus`
 // * `audio/webm;codecs=vorbis`
 //
-// **See also:** [Audio formats](/docs/services/speech-to-text/audio-formats.html).
+// **See also:** [Audio formats](https://cloud.ibm.com/docs/services/speech-to-text/audio-formats.html).
 //
 // ### Multipart speech recognition
 //
@@ -220,7 +220,7 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // with the request are greater than the 8 KB limit imposed by most HTTP servers and proxies. You can encounter this
 // limit, for example, if you want to spot a very large number of keywords.
 //
-// **See also:** [Making a multipart HTTP request](/docs/services/speech-to-text/http.html#HTTP-multi).
+// **See also:** [Making a multipart HTTP request](https://cloud.ibm.com/docs/services/speech-to-text/http.html#HTTP-multi).
 func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(recognizeOptions, "recognizeOptions cannot be nil"); err != nil {
 		return nil, err
@@ -326,7 +326,7 @@ func (speechToText *SpeechToTextV1) GetRecognizeResult(response *core.DetailedRe
 // with the caller.
 //
 // **See also:** [Checking the status and retrieving the results of a
-// job](/docs/services/speech-to-text/async.html#job).
+// job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#job).
 func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(checkJobOptions, "checkJobOptions cannot be nil"); err != nil {
 		return nil, err
@@ -371,7 +371,7 @@ func (speechToText *SpeechToTextV1) GetCheckJobResult(response *core.DetailedRes
 // one of the latest 100 outstanding jobs, use the **Check a job** method. A job and its results remain available until
 // you delete them with the **Delete a job** method or until the job's time to live expires, whichever comes first.
 //
-// **See also:** [Checking the status of the latest jobs](/docs/services/speech-to-text/async.html#jobs).
+// **See also:** [Checking the status of the latest jobs](https://cloud.ibm.com/docs/services/speech-to-text/async.html#jobs).
 func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(checkJobsOptions, "checkJobsOptions"); err != nil {
 		return nil, err
@@ -436,7 +436,7 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 // one-channel mono during transcoding. The method returns only final results; to enable interim results, use the
 // WebSocket API.
 //
-// **See also:** [Creating a job](/docs/services/speech-to-text/async.html#create).
+// **See also:** [Creating a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#create).
 //
 // ### Streaming mode
 //
@@ -447,8 +447,8 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 // time); use the `inactivity_timeout` parameter to change the default of 30 seconds.
 //
 // **See also:**
-// * [Audio transmission](/docs/services/speech-to-text/input.html#transmission)
-// * [Timeouts](/docs/services/speech-to-text/input.html#timeouts)
+// * [Audio transmission](https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission)
+// * [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts)
 //
 // ### Audio formats (content types)
 //
@@ -476,7 +476,7 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 // * `audio/webm;codecs=opus`
 // * `audio/webm;codecs=vorbis`
 //
-// **See also:** [Audio formats](/docs/services/speech-to-text/audio-formats.html).
+// **See also:** [Audio formats](https://cloud.ibm.com/docs/services/speech-to-text/audio-formats.html).
 func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createJobOptions, "createJobOptions cannot be nil"); err != nil {
 		return nil, err
@@ -588,7 +588,7 @@ func (speechToText *SpeechToTextV1) GetCreateJobResult(response *core.DetailedRe
 // its results are no longer available. The service automatically deletes a job and its results when the time to live
 // for the results expires. You must submit the request with the service credentials of the user who created the job.
 //
-// **See also:** [Deleting a job](/docs/services/speech-to-text/async.html#delete).
+// **See also:** [Deleting a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#delete).
 func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteJobOptions, "deleteJobOptions cannot be nil"); err != nil {
 		return nil, err
@@ -643,7 +643,7 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 // After you successfully register a callback URL, you can use it with an indefinite number of recognition requests. You
 // can register a maximum of 20 callback URLS in a one-hour span of time.
 //
-// **See also:** [Registering a callback URL](/docs/services/speech-to-text/async.html#register).
+// **See also:** [Registering a callback URL](https://cloud.ibm.com/docs/services/speech-to-text/async.html#register).
 func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *RegisterCallbackOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(registerCallbackOptions, "registerCallbackOptions cannot be nil"); err != nil {
 		return nil, err
@@ -690,7 +690,7 @@ func (speechToText *SpeechToTextV1) GetRegisterCallbackResult(response *core.Det
 // Unregisters a callback URL that was previously white-listed with a **Register a callback** request for use with the
 // asynchronous interface. Once unregistered, the URL can no longer be used with asynchronous recognition requests.
 //
-// **See also:** [Unregistering a callback URL](/docs/services/speech-to-text/async.html#unregister).
+// **See also:** [Unregistering a callback URL](https://cloud.ibm.com/docs/services/speech-to-text/async.html#unregister).
 func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions *UnregisterCallbackOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(unregisterCallbackOptions, "unregisterCallbackOptions cannot be nil"); err != nil {
 		return nil, err
@@ -726,7 +726,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
 //
-// **See also:** [Create a custom language model](/docs/services/speech-to-text/language-create.html#createModel).
+// **See also:** [Create a custom language model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#createModel).
 func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptions *CreateLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createLanguageModelOptions, "createLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -788,7 +788,7 @@ func (speechToText *SpeechToTextV1) GetCreateLanguageModelResult(response *core.
 // corpus to the model, is currently being processed. You must use credentials for the instance of the service that owns
 // a model to delete it.
 //
-// **See also:** [Deleting a custom language model](/docs/services/speech-to-text/language-models.html#deleteModel).
+// **See also:** [Deleting a custom language model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#deleteModel).
 func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptions *DeleteLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteLanguageModelOptions, "deleteLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -821,7 +821,7 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 // Gets information about a specified custom language model. You must use credentials for the instance of the service
 // that owns a model to list information about it.
 //
-// **See also:** [Listing custom language models](/docs/services/speech-to-text/language-models.html#listModels).
+// **See also:** [Listing custom language models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels).
 func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *GetLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getLanguageModelOptions, "getLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -865,7 +865,7 @@ func (speechToText *SpeechToTextV1) GetGetLanguageModelResult(response *core.Det
 // models for all languages. You must use credentials for the instance of the service that owns a model to list
 // information about it.
 //
-// **See also:** [Listing custom language models](/docs/services/speech-to-text/language-models.html#listModels).
+// **See also:** [Listing custom language models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels).
 func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions *ListLanguageModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listLanguageModelsOptions, "listLanguageModelsOptions"); err != nil {
 		return nil, err
@@ -910,7 +910,7 @@ func (speechToText *SpeechToTextV1) GetListLanguageModelsResult(response *core.D
 // preserved, but the model's words resource is removed and must be re-created. You must use credentials for the
 // instance of the service that owns a model to reset it.
 //
-// **See also:** [Resetting a custom language model](/docs/services/speech-to-text/language-models.html#resetModel).
+// **See also:** [Resetting a custom language model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#resetModel).
 func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions *ResetLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(resetLanguageModelOptions, "resetLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -962,7 +962,7 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 // * No training data (corpora or words) have been added to the custom model.
 // * One or more words that were added to the custom model have invalid sounds-like pronunciations that you must fix.
 //
-// **See also:** [Train the custom language model](/docs/services/speech-to-text/language-create.html#trainModel).
+// **See also:** [Train the custom language model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#trainModel).
 func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions *TrainLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainLanguageModelOptions, "trainLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1011,7 +1011,7 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 // complete, the model resumes the status that it had prior to upgrade. The service cannot accept subsequent requests
 // for the model until the upgrade completes.
 //
-// **See also:** [Upgrading a custom language model](/docs/services/speech-to-text/custom-upgrade.html#upgradeLanguage).
+// **See also:** [Upgrading a custom language model](https://cloud.ibm.com/docs/services/speech-to-text/custom-upgrade.html#upgradeLanguage).
 func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOptions *UpgradeLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(upgradeLanguageModelOptions, "upgradeLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1072,8 +1072,8 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 // includes words that the service extracts from corpora and words that you add directly.
 //
 // **See also:**
-// * [Working with corpora](/docs/services/speech-to-text/language-resource.html#workingCorpora)
-// * [Add corpora to the custom language model](/docs/services/speech-to-text/language-create.html#addCorpora).
+// * [Working with corpora](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#workingCorpora)
+// * [Add corpora to the custom language model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#addCorpora).
 func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addCorpusOptions, "addCorpusOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1117,7 +1117,7 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 // must use credentials for the instance of the service that owns a model to delete its corpora.
 //
 // **See also:** [Deleting a corpus from a custom language
-// model](/docs/services/speech-to-text/language-corpora.html#deleteCorpus).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-corpora.html#deleteCorpus).
 func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorpusOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteCorpusOptions, "deleteCorpusOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1152,7 +1152,7 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 // service that owns a model to list its corpora.
 //
 // **See also:** [Listing corpora for a custom language
-// model](/docs/services/speech-to-text/language-corpora.html#listCorpora).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-corpora.html#listCorpora).
 func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getCorpusOptions, "getCorpusOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1196,7 +1196,7 @@ func (speechToText *SpeechToTextV1) GetGetCorpusResult(response *core.DetailedRe
 // service that owns a model to list its corpora.
 //
 // **See also:** [Listing corpora for a custom language
-// model](/docs/services/speech-to-text/language-corpora.html#listCorpora).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-corpora.html#listCorpora).
 func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listCorporaOptions, "listCorporaOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1260,8 +1260,8 @@ func (speechToText *SpeechToTextV1) GetListCorporaResult(response *core.Detailed
 // resource. Use the **List a custom word** method to review the word that you add.
 //
 // **See also:**
-// * [Working with custom words](/docs/services/speech-to-text/language-resource.html#workingWords)
-// * [Add words to the custom language model](/docs/services/speech-to-text/language-create.html#addWords).
+// * [Working with custom words](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#workingWords)
+// * [Add words to the custom language model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#addWords).
 func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1346,8 +1346,8 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 // methods to correct errors, eliminate typos, and modify how words are pronounced as needed.
 //
 // **See also:**
-// * [Working with custom words](/docs/services/speech-to-text/language-resource.html#workingWords)
-// * [Add words to the custom language model](/docs/services/speech-to-text/language-create.html#addWords).
+// * [Working with custom words](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#workingWords)
+// * [Add words to the custom language model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#addWords).
 func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1394,7 +1394,7 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 // credentials for the instance of the service that owns a model to delete its words.
 //
 // **See also:** [Deleting a word from a custom language
-// model](/docs/services/speech-to-text/language-words.html#deleteWord).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-words.html#deleteWord).
 func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1428,7 +1428,7 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 // service that owns a model to query information about its words.
 //
 // **See also:** [Listing words from a custom language
-// model](/docs/services/speech-to-text/language-words.html#listWords).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-words.html#listWords).
 func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1474,7 +1474,7 @@ func (speechToText *SpeechToTextV1) GetGetWordResult(response *core.DetailedResp
 // a model to query information about its words.
 //
 // **See also:** [Listing words from a custom language
-// model](/docs/services/speech-to-text/language-words.html#listWords).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-words.html#listWords).
 func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1524,7 +1524,7 @@ func (speechToText *SpeechToTextV1) GetListWordsResult(response *core.DetailedRe
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
 //
-// **See also:** [Create a custom acoustic model](/docs/services/speech-to-text/acoustic-create.html#createModel).
+// **See also:** [Create a custom acoustic model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel).
 func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptions *CreateAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createAcousticModelOptions, "createAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1583,7 +1583,7 @@ func (speechToText *SpeechToTextV1) GetCreateAcousticModelResult(response *core.
 // audio resource to the model, is currently being processed. You must use credentials for the instance of the service
 // that owns a model to delete it.
 //
-// **See also:** [Deleting a custom acoustic model](/docs/services/speech-to-text/acoustic-models.html#deleteModel).
+// **See also:** [Deleting a custom acoustic model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#deleteModel).
 func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptions *DeleteAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteAcousticModelOptions, "deleteAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1616,7 +1616,7 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // Gets information about a specified custom acoustic model. You must use credentials for the instance of the service
 // that owns a model to list information about it.
 //
-// **See also:** [Listing custom acoustic models](/docs/services/speech-to-text/acoustic-models.html#listModels).
+// **See also:** [Listing custom acoustic models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels).
 func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *GetAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getAcousticModelOptions, "getAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1660,7 +1660,7 @@ func (speechToText *SpeechToTextV1) GetGetAcousticModelResult(response *core.Det
 // models for all languages. You must use credentials for the instance of the service that owns a model to list
 // information about it.
 //
-// **See also:** [Listing custom acoustic models](/docs/services/speech-to-text/acoustic-models.html#listModels).
+// **See also:** [Listing custom acoustic models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels).
 func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions *ListAcousticModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listAcousticModelsOptions, "listAcousticModelsOptions"); err != nil {
 		return nil, err
@@ -1705,7 +1705,7 @@ func (speechToText *SpeechToTextV1) GetListAcousticModelsResult(response *core.D
 // preserved, but the model's audio resources are removed and must be re-created. You must use credentials for the
 // instance of the service that owns a model to reset it.
 //
-// **See also:** [Resetting a custom acoustic model](/docs/services/speech-to-text/acoustic-models.html#resetModel).
+// **See also:** [Resetting a custom acoustic model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#resetModel).
 func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions *ResetAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(resetAcousticModelOptions, "resetAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1764,7 +1764,7 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 // * The custom model contains less than 10 minutes or more than 50 hours of audio data.
 // * One or more of the custom model's audio resources is invalid.
 //
-// **See also:** [Train the custom acoustic model](/docs/services/speech-to-text/acoustic-create.html#trainModel).
+// **See also:** [Train the custom acoustic model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#trainModel).
 func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions *TrainAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainAcousticModelOptions, "trainAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1816,7 +1816,7 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 // must be upgraded before the custom acoustic model can be upgraded. Omit the parameter if the custom acoustic model
 // was not trained with a custom language model.
 //
-// **See also:** [Upgrading a custom acoustic model](/docs/services/speech-to-text/custom-upgrade.html#upgradeAcoustic).
+// **See also:** [Upgrading a custom acoustic model](https://cloud.ibm.com/docs/services/speech-to-text/custom-upgrade.html#upgradeAcoustic).
 func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOptions *UpgradeAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(upgradeAcousticModelOptions, "upgradeAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1878,7 +1878,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 // and it returns the status of the resource. Use a loop to check the status of the audio every few seconds until it
 // becomes `ok`.
 //
-// **See also:** [Add audio to the custom acoustic model](/docs/services/speech-to-text/acoustic-create.html#addAudio).
+// **See also:** [Add audio to the custom acoustic model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#addAudio).
 //
 // ### Content types for audio-type resources
 //
@@ -1900,7 +1900,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 // * `audio/webm;codecs=opus`
 // * `audio/webm;codecs=vorbis`
 //
-// **See also:** [Audio formats](/docs/services/speech-to-text/audio-formats.html).
+// **See also:** [Audio formats](https://cloud.ibm.com/docs/services/speech-to-text/audio-formats.html).
 //
 // **Note:** The sampling rate of an audio file must match the sampling rate of the base model for the custom model: for
 // broadband models, at least 16 kHz; for narrowband models, at least 8 kHz. If the sampling rate of the audio is higher
@@ -1978,7 +1978,7 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 // model to delete its audio resources.
 //
 // **See also:** [Deleting an audio resource from a custom acoustic
-// model](/docs/services/speech-to-text/acoustic-audio.html#deleteAudio).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-audio.html#deleteAudio).
 func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteAudioOptions, "deleteAudioOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2025,7 +2025,7 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 // You must use credentials for the instance of the service that owns a model to list its audio resources.
 //
 // **See also:** [Listing audio resources for a custom acoustic
-// model](/docs/services/speech-to-text/acoustic-audio.html#listAudio).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-audio.html#listAudio).
 func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getAudioOptions, "getAudioOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2071,7 +2071,7 @@ func (speechToText *SpeechToTextV1) GetGetAudioResult(response *core.DetailedRes
 // audio resources.
 //
 // **See also:** [Listing audio resources for a custom acoustic
-// model](/docs/services/speech-to-text/acoustic-audio.html#listAudio).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-audio.html#listAudio).
 func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listAudioOptions, "listAudioOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2117,7 +2117,7 @@ func (speechToText *SpeechToTextV1) GetListAudioResult(response *core.DetailedRe
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
 //
-// **See also:** [Information security](/docs/services/speech-to-text/information-security.html).
+// **See also:** [Information security](https://cloud.ibm.com/docs/services/speech-to-text/information-security.html).
 func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2383,7 +2383,7 @@ type AddCorpusOptions struct {
 	//
 	// Make sure that you know the character encoding of the file. You must use that encoding when working with the words
 	// in the custom language model. For more information, see [Character
-	// encoding](/docs/services/speech-to-text/language-resource.html#charEncoding).
+	// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).
 	//
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
 	CorpusFile *os.File `json:"corpus_file" validate:"required"`
@@ -2455,7 +2455,7 @@ type AddWordOptions struct {
 	// The custom word that is to be added to or updated in the custom language model. Do not include spaces in the word.
 	// Use a `-` (dash) or `_` (underscore) to connect the tokens of compound words. URL-encode the word if it includes
 	// non-ASCII characters. For more information, see [Character
-	// encoding](/docs/services/speech-to-text/language-resource.html#charEncoding).
+	// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).
 	WordName *string `json:"word_name" validate:"required"`
 
 	// For the **Add custom words** method, you must specify the custom word that is to be added to or updated in the
@@ -2828,7 +2828,7 @@ type CreateAcousticModelOptions struct {
 	// can be used only with the base model that it customizes.
 	//
 	// To determine whether a base model supports acoustic model customization, refer to [Language support for
-	// customization](/docs/services/speech-to-text/custom.html#languageSupport).
+	// customization](https://cloud.ibm.com/docs/services/speech-to-text/custom.html#languageSupport).
 	BaseModelName *string `json:"base_model_name" validate:"required"`
 
 	// A description of the new custom acoustic model. Use a localized description that matches the language of the custom
@@ -2844,7 +2844,7 @@ type CreateAcousticModelOptions struct {
 // can be used only with the base model that it customizes.
 //
 // To determine whether a base model supports acoustic model customization, refer to [Language support for
-// customization](/docs/services/speech-to-text/custom.html#languageSupport).
+// customization](https://cloud.ibm.com/docs/services/speech-to-text/custom.html#languageSupport).
 const (
 	CreateAcousticModelOptions_BaseModelName_ArArBroadbandmodel  = "ar-AR_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_DeDeBroadbandmodel  = "de-DE_BroadbandModel"
@@ -2948,7 +2948,7 @@ type CreateJobOptions struct {
 	// The customization ID (GUID) of a custom language model that is to be used with the recognition request. The base
 	// model of the specified custom language model must match the model specified with the `model` parameter. You must
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
-	// default, no custom language model is used. See [Custom models](/docs/services/speech-to-text/input.html#custom).
+	// default, no custom language model is used. See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
 	//
 	// **Note:** Use this parameter instead of the deprecated `customization_id` parameter.
 	LanguageCustomizationID *string `json:"language_customization_id,omitempty"`
@@ -2956,13 +2956,13 @@ type CreateJobOptions struct {
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
-	// default, no custom acoustic model is used. See [Custom models](/docs/services/speech-to-text/input.html#custom).
+	// default, no custom acoustic model is used. See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
 	AcousticCustomizationID *string `json:"acoustic_customization_id,omitempty"`
 
 	// The version of the specified base model that is to be used with recognition request. Multiple versions of a base
 	// model can exist when a model is updated for internal improvements. The parameter is intended primarily for use with
 	// custom models that have been upgraded for a new base model. The default value depends on whether the parameter is
-	// used with or without a custom model. See [Base model version](/docs/services/speech-to-text/input.html#version).
+	// used with or without a custom model. See [Base model version](https://cloud.ibm.com/docs/services/speech-to-text/input.html#version).
 	BaseModelVersion *string `json:"base_model_version,omitempty"`
 
 	// If you specify the customization ID (GUID) of a custom language model with the recognition request, the
@@ -2977,55 +2977,55 @@ type CreateJobOptions struct {
 	// OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
 	//
-	// See [Custom models](/docs/services/speech-to-text/input.html#custom).
+	// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
 	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
 	// The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
-	// simply walks away. Use `-1` for infinity. See [Timeouts](/docs/services/speech-to-text/input.html#timeouts).
+	// simply walks away. Use `-1` for infinity. See [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts).
 	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
 	// also specify a keywords threshold. You can spot a maximum of 1000 keywords. Omit the parameter or specify an empty
 	// array if you do not need to spot keywords. See [Keyword
-	// spotting](/docs/services/speech-to-text/output.html#keyword_spotting).
+	// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
 	Keywords []string `json:"keywords,omitempty"`
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
 	// confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. No keyword spotting
 	// is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords. See
-	// [Keyword spotting](/docs/services/speech-to-text/output.html#keyword_spotting).
+	// [Keyword spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
 	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
 
 	// The maximum number of alternative transcripts that the service is to return. By default, a single transcription is
-	// returned. See [Maximum alternatives](/docs/services/speech-to-text/output.html#max_alternatives).
+	// returned. See [Maximum alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives).
 	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
 
 	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known
 	// as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the
 	// threshold. Specify a probability between 0.0 and 1.0. No alternative words are computed if you omit the parameter.
-	// See [Word alternatives](/docs/services/speech-to-text/output.html#word_alternatives).
+	// See [Word alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#word_alternatives).
 	WordAlternativesThreshold *float32 `json:"word_alternatives_threshold,omitempty"`
 
 	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, no word
-	// confidence measures are returned. See [Word confidence](/docs/services/speech-to-text/output.html#word_confidence).
+	// confidence measures are returned. See [Word confidence](https://cloud.ibm.com/docs/services/speech-to-text/output.html#word_confidence).
 	WordConfidence *bool `json:"word_confidence,omitempty"`
 
 	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned. See [Word
-	// timestamps](/docs/services/speech-to-text/output.html#word_timestamps).
+	// timestamps](https://cloud.ibm.com/docs/services/speech-to-text/output.html#word_timestamps).
 	Timestamps *bool `json:"timestamps,omitempty"`
 
 	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words
 	// with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English
-	// transcription only. See [Profanity filtering](/docs/services/speech-to-text/output.html#profanity_filter).
+	// transcription only. See [Profanity filtering](https://cloud.ibm.com/docs/services/speech-to-text/output.html#profanity_filter).
 	ProfanityFilter *bool `json:"profanity_filter,omitempty"`
 
 	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and
 	// internet addresses into more readable, conventional representations in the final transcript of a recognition
 	// request. For US English, the service also converts certain keyword strings to punctuation symbols. By default, no
 	// smart formatting is performed. Applies to US English, Japanese, and Spanish transcription only. See [Smart
-	// formatting](/docs/services/speech-to-text/output.html#smart_formatting).
+	// formatting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#smart_formatting).
 	SmartFormatting *bool `json:"smart_formatting,omitempty"`
 
 	// If `true`, the response includes labels that identify which words were spoken by which participants in a
@@ -3034,7 +3034,7 @@ type CreateJobOptions struct {
 	//
 	// To determine whether a language model supports speaker labels, use the **Get a model** method and check that the
 	// attribute `speaker_labels` is set to `true`. See [Speaker
-	// labels](/docs/services/speech-to-text/output.html#speaker_labels).
+	// labels](https://cloud.ibm.com/docs/services/speech-to-text/output.html#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
 
 	// **Deprecated.** Use the `language_customization_id` parameter to specify the customization ID (GUID) of a custom
@@ -3269,7 +3269,7 @@ type CreateLanguageModelOptions struct {
 	//
 	// To determine whether a base model supports language model customization, use the **Get a model** method and check
 	// that the attribute `custom_language_model` is set to `true`. You can also refer to [Language support for
-	// customization](/docs/services/speech-to-text/custom.html#languageSupport).
+	// customization](https://cloud.ibm.com/docs/services/speech-to-text/custom.html#languageSupport).
 	BaseModelName *string `json:"base_model_name" validate:"required"`
 
 	// The dialect of the specified language that is to be used with the custom language model. The parameter is meaningful
@@ -3297,7 +3297,7 @@ type CreateLanguageModelOptions struct {
 //
 // To determine whether a base model supports language model customization, use the **Get a model** method and check
 // that the attribute `custom_language_model` is set to `true`. You can also refer to [Language support for
-// customization](/docs/services/speech-to-text/custom.html#languageSupport).
+// customization](https://cloud.ibm.com/docs/services/speech-to-text/custom.html#languageSupport).
 const (
 	CreateLanguageModelOptions_BaseModelName_DeDeBroadbandmodel  = "de-DE_BroadbandModel"
 	CreateLanguageModelOptions_BaseModelName_EnGbBroadbandmodel  = "en-GB_BroadbandModel"
@@ -3588,7 +3588,7 @@ type DeleteWordOptions struct {
 
 	// The custom word that is to be deleted from the custom language model. URL-encode the word if it includes non-ASCII
 	// characters. For more information, see [Character
-	// encoding](/docs/services/speech-to-text/language-resource.html#charEncoding).
+	// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).
 	WordName *string `json:"word_name" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3821,7 +3821,7 @@ type GetWordOptions struct {
 
 	// The custom word that is to be read from the custom language model. URL-encode the word if it includes non-ASCII
 	// characters. For more information, see [Character
-	// encoding](/docs/services/speech-to-text/language-resource.html#charEncoding).
+	// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).
 	WordName *string `json:"word_name" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -4255,7 +4255,7 @@ type RecognizeOptions struct {
 	// The customization ID (GUID) of a custom language model that is to be used with the recognition request. The base
 	// model of the specified custom language model must match the model specified with the `model` parameter. You must
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
-	// default, no custom language model is used. See [Custom models](/docs/services/speech-to-text/input.html#custom).
+	// default, no custom language model is used. See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
 	//
 	// **Note:** Use this parameter instead of the deprecated `customization_id` parameter.
 	LanguageCustomizationID *string `json:"language_customization_id,omitempty"`
@@ -4263,13 +4263,13 @@ type RecognizeOptions struct {
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
 	// make the request with service credentials created for the instance of the service that owns the custom model. By
-	// default, no custom acoustic model is used. See [Custom models](/docs/services/speech-to-text/input.html#custom).
+	// default, no custom acoustic model is used. See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
 	AcousticCustomizationID *string `json:"acoustic_customization_id,omitempty"`
 
 	// The version of the specified base model that is to be used with recognition request. Multiple versions of a base
 	// model can exist when a model is updated for internal improvements. The parameter is intended primarily for use with
 	// custom models that have been upgraded for a new base model. The default value depends on whether the parameter is
-	// used with or without a custom model. See [Base model version](/docs/services/speech-to-text/input.html#version).
+	// used with or without a custom model. See [Base model version](https://cloud.ibm.com/docs/services/speech-to-text/input.html#version).
 	BaseModelVersion *string `json:"base_model_version,omitempty"`
 
 	// If you specify the customization ID (GUID) of a custom language model with the recognition request, the
@@ -4284,55 +4284,55 @@ type RecognizeOptions struct {
 	// OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
 	//
-	// See [Custom models](/docs/services/speech-to-text/input.html#custom).
+	// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
 	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
 	// The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
-	// simply walks away. Use `-1` for infinity. See [Timeouts](/docs/services/speech-to-text/input.html#timeouts).
+	// simply walks away. Use `-1` for infinity. See [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts).
 	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
 	// also specify a keywords threshold. You can spot a maximum of 1000 keywords. Omit the parameter or specify an empty
 	// array if you do not need to spot keywords. See [Keyword
-	// spotting](/docs/services/speech-to-text/output.html#keyword_spotting).
+	// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
 	Keywords []string `json:"keywords,omitempty"`
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
 	// confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. No keyword spotting
 	// is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords. See
-	// [Keyword spotting](/docs/services/speech-to-text/output.html#keyword_spotting).
+	// [Keyword spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
 	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
 
 	// The maximum number of alternative transcripts that the service is to return. By default, a single transcription is
-	// returned. See [Maximum alternatives](/docs/services/speech-to-text/output.html#max_alternatives).
+	// returned. See [Maximum alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives).
 	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
 
 	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known
 	// as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the
 	// threshold. Specify a probability between 0.0 and 1.0. No alternative words are computed if you omit the parameter.
-	// See [Word alternatives](/docs/services/speech-to-text/output.html#word_alternatives).
+	// See [Word alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#word_alternatives).
 	WordAlternativesThreshold *float32 `json:"word_alternatives_threshold,omitempty"`
 
 	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, no word
-	// confidence measures are returned. See [Word confidence](/docs/services/speech-to-text/output.html#word_confidence).
+	// confidence measures are returned. See [Word confidence](https://cloud.ibm.com/docs/services/speech-to-text/output.html#word_confidence).
 	WordConfidence *bool `json:"word_confidence,omitempty"`
 
 	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned. See [Word
-	// timestamps](/docs/services/speech-to-text/output.html#word_timestamps).
+	// timestamps](https://cloud.ibm.com/docs/services/speech-to-text/output.html#word_timestamps).
 	Timestamps *bool `json:"timestamps,omitempty"`
 
 	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words
 	// with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English
-	// transcription only. See [Profanity filtering](/docs/services/speech-to-text/output.html#profanity_filter).
+	// transcription only. See [Profanity filtering](https://cloud.ibm.com/docs/services/speech-to-text/output.html#profanity_filter).
 	ProfanityFilter *bool `json:"profanity_filter,omitempty"`
 
 	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and
 	// internet addresses into more readable, conventional representations in the final transcript of a recognition
 	// request. For US English, the service also converts certain keyword strings to punctuation symbols. By default, no
 	// smart formatting is performed. Applies to US English, Japanese, and Spanish transcription only. See [Smart
-	// formatting](/docs/services/speech-to-text/output.html#smart_formatting).
+	// formatting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#smart_formatting).
 	SmartFormatting *bool `json:"smart_formatting,omitempty"`
 
 	// If `true`, the response includes labels that identify which words were spoken by which participants in a
@@ -4341,7 +4341,7 @@ type RecognizeOptions struct {
 	//
 	// To determine whether a language model supports speaker labels, use the **Get a model** method and check that the
 	// attribute `speaker_labels` is set to `true`. See [Speaker
-	// labels](/docs/services/speech-to-text/output.html#speaker_labels).
+	// labels](https://cloud.ibm.com/docs/services/speech-to-text/output.html#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
 
 	// **Deprecated.** Use the `language_customization_id` parameter to specify the customization ID (GUID) of a custom

@@ -88,7 +88,7 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (*ToneAnalyzerV3, error) 
 // removes HTML tags and analyzes only the textual content.
 //
 // **See also:** [Using the general-purpose
-// endpoint](/docs/services/tone-analyzer/using-tone.html#using-the-general-purpose-endpoint).
+// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone.html#using-the-general-purpose-endpoint).
 func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(toneOptions, "toneOptions cannot be nil"); err != nil {
 		return nil, err
@@ -159,7 +159,7 @@ func (toneAnalyzer *ToneAnalyzerV3) GetToneResult(response *core.DetailedRespons
 // characters. Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8.
 //
 // **See also:** [Using the customer-engagement
-// endpoint](/docs/services/tone-analyzer/using-tone-chat.html#using-the-customer-engagement-endpoint).
+// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone-chat.html#using-the-customer-engagement-endpoint).
 func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(toneChatOptions, "toneChatOptions cannot be nil"); err != nil {
 		return nil, err
