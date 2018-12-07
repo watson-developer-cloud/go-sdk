@@ -64,7 +64,7 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 }
 
 // ConvertToHTML : Convert file to HTML
-// Uploads an input file to the service instance, which returns an HTML version of the document.
+// Uploads an input file. The response includes an HTML version of the document.
 func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *ConvertToHTMLOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(convertToHTMLOptions, "convertToHTMLOptions cannot be nil"); err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func (compareComply *CompareComplyV1) GetConvertToHTMLResult(response *core.Deta
 }
 
 // ClassifyElements : Classify the elements of a document
-// Uploads a file to the service instance, which returns an analysis of the document's structural and semantic elements.
+// Uploads a file. The response includes an analysis of the document's structural and semantic elements.
 func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *ClassifyElementsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(classifyElementsOptions, "classifyElementsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -158,7 +158,7 @@ func (compareComply *CompareComplyV1) GetClassifyElementsResult(response *core.D
 }
 
 // ExtractTables : Extract a document's tables
-// Uploads a document file to the service instance, which extracts the contents of the document's tables.
+// Uploads a file. The response includes an analysis of the document's tables.
 func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *ExtractTablesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(extractTablesOptions, "extractTablesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -205,8 +205,8 @@ func (compareComply *CompareComplyV1) GetExtractTablesResult(response *core.Deta
 }
 
 // CompareDocuments : Compare two documents
-// Uploads two input files to the service instance, which analyzes the content and returns parsed JSON comparing the two
-// documents. Uploaded files must be in the same file format.
+// Uploads two input files. The response includes JSON comparing the two documents. Uploaded files must be in the same
+// file format.
 func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *CompareDocumentsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(compareDocumentsOptions, "compareDocumentsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -737,6 +737,9 @@ type AlignedElement struct {
 	// Specifies whether the text is identical.
 	IdenticalText *bool `json:"identical_text,omitempty"`
 
+	// Indicates that the elements aligned are contractual clauses of significance.
+	SignificantElements *bool `json:"significant_elements,omitempty"`
+
 	// One or more hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 }
@@ -744,7 +747,7 @@ type AlignedElement struct {
 // Attribute : List of document attributes.
 type Attribute struct {
 
-	// The type of attribute. Possible values are `Currency`, `DateTime`, and `Location`.
+	// The type of attribute. Possible values are `Currency`, `DateTime`, `Location`, `Organization`, and `Person`.
 	Type *string `json:"type,omitempty"`
 
 	// The text associated with the attribute.
@@ -756,11 +759,13 @@ type Attribute struct {
 }
 
 // Constants associated with the Attribute.Type property.
-// The type of attribute. Possible values are `Currency`, `DateTime`, and `Location`.
+// The type of attribute. Possible values are `Currency`, `DateTime`, `Location`, `Organization`, and `Person`.
 const (
-	Attribute_Type_Currency = "Currency"
-	Attribute_Type_DateTime = "DateTime"
-	Attribute_Type_Location = "Location"
+	Attribute_Type_Currency     = "Currency"
+	Attribute_Type_Datetime     = "DateTime"
+	Attribute_Type_Location     = "Location"
+	Attribute_Type_Organization = "Organization"
+	Attribute_Type_Person       = "Person"
 )
 
 // BatchStatus : The batch-request status.
@@ -794,10 +799,10 @@ type BatchStatus struct {
 	Status *string `json:"status,omitempty"`
 
 	// The creation time of the batch request.
-	Created *strfmt.Date `json:"created,omitempty"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// The time of the most recent update to the batch request.
-	Updated *strfmt.Date `json:"updated,omitempty"`
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
 // Constants associated with the BatchStatus.Function property.
@@ -805,8 +810,8 @@ type BatchStatus struct {
 // `tables`.
 const (
 	BatchStatus_Function_ElementClassification = "element_classification"
-	BatchStatus_Function_HTMLConversion = "html_conversion"
-	BatchStatus_Function_Tables = "tables"
+	BatchStatus_Function_HTMLConversion        = "html_conversion"
+	BatchStatus_Function_Tables                = "tables"
 )
 
 // Batches : The results of a successful `GET /v1/batches` request.
@@ -868,36 +873,36 @@ type Category struct {
 // Constants associated with the Category.Label property.
 // The category of the associated element.
 const (
-	Category_Label_Amendments = "Amendments"
-	Category_Label_AssetUse = "Asset Use"
-	Category_Label_Assignments = "Assignments"
-	Category_Label_Audits = "Audits"
-	Category_Label_BusinessContinuity = "Business Continuity"
-	Category_Label_Communication = "Communication"
-	Category_Label_Confidentiality = "Confidentiality"
-	Category_Label_Deliverables = "Deliverables"
-	Category_Label_Delivery = "Delivery"
-	Category_Label_DisputeResolution = "Dispute Resolution"
-	Category_Label_ForceMajeure = "Force Majeure"
-	Category_Label_Indemnification = "Indemnification"
-	Category_Label_Insurance = "Insurance"
+	Category_Label_Amendments           = "Amendments"
+	Category_Label_AssetUse             = "Asset Use"
+	Category_Label_Assignments          = "Assignments"
+	Category_Label_Audits               = "Audits"
+	Category_Label_BusinessContinuity   = "Business Continuity"
+	Category_Label_Communication        = "Communication"
+	Category_Label_Confidentiality      = "Confidentiality"
+	Category_Label_Deliverables         = "Deliverables"
+	Category_Label_Delivery             = "Delivery"
+	Category_Label_DisputeResolution    = "Dispute Resolution"
+	Category_Label_ForceMajeure         = "Force Majeure"
+	Category_Label_Indemnification      = "Indemnification"
+	Category_Label_Insurance            = "Insurance"
 	Category_Label_IntellectualProperty = "Intellectual Property"
-	Category_Label_Liability = "Liability"
-	Category_Label_PaymentTermsBilling = "Payment Terms & Billing"
-	Category_Label_PricingTaxes = "Pricing & Taxes"
-	Category_Label_Privacy = "Privacy"
-	Category_Label_Responsibilities = "Responsibilities"
-	Category_Label_SafetyAndSecurity = "Safety and Security"
-	Category_Label_ScopeOfWork = "Scope of Work"
-	Category_Label_Subcontracts = "Subcontracts"
-	Category_Label_TermTermination = "Term & Termination"
-	Category_Label_Warranties = "Warranties"
+	Category_Label_Liability            = "Liability"
+	Category_Label_PaymentTermsBilling  = "Payment Terms & Billing"
+	Category_Label_PricingTaxes         = "Pricing & Taxes"
+	Category_Label_Privacy              = "Privacy"
+	Category_Label_Responsibilities     = "Responsibilities"
+	Category_Label_SafetyAndSecurity    = "Safety and Security"
+	Category_Label_ScopeOfWork          = "Scope of Work"
+	Category_Label_Subcontracts         = "Subcontracts"
+	Category_Label_TermTermination      = "Term & Termination"
+	Category_Label_Warranties           = "Warranties"
 )
 
 // ClassifyElementsOptions : The classifyElements options.
 type ClassifyElementsOptions struct {
 
-	// The input file to convert.
+	// The file to classify.
 	File *os.File `json:"file" validate:"required"`
 
 	// The filename for file.
@@ -921,7 +926,7 @@ type ClassifyElementsOptions struct {
 // methods as well as to the methods' use in batch-processing requests.
 const (
 	ClassifyElementsOptions_ModelID_Contracts = "contracts"
-	ClassifyElementsOptions_ModelID_Tables = "tables"
+	ClassifyElementsOptions_ModelID_Tables    = "tables"
 )
 
 // NewClassifyElementsOptions : Instantiate ClassifyElementsOptions
@@ -1025,9 +1030,9 @@ type ColumnHeaders struct {
 	// header cell in the input document.
 	CellID *string `json:"cell_id,omitempty"`
 
-	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
-	// `end`.
-	Location *Location `json:"location,omitempty"`
+	// The location of the column header cell in the current table as defined by its `begin` and `end` offsets,
+	// respectfully, in the input document.
+	Location interface{} `json:"location,omitempty"`
 
 	// The textual contents of this cell from the input document without associated markup content.
 	Text *string `json:"text,omitempty"`
@@ -1064,10 +1069,10 @@ type CompareDocumentsOptions struct {
 	// The filename for file2.
 	File2Filename *string `json:"file_2_filename,omitempty"`
 
-	// A text label for the first file. The label cannot exceed 64 characters in length. The default is `file_1`.
+	// A text label for the first file.
 	File1Label *string `json:"file_1_label,omitempty"`
 
-	// A text label for the second file. The label cannot exceed 64 characters in length. The default is `file_2`.
+	// A text label for the second file.
 	File2Label *string `json:"file_2_label,omitempty"`
 
 	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
@@ -1091,7 +1096,7 @@ type CompareDocumentsOptions struct {
 // methods as well as to the methods' use in batch-processing requests.
 const (
 	CompareDocumentsOptions_ModelID_Contracts = "contracts"
-	CompareDocumentsOptions_ModelID_Tables = "tables"
+	CompareDocumentsOptions_ModelID_Tables    = "tables"
 )
 
 // NewCompareDocumentsOptions : Instantiate CompareDocumentsOptions
@@ -1206,7 +1211,7 @@ type ContractAmts struct {
 // ConvertToHTMLOptions : The convertToHtml options.
 type ConvertToHTMLOptions struct {
 
-	// The input file to convert.
+	// The file to convert.
 	File *os.File `json:"file" validate:"required"`
 
 	// The filename for file.
@@ -1230,13 +1235,13 @@ type ConvertToHTMLOptions struct {
 // methods as well as to the methods' use in batch-processing requests.
 const (
 	ConvertToHTMLOptions_ModelID_Contracts = "contracts"
-	ConvertToHTMLOptions_ModelID_Tables = "tables"
+	ConvertToHTMLOptions_ModelID_Tables    = "tables"
 )
 
 // NewConvertToHTMLOptions : Instantiate ConvertToHTMLOptions
 func (compareComply *CompareComplyV1) NewConvertToHTMLOptions(file *os.File, filename string) *ConvertToHTMLOptions {
 	return &ConvertToHTMLOptions{
-		File: file,
+		File:     file,
 		Filename: core.StringPtr(filename),
 	}
 }
@@ -1274,8 +1279,7 @@ func (options *ConvertToHTMLOptions) SetHeaders(param map[string]string) *Conver
 // CreateBatchOptions : The createBatch options.
 type CreateBatchOptions struct {
 
-	// The Compare and Comply method to run across the submitted input documents. Possible values are `html_conversion`,
-	// `element_classification`, and `tables`.
+	// The Compare and Comply method to run across the submitted input documents.
 	Function *string `json:"function" validate:"required"`
 
 	// A JSON file containing the input Cloud Object Storage credentials. At a minimum, the credentials must enable `READ`
@@ -1316,12 +1320,11 @@ type CreateBatchOptions struct {
 }
 
 // Constants associated with the CreateBatchOptions.Function property.
-// The Compare and Comply method to run across the submitted input documents. Possible values are `html_conversion`,
-// `element_classification`, and `tables`.
+// The Compare and Comply method to run across the submitted input documents.
 const (
 	CreateBatchOptions_Function_ElementClassification = "element_classification"
-	CreateBatchOptions_Function_HTMLConversion = "html_conversion"
-	CreateBatchOptions_Function_Tables = "tables"
+	CreateBatchOptions_Function_HTMLConversion        = "html_conversion"
+	CreateBatchOptions_Function_Tables                = "tables"
 )
 
 // Constants associated with the CreateBatchOptions.ModelID property.
@@ -1330,19 +1333,19 @@ const (
 // methods as well as to the methods' use in batch-processing requests.
 const (
 	CreateBatchOptions_ModelID_Contracts = "contracts"
-	CreateBatchOptions_ModelID_Tables = "tables"
+	CreateBatchOptions_ModelID_Tables    = "tables"
 )
 
 // NewCreateBatchOptions : Instantiate CreateBatchOptions
 func (compareComply *CompareComplyV1) NewCreateBatchOptions(function string, inputCredentialsFile *os.File, inputBucketLocation string, inputBucketName string, outputCredentialsFile *os.File, outputBucketLocation string, outputBucketName string) *CreateBatchOptions {
 	return &CreateBatchOptions{
-		Function: core.StringPtr(function),
-		InputCredentialsFile: inputCredentialsFile,
-		InputBucketLocation: core.StringPtr(inputBucketLocation),
-		InputBucketName: core.StringPtr(inputBucketName),
+		Function:              core.StringPtr(function),
+		InputCredentialsFile:  inputCredentialsFile,
+		InputBucketLocation:   core.StringPtr(inputBucketLocation),
+		InputBucketName:       core.StringPtr(inputBucketName),
 		OutputCredentialsFile: outputCredentialsFile,
-		OutputBucketLocation: core.StringPtr(outputBucketLocation),
-		OutputBucketName: core.StringPtr(outputBucketName),
+		OutputBucketLocation:  core.StringPtr(outputBucketLocation),
+		OutputBucketName:      core.StringPtr(outputBucketName),
 	}
 }
 
@@ -1433,7 +1436,7 @@ type DeleteFeedbackOptions struct {
 // methods as well as to the methods' use in batch-processing requests.
 const (
 	DeleteFeedbackOptions_ModelID_Contracts = "contracts"
-	DeleteFeedbackOptions_ModelID_Tables = "tables"
+	DeleteFeedbackOptions_ModelID_Tables    = "tables"
 )
 
 // NewDeleteFeedbackOptions : Instantiate DeleteFeedbackOptions
@@ -1585,7 +1588,7 @@ type ElementPair struct {
 // ExtractTablesOptions : The extractTables options.
 type ExtractTablesOptions struct {
 
-	// The input file on which to run table extraction.
+	// The file on which to run table extraction.
 	File *os.File `json:"file" validate:"required"`
 
 	// The filename for file.
@@ -1609,7 +1612,7 @@ type ExtractTablesOptions struct {
 // methods as well as to the methods' use in batch-processing requests.
 const (
 	ExtractTablesOptions_ModelID_Contracts = "contracts"
-	ExtractTablesOptions_ModelID_Tables = "tables"
+	ExtractTablesOptions_ModelID_Tables    = "tables"
 )
 
 // NewExtractTablesOptions : Instantiate ExtractTablesOptions
@@ -1740,7 +1743,7 @@ type FeedbackReturn struct {
 	Comment *string `json:"comment,omitempty"`
 
 	// Timestamp listing the creation time of the feedback submission.
-	Created *strfmt.Date `json:"created,omitempty"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// Information returned from the `POST /v1/feedback` method.
 	FeedbackData *FeedbackDataOutput `json:"feedback_data,omitempty"`
@@ -1782,7 +1785,7 @@ type GetFeedback struct {
 	FeedbackID *string `json:"feedback_id,omitempty"`
 
 	// A timestamp identifying the creation time of the feedback entry.
-	Created *strfmt.Date `json:"created,omitempty"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// A string containing the user's comment about the feedback entry.
 	Comment *string `json:"comment,omitempty"`
@@ -1812,7 +1815,7 @@ type GetFeedbackOptions struct {
 // methods as well as to the methods' use in batch-processing requests.
 const (
 	GetFeedbackOptions_ModelID_Contracts = "contracts"
-	GetFeedbackOptions_ModelID_Tables = "tables"
+	GetFeedbackOptions_ModelID_Tables    = "tables"
 )
 
 // NewGetFeedbackOptions : Instantiate GetFeedbackOptions
@@ -1952,8 +1955,7 @@ type ListFeedbackOptions struct {
 	// to include only feedback that has at least one `nature`:`party` pair from the list unchanged.
 	TypeNotChanged *string `json:"type_not_changed,omitempty"`
 
-	// An optional integer specifying the number of documents that you want the service to return. The default value is
-	// `10` and the maximum value is `100`.
+	// An optional integer specifying the number of documents that you want the service to return.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
 	// An optional string that returns the set of documents after the previous set. Use this parameter with the
@@ -2119,9 +2121,9 @@ type OriginalLabelsOut struct {
 // A string identifying the type of modification the feedback entry in the `updated_labels` array. Possible values are
 // `added`, `not_changed`, and `removed`.
 const (
-	OriginalLabelsOut_Modification_Added = "added"
+	OriginalLabelsOut_Modification_Added      = "added"
 	OriginalLabelsOut_Modification_NotChanged = "not_changed"
-	OriginalLabelsOut_Modification_Removed = "removed"
+	OriginalLabelsOut_Modification_Removed    = "removed"
 )
 
 // Pagination : Pagination details, if required by the length of the output.
@@ -2239,7 +2241,7 @@ type SectionTitles struct {
 	// top-level section, `2` represents a subsection within the level `1` section, and so forth.
 	Level *int64 `json:"level,omitempty"`
 
-	// An array of `location` objects listing the locations of detected section titles.
+	// An array of `location` objects listing the locations of detected leading sentences.
 	ElementLocations []ElementLocations `json:"element_locations,omitempty"`
 }
 
@@ -2260,9 +2262,9 @@ type TableHeaders struct {
 	// the cell value in the input document.
 	CellID *string `json:"cell_id,omitempty"`
 
-	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
-	// `end`.
-	Location *Location `json:"location,omitempty"`
+	// The location of the table header cell in the current table as defined by its `begin` and `end` offsets,
+	// respectfully, in the input document.
+	Location interface{} `json:"location,omitempty"`
 
 	// The textual contents of the cell from the input document without associated markup content.
 	Text *string `json:"text,omitempty"`
@@ -2377,7 +2379,7 @@ type UpdateBatchOptions struct {
 	// The ID of the batch-processing request you want to update.
 	BatchID *string `json:"batch_id" validate:"required"`
 
-	// The action you want to perform on the specified batch-processing request. Possible values are `rescan` and `cancel`.
+	// The action you want to perform on the specified batch-processing request.
 	Action *string `json:"action" validate:"required"`
 
 	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
@@ -2390,7 +2392,7 @@ type UpdateBatchOptions struct {
 }
 
 // Constants associated with the UpdateBatchOptions.Action property.
-// The action you want to perform on the specified batch-processing request. Possible values are `rescan` and `cancel`.
+// The action you want to perform on the specified batch-processing request.
 const (
 	UpdateBatchOptions_Action_Cancel = "cancel"
 	UpdateBatchOptions_Action_Rescan = "rescan"
@@ -2402,14 +2404,14 @@ const (
 // methods as well as to the methods' use in batch-processing requests.
 const (
 	UpdateBatchOptions_ModelID_Contracts = "contracts"
-	UpdateBatchOptions_ModelID_Tables = "tables"
+	UpdateBatchOptions_ModelID_Tables    = "tables"
 )
 
 // NewUpdateBatchOptions : Instantiate UpdateBatchOptions
 func (compareComply *CompareComplyV1) NewUpdateBatchOptions(batchID string, action string) *UpdateBatchOptions {
 	return &UpdateBatchOptions{
 		BatchID: core.StringPtr(batchID),
-		Action: core.StringPtr(action),
+		Action:  core.StringPtr(action),
 	}
 }
 
@@ -2465,7 +2467,7 @@ type UpdatedLabelsOut struct {
 // The type of modification the feedback entry in the `updated_labels` array. Possible values are `added`,
 // `not_changed`, and `removed`.
 const (
-	UpdatedLabelsOut_Modification_Added = "added"
+	UpdatedLabelsOut_Modification_Added      = "added"
 	UpdatedLabelsOut_Modification_NotChanged = "not_changed"
-	UpdatedLabelsOut_Modification_Removed = "removed"
+	UpdatedLabelsOut_Modification_Removed    = "removed"
 )

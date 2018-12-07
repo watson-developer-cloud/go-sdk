@@ -3161,8 +3161,7 @@ type Collection struct {
 	// collection.
 	DocumentCounts *DocumentCounts `json:"document_counts,omitempty"`
 
-	// The object providing information about the disk usage of the collection. Present only when retrieving details of a
-	// collection.
+	// Summary of the disk usage statistics for this collection.
 	DiskUsage *CollectionDiskUsage `json:"disk_usage,omitempty"`
 
 	// Provides information about the status of relevance training for collection.
@@ -3215,7 +3214,7 @@ type Configuration struct {
 	// The description of the configuration, if available.
 	Description *string `json:"description,omitempty"`
 
-	// The document conversion settings for the configuration.
+	// Document conversion settings.
 	Conversions *Conversions `json:"conversions,omitempty"`
 
 	// An array of document enrichment settings for the configuration.
@@ -3342,7 +3341,7 @@ type CreateConfigurationOptions struct {
 	// The description of the configuration, if available.
 	Description *string `json:"description,omitempty"`
 
-	// The document conversion settings for the configuration.
+	// Document conversion settings.
 	Conversions *Conversions `json:"conversions,omitempty"`
 
 	// An array of document enrichment settings for the configuration.
@@ -3499,15 +3498,15 @@ type CreateEnvironmentOptions struct {
 // is `S`.
 const (
 	CreateEnvironmentOptions_Size_L    = "L"
-	CreateEnvironmentOptions_Size_LT   = "LT"
+	CreateEnvironmentOptions_Size_Lt   = "LT"
 	CreateEnvironmentOptions_Size_M    = "M"
-	CreateEnvironmentOptions_Size_ML   = "ML"
-	CreateEnvironmentOptions_Size_MS   = "MS"
+	CreateEnvironmentOptions_Size_Ml   = "ML"
+	CreateEnvironmentOptions_Size_Ms   = "MS"
 	CreateEnvironmentOptions_Size_S    = "S"
-	CreateEnvironmentOptions_Size_XL   = "XL"
-	CreateEnvironmentOptions_Size_XS   = "XS"
-	CreateEnvironmentOptions_Size_XXL  = "XXL"
-	CreateEnvironmentOptions_Size_XXXL = "XXXL"
+	CreateEnvironmentOptions_Size_Xl   = "XL"
+	CreateEnvironmentOptions_Size_Xs   = "XS"
+	CreateEnvironmentOptions_Size_Xxl  = "XXL"
+	CreateEnvironmentOptions_Size_Xxxl = "XXXL"
 )
 
 // NewCreateEnvironmentOptions : Instantiate CreateEnvironmentOptions
@@ -3547,7 +3546,7 @@ type CreateEventOptions struct {
 	// The event type to be created.
 	Type *string `json:"type" validate:"required"`
 
-	// Data object used to create a query event.
+	// Query event data object.
 	Data *EventData `json:"data" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -4589,7 +4588,7 @@ type Enrichment struct {
 	// document to fail processing.
 	IgnoreDownstreamErrors *bool `json:"ignore_downstream_errors,omitempty"`
 
-	// A list of options specific to the enrichment.
+	// Options which are specific to a particular enrichment.
 	Options *EnrichmentOptions `json:"options,omitempty"`
 }
 
@@ -4662,7 +4661,7 @@ type Environment struct {
 	// Details about the resource usage and capacity of the environment.
 	IndexCapacity *IndexCapacity `json:"index_capacity,omitempty"`
 
-	// Information about Continuous Relevancy Training for this environment.
+	// Information about the Continuous Relevancy Training for this environment.
 	SearchStatus *SearchStatus `json:"search_status,omitempty"`
 }
 
@@ -4680,15 +4679,15 @@ const (
 // Current size of the environment.
 const (
 	Environment_Size_L    = "L"
-	Environment_Size_LT   = "LT"
+	Environment_Size_Lt   = "LT"
 	Environment_Size_M    = "M"
-	Environment_Size_ML   = "ML"
-	Environment_Size_MS   = "MS"
+	Environment_Size_Ml   = "ML"
+	Environment_Size_Ms   = "MS"
 	Environment_Size_S    = "S"
-	Environment_Size_XL   = "XL"
-	Environment_Size_XS   = "XS"
-	Environment_Size_XXL  = "XXL"
-	Environment_Size_XXXL = "XXXL"
+	Environment_Size_Xl   = "XL"
+	Environment_Size_Xs   = "XS"
+	Environment_Size_Xxl  = "XXL"
+	Environment_Size_Xxxl = "XXXL"
 )
 
 // EnvironmentDocuments : Summary of the document usage statistics for the environment.
@@ -5810,13 +5809,13 @@ type IndexCapacity struct {
 	// Summary of the document usage statistics for the environment.
 	Documents *EnvironmentDocuments `json:"documents,omitempty"`
 
-	// Summary of the disk usage of the environment.
+	// Summary of the disk usage statistics for the environment.
 	DiskUsage *DiskUsage `json:"disk_usage,omitempty"`
 
 	// Summary of the collection usage in the environment.
 	Collections *CollectionUsage `json:"collections,omitempty"`
 
-	// **Deprecated**: Summary of the memory usage of the environment.
+	// **Deprecated**: Summary of the memory usage statistics for this environment.
 	MemoryUsage *MemoryUsage `json:"memory_usage,omitempty"`
 }
 
@@ -6418,6 +6417,13 @@ type MetricTokenResponse struct {
 type NluEnrichmentCategories struct {
 }
 
+// NluEnrichmentConcepts : An object specifiying the concepts enrichment and related parameters.
+type NluEnrichmentConcepts struct {
+
+	// The maximum number of concepts enrichments to extact from each instance of the specified field.
+	Limit *int64 `json:"limit,omitempty"`
+}
+
 // NluEnrichmentEmotion : An object specifying the emotion detection enrichment and related parameters.
 type NluEnrichmentEmotion struct {
 
@@ -6448,7 +6454,7 @@ type NluEnrichmentEntities struct {
 
 	// When `true`, a list of sentence locations for each instance of each identified entity is recorded. The default is
 	// `false`.
-	SentenceLocation *bool `json:"sentence_location,omitempty"`
+	SentenceLocations *bool `json:"sentence_locations,omitempty"`
 
 	// The enrichement model to use with entity extraction. May be a custom model provided by Watson Knowledge Studio, the
 	// public model for use with Knowledge Graph `en-news`, or the default public model `alchemy`.
@@ -6470,7 +6476,7 @@ type NluEnrichmentFeatures struct {
 	// An object specifying the emotion detection enrichment and related parameters.
 	Emotion *NluEnrichmentEmotion `json:"emotion,omitempty"`
 
-	// An object specifying the categories enrichment and related parameters.
+	// An object that indicates the Categories enrichment will be applied to the specified field.
 	Categories *NluEnrichmentCategories `json:"categories,omitempty"`
 
 	// An object specifiying the semantic roles enrichment and related parameters.
@@ -6478,6 +6484,9 @@ type NluEnrichmentFeatures struct {
 
 	// An object specifying the relations enrichment and related parameters.
 	Relations *NluEnrichmentRelations `json:"relations,omitempty"`
+
+	// An object specifiying the concepts enrichment and related parameters.
+	Concepts *NluEnrichmentConcepts `json:"concepts,omitempty"`
 }
 
 // NluEnrichmentKeywords : An object specifying the Keyword enrichment and related parameters.
@@ -7124,7 +7133,7 @@ type QueryNoticesResult struct {
 	// The collection ID of the collection containing the document for this result.
 	CollectionID *string `json:"collection_id,omitempty"`
 
-	// Metadata of the query result.
+	// Metadata of a query result.
 	ResultMetadata *QueryResultMetadata `json:"result_metadata,omitempty"`
 
 	// The internal status code returned by the ingestion subsystem indicating the overall result of ingesting the source
@@ -7603,6 +7612,9 @@ type QueryResponse struct {
 	//
 	// **Important:** Session tokens are case sensitive.
 	SessionToken *string `json:"session_token,omitempty"`
+
+	// An object contain retrieval type information.
+	RetrievalDetails *RetrievalDetails `json:"retrieval_details,omitempty"`
 }
 
 // QueryResult : QueryResult struct
@@ -7620,7 +7632,7 @@ type QueryResult struct {
 	// The collection ID of the collection containing the document for this result.
 	CollectionID *string `json:"collection_id,omitempty"`
 
-	// Metadata of the query result.
+	// Metadata of a query result.
 	ResultMetadata *QueryResultMetadata `json:"result_metadata,omitempty"`
 }
 
@@ -7629,13 +7641,41 @@ type QueryResultMetadata struct {
 
 	// An unbounded measure of the relevance of a particular result, dependent on the query and matching document. A higher
 	// score indicates a greater match to the query parameters.
-	Score *float64 `json:"score,omitempty"`
+	Score *float64 `json:"score" validate:"required"`
 
-	// The confidence score for the given result. Calculated based on how relevant the result is estimated to be, compared
-	// to a trained relevancy model. confidence can range from `0.0` to `1.0`. The higher the number, the more relevant the
-	// document.
-	Confidence *float64 `json:"confidence,omitempty"`
+	// The confidence score for the given result. Calculated based on how relevant the result is estimated to be.
+	// confidence can range from `0.0` to `1.0`. The higher the number, the more relevant the document. The `confidence`
+	// value for a result was calculated using the model specified in the `document_retrieval_strategy` field of the result
+	// set.
+	Confidence *float64 `json:"confidence" validate:"required"`
 }
+
+// RetrievalDetails : An object contain retrieval type information.
+type RetrievalDetails struct {
+
+	// Indentifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results
+	// were returned using a relevancy trained model. `continuous_relevancy_training` indicates that the results were
+	// returned using the continuous relevancy training model created by result feedback analysis. `untrained` means the
+	// results were returned using the standard untrained model.
+	//
+	//  **Note**: In the event of trained collections being queried, but the trained model is not used to return results,
+	// the **document_retrieval_strategy** will be listed as `untrained`.
+	DocumentRetrievalStrategy *string `json:"document_retrieval_strategy,omitempty"`
+}
+
+// Constants associated with the RetrievalDetails.DocumentRetrievalStrategy property.
+// Indentifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results were
+// returned using a relevancy trained model. `continuous_relevancy_training` indicates that the results were returned
+// using the continuous relevancy training model created by result feedback analysis. `untrained` means the results were
+// returned using the standard untrained model.
+//
+//  **Note**: In the event of trained collections being queried, but the trained model is not used to return results,
+// the **document_retrieval_strategy** will be listed as `untrained`.
+const (
+	RetrievalDetails_DocumentRetrievalStrategy_ContinuousRelevancyTraining = "continuous_relevancy_training"
+	RetrievalDetails_DocumentRetrievalStrategy_RelevancyTraining           = "relevancy_training"
+	RetrievalDetails_DocumentRetrievalStrategy_Untrained                   = "untrained"
+)
 
 // SearchStatus : Information about the Continuous Relevancy Training for this environment.
 type SearchStatus struct {
@@ -7656,11 +7696,11 @@ type SearchStatus struct {
 // Constants associated with the SearchStatus.Status property.
 // The current status of Continuous Relevancy Training for this environment.
 const (
-	SearchStatus_Status_INSUFFICENTDATA = "INSUFFICENT_DATA"
-	SearchStatus_Status_NOTAPPLICABLE   = "NOT_APPLICABLE"
-	SearchStatus_Status_NODATA          = "NO_DATA"
-	SearchStatus_Status_TRAINED         = "TRAINED"
-	SearchStatus_Status_TRAINING        = "TRAINING"
+	SearchStatus_Status_InsufficentData = "INSUFFICENT_DATA"
+	SearchStatus_Status_NoData          = "NO_DATA"
+	SearchStatus_Status_NotApplicable   = "NOT_APPLICABLE"
+	SearchStatus_Status_Trained         = "TRAINED"
+	SearchStatus_Status_Training        = "TRAINING"
 )
 
 // SegmentSettings : A list of Document Segmentation settings.
@@ -7966,16 +8006,16 @@ type TestDocument struct {
 type TokenDictRule struct {
 
 	// The string to tokenize.
-	Text *string `json:"text,omitempty"`
+	Text *string `json:"text" validate:"required"`
 
 	// Array of tokens that the `text` field is split into when found.
-	Tokens []string `json:"tokens,omitempty"`
+	Tokens []string `json:"tokens" validate:"required"`
 
 	// Array of tokens that represent the content of the `text` field in an alternate character set.
 	Readings []string `json:"readings,omitempty"`
 
 	// The part of speech that the `text` string belongs to. For example `noun`. Custom parts of speech can be specified.
-	PartOfSpeech *string `json:"part_of_speech,omitempty"`
+	PartOfSpeech *string `json:"part_of_speech" validate:"required"`
 }
 
 // TokenDictStatusResponse : Object describing the current status of the tokenization dictionary.
@@ -8142,7 +8182,7 @@ type UpdateConfigurationOptions struct {
 	// The description of the configuration, if available.
 	Description *string `json:"description,omitempty"`
 
-	// The document conversion settings for the configuration.
+	// Document conversion settings.
 	Conversions *Conversions `json:"conversions,omitempty"`
 
 	// An array of document enrichment settings for the configuration.
@@ -8412,12 +8452,12 @@ type UpdateEnvironmentOptions struct {
 const (
 	UpdateEnvironmentOptions_Size_L    = "L"
 	UpdateEnvironmentOptions_Size_M    = "M"
-	UpdateEnvironmentOptions_Size_ML   = "ML"
-	UpdateEnvironmentOptions_Size_MS   = "MS"
+	UpdateEnvironmentOptions_Size_Ml   = "ML"
+	UpdateEnvironmentOptions_Size_Ms   = "MS"
 	UpdateEnvironmentOptions_Size_S    = "S"
-	UpdateEnvironmentOptions_Size_XL   = "XL"
-	UpdateEnvironmentOptions_Size_XXL  = "XXL"
-	UpdateEnvironmentOptions_Size_XXXL = "XXXL"
+	UpdateEnvironmentOptions_Size_Xl   = "XL"
+	UpdateEnvironmentOptions_Size_Xxl  = "XXL"
+	UpdateEnvironmentOptions_Size_Xxxl = "XXXL"
 )
 
 // NewUpdateEnvironmentOptions : Instantiate UpdateEnvironmentOptions

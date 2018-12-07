@@ -58,7 +58,7 @@ func TestVoice(t *testing.T) {
 	// Get voice
 	response, responseErr = service.GetVoice(
 		&texttospeechv1.GetVoiceOptions{
-			Voice: core.StringPtr(texttospeechv1.GetVoiceOptions_Voice_EnUSAllisonVoice),
+			Voice: core.StringPtr(texttospeechv1.GetVoiceOptions_Voice_EnUsAllisonvoice),
 		},
 	)
 
@@ -72,7 +72,7 @@ func TestSynthesize(t *testing.T) {
 		&texttospeechv1.SynthesizeOptions{
 			Text:   core.StringPtr("Hello world"),
 			Accept: core.StringPtr(texttospeechv1.SynthesizeOptions_Accept_AudioWav),
-			Voice:  core.StringPtr(texttospeechv1.SynthesizeOptions_Voice_EnUSAllisonVoice),
+			Voice:  core.StringPtr(texttospeechv1.SynthesizeOptions_Voice_EnUsAllisonvoice),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -86,7 +86,7 @@ func TestPronunciation(t *testing.T) {
 	response, responseErr := service.GetPronunciation(
 		&texttospeechv1.GetPronunciationOptions{
 			Text:   core.StringPtr("IEEE"),
-			Voice:  core.StringPtr(texttospeechv1.GetPronunciationOptions_Voice_EnUSAllisonVoice),
+			Voice:  core.StringPtr(texttospeechv1.GetPronunciationOptions_Voice_EnUsAllisonvoice),
 			Format: core.StringPtr("ibm"),
 		},
 	)
@@ -101,7 +101,7 @@ func TestVoiceModel(t *testing.T) {
 	response, responseErr := service.CreateVoiceModel(
 		&texttospeechv1.CreateVoiceModelOptions{
 			Name:        core.StringPtr("First model for GO"),
-			Language:    core.StringPtr(texttospeechv1.CreateVoiceModelOptions_Language_EnUS),
+			Language:    core.StringPtr(texttospeechv1.CreateVoiceModelOptions_Language_EnUs),
 			Description: core.StringPtr("First custom voice model"),
 		},
 	)

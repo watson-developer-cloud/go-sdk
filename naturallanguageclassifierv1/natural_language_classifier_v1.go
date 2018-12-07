@@ -511,8 +511,8 @@ type CreateClassifierOptions struct {
 	// The filename for trainingMetadata.
 	MetadataFilename *string `json:"metadata_filename,omitempty"`
 
-	// Training data in CSV format. Each text value must have at least one class. The data can include up to 20,000
-	// records. For details, see [Data
+	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
+	// and 20,000 records. For details, see [Data
 	// preparation](https://console.bluemix.net/docs/services/natural-language-classifier/using-your-data.html).
 	TrainingData *os.File `json:"training_data" validate:"required"`
 

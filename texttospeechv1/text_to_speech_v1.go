@@ -82,7 +82,7 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) 
 // about the voice. Specify a customization ID to obtain information for that custom voice model of the specified voice.
 // To list information about all available voices, use the **List voices** method.
 //
-// **See also:** [Specifying a voice](https://console.bluemix.net/docs/services/text-to-speech/http.html#voices).
+// **See also:** [Specifying a voice](/docs/services/text-to-speech/http.html#voices).
 func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceOptions, "getVoiceOptions cannot be nil"); err != nil {
 		return nil, err
@@ -128,7 +128,7 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedRes
 // Lists all voices available for use with the service. The information includes the name, language, gender, and other
 // details about the voice. To see information about a specific voice, use the **Get a voice** method.
 //
-// **See also:** [Specifying a voice](https://console.bluemix.net/docs/services/text-to-speech/http.html#voices).
+// **See also:** [Specifying a voice](/docs/services/text-to-speech/http.html#voices).
 func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoicesOptions, "listVoicesOptions"); err != nil {
 		return nil, err
@@ -164,17 +164,77 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 }
 
 // Synthesize : Synthesize audio
-// Synthesizes text to spoken audio, returning the synthesized audio stream as an array of bytes. You can pass a maximum
-// of 5 KB of text.  Use the `Accept` header or the `accept` query parameter to specify the requested format (MIME type)
-// of the response audio. By default, the service uses `audio/ogg;codecs=opus`.
+// Synthesizes text to audio that is spoken in the specified voice. The service bases its understanding of the language
+// for the input text on the specified voice. Use a voice that matches the language of the input text.
 //
-// If a request includes invalid query parameters, the service returns a `Warnings` response header that provides
+// The service returns the synthesized audio stream as an array of bytes. You can pass a maximum of 5 KB of text to the
+// service.
+//
+// **See also:** [Synthesizing text to audio](/docs/services/text-to-speech/http.html#synthesize).
+//
+// ### Audio formats (accept types)
+//
+//  The service can return audio in the following formats (MIME types).
+// * Where indicated, you can optionally specify the sampling rate (`rate`) of the audio. You must specify a sampling
+// rate for the `audio/l16` and `audio/mulaw` formats. A specified sampling rate must lie in the range of 8 kHz to 192
+// kHz.
+// * For the `audio/l16` format, you can optionally specify the endianness (`endianness`) of the audio:
+// `endianness=big-endian` or `endianness=little-endian`.
+//
+// Use the `Accept` header or the `accept` parameter to specify the requested format of the response audio. If you omit
+// an audio format altogether, the service returns the audio in Ogg format with the Opus codec
+// (`audio/ogg;codecs=opus`). The service always returns single-channel audio.
+// * `audio/basic`
+//
+//   The service returns audio with a sampling rate of 8000 Hz.
+// * `audio/flac`
+//
+//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/l16`
+//
+//   You must specify the `rate` of the audio. You can optionally specify the `endianness` of the audio. The default
+// endianness is `little-endian`.
+// * `audio/mp3`
+//
+//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/mpeg`
+//
+//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/mulaw`
+//
+//   You must specify the `rate` of the audio.
+// * `audio/ogg`
+//
+//   The service returns the audio in the `vorbis` codec. You can optionally specify the `rate` of the audio. The
+// default sampling rate is 22,050 Hz.
+// * `audio/ogg;codecs=opus`
+//
+//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/ogg;codecs=vorbis`
+//
+//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/wav`
+//
+//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/webm`
+//
+//   The service returns the audio in the `opus` codec. The service returns audio with a sampling rate of 48,000 Hz.
+// * `audio/webm;codecs=opus`
+//
+//   The service returns audio with a sampling rate of 48,000 Hz.
+// * `audio/webm;codecs=vorbis`
+//
+//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+//
+// For more information about specifying an audio format, including additional details about some of the formats, see
+// [Specifying an audio format](/docs/services/text-to-speech/http.html#format).
+//
+// ### Warning messages
+//
+//  If a request includes invalid query parameters, the service returns a `Warnings` response header that provides
 // messages about the invalid parameters. The warning includes a descriptive message and a list of invalid argument
 // strings. For example, a message such as `\"Unknown arguments:\"` or `\"Unknown url query arguments:\"` followed by a
-// list of the form `\"invalid_arg_1, invalid_arg_2.\"` The request succeeds despite the warnings.
-//
-// **See also:** [Synthesizing text to
-// audio](https://console.bluemix.net/docs/services/text-to-speech/http.html#synthesize).
+// list of the form `\"{invalid_arg_1}, {invalid_arg_2}.\"` The request succeeds despite the warnings.
 func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(synthesizeOptions, "synthesizeOptions cannot be nil"); err != nil {
 		return nil, err
@@ -240,7 +300,7 @@ func (textToSpeech *TextToSpeechV1) GetSynthesizeResult(response *core.DetailedR
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying a word from a
-// language](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordsQueryLanguage).
+// language](/docs/services/text-to-speech/custom-entries.html#cuWordsQueryLanguage).
 func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getPronunciationOptions, "getPronunciationOptions cannot be nil"); err != nil {
 		return nil, err
@@ -296,8 +356,7 @@ func (textToSpeech *TextToSpeechV1) GetGetPronunciationResult(response *core.Det
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Creating a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsCreate).
+// **See also:** [Creating a custom model](/docs/services/text-to-speech/custom-models.html#cuModelsCreate).
 func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createVoiceModelOptions, "createVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -357,8 +416,7 @@ func (textToSpeech *TextToSpeechV1) GetCreateVoiceModelResult(response *core.Det
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Deleting a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsDelete).
+// **See also:** [Deleting a custom model](/docs/services/text-to-speech/custom-models.html#cuModelsDelete).
 func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -393,8 +451,7 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Querying a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsQuery).
+// **See also:** [Querying a custom model](/docs/services/text-to-speech/custom-models.html#cuModelsQuery).
 func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -440,8 +497,7 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.Detail
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Querying all custom
-// models](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsQueryAll).
+// **See also:** [Querying all custom models](/docs/services/text-to-speech/custom-models.html#cuModelsQueryAll).
 func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoiceModelsOptions, "listVoiceModelsOptions"); err != nil {
 		return nil, err
@@ -499,11 +555,9 @@ func (textToSpeech *TextToSpeechV1) GetListVoiceModelsResult(response *core.Deta
 // **Note:** This method is currently a beta release.
 //
 // **See also:**
-// * [Updating a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-models.html#cuModelsUpdate)
-// * [Adding words to a Japanese custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-// * [Understanding customization](https://console.bluemix.net/docs/services/text-to-speech/custom-intro.html).
+// * [Updating a custom model](/docs/services/text-to-speech/custom-models.html#cuModelsUpdate)
+// * [Adding words to a Japanese custom model](/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Understanding customization](/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateVoiceModelOptions, "updateVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -566,11 +620,9 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 // **Note:** This method is currently a beta release.
 //
 // **See also:**
-// * [Adding a single word to a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordAdd)
-// * [Adding words to a Japanese custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-// * [Understanding customization](https://console.bluemix.net/docs/services/text-to-speech/custom-intro.html).
+// * [Adding a single word to a custom model](/docs/services/text-to-speech/custom-entries.html#cuWordAdd)
+// * [Adding words to a Japanese custom model](/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Understanding customization](/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -630,11 +682,9 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 // **Note:** This method is currently a beta release.
 //
 // **See also:**
-// * [Adding multiple words to a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordsAdd)
-// * [Adding words to a Japanese custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-// * [Understanding customization](https://console.bluemix.net/docs/services/text-to-speech/custom-intro.html).
+// * [Adding multiple words to a custom model](/docs/services/text-to-speech/custom-entries.html#cuWordsAdd)
+// * [Adding words to a Japanese custom model](/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Understanding customization](/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -679,8 +729,7 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Deleting a word from a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordDelete).
+// **See also:** [Deleting a word from a custom model](/docs/services/text-to-speech/custom-entries.html#cuWordDelete).
 func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -715,7 +764,7 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying a single word from a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordQueryModel).
+// model](/docs/services/text-to-speech/custom-entries.html#cuWordQueryModel).
 func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
 		return nil, err
@@ -761,7 +810,7 @@ func (textToSpeech *TextToSpeechV1) GetGetWordResult(response *core.DetailedResp
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying all words from a custom
-// model](https://console.bluemix.net/docs/services/text-to-speech/custom-entries.html#cuWordsQueryModel).
+// model](/docs/services/text-to-speech/custom-entries.html#cuWordsQueryModel).
 func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -807,8 +856,7 @@ func (textToSpeech *TextToSpeechV1) GetListWordsResult(response *core.DetailedRe
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
 //
-// **See also:** [Information
-// security](https://console.bluemix.net/docs/services/text-to-speech/information-security.html).
+// **See also:** [Information security](/docs/services/text-to-speech/information-security.html).
 func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -856,7 +904,7 @@ type AddWordOptions struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+	// Japanese entries](/docs/services/text-to-speech/custom-rules.html#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -867,7 +915,7 @@ type AddWordOptions struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+// Japanese entries](/docs/services/text-to-speech/custom-rules.html#jaNotes).
 const (
 	AddWordOptions_PartOfSpeech_Dosi = "Dosi"
 	AddWordOptions_PartOfSpeech_Fuku = "Fuku"
@@ -989,16 +1037,16 @@ type CreateVoiceModelOptions struct {
 // Constants associated with the CreateVoiceModelOptions.Language property.
 // The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
 const (
-	CreateVoiceModelOptions_Language_DeDE = "de-DE"
-	CreateVoiceModelOptions_Language_EnGB = "en-GB"
-	CreateVoiceModelOptions_Language_EnUS = "en-US"
-	CreateVoiceModelOptions_Language_EsES = "es-ES"
-	CreateVoiceModelOptions_Language_EsLA = "es-LA"
-	CreateVoiceModelOptions_Language_EsUS = "es-US"
-	CreateVoiceModelOptions_Language_FrFR = "fr-FR"
-	CreateVoiceModelOptions_Language_ItIT = "it-IT"
-	CreateVoiceModelOptions_Language_JaJP = "ja-JP"
-	CreateVoiceModelOptions_Language_PtBR = "pt-BR"
+	CreateVoiceModelOptions_Language_DeDe = "de-DE"
+	CreateVoiceModelOptions_Language_EnGb = "en-GB"
+	CreateVoiceModelOptions_Language_EnUs = "en-US"
+	CreateVoiceModelOptions_Language_EsEs = "es-ES"
+	CreateVoiceModelOptions_Language_EsLa = "es-LA"
+	CreateVoiceModelOptions_Language_EsUs = "es-US"
+	CreateVoiceModelOptions_Language_FrFr = "fr-FR"
+	CreateVoiceModelOptions_Language_ItIt = "it-IT"
+	CreateVoiceModelOptions_Language_JaJp = "ja-JP"
+	CreateVoiceModelOptions_Language_PtBr = "pt-BR"
 )
 
 // NewCreateVoiceModelOptions : Instantiate CreateVoiceModelOptions
@@ -1160,20 +1208,20 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
-	GetPronunciationOptions_Voice_DeDEBirgitVoice    = "de-DE_BirgitVoice"
-	GetPronunciationOptions_Voice_DeDEDieterVoice    = "de-DE_DieterVoice"
-	GetPronunciationOptions_Voice_EnGBKateVoice      = "en-GB_KateVoice"
-	GetPronunciationOptions_Voice_EnUSAllisonVoice   = "en-US_AllisonVoice"
-	GetPronunciationOptions_Voice_EnUSLisaVoice      = "en-US_LisaVoice"
-	GetPronunciationOptions_Voice_EnUSMichaelVoice   = "en-US_MichaelVoice"
-	GetPronunciationOptions_Voice_EsESEnriqueVoice   = "es-ES_EnriqueVoice"
-	GetPronunciationOptions_Voice_EsESLauraVoice     = "es-ES_LauraVoice"
-	GetPronunciationOptions_Voice_EsLASofiaVoice     = "es-LA_SofiaVoice"
-	GetPronunciationOptions_Voice_EsUSSofiaVoice     = "es-US_SofiaVoice"
-	GetPronunciationOptions_Voice_FrFRReneeVoice     = "fr-FR_ReneeVoice"
-	GetPronunciationOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
-	GetPronunciationOptions_Voice_JaJPEmiVoice       = "ja-JP_EmiVoice"
-	GetPronunciationOptions_Voice_PtBRIsabelaVoice   = "pt-BR_IsabelaVoice"
+	GetPronunciationOptions_Voice_DeDeBirgitvoice    = "de-DE_BirgitVoice"
+	GetPronunciationOptions_Voice_DeDeDietervoice    = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_EnGbKatevoice      = "en-GB_KateVoice"
+	GetPronunciationOptions_Voice_EnUsAllisonvoice   = "en-US_AllisonVoice"
+	GetPronunciationOptions_Voice_EnUsLisavoice      = "en-US_LisaVoice"
+	GetPronunciationOptions_Voice_EnUsMichaelvoice   = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EsEsEnriquevoice   = "es-ES_EnriqueVoice"
+	GetPronunciationOptions_Voice_EsEsLauravoice     = "es-ES_LauraVoice"
+	GetPronunciationOptions_Voice_EsLaSofiavoice     = "es-LA_SofiaVoice"
+	GetPronunciationOptions_Voice_EsUsSofiavoice     = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFrReneevoice     = "fr-FR_ReneeVoice"
+	GetPronunciationOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
+	GetPronunciationOptions_Voice_JaJpEmivoice       = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_PtBrIsabelavoice   = "pt-BR_IsabelaVoice"
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
@@ -1269,20 +1317,20 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
-	GetVoiceOptions_Voice_DeDEBirgitVoice    = "de-DE_BirgitVoice"
-	GetVoiceOptions_Voice_DeDEDieterVoice    = "de-DE_DieterVoice"
-	GetVoiceOptions_Voice_EnGBKateVoice      = "en-GB_KateVoice"
-	GetVoiceOptions_Voice_EnUSAllisonVoice   = "en-US_AllisonVoice"
-	GetVoiceOptions_Voice_EnUSLisaVoice      = "en-US_LisaVoice"
-	GetVoiceOptions_Voice_EnUSMichaelVoice   = "en-US_MichaelVoice"
-	GetVoiceOptions_Voice_EsESEnriqueVoice   = "es-ES_EnriqueVoice"
-	GetVoiceOptions_Voice_EsESLauraVoice     = "es-ES_LauraVoice"
-	GetVoiceOptions_Voice_EsLASofiaVoice     = "es-LA_SofiaVoice"
-	GetVoiceOptions_Voice_EsUSSofiaVoice     = "es-US_SofiaVoice"
-	GetVoiceOptions_Voice_FrFRReneeVoice     = "fr-FR_ReneeVoice"
-	GetVoiceOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
-	GetVoiceOptions_Voice_JaJPEmiVoice       = "ja-JP_EmiVoice"
-	GetVoiceOptions_Voice_PtBRIsabelaVoice   = "pt-BR_IsabelaVoice"
+	GetVoiceOptions_Voice_DeDeBirgitvoice    = "de-DE_BirgitVoice"
+	GetVoiceOptions_Voice_DeDeDietervoice    = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_EnGbKatevoice      = "en-GB_KateVoice"
+	GetVoiceOptions_Voice_EnUsAllisonvoice   = "en-US_AllisonVoice"
+	GetVoiceOptions_Voice_EnUsLisavoice      = "en-US_LisaVoice"
+	GetVoiceOptions_Voice_EnUsMichaelvoice   = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EsEsEnriquevoice   = "es-ES_EnriqueVoice"
+	GetVoiceOptions_Voice_EsEsLauravoice     = "es-ES_LauraVoice"
+	GetVoiceOptions_Voice_EsLaSofiavoice     = "es-LA_SofiaVoice"
+	GetVoiceOptions_Voice_EsUsSofiavoice     = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFrReneevoice     = "fr-FR_ReneeVoice"
+	GetVoiceOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
+	GetVoiceOptions_Voice_JaJpEmivoice       = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_PtBrIsabelavoice   = "pt-BR_IsabelaVoice"
 )
 
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
@@ -1365,16 +1413,16 @@ type ListVoiceModelsOptions struct {
 // The language for which custom voice models that are owned by the requesting service credentials are to be returned.
 // Omit the parameter to see all custom voice models that are owned by the requester.
 const (
-	ListVoiceModelsOptions_Language_DeDE = "de-DE"
-	ListVoiceModelsOptions_Language_EnGB = "en-GB"
-	ListVoiceModelsOptions_Language_EnUS = "en-US"
-	ListVoiceModelsOptions_Language_EsES = "es-ES"
-	ListVoiceModelsOptions_Language_EsLA = "es-LA"
-	ListVoiceModelsOptions_Language_EsUS = "es-US"
-	ListVoiceModelsOptions_Language_FrFR = "fr-FR"
-	ListVoiceModelsOptions_Language_ItIT = "it-IT"
-	ListVoiceModelsOptions_Language_JaJP = "ja-JP"
-	ListVoiceModelsOptions_Language_PtBR = "pt-BR"
+	ListVoiceModelsOptions_Language_DeDe = "de-DE"
+	ListVoiceModelsOptions_Language_EnGb = "en-GB"
+	ListVoiceModelsOptions_Language_EnUs = "en-US"
+	ListVoiceModelsOptions_Language_EsEs = "es-ES"
+	ListVoiceModelsOptions_Language_EsLa = "es-LA"
+	ListVoiceModelsOptions_Language_EsUs = "es-US"
+	ListVoiceModelsOptions_Language_FrFr = "fr-FR"
+	ListVoiceModelsOptions_Language_ItIt = "it-IT"
+	ListVoiceModelsOptions_Language_JaJp = "ja-JP"
+	ListVoiceModelsOptions_Language_PtBr = "pt-BR"
 )
 
 // NewListVoiceModelsOptions : Instantiate ListVoiceModelsOptions
@@ -1450,7 +1498,7 @@ type Pronunciation struct {
 	Pronunciation *string `json:"pronunciation" validate:"required"`
 }
 
-// SupportedFeatures : SupportedFeatures struct
+// SupportedFeatures : Describes the additional service features that are supported with the voice.
 type SupportedFeatures struct {
 
 	// If `true`, the voice can be customized; if `false`, the voice cannot be customized. (Same as `customizable`.).
@@ -1467,11 +1515,11 @@ type SynthesizeOptions struct {
 	// The text to synthesize.
 	Text *string `json:"text" validate:"required"`
 
-	// The requested audio format (MIME type) of the audio. You can use the `Accept` header or the `accept` query parameter
-	// to specify the audio format. (For the `audio/l16` format, you can optionally specify `endianness=big-endian` or
-	// `endianness=little-endian`; the default is little endian.) For detailed information about the supported audio
-	// formats and sampling rates, see [Specifying an audio
-	// format](https://console.bluemix.net/docs/services/text-to-speech/http.html#format).
+	// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
+	// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
+	// method description.
+	//
+	// Default: `audio/ogg;codecs=opus`.
 	Accept *string `json:"Accept,omitempty"`
 
 	// The voice to use for synthesis.
@@ -1488,18 +1536,18 @@ type SynthesizeOptions struct {
 }
 
 // Constants associated with the SynthesizeOptions.Accept property.
-// The requested audio format (MIME type) of the audio. You can use the `Accept` header or the `accept` query parameter
-// to specify the audio format. (For the `audio/l16` format, you can optionally specify `endianness=big-endian` or
-// `endianness=little-endian`; the default is little endian.) For detailed information about the supported audio formats
-// and sampling rates, see [Specifying an audio
-// format](https://console.bluemix.net/docs/services/text-to-speech/http.html#format).
+// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
+// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
+// method description.
+//
+// Default: `audio/ogg;codecs=opus`.
 const (
 	SynthesizeOptions_Accept_AudioBasic            = "audio/basic"
 	SynthesizeOptions_Accept_AudioFlac             = "audio/flac"
-	SynthesizeOptions_Accept_AudioL16RateNnnn      = "audio/l16;rate=nnnn"
+	SynthesizeOptions_Accept_AudioL16              = "audio/l16"
 	SynthesizeOptions_Accept_AudioMp3              = "audio/mp3"
 	SynthesizeOptions_Accept_AudioMpeg             = "audio/mpeg"
-	SynthesizeOptions_Accept_AudioMulawRateNnnn    = "audio/mulaw;rate=nnnn"
+	SynthesizeOptions_Accept_AudioMulaw            = "audio/mulaw"
 	SynthesizeOptions_Accept_AudioOgg              = "audio/ogg"
 	SynthesizeOptions_Accept_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
 	SynthesizeOptions_Accept_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
@@ -1512,20 +1560,20 @@ const (
 // Constants associated with the SynthesizeOptions.Voice property.
 // The voice to use for synthesis.
 const (
-	SynthesizeOptions_Voice_DeDEBirgitVoice    = "de-DE_BirgitVoice"
-	SynthesizeOptions_Voice_DeDEDieterVoice    = "de-DE_DieterVoice"
-	SynthesizeOptions_Voice_EnGBKateVoice      = "en-GB_KateVoice"
-	SynthesizeOptions_Voice_EnUSAllisonVoice   = "en-US_AllisonVoice"
-	SynthesizeOptions_Voice_EnUSLisaVoice      = "en-US_LisaVoice"
-	SynthesizeOptions_Voice_EnUSMichaelVoice   = "en-US_MichaelVoice"
-	SynthesizeOptions_Voice_EsESEnriqueVoice   = "es-ES_EnriqueVoice"
-	SynthesizeOptions_Voice_EsESLauraVoice     = "es-ES_LauraVoice"
-	SynthesizeOptions_Voice_EsLASofiaVoice     = "es-LA_SofiaVoice"
-	SynthesizeOptions_Voice_EsUSSofiaVoice     = "es-US_SofiaVoice"
-	SynthesizeOptions_Voice_FrFRReneeVoice     = "fr-FR_ReneeVoice"
-	SynthesizeOptions_Voice_ItITFrancescaVoice = "it-IT_FrancescaVoice"
-	SynthesizeOptions_Voice_JaJPEmiVoice       = "ja-JP_EmiVoice"
-	SynthesizeOptions_Voice_PtBRIsabelaVoice   = "pt-BR_IsabelaVoice"
+	SynthesizeOptions_Voice_DeDeBirgitvoice    = "de-DE_BirgitVoice"
+	SynthesizeOptions_Voice_DeDeDietervoice    = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_EnGbKatevoice      = "en-GB_KateVoice"
+	SynthesizeOptions_Voice_EnUsAllisonvoice   = "en-US_AllisonVoice"
+	SynthesizeOptions_Voice_EnUsLisavoice      = "en-US_LisaVoice"
+	SynthesizeOptions_Voice_EnUsMichaelvoice   = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EsEsEnriquevoice   = "es-ES_EnriqueVoice"
+	SynthesizeOptions_Voice_EsEsLauravoice     = "es-ES_LauraVoice"
+	SynthesizeOptions_Voice_EsLaSofiavoice     = "es-LA_SofiaVoice"
+	SynthesizeOptions_Voice_EsUsSofiavoice     = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFrReneevoice     = "fr-FR_ReneeVoice"
+	SynthesizeOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
+	SynthesizeOptions_Voice_JaJpEmivoice       = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_PtBrIsabelavoice   = "pt-BR_IsabelaVoice"
 )
 
 // NewSynthesizeOptions : Instantiate SynthesizeOptions
@@ -1576,7 +1624,7 @@ type Translation struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+	// Japanese entries](/docs/services/text-to-speech/custom-rules.html#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 }
 
@@ -1584,7 +1632,7 @@ type Translation struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+// Japanese entries](/docs/services/text-to-speech/custom-rules.html#jaNotes).
 const (
 	Translation_PartOfSpeech_Dosi = "Dosi"
 	Translation_PartOfSpeech_Fuku = "Fuku"
@@ -1685,7 +1733,7 @@ type Voice struct {
 	// maintained for backward compatibility.).
 	Customizable *bool `json:"customizable" validate:"required"`
 
-	// Describes the additional service features supported with the voice.
+	// Describes the additional service features that are supported with the voice.
 	SupportedFeatures *SupportedFeatures `json:"supported_features" validate:"required"`
 
 	// Returns information about a specified custom voice model. This field is returned only by the **Get a voice** method
@@ -1758,7 +1806,7 @@ type Word struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+	// Japanese entries](/docs/services/text-to-speech/custom-rules.html#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 }
 
@@ -1766,7 +1814,7 @@ type Word struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://console.bluemix.net/docs/services/text-to-speech/custom-rules.html#jaNotes).
+// Japanese entries](/docs/services/text-to-speech/custom-rules.html#jaNotes).
 const (
 	Word_PartOfSpeech_Dosi = "Dosi"
 	Word_PartOfSpeech_Fuku = "Fuku"
