@@ -219,7 +219,7 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 
 	builder.AddFormData("name", "", "", fmt.Sprint(*createClassifierOptions.Name))
 	for key, value := range createClassifierOptions.PositiveExamples {
-		partName := core.CreateFormPartName("{classname}_positive_examples", "classname", key)
+		partName := fmt.Sprintf("%s_positive_examples", key)
 		builder.AddFormData(partName, core.StringNilMapper(createClassifierOptions.PositiveExamplesFilename[key]), "application/octet-stream", value)
 	}
 	if createClassifierOptions.NegativeExamples != nil {
@@ -390,7 +390,7 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	for key, value := range updateClassifierOptions.PositiveExamples {
-		partName := core.CreateFormPartName("{classname}_positive_examples", "classname", key)
+		partName := fmt.Sprintf("%s_positive_examples", key)
 		builder.AddFormData(partName, core.StringNilMapper(updateClassifierOptions.PositiveExamplesFilename[key]), "application/octet-stream", value)
 	}
 	if updateClassifierOptions.NegativeExamples != nil {
@@ -449,8 +449,8 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 }
 
 // GetGetCoreMlModelResult : Retrieve result of GetCoreMlModel operation
-func (visualRecognition *VisualRecognitionV3) GetGetCoreMlModelResult(response *core.DetailedResponse) io.ReadCloser {
-	result, ok := response.Result.(io.ReadCloser)
+func (visualRecognition *VisualRecognitionV3) GetGetCoreMlModelResult(response *core.DetailedResponse) *io.ReadCloser {
+	result, ok := response.Result.(*io.ReadCloser)
 	if ok {
 		return result
 	}
@@ -510,11 +510,11 @@ type ClassResult struct {
 
 	// Confidence score for the property in the range of 0 to 1. A higher score indicates greater likelihood that the class
 	// is depicted in the image. The default threshold for returning scores from a classifier is 0.5.
-	Score *float32 `json:"score,omitempty"`
+	Score *float32 `json:"score" validate:"required"`
 
 	// Knowledge graph of the property. For example, `/fruit/pome/apple/eating apple/Granny Smith`. Included only if
 	// identified.
-	TypeHierarchy *string `json:"type_hierarchy,omitempty"`
+	TypeHierarchy *string `json:"type_hierarchy" validate:"required"`
 }
 
 // ClassifiedImage : Results for one image.
@@ -541,10 +541,10 @@ type ClassifiedImage struct {
 type ClassifiedImages struct {
 
 	// Number of custom classes identified in the images.
-	CustomClasses *int64 `json:"custom_classes,omitempty"`
+	CustomClasses *int64 `json:"custom_classes" validate:"required"`
 
 	// Number of images processed for the API call.
-	ImagesProcessed *int64 `json:"images_processed,omitempty"`
+	ImagesProcessed *int64 `json:"images_processed" validate:"required"`
 
 	// Classified images.
 	Images []ClassifiedImage `json:"images" validate:"required"`
@@ -964,7 +964,7 @@ func (options *DetectFacesOptions) SetHeaders(param map[string]string) *DetectFa
 type DetectedFaces struct {
 
 	// Number of images processed for the API call.
-	ImagesProcessed *int64 `json:"images_processed,omitempty"`
+	ImagesProcessed *int64 `json:"images_processed" validate:"required"`
 
 	// The images.
 	Images []ImageWithFaces `json:"images" validate:"required"`
@@ -1013,7 +1013,7 @@ type FaceAge struct {
 
 	// Confidence score in the range of 0 to 1. A higher score indicates greater confidence in the estimated value for the
 	// property.
-	Score *float32 `json:"score,omitempty"`
+	Score *float32 `json:"score" validate:"required"`
 }
 
 // FaceGender : Information about the gender of the face.
@@ -1024,7 +1024,7 @@ type FaceGender struct {
 
 	// Confidence score in the range of 0 to 1. A higher score indicates greater confidence in the estimated value for the
 	// property.
-	Score *float32 `json:"score,omitempty"`
+	Score *float32 `json:"score" validate:"required"`
 }
 
 // FaceLocation : The location of the bounding box around the face.

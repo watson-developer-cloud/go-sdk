@@ -110,7 +110,7 @@ func TestLanguageModel(t *testing.T) {
 	response, responseErr := service.CreateLanguageModel(
 		&speechtotextv1.CreateLanguageModelOptions{
 			Name:          core.StringPtr("First example language model for GO"),
-			BaseModelName: core.StringPtr(speechtotextv1.CreateLanguageModelOptions_BaseModelName_EnUSBroadbandModel),
+			BaseModelName: core.StringPtr(speechtotextv1.CreateLanguageModelOptions_BaseModelName_EnUsBroadbandmodel),
 			Description:   core.StringPtr("First custom language model example"),
 		},
 	)
@@ -269,7 +269,7 @@ func TestAcousticModel(t *testing.T) {
 	response, responseErr := service.CreateAcousticModel(
 		&speechtotextv1.CreateAcousticModelOptions{
 			Name:          core.StringPtr("First example acoustic model for GO"),
-			BaseModelName: core.StringPtr(speechtotextv1.CreateAcousticModelOptions_BaseModelName_EnUSBroadbandModel),
+			BaseModelName: core.StringPtr(speechtotextv1.CreateAcousticModelOptions_BaseModelName_EnUsBroadbandmodel),
 			Description:   core.StringPtr("First custom acoustic model example"),
 		},
 	)
