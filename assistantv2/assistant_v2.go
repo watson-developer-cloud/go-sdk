@@ -459,7 +459,7 @@ type MessageContext struct {
 // MessageContextGlobal : Contains information that can be shared by all skills within the Assistant.
 type MessageContextGlobal struct {
 
-	// Properties interpreted by the Assistant that are shared across all skills within the Assistant.
+	// Properties that are shared by all skills used by the assistant.
 	System *MessageContextGlobalSystem `json:"system,omitempty"`
 }
 
@@ -470,13 +470,21 @@ type MessageContextGlobalSystem struct {
 	Timezone *string `json:"timezone,omitempty"`
 
 	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
-	// identifier for each individual end user who accesses the application. This user ID may be used for billing and other
-	// purposes.
+	// identifier for each individual end user who accesses the application. For Plus and Premium plans, this user ID is
+	// used to identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab
+	// characters.
 	UserID *string `json:"user_id,omitempty"`
 
 	// A counter that is automatically incremented with each turn of the conversation. A value of 1 indicates that this is
 	// the the first turn of a new conversation, which can affect the behavior of some skills.
 	TurnCount *int64 `json:"turn_count,omitempty"`
+}
+
+// MessageContextSkill : Contains information specific to a particular skill within the Assistant.
+type MessageContextSkill struct {
+
+	// Arbitrary variables that can be read and written to by a particular skill within the Assistant.
+	UserDefined *string `json:"user_defined,omitempty"`
 }
 
 // MessageContextSkills : Contains information specific to particular skills within the Assistant.
@@ -493,7 +501,7 @@ type MessageInput struct {
 	// no longer than 2048 characters.
 	Text *string `json:"text,omitempty"`
 
-	// Properties that control how the assistant responds.
+	// Optional properties that control how the assistant responds.
 	Options *MessageInputOptions `json:"options,omitempty"`
 
 	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
@@ -546,7 +554,7 @@ type MessageOptions struct {
 	// Unique identifier of the session.
 	SessionID *string `json:"session_id" validate:"required"`
 
-	// An input object that includes the input text.
+	// The user input.
 	Input *MessageInput `json:"input,omitempty"`
 
 	// State information for the conversation.
@@ -646,8 +654,7 @@ type MessageResponse struct {
 	// Assistant output to be rendered or processed by the client.
 	Output *MessageOutput `json:"output" validate:"required"`
 
-	// The current session context. Included in the response if the `return_context` property of the message input was set
-	// to `true`.
+	// State information for the conversation.
 	Context *MessageContext `json:"context,omitempty"`
 }
 

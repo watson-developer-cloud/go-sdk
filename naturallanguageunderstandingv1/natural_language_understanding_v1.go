@@ -18,6 +18,7 @@ package naturallanguageunderstandingv1
  */
 
 import (
+	"github.com/go-openapi/strfmt"
 	core "github.com/watson-developer-cloud/go-sdk/core"
 )
 
@@ -26,7 +27,7 @@ import (
 // service cleans HTML content before analysis by default, so the results can ignore most advertisements and other
 // unwanted content.
 //
-// You can create [custom models](/docs/services/natural-language-understanding/customizing.html) with Watson Knowledge
+// You can create [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) with Watson Knowledge
 // Studio to detect custom entities and relations in Natural Language Understanding.
 //
 // Version: V1
@@ -69,9 +70,17 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 	return &NaturalLanguageUnderstandingV1{Service: service}, nil
 }
 
-// Analyze : Analyze text, HTML, or a public webpage
-// Analyzes text, HTML, or a public webpage with one or more text analysis features, including categories, concepts,
-// emotion, entities, keywords, metadata, relations, semantic roles, and sentiment.
+// Analyze : Analyze text
+// Analyzes text, HTML, or a public webpage for the following features:
+// - Categories
+// - Concepts
+// - Emotion
+// - Entities
+// - Keywords
+// - Metadata
+// - Relations
+// - Semantic roles
+// - Sentiment.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(analyzeOptions *AnalyzeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(analyzeOptions, "analyzeOptions cannot be nil"); err != nil {
 		return nil, err
@@ -188,8 +197,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetDeleteMod
 }
 
 // ListModels : List models
-// Lists available models for Relations and Entities features, including Watson Knowledge Studio custom models that you
-// have created and linked to your Natural Language Understanding service.
+// Lists Watson Knowledge Studio [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) that
+// are deployed to your Natural Language Understanding service.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
 		return nil, err
@@ -234,34 +243,36 @@ type AnalysisResults struct {
 	// Text that was used in the analysis.
 	AnalyzedText *string `json:"analyzed_text,omitempty"`
 
-	// URL that was used to retrieve HTML content.
+	// URL of the webpage that was analyzed.
 	RetrievedURL *string `json:"retrieved_url,omitempty"`
 
-	// API usage information for the request.
+	// Usage information.
 	Usage *Usage `json:"usage,omitempty"`
 
-	// The general concepts referenced or alluded to in the specified content.
+	// The general concepts referenced or alluded to in the analyzed text.
 	Concepts []ConceptsResult `json:"concepts,omitempty"`
 
-	// The important entities in the specified content.
+	// The entities detected in the analyzed text.
 	Entities []EntitiesResult `json:"entities,omitempty"`
 
-	// The important keywords in content organized by relevance.
+	// The keywords from the analyzed text.
 	Keywords []KeywordsResult `json:"keywords,omitempty"`
 
-	// The hierarchical 5-level taxonomy the content is categorized into.
+	// The categories that the service assigned to the analyzed text.
 	Categories []CategoriesResult `json:"categories,omitempty"`
 
-	// The anger, disgust, fear, joy, or sadness conveyed by the content.
+	// The detected anger, disgust, fear, joy, or sadness that is conveyed by the content. Emotion information can be
+	// returned for detected entities, keywords, or user-specified target phrases found in the text.
 	Emotion *EmotionResult `json:"emotion,omitempty"`
 
-	// The metadata holds author information, publication date and the title of the text/HTML content.
+	// The authors, publication date, title, prominent page image, and RSS/ATOM feeds of the webpage. Supports URL and HTML
+	// input types.
 	Metadata *MetadataResult `json:"metadata,omitempty"`
 
 	// The relationships between entities in the content.
 	Relations []RelationsResult `json:"relations,omitempty"`
 
-	// The subjects of actions and the objects the actions act upon.
+	// Sentences parsed into `subject`, `action`, and `object` form.
 	SemanticRoles []SemanticRolesResult `json:"semantic_roles,omitempty"`
 
 	// The sentiment of the content.
@@ -277,18 +288,19 @@ type AnalyzeOptions struct {
 	// The HTML file to analyze. One of the `text`, `html`, or `url` parameters is required.
 	HTML *string `json:"html,omitempty"`
 
-	// The web page to analyze. One of the `text`, `html`, or `url` parameters is required.
+	// The webpage to analyze. One of the `text`, `html`, or `url` parameters is required.
 	URL *string `json:"url,omitempty"`
 
-	// Specific features to analyze the document for.
+	// Analysis features and options.
 	Features *Features `json:"features" validate:"required"`
 
-	// Remove website elements, such as links, ads, etc.
+	// Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning, see the [Analyzing
+	// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html) documentation.
 	Clean *bool `json:"clean,omitempty"`
 
-	// An [XPath query](https://www.w3.org/TR/xpath/) to perform on `html` or `url` input. Results of the query will be
-	// appended to the cleaned webpage text before it is analyzed. To analyze only the results of the XPath query, set the
-	// `clean` parameter to `false`.
+	// An [XPath query](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html#xpath) to perform on `html`
+	// or `url` input. Results of the query will be appended to the cleaned webpage text before it is analyzed. To analyze
+	// only the results of the XPath query, set the `clean` parameter to `false`.
 	Xpath *string `json:"xpath,omitempty"`
 
 	// Whether to use raw HTML content if text cleaning fails.
@@ -394,12 +406,18 @@ type Author struct {
 //
 // Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 type CategoriesOptions struct {
+
+	// Maximum number of categories to return.
+	// Maximum value: **10**.
+	Limit *int64 `json:"limit,omitempty"`
 }
 
-// CategoriesResult : The hierarchical 5-level taxonomy the content is categorized into.
+// CategoriesResult : A categorization of the analyzed text.
 type CategoriesResult struct {
 
-	// The path to the category through the taxonomy hierarchy.
+	// The path to the category through the 5-level taxonomy hierarchy. For the complete list of categories, see the
+	// [Categories hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding/categories.html#categories-hierarchy)
+	// documentation.
 	Label *string `json:"label,omitempty"`
 
 	// Confidence score for the category classification. Higher values indicate greater confidence.
@@ -416,7 +434,7 @@ type ConceptsOptions struct {
 	Limit *int64 `json:"limit,omitempty"`
 }
 
-// ConceptsResult : The general concepts referenced or alluded to in the specified content.
+// ConceptsResult : The general concepts referenced or alluded to in the analyzed text.
 type ConceptsResult struct {
 
 	// Name of the concept.
@@ -478,10 +496,10 @@ type DisambiguationResult struct {
 	Subtype []string `json:"subtype,omitempty"`
 }
 
-// DocumentEmotionResults : An object containing the emotion results of a document.
+// DocumentEmotionResults : Emotion results for the document as a whole.
 type DocumentEmotionResults struct {
 
-	// An object containing the emotion results for the document.
+	// Emotion results for the document as a whole.
 	Emotion *EmotionScores `json:"emotion,omitempty"`
 }
 
@@ -513,10 +531,10 @@ type EmotionOptions struct {
 // returned for detected entities, keywords, or user-specified target phrases found in the text.
 type EmotionResult struct {
 
-	// The returned emotion results across the document.
+	// Emotion results for the document as a whole.
 	Document *DocumentEmotionResults `json:"document,omitempty"`
 
-	// The returned emotion results per specified target.
+	// Emotion results for specified targets.
 	Targets []TargetedEmotionResults `json:"targets,omitempty"`
 }
 
@@ -540,7 +558,7 @@ type EmotionScores struct {
 }
 
 // EntitiesOptions : Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-// subtypes](/docs/services/natural-language-understanding/entity-types.html).
+// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
 //
 // Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 // Arabic, Chinese, and Dutch custom models are also supported.
@@ -581,10 +599,10 @@ type EntitiesResult struct {
 	// How many times the entity was mentioned in the text.
 	Count *int64 `json:"count,omitempty"`
 
-	// Emotion analysis results for the entity, enabled with the "emotion" option.
+	// Emotion analysis results for the entity, enabled with the `emotion` option.
 	Emotion *EmotionScores `json:"emotion,omitempty"`
 
-	// Sentiment analysis results for the entity, enabled with the "sentiment" option.
+	// Sentiment analysis results for the entity, enabled with the `sentiment` option.
 	Sentiment *FeatureSentimentResults `json:"sentiment,omitempty"`
 
 	// Disambiguation information for the entity.
@@ -621,11 +639,11 @@ type Features struct {
 	// phrases specified in the targets parameter. You can analyze emotion for detected entities with `entities.emotion`
 	// and for keywords with `keywords.emotion`.
 	//
-	// Supported languages: English
+	// Supported languages: English.
 	Emotion *EmotionOptions `json:"emotion,omitempty"`
 
 	// Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-	// subtypes](/docs/services/natural-language-understanding/entity-types.html).
+	// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
 	//
 	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 	// Arabic, Chinese, and Dutch custom models are also supported.
@@ -642,7 +660,7 @@ type Features struct {
 
 	// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 	// might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-	// types](/docs/services/natural-language-understanding/relations.html).
+	// types](https://cloud.ibm.com/docs/services/natural-language-understanding/relations.html).
 	//
 	// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
 	// Portuguese custom models are also supported.
@@ -656,7 +674,7 @@ type Features struct {
 	// Analyzes the general sentiment of your content or the sentiment toward specific target phrases. You can analyze
 	// sentiment for detected entities with `entities.sentiment` and for keywords with `keywords.sentiment`.
 	//
-	//  Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish
+	//  Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish.
 	Sentiment *SentimentOptions `json:"sentiment,omitempty"`
 
 	// Returns a five-level taxonomy of the content. The top three categories are returned.
@@ -687,8 +705,11 @@ type KeywordsOptions struct {
 	Emotion *bool `json:"emotion,omitempty"`
 }
 
-// KeywordsResult : The most important keywords in the content, organized by relevance.
+// KeywordsResult : The important keywords in the content, organized by relevance.
 type KeywordsResult struct {
+
+	// Number of times the keyword appears in the analyzed text.
+	Count *int64 `json:"count,omitempty"`
 
 	// Relevance score from 0 to 1. Higher values indicate greater relevance.
 	Relevance *float64 `json:"relevance,omitempty"`
@@ -696,10 +717,10 @@ type KeywordsResult struct {
 	// The keyword text.
 	Text *string `json:"text,omitempty"`
 
-	// Emotion analysis results for the keyword, enabled with the "emotion" option.
+	// Emotion analysis results for the keyword, enabled with the `emotion` option.
 	Emotion *EmotionScores `json:"emotion,omitempty"`
 
-	// Sentiment analysis results for the keyword, enabled with the "sentiment" option.
+	// Sentiment analysis results for the keyword, enabled with the `sentiment` option.
 	Sentiment *FeatureSentimentResults `json:"sentiment,omitempty"`
 }
 
@@ -733,7 +754,8 @@ type ListModelsResults struct {
 type MetadataOptions struct {
 }
 
-// MetadataResult : The Authors, Publication Date, and Title of the document. Supports URL and HTML input types.
+// MetadataResult : The authors, publication date, title, prominent page image, and RSS/ATOM feeds of the webpage. Supports URL and HTML
+// input types.
 type MetadataResult struct {
 
 	// The authors of the document.
@@ -755,7 +777,7 @@ type MetadataResult struct {
 // Model : Model struct
 type Model struct {
 
-	// Shows as available if the model is ready for use.
+	// When the status is `available`, the model is ready to use.
 	Status *string `json:"status,omitempty"`
 
 	// Unique model ID.
@@ -766,6 +788,18 @@ type Model struct {
 
 	// Model description.
 	Description *string `json:"description,omitempty"`
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string `json:"workspace_id,omitempty"`
+
+	// The model version, if it was manually provided in Watson Knowledge Studio.
+	Version *string `json:"version,omitempty"`
+
+	// The description of the version, if it was manually provided in Watson Knowledge Studio.
+	VersionDescription *string `json:"version_description,omitempty"`
+
+	// A dateTime indicating when the model was created.
+	Created *strfmt.DateTime `json:"created,omitempty"`
 }
 
 // RelationArgument : RelationArgument struct
@@ -793,13 +827,13 @@ type RelationEntity struct {
 
 // RelationsOptions : Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 // might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-// types](/docs/services/natural-language-understanding/relations.html).
+// types](https://cloud.ibm.com/docs/services/natural-language-understanding/relations.html).
 //
 // Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
 // Portuguese custom models are also supported.
 type RelationsOptions struct {
 
-	// Enter a [custom model](/docs/services/natural-language-understanding/customizing.html) ID to override the default
+	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to override the default
 	// model.
 	Model *string `json:"model,omitempty"`
 }
@@ -816,7 +850,7 @@ type RelationsResult struct {
 	// The type of the relation.
 	Type *string `json:"type,omitempty"`
 
-	// The extracted relation objects from the text.
+	// Entity mentions that are involved in the relation.
 	Arguments []RelationArgument `json:"arguments,omitempty"`
 }
 
@@ -936,13 +970,13 @@ type SentimentResult struct {
 	Targets []TargetedSentimentResults `json:"targets,omitempty"`
 }
 
-// TargetedEmotionResults : An object containing the emotion results for the target.
+// TargetedEmotionResults : Emotion results for a specified target.
 type TargetedEmotionResults struct {
 
 	// Targeted text.
 	Text *string `json:"text,omitempty"`
 
-	// An object containing the emotion results for the target.
+	// The emotion results for the target.
 	Emotion *EmotionScores `json:"emotion,omitempty"`
 }
 

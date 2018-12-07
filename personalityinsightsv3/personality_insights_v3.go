@@ -32,12 +32,12 @@ import (
 // personality characteristics. The service can infer consumption preferences based on the results of its analysis and,
 // for JSON content that is timestamped, can report temporal behavior.
 // * For information about the meaning of the models that the service uses to describe personality characteristics, see
-// [Personality models](https://console.bluemix.net/docs/services/personality-insights/models.html).
+// [Personality models](https://cloud.ibm.com/docs/services/personality-insights/models.html).
 // * For information about the meaning of the consumption preferences, see [Consumption
-// preferences](https://console.bluemix.net/docs/services/personality-insights/preferences.html).
+// preferences](https://cloud.ibm.com/docs/services/personality-insights/preferences.html).
 //
-// **Note:** Request logging is disabled for the Personality Insights service. The service neither logs nor retains data
-// from requests and responses, regardless of whether the `X-Watson-Learning-Opt-Out` request header is set.
+// **Note:** Request logging is disabled for the Personality Insights service. Regardless of whether you set the
+// `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/personality-insights.html
@@ -81,22 +81,35 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 
 // Profile : Get profile
 // Generates a personality profile for the author of the input text. The service accepts a maximum of 20 MB of input
-// content, but it requires much less text to produce an accurate profile; for more information, see [Providing
-// sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient). The service
-// analyzes text in Arabic, English, Japanese, Korean, or Spanish and returns its results in a variety of languages. You
-// can provide plain text, HTML, or JSON input by specifying the **Content-Type** parameter; the default is
-// `text/plain`. Request a JSON or comma-separated values (CSV) response by specifying the **Accept** parameter; CSV
-// output includes a fixed number of columns and optional headers.
-//
-// Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8; per the HTTP
-// specification, the default encoding for plain text and HTML is ISO-8859-1 (effectively, the ASCII character set).
-// When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
-// encoding of the input text; for example: `Content-Type: text/plain;charset=utf-8`.
+// content, but it requires much less text to produce an accurate profile. The service can analyze text in Arabic,
+// English, Japanese, Korean, or Spanish. It can return its results in a variety of languages.
 //
 // **See also:**
-// * [Requesting a profile](https://console.bluemix.net/docs/services/personality-insights/input.html)
-// * [Understanding a JSON profile](https://console.bluemix.net/docs/services/personality-insights/output.html)
-// * [Understanding a CSV profile](https://console.bluemix.net/docs/services/personality-insights/output-csv.html).
+// * [Requesting a profile](https://cloud.ibm.com/docs/services/personality-insights/input.html)
+// * [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient)
+//
+// ### Content types
+//
+//  You can provide input content as plain text (`text/plain`), HTML (`text/html`), or JSON (`application/json`) by
+// specifying the **Content-Type** parameter. The default is `text/plain`.
+// * Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8.
+// * Per the HTTP specification, the default encoding for plain text and HTML is ISO-8859-1 (effectively, the ASCII
+// character set).
+//
+// When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
+// encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
+//
+// **See also:** [Specifying request and response formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
+//
+// ### Accept types
+//
+//  You must request a response as JSON (`application/json`) or comma-separated values (`text/csv`) by specifying the
+// **Accept** parameter. CSV output includes a fixed number of columns. Set the **csv_headers** parameter to `true` to
+// request optional column headers for CSV output.
+//
+// **See also:**
+// * [Understanding a JSON profile](https://cloud.ibm.com/docs/services/personality-insights/output.html)
+// * [Understanding a CSV profile](https://cloud.ibm.com/docs/services/personality-insights/output-csv.html).
 func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -161,22 +174,35 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 
 // ProfileAsCsv : Get profile as csv
 // Generates a personality profile for the author of the input text. The service accepts a maximum of 20 MB of input
-// content, but it requires much less text to produce an accurate profile; for more information, see [Providing
-// sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient). The service
-// analyzes text in Arabic, English, Japanese, Korean, or Spanish and returns its results in a variety of languages. You
-// can provide plain text, HTML, or JSON input by specifying the **Content-Type** parameter; the default is
-// `text/plain`. Request a JSON or comma-separated values (CSV) response by specifying the **Accept** parameter; CSV
-// output includes a fixed number of columns and optional headers.
-//
-// Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8; per the HTTP
-// specification, the default encoding for plain text and HTML is ISO-8859-1 (effectively, the ASCII character set).
-// When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
-// encoding of the input text; for example: `Content-Type: text/plain;charset=utf-8`.
+// content, but it requires much less text to produce an accurate profile. The service can analyze text in Arabic,
+// English, Japanese, Korean, or Spanish. It can return its results in a variety of languages.
 //
 // **See also:**
-// * [Requesting a profile](https://console.bluemix.net/docs/services/personality-insights/input.html)
-// * [Understanding a JSON profile](https://console.bluemix.net/docs/services/personality-insights/output.html)
-// * [Understanding a CSV profile](https://console.bluemix.net/docs/services/personality-insights/output-csv.html).
+// * [Requesting a profile](https://cloud.ibm.com/docs/services/personality-insights/input.html)
+// * [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient)
+//
+// ### Content types
+//
+//  You can provide input content as plain text (`text/plain`), HTML (`text/html`), or JSON (`application/json`) by
+// specifying the **Content-Type** parameter. The default is `text/plain`.
+// * Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8.
+// * Per the HTTP specification, the default encoding for plain text and HTML is ISO-8859-1 (effectively, the ASCII
+// character set).
+//
+// When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
+// encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
+//
+// **See also:** [Specifying request and response formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
+//
+// ### Accept types
+//
+//  You must request a response as JSON (`application/json`) or comma-separated values (`text/csv`) by specifying the
+// **Accept** parameter. CSV output includes a fixed number of columns. Set the **csv_headers** parameter to `true` to
+// request optional column headers for CSV output.
+//
+// **See also:**
+// * [Understanding a JSON profile](https://cloud.ibm.com/docs/services/personality-insights/output.html)
+// * [Understanding a CSV profile](https://cloud.ibm.com/docs/services/personality-insights/output-csv.html).
 func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -414,17 +440,16 @@ const (
 type ProfileOptions struct {
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
-	// [Providing sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient).
-	// For JSON input, provide an object of type `Content`.
+	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an
+	// object of type `Content`.
 	Content *Content `json:"content,omitempty"`
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
-	// [Providing sufficient input](https://console.bluemix.net/docs/services/personality-insights/input.html#sufficient).
-	// For JSON input, provide an object of type `Content`.
+	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an
+	// object of type `Content`.
 	Body *string `json:"body,omitempty"`
 
-	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
-	// 'text/html;charset=utf-8'.
+	// The type of the input. For more information, see **Content types** in the method description.
 	ContentType *string `json:"Content-Type" validate:"required"`
 
 	// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are
@@ -448,7 +473,7 @@ type ProfileOptions struct {
 	RawScores *bool `json:"raw_scores,omitempty"`
 
 	// Indicates whether column labels are returned with a CSV response. By default, no column labels are returned. Applies
-	// only when the **Accept** parameter is set to `text/csv`.
+	// only when the response type is CSV (`text/csv`).
 	CsvHeaders *bool `json:"csv_headers,omitempty"`
 
 	// Indicates whether consumption preferences are returned with the results. By default, no consumption preferences are
@@ -460,8 +485,9 @@ type ProfileOptions struct {
 }
 
 // Constants associated with the ProfileOptions.ContentType property.
-// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
-// 'text/html;charset=utf-8'.
+// The type of the input. For more information, see **Content types** in the method description.
+//
+// Default: `text/plain`.
 const (
 	ProfileOptions_ContentType_ApplicationJSON = "application/json"
 	ProfileOptions_ContentType_TextHTML        = "text/html"
@@ -640,8 +666,8 @@ type Warning struct {
 // Constants associated with the Warning.WarningID property.
 // The identifier of the warning message.
 const (
-	Warning_WarningID_CONTENTTRUNCATED = "CONTENT_TRUNCATED"
-	Warning_WarningID_JSONASTEXT       = "JSON_AS_TEXT"
-	Warning_WarningID_PARTIALTEXTUSED  = "PARTIAL_TEXT_USED"
-	Warning_WarningID_WORDCOUNTMESSAGE = "WORD_COUNT_MESSAGE"
+	Warning_WarningID_ContentTruncated = "CONTENT_TRUNCATED"
+	Warning_WarningID_JSONAsText       = "JSON_AS_TEXT"
+	Warning_WarningID_PartialTextUsed  = "PARTIAL_TEXT_USED"
+	Warning_WarningID_WordCountMessage = "WORD_COUNT_MESSAGE"
 )
