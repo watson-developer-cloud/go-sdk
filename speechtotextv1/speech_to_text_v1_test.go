@@ -1611,4 +1611,182 @@ var _ = Describe("SpeechToTextV1", func() {
 			})
 		})
 	})
+	Describe("AddGrammar(addGrammarOptions *AddGrammarOptions)", func() {
+		addGrammarPath := "/v1/customizations/{customization_id}/grammars/{grammar_name}"
+		customizationID := "exampleString"
+		grammarName := "exampleString"
+		pwd, _ := os.Getwd()
+		grammarFile, err := os.Open(pwd + "/../resources/confirm-grammar.xml")
+		if err != nil {
+			panic(err)
+		}
+		contentType := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(addGrammarPath, "{customization_id}", customizationID, 1)
+		Path = strings.Replace(Path, "{grammar_name}", grammarName, 1)
+		Context("Successfully - Add a grammar", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call AddGrammar", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
+					URL:      testServer.URL,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.AddGrammar(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				addGrammarOptions := testService.NewAddGrammarOptions(customizationID, grammarName, grammarFile, contentType)
+				returnValue, returnValueErr = testService.AddGrammar(addGrammarOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("DeleteGrammar(deleteGrammarOptions *DeleteGrammarOptions)", func() {
+		deleteGrammarPath := "/v1/customizations/{customization_id}/grammars/{grammar_name}"
+		customizationID := "exampleString"
+		grammarName := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(deleteGrammarPath, "{customization_id}", customizationID, 1)
+		Path = strings.Replace(Path, "{grammar_name}", grammarName, 1)
+		Context("Successfully - Delete a grammar", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"hi":"there"}`)
+			}))
+			It("Succeed to call DeleteGrammar", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
+					URL:      testServer.URL,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.DeleteGrammar(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				deleteGrammarOptions := testService.NewDeleteGrammarOptions(customizationID, grammarName)
+				returnValue, returnValueErr = testService.DeleteGrammar(deleteGrammarOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetGrammar(getGrammarOptions *GetGrammarOptions)", func() {
+		getGrammarPath := "/v1/customizations/{customization_id}/grammars/{grammar_name}"
+		customizationID := "exampleString"
+		grammarName := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(getGrammarPath, "{customization_id}", customizationID, 1)
+		Path = strings.Replace(Path, "{grammar_name}", grammarName, 1)
+		Context("Successfully - Get a grammar", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"name":"xxx"}`)
+			}))
+			It("Succeed to call GetGrammar", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
+					URL:      testServer.URL,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.GetGrammar(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				getGrammarOptions := testService.NewGetGrammarOptions(customizationID, grammarName)
+				returnValue, returnValueErr = testService.GetGrammar(getGrammarOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetGetGrammarResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("ListGrammars(listGrammarsOptions *ListGrammarsOptions)", func() {
+		listGrammarsPath := "/v1/customizations/{customization_id}/grammars"
+		customizationID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(listGrammarsPath, "{customization_id}", customizationID, 1)
+		Context("Successfully - List grammars", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `["grammars": {"name":"xxx"}]`)
+			}))
+			It("Succeed to call ListGrammars", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
+					URL:      testServer.URL,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.ListGrammars(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				listGrammarsOptions := testService.NewListGrammarsOptions(customizationID)
+				returnValue, returnValueErr = testService.ListGrammars(listGrammarsOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetListGrammarsResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 })

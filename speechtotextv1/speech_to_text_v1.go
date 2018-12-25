@@ -1519,12 +1519,205 @@ func (speechToText *SpeechToTextV1) GetListWordsResult(response *core.DetailedRe
 	return nil
 }
 
+// AddGrammar : Add a grammar
+// Adds a single grammar file to a custom language model. Submit a plain text file in UTF-8 format that defines the
+// grammar. Use multiple requests to submit multiple grammar files. You must use credentials for the instance of the
+// service that owns a model to add a grammar to it. Adding a grammar does not affect the custom language model until
+// you train the model for the new data by using the **Train a custom language model** method.
+//
+// The call returns an HTTP 201 response code if the grammar is valid. The service then asynchronously processes the
+// contents of the grammar and automatically extracts new words that it finds. This can take a few seconds to complete
+// depending on the size and complexity of the grammar, as well as the current load on the service. You cannot submit
+// requests to add additional resources to the custom model or to train the model until the service's analysis of the
+// grammar for the current request completes. Use the **Get a grammar** method to check the status of the analysis.
+//
+// The service populates the model's words resource with any word that is recognized by the grammar that is not found in
+// the model's base vocabulary. These are referred to as out-of-vocabulary (OOV) words. You can use the **List custom
+// words** method to examine the words resource and use other words-related methods to eliminate typos and modify how
+// words are pronounced as needed.
+//
+// To add a grammar that has the same name as an existing grammar, set the `allow_overwrite` parameter to `true`;
+// otherwise, the request fails. Overwriting an existing grammar causes the service to process the grammar file and
+// extract OOV words anew. Before doing so, it removes any OOV words associated with the existing grammar from the
+// model's words resource unless they were also added by another resource or they have been modified in some way with
+// the **Add custom words** or **Add a custom word** method.
+//
+// The service limits the overall amount of data that you can add to a custom model to a maximum of 10 million total
+// words from all sources combined. Also, you can add no more than 30 thousand OOV words to a model. This includes words
+// that the service extracts from corpora and grammars and words that you add directly.
+//
+// **See also:**
+// * [Working with grammars](https://cloud.ibm.com/docs/services/speech-to-text/)
+// * [Add grammars to the custom language model](https://cloud.ibm.com/docs/services/speech-to-text/).
+func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(addGrammarOptions, "addGrammarOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(addGrammarOptions, "addGrammarOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/customizations", "grammars"}
+	pathParameters := []string{*addGrammarOptions.CustomizationID, *addGrammarOptions.GrammarName}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range addGrammarOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	if addGrammarOptions.ContentType != nil {
+		builder.AddHeader("Content-Type", fmt.Sprint(*addGrammarOptions.ContentType))
+	}
+
+	if addGrammarOptions.AllowOverwrite != nil {
+		builder.AddQuery("allow_overwrite", fmt.Sprint(*addGrammarOptions.AllowOverwrite))
+	}
+
+	_, err := builder.SetBodyContent(core.StringNilMapper(addGrammarOptions.ContentType), nil, nil, addGrammarOptions.GrammarFile)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := speechToText.Service.Request(request, nil)
+	return response, err
+}
+
+// DeleteGrammar : Delete a grammar
+// Deletes an existing grammar from a custom language model. The service removes any out-of-vocabulary (OOV) words
+// associated with the grammar from the custom model's words resource unless they were also added by another resource or
+// they were modified in some way with the **Add custom words** or **Add a custom word** method. Removing a grammar does
+// not affect the custom model until you train the model with the **Train a custom language model** method. You must use
+// credentials for the instance of the service that owns a model to delete its grammar.
+//
+// **See also:** [Deleting a grammar from a custom language model](https://cloud.ibm.com/docs/services/speech-to-text/).
+func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGrammarOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteGrammarOptions, "deleteGrammarOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteGrammarOptions, "deleteGrammarOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/customizations", "grammars"}
+	pathParameters := []string{*deleteGrammarOptions.CustomizationID, *deleteGrammarOptions.GrammarName}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteGrammarOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := speechToText.Service.Request(request, nil)
+	return response, err
+}
+
+// GetGrammar : Get a grammar
+// Gets information about a grammar from a custom language model. The information includes the total number of
+// out-of-vocabulary (OOV) words, name, and status of the grammar. You must use credentials for the instance of the
+// service that owns a model to list its grammars.
+//
+// **See also:** [Listing grammars from a custom language model](https://cloud.ibm.com/docs/services/speech-to-text/).
+func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getGrammarOptions, "getGrammarOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getGrammarOptions, "getGrammarOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/customizations", "grammars"}
+	pathParameters := []string{*getGrammarOptions.CustomizationID, *getGrammarOptions.GrammarName}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getGrammarOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := speechToText.Service.Request(request, new(Grammar))
+	return response, err
+}
+
+// GetGetGrammarResult : Retrieve result of GetGrammar operation
+func (speechToText *SpeechToTextV1) GetGetGrammarResult(response *core.DetailedResponse) *Grammar {
+	result, ok := response.Result.(*Grammar)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// ListGrammars : List grammars
+// Lists information about all grammars from a custom language model. The information includes the total number of
+// out-of-vocabulary (OOV) words, name, and status of each grammar. You must use credentials for the instance of the
+// service that owns a model to list its grammars.
+//
+// **See also:** [Listing grammars from a custom language model](https://cloud.ibm.com/docs/services/speech-to-text/).
+func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGrammarsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listGrammarsOptions, "listGrammarsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listGrammarsOptions, "listGrammarsOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/customizations", "grammars"}
+	pathParameters := []string{*listGrammarsOptions.CustomizationID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listGrammarsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := speechToText.Service.Request(request, new(Grammars))
+	return response, err
+}
+
+// GetListGrammarsResult : Retrieve result of ListGrammars operation
+func (speechToText *SpeechToTextV1) GetListGrammarsResult(response *core.DetailedResponse) *Grammars {
+	result, ok := response.Result.(*Grammars)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // CreateAcousticModel : Create a custom acoustic model
 // Creates a new custom acoustic model for a specified base model. The custom acoustic model can be used only with the
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
 //
-// **See also:** [Create a custom acoustic model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel).
+// **See also:** [Create a custom acoustic
+// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel).
 func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptions *CreateAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createAcousticModelOptions, "createAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2445,11 +2638,103 @@ func (options *AddCorpusOptions) SetHeaders(param map[string]string) *AddCorpusO
 	return options
 }
 
+// AddGrammarOptions : The addGrammar options.
+type AddGrammarOptions struct {
+
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with credentials for the instance of the service that owns the custom model.
+	CustomizationID *string `json:"customization_id" validate:"required"`
+
+	// The name of the new grammar for the custom language model. Use a localized name that matches the language of the
+	// custom model and reflects the contents of the grammar.
+	// * Include a maximum of 128 characters in the name.
+	// * Do not include spaces, slashes, or backslashes in the name.
+	// * Do not use the name of an existing grammar or corpus that is already defined for the custom model.
+	// * Do not use the name `user`, which is reserved by the service to denote custom words that are added or modified by
+	// the user.
+	GrammarName *string `json:"grammar_name" validate:"required"`
+
+	// A plain text file that contains the grammar in the format specified by the `Content-Type` header. Encode the file in
+	// UTF-8 (ASCII is a subset of UTF-8). Using any other encoding can lead to issues when compiling the grammar or to
+	// unexpected results in decoding. The service ignores an encoding that is specified in the header of the grammar.
+	GrammarFile *io.ReadCloser `json:"grammar_file" validate:"required"`
+
+	// The format (MIME type) of the grammar file:
+	// * `application/srgs` for Augmented Backus-Naur Form (ABNF), which uses a plain-text representation that is similar
+	// to traditional BNF grammars.
+	// * `application/srgs+xml` for XML Form, which uses XML elements to represent the grammar.
+	ContentType *string `json:"Content-Type" validate:"required"`
+
+	// If `true`, the specified grammar overwrites an existing grammar with the same name. If `false`, the request fails if
+	// a grammar with the same name already exists. The parameter has no effect if a grammar with the same name does not
+	// already exist.
+	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// Constants associated with the AddGrammarOptions.ContentType property.
+// The format (MIME type) of the grammar file:
+// * `application/srgs` for Augmented Backus-Naur Form (ABNF), which uses a plain-text representation that is similar to
+// traditional BNF grammars.
+// * `application/srgs+xml` for XML Form, which uses XML elements to represent the grammar.
+const (
+	AddGrammarOptions_ContentType_ApplicationSrgs    = "application/srgs"
+	AddGrammarOptions_ContentType_ApplicationSrgsXml = "application/srgs+xml"
+)
+
+// NewAddGrammarOptions : Instantiate AddGrammarOptions
+func (speechToText *SpeechToTextV1) NewAddGrammarOptions(customizationID string, grammarName string, grammarFile io.ReadCloser, contentType string) *AddGrammarOptions {
+	return &AddGrammarOptions{
+		CustomizationID: core.StringPtr(customizationID),
+		GrammarName:     core.StringPtr(grammarName),
+		GrammarFile:     &grammarFile,
+		ContentType:     core.StringPtr(contentType),
+	}
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *AddGrammarOptions) SetCustomizationID(customizationID string) *AddGrammarOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
+	return options
+}
+
+// SetGrammarName : Allow user to set GrammarName
+func (options *AddGrammarOptions) SetGrammarName(grammarName string) *AddGrammarOptions {
+	options.GrammarName = core.StringPtr(grammarName)
+	return options
+}
+
+// SetGrammarFile : Allow user to set GrammarFile
+func (options *AddGrammarOptions) SetGrammarFile(grammarFile io.ReadCloser) *AddGrammarOptions {
+	options.GrammarFile = &grammarFile
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *AddGrammarOptions) SetContentType(contentType string) *AddGrammarOptions {
+	options.ContentType = core.StringPtr(contentType)
+	return options
+}
+
+// SetAllowOverwrite : Allow user to set AllowOverwrite
+func (options *AddGrammarOptions) SetAllowOverwrite(allowOverwrite bool) *AddGrammarOptions {
+	options.AllowOverwrite = core.BoolPtr(allowOverwrite)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *AddGrammarOptions) SetHeaders(param map[string]string) *AddGrammarOptions {
+	options.Headers = param
+	return options
+}
+
 // AddWordOptions : The addWord options.
 type AddWordOptions struct {
 
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
-	// request with service credentials created for the instance of the service that owns the custom model.
+	// request with credentials for the instance of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The custom word that is to be added to or updated in the custom language model. Do not include spaces in the word.
@@ -3491,10 +3776,51 @@ func (options *DeleteCorpusOptions) SetHeaders(param map[string]string) *DeleteC
 	return options
 }
 
+// DeleteGrammarOptions : The deleteGrammar options.
+type DeleteGrammarOptions struct {
+
+	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
+	// request with credentials for the instance of the service that owns the custom model.
+	CustomizationID *string `json:"customization_id" validate:"required"`
+
+	// The name of the grammar for the custom language model.
+	GrammarName *string `json:"grammar_name" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteGrammarOptions : Instantiate DeleteGrammarOptions
+func (speechToText *SpeechToTextV1) NewDeleteGrammarOptions(customizationID string, grammarName string) *DeleteGrammarOptions {
+	return &DeleteGrammarOptions{
+		CustomizationID: core.StringPtr(customizationID),
+		GrammarName:     core.StringPtr(grammarName),
+	}
+}
+
+// SetCustomizationID : Allow user to set CustomizationID
+func (options *DeleteGrammarOptions) SetCustomizationID(customizationID string) *DeleteGrammarOptions {
+	options.CustomizationID = core.StringPtr(customizationID)
+	return options
+}
+
+// SetGrammarName : Allow user to set GrammarName
+func (options *DeleteGrammarOptions) SetGrammarName(grammarName string) *DeleteGrammarOptions {
+	options.GrammarName = core.StringPtr(grammarName)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteGrammarOptions) SetHeaders(param map[string]string) *DeleteGrammarOptions {
+	options.Headers = param
+	return options
+}
+
 // DeleteJobOptions : The deleteJob options.
 type DeleteJobOptions struct {
 
-	// The identifier of the asynchronous job that is to be used for the request.
+	// The identifier of the asynchronous job that is to be used for the request. You must make the request with
+	// credentials for the instance of the service that owns the job.
 	ID *string `json:"id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
