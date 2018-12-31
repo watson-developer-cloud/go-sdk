@@ -21,7 +21,6 @@ package toneanalyzerv3_test
 import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
 	"os"
@@ -31,21 +30,29 @@ import (
 var service *toneanalyzerv3.ToneAnalyzerV3
 var serviceErr error
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = toneanalyzerv3.
-		NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-			URL:      os.Getenv("TONE_ANALYZER_URL"),
-			Version:  "2017-09-21",
-			Username: os.Getenv("TONE_ANALYZER_USERNAME"),
-			Password: os.Getenv("TONE_ANALYZER_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = toneanalyzerv3.
+			NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
+				URL:      os.Getenv("TONE_ANALYZER_URL"),
+				Version:  "2017-09-21",
+				Username: os.Getenv("TONE_ANALYZER_USERNAME"),
+				Password: os.Getenv("TONE_ANALYZER_PASSWORD"),
+			})
+	}
+}
+
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
 }
 
 func TestTone(t *testing.T) {
+	shouldSkipTest(t)
+
 	text := "Team, I know that times are tough! Product sales have been disappointing for the past three quarters. We have a competitive product, but we need to do a better job of selling it!"
 	response, responseErr := service.Tone(
 		&toneanalyzerv3.ToneOptions{
@@ -62,6 +69,8 @@ func TestTone(t *testing.T) {
 }
 
 func TestToneChat(t *testing.T) {
+	shouldSkipTest(t)
+
 	utterances := []toneanalyzerv3.Utterance{
 		toneanalyzerv3.Utterance{
 			Text: core.StringPtr("Hello, I'm having a problem with your product."),
