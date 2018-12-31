@@ -21,7 +21,6 @@ package naturallanguageunderstandingv1_test
 import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
 	"os"
@@ -31,21 +30,28 @@ import (
 var service *naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1
 var serviceErr error
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = naturallanguageunderstandingv1.
-		NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
-			URL:      os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_URL"),
-			Version:  "2018-03-16",
-			Username: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_USERNAME"),
-			Password: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = naturallanguageunderstandingv1.
+			NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
+				URL:      os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_URL"),
+				Version:  "2018-03-16",
+				Username: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_USERNAME"),
+				Password: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD"),
+			})
+	}
 }
 
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
+}
 func TestAnalyze(t *testing.T) {
+	shouldSkipTest(t)
+
 	text := `IBM is an American multinational technology company
 					 headquartered in Armonk, New York, United States
 					with operations in over 170 countries.`
@@ -69,6 +75,8 @@ func TestAnalyze(t *testing.T) {
 }
 
 func TestListModels(t *testing.T) {
+	shouldSkipTest(t)
+
 	// list models
 	response, responseErr := service.ListModels(
 		&naturallanguageunderstandingv1.ListModelsOptions{},

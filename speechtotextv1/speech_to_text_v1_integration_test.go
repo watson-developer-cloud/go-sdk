@@ -21,7 +21,6 @@ package speechtotextv1_test
 import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
 	"io"
@@ -33,20 +32,28 @@ var service *speechtotextv1.SpeechToTextV1
 var serviceErr error
 var languageModel *speechtotextv1.LanguageModel
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = speechtotextv1.
-		NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			URL:      os.Getenv("SPEECH_TO_TEXT_URL"),
-			Username: os.Getenv("SPEECH_TO_TEXT_USERNAME"),
-			Password: os.Getenv("SPEECH_TO_TEXT_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = speechtotextv1.
+			NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
+				URL:      os.Getenv("SPEECH_TO_TEXT_URL"),
+				Username: os.Getenv("SPEECH_TO_TEXT_USERNAME"),
+				Password: os.Getenv("SPEECH_TO_TEXT_PASSWORD"),
+			})
+	}
+}
+
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
 }
 
 func TestModel(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List models
 	response, responseErr := service.ListModels(
 		&speechtotextv1.ListModelsOptions{},
@@ -69,6 +76,8 @@ func TestModel(t *testing.T) {
 }
 
 func TestRecognize(t *testing.T) {
+	shouldSkipTest(t)
+
 	pwd, _ := os.Getwd()
 	files := [1]string{"audio_example.mp3"}
 	for _, fileName := range files {
@@ -95,6 +104,8 @@ func TestRecognize(t *testing.T) {
 }
 
 func TestJobs(t *testing.T) {
+	shouldSkipTest(t)
+
 	t.Skip("Skipping time consuming test")
 	response, responseErr := service.CheckJobs(
 		&speechtotextv1.CheckJobsOptions{},
@@ -106,6 +117,8 @@ func TestJobs(t *testing.T) {
 }
 
 func TestLanguageModel(t *testing.T) {
+	shouldSkipTest(t)
+
 	// create language model
 	response, responseErr := service.CreateLanguageModel(
 		&speechtotextv1.CreateLanguageModelOptions{
@@ -144,6 +157,8 @@ func TestLanguageModel(t *testing.T) {
 }
 
 func TestCorpora(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List corpora
 	response, responseErr := service.ListCorpora(
 		&speechtotextv1.ListCorporaOptions{
@@ -197,6 +212,8 @@ func TestCorpora(t *testing.T) {
 }
 
 func TestWords(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List words
 	response, responseErr := service.ListWords(
 		&speechtotextv1.ListWordsOptions{
@@ -265,6 +282,8 @@ func TestWords(t *testing.T) {
 }
 
 func TestAcousticModel(t *testing.T) {
+	shouldSkipTest(t)
+
 	// create acoustic model
 	response, responseErr := service.CreateAcousticModel(
 		&speechtotextv1.CreateAcousticModelOptions{
@@ -318,6 +337,8 @@ func TestAcousticModel(t *testing.T) {
 }
 
 func TestAudio(t *testing.T) {
+	shouldSkipTest(t)
+
 	if *languageModel.Status != "Available" {
 		t.Skip("Skipping the rest of the audio tests")
 	}
@@ -373,6 +394,8 @@ func TestAudio(t *testing.T) {
 }
 
 func TestDeleteLanguageModel(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Delete language model
 	_, responseErr := service.DeleteLanguageModel(
 		&speechtotextv1.DeleteLanguageModelOptions{

@@ -21,7 +21,6 @@ package texttospeechv1_test
 import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
 	"os"
@@ -32,20 +31,28 @@ var service *texttospeechv1.TextToSpeechV1
 var serviceErr error
 var customizationID *string
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = texttospeechv1.
-		NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-			URL:      os.Getenv("TEXT_TO_SPEECH_URL"),
-			Username: os.Getenv("TEXT_TO_SPEECH_USERNAME"),
-			Password: os.Getenv("TEXT_TO_SPEECH_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = texttospeechv1.
+			NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+				URL:      os.Getenv("TEXT_TO_SPEECH_URL"),
+				Username: os.Getenv("TEXT_TO_SPEECH_USERNAME"),
+				Password: os.Getenv("TEXT_TO_SPEECH_PASSWORD"),
+			})
+	}
+}
+
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
 }
 
 func TestVoice(t *testing.T) {
+	shouldSkipTest(t)
+
 	// list voices
 	response, responseErr := service.ListVoices(
 		&texttospeechv1.ListVoicesOptions{},
@@ -67,6 +74,8 @@ func TestVoice(t *testing.T) {
 }
 
 func TestSynthesize(t *testing.T) {
+	shouldSkipTest(t)
+
 	// synthesize
 	response, responseErr := service.Synthesize(
 		&texttospeechv1.SynthesizeOptions{
@@ -82,6 +91,8 @@ func TestSynthesize(t *testing.T) {
 }
 
 func TestPronunciation(t *testing.T) {
+	shouldSkipTest(t)
+
 	// get pronunciation
 	response, responseErr := service.GetPronunciation(
 		&texttospeechv1.GetPronunciationOptions{
@@ -97,6 +108,8 @@ func TestPronunciation(t *testing.T) {
 }
 
 func TestVoiceModel(t *testing.T) {
+	shouldSkipTest(t)
+
 	// create voice model
 	response, responseErr := service.CreateVoiceModel(
 		&texttospeechv1.CreateVoiceModelOptions{
@@ -154,6 +167,8 @@ func TestVoiceModel(t *testing.T) {
 }
 
 func TestWords(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List Words
 	response, responseErr := service.ListWords(
 		&texttospeechv1.ListWordsOptions{
