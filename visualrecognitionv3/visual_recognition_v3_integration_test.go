@@ -21,7 +21,6 @@ package visualrecognitionv3_test
 import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
 	"os"
@@ -31,20 +30,28 @@ import (
 var service *visualrecognitionv3.VisualRecognitionV3
 var serviceErr error
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = visualrecognitionv3.
-		NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-			URL:       os.Getenv("VISUAL_RECOGNITION_URL"),
-			Version:   "2018-03-19",
-			IAMApiKey: os.Getenv("VISUAL_RECOGNITION_APIKEY"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = visualrecognitionv3.
+			NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+				URL:       os.Getenv("VISUAL_RECOGNITION_URL"),
+				Version:   "2018-03-19",
+				IAMApiKey: os.Getenv("VISUAL_RECOGNITION_APIKEY"),
+			})
+	}
+}
+
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
 }
 
 func TestClassify(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Classify
 	pwd, _ := os.Getwd()
 	imageFile, imageFileErr := os.Open(pwd + "/../resources/kitty.jpg")
@@ -81,6 +88,8 @@ func TestClassify(t *testing.T) {
 }
 
 func TestClassifiers(t *testing.T) {
+	shouldSkipTest(t)
+
 	pwd, _ := os.Getwd()
 
 	// Create classifier
