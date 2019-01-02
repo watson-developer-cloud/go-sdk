@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/comparecomplyv1"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"os"
@@ -32,20 +31,28 @@ import (
 var service *comparecomplyv1.CompareComplyV1
 var serviceErr error
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = comparecomplyv1.
-		NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-			URL:       os.Getenv("COMPARE_COMPLY_URL"),
-			Version:   "2018-10-15",
-			IAMApiKey: os.Getenv("COMPARE_COMPLY_IAMAPIKEY"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = comparecomplyv1.
+			NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
+				URL:       os.Getenv("COMPARE_COMPLY_URL"),
+				Version:   "2018-10-15",
+				IAMApiKey: os.Getenv("COMPARE_COMPLY_IAMAPIKEY"),
+			})
+	}
+}
+
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
 }
 
 func TestConvertToHTML(t *testing.T) {
+	shouldSkipTest(t)
+
 	pwd, _ := os.Getwd()
 	testPDF, testPDFErr := os.Open(pwd + "/../resources/contract_A.pdf")
 	if testPDFErr != nil {
@@ -65,6 +72,8 @@ func TestConvertToHTML(t *testing.T) {
 }
 
 func TestClassifyElements(t *testing.T) {
+	shouldSkipTest(t)
+
 	pwd, _ := os.Getwd()
 	testPDF, testPDFErr := os.Open(pwd + "/../resources/contract_A.pdf")
 	if testPDFErr != nil {
@@ -84,6 +93,8 @@ func TestClassifyElements(t *testing.T) {
 }
 
 func TestExtractTables(t *testing.T) {
+	shouldSkipTest(t)
+
 	pwd, _ := os.Getwd()
 	file, fileErr := os.Open(pwd + "/../resources/sample-tables.pdf")
 	if fileErr != nil {
@@ -103,6 +114,8 @@ func TestExtractTables(t *testing.T) {
 }
 
 func TestCompareDocuments(t *testing.T) {
+	shouldSkipTest(t)
+
 	pwd, _ := os.Getwd()
 	file1, file1Err := os.Open(pwd + "/../resources/contract_A.pdf")
 	if file1Err != nil {
@@ -127,6 +140,8 @@ func TestCompareDocuments(t *testing.T) {
 }
 
 func TestFeedback(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Add feedback
 	t.Skip()
 	response, responseErr := service.AddFeedback(
@@ -223,6 +238,8 @@ func TestFeedback(t *testing.T) {
 }
 
 func TestBatch(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Get batches
 	response, responseErr := service.ListBatches(
 		&comparecomplyv1.ListBatchesOptions{},
