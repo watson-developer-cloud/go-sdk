@@ -620,6 +620,9 @@ type MessageOutput struct {
 
 	// Additional detailed information about a message response and how it was generated.
 	Debug *MessageOutputDebug `json:"debug,omitempty"`
+
+	// Arbitrary variables that can be read and written to by a particular skill within the Assistant.
+	UserDefined interface{} `json:"user_defined,omitempty"`
 }
 
 // MessageOutputDebug : Additional detailed information about a message response and how it was generated.
