@@ -132,3 +132,10 @@ func CreateFormPartName(template string, keyName string, keyValue string) string
 	toBeReplaced := "{" + keyName + "}"
 	return strings.Replace(template, toBeReplaced, keyValue, 1)
 }
+
+// HasBadFirstOrLastChar checks if the string starts with `{` or `"`
+// or ends with `}` or `"`
+func HasBadFirstOrLastChar(str string) bool {
+	return strings.HasPrefix(str, "{") || strings.HasPrefix(str, "\"") ||
+		strings.HasSuffix(str, "}") || strings.HasSuffix(str, "\"")
+}
