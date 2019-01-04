@@ -21,7 +21,6 @@ package assistantv2_test
 import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/assistantv2"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"os"
@@ -31,21 +30,29 @@ import (
 var service *assistantv2.AssistantV2
 var serviceErr error
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = assistantv2.
-		NewAssistantV2(&assistantv2.AssistantV2Options{
-			URL:      os.Getenv("ASSISTANT_URL"),
-			Version:  "2017-04-21",
-			Username: os.Getenv("ASSISTANT_USERNAME"),
-			Password: os.Getenv("ASSISTANT_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = assistantv2.
+			NewAssistantV2(&assistantv2.AssistantV2Options{
+				URL:      os.Getenv("ASSISTANT_URL"),
+				Version:  "2017-04-21",
+				Username: os.Getenv("ASSISTANT_USERNAME"),
+				Password: os.Getenv("ASSISTANT_PASSWORD"),
+			})
+	}
+}
+
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
 }
 
 func TestSession(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Create session
 	response, responseErr := service.CreateSession(
 		&assistantv2.CreateSessionOptions{

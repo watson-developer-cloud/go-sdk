@@ -21,7 +21,6 @@ package languagetranslatorv3_test
 import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/languagetranslatorv3"
 	"os"
@@ -31,21 +30,28 @@ import (
 var service *languagetranslatorv3.LanguageTranslatorV3
 var serviceErr error
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = languagetranslatorv3.
-		NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-			URL:      os.Getenv("LANGUAGE_TRANSLATOR_URL"),
-			Version:  "2018-05-01",
-			Username: os.Getenv("LANGUAGE_TRANSLATOR_USERNAME"),
-			Password: os.Getenv("LANGUAGE_TRANSLATOR_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = languagetranslatorv3.
+			NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+				URL:      os.Getenv("LANGUAGE_TRANSLATOR_URL"),
+				Version:  "2018-05-01",
+				Username: os.Getenv("LANGUAGE_TRANSLATOR_USERNAME"),
+				Password: os.Getenv("LANGUAGE_TRANSLATOR_PASSWORD"),
+			})
+	}
 }
 
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
+}
 func TestModels(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List models
 	response, responseErr := service.ListModels(
 		&languagetranslatorv3.ListModelsOptions{},
@@ -93,6 +99,8 @@ func TestModels(t *testing.T) {
 }
 
 func TestTranslate(t *testing.T) {
+	shouldSkipTest(t)
+
 	response, responseErr := service.Translate(
 		&languagetranslatorv3.TranslateOptions{
 			Text:    []string{"Hello"},
@@ -106,6 +114,8 @@ func TestTranslate(t *testing.T) {
 }
 
 func TestIdentifiableLanguage(t *testing.T) {
+	shouldSkipTest(t)
+
 	response, responseErr := service.ListIdentifiableLanguages(
 		&languagetranslatorv3.ListIdentifiableLanguagesOptions{},
 	)
@@ -116,6 +126,8 @@ func TestIdentifiableLanguage(t *testing.T) {
 }
 
 func TestIdentify(t *testing.T) {
+	shouldSkipTest(t)
+
 	response, responseErr := service.Identify(
 		&languagetranslatorv3.IdentifyOptions{
 			Text: core.StringPtr("Language translator translates text from one language to another"),

@@ -79,17 +79,20 @@ func NewRequestBuilder(method string) *RequestBuilder {
 
 // ConstructHTTPURL creates a properly encoded URL with path parameters.
 func (requestBuilder *RequestBuilder) ConstructHTTPURL(endPoint string, pathSegments []string, pathParameters []string) *RequestBuilder {
-	for i, pathSegment := range pathSegments {
-		endPoint += "/" + pathSegment
-		if pathParameters != nil && i < len(pathParameters) {
-			endPoint += "/" + pathParameters[i]
-		}
-	}
-	u, err := url.Parse(endPoint)
+	var URL *url.URL
+
+	URL, err := url.Parse(endPoint)
 	if err != nil {
 		panic(err)
 	}
-	requestBuilder.URL = u
+
+	for i, pathSegment := range pathSegments {
+		URL.Path += "/" + pathSegment
+		if pathParameters != nil && i < len(pathParameters) {
+			URL.Path += "/" + pathParameters[i]
+		}
+	}
+	requestBuilder.URL = URL
 	return requestBuilder
 }
 
@@ -188,13 +191,6 @@ func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType str
 
 // Build the request
 func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
-	// URL
-	URL, err := url.Parse(requestBuilder.URL.String())
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-
 	// Create multipart form data
 	if len(requestBuilder.Form) > 0 {
 		// handle both application/x-www-form-urlencoded or multipart/form-data
@@ -219,7 +215,7 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 			}
 
 			requestBuilder.AddHeader("Content-Type", formWriter.FormDataContentType())
-			err = formWriter.Close()
+			err := formWriter.Close()
 			if err != nil {
 				return nil, err
 			}
@@ -227,7 +223,7 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 	}
 
 	// Create the request
-	req, err := http.NewRequest(requestBuilder.Method, URL.String(), requestBuilder.Body)
+	req, err := http.NewRequest(requestBuilder.Method, requestBuilder.URL.String(), requestBuilder.Body)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err

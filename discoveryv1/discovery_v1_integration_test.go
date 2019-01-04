@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/discoveryv1"
 	"os"
@@ -35,21 +34,28 @@ var environmentID *string
 var configurationID *string
 var collectionID *string
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = discoveryv1.
-		NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-			URL:       os.Getenv("DISCOVERY_URL"),
-			Version:   "2018-03-05",
-			IAMApiKey: os.Getenv("DISCOVERY_IAMAPIKEY"),
-		})
-	environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = discoveryv1.
+			NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+				URL:       os.Getenv("DISCOVERY_URL"),
+				Version:   "2018-03-05",
+				IAMApiKey: os.Getenv("DISCOVERY_IAMAPIKEY"),
+			})
+		environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
+	}
 }
 
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
+}
 func TestEnvironment(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List environment
 	response, responseErr := service.ListEnvironments(
 		&discoveryv1.ListEnvironmentsOptions{},
@@ -114,6 +120,8 @@ func TestEnvironment(t *testing.T) {
 }
 
 func TestConfiguration(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Create Configuraion
 	response, responseErr := service.CreateConfiguration(
 		&discoveryv1.CreateConfigurationOptions{
@@ -183,6 +191,8 @@ func TestConfiguration(t *testing.T) {
 }
 
 func TestCollection(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Create collection
 	response, responseErr := service.CreateCollection(
 		&discoveryv1.CreateCollectionOptions{
@@ -262,6 +272,8 @@ func TestCollection(t *testing.T) {
 }
 
 func TestDocument(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Add document
 	pwd, _ := os.Getwd()
 	file, fileErr := os.Open(pwd + "/../resources/example.html")
@@ -321,6 +333,8 @@ func TestDocument(t *testing.T) {
 }
 
 func TestQuery(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Query
 	response, responseErr := service.Query(
 		&discoveryv1.QueryOptions{
@@ -337,6 +351,8 @@ func TestQuery(t *testing.T) {
 }
 
 func TestTokenizationDictionary(t *testing.T) {
+	shouldSkipTest(t)
+
 	t.Skip("Disable temporarily")
 	// Create collection in Japanese as create tokenization dictionary is only supported in JA
 	response, responseErr := service.CreateCollection(
@@ -391,6 +407,8 @@ func TestTokenizationDictionary(t *testing.T) {
 }
 
 func TestDeleteOperations(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Delete all collections
 	response, responseErr := service.ListCollections(
 		&discoveryv1.ListCollectionsOptions{
