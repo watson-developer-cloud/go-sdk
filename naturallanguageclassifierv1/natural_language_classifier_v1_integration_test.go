@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/naturallanguageclassifierv1"
 	"os"
@@ -33,20 +32,27 @@ var service *naturallanguageclassifierv1.NaturalLanguageClassifierV1
 var serviceErr error
 var classifier *naturallanguageclassifierv1.Classifier
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = naturallanguageclassifierv1.
-		NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-			URL:      os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_URL"),
-			Username: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_USERNAME"),
-			Password: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = naturallanguageclassifierv1.
+			NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+				URL:      os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_URL"),
+				Username: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_USERNAME"),
+				Password: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_PASSWORD"),
+			})
+	}
 }
 
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
+}
 func TestClassifier(t *testing.T) {
+	shouldSkipTest(t)
+
 	// create classifier
 	pwd, _ := os.Getwd()
 
@@ -91,6 +97,8 @@ func TestClassifier(t *testing.T) {
 }
 
 func TestClassify(t *testing.T) {
+	shouldSkipTest(t)
+
 	// classify
 	if *classifier.Status != "Available" {
 		t.Skip("Skip test classify")
@@ -109,6 +117,8 @@ func TestClassify(t *testing.T) {
 }
 
 func TestClassifyCollection(t *testing.T) {
+	shouldSkipTest(t)
+
 	if *classifier.Status != "Available" {
 		t.Skip("Skip test classify collection.")
 	}
@@ -133,6 +143,8 @@ func TestClassifyCollection(t *testing.T) {
 }
 
 func TestDeleteClassifier(t *testing.T) {
+	shouldSkipTest(t)
+
 	// Delete classifier
 	response, responseErr := service.DeleteClassifier(
 		&naturallanguageclassifierv1.DeleteClassifierOptions{

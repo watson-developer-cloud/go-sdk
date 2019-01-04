@@ -22,7 +22,6 @@ import (
 	"encoding/json"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 	"io/ioutil"
@@ -33,21 +32,29 @@ import (
 var service *personalityinsightsv3.PersonalityInsightsV3
 var serviceErr error
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = personalityinsightsv3.
-		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-			URL:      os.Getenv("PERSONALITY_INSIGHTS_URL"),
-			Version:  "2017-10-13",
-			Username: os.Getenv("PERSONALITY_INSIGHTS_USERNAME"),
-			Password: os.Getenv("PERSONALITY_INSIGHTS_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = personalityinsightsv3.
+			NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+				URL:      os.Getenv("PERSONALITY_INSIGHTS_URL"),
+				Version:  "2017-10-13",
+				Username: os.Getenv("PERSONALITY_INSIGHTS_USERNAME"),
+				Password: os.Getenv("PERSONALITY_INSIGHTS_PASSWORD"),
+			})
+	}
+}
+
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
 }
 
 func TestProfile(t *testing.T) {
+	shouldSkipTest(t)
+
 	pwd, _ := os.Getwd()
 	file, fileErr := ioutil.ReadFile(pwd + "/../resources/personality-v3.json")
 	assert.Nil(t, fileErr)

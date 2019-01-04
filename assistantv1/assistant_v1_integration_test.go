@@ -21,7 +21,6 @@ package assistantv1_test
 import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/watson-developer-cloud/go-sdk/assistantv1"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"os"
@@ -31,21 +30,29 @@ import (
 var service *assistantv1.AssistantV1
 var serviceErr error
 
-func TestInitialization(t *testing.T) {
+func init() {
 	err := godotenv.Load("../.env")
-	require.Nil(t, err)
 
-	service, serviceErr = assistantv1.
-		NewAssistantV1(&assistantv1.AssistantV1Options{
-			URL:      os.Getenv("ASSISTANT_GO_SDK_URL"),
-			Version:  "2018-09-20",
-			Username: os.Getenv("ASSISTANT_GO_SDK_USERNAME"),
-			Password: os.Getenv("ASSISTANT_GO_SDK_PASSWORD"),
-		})
-	require.Nil(t, serviceErr)
+	if err == nil {
+		service, serviceErr = assistantv1.
+			NewAssistantV1(&assistantv1.AssistantV1Options{
+				URL:      os.Getenv("ASSISTANT_GO_SDK_URL"),
+				Version:  "2018-09-20",
+				Username: os.Getenv("ASSISTANT_GO_SDK_USERNAME"),
+				Password: os.Getenv("ASSISTANT_GO_SDK_PASSWORD"),
+			})
+	}
+}
+
+func shouldSkipTest(t *testing.T) {
+	if service == nil {
+		t.Skip("Skipping test as service credentials are missing")
+	}
 }
 
 func TestCounterexamples(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List Counter Examples
 	response, responseErr := service.ListCounterexamples(service.
 		NewListCounterexamplesOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")))
@@ -56,7 +63,7 @@ func TestCounterexamples(t *testing.T) {
 
 	// Create counter example
 	response, responseErr = service.CreateCounterexample(service.
-		NewCreateCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade"))
+		NewCreateCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade?"))
 	assert.Nil(t, responseErr)
 
 	createCounterExample := service.GetCreateCounterexampleResult(response)
@@ -64,7 +71,7 @@ func TestCounterexamples(t *testing.T) {
 
 	// Get counter example
 	response, responseErr = service.GetCounterexample(service.
-		NewGetCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade"))
+		NewGetCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade?"))
 	assert.Nil(t, responseErr)
 
 	getCounterExample := service.GetGetCounterexampleResult(response)
@@ -72,8 +79,8 @@ func TestCounterexamples(t *testing.T) {
 
 	// Update counter example
 	options := service.NewUpdateCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"),
-		"Make me a lemonade").
-		SetNewText("Make me a smoothie")
+		"Make me a lemonade?").
+		SetNewText("Make me a smoothie?")
 	response, responseErr = service.UpdateCounterexample(options)
 	assert.Nil(t, responseErr)
 
@@ -82,11 +89,13 @@ func TestCounterexamples(t *testing.T) {
 
 	// Delete counter example
 	response, responseErr = service.DeleteCounterexample(service.
-		NewDeleteCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a smoothie"))
+		NewDeleteCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a smoothie?"))
 	assert.NotNil(t, response)
 }
 
 func TestEntity(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List entities
 	response, responseErr := service.ListEntities(
 		&assistantv1.ListEntitiesOptions{
@@ -146,6 +155,8 @@ func TestEntity(t *testing.T) {
 }
 
 func TestValues(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List values
 	response, responseErr := service.ListValues(
 		&assistantv1.ListValuesOptions{
@@ -200,6 +211,8 @@ func TestValues(t *testing.T) {
 }
 
 func TestListMentions(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List mentions
 	response, responseErr := service.ListMentions(
 		&assistantv1.ListMentionsOptions{
@@ -214,6 +227,8 @@ func TestListMentions(t *testing.T) {
 }
 
 func TestSynonyms(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List synonyms
 	response, responseErr := service.ListSynonyms(
 		&assistantv1.ListSynonymsOptions{
@@ -302,6 +317,8 @@ func TestSynonyms(t *testing.T) {
 }
 
 func TestIntents(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List intents
 	response, responseErr := service.ListIntents(
 		&assistantv1.ListIntentsOptions{
@@ -353,6 +370,8 @@ func TestIntents(t *testing.T) {
 }
 
 func TestExamples(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List examples
 	response, responseErr := service.ListExamples(
 		&assistantv1.ListExamplesOptions{
@@ -426,6 +445,8 @@ func TestExamples(t *testing.T) {
 }
 
 func TestDialogNodes(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List dialog nodes
 	response, responseErr := service.ListDialogNodes(
 		&assistantv1.ListDialogNodesOptions{
@@ -499,6 +520,8 @@ func TestDialogNodes(t *testing.T) {
 }
 
 func TestWorkspaces(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List workspaces
 	response, responseErr := service.ListWorkspaces(
 		&assistantv1.ListWorkspacesOptions{},
@@ -554,6 +577,8 @@ func TestWorkspaces(t *testing.T) {
 }
 
 func TestMessage(t *testing.T) {
+	shouldSkipTest(t)
+
 	response, responseErr := service.Message(
 		&assistantv1.MessageOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
@@ -569,6 +594,8 @@ func TestMessage(t *testing.T) {
 }
 
 func TestLogs(t *testing.T) {
+	shouldSkipTest(t)
+
 	// List logs
 	response, responseErr := service.ListLogs(
 		&assistantv1.ListLogsOptions{
