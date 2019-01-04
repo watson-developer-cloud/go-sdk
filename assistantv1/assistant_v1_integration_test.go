@@ -63,7 +63,7 @@ func TestCounterexamples(t *testing.T) {
 
 	// Create counter example
 	response, responseErr = service.CreateCounterexample(service.
-		NewCreateCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade"))
+		NewCreateCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade?"))
 	assert.Nil(t, responseErr)
 
 	createCounterExample := service.GetCreateCounterexampleResult(response)
@@ -71,7 +71,7 @@ func TestCounterexamples(t *testing.T) {
 
 	// Get counter example
 	response, responseErr = service.GetCounterexample(service.
-		NewGetCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade"))
+		NewGetCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade?"))
 	assert.Nil(t, responseErr)
 
 	getCounterExample := service.GetGetCounterexampleResult(response)
@@ -79,8 +79,8 @@ func TestCounterexamples(t *testing.T) {
 
 	// Update counter example
 	options := service.NewUpdateCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"),
-		"Make me a lemonade").
-		SetNewText("Make me a smoothie")
+		"Make me a lemonade?").
+		SetNewText("Make me a smoothie?")
 	response, responseErr = service.UpdateCounterexample(options)
 	assert.Nil(t, responseErr)
 
@@ -89,7 +89,7 @@ func TestCounterexamples(t *testing.T) {
 
 	// Delete counter example
 	response, responseErr = service.DeleteCounterexample(service.
-		NewDeleteCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a smoothie"))
+		NewDeleteCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a smoothie?"))
 	assert.NotNil(t, response)
 }
 
