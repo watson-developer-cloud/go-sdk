@@ -97,3 +97,11 @@ func TestCreateFormPartName(t *testing.T) {
 	assert.Equal(t, "this_is_a_test", CreateFormPartName("this_is_{word}_test", "word", "a"))
 	assert.Equal(t, "this_is_not_a_test", CreateFormPartName("this_is_{word}_test", "word", "not_a"))
 }
+
+func TestHasBadFirstOrLastChar(t *testing.T) {
+	assert.Equal(t, true, HasBadFirstOrLastChar("{hello}"))
+	assert.Equal(t, true, HasBadFirstOrLastChar("hello}"))
+	assert.Equal(t, true, HasBadFirstOrLastChar("\"hello"))
+	assert.Equal(t, true, HasBadFirstOrLastChar("hello\""))
+	assert.Equal(t, false, HasBadFirstOrLastChar("hello"))
+}

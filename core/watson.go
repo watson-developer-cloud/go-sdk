@@ -45,6 +45,10 @@ type WatsonService struct {
 
 // NewWatsonService Instantiate a Watson Service
 func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonService, error) {
+	if HasBadFirstOrLastChar(options.URL) {
+		return nil, fmt.Errorf("The URL shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your URL")
+	}
+
 	service := WatsonService{
 		Options: options,
 
@@ -59,12 +63,18 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 
 	if options.Username != "" && options.Password != "" {
 		if options.Username == APIKey && !strings.HasPrefix(options.Password, ICPPrefix) {
-			service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL)
+			if err := service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL); err != nil {
+				return nil, err
+			}
 		} else {
-			service.SetUsernameAndPassword(options.Username, options.Password)
+			if err := service.SetUsernameAndPassword(options.Username, options.Password); err != nil {
+				return nil, err
+			}
 		}
 	} else if options.IAMAccessToken != "" || options.IAMApiKey != "" {
-		service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL)
+		if err := service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL); err != nil {
+			return nil, err
+		}
 	} else {
 		// Try accessing VCAP_SERVICES env variable
 		err := service.accessVCAP(serviceName)
@@ -77,18 +87,29 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 }
 
 // SetUsernameAndPassword Sets the Username and Password
-func (service *WatsonService) SetUsernameAndPassword(username string, password string) {
+func (service *WatsonService) SetUsernameAndPassword(username string, password string) error {
+	if HasBadFirstOrLastChar(username) {
+		return fmt.Errorf("The username shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your username")
+	}
+	if HasBadFirstOrLastChar(password) {
+		return fmt.Errorf("The password shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your password")
+	}
 	service.Options.Username = username
 	service.Options.Password = password
+	return nil
 }
 
 // SetTokenManager Sets the Token Manager for IAM Authentication
-func (service *WatsonService) SetTokenManager(iamAPIKey string, iamAccessToken string, iamURL string) {
+func (service *WatsonService) SetTokenManager(iamAPIKey string, iamAccessToken string, iamURL string) error {
+	if HasBadFirstOrLastChar(iamAPIKey) {
+		return fmt.Errorf("The credentials shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your credentials")
+	}
 	service.Options.IAMApiKey = iamAPIKey
 	service.Options.IAMAccessToken = iamAccessToken
 	service.Options.IAMURL = iamURL
 	tokenManager := NewTokenManager(iamAPIKey, iamURL, iamAccessToken)
 	service.TokenManager = tokenManager
+	return nil
 }
 
 // SetIAMAccessToken Sets the IAM access token
@@ -103,7 +124,10 @@ func (service *WatsonService) SetIAMAccessToken(iamAccessToken string) {
 }
 
 // SetIAMAPIKey Sets the IAM API key
-func (service *WatsonService) SetIAMAPIKey(iamAPIKey string) {
+func (service *WatsonService) SetIAMAPIKey(iamAPIKey string) error {
+	if HasBadFirstOrLastChar(iamAPIKey) {
+		return fmt.Errorf("The credentials shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your credentials")
+	}
 	if service.TokenManager != nil {
 		service.TokenManager.SetIAMAPIKey(iamAPIKey)
 	} else {
@@ -111,11 +135,16 @@ func (service *WatsonService) SetIAMAPIKey(iamAPIKey string) {
 		service.TokenManager = tokenManager
 	}
 	service.Options.IAMApiKey = iamAPIKey
+	return nil
 }
 
 // SetURL sets the service URL
-func (service *WatsonService) SetURL(url string) {
+func (service *WatsonService) SetURL(url string) error {
+	if HasBadFirstOrLastChar(url) {
+		return fmt.Errorf("The URL shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your URL")
+	}
 	service.Options.URL = url
+	return nil
 }
 
 // SetDefaultHeaders sets HTTP headers to be sent in every request.
