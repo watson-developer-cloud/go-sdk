@@ -163,9 +163,6 @@ if listEnvironmentResult != nil {
 
 The [examples][examples] folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
 
-## AssistantV2
-Watson Assistant v2 API is released in beta. For details, see the ["Introducing Watson Assistant"](https://www.ibm.com/blogs/watson/2018/03/the-future-of-watson-conversation-watson-assistant/) blog post.
-
 ## Tests
 
 Run all test suites:
