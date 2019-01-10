@@ -2644,9 +2644,6 @@ type CreateDialogNode struct {
 	// The context for the dialog node.
 	Context interface{} `json:"context,omitempty"`
 
-	// Whether to consider the dialog node during runtime evaluation.  Set to `true` to ignore the dialog node.
-	Disabled *bool `json:"disabled,omitempty"`
-
 	// The metadata for the dialog node.
 	Metadata interface{} `json:"metadata,omitempty"`
 
@@ -3965,6 +3962,9 @@ type DialogNode struct {
 
 	// The alias used to identify the dialog node.
 	Title *string `json:"title,omitempty"`
+
+	// For internal use only.
+	Disabled *bool `json:"disabled,omitempty"`
 
 	// How the dialog node is processed.
 	NodeType *string `json:"type,omitempty"`
