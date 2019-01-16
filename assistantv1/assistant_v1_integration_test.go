@@ -465,7 +465,7 @@ func TestDialogNodes(t *testing.T) {
 			DialogNode:  core.StringPtr("greeting"),
 			Conditions:  core.StringPtr("#hello"),
 			Output: &assistantv1.DialogNodeOutput{
-				Generic: []assistantv1.DialogNodeOutputGeneric{
+				"generic": []assistantv1.DialogNodeOutputGeneric{
 					assistantv1.DialogNodeOutputGeneric{
 						ResponseType: core.StringPtr(assistantv1.DialogNodeOutputGeneric_ResponseType_Text),
 						Values: []assistantv1.DialogNodeOutputTextValuesElement{

@@ -2485,7 +2485,7 @@ func (assistant *AssistantV1) GetListLogsResult(response *core.DetailedResponse)
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
-// security](https://console.bluemix.net/docs/services/conversation/information-security.html).
+// security](https://cloud.ibm.com/docs/services/assistant/information-security.html).
 func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2528,16 +2528,36 @@ type CaptureGroup struct {
 }
 
 // Context : State information for the conversation. To maintain state, include the context from the previous response.
-type Context struct {
+type Context map[string]interface{}
 
-	// The unique identifier of the conversation.
-	ConversationID *string `json:"conversation_id,omitempty"`
+// SetConversationID : Allow user to set ConversationID
+func (this *Context) SetConversationID(ConversationID *string) {
+	(*this)["conversation_id"] = ConversationID
+}
 
-	// For internal use only.
-	System *SystemResponse `json:"system,omitempty"`
+// GetConversationID : Allow user to get ConversationID
+func (this *Context) GetConversationID() *string {
+	return (*this)["conversation_id"].(*string)
+}
 
-	// Metadata related to the message.
-	Metadata *MessageContextMetadata `json:"metadata,omitempty"`
+// SetSystem : Allow user to set System
+func (this *Context) SetSystem(System *SystemResponse) {
+	(*this)["system"] = System
+}
+
+// GetSystem : Allow user to get System
+func (this *Context) GetSystem() *SystemResponse {
+	return (*this)["system"].(*SystemResponse)
+}
+
+// SetMetadata : Allow user to set Metadata
+func (this *Context) SetMetadata(Metadata *MessageContextMetadata) {
+	(*this)["metadata"] = Metadata
+}
+
+// GetMetadata : Allow user to get Metadata
+func (this *Context) GetMetadata() *MessageContextMetadata {
+	return (*this)["metadata"].(*MessageContextMetadata)
 }
 
 // Counterexample : Counterexample struct
@@ -2638,7 +2658,7 @@ type CreateDialogNode struct {
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
@@ -2756,7 +2776,7 @@ type CreateDialogNodeOptions struct {
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
@@ -3321,7 +3341,7 @@ type CreateValue struct {
 	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
 	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
 	// specify a pattern, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
@@ -3363,7 +3383,7 @@ type CreateValueOptions struct {
 	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
 	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
 	// specify a pattern, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Specifies the type of value.
@@ -3939,7 +3959,7 @@ type DialogNode struct {
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context (if defined) for the dialog node.
@@ -4148,14 +4168,27 @@ const (
 )
 
 // DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the
-// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
-type DialogNodeOutput struct {
+// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+type DialogNodeOutput map[string]interface{}
 
-	// An array of objects describing the output defined for the dialog node.
-	Generic []DialogNodeOutputGeneric `json:"generic,omitempty"`
+// SetGeneric : Allow user to set Generic
+func (this *DialogNodeOutput) SetGeneric(Generic *[]DialogNodeOutputGeneric) {
+	(*this)["generic"] = Generic
+}
 
-	// Options that modify how specified output is handled.
-	Modifiers *DialogNodeOutputModifiers `json:"modifiers,omitempty"`
+// GetGeneric : Allow user to get Generic
+func (this *DialogNodeOutput) GetGeneric() *[]DialogNodeOutputGeneric {
+	return (*this)["generic"].(*[]DialogNodeOutputGeneric)
+}
+
+// SetModifiers : Allow user to set Modifiers
+func (this *DialogNodeOutput) SetModifiers(Modifiers *DialogNodeOutputModifiers) {
+	(*this)["modifiers"] = Modifiers
+}
+
+// GetModifiers : Allow user to get Modifiers
+func (this *DialogNodeOutput) GetModifiers() *DialogNodeOutputModifiers {
+	return (*this)["modifiers"].(*DialogNodeOutputModifiers)
 }
 
 // DialogNodeOutputGeneric : DialogNodeOutputGeneric struct
@@ -4255,7 +4288,7 @@ type DialogNodeOutputOptionsElement struct {
 // option.
 type DialogNodeOutputOptionsElementValue struct {
 
-	// The user input.
+	// An input object that includes the input text.
 	Input *InputData `json:"input,omitempty"`
 }
 
@@ -4370,7 +4403,7 @@ type DialogSuggestion struct {
 // selects the corresponding disambiguation option.
 type DialogSuggestionValue struct {
 
-	// The user input.
+	// An input object that includes the input text.
 	Input *InputData `json:"input,omitempty"`
 
 	// An array of intents to be sent along with the user input.
@@ -4957,7 +4990,7 @@ func (options *GetWorkspaceOptions) SetHeaders(param map[string]string) *GetWork
 	return options
 }
 
-// InputData : The user input.
+// InputData : An input object that includes the input text.
 type InputData struct {
 
 	// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be
@@ -5016,7 +5049,7 @@ type ListAllLogsOptions struct {
 	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter
 	// query that includes a value for `language`, as well as a value for `workspace_id` or
 	// `request.context.metadata.deployment`. For more information, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).
 	Filter *string `json:"filter" validate:"required"`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
@@ -5526,7 +5559,7 @@ type ListLogsOptions struct {
 	Sort *string `json:"sort,omitempty"`
 
 	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).
 	Filter *string `json:"filter,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -5931,10 +5964,10 @@ type LogCollection struct {
 // LogExport : LogExport struct
 type LogExport struct {
 
-	// A message request formatted for the Watson Assistant service.
+	// A request sent to the workspace, including the user input and context.
 	Request *MessageRequest `json:"request" validate:"required"`
 
-	// A response from the Watson Assistant service.
+	// The response sent by the workspace, including the output text, detected intents and entities, and context.
 	Response *MessageResponse `json:"response" validate:"required"`
 
 	// A unique identifier for the logged event.
@@ -5954,13 +5987,26 @@ type LogExport struct {
 }
 
 // LogMessage : Log message details.
-type LogMessage struct {
+type LogMessage map[string]interface{}
 
-	// The severity of the log message.
-	Level *string `json:"level" validate:"required"`
+// SetLevel : Allow user to set Level
+func (this *LogMessage) SetLevel(Level *string) {
+	(*this)["level"] = Level
+}
 
-	// The text of the log message.
-	Msg *string `json:"msg" validate:"required"`
+// GetLevel : Allow user to get Level
+func (this *LogMessage) GetLevel() *string {
+	return (*this)["level"].(*string)
+}
+
+// SetMsg : Allow user to set Msg
+func (this *LogMessage) SetMsg(Msg *string) {
+	(*this)["msg"] = Msg
+}
+
+// GetMsg : Allow user to get Msg
+func (this *LogMessage) GetMsg() *string {
+	return (*this)["msg"].(*string)
 }
 
 // Constants associated with the LogMessage.Level property.
@@ -6021,7 +6067,7 @@ type MessageOptions struct {
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// The user input.
+	// An input object that includes the input text.
 	Input *InputData `json:"input,omitempty"`
 
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
@@ -6111,10 +6157,10 @@ func (options *MessageOptions) SetHeaders(param map[string]string) *MessageOptio
 	return options
 }
 
-// MessageRequest : A message request formatted for the Watson Assistant service.
+// MessageRequest : A request sent to the workspace, including the user input and context.
 type MessageRequest struct {
 
-	// The user input.
+	// An input object that includes the input text.
 	Input *InputData `json:"input,omitempty"`
 
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
@@ -6136,53 +6182,131 @@ type MessageRequest struct {
 	Output *OutputData `json:"output,omitempty"`
 }
 
-// MessageResponse : A response from the Watson Assistant service.
-type MessageResponse struct {
+// MessageResponse : The response sent by the workspace, including the output text, detected intents and entities, and context.
+type MessageResponse map[string]interface{}
 
-	// The text of the user input.
-	Input *MessageInput `json:"input,omitempty"`
+// SetInput : Allow user to set Input
+func (this *MessageResponse) SetInput(Input *MessageInput) {
+	(*this)["input"] = Input
+}
 
-	// An array of intents recognized in the user input, sorted in descending order of confidence.
-	Intents []RuntimeIntent `json:"intents" validate:"required"`
+// GetInput : Allow user to get Input
+func (this *MessageResponse) GetInput() *MessageInput {
+	return (*this)["input"].(*MessageInput)
+}
 
-	// An array of entities identified in the user input.
-	Entities []RuntimeEntity `json:"entities" validate:"required"`
+// SetIntents : Allow user to set Intents
+func (this *MessageResponse) SetIntents(Intents *[]RuntimeIntent) {
+	(*this)["intents"] = Intents
+}
 
-	// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
-	AlternateIntents *bool `json:"alternate_intents,omitempty"`
+// GetIntents : Allow user to get Intents
+func (this *MessageResponse) GetIntents() *[]RuntimeIntent {
+	return (*this)["intents"].(*[]RuntimeIntent)
+}
 
-	// State information for the conversation. To maintain state, include the context from the previous response.
-	Context *Context `json:"context" validate:"required"`
+// SetEntities : Allow user to set Entities
+func (this *MessageResponse) SetEntities(Entities *[]RuntimeEntity) {
+	(*this)["entities"] = Entities
+}
 
-	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
-	// log.
-	Output *OutputData `json:"output" validate:"required"`
+// GetEntities : Allow user to get Entities
+func (this *MessageResponse) GetEntities() *[]RuntimeEntity {
+	return (*this)["entities"].(*[]RuntimeEntity)
+}
 
-	// An array of objects describing any actions requested by the dialog node.
-	Actions []DialogNodeAction `json:"actions,omitempty"`
+// SetAlternateIntents : Allow user to set AlternateIntents
+func (this *MessageResponse) SetAlternateIntents(AlternateIntents *bool) {
+	(*this)["alternate_intents"] = AlternateIntents
+}
+
+// GetAlternateIntents : Allow user to get AlternateIntents
+func (this *MessageResponse) GetAlternateIntents() *bool {
+	return (*this)["alternate_intents"].(*bool)
+}
+
+// SetContext : Allow user to set Context
+func (this *MessageResponse) SetContext(Context *Context) {
+	(*this)["context"] = Context
+}
+
+// GetContext : Allow user to get Context
+func (this *MessageResponse) GetContext() *Context {
+	return (*this)["context"].(*Context)
+}
+
+// SetOutput : Allow user to set Output
+func (this *MessageResponse) SetOutput(Output *OutputData) {
+	(*this)["output"] = Output
+}
+
+// GetOutput : Allow user to get Output
+func (this *MessageResponse) GetOutput() *OutputData {
+	return (*this)["output"].(*OutputData)
+}
+
+// SetActions : Allow user to set Actions
+func (this *MessageResponse) SetActions(Actions *[]DialogNodeAction) {
+	(*this)["actions"] = Actions
+}
+
+// GetActions : Allow user to get Actions
+func (this *MessageResponse) GetActions() *[]DialogNodeAction {
+	return (*this)["actions"].(*[]DialogNodeAction)
 }
 
 // OutputData : An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
 // log.
-type OutputData struct {
+type OutputData map[string]interface{}
 
-	// An array of up to 50 messages logged with the request.
-	LogMessages []LogMessage `json:"log_messages" validate:"required"`
+// SetLogMessages : Allow user to set LogMessages
+func (this *OutputData) SetLogMessages(LogMessages *[]LogMessage) {
+	(*this)["log_messages"] = LogMessages
+}
 
-	// An array of responses to the user.
-	Text []string `json:"text" validate:"required"`
+// GetLogMessages : Allow user to get LogMessages
+func (this *OutputData) GetLogMessages() *[]LogMessage {
+	return (*this)["log_messages"].(*[]LogMessage)
+}
 
-	// Output intended for any channel. It is the responsibility of the client application to implement the supported
-	// response types.
-	Generic []DialogRuntimeResponseGeneric `json:"generic,omitempty"`
+// SetText : Allow user to set Text
+func (this *OutputData) SetText(Text *[]string) {
+	(*this)["text"] = Text
+}
 
-	// An array of the nodes that were triggered to create the response, in the order in which they were visited. This
-	// information is useful for debugging and for tracing the path taken through the node tree.
-	NodesVisited []string `json:"nodes_visited,omitempty"`
+// GetText : Allow user to get Text
+func (this *OutputData) GetText() *[]string {
+	return (*this)["text"].(*[]string)
+}
 
-	// An array of objects containing detailed diagnostic information about the nodes that were triggered during processing
-	// of the input message. Included only if **nodes_visited_details** is set to `true` in the message request.
-	NodesVisitedDetails []DialogNodeVisitedDetails `json:"nodes_visited_details,omitempty"`
+// SetGeneric : Allow user to set Generic
+func (this *OutputData) SetGeneric(Generic *[]DialogRuntimeResponseGeneric) {
+	(*this)["generic"] = Generic
+}
+
+// GetGeneric : Allow user to get Generic
+func (this *OutputData) GetGeneric() *[]DialogRuntimeResponseGeneric {
+	return (*this)["generic"].(*[]DialogRuntimeResponseGeneric)
+}
+
+// SetNodesVisited : Allow user to set NodesVisited
+func (this *OutputData) SetNodesVisited(NodesVisited *[]string) {
+	(*this)["nodes_visited"] = NodesVisited
+}
+
+// GetNodesVisited : Allow user to get NodesVisited
+func (this *OutputData) GetNodesVisited() *[]string {
+	return (*this)["nodes_visited"].(*[]string)
+}
+
+// SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
+func (this *OutputData) SetNodesVisitedDetails(NodesVisitedDetails *[]DialogNodeVisitedDetails) {
+	(*this)["nodes_visited_details"] = NodesVisitedDetails
+}
+
+// GetNodesVisitedDetails : Allow user to get NodesVisitedDetails
+func (this *OutputData) GetNodesVisitedDetails() *[]DialogNodeVisitedDetails {
+	return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
 }
 
 // Pagination : The pagination data for the returned objects.
@@ -6208,36 +6332,89 @@ type Pagination struct {
 }
 
 // RuntimeEntity : A term from the request that was identified as an entity.
-type RuntimeEntity struct {
+type RuntimeEntity map[string]interface{}
 
-	// An entity detected in the input.
-	Entity *string `json:"entity" validate:"required"`
+// SetEntity : Allow user to set Entity
+func (this *RuntimeEntity) SetEntity(Entity *string) {
+	(*this)["entity"] = Entity
+}
 
-	// An array of zero-based character offsets that indicate where the detected entity values begin and end in the input
-	// text.
-	Location []int64 `json:"location" validate:"required"`
+// GetEntity : Allow user to get Entity
+func (this *RuntimeEntity) GetEntity() *string {
+	return (*this)["entity"].(*string)
+}
 
-	// The term in the input text that was recognized as an entity value.
-	Value *string `json:"value" validate:"required"`
+// SetLocation : Allow user to set Location
+func (this *RuntimeEntity) SetLocation(Location *[]int64) {
+	(*this)["location"] = Location
+}
 
-	// A decimal percentage that represents Watson's confidence in the entity.
-	Confidence *float64 `json:"confidence,omitempty"`
+// GetLocation : Allow user to get Location
+func (this *RuntimeEntity) GetLocation() *[]int64 {
+	return (*this)["location"].(*[]int64)
+}
 
-	// Any metadata for the entity.
-	Metadata interface{} `json:"metadata,omitempty"`
+// SetValue : Allow user to set Value
+func (this *RuntimeEntity) SetValue(Value *string) {
+	(*this)["value"] = Value
+}
 
-	// The recognized capture groups for the entity, as defined by the entity pattern.
-	Groups []CaptureGroup `json:"groups,omitempty"`
+// GetValue : Allow user to get Value
+func (this *RuntimeEntity) GetValue() *string {
+	return (*this)["value"].(*string)
+}
+
+// SetConfidence : Allow user to set Confidence
+func (this *RuntimeEntity) SetConfidence(Confidence *float64) {
+	(*this)["confidence"] = Confidence
+}
+
+// GetConfidence : Allow user to get Confidence
+func (this *RuntimeEntity) GetConfidence() *float64 {
+	return (*this)["confidence"].(*float64)
+}
+
+// SetMetadata : Allow user to set Metadata
+func (this *RuntimeEntity) SetMetadata(Metadata *interface{}) {
+	(*this)["metadata"] = Metadata
+}
+
+// GetMetadata : Allow user to get Metadata
+func (this *RuntimeEntity) GetMetadata() *interface{} {
+	return (*this)["metadata"].(*interface{})
+}
+
+// SetGroups : Allow user to set Groups
+func (this *RuntimeEntity) SetGroups(Groups *[]CaptureGroup) {
+	(*this)["groups"] = Groups
+}
+
+// GetGroups : Allow user to get Groups
+func (this *RuntimeEntity) GetGroups() *[]CaptureGroup {
+	return (*this)["groups"].(*[]CaptureGroup)
 }
 
 // RuntimeIntent : An intent identified in the user input.
-type RuntimeIntent struct {
+type RuntimeIntent map[string]interface{}
 
-	// The name of the recognized intent.
-	Intent *string `json:"intent" validate:"required"`
+// SetIntent : Allow user to set Intent
+func (this *RuntimeIntent) SetIntent(Intent *string) {
+	(*this)["intent"] = Intent
+}
 
-	// A decimal percentage that represents Watson's confidence in the intent.
-	Confidence *float64 `json:"confidence" validate:"required"`
+// GetIntent : Allow user to get Intent
+func (this *RuntimeIntent) GetIntent() *string {
+	return (*this)["intent"].(*string)
+}
+
+// SetConfidence : Allow user to set Confidence
+func (this *RuntimeIntent) SetConfidence(Confidence *float64) {
+	(*this)["confidence"] = Confidence
+}
+
+// GetConfidence : Allow user to get Confidence
+func (this *RuntimeIntent) GetConfidence() *float64 {
+	return (*this)["confidence"].(*float64)
 }
 
 // Synonym : Synonym struct
@@ -6264,8 +6441,7 @@ type SynonymCollection struct {
 }
 
 // SystemResponse : For internal use only.
-type SystemResponse struct {
-}
+type SystemResponse map[string]interface{}
 
 // UpdateCounterexampleOptions : The updateCounterexample options.
 type UpdateCounterexampleOptions struct {
@@ -6375,7 +6551,7 @@ type UpdateDialogNodeOptions struct {
 	NewDigressIn *string `json:"new_digress_in,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
 	NewOutput *DialogNodeOutput `json:"new_output,omitempty"`
 
 	// The ID of the parent dialog node.
@@ -6899,7 +7075,7 @@ type UpdateValueOptions struct {
 	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
 	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
 	// specify a pattern, see the
-	// [documentation](https://console.bluemix.net/docs/services/conversation/entities.html#creating-entities).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
 	NewPatterns []string `json:"new_patterns,omitempty"`
 
 	// The text of the entity value. This string must conform to the following restrictions:
@@ -7292,7 +7468,7 @@ const (
 	WorkspaceExport_Status_Unavailable = "Unavailable"
 )
 
-// WorkspaceSystemSettings : WorkspaceSystemSettings struct
+// WorkspaceSystemSettings : Global settings for the workspace.
 type WorkspaceSystemSettings struct {
 
 	// Workspace settings related to the Watson Assistant tool.
@@ -7307,7 +7483,9 @@ type WorkspaceSystemSettings struct {
 	HumanAgentAssist interface{} `json:"human_agent_assist,omitempty"`
 }
 
-// WorkspaceSystemSettingsDisambiguation : WorkspaceSystemSettingsDisambiguation struct
+// WorkspaceSystemSettingsDisambiguation : Workspace settings related to the disambiguation feature.
+//
+// **Note:** This feature is available only to Premium users.
 type WorkspaceSystemSettingsDisambiguation struct {
 
 	// The text of the introductory prompt that accompanies disambiguation options presented to the user.
@@ -7333,7 +7511,7 @@ const (
 	WorkspaceSystemSettingsDisambiguation_Sensitivity_High = "high"
 )
 
-// WorkspaceSystemSettingsTooling : WorkspaceSystemSettingsTooling struct
+// WorkspaceSystemSettingsTooling : Workspace settings related to the Watson Assistant tool.
 type WorkspaceSystemSettingsTooling struct {
 
 	// Whether the dialog JSON editor displays text responses within the `output.generic` object.
