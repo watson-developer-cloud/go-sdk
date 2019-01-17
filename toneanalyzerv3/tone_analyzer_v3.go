@@ -420,7 +420,7 @@ type ToneOptions struct {
 
 	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
 	// 'text/plain;charset=utf-8'.
-	ContentType *string `json:"Content-Type,omitempty"`
+	ContentType *string `json:"Content-Type" validate:"required"`
 
 	// Indicates whether the service is to return an analysis of each individual sentence in addition to its analysis of
 	// the full document. If `true` (the default), the service returns results for each sentence.
