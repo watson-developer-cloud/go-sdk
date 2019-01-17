@@ -1006,6 +1006,49 @@ func (discovery *DiscoveryV1) GetCreateExpansionsResult(response *core.DetailedR
 	return nil
 }
 
+// CreateStopwordList : Create stopword list
+// Upload a custom stopword list to use with the specified collection.
+func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *CreateStopwordListOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createStopwordListOptions, "createStopwordListOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createStopwordListOptions, "createStopwordListOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
+	pathParameters := []string{*createStopwordListOptions.EnvironmentID, *createStopwordListOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createStopwordListOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	builder.AddFormData("stopword_file", core.StringNilMapper(createStopwordListOptions.StopwordFilename),
+		"application/octet-stream", createStopwordListOptions.StopwordFile)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, new(TokenDictStatusResponse))
+	return response, err
+}
+
+// GetCreateStopwordListResult : Retrieve result of CreateStopwordList operation
+func (discovery *DiscoveryV1) GetCreateStopwordListResult(response *core.DetailedResponse) *TokenDictStatusResponse {
+	result, ok := response.Result.(*TokenDictStatusResponse)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // CreateTokenizationDictionary : Create tokenization dictionary
 // Upload a custom tokenization dictionary to use with the specified collection.
 func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions) (*core.DetailedResponse, error) {
@@ -1074,6 +1117,38 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
 
 	for headerName, headerValue := range deleteExpansionsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, nil)
+	return response, err
+}
+
+// DeleteStopwordList : Delete a custom stopword list
+// Delete a custom stopword list from the collection. After a custom stopword list is deleted, the default list is used
+// for the collection.
+func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *DeleteStopwordListOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteStopwordListOptions, "deleteStopwordListOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteStopwordListOptions, "deleteStopwordListOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
+	pathParameters := []string{*deleteStopwordListOptions.EnvironmentID, *deleteStopwordListOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteStopwordListOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")

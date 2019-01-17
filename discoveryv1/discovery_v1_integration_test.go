@@ -406,6 +406,38 @@ func TestTokenizationDictionary(t *testing.T) {
 	)
 }
 
+func TestStopwordOperations(t *testing.T) {
+	shouldSkipTest(t)
+
+	t.Skip("Disable temporarily")
+	// Create stopword list
+	pwd, _ := os.Getwd()
+	file, fileErr := os.Open(pwd + "/../resources/stopwords.txt")
+	assert.Nil(t, fileErr)
+
+	response, responseErr := service.CreateStopwordList(
+		&discoveryv1.CreateStopwordListOptions{
+			EnvironmentID:    environmentID,
+			CollectionID:     collectionID,
+			StopwordFile:     file,
+			StopwordFilename: core.StringPtr("stopwords.txt"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	stopwordsListStatus := service.GetCreateStopwordListResult(response)
+	assert.NotNil(t, stopwordsListStatus)
+
+	// Delete stopword list
+	_, responseErr = service.DeleteStopwordList(
+		&discoveryv1.DeleteStopwordListOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  collectionID,
+		},
+	)
+	assert.Nil(t, responseErr)
+}
+
 func TestDeleteOperations(t *testing.T) {
 	shouldSkipTest(t)
 
