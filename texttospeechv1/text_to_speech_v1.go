@@ -356,7 +356,8 @@ func (textToSpeech *TextToSpeechV1) GetGetPronunciationResult(response *core.Det
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Creating a custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsCreate).
+// **See also:** [Creating a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsCreate).
 func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createVoiceModelOptions, "createVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -416,7 +417,8 @@ func (textToSpeech *TextToSpeechV1) GetCreateVoiceModelResult(response *core.Det
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Deleting a custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsDelete).
+// **See also:** [Deleting a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsDelete).
 func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -451,7 +453,8 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Querying a custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsQuery).
+// **See also:** [Querying a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsQuery).
 func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -497,7 +500,8 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.Detail
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Querying all custom models](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsQueryAll).
+// **See also:** [Querying all custom
+// models](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsQueryAll).
 func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoiceModelsOptions, "listVoiceModelsOptions"); err != nil {
 		return nil, err
@@ -556,7 +560,8 @@ func (textToSpeech *TextToSpeechV1) GetListVoiceModelsResult(response *core.Deta
 //
 // **See also:**
 // * [Updating a custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsUpdate)
-// * [Adding words to a Japanese custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Adding words to a Japanese custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
 // * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateVoiceModelOptions, "updateVoiceModelOptions cannot be nil"); err != nil {
@@ -620,8 +625,10 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 // **Note:** This method is currently a beta release.
 //
 // **See also:**
-// * [Adding a single word to a custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordAdd)
-// * [Adding words to a Japanese custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Adding a single word to a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordAdd)
+// * [Adding words to a Japanese custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
 // * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
@@ -682,8 +689,10 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 // **Note:** This method is currently a beta release.
 //
 // **See also:**
-// * [Adding multiple words to a custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordsAdd)
-// * [Adding words to a Japanese custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
+// * [Adding multiple words to a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordsAdd)
+// * [Adding words to a Japanese custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
 // * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
 func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
@@ -729,7 +738,8 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:** [Deleting a word from a custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordDelete).
+// **See also:** [Deleting a word from a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordDelete).
 func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
 		return nil, err
