@@ -513,7 +513,7 @@ type CreateClassifierOptions struct {
 
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
-	// preparation](https://console.bluemix.net/docs/services/natural-language-classifier/using-your-data.html).
+	// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier/using-your-data.html).
 	TrainingData *os.File `json:"training_data" validate:"required"`
 
 	// The filename for trainingData.
