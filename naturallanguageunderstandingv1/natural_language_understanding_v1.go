@@ -27,8 +27,8 @@ import (
 // service cleans HTML content before analysis by default, so the results can ignore most advertisements and other
 // unwanted content.
 //
-// You can create [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) with Watson Knowledge
-// Studio to detect custom entities and relations in Natural Language Understanding.
+// You can create [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html)
+// with Watson Knowledge Studio to detect custom entities and relations in Natural Language Understanding.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/natural-language-understanding.html
@@ -197,8 +197,9 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetDeleteMod
 }
 
 // ListModels : List models
-// Lists Watson Knowledge Studio [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) that
-// are deployed to your Natural Language Understanding service.
+// Lists Watson Knowledge Studio [custom
+// models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) that are deployed to
+// your Natural Language Understanding service.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
 		return nil, err
@@ -298,9 +299,9 @@ type AnalyzeOptions struct {
 	// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html) documentation.
 	Clean *bool `json:"clean,omitempty"`
 
-	// An [XPath query](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html#xpath) to perform on `html`
-	// or `url` input. Results of the query will be appended to the cleaned webpage text before it is analyzed. To analyze
-	// only the results of the XPath query, set the `clean` parameter to `false`.
+	// An [XPath query](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html#xpath)
+	// to perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text before it is
+	// analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
 	Xpath *string `json:"xpath,omitempty"`
 
 	// Whether to use raw HTML content if text cleaning fails.
@@ -408,7 +409,6 @@ type Author struct {
 type CategoriesOptions struct {
 
 	// Maximum number of categories to return.
-	// Maximum value: **10**.
 	Limit *int64 `json:"limit,omitempty"`
 }
 
@@ -416,7 +416,8 @@ type CategoriesOptions struct {
 type CategoriesResult struct {
 
 	// The path to the category through the 5-level taxonomy hierarchy. For the complete list of categories, see the
-	// [Categories hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding/categories.html#categories-hierarchy)
+	// [Categories
+	// hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding/categories.html#categories-hierarchy)
 	// documentation.
 	Label *string `json:"label,omitempty"`
 
@@ -427,7 +428,7 @@ type CategoriesResult struct {
 // ConceptsOptions : Returns high-level concepts in the content. For example, a research paper about deep learning might return the
 // concept, "Artificial Intelligence" although the term is not mentioned.
 //
-// Supported languages: English, French, German, Japanese, Korean, Portuguese, Spanish.
+// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 type ConceptsOptions struct {
 
 	// Maximum number of concepts to return.
@@ -450,7 +451,7 @@ type ConceptsResult struct {
 // DeleteModelOptions : The deleteModel options.
 type DeleteModelOptions struct {
 
-	// model_id of the model to delete.
+	// Model ID of the model to delete.
 	ModelID *string `json:"model_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -561,7 +562,7 @@ type EmotionScores struct {
 // subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
 //
 // Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
-// Arabic, Chinese, and Dutch custom models are also supported.
+// Arabic, Chinese, and Dutch are supported only through custom models.
 type EntitiesOptions struct {
 
 	// Maximum number of entities to return.
@@ -570,7 +571,7 @@ type EntitiesOptions struct {
 	// Set this to `true` to return locations of entity mentions.
 	Mentions *bool `json:"mentions,omitempty"`
 
-	// Enter a [custom model](https://www.bluemix.net/docs/services/natural-language-understanding/customizing.html) ID to
+	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to
 	// override the standard entity detection model.
 	Model *string `json:"model,omitempty"`
 
@@ -632,7 +633,7 @@ type Features struct {
 	// Returns high-level concepts in the content. For example, a research paper about deep learning might return the
 	// concept, "Artificial Intelligence" although the term is not mentioned.
 	//
-	// Supported languages: English, French, German, Japanese, Korean, Portuguese, Spanish.
+	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 	Concepts *ConceptsOptions `json:"concepts,omitempty"`
 
 	// Detects anger, disgust, fear, joy, or sadness that is conveyed in the content or by the context around target
@@ -646,7 +647,7 @@ type Features struct {
 	// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
 	//
 	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
-	// Arabic, Chinese, and Dutch custom models are also supported.
+	// Arabic, Chinese, and Dutch are supported only through custom models.
 	Entities *EntitiesOptions `json:"entities,omitempty"`
 
 	// Returns important keywords in the content.
@@ -742,7 +743,7 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 	return options
 }
 
-// ListModelsResults : Models available for Relations and Entities features.
+// ListModelsResults : Custom models that are available for entities and relations.
 type ListModelsResults struct {
 
 	// An array of available models.
@@ -751,8 +752,7 @@ type ListModelsResults struct {
 
 // MetadataOptions : Returns information from the document, including author name, title, RSS/ATOM feeds, prominent page image, and
 // publication date. Supports URL and HTML input types only.
-type MetadataOptions struct {
-}
+type MetadataOptions map[string]interface{}
 
 // MetadataResult : The authors, publication date, title, prominent page image, and RSS/ATOM feeds of the webpage. Supports URL and HTML
 // input types.
@@ -833,8 +833,8 @@ type RelationEntity struct {
 // Portuguese custom models are also supported.
 type RelationsOptions struct {
 
-	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to override the default
-	// model.
+	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to
+	// override the default model.
 	Model *string `json:"model,omitempty"`
 }
 
