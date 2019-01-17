@@ -438,6 +438,57 @@ func TestStopwordOperations(t *testing.T) {
 	assert.Nil(t, responseErr)
 }
 
+func TestGatewayConfiguration(t *testing.T) {
+	shouldSkipTest(t)
+
+	// Create gateway
+	response, responseErr := service.CreateGateway(
+		&discoveryv1.CreateGatewayOptions{
+			EnvironmentID: environmentID,
+			Name:          core.StringPtr("test-gateway-configuration-go"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	createGateway := service.GetCreateGatewayResult(response)
+	assert.NotNil(t, createGateway)
+
+	// Get gateway
+	response, responseErr = service.GetGateway(
+		&discoveryv1.GetGatewayOptions{
+			EnvironmentID: environmentID,
+			GatewayID:     createGateway.GatewayID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	getGateway := service.GetGetGatewayResult(response)
+	assert.NotNil(t, getGateway)
+
+	// List gateways
+	response, responseErr = service.ListGateways(
+		&discoveryv1.ListGatewaysOptions{
+			EnvironmentID: environmentID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	listGateways := service.GetListGatewaysResult(response)
+	assert.NotNil(t, listGateways)
+
+	// Delete gateway
+	response, responseErr = service.DeleteGateway(
+		&discoveryv1.DeleteGatewayOptions{
+			EnvironmentID: environmentID,
+			GatewayID:     getGateway.GatewayID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	deleteGateway := service.GetDeleteGatewayResult(response)
+	assert.NotNil(t, deleteGateway)
+}
+
 func TestDeleteOperations(t *testing.T) {
 	shouldSkipTest(t)
 

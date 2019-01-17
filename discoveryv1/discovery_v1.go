@@ -3046,6 +3046,176 @@ func (discovery *DiscoveryV1) GetUpdateCredentialsResult(response *core.Detailed
 	return nil
 }
 
+// CreateGateway : Create Gateway
+// Create a gateway configuration to use with a remotely installed gateway.
+func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createGatewayOptions, "createGatewayOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createGatewayOptions, "createGatewayOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "gateways"}
+	pathParameters := []string{*createGatewayOptions.EnvironmentID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createGatewayOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	body := make(map[string]interface{})
+	if createGatewayOptions.Name != nil {
+		body["name"] = createGatewayOptions.Name
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, new(Gateway))
+	return response, err
+}
+
+// GetCreateGatewayResult : Retrieve result of CreateGateway operation
+func (discovery *DiscoveryV1) GetCreateGatewayResult(response *core.DetailedResponse) *Gateway {
+	result, ok := response.Result.(*Gateway)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// DeleteGateway : Delete Gateway
+// Delete the specified gateway configuration.
+func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteGatewayOptions, "deleteGatewayOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteGatewayOptions, "deleteGatewayOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "gateways"}
+	pathParameters := []string{*deleteGatewayOptions.EnvironmentID, *deleteGatewayOptions.GatewayID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteGatewayOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, new(GatewayDelete))
+	return response, err
+}
+
+// GetDeleteGatewayResult : Retrieve result of DeleteGateway operation
+func (discovery *DiscoveryV1) GetDeleteGatewayResult(response *core.DetailedResponse) *GatewayDelete {
+	result, ok := response.Result.(*GatewayDelete)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// GetGateway : List Gateway Details
+// List information about the specified gateway.
+func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getGatewayOptions, "getGatewayOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getGatewayOptions, "getGatewayOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "gateways"}
+	pathParameters := []string{*getGatewayOptions.EnvironmentID, *getGatewayOptions.GatewayID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getGatewayOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, new(Gateway))
+	return response, err
+}
+
+// GetGetGatewayResult : Retrieve result of GetGateway operation
+func (discovery *DiscoveryV1) GetGetGatewayResult(response *core.DetailedResponse) *Gateway {
+	result, ok := response.Result.(*Gateway)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// ListGateways : List Gateways
+// List the currently configured gateways.
+func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listGatewaysOptions, "listGatewaysOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listGatewaysOptions, "listGatewaysOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "gateways"}
+	pathParameters := []string{*listGatewaysOptions.EnvironmentID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listGatewaysOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, new(GatewayList))
+	return response, err
+}
+
+// GetListGatewaysResult : Retrieve result of ListGateways operation
+func (discovery *DiscoveryV1) GetListGatewaysResult(response *core.DetailedResponse) *GatewayList {
+	result, ok := response.Result.(*GatewayList)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // AddDocumentOptions : The addDocument options.
 type AddDocumentOptions struct {
 
@@ -3736,6 +3906,103 @@ func (options *CreateExpansionsOptions) SetHeaders(param map[string]string) *Cre
 	return options
 }
 
+// CreateGatewayOptions : The createGateway options.
+type CreateGatewayOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// User-defined name.
+	Name *string `json:"name,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewCreateGatewayOptions : Instantiate CreateGatewayOptions
+func (discovery *DiscoveryV1) NewCreateGatewayOptions(environmentID string) *CreateGatewayOptions {
+	return &CreateGatewayOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *CreateGatewayOptions) SetEnvironmentID(environmentID string) *CreateGatewayOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *CreateGatewayOptions) SetName(name string) *CreateGatewayOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateGatewayOptions) SetHeaders(param map[string]string) *CreateGatewayOptions {
+	options.Headers = param
+	return options
+}
+
+// CreateStopwordListOptions : The createStopwordList options.
+type CreateStopwordListOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// The content of the stopword list to ingest.
+	StopwordFile *os.File `json:"stopword_file" validate:"required"`
+
+	// The filename for stopwordFile.
+	StopwordFilename *string `json:"stopword_filename" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewCreateStopwordListOptions : Instantiate CreateStopwordListOptions
+func (discovery *DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectionID string, stopwordFile *os.File, stopwordFilename string) *CreateStopwordListOptions {
+	return &CreateStopwordListOptions{
+		EnvironmentID:    core.StringPtr(environmentID),
+		CollectionID:     core.StringPtr(collectionID),
+		StopwordFile:     stopwordFile,
+		StopwordFilename: core.StringPtr(stopwordFilename),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *CreateStopwordListOptions) SetEnvironmentID(environmentID string) *CreateStopwordListOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *CreateStopwordListOptions) SetCollectionID(collectionID string) *CreateStopwordListOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetStopwordFile : Allow user to set StopwordFile
+func (options *CreateStopwordListOptions) SetStopwordFile(stopwordFile *os.File) *CreateStopwordListOptions {
+	options.StopwordFile = stopwordFile
+	return options
+}
+
+// SetStopwordFilename : Allow user to set StopwordFilename
+func (options *CreateStopwordListOptions) SetStopwordFilename(stopwordFilename string) *CreateStopwordListOptions {
+	options.StopwordFilename = core.StringPtr(stopwordFilename)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateStopwordListOptions) SetHeaders(param map[string]string) *CreateStopwordListOptions {
+	options.Headers = param
+	return options
+}
+
 // CreateTokenizationDictionaryOptions : The createTokenizationDictionary options.
 type CreateTokenizationDictionaryOptions struct {
 
@@ -4325,6 +4592,84 @@ func (options *DeleteExpansionsOptions) SetCollectionID(collectionID string) *De
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteExpansionsOptions) SetHeaders(param map[string]string) *DeleteExpansionsOptions {
+	options.Headers = param
+	return options
+}
+
+// DeleteGatewayOptions : The deleteGateway options.
+type DeleteGatewayOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The requested gateway ID.
+	GatewayID *string `json:"gateway_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteGatewayOptions : Instantiate DeleteGatewayOptions
+func (discovery *DiscoveryV1) NewDeleteGatewayOptions(environmentID string, gatewayID string) *DeleteGatewayOptions {
+	return &DeleteGatewayOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		GatewayID:     core.StringPtr(gatewayID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteGatewayOptions) SetEnvironmentID(environmentID string) *DeleteGatewayOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetGatewayID : Allow user to set GatewayID
+func (options *DeleteGatewayOptions) SetGatewayID(gatewayID string) *DeleteGatewayOptions {
+	options.GatewayID = core.StringPtr(gatewayID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteGatewayOptions) SetHeaders(param map[string]string) *DeleteGatewayOptions {
+	options.Headers = param
+	return options
+}
+
+// DeleteStopwordListOptions : The deleteStopwordList options.
+type DeleteStopwordListOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteStopwordListOptions : Instantiate DeleteStopwordListOptions
+func (discovery *DiscoveryV1) NewDeleteStopwordListOptions(environmentID string, collectionID string) *DeleteStopwordListOptions {
+	return &DeleteStopwordListOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *DeleteStopwordListOptions) SetEnvironmentID(environmentID string) *DeleteStopwordListOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteStopwordListOptions) SetCollectionID(collectionID string) *DeleteStopwordListOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteStopwordListOptions) SetHeaders(param map[string]string) *DeleteStopwordListOptions {
 	options.Headers = param
 	return options
 }
@@ -5290,6 +5635,53 @@ type FontSetting struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// Gateway : Object describing a specific gateway.
+type Gateway struct {
+
+	// The gateway ID of the gateway.
+	GatewayID *string `json:"gateway_id,omitempty"`
+
+	// The user defined name of the gateway.
+	Name *string `json:"name,omitempty"`
+
+	// The current status of the gateway. `connected` means the gateway is connected to the remotly installed gateway.
+	// `idle` means this gateway is not currently in use.
+	Status *string `json:"status,omitempty"`
+
+	// The generated **token** for this gateway. The value of this field is used when configuring the remotly installed
+	// gateway.
+	Token *string `json:"token,omitempty"`
+
+	// The generated **token_id** for this gateway. The value of this field is used when configuring the remotly installed
+	// gateway.
+	TokenID *string `json:"token_id,omitempty"`
+}
+
+// Constants associated with the Gateway.Status property.
+// The current status of the gateway. `connected` means the gateway is connected to the remotly installed gateway.
+// `idle` means this gateway is not currently in use.
+const (
+	Gateway_Status_Connected = "connected"
+	Gateway_Status_Idle      = "idle"
+)
+
+// GatewayDelete : Gatway deletion confirmation.
+type GatewayDelete struct {
+
+	// The gateway ID of the deleted gateway.
+	GatewayID *string `json:"gateway_id,omitempty"`
+
+	// The status of the request.
+	Status *string `json:"status,omitempty"`
+}
+
+// GatewayList : Object containing gateways array.
+type GatewayList struct {
+
+	// Array of configured gateway connections.
+	Gateways []Gateway `json:"gateways,omitempty"`
+}
+
 // GetCollectionOptions : The getCollection options.
 type GetCollectionOptions struct {
 
@@ -5481,6 +5873,74 @@ func (options *GetEnvironmentOptions) SetEnvironmentID(environmentID string) *Ge
 
 // SetHeaders : Allow user to set Headers
 func (options *GetEnvironmentOptions) SetHeaders(param map[string]string) *GetEnvironmentOptions {
+	options.Headers = param
+	return options
+}
+
+// GetGatewayOptions : The getGateway options.
+type GetGatewayOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The requested gateway ID.
+	GatewayID *string `json:"gateway_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetGatewayOptions : Instantiate GetGatewayOptions
+func (discovery *DiscoveryV1) NewGetGatewayOptions(environmentID string, gatewayID string) *GetGatewayOptions {
+	return &GetGatewayOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		GatewayID:     core.StringPtr(gatewayID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetGatewayOptions) SetEnvironmentID(environmentID string) *GetGatewayOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetGatewayID : Allow user to set GatewayID
+func (options *GetGatewayOptions) SetGatewayID(gatewayID string) *GetGatewayOptions {
+	options.GatewayID = core.StringPtr(gatewayID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetGatewayOptions) SetHeaders(param map[string]string) *GetGatewayOptions {
+	options.Headers = param
+	return options
+}
+
+// ListGatewaysOptions : The listGateways options.
+type ListGatewaysOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewListGatewaysOptions : Instantiate ListGatewaysOptions
+func (discovery *DiscoveryV1) NewListGatewaysOptions(environmentID string) *ListGatewaysOptions {
+	return &ListGatewaysOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListGatewaysOptions) SetEnvironmentID(environmentID string) *ListGatewaysOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListGatewaysOptions) SetHeaders(param map[string]string) *ListGatewaysOptions {
 	options.Headers = param
 	return options
 }
