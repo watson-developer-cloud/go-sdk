@@ -3668,6 +3668,7 @@ type CreateCredentialsOptions struct {
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
 	// -  `salesforce` indicates the credentials are used to connect to Salesforce.
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials.
@@ -3684,10 +3685,12 @@ type CreateCredentialsOptions struct {
 // -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
 // -  `salesforce` indicates the credentials are used to connect to Salesforce.
 // -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 const (
 	CreateCredentialsOptions_SourceType_Box        = "box"
 	CreateCredentialsOptions_SourceType_Salesforce = "salesforce"
 	CreateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
+	CreateCredentialsOptions_SourceType_WebCrawl   = "web_crawl"
 )
 
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
@@ -4135,7 +4138,9 @@ type CredentialDetails struct {
 	//
 	// -  `"source_type": "box"` - valid `credential_type`s: `oauth2`
 	// -  `"source_type": "salesforce"` - valid `credential_type`s: `username_password`
-	// -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml`.
+	// -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml` with **source_version** of `online`, or
+	// `ntml_v1` with **source_version** of `2016`
+	// -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`.
 	CredentialType *string `json:"credential_type,omitempty"`
 
 	// The **client_id** of the source that these credentials connect to. Only valid, and required, with a
@@ -4147,11 +4152,11 @@ type CredentialDetails struct {
 	EnterpriseID *string `json:"enterprise_id,omitempty"`
 
 	// The **url** of the source that these credentials connect to. Only valid, and required, with a **credential_type** of
-	// `username_password`.
+	// `username_password`, `noauth`, and `basic`.
 	URL *string `json:"url,omitempty"`
 
 	// The **username** of the source that these credentials connect to. Only valid, and required, with a
-	// **credential_type** of `saml` and `username_password`.
+	// **credential_type** of `saml`, `username_password`, `basic`, or `ntml_v1`.
 	Username *string `json:"username,omitempty"`
 
 	// The **organization_url** of the source that these credentials connect to. Only valid, and required, with a
@@ -4183,12 +4188,27 @@ type CredentialDetails struct {
 	Passphrase *string `json:"passphrase,omitempty"`
 
 	// The **password** of the source that these credentials connect to. Only valid, and required, with
-	// **credential_type**s of `saml` and `username_password`.
+	// **credential_type**s of `saml`, `username_password`, `basic`, or `ntml_v1`.
 	//
 	// **Note:** When used with a **source_type** of `salesforce`, the password consists of the Salesforce password and a
 	// valid Salesforce security token concatenated. This value is never returned and is only used when creating or
 	// modifying **credentials**.
 	Password *string `json:"password,omitempty"`
+
+	// The ID of the **gateway** to be connected through (when connecting to intranet sites). Only valid with a
+	// **credential_type** of `noauth`, `basic`, or `ntml_v1`. Gateways are created using the
+	// `/v1/environments/{environment_id}/gateways` methods.
+	GatewayID *string `json:"gateway_id,omitempty"`
+
+	// The type of Sharepoint repository to connect to. Only valid, and required, with a **source_type** of `sharepoint`.
+	SourceVersion *string `json:"source_version,omitempty"`
+
+	// SharePoint OnPrem WebApplication URL. Only valid, and required, with a **source_version** of `2016`.
+	WebApplicationURL *string `json:"web_application_url,omitempty"`
+
+	// The domain used to log in to your OnPrem SharePoint account. Only valid, and required, with a **source_version** of
+	// `2016`.
+	Domain *string `json:"domain,omitempty"`
 }
 
 // Constants associated with the CredentialDetails.CredentialType property.
@@ -4197,11 +4217,23 @@ type CredentialDetails struct {
 //
 // -  `"source_type": "box"` - valid `credential_type`s: `oauth2`
 // -  `"source_type": "salesforce"` - valid `credential_type`s: `username_password`
-// -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml`.
+// -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml` with **source_version** of `online`, or `ntml_v1`
+// with **source_version** of `2016`
+// -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`.
 const (
+	CredentialDetails_CredentialType_Basic            = "basic"
+	CredentialDetails_CredentialType_Noauth           = "noauth"
+	CredentialDetails_CredentialType_NtmlV1           = "ntml_v1"
 	CredentialDetails_CredentialType_Oauth2           = "oauth2"
 	CredentialDetails_CredentialType_Saml             = "saml"
 	CredentialDetails_CredentialType_UsernamePassword = "username_password"
+)
+
+// Constants associated with the CredentialDetails.SourceVersion property.
+// The type of Sharepoint repository to connect to. Only valid, and required, with a **source_type** of `sharepoint`.
+const (
+	CredentialDetails_SourceVersion_2016   = "2016"
+	CredentialDetails_SourceVersion_Online = "online"
 )
 
 // Credentials : Object containing credential information.
@@ -4214,6 +4246,7 @@ type Credentials struct {
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
 	// -  `salesforce` indicates the credentials are used to connect to Salesforce.
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials.
@@ -4227,10 +4260,12 @@ type Credentials struct {
 // -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
 // -  `salesforce` indicates the credentials are used to connect to Salesforce.
 // -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 const (
 	Credentials_SourceType_Box        = "box"
 	Credentials_SourceType_Salesforce = "salesforce"
 	Credentials_SourceType_Sharepoint = "sharepoint"
+	Credentials_SourceType_WebCrawl   = "web_crawl"
 )
 
 // CredentialsList : CredentialsList struct
@@ -6949,8 +6984,7 @@ type MetricTokenResponse struct {
 }
 
 // NluEnrichmentCategories : An object that indicates the Categories enrichment will be applied to the specified field.
-type NluEnrichmentCategories struct {
-}
+type NluEnrichmentCategories map[string]interface{}
 
 // NluEnrichmentConcepts : An object specifiying the concepts enrichment and related parameters.
 type NluEnrichmentConcepts struct {
@@ -7654,38 +7688,106 @@ type QueryNoticesResponse struct {
 }
 
 // QueryNoticesResult : QueryNoticesResult struct
-type QueryNoticesResult struct {
+type QueryNoticesResult map[string]interface{}
 
-	// The unique identifier of the document.
-	ID *string `json:"id,omitempty"`
+// SetID : Allow user to set ID
+func (this *QueryNoticesResult) SetID(ID *string) {
+	(*this)["id"] = ID
+}
 
-	// *Deprecated* This field is now part of the **result_metadata** object.
-	Score *float64 `json:"score,omitempty"`
+// GetID : Allow user to get ID
+func (this *QueryNoticesResult) GetID() *string {
+	return (*this)["id"].(*string)
+}
 
-	// Metadata of the document.
-	Metadata interface{} `json:"metadata,omitempty"`
+// SetScore : Allow user to set Score
+func (this *QueryNoticesResult) SetScore(Score *float64) {
+	(*this)["score"] = Score
+}
 
-	// The collection ID of the collection containing the document for this result.
-	CollectionID *string `json:"collection_id,omitempty"`
+// GetScore : Allow user to get Score
+func (this *QueryNoticesResult) GetScore() *float64 {
+	return (*this)["score"].(*float64)
+}
 
-	// Metadata of a query result.
-	ResultMetadata *QueryResultMetadata `json:"result_metadata,omitempty"`
+// SetMetadata : Allow user to set Metadata
+func (this *QueryNoticesResult) SetMetadata(Metadata *interface{}) {
+	(*this)["metadata"] = Metadata
+}
 
-	// The internal status code returned by the ingestion subsystem indicating the overall result of ingesting the source
-	// document.
-	Code *int64 `json:"code,omitempty"`
+// GetMetadata : Allow user to get Metadata
+func (this *QueryNoticesResult) GetMetadata() *interface{} {
+	return (*this)["metadata"].(*interface{})
+}
 
-	// Name of the original source file (if available).
-	Filename *string `json:"filename,omitempty"`
+// SetCollectionID : Allow user to set CollectionID
+func (this *QueryNoticesResult) SetCollectionID(CollectionID *string) {
+	(*this)["collection_id"] = CollectionID
+}
 
-	// The type of the original source file.
-	FileType *string `json:"file_type,omitempty"`
+// GetCollectionID : Allow user to get CollectionID
+func (this *QueryNoticesResult) GetCollectionID() *string {
+	return (*this)["collection_id"].(*string)
+}
 
-	// The SHA-1 hash of the original source file (formatted as a hexadecimal string).
-	Sha1 *string `json:"sha1,omitempty"`
+// SetResultMetadata : Allow user to set ResultMetadata
+func (this *QueryNoticesResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) {
+	(*this)["result_metadata"] = ResultMetadata
+}
 
-	// Array of notices for the document.
-	Notices []Notice `json:"notices,omitempty"`
+// GetResultMetadata : Allow user to get ResultMetadata
+func (this *QueryNoticesResult) GetResultMetadata() *QueryResultMetadata {
+	return (*this)["result_metadata"].(*QueryResultMetadata)
+}
+
+// SetCode : Allow user to set Code
+func (this *QueryNoticesResult) SetCode(Code *int64) {
+	(*this)["code"] = Code
+}
+
+// GetCode : Allow user to get Code
+func (this *QueryNoticesResult) GetCode() *int64 {
+	return (*this)["code"].(*int64)
+}
+
+// SetFilename : Allow user to set Filename
+func (this *QueryNoticesResult) SetFilename(Filename *string) {
+	(*this)["filename"] = Filename
+}
+
+// GetFilename : Allow user to get Filename
+func (this *QueryNoticesResult) GetFilename() *string {
+	return (*this)["filename"].(*string)
+}
+
+// SetFileType : Allow user to set FileType
+func (this *QueryNoticesResult) SetFileType(FileType *string) {
+	(*this)["file_type"] = FileType
+}
+
+// GetFileType : Allow user to get FileType
+func (this *QueryNoticesResult) GetFileType() *string {
+	return (*this)["file_type"].(*string)
+}
+
+// SetSha1 : Allow user to set Sha1
+func (this *QueryNoticesResult) SetSha1(Sha1 *string) {
+	(*this)["sha1"] = Sha1
+}
+
+// GetSha1 : Allow user to get Sha1
+func (this *QueryNoticesResult) GetSha1() *string {
+	return (*this)["sha1"].(*string)
+}
+
+// SetNotices : Allow user to set Notices
+func (this *QueryNoticesResult) SetNotices(Notices *[]Notice) {
+	(*this)["notices"] = Notices
+}
+
+// GetNotices : Allow user to get Notices
+func (this *QueryNoticesResult) GetNotices() *[]Notice {
+	return (*this)["notices"].(*[]Notice)
 }
 
 // Constants associated with the QueryNoticesResult.FileType property.
@@ -8153,22 +8255,56 @@ type QueryResponse struct {
 }
 
 // QueryResult : QueryResult struct
-type QueryResult struct {
+type QueryResult map[string]interface{}
 
-	// The unique identifier of the document.
-	ID *string `json:"id,omitempty"`
+// SetID : Allow user to set ID
+func (this *QueryResult) SetID(ID *string) {
+	(*this)["id"] = ID
+}
 
-	// *Deprecated* This field is now part of the **result_metadata** object.
-	Score *float64 `json:"score,omitempty"`
+// GetID : Allow user to get ID
+func (this *QueryResult) GetID() *string {
+	return (*this)["id"].(*string)
+}
 
-	// Metadata of the document.
-	Metadata interface{} `json:"metadata,omitempty"`
+// SetScore : Allow user to set Score
+func (this *QueryResult) SetScore(Score *float64) {
+	(*this)["score"] = Score
+}
 
-	// The collection ID of the collection containing the document for this result.
-	CollectionID *string `json:"collection_id,omitempty"`
+// GetScore : Allow user to get Score
+func (this *QueryResult) GetScore() *float64 {
+	return (*this)["score"].(*float64)
+}
 
-	// Metadata of a query result.
-	ResultMetadata *QueryResultMetadata `json:"result_metadata,omitempty"`
+// SetMetadata : Allow user to set Metadata
+func (this *QueryResult) SetMetadata(Metadata *interface{}) {
+	(*this)["metadata"] = Metadata
+}
+
+// GetMetadata : Allow user to get Metadata
+func (this *QueryResult) GetMetadata() *interface{} {
+	return (*this)["metadata"].(*interface{})
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (this *QueryResult) SetCollectionID(CollectionID *string) {
+	(*this)["collection_id"] = CollectionID
+}
+
+// GetCollectionID : Allow user to get CollectionID
+func (this *QueryResult) GetCollectionID() *string {
+	return (*this)["collection_id"].(*string)
+}
+
+// SetResultMetadata : Allow user to set ResultMetadata
+func (this *QueryResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) {
+	(*this)["result_metadata"] = ResultMetadata
+}
+
+// GetResultMetadata : Allow user to get ResultMetadata
+func (this *QueryResult) GetResultMetadata() *QueryResultMetadata {
+	return (*this)["result_metadata"].(*QueryResultMetadata)
 }
 
 // QueryResultMetadata : Metadata of a query result.
@@ -8255,6 +8391,7 @@ type Source struct {
 	// -  `box` indicates the configuration is to connect an instance of Enterprise Box.
 	// -  `salesforce` indicates the configuration is to connect to Salesforce.
 	// -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
+	// -  `web_crawl` indicates the configuration is to perform a web page crawl.
 	Type *string `json:"type,omitempty"`
 
 	// The **credential_id** of the credentials to use to connect to the source. Credentials are defined using the
@@ -8274,10 +8411,12 @@ type Source struct {
 // -  `box` indicates the configuration is to connect an instance of Enterprise Box.
 // -  `salesforce` indicates the configuration is to connect to Salesforce.
 // -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
+// -  `web_crawl` indicates the configuration is to perform a web page crawl.
 const (
 	Source_Type_Box        = "box"
 	Source_Type_Salesforce = "salesforce"
 	Source_Type_Sharepoint = "sharepoint"
+	Source_Type_WebCrawl   = "web_crawl"
 )
 
 // SourceOptions : The **options** object defines which items to crawl from the source system.
@@ -8294,6 +8433,10 @@ type SourceOptions struct {
 	// Array of Microsoft SharePointoint Online site collections to crawl from the SharePoint source. Only valid and
 	// required when the **type** field of the **source** object is set to `sharepoint`.
 	SiteCollections []SourceOptionsSiteColl `json:"site_collections,omitempty"`
+
+	// Array of Web page URLs to begin crawling the web from. Only valid and required when the **type** field of the
+	// **source** object is set to `web_crawl`.
+	Urls []SourceOptionsWebCrawl `json:"urls,omitempty"`
 }
 
 // SourceOptionsFolder : Object that defines a box folder to crawl with this configuration.
@@ -8331,6 +8474,47 @@ type SourceOptionsSiteColl struct {
 	// are crawled.
 	Limit *int64 `json:"limit,omitempty"`
 }
+
+// SourceOptionsWebCrawl : Object defining which URL to crawl and how to crawl it.
+type SourceOptionsWebCrawl struct {
+
+	// The starting URL to crawl.
+	URL *string `json:"url" validate:"required"`
+
+	// When `true`, crawls of the specified URL are limited to the host part of the **url** field.
+	LimitToStartingHosts *bool `json:"limit_to_starting_hosts,omitempty"`
+
+	// The number of concurrent URLs to fetch. `gentle` means one URL is fetched at a time with a delay between each call.
+	// `normal` means as many as two URLs are fectched concurrently with a short delay between fetch calls. `aggressive`
+	// means that up to ten URLs are fetched concurrently with a short delay between fetch calls.
+	CrawlSpeed *string `json:"crawl_speed,omitempty"`
+
+	// When `true`, allows the crawl to interact with HTTPS sites with SSL certificates with untrusted signers.
+	AllowUntrustedCertificate *bool `json:"allow_untrusted_certificate,omitempty"`
+
+	// The maximum number of hops to make from the initial URL. When a page is crawled each link on that page will also be
+	// crawled if it is within the **maximum_hops** from the initial URL. The first page crawled is 0 hops, each link
+	// crawled from the first page is 1 hop, each link crawled from those pages is 2 hops, and so on.
+	MaximumHops *int64 `json:"maximum_hops,omitempty"`
+
+	// The maximum milliseconds to wait for a response from the web server.
+	RequestTimeout *int64 `json:"request_timeout,omitempty"`
+
+	// When `true`, the crawler will ignore any `robots.txt` encountered by the crawler. This should only ever be done when
+	// crawling a web site the user owns. This must be be set to `true` when a **gateway_id** is specied in the
+	// **credentials**.
+	OverrideRobotsTxt *bool `json:"override_robots_txt,omitempty"`
+}
+
+// Constants associated with the SourceOptionsWebCrawl.CrawlSpeed property.
+// The number of concurrent URLs to fetch. `gentle` means one URL is fetched at a time with a delay between each call.
+// `normal` means as many as two URLs are fectched concurrently with a short delay between fetch calls. `aggressive`
+// means that up to ten URLs are fetched concurrently with a short delay between fetch calls.
+const (
+	SourceOptionsWebCrawl_CrawlSpeed_Aggressive = "aggressive"
+	SourceOptionsWebCrawl_CrawlSpeed_Gentle     = "gentle"
+	SourceOptionsWebCrawl_CrawlSpeed_Normal     = "normal"
+)
 
 // SourceSchedule : Object containing the schedule information for the source.
 type SourceSchedule struct {
@@ -8553,18 +8737,18 @@ type TokenDictRule struct {
 	PartOfSpeech *string `json:"part_of_speech" validate:"required"`
 }
 
-// TokenDictStatusResponse : Object describing the current status of the tokenization dictionary.
+// TokenDictStatusResponse : Object describing the current status of the wordlist.
 type TokenDictStatusResponse struct {
 
-	// Current tokenization dictionary status for the specified collection.
+	// Current wordlist status for the specified collection.
 	Status *string `json:"status,omitempty"`
 
-	// The type for this dictionary. Always returns `tokenization_dictionary`.
+	// The type for this wordlist. Can be `tokenization_dictionary` or `stopwords`.
 	Type *string `json:"type,omitempty"`
 }
 
 // Constants associated with the TokenDictStatusResponse.Status property.
-// Current tokenization dictionary status for the specified collection.
+// Current wordlist status for the specified collection.
 const (
 	TokenDictStatusResponse_Status_Active   = "active"
 	TokenDictStatusResponse_Status_NotFound = "not found"
@@ -8809,6 +8993,7 @@ type UpdateCredentialsOptions struct {
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
 	// -  `salesforce` indicates the credentials are used to connect to Salesforce.
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials.
@@ -8825,10 +9010,12 @@ type UpdateCredentialsOptions struct {
 // -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
 // -  `salesforce` indicates the credentials are used to connect to Salesforce.
 // -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 const (
 	UpdateCredentialsOptions_SourceType_Box        = "box"
 	UpdateCredentialsOptions_SourceType_Salesforce = "salesforce"
 	UpdateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
+	UpdateCredentialsOptions_SourceType_WebCrawl   = "web_crawl"
 )
 
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
