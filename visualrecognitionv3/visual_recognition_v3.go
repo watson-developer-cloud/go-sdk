@@ -133,7 +133,7 @@ func (visualRecognition *VisualRecognitionV3) GetClassifyResult(response *core.D
 // **Important:** On April 2, 2018, the identity information in the response to calls to the Face model was removed. The
 // identity information refers to the `name` of the person, `score`, and `type_hierarchy` knowledge graph. For details
 // about the enhanced Face model, see the [Release
-// notes](https://console.bluemix.net/docs/services/visual-recognition/release-notes.html#2april2018).
+// notes](https://cloud.ibm.com/docs/services/visual-recognition/release-notes.html#2april2018).
 //
 // Analyze and get data about faces in images. Responses can include estimated age and gender. This feature uses a
 // built-in model, so no training is necessary. The Detect faces method does not support general biometric facial
@@ -162,6 +162,9 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *De
 		builder.AddHeader(headerName, headerValue)
 	}
 	builder.AddHeader("Accept", "application/json")
+	if detectFacesOptions.AcceptLanguage != nil {
+		builder.AddHeader("Accept-Language", fmt.Sprint(*detectFacesOptions.AcceptLanguage))
+	}
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	if detectFacesOptions.ImagesFile != nil {
@@ -358,7 +361,7 @@ func (visualRecognition *VisualRecognitionV3) GetListClassifiersResult(response 
 // UpdateClassifier : Update a classifier
 // Update a custom classifier by adding new positive or negative classes (examples) or by adding new images to existing
 // classes. You must supply at least one set of positive or negative examples. For details, see [Updating custom
-// classifiers](https://console.bluemix.net/docs/services/visual-recognition/customizing.html#updating-custom-classifiers).
+// classifiers](https://cloud.ibm.com/docs/services/visual-recognition/customizing.html#updating-custom-classifiers).
 //
 // Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
 // names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
@@ -463,7 +466,7 @@ func (visualRecognition *VisualRecognitionV3) GetGetCoreMlModelResult(response *
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
-// security](https://console.bluemix.net/docs/services/visual-recognition/information-security.html).
+// security](https://cloud.ibm.com/docs/services/visual-recognition/information-security.html).
 func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -506,6 +509,11 @@ type Class struct {
 type ClassResult struct {
 
 	// Name of the class.
+	//
+	// Class names are translated in the language defined by the **Accept-Language** request header for the build-in
+	// classifier IDs (`default`, `food`, and `explicit`). Class names of custom classifiers are not translated. The
+	// response might not be in the specified language when the requested language is not supported or when there is no
+	// translation for the class name.
 	ClassName *string `json:"class" validate:"required"`
 
 	// Confidence score for the property in the range of 0 to 1. A higher score indicates greater likelihood that the class
@@ -514,7 +522,7 @@ type ClassResult struct {
 
 	// Knowledge graph of the property. For example, `/fruit/pome/apple/eating apple/Granny Smith`. Included only if
 	// identified.
-	TypeHierarchy *string `json:"type_hierarchy" validate:"required"`
+	TypeHierarchy *string `json:"type_hierarchy,omitempty"`
 }
 
 // ClassifiedImage : Results for one image.
@@ -541,10 +549,10 @@ type ClassifiedImage struct {
 type ClassifiedImages struct {
 
 	// Number of custom classes identified in the images.
-	CustomClasses *int64 `json:"custom_classes" validate:"required"`
+	CustomClasses *int64 `json:"custom_classes,omitempty"`
 
 	// Number of images processed for the API call.
-	ImagesProcessed *int64 `json:"images_processed" validate:"required"`
+	ImagesProcessed *int64 `json:"images_processed,omitempty"`
 
 	// Classified images.
 	Images []ClassifiedImage `json:"images" validate:"required"`
@@ -634,11 +642,7 @@ type ClassifyOptions struct {
 	// The filename for imagesFile.
 	ImagesFilename *string `json:"images_filename,omitempty"`
 
-	// The language of the output class names. The full set of languages is supported for the built-in classifier IDs:
-	// `default`, `food`, and `explicit`. The class names of custom classifiers are not translated.
-	//
-	// The response might not be in the specified language when the requested language is not supported or when there is no
-	// translation for the class name.
+	// The desired language of parts of the response. See the response for details.
 	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
 	// The URL of an image to analyze. Must be in .jpg, or .png format. The minimum recommended pixel density is 32X32
@@ -677,11 +681,7 @@ type ClassifyOptions struct {
 }
 
 // Constants associated with the ClassifyOptions.AcceptLanguage property.
-// The language of the output class names. The full set of languages is supported for the built-in classifier IDs:
-// `default`, `food`, and `explicit`. The class names of custom classifiers are not translated.
-//
-// The response might not be in the specified language when the requested language is not supported or when there is no
-// translation for the class name.
+// The desired language of parts of the response. See the response for details.
 const (
 	ClassifyOptions_AcceptLanguage_Ar   = "ar"
 	ClassifyOptions_AcceptLanguage_De   = "de"
@@ -918,12 +918,31 @@ type DetectFacesOptions struct {
 	// You can also include images with the **images_file** parameter.
 	URL *string `json:"url,omitempty"`
 
+	// The desired language of parts of the response. See the response for details.
+	AcceptLanguage *string `json:"Accept-Language,omitempty"`
+
 	// The content type of imagesFile. Values for this parameter can be obtained from the HttpMediaType class.
 	ImagesFileContentType *string `json:"images_file_content_type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the DetectFacesOptions.AcceptLanguage property.
+// The desired language of parts of the response. See the response for details.
+const (
+	DetectFacesOptions_AcceptLanguage_Ar   = "ar"
+	DetectFacesOptions_AcceptLanguage_De   = "de"
+	DetectFacesOptions_AcceptLanguage_En   = "en"
+	DetectFacesOptions_AcceptLanguage_Es   = "es"
+	DetectFacesOptions_AcceptLanguage_Fr   = "fr"
+	DetectFacesOptions_AcceptLanguage_It   = "it"
+	DetectFacesOptions_AcceptLanguage_Ja   = "ja"
+	DetectFacesOptions_AcceptLanguage_Ko   = "ko"
+	DetectFacesOptions_AcceptLanguage_PtBr = "pt-br"
+	DetectFacesOptions_AcceptLanguage_ZhCn = "zh-cn"
+	DetectFacesOptions_AcceptLanguage_ZhTw = "zh-tw"
+)
 
 // NewDetectFacesOptions : Instantiate DetectFacesOptions
 func (visualRecognition *VisualRecognitionV3) NewDetectFacesOptions() *DetectFacesOptions {
@@ -945,6 +964,12 @@ func (options *DetectFacesOptions) SetImagesFilename(imagesFilename string) *Det
 // SetURL : Allow user to set URL
 func (options *DetectFacesOptions) SetURL(URL string) *DetectFacesOptions {
 	options.URL = core.StringPtr(URL)
+	return options
+}
+
+// SetAcceptLanguage : Allow user to set AcceptLanguage
+func (options *DetectFacesOptions) SetAcceptLanguage(acceptLanguage string) *DetectFacesOptions {
+	options.AcceptLanguage = core.StringPtr(acceptLanguage)
 	return options
 }
 
@@ -1021,6 +1046,9 @@ type FaceGender struct {
 
 	// Gender identified by the face. For example, `MALE` or `FEMALE`.
 	Gender *string `json:"gender" validate:"required"`
+
+	// The word for "male" or "female" in the language defined by the **Accept-Language** request header.
+	GenderLabel *string `json:"gender_label" validate:"required"`
 
 	// Confidence score in the range of 0 to 1. A higher score indicates greater confidence in the estimated value for the
 	// property.
