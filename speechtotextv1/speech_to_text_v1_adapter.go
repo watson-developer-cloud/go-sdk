@@ -42,7 +42,7 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeOptions *R
 		wsListener.Callback.OnError(err)
 	}
 
-	if speechToText.Service.Options.IAMApiKey != "" || speechToText.Service.TokenManager != nil {
+	if speechToText.Service.Options.IAMApiKey != "" || speechToText.Service.TokenManager != nil || speechToText.Service.Options.IAMAccessToken != "" {
 		token = speechToText.Service.TokenManager.GetToken()
 		headers.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	} else {

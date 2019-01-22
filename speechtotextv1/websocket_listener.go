@@ -2,7 +2,6 @@ package speechtotextv1
 
 import (
 	"encoding/json"
-	// "fmt"
 	"github.com/gorilla/websocket"
 	core "github.com/watson-developer-cloud/go-sdk/core"
 	"io"
@@ -60,7 +59,6 @@ func (wsHandle websocketListener) OnData(conn *websocket.Conn, recognizeOptions 
 		detailResp := core.DetailedResponse{}
 		detailResp.Result = result
 		detailResp.StatusCode = SUCCESS
-		//wsHandle.RespChannel <- &detailResp
 		wsHandle.Callback.OnData(&detailResp)
 	}
 	conn.Close()

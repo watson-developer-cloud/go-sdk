@@ -23,9 +23,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/core"
-	"go-sdk/speechtotextv1"
-	//"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
-	"fmt"
+	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
 	"io"
 	"os"
 	"testing"
@@ -45,8 +43,6 @@ func init() {
 				Username: os.Getenv("SPEECH_TO_TEXT_USERNAME"),
 				Password: os.Getenv("SPEECH_TO_TEXT_PASSWORD"),
 			})
-	} else {
-
 	}
 }
 func shouldSkipTest(t *testing.T) {
@@ -402,22 +398,20 @@ type myCallBack struct {
 }
 
 func (cb myCallBack) OnOpen() {
-	fmt.Println("On open")
 }
 func (cb myCallBack) OnClose() {
-	fmt.Println("On close")
 }
 func (cb myCallBack) OnData(resp *core.DetailedResponse) {
-	fmt.Println("on data")
 	var speechResults speechtotextv1.SpeechRecognitionResults
 	result := resp.GetResult().([]byte)
 	json.Unmarshal(result, &speechResults)
-	fmt.Println(speechResults)
 	assert.NotNil(cb.T, speechResults)
+	assert.NotNil(cb.T, speechResults.Results[0].Alternatives[0].WordConfidence)
+	assert.NotNil(cb.T, speechResults.SpeakerLabels)
+	assert.NotNil(cb.T, speechResults.Results[0].Alternatives[0].Timestamps)
 }
 func (cb myCallBack) OnError(err error) {
 	cb.T.Fail()
-	fmt.Println(err)
 }
 
 func TestRecognizeUsingWebsockets(t *testing.T) {
@@ -426,12 +420,10 @@ func TestRecognizeUsingWebsockets(t *testing.T) {
 	wsListener := speechtotextv1.WebsocketListenerFactory(callback)
 
 	recognizeOptions := service.NewRecognizeOptions(f, "audio/mp3")
-	recognizeOptions.SetModel("en-US_BroadbandModel")
-	recognizeOptions.SetWordConfidence(true)
 
 	audioMetaData := speechtotextv1.AudioProperties{}
 	audioMetaData.SetIsBuffer(false).SetIsRecording(false)
-	recognizeOptions.SetAudioMetaData(&audioMetaData)
+	recognizeOptions.SetAudioMetaData(&audioMetaData).SetModel("en-US_BroadbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
 
 	service.RecognizeUsingWebsockets(recognizeOptions, wsListener)
 
