@@ -2539,4 +2539,290 @@ var _ = Describe("DiscoveryV1", func() {
 			})
 		})
 	})
+	Describe("CreateStopwordList(createStopwordListOptions *CreateStopwordListOptions)", func() {
+		createStopwordListPath := "/v1/environments/{environment_id}/collections/{collection_id}/word_lists/stopwords"
+		version := "exampleString"
+		environmentID := "exampleString"
+		collectionID := "exampleString"
+		pwd, _ := os.Getwd()
+		stopwordsFile, stopwordsFileErr := os.Open(pwd + "/../resources/stopwords.txt")
+		if stopwordsFileErr != nil {
+			panic(stopwordsFileErr)
+		}
+		stopwordFilename := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(createStopwordListPath, "{environment_id}", environmentID, 1)
+		Path = strings.Replace(Path, "{collection_id}", collectionID, 1)
+		Context("Successfully - Create stopword list", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"status": "ready"}`)
+			}))
+			It("Succeed to call CreateStopwordList", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.CreateStopwordList(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				createStopwordListOptions := testService.NewCreateStopwordListOptions(environmentID, collectionID, stopwordsFile, stopwordFilename)
+				returnValue, returnValueErr = testService.CreateStopwordList(createStopwordListOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetCreateStopwordListResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("DeleteStopwordList(deleteStopwordListOptions *DeleteStopwordListOptions)", func() {
+		deleteStopwordListPath := "/v1/environments/{environment_id}/collections/{collection_id}/word_lists/stopwords"
+		version := "exampleString"
+		environmentID := "exampleString"
+		collectionID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(deleteStopwordListPath, "{environment_id}", environmentID, 1)
+		Path = strings.Replace(Path, "{collection_id}", collectionID, 1)
+		Context("Successfully - Delete a custom stopword list", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+			}))
+			It("Succeed to call DeleteStopwordList", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.DeleteStopwordList(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				deleteStopwordListOptions := testService.NewDeleteStopwordListOptions(environmentID, collectionID)
+				returnValue, returnValueErr = testService.DeleteStopwordList(deleteStopwordListOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("CreateGateway(createGatewayOptions *CreateGatewayOptions)", func() {
+		createGatewayPath := "/v1/environments/{environment_id}/gateways"
+		version := "exampleString"
+		environmentID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(createGatewayPath, "{environment_id}", environmentID, 1)
+		Context("Successfully - Create Gateway", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"gateway_id":"1234"}`)
+			}))
+			It("Succeed to call CreateGateway", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.CreateGateway(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				createGatewayOptions := testService.NewCreateGatewayOptions(environmentID)
+				returnValue, returnValueErr = testService.CreateGateway(createGatewayOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetCreateGatewayResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("DeleteGateway(deleteGatewayOptions *DeleteGatewayOptions)", func() {
+		deleteGatewayPath := "/v1/environments/{environment_id}/gateways/{gateway_id}"
+		version := "exampleString"
+		environmentID := "exampleString"
+		gatewayID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(deleteGatewayPath, "{environment_id}", environmentID, 1)
+		Path = strings.Replace(Path, "{gateway_id}", gatewayID, 1)
+		Context("Successfully - Delete Gateway", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"gateway_id":"1234"}`)
+			}))
+			It("Succeed to call DeleteGateway", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.DeleteGateway(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				deleteGatewayOptions := testService.NewDeleteGatewayOptions(environmentID, gatewayID)
+				returnValue, returnValueErr = testService.DeleteGateway(deleteGatewayOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetDeleteGatewayResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetGateway(getGatewayOptions *GetGatewayOptions)", func() {
+		getGatewayPath := "/v1/environments/{environment_id}/gateways/{gateway_id}"
+		version := "exampleString"
+		environmentID := "exampleString"
+		gatewayID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(getGatewayPath, "{environment_id}", environmentID, 1)
+		Path = strings.Replace(Path, "{gateway_id}", gatewayID, 1)
+		Context("Successfully - Get Gateway", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"gateway_id":"1234"}`)
+			}))
+			It("Succeed to call GetGateway", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.GetGateway(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				getGatewayOptions := testService.NewGetGatewayOptions(environmentID, gatewayID)
+				returnValue, returnValueErr = testService.GetGateway(getGatewayOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetGetGatewayResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("ListGateway(listGatewayOptions *ListGatewayOptions)", func() {
+		listGatewayPath := "/v1/environments/{environment_id}/gateways"
+		version := "exampleString"
+		environmentID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(listGatewayPath, "{environment_id}", environmentID, 1)
+		Context("Successfully - List Gateways", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `["gateways": {"gateway_id":"1234"}]`)
+			}))
+			It("Succeed to call ListGateway", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.ListGateways(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				listGatewaysOptions := testService.NewListGatewaysOptions(environmentID)
+				returnValue, returnValueErr = testService.ListGateways(listGatewaysOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetListGatewaysResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 })

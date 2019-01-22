@@ -58,8 +58,10 @@ func TestModel(t *testing.T) {
 		&speechtotextv1.ListModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
+
 	listModels := service.GetListModelsResult(response)
 	assert.NotNil(t, listModels)
+
 	//Get model
 	response, responseErr = service.GetModel(
 		&speechtotextv1.GetModelOptions{
@@ -67,22 +69,23 @@ func TestModel(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
+
 	getModel := service.GetGetModelResult(response)
 	assert.NotNil(t, getModel)
 }
+
 func TestRecognize(t *testing.T) {
 	shouldSkipTest(t)
+
 	pwd, _ := os.Getwd()
 	files := [1]string{"audio_example.mp3"}
 	for _, fileName := range files {
 		var audio io.ReadCloser
 		var audioErr error
 		audio, audioErr = os.Open(pwd + "/../resources/" + fileName)
-
 		assert.Nil(t, audioErr)
 
 		response, responseErr := service.Recognize(
-
 			&speechtotextv1.RecognizeOptions{
 				Audio:                     &audio,
 				ContentType:               core.StringPtr(speechtotextv1.RecognizeOptions_ContentType_AudioMp3),
@@ -97,18 +100,23 @@ func TestRecognize(t *testing.T) {
 		assert.NotNil(t, recognize)
 	}
 }
+
 func TestJobs(t *testing.T) {
 	shouldSkipTest(t)
+
 	t.Skip("Skipping time consuming test")
 	response, responseErr := service.CheckJobs(
 		&speechtotextv1.CheckJobsOptions{},
 	)
 	assert.Nil(t, responseErr)
+
 	checkJobs := service.GetCheckJobsResult(response)
 	assert.NotNil(t, checkJobs)
 }
+
 func TestLanguageModel(t *testing.T) {
 	shouldSkipTest(t)
+
 	// create language model
 	response, responseErr := service.CreateLanguageModel(
 		&speechtotextv1.CreateLanguageModelOptions{

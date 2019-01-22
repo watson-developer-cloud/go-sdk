@@ -336,7 +336,7 @@ type DialogNodeOutputOptionsElement struct {
 // DialogNodeOutputOptionsElementValue : An object defining the message input to be sent to the assistant if the user selects the corresponding option.
 type DialogNodeOutputOptionsElementValue struct {
 
-	// The user input.
+	// An input object that includes the input text.
 	Input *MessageInput `json:"input,omitempty"`
 }
 
@@ -442,7 +442,7 @@ type DialogSuggestion struct {
 // option.
 type DialogSuggestionValue struct {
 
-	// The user input.
+	// An input object that includes the input text.
 	Input *MessageInput `json:"input,omitempty"`
 }
 
@@ -488,10 +488,9 @@ type MessageContextSkill struct {
 }
 
 // MessageContextSkills : Contains information specific to particular skills within the Assistant.
-type MessageContextSkills struct {
-}
+type MessageContextSkills map[string]interface{}
 
-// MessageInput : The user input.
+// MessageInput : An input object that includes the input text.
 type MessageInput struct {
 
 	// The type of user input. Currently, only text input is supported.
@@ -529,8 +528,8 @@ type MessageInputOptions struct {
 	// `output.debug` key.
 	Debug *bool `json:"debug,omitempty"`
 
-	// Whether to start a new conversation with this user input. Specify `true` to clear the state information stored by
-	// the session.
+	// Whether to restart dialog processing at the root of the dialog, regardless of any previously visited nodes.
+	// **Note:** This does not affect `turn_count` or any other context variables.
 	Restart *bool `json:"restart,omitempty"`
 
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
@@ -621,7 +620,8 @@ type MessageOutput struct {
 	// Additional detailed information about a message response and how it was generated.
 	Debug *MessageOutputDebug `json:"debug,omitempty"`
 
-	// Arbitrary variables that can be read and written to by a particular skill within the Assistant.
+	// An object containing any custom properties included in the response. This object includes any arbitrary properties
+	// defined in the dialog JSON editor as part of the dialog node output.
 	UserDefined interface{} `json:"user_defined,omitempty"`
 }
 

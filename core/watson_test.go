@@ -37,6 +37,26 @@ func TestRequestResponseAsJSON(t *testing.T) {
 	assert.Equal(t, "wonder woman", *detailedResponse.Result.(*Foo).Name)
 }
 
+func TestIncorrectCreds(t *testing.T) {
+	options := &ServiceOptions{
+		URL:      "xxx",
+		Username: "{yyy}",
+		Password: "zzz",
+	}
+	_, serviceErr := NewWatsonService(options, "watson")
+	assert.Equal(t, "The username shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your username", serviceErr.Error())
+}
+
+func TestIncorrectURL(t *testing.T) {
+	options := &ServiceOptions{
+		URL:      "{xxx}",
+		Username: "yyy",
+		Password: "zzz",
+	}
+	_, serviceErr := NewWatsonService(options, "watson")
+	assert.Equal(t, "The URL shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your URL", serviceErr.Error())
+}
+
 func TestDisableSSLverification(t *testing.T) {
 	options := &ServiceOptions{
 		URL:      "test.com",

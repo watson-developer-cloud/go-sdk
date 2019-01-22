@@ -107,10 +107,7 @@ func main() {
 	fmt.Println(response)
 
 	// To continue with the same assistant, pass in the context from the previous call
-	conversationID := service.GetMessageResult(response).Context.ConversationID
-	context := &assistant.Context{
-		ConversationID: conversationID,
-	}
+	context := service.GetMessageResult(response).GetContext()
 
 	inputData.Text = core.StringPtr("What's the weather right now?")
 	messageOptions.SetContext(context).

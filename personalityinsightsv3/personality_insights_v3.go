@@ -99,7 +99,12 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 // When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
 // encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
 //
+<<<<<<< HEAD
 // **See also:** [Specifying request and response formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
+=======
+// **See also:** [Specifying request and response
+// formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
+>>>>>>> d787122085a4bdd3af82c7407405b0c89116b4fd
 //
 // ### Accept types
 //
@@ -192,7 +197,12 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // When specifying a content type of plain text or HTML, include the `charset` parameter to indicate the character
 // encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
 //
+<<<<<<< HEAD
 // **See also:** [Specifying request and response formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
+=======
+// **See also:** [Specifying request and response
+// formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
+>>>>>>> d787122085a4bdd3af82c7407405b0c89116b4fd
 //
 // ### Accept types
 //
@@ -440,6 +450,7 @@ const (
 type ProfileOptions struct {
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
+<<<<<<< HEAD
 	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an
 	// object of type `Content`.
 	Content *Content `json:"content,omitempty"`
@@ -447,6 +458,15 @@ type ProfileOptions struct {
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
 	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For JSON input, provide an
 	// object of type `Content`.
+=======
+	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For
+	// JSON input, provide an object of type `Content`.
+	Content *Content `json:"content,omitempty"`
+
+	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
+	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For
+	// JSON input, provide an object of type `Content`.
+>>>>>>> d787122085a4bdd3af82c7407405b0c89116b4fd
 	Body *string `json:"body,omitempty"`
 
 	// The type of the input. For more information, see **Content types** in the method description.

@@ -78,6 +78,13 @@ func TestSession(t *testing.T) {
 						UserID: core.StringPtr("dummy"),
 					},
 				},
+				Skills: &assistantv2.MessageContextSkills{
+					"main_skill": map[string]interface{}{
+						"user_defined": map[string]string{
+							"account_number": "12345",
+						},
+					},
+				},
 			},
 		},
 	)
