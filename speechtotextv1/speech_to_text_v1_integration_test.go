@@ -19,6 +19,7 @@ package speechtotextv1_test
  */
 
 import (
+	"encoding/json"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/core"
@@ -44,13 +45,11 @@ func init() {
 			})
 	}
 }
-
 func shouldSkipTest(t *testing.T) {
 	if service == nil {
 		t.Skip("Skipping test as service credentials are missing")
 	}
 }
-
 func TestModel(t *testing.T) {
 	shouldSkipTest(t)
 
@@ -97,7 +96,6 @@ func TestRecognize(t *testing.T) {
 			},
 		)
 		assert.Nil(t, responseErr)
-
 		recognize := service.GetRecognizeResult(response)
 		assert.NotNil(t, recognize)
 	}
@@ -128,7 +126,6 @@ func TestLanguageModel(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	createLanguageModel := service.GetCreateLanguageModelResult(response)
 	assert.NotNil(t, createLanguageModel)
 
@@ -148,7 +145,6 @@ func TestLanguageModel(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	getLanguageModel := service.GetGetLanguageModelResult(response)
 	assert.NotNil(t, getLanguageModel)
 
@@ -403,4 +399,40 @@ func TestDeleteLanguageModel(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
+}
+
+type myCallBack struct {
+	T *testing.T
+}
+
+func (cb myCallBack) OnOpen() {
+}
+func (cb myCallBack) OnClose() {
+}
+func (cb myCallBack) OnData(resp *core.DetailedResponse) {
+	var speechResults speechtotextv1.SpeechRecognitionResults
+	result := resp.GetResult().([]byte)
+	json.Unmarshal(result, &speechResults)
+	assert.NotNil(cb.T, speechResults)
+	assert.NotNil(cb.T, speechResults.Results[0].Alternatives[0].WordConfidence)
+	assert.NotNil(cb.T, speechResults.SpeakerLabels)
+	assert.NotNil(cb.T, speechResults.Results[0].Alternatives[0].Timestamps)
+}
+func (cb myCallBack) OnError(err error) {
+	cb.T.Fail()
+}
+
+func TestRecognizeUsingWebsockets(t *testing.T) {
+	f, _ := os.Open("../resources/audio_example.mp3")
+	callback := myCallBack{T: t}
+	wsListener := speechtotextv1.WebsocketListenerFactory(callback)
+
+	recognizeOptions := service.NewRecognizeOptions(f, "audio/mp3")
+
+	audioMetaData := speechtotextv1.AudioProperties{}
+	audioMetaData.SetIsBuffer(false).SetIsRecording(false)
+	recognizeOptions.SetAudioMetaData(&audioMetaData).SetModel("en-US_BroadbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
+
+	service.RecognizeUsingWebsockets(recognizeOptions, wsListener)
+
 }

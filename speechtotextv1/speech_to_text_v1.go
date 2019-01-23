@@ -4796,6 +4796,28 @@ type RecognitionJobs struct {
 	Recognitions []RecognitionJob `json:"recognitions" validate:"required"`
 }
 
+// AudioProperties : AudioProperties struct (Websocket Only)
+type AudioProperties struct {
+
+	// Indicates if sent audio data is one buffer
+	IsBuffer *bool
+
+	// Indicates whether the audio input source is still recording data
+	IsRecording *bool
+}
+
+// SetIsBuffer : Allow user to set IsBuffer
+func (audioProperties *AudioProperties) SetIsBuffer(isBuffer bool) *AudioProperties {
+	audioProperties.IsBuffer = core.BoolPtr(isBuffer)
+	return audioProperties
+}
+
+// SetIsRecording : Allow user to set IsRecording
+func (audioProperties *AudioProperties) SetIsRecording(isRecording bool) *AudioProperties {
+	audioProperties.IsRecording = core.BoolPtr(isRecording)
+	return audioProperties
+}
+
 // RecognizeOptions : The recognize options.
 type RecognizeOptions struct {
 
@@ -4939,6 +4961,16 @@ type RecognizeOptions struct {
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
+
+	// Websocket only. Describes the behaviour of Websocket connection when EOF detected
+	AudioMetaData *AudioProperties
+
+	// Websocket only. The action that is to be performed. Allowable values: start, stop
+	Action *string `json:"action,omitempty"`
+
+	// Websockey only. If true, the service returns interim results as a stream of JSON SpeechRecognitionResults objects.
+	// If false, the service returns a single SpeechRecognitionResults object with final results only.
+	InterimResults *bool `json:"interim_results,omitempty"`
 }
 
 // Constants associated with the RecognizeOptions.ContentType property.
@@ -5119,6 +5151,12 @@ func (options *RecognizeOptions) SetRedaction(redaction bool) *RecognizeOptions 
 // SetHeaders : Allow user to set Headers
 func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeOptions {
 	options.Headers = param
+	return options
+}
+
+// SetAudioMetaData : Allow user to set AudioMetaData
+func (options *RecognizeOptions) SetAudioMetaData(audioMeta *AudioProperties) *RecognizeOptions {
+	options.AudioMetaData = audioMeta
 	return options
 }
 
@@ -5373,6 +5411,10 @@ type SpeechRecognitionResults struct {
 	//
 	// In both cases, the request succeeds despite the warnings.
 	Warnings []string `json:"warnings,omitempty"`
+
+	// Websocket only. Acknowledges that a start/end message was received, and indicates
+	// the start/end of the audio data
+	State string `json:"state,omitempty"`
 }
 
 // SupportedFeatures : Describes the additional service features that are supported with the model.
