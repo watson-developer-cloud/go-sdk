@@ -9,18 +9,14 @@ import (
 )
 
 type websocketListener struct {
-	RespChannel chan *core.DetailedResponse
-	WSOpenChan  chan *websocket.Conn
-	IsClosed    chan bool
-	Callback    RecognizeCallbackWrapper
-	IsListening bool
+	IsClosed chan bool
+	Callback RecognizeCallbackWrapper
 }
 
 /*
 	OnOpen: Sends start message to server when connection created
 */
-func (wsHandle websocketListener) OnOpen(recognizeOpt *RecognizeOptions) {
-	conn := <-wsHandle.WSOpenChan
+func (wsHandle websocketListener) OnOpen(recognizeOpt *RecognizeOptions, conn *websocket.Conn) {
 	wsHandle.Callback.OnOpen()
 	sendStartMessage(conn, recognizeOpt)
 }
@@ -38,6 +34,7 @@ func (wsHandle websocketListener) OnClose(finish chan bool) {
 	OnData: Callback when websocket connection receives data
 */
 func (wsHandle websocketListener) OnData(conn *websocket.Conn, recognizeOptions *RecognizeOptions) {
+	isListening := false
 	for {
 		var websocketResponse SpeechRecognitionResults
 		_, result, err := conn.ReadMessage()
@@ -47,12 +44,10 @@ func (wsHandle websocketListener) OnData(conn *websocket.Conn, recognizeOptions 
 		json.Unmarshal(result, &websocketResponse)
 
 		if websocketResponse.State == "listening" {
-			if !wsHandle.IsListening {
-				wsHandle.IsListening = true
-				sendAudio(conn, recognizeOptions, wsHandle.Callback)
+			if !isListening {
+				isListening = true
 				continue
 			} else {
-				wsHandle.IsListening = false
 				break
 			}
 		}
@@ -134,11 +129,8 @@ func sendAudio(conn *websocket.Conn, recognizeOptions *RecognizeOptions, recogni
 */
 func WebsocketListenerFactory(callback RecognizeCallbackWrapper) websocketListener {
 	wsHandle := websocketListener{
-		RespChannel: make(chan *core.DetailedResponse, 1),
-		WSOpenChan:  make(chan *websocket.Conn, 1),
-		IsClosed:    make(chan bool, 1),
-		Callback:    callback,
-		IsListening: false,
+		IsClosed: make(chan bool, 1),
+		Callback: callback,
 	}
 	return wsHandle
 }

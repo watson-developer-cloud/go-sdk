@@ -73,9 +73,9 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeOptions *R
 		panic(err)
 	}
 
-	go wsListener.OnOpen(recognizeOptions)
+	wsListener.OnOpen(recognizeOptions, conn)
 	go wsListener.OnClose(finish)
 	go wsListener.OnData(conn, recognizeOptions)
-	wsListener.WSOpenChan <- conn
+	go sendAudio(conn, recognizeOptions, wsListener.Callback)
 	<-finish
 }
