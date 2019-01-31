@@ -62,7 +62,7 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "natural-language-understanding")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "natural-language-understanding", "Natural Language Understanding")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

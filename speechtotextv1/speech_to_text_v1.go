@@ -73,7 +73,7 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (*SpeechToTextV1, error) 
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "speech_to_text")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "speech_to_text", "Speech to Text")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

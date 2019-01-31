@@ -64,7 +64,7 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (*ToneAnalyzerV3, error) 
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "tone_analyzer")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "tone_analyzer", "Tone Analyzer")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

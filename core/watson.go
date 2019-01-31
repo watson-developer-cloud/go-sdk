@@ -1,12 +1,15 @@
 package core
 
 import (
+	"bufio"
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"path"
 	"runtime"
 	"strings"
 	"time"
@@ -16,11 +19,18 @@ import (
 
 // common constants for core
 const (
-	APIKey        = "apikey"
-	ICPPrefix     = "icp-"
-	UserAgent     = "User-Agent"
-	Authorization = "Authorization"
-	Bearer        = "Bearer"
+	APIKey                       = "apikey"
+	ICPPrefix                    = "icp-"
+	UserAgent                    = "User-Agent"
+	Authorization                = "Authorization"
+	Bearer                       = "Bearer"
+	IBM_CREDENTIAL_FILE_ENV      = "IBM_CREDENTIALS_FILE"
+	DEFAULT_CREDENTIAL_FILE_NAME = "ibm-credentials.env"
+	URL                          = "url"
+	USERNAME                     = "username"
+	PASSWORD                     = "password"
+	IAM_API_KEY                  = "iam_apikey"
+	IAM_URL                      = "iam_url"
 )
 
 // ServiceOptions Service options
@@ -44,7 +54,7 @@ type WatsonService struct {
 }
 
 // NewWatsonService Instantiate a Watson Service
-func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonService, error) {
+func NewWatsonService(options *ServiceOptions, serviceName, displayName string) (*WatsonService, error) {
 	if HasBadFirstOrLastChar(options.URL) {
 		return nil, fmt.Errorf("The URL shouldn't start or end with curly brackets or quotes. Be sure to remove any {} and \" characters surrounding your URL")
 	}
@@ -61,6 +71,7 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 	userAgent += "-" + runtime.GOOS
 	service.UserAgent = userAgent
 
+	// 1. Credentials are passed in constructor
 	if options.Username != "" && options.Password != "" {
 		if options.Username == APIKey && !strings.HasPrefix(options.Password, ICPPrefix) {
 			if err := service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL); err != nil {
@@ -75,8 +86,16 @@ func NewWatsonService(options *ServiceOptions, serviceName string) (*WatsonServi
 		if err := service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL); err != nil {
 			return nil, err
 		}
-	} else {
-		// Try accessing VCAP_SERVICES env variable
+	}
+
+	// 2. Credentials from credential file
+	if displayName != "" && service.Options.Username == "" && service.TokenManager == nil {
+		serviceName := strings.ToLower(strings.Replace(displayName, " ", "_", -1))
+		service.loadFromCredentialFile(serviceName, "=")
+	}
+
+	// 3. Try accessing VCAP_SERVICES env variable
+	if service.Options.Username == "" && service.TokenManager == nil {
 		err := service.accessVCAP(serviceName)
 		if err != nil {
 			return nil, err
@@ -245,4 +264,60 @@ func (service *WatsonService) accessVCAP(serviceName string) error {
 	}
 
 	return fmt.Errorf("you must specify an IAM API key or username and password service credentials")
+}
+
+func (service *WatsonService) loadFromCredentialFile(serviceName string, separator string) error {
+	// File path specified by env variable
+	credentialFilePath := os.Getenv(IBM_CREDENTIAL_FILE_ENV)
+
+	// Home directory
+	if credentialFilePath == "" {
+		var filePath = path.Join(UserHomeDir(), DEFAULT_CREDENTIAL_FILE_NAME)
+		if _, err := os.Stat(filePath); err == nil {
+			credentialFilePath = filePath
+		}
+	}
+
+	// Top-level of project directory
+	if credentialFilePath == "" {
+		dir, _ := os.Getwd()
+		var filePath = path.Join(dir, "..", DEFAULT_CREDENTIAL_FILE_NAME)
+		if _, err := os.Stat(filePath); err == nil {
+			credentialFilePath = filePath
+		}
+	}
+
+	if credentialFilePath != "" {
+		file, err := os.Open(credentialFilePath)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			var line = scanner.Text()
+			var keyVal = strings.Split(strings.ToLower(line), separator)
+			if len(keyVal) == 2 {
+				service.setCredentialBasedOnType(serviceName, keyVal[0], keyVal[1])
+			}
+		}
+	}
+	return nil
+}
+
+func (service *WatsonService) setCredentialBasedOnType(serviceName, key, value string) {
+	if strings.Contains(key, serviceName) {
+		if strings.Contains(key, APIKey) {
+			service.SetIAMAPIKey(value)
+		} else if strings.Contains(key, URL) {
+			service.SetURL(value)
+		} else if strings.Contains(key, USERNAME) {
+			service.Options.Username = value
+		} else if strings.Contains(key, PASSWORD) {
+			service.Options.Password = value
+		} else if strings.Contains(key, IAM_API_KEY) {
+			service.SetIAMAPIKey(value)
+		}
+	}
 }
