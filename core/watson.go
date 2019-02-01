@@ -68,7 +68,7 @@ func NewWatsonService(options *ServiceOptions, serviceName, displayName string) 
 	}
 
 	var userAgent = "watson-apis-go-sdk-" + Version
-	userAgent += "-" + runtime.GOOS
+	userAgent += " " + runtime.GOOS + " " + runtime.Version()
 	service.UserAgent = userAgent
 
 	// 1. Credentials are passed in constructor

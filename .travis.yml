@@ -16,8 +16,9 @@ before_install:
 - go get -u golang.org/x/lint/golint
 install:
 - dep ensure
-- npm install semantic-release@13.1.1
-- pip install --user bumpversion
+- pip install bumpversion
+- npm install @semantic-release/exec
+- npm install @semantic-release/git
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd
   ../; fi
 notifications:
