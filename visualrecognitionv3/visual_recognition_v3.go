@@ -58,7 +58,7 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (*VisualRecogni
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "watson_vision_combined")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "watson_vision_combined", "Visual Recognition")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

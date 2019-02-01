@@ -62,7 +62,7 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (*DiscoveryV1, error) {
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "discovery")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "discovery", "Discovery")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

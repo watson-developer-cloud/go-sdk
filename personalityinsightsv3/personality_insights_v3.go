@@ -71,7 +71,7 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "personality_insights")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "personality_insights", "Personality Insights")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

@@ -57,7 +57,7 @@ func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options)
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "natural_language_classifier")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "natural_language_classifier", "Natural Language Classifier")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

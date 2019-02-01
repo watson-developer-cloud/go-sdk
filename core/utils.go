@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"reflect"
 	"regexp"
+	"runtime"
 	"strings"
 
 	validator "gopkg.in/go-playground/validator.v9"
@@ -138,4 +140,16 @@ func CreateFormPartName(template string, keyName string, keyValue string) string
 func HasBadFirstOrLastChar(str string) bool {
 	return strings.HasPrefix(str, "{") || strings.HasPrefix(str, "\"") ||
 		strings.HasSuffix(str, "}") || strings.HasSuffix(str, "\"")
+}
+
+// UserHomeDir returns the user home directory
+func UserHomeDir() string {
+	if runtime.GOOS == "windows" {
+		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
+		}
+		return home
+	}
+	return os.Getenv("HOME")
 }

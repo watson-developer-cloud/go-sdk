@@ -55,7 +55,7 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "compare-comply")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "compare-comply", "Compare Comply")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

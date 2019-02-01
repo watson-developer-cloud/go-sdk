@@ -56,7 +56,7 @@ func NewAssistantV2(options *AssistantV2Options) (*AssistantV2, error) {
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "conversation")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "conversation", "Assistant")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}

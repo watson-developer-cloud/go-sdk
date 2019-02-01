@@ -60,7 +60,7 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (*LanguageTra
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "language_translator")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "language_translator", "Language Translator")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
