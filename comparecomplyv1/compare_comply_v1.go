@@ -2161,6 +2161,9 @@ type Parties struct {
 	// A string identifying the party.
 	Party *string `json:"party,omitempty"`
 
+	// A string that identifies the importance of the party.
+	Importance *string `json:"importance,omitempty"`
+
 	// A string identifying the party's role.
 	Role *string `json:"role,omitempty"`
 
