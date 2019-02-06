@@ -92,6 +92,7 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 	for headerName, headerValue := range createEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateEnvironment")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -147,6 +148,7 @@ func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *Delete
 	for headerName, headerValue := range deleteEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteEnvironment")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -186,6 +188,7 @@ func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironme
 	for headerName, headerValue := range getEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetEnvironment")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -223,6 +226,7 @@ func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvi
 	for headerName, headerValue := range listEnvironmentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListEnvironments")
 	builder.AddHeader("Accept", "application/json")
 
 	if listEnvironmentsOptions.Name != nil {
@@ -267,6 +271,7 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 	for headerName, headerValue := range listFieldsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListFields")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("collection_ids", strings.Join(listFieldsOptions.CollectionIds, ","))
@@ -310,6 +315,7 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 	for headerName, headerValue := range updateEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateEnvironment")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -374,6 +380,7 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 	for headerName, headerValue := range createConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateConfiguration")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -442,6 +449,7 @@ func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *De
 	for headerName, headerValue := range deleteConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteConfiguration")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -481,6 +489,7 @@ func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfi
 	for headerName, headerValue := range getConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetConfiguration")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -521,6 +530,7 @@ func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *List
 	for headerName, headerValue := range listConfigurationsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListConfigurations")
 	builder.AddHeader("Accept", "application/json")
 
 	if listConfigurationsOptions.Name != nil {
@@ -571,6 +581,7 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 	for headerName, headerValue := range updateConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateConfiguration")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -640,6 +651,7 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(testConfigurationIn
 	for headerName, headerValue := range testConfigurationInEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=TestConfigurationInEnvironment")
 	builder.AddHeader("Accept", "application/json")
 
 	if testConfigurationInEnvironmentOptions.Step != nil {
@@ -697,6 +709,7 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 	for headerName, headerValue := range createCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateCollection")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -755,6 +768,7 @@ func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCo
 	for headerName, headerValue := range deleteCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteCollection")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -794,6 +808,7 @@ func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionO
 	for headerName, headerValue := range getCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetCollection")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -834,6 +849,7 @@ func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *
 	for headerName, headerValue := range listCollectionFieldsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListCollectionFields")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -874,6 +890,7 @@ func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollec
 	for headerName, headerValue := range listCollectionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListCollections")
 	builder.AddHeader("Accept", "application/json")
 
 	if listCollectionsOptions.Name != nil {
@@ -917,6 +934,7 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 	for headerName, headerValue := range updateCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateCollection")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -975,6 +993,7 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 	for headerName, headerValue := range createExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateExpansions")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -1025,6 +1044,7 @@ func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *Crea
 	for headerName, headerValue := range createStopwordListOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateStopwordList")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1068,6 +1088,7 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 	for headerName, headerValue := range createTokenizationDictionaryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateTokenizationDictionary")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -1119,6 +1140,7 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 	for headerName, headerValue := range deleteExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteExpansions")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1151,6 +1173,7 @@ func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *Dele
 	for headerName, headerValue := range deleteStopwordListOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteStopwordList")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1182,6 +1205,7 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDic
 	for headerName, headerValue := range deleteTokenizationDictionaryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteTokenizationDictionary")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1254,6 +1278,7 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDic
 	for headerName, headerValue := range getTokenizationDictionaryStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetTokenizationDictionaryStatus")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1295,6 +1320,7 @@ func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansio
 	for headerName, headerValue := range listExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListExpansions")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1356,6 +1382,7 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 	for headerName, headerValue := range addDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=AddDocument")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1405,6 +1432,7 @@ func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocume
 	for headerName, headerValue := range deleteDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteDocument")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1447,6 +1475,7 @@ func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDoc
 	for headerName, headerValue := range getDocumentStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetDocumentStatus")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1490,6 +1519,7 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 	for headerName, headerValue := range updateDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateDocument")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1540,6 +1570,7 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	for headerName, headerValue := range federatedQueryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=FederatedQuery")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	if federatedQueryOptions.LoggingOptOut != nil {
@@ -1653,6 +1684,7 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	for headerName, headerValue := range federatedQueryNoticesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=FederatedQueryNotices")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("collection_ids", strings.Join(federatedQueryNoticesOptions.CollectionIds, ","))
@@ -1736,6 +1768,7 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 	for headerName, headerValue := range queryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=Query")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	if queryOptions.LoggingOptOut != nil {
@@ -1847,6 +1880,7 @@ func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesO
 	for headerName, headerValue := range queryEntitiesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=QueryEntities")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -1912,6 +1946,7 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 	for headerName, headerValue := range queryNoticesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=QueryNotices")
 	builder.AddHeader("Accept", "application/json")
 
 	if queryNoticesOptions.Filter != nil {
@@ -2005,6 +2040,7 @@ func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelatio
 	for headerName, headerValue := range queryRelationsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=QueryRelations")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2070,6 +2106,7 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 	for headerName, headerValue := range addTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=AddTrainingData")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2126,6 +2163,7 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 	for headerName, headerValue := range createTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateTrainingExample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2182,6 +2220,7 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 	for headerName, headerValue := range deleteAllTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteAllTrainingData")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2213,6 +2252,7 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 	for headerName, headerValue := range deleteTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteTrainingData")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2244,6 +2284,7 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 	for headerName, headerValue := range deleteTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteTrainingExample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2275,6 +2316,7 @@ func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainin
 	for headerName, headerValue := range getTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetTrainingData")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2315,6 +2357,7 @@ func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetT
 	for headerName, headerValue := range getTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetTrainingExample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2355,6 +2398,7 @@ func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrai
 	for headerName, headerValue := range listTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListTrainingData")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2395,6 +2439,7 @@ func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *
 	for headerName, headerValue := range listTrainingExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListTrainingExamples")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2435,6 +2480,7 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 	for headerName, headerValue := range updateTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateTrainingExample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2493,6 +2539,7 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteUserData")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
@@ -2527,6 +2574,7 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 	for headerName, headerValue := range createEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateEvent")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2579,6 +2627,7 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 	for headerName, headerValue := range getMetricsEventRateOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsEventRate")
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsEventRateOptions.StartTime != nil {
@@ -2626,6 +2675,7 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 	for headerName, headerValue := range getMetricsQueryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsQuery")
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsQueryOptions.StartTime != nil {
@@ -2675,6 +2725,7 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 	for headerName, headerValue := range getMetricsQueryEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryEvent")
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsQueryEventOptions.StartTime != nil {
@@ -2723,6 +2774,7 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 	for headerName, headerValue := range getMetricsQueryNoResultsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryNoResults")
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsQueryNoResultsOptions.StartTime != nil {
@@ -2772,6 +2824,7 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEven
 	for headerName, headerValue := range getMetricsQueryTokenEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryTokenEvent")
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsQueryTokenEventOptions.Count != nil {
@@ -2814,6 +2867,7 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (*core.
 	for headerName, headerValue := range queryLogOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=QueryLog")
 	builder.AddHeader("Accept", "application/json")
 
 	if queryLogOptions.Filter != nil {
@@ -2873,6 +2927,7 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 	for headerName, headerValue := range createCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateCredentials")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2926,6 +2981,7 @@ func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *Delete
 	for headerName, headerValue := range deleteCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteCredentials")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2969,6 +3025,7 @@ func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentia
 	for headerName, headerValue := range getCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetCredentials")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3011,6 +3068,7 @@ func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCreden
 	for headerName, headerValue := range listCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListCredentials")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3053,6 +3111,7 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 	for headerName, headerValue := range updateCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateCredentials")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -3106,6 +3165,7 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 	for headerName, headerValue := range createGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateGateway")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -3156,6 +3216,7 @@ func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayO
 	for headerName, headerValue := range deleteGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteGateway")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3196,6 +3257,7 @@ func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (
 	for headerName, headerValue := range getGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetGateway")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3236,6 +3298,7 @@ func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOpti
 	for headerName, headerValue := range listGatewaysOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListGateways")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -4954,7 +5017,8 @@ type DocumentAccepted struct {
 	// The unique identifier of the ingested document.
 	DocumentID *string `json:"document_id,omitempty"`
 
-	// Status of the document in the ingestion process.
+	// Status of the document in the ingestion process. A status of `processing` is returned for documents that are
+	// ingested with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
 	Status *string `json:"status,omitempty"`
 
 	// Array of notices produced by the document-ingestion process.
@@ -4962,8 +5026,10 @@ type DocumentAccepted struct {
 }
 
 // Constants associated with the DocumentAccepted.Status property.
-// Status of the document in the ingestion process.
+// Status of the document in the ingestion process. A status of `processing` is returned for documents that are ingested
+// with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
 const (
+	DocumentAccepted_Status_Pending    = "pending"
 	DocumentAccepted_Status_Processing = "processing"
 )
 
@@ -4978,6 +5044,9 @@ type DocumentCounts struct {
 
 	// The number of documents in the collection that failed to be ingested.
 	Failed *int64 `json:"failed,omitempty"`
+
+	// The number of documents that have been uploaded to the collection, but have not yet started processing.
+	Pending *int64 `json:"pending,omitempty"`
 }
 
 // DocumentSnapshot : DocumentSnapshot struct
@@ -5037,6 +5106,7 @@ const (
 	DocumentStatus_Status_Available            = "available"
 	DocumentStatus_Status_AvailableWithNotices = "available with notices"
 	DocumentStatus_Status_Failed               = "failed"
+	DocumentStatus_Status_Pending              = "pending"
 	DocumentStatus_Status_Processing           = "processing"
 )
 
@@ -5992,35 +6062,6 @@ func (options *GetGatewayOptions) SetHeaders(param map[string]string) *GetGatewa
 	return options
 }
 
-// ListGatewaysOptions : The listGateways options.
-type ListGatewaysOptions struct {
-
-	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
-
-	// Allows users to set headers to be GDPR compliant
-	Headers map[string]string
-}
-
-// NewListGatewaysOptions : Instantiate ListGatewaysOptions
-func (discovery *DiscoveryV1) NewListGatewaysOptions(environmentID string) *ListGatewaysOptions {
-	return &ListGatewaysOptions{
-		EnvironmentID: core.StringPtr(environmentID),
-	}
-}
-
-// SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListGatewaysOptions) SetEnvironmentID(environmentID string) *ListGatewaysOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
-}
-
-// SetHeaders : Allow user to set Headers
-func (options *ListGatewaysOptions) SetHeaders(param map[string]string) *ListGatewaysOptions {
-	options.Headers = param
-	return options
-}
-
 // GetMetricsEventRateOptions : The getMetricsEventRate options.
 type GetMetricsEventRateOptions struct {
 
@@ -6248,6 +6289,45 @@ func (options *GetMetricsQueryTokenEventOptions) SetCount(count int64) *GetMetri
 
 // SetHeaders : Allow user to set Headers
 func (options *GetMetricsQueryTokenEventOptions) SetHeaders(param map[string]string) *GetMetricsQueryTokenEventOptions {
+	options.Headers = param
+	return options
+}
+
+// GetStopwordListStatusOptions : The getStopwordListStatus options.
+type GetStopwordListStatusOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetStopwordListStatusOptions : Instantiate GetStopwordListStatusOptions
+func (discovery *DiscoveryV1) NewGetStopwordListStatusOptions(environmentID string, collectionID string) *GetStopwordListStatusOptions {
+	return &GetStopwordListStatusOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID:  core.StringPtr(collectionID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetStopwordListStatusOptions) SetEnvironmentID(environmentID string) *GetStopwordListStatusOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetStopwordListStatusOptions) SetCollectionID(collectionID string) *GetStopwordListStatusOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetStopwordListStatusOptions) SetHeaders(param map[string]string) *GetStopwordListStatusOptions {
 	options.Headers = param
 	return options
 }
@@ -6714,6 +6794,35 @@ func (options *ListFieldsOptions) SetCollectionIds(collectionIds []string) *List
 
 // SetHeaders : Allow user to set Headers
 func (options *ListFieldsOptions) SetHeaders(param map[string]string) *ListFieldsOptions {
+	options.Headers = param
+	return options
+}
+
+// ListGatewaysOptions : The listGateways options.
+type ListGatewaysOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewListGatewaysOptions : Instantiate ListGatewaysOptions
+func (discovery *DiscoveryV1) NewListGatewaysOptions(environmentID string) *ListGatewaysOptions {
+	return &ListGatewaysOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *ListGatewaysOptions) SetEnvironmentID(environmentID string) *ListGatewaysOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListGatewaysOptions) SetHeaders(param map[string]string) *ListGatewaysOptions {
 	options.Headers = param
 	return options
 }
