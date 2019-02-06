@@ -1194,6 +1194,47 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDic
 	return response, err
 }
 
+// GetStopwordListStatus : Get stopword list status
+// Returns the current status of the stopword list for the specified collection.
+func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions *GetStopwordListStatusOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getStopwordListStatusOptions, "getStopwordListStatusOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getStopwordListStatusOptions, "getStopwordListStatusOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
+	pathParameters := []string{*getStopwordListStatusOptions.EnvironmentID, *getStopwordListStatusOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getStopwordListStatusOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetStopwordListStatus")
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := discovery.Service.Request(request, new(TokenDictStatusResponse))
+	return response, err
+}
+
+// GetGetStopwordListStatusResult : Retrieve result of GetStopwordListStatus operation
+func (discovery *DiscoveryV1) GetGetStopwordListStatusResult(response *core.DetailedResponse) *TokenDictStatusResponse {
+	result, ok := response.Result.(*TokenDictStatusResponse)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // GetTokenizationDictionaryStatus : Get tokenization dictionary status
 // Returns the current status of the tokenization dictionary for the specified collection.
 func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions) (*core.DetailedResponse, error) {
