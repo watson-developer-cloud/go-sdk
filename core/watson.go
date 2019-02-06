@@ -83,8 +83,14 @@ func NewWatsonService(options *ServiceOptions, serviceName, displayName string) 
 			}
 		}
 	} else if options.IAMAccessToken != "" || options.IAMApiKey != "" {
-		if err := service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL); err != nil {
-			return nil, err
+		if options.IAMApiKey != "" && strings.HasPrefix(options.IAMApiKey, ICPPrefix) {
+			if err := service.SetUsernameAndPassword(APIKey, options.IAMApiKey); err != nil {
+				return nil, err
+			}
+		} else {
+			if err := service.SetTokenManager(options.IAMApiKey, options.IAMAccessToken, options.IAMURL); err != nil {
+				return nil, err
+			}
 		}
 	}
 

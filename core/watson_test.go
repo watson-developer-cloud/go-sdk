@@ -107,3 +107,17 @@ func TestLoadingFromCredentialFile(t *testing.T) {
 	service2, _ := NewWatsonService(options2, "watson", "watson")
 	assert.Equal(t, service2.Options.IAMApiKey, "xxx")
 }
+
+func TestICPAuthentication(t *testing.T) {
+	options := &ServiceOptions{
+		IAMApiKey: "xxx",
+	}
+	service, _ := NewWatsonService(options, "watson", "watson")
+	assert.Equal(t, "xxx", service.Options.IAMApiKey)
+
+	options2 := &ServiceOptions{
+		IAMApiKey: "icp-xxx",
+	}
+	service2, _ := NewWatsonService(options2, "watson", "watson")
+	assert.Equal(t, "icp-xxx", service2.Options.Password)
+}
