@@ -5536,8 +5536,16 @@ type UpgradeAcousticModelOptions struct {
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// If the custom acoustic model was trained with a custom language model, the customization ID (GUID) of that custom
-	// language model. The custom language model must be upgraded before the custom acoustic model can be upgraded.
+	// language model. The custom language model must be upgraded before the custom acoustic model can be upgraded. The
+	// credentials specified with the request must own both custom models.
 	CustomLanguageModelID *string `json:"custom_language_model_id,omitempty"`
+
+	// If `true`, forces the upgrade of a custom acoustic model for which no input data has been modified since it was last
+	// trained. Use this parameter only to force the upgrade of a custom acoustic model that is trained with a custom
+	// language model, and only if you receive a 400 response code and the message `No input data modified since last
+	// training`. See [Upgrading a custom acoustic
+	// model](https://cloud.ibm.com/docs/services/speech-to-text/custom-upgrade.html#upgradeAcoustic).
+	Force *bool `json:"force,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -5559,6 +5567,12 @@ func (options *UpgradeAcousticModelOptions) SetCustomizationID(customizationID s
 // SetCustomLanguageModelID : Allow user to set CustomLanguageModelID
 func (options *UpgradeAcousticModelOptions) SetCustomLanguageModelID(customLanguageModelID string) *UpgradeAcousticModelOptions {
 	options.CustomLanguageModelID = core.StringPtr(customLanguageModelID)
+	return options
+}
+
+// SetForce : Allow user to set Force
+func (options *UpgradeAcousticModelOptions) SetForce(force bool) *UpgradeAcousticModelOptions {
+	options.Force = core.BoolPtr(force)
 	return options
 }
 
