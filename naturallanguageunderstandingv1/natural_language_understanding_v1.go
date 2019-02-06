@@ -98,6 +98,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 	for headerName, headerValue := range analyzeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural-language-understanding;service_version=V1;operation_id=Analyze")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
@@ -175,6 +176,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 	for headerName, headerValue := range deleteModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural-language-understanding;service_version=V1;operation_id=DeleteModel")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
 
@@ -214,6 +216,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(l
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural-language-understanding;service_version=V1;operation_id=ListModels")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
 
