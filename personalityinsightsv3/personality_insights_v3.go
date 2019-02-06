@@ -128,6 +128,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 	for headerName, headerValue := range profileOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=personality_insights;service_version=V3;operation_id=Profile")
 	builder.AddHeader("Accept", "application/json")
 	if profileOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
@@ -222,6 +223,7 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 	for headerName, headerValue := range profileOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=personality_insights;service_version=V3;operation_id=ProfileAsCsv")
 	builder.AddHeader("Accept", "text/csv")
 	if profileOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
