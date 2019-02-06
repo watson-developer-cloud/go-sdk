@@ -87,6 +87,7 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	for headerName, headerValue := range messageOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=Message")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -156,6 +157,7 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	for headerName, headerValue := range createWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateWorkspace")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -235,6 +237,7 @@ func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWork
 	for headerName, headerValue := range deleteWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteWorkspace")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -269,6 +272,7 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 	for headerName, headerValue := range getWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetWorkspace")
 	builder.AddHeader("Accept", "application/json")
 
 	if getWorkspaceOptions.Export != nil {
@@ -318,6 +322,7 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 	for headerName, headerValue := range listWorkspacesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListWorkspaces")
 	builder.AddHeader("Accept", "application/json")
 
 	if listWorkspacesOptions.PageLimit != nil {
@@ -377,6 +382,7 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	for headerName, headerValue := range updateWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateWorkspace")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -460,6 +466,7 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 	for headerName, headerValue := range createIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateIntent")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -518,6 +525,7 @@ func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOpti
 	for headerName, headerValue := range deleteIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteIntent")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -552,6 +560,7 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*co
 	for headerName, headerValue := range getIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetIntent")
 	builder.AddHeader("Accept", "application/json")
 
 	if getIntentOptions.Export != nil {
@@ -602,6 +611,7 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 	for headerName, headerValue := range listIntentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListIntents")
 	builder.AddHeader("Accept", "application/json")
 
 	if listIntentsOptions.Export != nil {
@@ -664,6 +674,7 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	for headerName, headerValue := range updateIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateIntent")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -722,6 +733,7 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 	for headerName, headerValue := range createExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateExample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -777,6 +789,7 @@ func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleO
 	for headerName, headerValue := range deleteExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteExample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -810,6 +823,7 @@ func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (
 	for headerName, headerValue := range getExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetExample")
 	builder.AddHeader("Accept", "application/json")
 
 	if getExampleOptions.IncludeAudit != nil {
@@ -856,6 +870,7 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 	for headerName, headerValue := range listExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListExamples")
 	builder.AddHeader("Accept", "application/json")
 
 	if listExamplesOptions.PageLimit != nil {
@@ -914,6 +929,7 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 	for headerName, headerValue := range updateExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateExample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -969,6 +985,7 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 	for headerName, headerValue := range createCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateCounterexample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1021,6 +1038,7 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 	for headerName, headerValue := range deleteCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteCounterexample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1054,6 +1072,7 @@ func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCou
 	for headerName, headerValue := range getCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetCounterexample")
 	builder.AddHeader("Accept", "application/json")
 
 	if getCounterexampleOptions.IncludeAudit != nil {
@@ -1100,6 +1119,7 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 	for headerName, headerValue := range listCounterexamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListCounterexamples")
 	builder.AddHeader("Accept", "application/json")
 
 	if listCounterexamplesOptions.PageLimit != nil {
@@ -1158,6 +1178,7 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 	for headerName, headerValue := range updateCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateCounterexample")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1210,6 +1231,7 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	for headerName, headerValue := range createEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateEntity")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1274,6 +1296,7 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 	for headerName, headerValue := range deleteEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteEntity")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1308,6 +1331,7 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*co
 	for headerName, headerValue := range getEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetEntity")
 	builder.AddHeader("Accept", "application/json")
 
 	if getEntityOptions.Export != nil {
@@ -1358,6 +1382,7 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 	for headerName, headerValue := range listEntitiesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListEntities")
 	builder.AddHeader("Accept", "application/json")
 
 	if listEntitiesOptions.Export != nil {
@@ -1420,6 +1445,7 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 	for headerName, headerValue := range updateEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateEntity")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1485,6 +1511,7 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 	for headerName, headerValue := range listMentionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListMentions")
 	builder.AddHeader("Accept", "application/json")
 
 	if listMentionsOptions.Export != nil {
@@ -1534,6 +1561,7 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	for headerName, headerValue := range createValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateValue")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1598,6 +1626,7 @@ func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions
 	for headerName, headerValue := range deleteValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteValue")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1631,6 +1660,7 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.
 	for headerName, headerValue := range getValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetValue")
 	builder.AddHeader("Accept", "application/json")
 
 	if getValueOptions.Export != nil {
@@ -1680,6 +1710,7 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 	for headerName, headerValue := range listValuesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListValues")
 	builder.AddHeader("Accept", "application/json")
 
 	if listValuesOptions.Export != nil {
@@ -1742,6 +1773,7 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	for headerName, headerValue := range updateValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateValue")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1806,6 +1838,7 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 	for headerName, headerValue := range createSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateSynonym")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1858,6 +1891,7 @@ func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymO
 	for headerName, headerValue := range deleteSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteSynonym")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1891,6 +1925,7 @@ func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (
 	for headerName, headerValue := range getSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetSynonym")
 	builder.AddHeader("Accept", "application/json")
 
 	if getSynonymOptions.IncludeAudit != nil {
@@ -1937,6 +1972,7 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 	for headerName, headerValue := range listSynonymsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListSynonyms")
 	builder.AddHeader("Accept", "application/json")
 
 	if listSynonymsOptions.PageLimit != nil {
@@ -1995,6 +2031,7 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 	for headerName, headerValue := range updateSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateSynonym")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -2047,6 +2084,7 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	for headerName, headerValue := range createDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateDialogNode")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -2150,6 +2188,7 @@ func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDi
 	for headerName, headerValue := range deleteDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteDialogNode")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -2183,6 +2222,7 @@ func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeO
 	for headerName, headerValue := range getDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetDialogNode")
 	builder.AddHeader("Accept", "application/json")
 
 	if getDialogNodeOptions.IncludeAudit != nil {
@@ -2229,6 +2269,7 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 	for headerName, headerValue := range listDialogNodesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListDialogNodes")
 	builder.AddHeader("Accept", "application/json")
 
 	if listDialogNodesOptions.PageLimit != nil {
@@ -2287,6 +2328,7 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	for headerName, headerValue := range updateDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateDialogNode")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -2391,6 +2433,7 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 	for headerName, headerValue := range listAllLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListAllLogs")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("filter", fmt.Sprint(*listAllLogsOptions.Filter))
@@ -2445,6 +2488,7 @@ func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.
 	for headerName, headerValue := range listLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListLogs")
 	builder.AddHeader("Accept", "application/json")
 
 	if listLogsOptions.Sort != nil {
@@ -2503,6 +2547,7 @@ func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteUserData")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
@@ -4991,11 +5036,16 @@ func (options *GetWorkspaceOptions) SetHeaders(param map[string]string) *GetWork
 }
 
 // InputData : An input object that includes the input text.
-type InputData struct {
+type InputData map[string]interface{}
 
-	// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be
-	// no longer than 2048 characters.
-	Text *string `json:"text" validate:"required"`
+// SetText : Allow user to set Text
+func (this *InputData) SetText(Text *string) {
+	(*this)["text"] = Text
+}
+
+// GetText : Allow user to get Text
+func (this *InputData) GetText() *string {
+	return (*this)["text"].(*string)
 }
 
 // Intent : Intent struct
@@ -6183,76 +6233,29 @@ type MessageRequest struct {
 }
 
 // MessageResponse : The response sent by the workspace, including the output text, detected intents and entities, and context.
-type MessageResponse map[string]interface{}
+type MessageResponse struct {
 
-// SetInput : Allow user to set Input
-func (this *MessageResponse) SetInput(Input *MessageInput) {
-	(*this)["input"] = Input
-}
+	// The text of the user input.
+	Input *MessageInput `json:"input,omitempty"`
 
-// GetInput : Allow user to get Input
-func (this *MessageResponse) GetInput() *MessageInput {
-	return (*this)["input"].(*MessageInput)
-}
+	// An array of intents recognized in the user input, sorted in descending order of confidence.
+	Intents []RuntimeIntent `json:"intents" validate:"required"`
 
-// SetIntents : Allow user to set Intents
-func (this *MessageResponse) SetIntents(Intents *[]RuntimeIntent) {
-	(*this)["intents"] = Intents
-}
+	// An array of entities identified in the user input.
+	Entities []RuntimeEntity `json:"entities" validate:"required"`
 
-// GetIntents : Allow user to get Intents
-func (this *MessageResponse) GetIntents() *[]RuntimeIntent {
-	return (*this)["intents"].(*[]RuntimeIntent)
-}
+	// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
+	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
-// SetEntities : Allow user to set Entities
-func (this *MessageResponse) SetEntities(Entities *[]RuntimeEntity) {
-	(*this)["entities"] = Entities
-}
+	// State information for the conversation. To maintain state, include the context from the previous response.
+	Context *Context `json:"context" validate:"required"`
 
-// GetEntities : Allow user to get Entities
-func (this *MessageResponse) GetEntities() *[]RuntimeEntity {
-	return (*this)["entities"].(*[]RuntimeEntity)
-}
+	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
+	// log.
+	Output *OutputData `json:"output" validate:"required"`
 
-// SetAlternateIntents : Allow user to set AlternateIntents
-func (this *MessageResponse) SetAlternateIntents(AlternateIntents *bool) {
-	(*this)["alternate_intents"] = AlternateIntents
-}
-
-// GetAlternateIntents : Allow user to get AlternateIntents
-func (this *MessageResponse) GetAlternateIntents() *bool {
-	return (*this)["alternate_intents"].(*bool)
-}
-
-// SetContext : Allow user to set Context
-func (this *MessageResponse) SetContext(Context *Context) {
-	(*this)["context"] = Context
-}
-
-// GetContext : Allow user to get Context
-func (this *MessageResponse) GetContext() *Context {
-	return (*this)["context"].(*Context)
-}
-
-// SetOutput : Allow user to set Output
-func (this *MessageResponse) SetOutput(Output *OutputData) {
-	(*this)["output"] = Output
-}
-
-// GetOutput : Allow user to get Output
-func (this *MessageResponse) GetOutput() *OutputData {
-	return (*this)["output"].(*OutputData)
-}
-
-// SetActions : Allow user to set Actions
-func (this *MessageResponse) SetActions(Actions *[]DialogNodeAction) {
-	(*this)["actions"] = Actions
-}
-
-// GetActions : Allow user to get Actions
-func (this *MessageResponse) GetActions() *[]DialogNodeAction {
-	return (*this)["actions"].(*[]DialogNodeAction)
+	// An array of objects describing any actions requested by the dialog node.
+	Actions []DialogNodeAction `json:"actions,omitempty"`
 }
 
 // OutputData : An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
