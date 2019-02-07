@@ -88,10 +88,8 @@ func main() {
 	fmt.Println(response)
 
 	// 	/* MESSAGE */
-
-	inputData := &assistant.InputData{
-		Text: core.StringPtr("Hello, how are you?"),
-	}
+	inputData := &assistant.InputData{}
+	inputData.SetText(core.StringPtr("Hello, how are you?"))
 
 	messageOptions := service.NewMessageOptions(*workspaceID).
 		SetInput(inputData)
@@ -107,9 +105,9 @@ func main() {
 	fmt.Println(response)
 
 	// To continue with the same assistant, pass in the context from the previous call
-	context := service.GetMessageResult(response).GetContext()
+	context := service.GetMessageResult(response).Context
 
-	inputData.Text = core.StringPtr("What's the weather right now?")
+	inputData.SetText(core.StringPtr("What's the weather right now?"))
 	messageOptions.SetContext(context).
 		SetInput(inputData)
 

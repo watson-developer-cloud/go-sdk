@@ -2825,4 +2825,52 @@ var _ = Describe("DiscoveryV1", func() {
 			})
 		})
 	})
+	Describe("GetStopwordListStatus(getStopwordListStatusOptions *GetStopwordListStatusOptions)", func() {
+		getStopwordListStatusPath := "/v1/environments/{environment_id}/collections/{collection_id}/word_lists/stopwords"
+		version := "exampleString"
+		environmentID := "exampleString"
+		collectionID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(getStopwordListStatusPath, "{environment_id}", environmentID, 1)
+		Path = strings.Replace(Path, "{collection_id}", collectionID, 1)
+		Context("Successfully - Get stopword list status", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"status": "ready"}`)
+			}))
+			It("Succeed to call GetStopwordListStatus", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.GetStopwordListStatus(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				getStopwordListStatusOptions := testService.NewGetStopwordListStatusOptions(environmentID, collectionID)
+				returnValue, returnValueErr = testService.GetStopwordListStatus(getStopwordListStatusOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetGetStopwordListStatusResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 })

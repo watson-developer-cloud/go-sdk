@@ -85,6 +85,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyO
 	for headerName, headerValue := range classifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=Classify")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -137,6 +138,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 	for headerName, headerValue := range classifyCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=ClassifyCollection")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -186,6 +188,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(c
 	for headerName, headerValue := range createClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=CreateClassifier")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddFormData("training_metadata", core.StringNilMapper(createClassifierOptions.MetadataFilename),
@@ -229,6 +232,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(d
 	for headerName, headerValue := range deleteClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=DeleteClassifier")
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -259,6 +263,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getC
 	for headerName, headerValue := range getClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=GetClassifier")
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -295,6 +300,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(li
 	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=ListClassifiers")
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()

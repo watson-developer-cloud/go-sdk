@@ -106,6 +106,7 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.Detail
 	for headerName, headerValue := range toneOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=tone_analyzer;service_version=V3;operation_id=Tone")
 	builder.AddHeader("Accept", "application/json")
 	if toneOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*toneOptions.ContentType))
@@ -177,6 +178,7 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 	for headerName, headerValue := range toneChatOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=tone_analyzer;service_version=V3;operation_id=ToneChat")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	if toneChatOptions.ContentLanguage != nil {
