@@ -583,7 +583,7 @@ func TestMessage(t *testing.T) {
 		&assistantv1.MessageOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
 			Input: &assistantv1.InputData{
-				Text: core.StringPtr("Hello World"),
+				"text": "Hello World",
 			},
 		},
 	)

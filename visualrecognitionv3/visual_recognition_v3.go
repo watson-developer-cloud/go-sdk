@@ -58,7 +58,7 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (*VisualRecogni
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "watson_vision_combined")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "watson_vision_combined", "Visual Recognition")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -88,6 +88,7 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 	for headerName, headerValue := range classifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=Classify")
 	builder.AddHeader("Accept", "application/json")
 	if classifyOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*classifyOptions.AcceptLanguage))
@@ -140,7 +141,8 @@ func (visualRecognition *VisualRecognitionV3) GetClassifyResult(response *core.D
 // recognition.
 //
 // Supported image formats include .gif, .jpg, .png, and .tif. The maximum image size is 10 MB. The minimum recommended
-// pixel density is 32X32 pixels per inch.
+// pixel density is 32X32 pixels, but the service tends to perform better with images that are at least 224 x 224
+// pixels.
 func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *DetectFacesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(detectFacesOptions, "detectFacesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -161,6 +163,7 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *De
 	for headerName, headerValue := range detectFacesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=DetectFaces")
 	builder.AddHeader("Accept", "application/json")
 	if detectFacesOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*detectFacesOptions.AcceptLanguage))
@@ -217,6 +220,7 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	for headerName, headerValue := range createClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=CreateClassifier")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
@@ -266,6 +270,7 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 	for headerName, headerValue := range deleteClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=DeleteClassifier")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
@@ -297,6 +302,7 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 	for headerName, headerValue := range getClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=GetClassifier")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
@@ -333,6 +339,7 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=ListClassifiers")
 	builder.AddHeader("Accept", "application/json")
 
 	if listClassifiersOptions.Verbose != nil {
@@ -359,8 +366,8 @@ func (visualRecognition *VisualRecognitionV3) GetListClassifiersResult(response 
 }
 
 // UpdateClassifier : Update a classifier
-// Update a custom classifier by adding new positive or negative classes (examples) or by adding new images to existing
-// classes. You must supply at least one set of positive or negative examples. For details, see [Updating custom
+// Update a custom classifier by adding new positive or negative classes or by adding new images to existing classes.
+// You must supply at least one set of positive or negative examples. For details, see [Updating custom
 // classifiers](https://cloud.ibm.com/docs/services/visual-recognition/customizing.html#updating-custom-classifiers).
 //
 // Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
@@ -389,6 +396,7 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	for headerName, headerValue := range updateClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=UpdateClassifier")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
@@ -439,6 +447,7 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 	for headerName, headerValue := range getCoreMlModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=GetCoreMlModel")
 	builder.AddHeader("Accept", "application/octet-stream")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
@@ -484,6 +493,7 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=DeleteUserData")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
@@ -572,8 +582,7 @@ type Classifier struct {
 	// Name of the classifier.
 	Name *string `json:"name" validate:"required"`
 
-	// Unique ID of the account who owns the classifier. Returned when verbose=`true`. Might not be returned by some
-	// requests.
+	// Unique ID of the account who owns the classifier. Might not be returned by some requests.
 	Owner *string `json:"owner,omitempty"`
 
 	// Training status of classifier.
@@ -591,12 +600,12 @@ type Classifier struct {
 	// Classes that define a classifier.
 	Classes []Class `json:"classes,omitempty"`
 
-	// Date and time in Coordinated Universal Time (UTC) that the classifier was updated. Returned when verbose=`true`.
-	// Might not be returned by some requests. Identical to `updated` and retained for backward compatibility.
+	// Date and time in Coordinated Universal Time (UTC) that the classifier was updated. Might not be returned by some
+	// requests. Identical to `updated` and retained for backward compatibility.
 	Retrained *strfmt.DateTime `json:"retrained,omitempty"`
 
 	// Date and time in Coordinated Universal Time (UTC) that the classifier was most recently updated. The field matches
-	// either `retrained` or `created`.  Returned when verbose=`true`. Might not be returned by some requests.
+	// either `retrained` or `created`. Might not be returned by some requests.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
@@ -632,9 +641,9 @@ type Classifiers struct {
 // ClassifyOptions : The classify options.
 type ClassifyOptions struct {
 
-	// An image file (.jpg, .png) or .zip file with images. Maximum image size is 10 MB. Include no more than 20 images and
-	// limit the .zip file to 100 MB. Encode the image and .zip file names in UTF-8 if they contain non-ASCII characters.
-	// The service assumes UTF-8 encoding if it encounters non-ASCII characters.
+	// An image file (.gif, .jpg, .png, .tif) or .zip file with images. Maximum image size is 10 MB. Include no more than
+	// 20 images and limit the .zip file to 100 MB. Encode the image and .zip file names in UTF-8 if they contain non-ASCII
+	// characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters.
 	//
 	// You can also include an image with the **url** parameter.
 	ImagesFile *os.File `json:"images_file,omitempty"`
@@ -645,23 +654,23 @@ type ClassifyOptions struct {
 	// The desired language of parts of the response. See the response for details.
 	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
-	// The URL of an image to analyze. Must be in .jpg, or .png format. The minimum recommended pixel density is 32X32
-	// pixels per inch, and the maximum image size is 10 MB.
+	// The URL of an image (.gif, .jpg, .png, .tif) to analyze. The minimum recommended pixel density is 32X32 pixels, but
+	// the service tends to perform better with images that are at least 224 x 224 pixels. The maximum image size is 10 MB.
 	//
 	// You can also include images with the **images_file** parameter.
 	URL *string `json:"url,omitempty"`
 
-	// The minimum score a class must have to be displayed in the response. Set the threshold to `0.0` to ignore the
-	// classification score and return all values.
+	// The minimum score a class must have to be displayed in the response. Set the threshold to `0.0` to return all
+	// identified classes.
 	Threshold *float32 `json:"threshold,omitempty"`
 
-	// The categories of classifiers to apply. Use `IBM` to classify against the `default` general classifier, and use `me`
-	// to classify against your custom classifiers. To analyze the image against both classifier categories, set the value
-	// to both `IBM` and `me`.
-	//
-	// The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty.
-	//
-	// The **classifier_ids** parameter overrides **owners**, so make sure that **classifier_ids** is empty.
+	// The categories of classifiers to apply. The **classifier_ids** parameter overrides **owners**, so make sure that
+	// **classifier_ids** is empty.
+	// - Use `IBM` to classify against the `default` general classifier. You get the same result if both **classifier_ids**
+	// and **owners** parameters are empty.
+	// - Use `me` to classify against all your custom classifiers. However, for better performance use **classifier_ids**
+	// to specify the specific custom classifiers to apply.
+	// - Use both `IBM` and `me` to analyze the image against both classifier categories.
 	Owners []string `json:"owners,omitempty"`
 
 	// Which classifiers to apply. Overrides the **owners** parameter. You can specify both custom and built-in classifier
@@ -912,8 +921,8 @@ type DetectFacesOptions struct {
 	ImagesFilename *string `json:"images_filename,omitempty"`
 
 	// The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum recommended pixel density
-	// is 32X32 pixels per inch, and the maximum image size is 10 MB. Redirects are followed, so you can use a shortened
-	// URL.
+	// is 32X32 pixels, but the service tends to perform better with images that are at least 224 x 224 pixels. The maximum
+	// image size is 10 MB. Redirects are followed, so you can use a shortened URL.
 	//
 	// You can also include images with the **images_file** parameter.
 	URL *string `json:"url,omitempty"`

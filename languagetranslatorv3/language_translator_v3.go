@@ -60,7 +60,7 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (*LanguageTra
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "language_translator")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "language_translator", "Language Translator")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -87,6 +87,7 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 	for headerName, headerValue := range translateOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=Translate")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
@@ -146,6 +147,7 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 	for headerName, headerValue := range identifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=Identify")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "text/plain")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
@@ -190,6 +192,7 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listId
 	for headerName, headerValue := range listIdentifiableLanguagesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=ListIdentifiableLanguages")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
@@ -244,6 +247,7 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 	for headerName, headerValue := range createModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=CreateModel")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("base_model_id", fmt.Sprint(*createModelOptions.BaseModelID))
@@ -298,6 +302,7 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 	for headerName, headerValue := range deleteModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=DeleteModel")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
@@ -339,6 +344,7 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetMod
 	for headerName, headerValue := range getModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=GetModel")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
@@ -376,6 +382,7 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=ListModels")
 	builder.AddHeader("Accept", "application/json")
 
 	if listModelsOptions.Source != nil {

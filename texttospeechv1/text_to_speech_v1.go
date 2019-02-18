@@ -69,7 +69,7 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) 
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "text_to_speech")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "text_to_speech", "Text to Speech")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -100,6 +100,7 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 	for headerName, headerValue := range getVoiceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=GetVoice")
 	builder.AddHeader("Accept", "application/json")
 
 	if getVoiceOptions.CustomizationID != nil {
@@ -143,6 +144,7 @@ func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOpti
 	for headerName, headerValue := range listVoicesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=ListVoices")
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -252,6 +254,7 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 	for headerName, headerValue := range synthesizeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=Synthesize")
 	builder.AddHeader("Accept", "audio/basic")
 	builder.AddHeader("Content-Type", "application/json")
 	if synthesizeOptions.Accept != nil {
@@ -318,6 +321,7 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 	for headerName, headerValue := range getPronunciationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=GetPronunciation")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("text", fmt.Sprint(*getPronunciationOptions.Text))
@@ -375,6 +379,7 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *Cr
 	for headerName, headerValue := range createVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=CreateVoiceModel")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -436,6 +441,7 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 	for headerName, headerValue := range deleteVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=DeleteVoiceModel")
 
 	request, err := builder.Build()
 	if err != nil {
@@ -472,6 +478,7 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoice
 	for headerName, headerValue := range getVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=GetVoiceModel")
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -516,6 +523,7 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *List
 	for headerName, headerValue := range listVoiceModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=ListVoiceModels")
 	builder.AddHeader("Accept", "application/json")
 
 	if listVoiceModelsOptions.Language != nil {
@@ -580,6 +588,7 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 	for headerName, headerValue := range updateVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=UpdateVoiceModel")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -647,6 +656,7 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 	for headerName, headerValue := range addWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=AddWord")
 	builder.AddHeader("Content-Type", "application/json")
 
 	body := make(map[string]interface{})
@@ -711,6 +721,7 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 	for headerName, headerValue := range addWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=AddWords")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -757,6 +768,7 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 	for headerName, headerValue := range deleteWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=DeleteWord")
 
 	request, err := builder.Build()
 	if err != nil {
@@ -792,6 +804,7 @@ func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*co
 	for headerName, headerValue := range getWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=GetWord")
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -838,6 +851,7 @@ func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions
 	for headerName, headerValue := range listWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=ListWords")
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -884,6 +898,7 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=DeleteUserData")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 

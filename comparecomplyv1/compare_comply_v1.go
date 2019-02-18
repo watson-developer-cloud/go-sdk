@@ -55,7 +55,7 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "compare-comply")
+	service, serviceErr := core.NewWatsonService(serviceOptions, "compare-comply", "Compare Comply")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -64,7 +64,7 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 }
 
 // ConvertToHTML : Convert file to HTML
-// Uploads an input file. The response includes an HTML version of the document.
+// Convert an uploaded file to HTML.
 func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *ConvertToHTMLOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(convertToHTMLOptions, "convertToHTMLOptions cannot be nil"); err != nil {
 		return nil, err
@@ -82,6 +82,7 @@ func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *Conver
 	for headerName, headerValue := range convertToHTMLOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ConvertToHTML")
 	builder.AddHeader("Accept", "application/json")
 
 	if convertToHTMLOptions.ModelID != nil {
@@ -111,7 +112,7 @@ func (compareComply *CompareComplyV1) GetConvertToHTMLResult(response *core.Deta
 }
 
 // ClassifyElements : Classify the elements of a document
-// Uploads a file. The response includes an analysis of the document's structural and semantic elements.
+// Analyze an uploaded file's structural and semantic elements.
 func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *ClassifyElementsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(classifyElementsOptions, "classifyElementsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -129,6 +130,7 @@ func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *
 	for headerName, headerValue := range classifyElementsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ClassifyElements")
 	builder.AddHeader("Accept", "application/json")
 
 	if classifyElementsOptions.ModelID != nil {
@@ -158,7 +160,7 @@ func (compareComply *CompareComplyV1) GetClassifyElementsResult(response *core.D
 }
 
 // ExtractTables : Extract a document's tables
-// Uploads a file. The response includes an analysis of the document's tables.
+// Extract and analyze an uploaded file's tables.
 func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *ExtractTablesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(extractTablesOptions, "extractTablesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -176,6 +178,7 @@ func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *Extrac
 	for headerName, headerValue := range extractTablesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ExtractTables")
 	builder.AddHeader("Accept", "application/json")
 
 	if extractTablesOptions.ModelID != nil {
@@ -205,8 +208,7 @@ func (compareComply *CompareComplyV1) GetExtractTablesResult(response *core.Deta
 }
 
 // CompareDocuments : Compare two documents
-// Uploads two input files. The response includes JSON comparing the two documents. Uploaded files must be in the same
-// file format.
+// Compare two uploaded input files. Uploaded files must be in the same file format.
 func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *CompareDocumentsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(compareDocumentsOptions, "compareDocumentsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -224,6 +226,7 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 	for headerName, headerValue := range compareDocumentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=CompareDocuments")
 	builder.AddHeader("Accept", "application/json")
 
 	if compareDocumentsOptions.File1Label != nil {
@@ -281,6 +284,7 @@ func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbac
 	for headerName, headerValue := range addFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=AddFeedback")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
@@ -336,6 +340,7 @@ func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *Dele
 	for headerName, headerValue := range deleteFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=DeleteFeedback")
 	builder.AddHeader("Accept", "application/json")
 
 	if deleteFeedbackOptions.ModelID != nil {
@@ -379,6 +384,7 @@ func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbac
 	for headerName, headerValue := range getFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=GetFeedback")
 	builder.AddHeader("Accept", "application/json")
 
 	if getFeedbackOptions.ModelID != nil {
@@ -419,6 +425,7 @@ func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeed
 	for headerName, headerValue := range listFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ListFeedback")
 	builder.AddHeader("Accept", "application/json")
 
 	if listFeedbackOptions.FeedbackType != nil {
@@ -492,9 +499,9 @@ func (compareComply *CompareComplyV1) GetListFeedbackResult(response *core.Detai
 // CreateBatch : Submit a batch-processing request
 // Run Compare and Comply methods over a collection of input documents.
 // **Important:** Batch processing requires the use of the [IBM Cloud Object Storage
-// service](https://console.bluemix.net/docs/services/cloud-object-storage/about-cos.html#about-ibm-cloud-object-storage).
-// The use of IBM Cloud Object Storage with Compare and Comply is discussed at [Using batch
-// processing](https://console.bluemix.net/docs/services/compare-comply/batching.html#before-you-batch).
+// service](https://cloud.ibm.com/docs/services/cloud-object-storage/about-cos.html#about-ibm-cloud-object-storage). The
+// use of IBM Cloud Object Storage with Compare and Comply is discussed at [Using batch
+// processing](https://cloud.ibm.com/docs/services/compare-comply/batching.html#before-you-batch).
 func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatchOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createBatchOptions, "createBatchOptions cannot be nil"); err != nil {
 		return nil, err
@@ -512,6 +519,7 @@ func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatc
 	for headerName, headerValue := range createBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=CreateBatch")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("function", fmt.Sprint(*createBatchOptions.Function))
@@ -547,8 +555,8 @@ func (compareComply *CompareComplyV1) GetCreateBatchResult(response *core.Detail
 	return nil
 }
 
-// GetBatch : Gets information about a specific batch-processing request
-// Gets information about a batch-processing request with a specified ID.
+// GetBatch : Get information about a specific batch-processing request
+// Get information about a batch-processing request with a specified ID.
 func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getBatchOptions, "getBatchOptions cannot be nil"); err != nil {
 		return nil, err
@@ -566,6 +574,7 @@ func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions)
 	for headerName, headerValue := range getBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=GetBatch")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -587,8 +596,8 @@ func (compareComply *CompareComplyV1) GetGetBatchResult(response *core.DetailedR
 	return nil
 }
 
-// ListBatches : Gets the list of submitted batch-processing jobs
-// Gets the list of batch-processing jobs submitted by users.
+// ListBatches : List submitted batch-processing jobs
+// List the batch-processing jobs submitted by users.
 func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatchesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listBatchesOptions, "listBatchesOptions"); err != nil {
 		return nil, err
@@ -603,6 +612,7 @@ func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatche
 	for headerName, headerValue := range listBatchesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ListBatches")
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -624,8 +634,8 @@ func (compareComply *CompareComplyV1) GetListBatchesResult(response *core.Detail
 	return nil
 }
 
-// UpdateBatch : Updates a pending or active batch-processing request
-// Updates a pending or active batch-processing request. You can rescan the input bucket to check for new documents or
+// UpdateBatch : Update a pending or active batch-processing request
+// Update a pending or active batch-processing request. You can rescan the input bucket to check for new documents or
 // cancel a request.
 func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatchOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateBatchOptions, "updateBatchOptions cannot be nil"); err != nil {
@@ -644,6 +654,7 @@ func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatc
 	for headerName, headerValue := range updateBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
+	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=UpdateBatch")
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("action", fmt.Sprint(*updateBatchOptions.Action))
@@ -747,7 +758,7 @@ type AlignedElement struct {
 // Attribute : List of document attributes.
 type Attribute struct {
 
-	// The type of attribute. Possible values are `Currency`, `DateTime`, `Location`, `Organization`, and `Person`.
+	// The type of attribute.
 	Type *string `json:"type,omitempty"`
 
 	// The text associated with the attribute.
@@ -759,8 +770,9 @@ type Attribute struct {
 }
 
 // Constants associated with the Attribute.Type property.
-// The type of attribute. Possible values are `Currency`, `DateTime`, `Location`, `Organization`, and `Person`.
+// The type of attribute.
 const (
+	Attribute_Type_Address      = "Address"
 	Attribute_Type_Currency     = "Currency"
 	Attribute_Type_Datetime     = "DateTime"
 	Attribute_Type_Location     = "Location"
@@ -847,17 +859,27 @@ type BodyCells struct {
 	// The `end` index of this cell's `column` location in the current table.
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 
-	RowHeaderIds []RowHeaderIds `json:"row_header_ids,omitempty"`
+	// An array of values, each being the `id` value of a row header that is applicable to this body cell.
+	RowHeaderIds []string `json:"row_header_ids,omitempty"`
 
-	RowHeaderTexts []RowHeaderTexts `json:"row_header_texts,omitempty"`
+	// An array of values, each being the `text` value of a row header that is applicable to this body cell.
+	RowHeaderTexts []string `json:"row_header_texts,omitempty"`
 
-	RowHeaderTextsNormalized []RowHeaderTextsNormalized `json:"row_header_texts_normalized,omitempty"`
+	// If you provide customization input, the normalized version of the row header texts according to the customization;
+	// otherwise, the same value as `row_header_texts`.
+	RowHeaderTextsNormalized []string `json:"row_header_texts_normalized,omitempty"`
 
-	ColumnHeaderIds []ColumnHeaderIds `json:"column_header_ids,omitempty"`
+	// An array of values, each being the `id` value of a column header that is applicable to the current cell.
+	ColumnHeaderIds []string `json:"column_header_ids,omitempty"`
 
-	ColumnHeaderTexts []ColumnHeaderTexts `json:"column_header_texts,omitempty"`
+	// An array of values, each being the `text` value of a column header that is applicable to the current cell.
+	ColumnHeaderTexts []string `json:"column_header_texts,omitempty"`
 
-	ColumnHeaderTextsNormalized []ColumnHeaderTextsNormalized `json:"column_header_texts_normalized,omitempty"`
+	// If you provide customization input, the normalized version of the column header texts according to the
+	// customization; otherwise, the same value as `column_header_texts`.
+	ColumnHeaderTextsNormalized []string `json:"column_header_texts_normalized,omitempty"`
+
+	Attributes []Attribute `json:"attributes,omitempty"`
 }
 
 // Category : Information defining an element's subject matter.
@@ -999,28 +1021,6 @@ type ClassifyReturn struct {
 
 	// The input document's termination dates.
 	TerminationDates []TerminationDates `json:"termination_dates,omitempty"`
-}
-
-// ColumnHeaderIds : An array of values, each being the `id` value of a column header that is applicable to the current cell.
-type ColumnHeaderIds struct {
-
-	// The `id` value of a column header.
-	ID *string `json:"id,omitempty"`
-}
-
-// ColumnHeaderTexts : An array of values, each being the `text` value of a column header that is applicable to the current cell.
-type ColumnHeaderTexts struct {
-
-	// The `text` value of a column header.
-	Text *string `json:"text,omitempty"`
-}
-
-// ColumnHeaderTextsNormalized : If you provide customization input, the normalized version of the column header texts according to the customization;
-// otherwise, the same value as `column_header_texts`.
-type ColumnHeaderTextsNormalized struct {
-
-	// The normalized version of a column header text.
-	TextNormalized *string `json:"text_normalized,omitempty"`
 }
 
 // ColumnHeaders : Column-level cells, each applicable as a header to other cells in the same column as itself, of the current table.
@@ -1203,10 +1203,21 @@ type ContractAmts struct {
 	// The monetary amount.
 	Text *string `json:"text,omitempty"`
 
+	// The confidence level in the identification of the contract amount.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
 	Location *Location `json:"location,omitempty"`
 }
+
+// Constants associated with the ContractAmts.ConfidenceLevel property.
+// The confidence level in the identification of the contract amount.
+const (
+	ContractAmts_ConfidenceLevel_High   = "High"
+	ContractAmts_ConfidenceLevel_Low    = "Low"
+	ContractAmts_ConfidenceLevel_Medium = "Medium"
+)
 
 // ConvertToHTMLOptions : The convertToHtml options.
 type ConvertToHTMLOptions struct {
@@ -1418,7 +1429,7 @@ func (options *CreateBatchOptions) SetHeaders(param map[string]string) *CreateBa
 // DeleteFeedbackOptions : The deleteFeedback options.
 type DeleteFeedbackOptions struct {
 
-	// An string that specifies the feedback entry to be deleted from the document.
+	// A string that specifies the feedback entry to be deleted from the document.
 	FeedbackID *string `json:"feedback_id" validate:"required"`
 
 	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
@@ -1516,7 +1527,8 @@ type Document struct {
 	// The MD5 hash value of the input document.
 	Hash *string `json:"hash,omitempty"`
 
-	// The label applied to the input document with the calling method's `file1_label` or `file2_label` value.
+	// The label applied to the input document with the calling method's `file_1_label` or `file_2_label` value. This field
+	// is specified only in the output of the **Comparing two documents** method.
 	Label *string `json:"label,omitempty"`
 }
 
@@ -1526,10 +1538,21 @@ type EffectiveDates struct {
 	// The effective date, listed as a string.
 	Text *string `json:"text,omitempty"`
 
+	// The confidence level in the identification of the effective date.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
 	Location *Location `json:"location,omitempty"`
 }
+
+// Constants associated with the EffectiveDates.ConfidenceLevel property.
+// The confidence level in the identification of the effective date.
+const (
+	EffectiveDates_ConfidenceLevel_High   = "High"
+	EffectiveDates_ConfidenceLevel_Low    = "Low"
+	EffectiveDates_ConfidenceLevel_Medium = "Medium"
+)
 
 // Element : A component part of the document.
 type Element struct {
@@ -1797,7 +1820,7 @@ type GetFeedback struct {
 // GetFeedbackOptions : The getFeedback options.
 type GetFeedbackOptions struct {
 
-	// An string that specifies the feedback entry to be included in the output.
+	// A string that specifies the feedback entry to be included in the output.
 	FeedbackID *string `json:"feedback_id" validate:"required"`
 
 	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
@@ -1883,7 +1906,7 @@ type LeadingSentence struct {
 	// `end`.
 	Location *Location `json:"location,omitempty"`
 
-	// An array of `location` objects listing the locations of detected leading sentences.
+	// An array of `location` objects that lists the locations of detected leading sentences.
 	ElementLocations []ElementLocations `json:"element_locations,omitempty"`
 }
 
@@ -2151,6 +2174,9 @@ type Parties struct {
 	// A string identifying the party.
 	Party *string `json:"party,omitempty"`
 
+	// A string that identifies the importance of the party.
+	Importance *string `json:"importance,omitempty"`
+
 	// A string identifying the party's role.
 	Role *string `json:"role,omitempty"`
 
@@ -2161,27 +2187,12 @@ type Parties struct {
 	Contacts []Contact `json:"contacts,omitempty"`
 }
 
-// RowHeaderIds : An array of values, each being the `id` value of a row header that is applicable to this body cell.
-type RowHeaderIds struct {
-
-	// The `id` values of a row header.
-	ID *string `json:"id,omitempty"`
-}
-
-// RowHeaderTexts : An array of values, each being the `text` value of a row header that is applicable to this body cell.
-type RowHeaderTexts struct {
-
-	// The `text` value of a row header.
-	Text *string `json:"text,omitempty"`
-}
-
-// RowHeaderTextsNormalized : If you provide customization input, the normalized version of the row header texts according to the customization;
-// otherwise, the same value as `row_header_texts`.
-type RowHeaderTextsNormalized struct {
-
-	// The normalized version of a row header text.
-	TextNormalized *string `json:"text_normalized,omitempty"`
-}
+// Constants associated with the Parties.Importance property.
+// A string that identifies the importance of the party.
+const (
+	Parties_Importance_Primary = "Primary"
+	Parties_Importance_Unknown = "Unknown"
+)
 
 // RowHeaders : Row-level cells, each applicable as a header to other cells in the same row as itself, of the current table.
 type RowHeaders struct {
@@ -2241,7 +2252,7 @@ type SectionTitles struct {
 	// top-level section, `2` represents a subsection within the level `1` section, and so forth.
 	Level *int64 `json:"level,omitempty"`
 
-	// An array of `location` objects listing the locations of detected leading sentences.
+	// An array of `location` objects that lists the locations of detected section titles.
 	ElementLocations []ElementLocations `json:"element_locations,omitempty"`
 }
 
@@ -2333,10 +2344,21 @@ type TerminationDates struct {
 	// The termination date.
 	Text *string `json:"text,omitempty"`
 
+	// The confidence level in the identification of the termination date.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
 	Location *Location `json:"location,omitempty"`
 }
+
+// Constants associated with the TerminationDates.ConfidenceLevel property.
+// The confidence level in the identification of the termination date.
+const (
+	TerminationDates_ConfidenceLevel_High   = "High"
+	TerminationDates_ConfidenceLevel_Low    = "Low"
+	TerminationDates_ConfidenceLevel_Medium = "Medium"
+)
 
 // TypeLabel : Identification of a specific type.
 type TypeLabel struct {
