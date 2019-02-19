@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type websocketListener struct {
+type WebsocketListener struct {
 	IsClosed chan bool
 	Callback RecognizeCallbackWrapper
 }
@@ -16,7 +16,7 @@ type websocketListener struct {
 /*
 	OnOpen: Sends start message to server when connection created
 */
-func (wsHandle websocketListener) OnOpen(recognizeOpt *RecognizeOptions, conn *websocket.Conn) {
+func (wsHandle WebsocketListener) OnOpen(recognizeOpt *RecognizeOptions, conn *websocket.Conn) {
 	wsHandle.Callback.OnOpen()
 	sendStartMessage(conn, recognizeOpt)
 }
@@ -24,16 +24,15 @@ func (wsHandle websocketListener) OnOpen(recognizeOpt *RecognizeOptions, conn *w
 /*
 	OnClose: Callback when websocket connection is closed
 */
-func (wsHandle websocketListener) OnClose(finish chan bool) {
+func (wsHandle WebsocketListener) OnClose() {
 	<-wsHandle.IsClosed
 	wsHandle.Callback.OnClose()
-	finish <- true
 }
 
 /*
 	OnData: Callback when websocket connection receives data
 */
-func (wsHandle websocketListener) OnData(conn *websocket.Conn, recognizeOptions *RecognizeOptions) {
+func (wsHandle WebsocketListener) OnData(conn *websocket.Conn, recognizeOptions *RecognizeOptions) {
 	isListening := false
 	for {
 		var websocketResponse SpeechRecognitionResults
@@ -60,7 +59,7 @@ func (wsHandle websocketListener) OnData(conn *websocket.Conn, recognizeOptions 
 	wsHandle.IsClosed <- true
 }
 
-func (wsHandle websocketListener) OnError(err error) {
+func (wsHandle WebsocketListener) OnError(err error) {
 	wsHandle.Callback.OnError(err)
 }
 
@@ -71,7 +70,10 @@ func sendStartMessage(conn *websocket.Conn, textParams *RecognizeOptions) {
 	action := "start"
 	textParams.Action = &action
 	startMsgBytes, _ := json.Marshal(textParams)
-	conn.WriteMessage(websocket.TextMessage, startMsgBytes)
+	err := conn.WriteMessage(websocket.TextMessage, startMsgBytes)
+	if err != nil {
+		textParams.WSListener.OnError(err)
+	}
 }
 
 /*
@@ -86,51 +88,22 @@ func sendCloseMessage(conn *websocket.Conn) {
 /*
 	sendAudio : Sends audio data to the server
 */
-func sendAudio(conn *websocket.Conn, recognizeOptions *RecognizeOptions, recognizeCB RecognizeCallbackWrapper) {
+func sendAudio(conn *websocket.Conn, recognizeOptions *RecognizeOptions) {
 	chunk := make([]byte, ONE_KB*2)
-
-	if !*recognizeOptions.AudioMetaData.IsBuffer {
-		for {
-			bytesRead, err := (*recognizeOptions.Audio).Read(chunk)
-			if err != nil {
-				if err == io.EOF {
-					break
-				} else {
-					recognizeCB.OnError(err)
-				}
+	for {
+		bytesRead, err := (*recognizeOptions.Audio).Read(chunk)
+		if err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				recognizeOptions.WSListener.OnError(err)
 			}
-			conn.WriteMessage(websocket.BinaryMessage, chunk[:bytesRead])
-			time.Sleep(TEN_MILLISECONDS)
 		}
-	} else {
-		for {
-			bytesRead, err := (*recognizeOptions.Audio).Read(chunk)
-			if err != nil {
-				if err == io.EOF {
-					if *recognizeOptions.AudioMetaData.IsRecording {
-						time.Sleep(TEN_MILLISECONDS)
-					} else {
-						break
-					}
-
-				} else {
-					recognizeCB.OnError(err)
-				}
-			}
-			conn.WriteMessage(websocket.BinaryMessage, chunk[:bytesRead])
-			time.Sleep(TEN_MILLISECONDS)
+		err = conn.WriteMessage(websocket.BinaryMessage, chunk[:bytesRead])
+		if err != nil {
+			recognizeOptions.WSListener.OnError(err)
 		}
+		time.Sleep(TEN_MILLISECONDS)
 	}
 	sendCloseMessage(conn)
-}
-
-/*
-	WebsocketListenerFactory: Creates WebsocketListener to stream audio and retrieve transcripts
-*/
-func WebsocketListenerFactory(callback RecognizeCallbackWrapper) websocketListener {
-	wsHandle := websocketListener{
-		IsClosed: make(chan bool, 1),
-		Callback: callback,
-	}
-	return wsHandle
 }

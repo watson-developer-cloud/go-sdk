@@ -27,19 +27,15 @@ type RecognizeCallbackWrapper interface {
 }
 
 // RecognizeUsingWebsockets: Recognize audio over websocket connection
-func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeOptions *RecognizeOptions, wsListener websocketListener) {
+func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeOptions *RecognizeOptions) {
 	var token string
 	headers := http.Header{}
-	finish := make(chan bool, 1)
 
 	if err := core.ValidateNotNil(recognizeOptions, "recognizeOptions cannot be nil"); err != nil {
-		wsListener.Callback.OnError(err)
-	}
-	if err := core.ValidateNotNil(recognizeOptions.AudioMetaData, "Audio metadata cannot be nil"); err != nil {
-		wsListener.Callback.OnError(err)
+		panic(err)
 	}
 	if err := core.ValidateStruct(recognizeOptions, "recognizeOptions"); err != nil {
-		wsListener.Callback.OnError(err)
+		panic(err)
 	}
 
 	if speechToText.Service.Options.IAMApiKey != "" || speechToText.Service.TokenManager != nil || speechToText.Service.Options.IAMAccessToken != "" {
@@ -70,12 +66,10 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeOptions *R
 
 	conn, _, err := websocket.DefaultDialer.Dial(fmt.Sprintf("%s%s?%s", dialURL, RECOGNIZE_ENDPOINT, param.Encode()), headers)
 	if err != nil {
-		panic(err)
+		recognizeOptions.WSListener.OnError(err)
 	}
-
-	wsListener.OnOpen(recognizeOptions, conn)
-	go wsListener.OnClose(finish)
-	go wsListener.OnData(conn, recognizeOptions)
-	go sendAudio(conn, recognizeOptions, wsListener.Callback)
-	<-finish
+	(*recognizeOptions).WSListener.OnOpen(recognizeOptions, conn)
+	go (*recognizeOptions).WSListener.OnData(conn, recognizeOptions)
+	go sendAudio(conn, recognizeOptions)
+	(*recognizeOptions).WSListener.OnClose()
 }

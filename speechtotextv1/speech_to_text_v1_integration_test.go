@@ -425,14 +425,11 @@ func (cb myCallBack) OnError(err error) {
 func TestRecognizeUsingWebsockets(t *testing.T) {
 	f, _ := os.Open("../resources/audio_example.mp3")
 	callback := myCallBack{T: t}
-	wsListener := speechtotextv1.WebsocketListenerFactory(callback)
 
-	recognizeOptions := service.NewRecognizeOptions(f, "audio/mp3")
+	recognizeOptions := service.NewRecognizeUsingWebsocketOptions(f, "audio/mp3", callback)
 
-	audioMetaData := speechtotextv1.AudioProperties{}
-	audioMetaData.SetIsBuffer(false).SetIsRecording(false)
-	recognizeOptions.SetAudioMetaData(&audioMetaData).SetModel("en-US_BroadbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
+	recognizeOptions.SetModel("en-US_BroadbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
 
-	service.RecognizeUsingWebsockets(recognizeOptions, wsListener)
+	service.RecognizeUsingWebsockets(recognizeOptions)
 
 }

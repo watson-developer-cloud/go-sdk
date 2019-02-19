@@ -4842,28 +4842,6 @@ type RecognitionJobs struct {
 	Recognitions []RecognitionJob `json:"recognitions" validate:"required"`
 }
 
-// AudioProperties : AudioProperties struct (Websocket Only)
-type AudioProperties struct {
-
-	// Indicates if sent audio data is one buffer
-	IsBuffer *bool
-
-	// Indicates whether the audio input source is still recording data
-	IsRecording *bool
-}
-
-// SetIsBuffer : Allow user to set IsBuffer
-func (audioProperties *AudioProperties) SetIsBuffer(isBuffer bool) *AudioProperties {
-	audioProperties.IsBuffer = core.BoolPtr(isBuffer)
-	return audioProperties
-}
-
-// SetIsRecording : Allow user to set IsRecording
-func (audioProperties *AudioProperties) SetIsRecording(isRecording bool) *AudioProperties {
-	audioProperties.IsRecording = core.BoolPtr(isRecording)
-	return audioProperties
-}
-
 // RecognizeOptions : The recognize options.
 type RecognizeOptions struct {
 
@@ -5008,15 +4986,15 @@ type RecognizeOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 
-	// Websocket only. Describes the behaviour of Websocket connection when EOF detected
-	AudioMetaData *AudioProperties
-
 	// Websocket only. The action that is to be performed. Allowable values: start, stop
 	Action *string `json:"action,omitempty"`
 
 	// Websockey only. If true, the service returns interim results as a stream of JSON SpeechRecognitionResults objects.
 	// If false, the service returns a single SpeechRecognitionResults object with final results only.
 	InterimResults *bool `json:"interim_results,omitempty"`
+
+	// Websocket only. Aynschronously manages Speech to Text conversion over a websocket connection.
+	WSListener *WebsocketListener `json:"-"`
 }
 
 // Constants associated with the RecognizeOptions.ContentType property.
@@ -5072,6 +5050,13 @@ func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser, con
 		ContentType: core.StringPtr(contentType),
 		Audio:       &audio,
 	}
+}
+
+// NewRecognizeUsingWebsocketOptions: Instantiate RecognizeOptions to enable websocket support
+func (speechToText *SpeechToTextV1) NewRecognizeUsingWebsocketOptions(audio io.ReadCloser, contentType string, callback RecognizeCallbackWrapper) *RecognizeOptions {
+	wsListener := WebsocketListener{Callback: callback, IsClosed: make(chan bool, 1)}
+	recognizeOptions := speechToText.NewRecognizeOptions(audio, contentType).SetWebsocketListener(&wsListener)
+	return recognizeOptions
 }
 
 // SetAudio : Allow user to set Audio
@@ -5200,9 +5185,9 @@ func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeO
 	return options
 }
 
-// SetAudioMetaData : Allow user to set AudioMetaData
-func (options *RecognizeOptions) SetAudioMetaData(audioMeta *AudioProperties) *RecognizeOptions {
-	options.AudioMetaData = audioMeta
+// SetWebsocketListener: Allow user to set WebsocketListener
+func (options *RecognizeOptions) SetWebsocketListener(wsListener *WebsocketListener) *RecognizeOptions {
+	options.WSListener = wsListener
 	return options
 }
 
