@@ -88,6 +88,7 @@ func TestSynthesize(t *testing.T) {
 
 	synthesize := service.GetSynthesizeResult(response)
 	assert.NotNil(t, synthesize)
+	synthesize.Close()
 }
 
 func TestPronunciation(t *testing.T) {
