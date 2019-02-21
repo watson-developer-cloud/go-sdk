@@ -40,7 +40,8 @@ func main() {
 
 	// Create a new ProfileOptions for ContentType "text/plain"
 	profileOptions := service.
-		NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_TextPlain)
+		NewProfileOptions().
+		SetContentType(personalityinsightsv3.ProfileOptions_ContentType_TextPlain)
 	profileOptions.SetBody(string(file))
 	profileOptions.ContentLanguage = core.StringPtr("en")
 	profileOptions.AcceptLanguage = core.StringPtr("en")

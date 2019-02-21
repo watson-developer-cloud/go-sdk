@@ -454,7 +454,9 @@ type ProfileOptions struct {
 	Body *string `json:"body,omitempty"`
 
 	// The type of the input. For more information, see **Content types** in the method description.
-	ContentType *string `json:"Content-Type" validate:"required"`
+	//
+	// Default: `text/plain`.
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are
 	// treated as their parent language; for example, `en-US` is interpreted as `en`.
@@ -535,10 +537,8 @@ const (
 )
 
 // NewProfileOptions : Instantiate ProfileOptions
-func (personalityInsights *PersonalityInsightsV3) NewProfileOptions(contentType string) *ProfileOptions {
-	return &ProfileOptions{
-		ContentType: core.StringPtr(contentType),
-	}
+func (personalityInsights *PersonalityInsightsV3) NewProfileOptions() *ProfileOptions {
+	return &ProfileOptions{}
 }
 
 // SetContent : Allow user to set Content

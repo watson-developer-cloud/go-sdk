@@ -243,37 +243,32 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 	return req, nil
 }
 
-// SetBodyContent - sets the body content from one of three different sources, based on the content type
+// SetBodyContent - sets the body content from one of three different sources
 func (requestBuilder *RequestBuilder) SetBodyContent(contentType string, jsonContent interface{}, jsonPatchContent interface{},
 	nonJSONContent interface{}) (*RequestBuilder, error) {
-	if contentType != "" {
-		if IsJSONMimeType(contentType) {
-			if builder, err := requestBuilder.SetBodyContentJSON(jsonContent); err != nil {
-				return builder, err
-			}
-		} else if IsJSONPatchMimeType(contentType) {
-			if builder, err := requestBuilder.SetBodyContentJSON(jsonPatchContent); err != nil {
-				return builder, err
-			}
-		} else {
-			// Set the non-JSON body content based on the type of value passed in,
-			// which should be a "string", "*string" or an "io.Reader"
-			if str, ok := nonJSONContent.(string); ok {
-				requestBuilder.SetBodyContentString(str)
-			} else if strPtr, ok := nonJSONContent.(*string); ok {
-				requestBuilder.SetBodyContentString(*strPtr)
-			} else if stream, ok := nonJSONContent.(io.Reader); ok {
-				requestBuilder.SetBodyContentStream(stream)
-			} else if stream, ok := nonJSONContent.(*io.ReadCloser); ok {
-				requestBuilder.SetBodyContentStream(*stream)
-			} else {
-				return requestBuilder, fmt.Errorf("Invalid type for non-JSON body content: %s",
-					reflect.TypeOf(nonJSONContent).String())
-			}
+	if jsonContent != nil {
+		if builder, err := requestBuilder.SetBodyContentJSON(jsonContent); err != nil {
+			return builder, err
+		}
+	} else if jsonPatchContent != nil {
+		if builder, err := requestBuilder.SetBodyContentJSON(jsonPatchContent); err != nil {
+			return builder, err
 		}
 	} else {
-		return requestBuilder, fmt.Errorf("Content-Type cant be empty")
+		// Set the non-JSON body content based on the type of value passed in,
+		// which should be a "string", "*string" or an "io.Reader"
+		if str, ok := nonJSONContent.(string); ok {
+			requestBuilder.SetBodyContentString(str)
+		} else if strPtr, ok := nonJSONContent.(*string); ok {
+			requestBuilder.SetBodyContentString(*strPtr)
+		} else if stream, ok := nonJSONContent.(io.Reader); ok {
+			requestBuilder.SetBodyContentStream(stream)
+		} else if stream, ok := nonJSONContent.(*io.ReadCloser); ok {
+			requestBuilder.SetBodyContentStream(*stream)
+		} else {
+			return requestBuilder, fmt.Errorf("Invalid type for non-JSON body content: %s",
+				reflect.TypeOf(nonJSONContent).String())
+		}
 	}
-
 	return requestBuilder, nil
 }

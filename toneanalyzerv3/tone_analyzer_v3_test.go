@@ -47,8 +47,9 @@ var _ = Describe("ToneAnalyzerV3", func() {
 				Expect(returnValueErr).NotTo(BeNil())
 
 				toneOptions := testService.
-					NewToneOptions(toneanalyzerv3.ToneOptions_ContentType_TextPlain).
-					SetBody("I am feeling well today")
+					NewToneOptions().
+					SetBody("I am feeling well today").
+					SetContentType(toneanalyzerv3.ToneOptions_ContentType_TextPlain)
 				returnValue, returnValueErr = testService.Tone(toneOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
