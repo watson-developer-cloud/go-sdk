@@ -33,8 +33,8 @@ func main() {
 
 	// Create a new RecognizeOptions for ContentType "audio/mp3"
 	recognizeOptions := service.
-		NewRecognizeOptions(audio,
-			speechtotextv1.RecognizeOptions_ContentType_AudioMp3)
+		NewRecognizeOptions(audio).
+		SetContentType(speechtotextv1.RecognizeOptions_ContentType_AudioMp3)
 
 	// Call the speechToText Recognize method
 	response, responseErr := service.Recognize(recognizeOptions)
