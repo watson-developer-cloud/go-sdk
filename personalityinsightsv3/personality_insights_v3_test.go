@@ -125,6 +125,7 @@ var _ = Describe("PersonalityInsightsV3", func() {
 
 				result := testService.GetProfileAsCsvResult(returnValue)
 				Expect(result).ToNot(BeNil())
+				result.Close()
 			})
 		})
 	})

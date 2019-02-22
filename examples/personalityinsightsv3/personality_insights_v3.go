@@ -130,4 +130,5 @@ func main() {
 		file.Write(buff.Bytes())
 		file.Close()
 	}
+	profCsvResult.Close()
 }

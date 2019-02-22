@@ -51,4 +51,5 @@ func main() {
 
 		fmt.Println("Wrote synthesized text to " + fileName)
 	}
+	synthesizeResult.Close()
 }

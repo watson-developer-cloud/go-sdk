@@ -183,6 +183,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				result := testService.GetSynthesizeResult(returnValue)
 				Expect(result).ToNot(BeNil())
+				result.Close()
 			})
 		})
 	})
