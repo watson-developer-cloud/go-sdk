@@ -19,8 +19,9 @@ package comparecomplyv1
 
 import (
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"os"
 )
 
@@ -30,7 +31,7 @@ import (
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/compare-comply.html
 type CompareComplyV1 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // CompareComplyV1Options : Service options
@@ -55,7 +56,7 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "compare-comply", "Compare Comply")
+	service, serviceErr := core.NewBaseService(serviceOptions, "compare-comply", "Compare Comply")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -82,7 +83,12 @@ func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *Conver
 	for headerName, headerValue := range convertToHTMLOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ConvertToHTML")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ConvertToHTML")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if convertToHTMLOptions.ModelID != nil {
@@ -130,7 +136,12 @@ func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *
 	for headerName, headerValue := range classifyElementsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ClassifyElements")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ClassifyElements")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if classifyElementsOptions.ModelID != nil {
@@ -138,7 +149,7 @@ func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("file", core.StringNilMapper(classifyElementsOptions.Filename),
+	builder.AddFormData("file", "filename",
 		core.StringNilMapper(classifyElementsOptions.FileContentType), classifyElementsOptions.File)
 
 	request, err := builder.Build()
@@ -178,7 +189,12 @@ func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *Extrac
 	for headerName, headerValue := range extractTablesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ExtractTables")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ExtractTables")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if extractTablesOptions.ModelID != nil {
@@ -186,7 +202,7 @@ func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *Extrac
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("file", core.StringNilMapper(extractTablesOptions.Filename),
+	builder.AddFormData("file", "filename",
 		core.StringNilMapper(extractTablesOptions.FileContentType), extractTablesOptions.File)
 
 	request, err := builder.Build()
@@ -226,7 +242,12 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 	for headerName, headerValue := range compareDocumentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=CompareDocuments")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "CompareDocuments")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if compareDocumentsOptions.File1Label != nil {
@@ -240,9 +261,9 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("file_1", core.StringNilMapper(compareDocumentsOptions.File1Filename),
+	builder.AddFormData("file_1", "filename",
 		core.StringNilMapper(compareDocumentsOptions.File1ContentType), compareDocumentsOptions.File1)
-	builder.AddFormData("file_2", core.StringNilMapper(compareDocumentsOptions.File2Filename),
+	builder.AddFormData("file_2", "filename",
 		core.StringNilMapper(compareDocumentsOptions.File2ContentType), compareDocumentsOptions.File2)
 
 	request, err := builder.Build()
@@ -284,20 +305,25 @@ func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbac
 	for headerName, headerValue := range addFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=AddFeedback")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "AddFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
 	body := make(map[string]interface{})
+	if addFeedbackOptions.FeedbackData != nil {
+		body["feedback_data"] = addFeedbackOptions.FeedbackData
+	}
 	if addFeedbackOptions.UserID != nil {
 		body["user_id"] = addFeedbackOptions.UserID
 	}
 	if addFeedbackOptions.Comment != nil {
 		body["comment"] = addFeedbackOptions.Comment
-	}
-	if addFeedbackOptions.FeedbackData != nil {
-		body["feedback_data"] = addFeedbackOptions.FeedbackData
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -340,7 +366,12 @@ func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *Dele
 	for headerName, headerValue := range deleteFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=DeleteFeedback")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "DeleteFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if deleteFeedbackOptions.ModelID != nil {
@@ -384,7 +415,12 @@ func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbac
 	for headerName, headerValue := range getFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=GetFeedback")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "GetFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getFeedbackOptions.ModelID != nil {
@@ -425,7 +461,12 @@ func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeed
 	for headerName, headerValue := range listFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ListFeedback")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ListFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listFeedbackOptions.FeedbackType != nil {
@@ -519,7 +560,12 @@ func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatc
 	for headerName, headerValue := range createBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=CreateBatch")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "CreateBatch")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("function", fmt.Sprint(*createBatchOptions.Function))
@@ -528,11 +574,11 @@ func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatc
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("input_credentials_file", core.StringNilMapper(createBatchOptions.InputCredentialsFilename),
+	builder.AddFormData("input_credentials_file", "filename",
 		"application/json", createBatchOptions.InputCredentialsFile)
 	builder.AddFormData("input_bucket_location", "", "", fmt.Sprint(*createBatchOptions.InputBucketLocation))
 	builder.AddFormData("input_bucket_name", "", "", fmt.Sprint(*createBatchOptions.InputBucketName))
-	builder.AddFormData("output_credentials_file", core.StringNilMapper(createBatchOptions.OutputCredentialsFilename),
+	builder.AddFormData("output_credentials_file", "filename",
 		"application/json", createBatchOptions.OutputCredentialsFile)
 	builder.AddFormData("output_bucket_location", "", "", fmt.Sprint(*createBatchOptions.OutputBucketLocation))
 	builder.AddFormData("output_bucket_name", "", "", fmt.Sprint(*createBatchOptions.OutputBucketName))
@@ -574,7 +620,12 @@ func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions)
 	for headerName, headerValue := range getBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=GetBatch")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "GetBatch")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -612,7 +663,12 @@ func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatche
 	for headerName, headerValue := range listBatchesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ListBatches")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ListBatches")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -654,7 +710,12 @@ func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatc
 	for headerName, headerValue := range updateBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=UpdateBatch")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "UpdateBatch")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("action", fmt.Sprint(*updateBatchOptions.Action))
@@ -684,14 +745,14 @@ func (compareComply *CompareComplyV1) GetUpdateBatchResult(response *core.Detail
 // AddFeedbackOptions : The addFeedback options.
 type AddFeedbackOptions struct {
 
+	// Feedback data for submission.
+	FeedbackData *FeedbackDataInput `json:"feedback_data" validate:"required"`
+
 	// An optional string identifying the user.
 	UserID *string `json:"user_id,omitempty"`
 
 	// An optional comment on or description of the feedback.
 	Comment *string `json:"comment,omitempty"`
-
-	// Feedback data for submission.
-	FeedbackData *FeedbackDataInput `json:"feedback_data" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -704,6 +765,12 @@ func (compareComply *CompareComplyV1) NewAddFeedbackOptions(feedbackData *Feedba
 	}
 }
 
+// SetFeedbackData : Allow user to set FeedbackData
+func (options *AddFeedbackOptions) SetFeedbackData(feedbackData *FeedbackDataInput) *AddFeedbackOptions {
+	options.FeedbackData = feedbackData
+	return options
+}
+
 // SetUserID : Allow user to set UserID
 func (options *AddFeedbackOptions) SetUserID(userID string) *AddFeedbackOptions {
 	options.UserID = core.StringPtr(userID)
@@ -713,12 +780,6 @@ func (options *AddFeedbackOptions) SetUserID(userID string) *AddFeedbackOptions 
 // SetComment : Allow user to set Comment
 func (options *AddFeedbackOptions) SetComment(comment string) *AddFeedbackOptions {
 	options.Comment = core.StringPtr(comment)
-	return options
-}
-
-// SetFeedbackData : Allow user to set FeedbackData
-func (options *AddFeedbackOptions) SetFeedbackData(feedbackData *FeedbackDataInput) *AddFeedbackOptions {
-	options.FeedbackData = feedbackData
 	return options
 }
 
@@ -927,15 +988,12 @@ type ClassifyElementsOptions struct {
 	// The file to classify.
 	File *os.File `json:"file" validate:"required"`
 
-	// The filename for file.
-	Filename *string `json:"filename,omitempty"`
-
 	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
 	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
 	// methods as well as to the methods' use in batch-processing requests.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -961,12 +1019,6 @@ func (compareComply *CompareComplyV1) NewClassifyElementsOptions(file *os.File) 
 // SetFile : Allow user to set File
 func (options *ClassifyElementsOptions) SetFile(file *os.File) *ClassifyElementsOptions {
 	options.File = file
-	return options
-}
-
-// SetFilename : Allow user to set Filename
-func (options *ClassifyElementsOptions) SetFilename(filename string) *ClassifyElementsOptions {
-	options.Filename = core.StringPtr(filename)
 	return options
 }
 
@@ -1032,7 +1084,7 @@ type ColumnHeaders struct {
 
 	// The location of the column header cell in the current table as defined by its `begin` and `end` offsets,
 	// respectfully, in the input document.
-	Location interface{} `json:"location,omitempty"`
+	Location map[string]interface{} `json:"location,omitempty"`
 
 	// The textual contents of this cell from the input document without associated markup content.
 	Text *string `json:"text,omitempty"`
@@ -1060,14 +1112,8 @@ type CompareDocumentsOptions struct {
 	// The first file to compare.
 	File1 *os.File `json:"file_1" validate:"required"`
 
-	// The filename for file1.
-	File1Filename *string `json:"file_1_filename,omitempty"`
-
 	// The second file to compare.
 	File2 *os.File `json:"file_2" validate:"required"`
-
-	// The filename for file2.
-	File2Filename *string `json:"file_2_filename,omitempty"`
 
 	// A text label for the first file.
 	File1Label *string `json:"file_1_label,omitempty"`
@@ -1080,10 +1126,10 @@ type CompareDocumentsOptions struct {
 	// methods as well as to the methods' use in batch-processing requests.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// The content type of file1. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file1.
 	File1ContentType *string `json:"file_1_content_type,omitempty"`
 
-	// The content type of file2. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file2.
 	File2ContentType *string `json:"file_2_content_type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1113,21 +1159,9 @@ func (options *CompareDocumentsOptions) SetFile1(file1 *os.File) *CompareDocumen
 	return options
 }
 
-// SetFile1Filename : Allow user to set File1Filename
-func (options *CompareDocumentsOptions) SetFile1Filename(file1Filename string) *CompareDocumentsOptions {
-	options.File1Filename = core.StringPtr(file1Filename)
-	return options
-}
-
 // SetFile2 : Allow user to set File2
 func (options *CompareDocumentsOptions) SetFile2(file2 *os.File) *CompareDocumentsOptions {
 	options.File2 = file2
-	return options
-}
-
-// SetFile2Filename : Allow user to set File2Filename
-func (options *CompareDocumentsOptions) SetFile2Filename(file2Filename string) *CompareDocumentsOptions {
-	options.File2Filename = core.StringPtr(file2Filename)
 	return options
 }
 
@@ -1233,7 +1267,7 @@ type ConvertToHTMLOptions struct {
 	// methods as well as to the methods' use in batch-processing requests.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1297,9 +1331,6 @@ type CreateBatchOptions struct {
 	// permissions on the bucket defined by the `input_bucket_name` parameter.
 	InputCredentialsFile *os.File `json:"input_credentials_file" validate:"required"`
 
-	// The filename for inputCredentialsFile.
-	InputCredentialsFilename *string `json:"input_credentials_filename,omitempty"`
-
 	// The geographical location of the Cloud Object Storage input bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
 	InputBucketLocation *string `json:"input_bucket_location" validate:"required"`
@@ -1310,9 +1341,6 @@ type CreateBatchOptions struct {
 	// A JSON file that lists the Cloud Object Storage output credentials. At a minimum, the credentials must enable `READ`
 	// and `WRITE` permissions on the bucket defined by the `output_bucket_name` parameter.
 	OutputCredentialsFile *os.File `json:"output_credentials_file" validate:"required"`
-
-	// The filename for outputCredentialsFile.
-	OutputCredentialsFilename *string `json:"output_credentials_filename,omitempty"`
 
 	// The geographical location of the Cloud Object Storage output bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
@@ -1372,12 +1400,6 @@ func (options *CreateBatchOptions) SetInputCredentialsFile(inputCredentialsFile 
 	return options
 }
 
-// SetInputCredentialsFilename : Allow user to set InputCredentialsFilename
-func (options *CreateBatchOptions) SetInputCredentialsFilename(inputCredentialsFilename string) *CreateBatchOptions {
-	options.InputCredentialsFilename = core.StringPtr(inputCredentialsFilename)
-	return options
-}
-
 // SetInputBucketLocation : Allow user to set InputBucketLocation
 func (options *CreateBatchOptions) SetInputBucketLocation(inputBucketLocation string) *CreateBatchOptions {
 	options.InputBucketLocation = core.StringPtr(inputBucketLocation)
@@ -1393,12 +1415,6 @@ func (options *CreateBatchOptions) SetInputBucketName(inputBucketName string) *C
 // SetOutputCredentialsFile : Allow user to set OutputCredentialsFile
 func (options *CreateBatchOptions) SetOutputCredentialsFile(outputCredentialsFile *os.File) *CreateBatchOptions {
 	options.OutputCredentialsFile = outputCredentialsFile
-	return options
-}
-
-// SetOutputCredentialsFilename : Allow user to set OutputCredentialsFilename
-func (options *CreateBatchOptions) SetOutputCredentialsFilename(outputCredentialsFilename string) *CreateBatchOptions {
-	options.OutputCredentialsFilename = core.StringPtr(outputCredentialsFilename)
 	return options
 }
 
@@ -1614,15 +1630,12 @@ type ExtractTablesOptions struct {
 	// The file on which to run table extraction.
 	File *os.File `json:"file" validate:"required"`
 
-	// The filename for file.
-	Filename *string `json:"filename,omitempty"`
-
 	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
 	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
 	// methods as well as to the methods' use in batch-processing requests.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1648,12 +1661,6 @@ func (compareComply *CompareComplyV1) NewExtractTablesOptions(file *os.File) *Ex
 // SetFile : Allow user to set File
 func (options *ExtractTablesOptions) SetFile(file *os.File) *ExtractTablesOptions {
 	options.File = file
-	return options
-}
-
-// SetFilename : Allow user to set Filename
-func (options *ExtractTablesOptions) SetFilename(filename string) *ExtractTablesOptions {
-	options.Filename = core.StringPtr(filename)
 	return options
 }
 
@@ -2275,7 +2282,7 @@ type TableHeaders struct {
 
 	// The location of the table header cell in the current table as defined by its `begin` and `end` offsets,
 	// respectfully, in the input document.
-	Location interface{} `json:"location,omitempty"`
+	Location map[string]interface{} `json:"location,omitempty"`
 
 	// The textual contents of the cell from the input document without associated markup content.
 	Text *string `json:"text,omitempty"`
