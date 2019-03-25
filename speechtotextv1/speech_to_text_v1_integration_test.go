@@ -426,10 +426,10 @@ func TestRecognizeUsingWebsockets(t *testing.T) {
 	f, _ := os.Open("../resources/audio_example.mp3")
 	callback := myCallBack{T: t}
 
-	recognizeOptions := service.NewRecognizeUsingWebsocketOptions(f, "audio/mp3", callback)
+	recognizeOptions := service.NewRecognizeUsingWebsocketOptions(f, "audio/mp3")
 
 	recognizeOptions.SetModel("en-US_BroadbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
 
-	service.RecognizeUsingWebsockets(recognizeOptions)
+	service.RecognizeUsingWebsockets(recognizeOptions, callback)
 
 }

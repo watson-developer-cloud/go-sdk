@@ -42,6 +42,7 @@ func (wsHandle RecognizeListener) OnData(conn *websocket.Conn, recognizeOptions 
 		_, result, err := conn.ReadMessage()
 		if err != nil {
 			wsHandle.OnError(err)
+			break
 		}
 		json.Unmarshal(result, &websocketResponse)
 
