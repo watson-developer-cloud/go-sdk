@@ -4985,16 +4985,6 @@ type RecognizeOptions struct {
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
-
-	// Websocket only. The action that is to be performed. Allowable values: start, stop
-	Action *string `json:"action,omitempty"`
-
-	// Websockey only. If true, the service returns interim results as a stream of JSON SpeechRecognitionResults objects.
-	// If false, the service returns a single SpeechRecognitionResults object with final results only.
-	InterimResults *bool `json:"interim_results,omitempty"`
-
-	// Websocket only. Aynschronously manages Speech to Text conversion over a websocket connection.
-	WSListener *WebsocketListener `json:"-"`
 }
 
 // Constants associated with the RecognizeOptions.ContentType property.
@@ -5050,13 +5040,6 @@ func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser, con
 		ContentType: core.StringPtr(contentType),
 		Audio:       &audio,
 	}
-}
-
-// NewRecognizeUsingWebsocketOptions: Instantiate RecognizeOptions to enable websocket support
-func (speechToText *SpeechToTextV1) NewRecognizeUsingWebsocketOptions(audio io.ReadCloser, contentType string, callback RecognizeCallbackWrapper) *RecognizeOptions {
-	wsListener := WebsocketListener{Callback: callback, IsClosed: make(chan bool, 1)}
-	recognizeOptions := speechToText.NewRecognizeOptions(audio, contentType).SetWebsocketListener(&wsListener)
-	return recognizeOptions
 }
 
 // SetAudio : Allow user to set Audio
@@ -5182,12 +5165,6 @@ func (options *RecognizeOptions) SetRedaction(redaction bool) *RecognizeOptions 
 // SetHeaders : Allow user to set Headers
 func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeOptions {
 	options.Headers = param
-	return options
-}
-
-// SetWebsocketListener: Allow user to set WebsocketListener
-func (options *RecognizeOptions) SetWebsocketListener(wsListener *WebsocketListener) *RecognizeOptions {
-	options.WSListener = wsListener
 	return options
 }
 
@@ -5442,10 +5419,6 @@ type SpeechRecognitionResults struct {
 	//
 	// In both cases, the request succeeds despite the warnings.
 	Warnings []string `json:"warnings,omitempty"`
-
-	// Websocket only. Acknowledges that a start/end message was received, and indicates
-	// the start/end of the audio data
-	State string `json:"state,omitempty"`
 }
 
 // SupportedFeatures : Describes the additional service features that are supported with the model.

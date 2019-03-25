@@ -2,13 +2,16 @@ package speechtotextv1
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/websocket"
 	core "github.com/watson-developer-cloud/go-sdk/core"
 	"io"
+	"net/http"
+	"net/url"
 	"time"
 )
 
-type WebsocketListener struct {
+type RecognizeListener struct {
 	IsClosed chan bool
 	Callback RecognizeCallbackWrapper
 }
@@ -16,15 +19,15 @@ type WebsocketListener struct {
 /*
 	OnOpen: Sends start message to server when connection created
 */
-func (wsHandle WebsocketListener) OnOpen(recognizeOpt *RecognizeOptions, conn *websocket.Conn) {
+func (wsHandle RecognizeListener) OnOpen(recognizeOpt *RecognizeUsingWebsocketOptions, conn *websocket.Conn) {
 	wsHandle.Callback.OnOpen()
-	sendStartMessage(conn, recognizeOpt)
+	sendStartMessage(conn, recognizeOpt, &wsHandle)
 }
 
 /*
 	OnClose: Callback when websocket connection is closed
 */
-func (wsHandle WebsocketListener) OnClose() {
+func (wsHandle RecognizeListener) OnClose() {
 	<-wsHandle.IsClosed
 	wsHandle.Callback.OnClose()
 }
@@ -32,10 +35,10 @@ func (wsHandle WebsocketListener) OnClose() {
 /*
 	OnData: Callback when websocket connection receives data
 */
-func (wsHandle WebsocketListener) OnData(conn *websocket.Conn, recognizeOptions *RecognizeOptions) {
+func (wsHandle RecognizeListener) OnData(conn *websocket.Conn, recognizeOptions *RecognizeUsingWebsocketOptions) {
 	isListening := false
 	for {
-		var websocketResponse SpeechRecognitionResults
+		var websocketResponse WebsocketRecognitionResults
 		_, result, err := conn.ReadMessage()
 		if err != nil {
 			wsHandle.OnError(err)
@@ -59,20 +62,23 @@ func (wsHandle WebsocketListener) OnData(conn *websocket.Conn, recognizeOptions 
 	wsHandle.IsClosed <- true
 }
 
-func (wsHandle WebsocketListener) OnError(err error) {
+/*
+	OnError: Callback when error encountered
+*/
+func (wsHandle RecognizeListener) OnError(err error) {
 	wsHandle.Callback.OnError(err)
 }
 
 /*
 	sendStartMessage : Sends start message to server
 */
-func sendStartMessage(conn *websocket.Conn, textParams *RecognizeOptions) {
+func sendStartMessage(conn *websocket.Conn, textParams *RecognizeUsingWebsocketOptions, recognizeListener *RecognizeListener) {
 	action := "start"
 	textParams.Action = &action
 	startMsgBytes, _ := json.Marshal(textParams)
 	err := conn.WriteMessage(websocket.TextMessage, startMsgBytes)
 	if err != nil {
-		textParams.WSListener.OnError(err)
+		recognizeListener.OnError(err)
 	}
 }
 
@@ -81,14 +87,14 @@ func sendStartMessage(conn *websocket.Conn, textParams *RecognizeOptions) {
 */
 func sendCloseMessage(conn *websocket.Conn) {
 	stop := "stop"
-	closeMsgBytes, _ := json.Marshal(RecognizeOptions{Action: &stop})
+	closeMsgBytes, _ := json.Marshal(RecognizeUsingWebsocketOptions{Action: &stop})
 	conn.WriteMessage(websocket.TextMessage, closeMsgBytes)
 }
 
 /*
 	sendAudio : Sends audio data to the server
 */
-func sendAudio(conn *websocket.Conn, recognizeOptions *RecognizeOptions) {
+func sendAudio(conn *websocket.Conn, recognizeOptions *RecognizeUsingWebsocketOptions, recognizeListener *RecognizeListener) {
 	chunk := make([]byte, ONE_KB*2)
 	for {
 		bytesRead, err := (*recognizeOptions.Audio).Read(chunk)
@@ -96,14 +102,29 @@ func sendAudio(conn *websocket.Conn, recognizeOptions *RecognizeOptions) {
 			if err == io.EOF {
 				break
 			} else {
-				recognizeOptions.WSListener.OnError(err)
+				recognizeListener.OnError(err)
 			}
 		}
 		err = conn.WriteMessage(websocket.BinaryMessage, chunk[:bytesRead])
 		if err != nil {
-			recognizeOptions.WSListener.OnError(err)
+			recognizeListener.OnError(err)
 		}
 		time.Sleep(TEN_MILLISECONDS)
 	}
 	sendCloseMessage(conn)
+}
+
+/*
+	NewRecognizeListener : Instantiates a listener instance to control the sending/receiving of audio/text
+*/
+func (speechToText *SpeechToTextV1) NewRecognizeListener(callback RecognizeCallbackWrapper, recognizeWSOptions *RecognizeUsingWebsocketOptions, dialURL string, param url.Values, headers http.Header) {
+	recognizeListener := RecognizeListener{Callback: callback, IsClosed: make(chan bool, 1)}
+	conn, _, err := websocket.DefaultDialer.Dial(fmt.Sprintf("%s%s?%s", dialURL, RECOGNIZE_ENDPOINT, param.Encode()), headers)
+	if err != nil {
+		recognizeListener.OnError(err)
+	}
+	recognizeListener.OnOpen(recognizeWSOptions, conn)
+	go recognizeListener.OnData(conn, recognizeWSOptions)
+	go sendAudio(conn, recognizeWSOptions, &recognizeListener)
+	recognizeListener.OnClose()
 }

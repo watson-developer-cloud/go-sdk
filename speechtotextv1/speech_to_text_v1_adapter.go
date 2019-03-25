@@ -3,8 +3,8 @@ package speechtotextv1
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/gorilla/websocket"
 	core "github.com/watson-developer-cloud/go-sdk/core"
+	"io"
 
 	"net/http"
 	"net/url"
@@ -19,6 +19,44 @@ const (
 	RECOGNIZE_ENDPOINT = "/v1/recognize"
 )
 
+type RecognizeUsingWebsocketOptions struct {
+	RecognizeOptions
+
+	// Action that is to be performed. Allowable values: start, stop
+	Action *string `json:"action,omitempty"`
+
+	// If true, the service returns interim results as a stream of JSON SpeechRecognitionResults objects.
+	// If false, the service returns a single SpeechRecognitionResults object with final results only.
+	InterimResults *bool `json:"interim_results,omitempty"`
+}
+
+// SetAction: Allows user to set the Action
+func (recognizeWSOptions *RecognizeUsingWebsocketOptions) SetAction(action string) *RecognizeUsingWebsocketOptions {
+	recognizeWSOptions.Action = core.StringPtr(action)
+	return recognizeWSOptions
+}
+
+// SetInterimResults: Allows user to set InterimResults
+func (recognizeWSOptions *RecognizeUsingWebsocketOptions) SetInterimResults(interimResults bool) *RecognizeUsingWebsocketOptions {
+	recognizeWSOptions.InterimResults = core.BoolPtr(interimResults)
+	return recognizeWSOptions
+}
+
+// NewRecognizeUsingWebsocketOptions: Instantiate RecognizeOptions to enable websocket support
+func (speechToText *SpeechToTextV1) NewRecognizeUsingWebsocketOptions(audio io.ReadCloser, contentType string) *RecognizeUsingWebsocketOptions {
+	recognizeOptions := speechToText.NewRecognizeOptions(audio, contentType)
+	recognizeWSOptions := &RecognizeUsingWebsocketOptions{*recognizeOptions, nil, nil}
+	return recognizeWSOptions
+}
+
+type WebsocketRecognitionResults struct {
+	// Acknowledges that a start/end message was received, and indicates
+	// the start/end of the audio data
+	State string `json:"state,omitempty"`
+
+	SpeechRecognitionResults
+}
+
 type RecognizeCallbackWrapper interface {
 	OnOpen()
 	OnClose()
@@ -27,14 +65,14 @@ type RecognizeCallbackWrapper interface {
 }
 
 // RecognizeUsingWebsockets: Recognize audio over websocket connection
-func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeOptions *RecognizeOptions) {
+func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeWSOptions *RecognizeUsingWebsocketOptions, callback RecognizeCallbackWrapper) {
 	var token string
 	headers := http.Header{}
 
-	if err := core.ValidateNotNil(recognizeOptions, "recognizeOptions cannot be nil"); err != nil {
+	if err := core.ValidateNotNil(recognizeWSOptions, "recognizeOptions cannot be nil"); err != nil {
 		panic(err)
 	}
-	if err := core.ValidateStruct(recognizeOptions, "recognizeOptions"); err != nil {
+	if err := core.ValidateStruct(recognizeWSOptions, "recognizeOptions"); err != nil {
 		panic(err)
 	}
 
@@ -46,30 +84,23 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeOptions *R
 		headers.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString(auth)))
 	}
 
-	headers.Set("Content-Type", *recognizeOptions.ContentType)
+	headers.Set("Content-Type", *recognizeWSOptions.ContentType)
 
 	dialURL := strings.Replace(speechToText.Service.Options.URL, "https", "wss", 1)
 	param := url.Values{}
 
-	if recognizeOptions.Model != nil {
-		param.Set("model", *recognizeOptions.Model)
+	if recognizeWSOptions.Model != nil {
+		param.Set("model", *recognizeWSOptions.Model)
 	}
-	if recognizeOptions.LanguageCustomizationID != nil {
-		param.Set("language_customization_id", *recognizeOptions.LanguageCustomizationID)
+	if recognizeWSOptions.LanguageCustomizationID != nil {
+		param.Set("language_customization_id", *recognizeWSOptions.LanguageCustomizationID)
 	}
-	if recognizeOptions.AcousticCustomizationID != nil {
-		param.Set("acoustic_customization_id", *recognizeOptions.AcousticCustomizationID)
+	if recognizeWSOptions.AcousticCustomizationID != nil {
+		param.Set("acoustic_customization_id", *recognizeWSOptions.AcousticCustomizationID)
 	}
-	if recognizeOptions.BaseModelVersion != nil {
-		param.Set("base_model_version", *recognizeOptions.BaseModelVersion)
+	if recognizeWSOptions.BaseModelVersion != nil {
+		param.Set("base_model_version", *recognizeWSOptions.BaseModelVersion)
 	}
 
-	conn, _, err := websocket.DefaultDialer.Dial(fmt.Sprintf("%s%s?%s", dialURL, RECOGNIZE_ENDPOINT, param.Encode()), headers)
-	if err != nil {
-		recognizeOptions.WSListener.OnError(err)
-	}
-	(*recognizeOptions).WSListener.OnOpen(recognizeOptions, conn)
-	go (*recognizeOptions).WSListener.OnData(conn, recognizeOptions)
-	go sendAudio(conn, recognizeOptions)
-	(*recognizeOptions).WSListener.OnClose()
+	speechToText.NewRecognizeListener(callback, recognizeWSOptions, dialURL, param, headers)
 }
