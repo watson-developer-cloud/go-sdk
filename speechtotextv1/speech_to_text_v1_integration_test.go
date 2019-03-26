@@ -423,6 +423,7 @@ func (cb myCallBack) OnError(err error) {
 }
 
 func TestRecognizeUsingWebsockets(t *testing.T) {
+	shouldSkipTest(t)
 	f, _ := os.Open("../resources/audio_example.mp3")
 	callback := myCallBack{T: t}
 
