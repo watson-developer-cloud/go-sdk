@@ -19,10 +19,10 @@ package assistantv1_test
  */
 
 import (
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/assistantv1"
-	"github.com/watson-developer-cloud/go-sdk/core"
 	"os"
 	"testing"
 )
@@ -582,7 +582,7 @@ func TestMessage(t *testing.T) {
 	response, responseErr := service.Message(
 		&assistantv1.MessageOptions{
 			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
-			Input: &assistantv1.InputData{
+			Input: &assistantv1.MessageInput{
 				"text": "Hello World",
 			},
 		},
