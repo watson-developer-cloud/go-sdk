@@ -19,7 +19,8 @@ package speechtotextv1
 
 import (
 	"fmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"os"
 	"strings"
@@ -46,7 +47,7 @@ import (
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/speech-to-text.html
 type SpeechToTextV1 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // SpeechToTextV1Options : Service options
@@ -73,7 +74,7 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (*SpeechToTextV1, error) 
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "speech_to_text", "Speech to Text")
+	service, serviceErr := core.NewBaseService(serviceOptions, "speech_to_text", "Speech to Text")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -103,7 +104,12 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 	for headerName, headerValue := range getModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=GetModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -143,7 +149,12 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ListModels")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -176,10 +187,10 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 // ### Streaming mode
 //
 //  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header to
-// `chunked` to use streaming mode. In streaming mode, the server closes the connection (status code 408) if the service
-// receives no data chunk for 30 seconds and it has no audio to transcribe for 30 seconds. The server also closes the
-// connection (status code 400) if no speech is detected for `inactivity_timeout` seconds of audio (not processing
-// time); use the `inactivity_timeout` parameter to change the default of 30 seconds.
+// `chunked` to use streaming mode. In streaming mode, the service closes the connection (status code 408) if it does
+// not receive at least 15 seconds of audio (including silence) in any 30-second period. The service also closes the
+// connection (status code 400) if it detects no speech for `inactivity_timeout` seconds of streaming audio; use the
+// `inactivity_timeout` parameter to change the default of 30 seconds.
 //
 // **See also:**
 // * [Audio transmission](https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission)
@@ -196,6 +207,7 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 //
 // Where indicated, the format that you specify must include the sampling rate and can optionally include the number of
 // channels and the endianness of the audio.
+// * `audio/alaw` (**Required.** Specify the sampling rate (`rate`) of the audio.)
 // * `audio/basic` (**Required.** Use only with narrowband models.)
 // * `audio/flac`
 // * `audio/g729` (Use only with narrowband models.)
@@ -250,7 +262,12 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	for headerName, headerValue := range recognizeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=Recognize")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "Recognize")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	if recognizeOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*recognizeOptions.ContentType))
@@ -363,7 +380,12 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 	for headerName, headerValue := range checkJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=CheckJob")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CheckJob")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -407,7 +429,12 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 	for headerName, headerValue := range checkJobsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=CheckJobs")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CheckJobs")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -453,8 +480,8 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 // * `user_token`
 // * `results_ttl`
 //
-// You can pass a maximum of 100 MB and a minimum of 100 bytes of audio with a request. The service automatically
-// detects the endianness of the incoming audio and, for audio that includes multiple channels, downmixes the audio to
+// You can pass a maximum of 1 GB and a minimum of 100 bytes of audio with a request. The service automatically detects
+// the endianness of the incoming audio and, for audio that includes multiple channels, downmixes the audio to
 // one-channel mono during transcoding. The method returns only final results; to enable interim results, use the
 // WebSocket API.
 //
@@ -463,10 +490,10 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 // ### Streaming mode
 //
 //  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header to
-// `chunked` to use streaming mode. In streaming mode, the server closes the connection (status code 408) if the service
-// receives no data chunk for 30 seconds and it has no audio to transcribe for 30 seconds. The server also closes the
-// connection (status code 400) if no speech is detected for `inactivity_timeout` seconds of audio (not processing
-// time); use the `inactivity_timeout` parameter to change the default of 30 seconds.
+// `chunked` to use streaming mode. In streaming mode, the service closes the connection (status code 408) if it does
+// not receive at least 15 seconds of audio (including silence) in any 30-second period. The service also closes the
+// connection (status code 400) if it detects no speech for `inactivity_timeout` seconds of streaming audio; use the
+// `inactivity_timeout` parameter to change the default of 30 seconds.
 //
 // **See also:**
 // * [Audio transmission](https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission)
@@ -483,6 +510,7 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 //
 // Where indicated, the format that you specify must include the sampling rate and can optionally include the number of
 // channels and the endianness of the audio.
+// * `audio/alaw` (**Required.** Specify the sampling rate (`rate`) of the audio.)
 // * `audio/basic` (**Required.** Use only with narrowband models.)
 // * `audio/flac`
 // * `audio/g729` (Use only with narrowband models.)
@@ -522,7 +550,12 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 	for headerName, headerValue := range createJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=CreateJob")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CreateJob")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	if createJobOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*createJobOptions.ContentType))
@@ -623,7 +656,7 @@ func (speechToText *SpeechToTextV1) GetCreateJobResult(response *core.DetailedRe
 // its results are no longer available. The service automatically deletes a job and its results when the time to live
 // for the results expires. You must use credentials for the instance of the service that owns a job to delete it.
 //
-// **See also:** [Deleting a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#delete).
+// **See also:** [Deleting a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#delete-async).
 func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteJobOptions, "deleteJobOptions cannot be nil"); err != nil {
 		return nil, err
@@ -641,8 +674,13 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 	for headerName, headerValue := range deleteJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=DeleteJob")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteJob")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 
 	request, err := builder.Build()
 	if err != nil {
@@ -697,7 +735,12 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 	for headerName, headerValue := range registerCallbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=RegisterCallback")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "RegisterCallback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("callback_url", fmt.Sprint(*registerCallbackOptions.CallbackURL))
@@ -746,8 +789,13 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 	for headerName, headerValue := range unregisterCallbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=UnregisterCallback")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "UnregisterCallback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 
 	builder.AddQuery("callback_url", fmt.Sprint(*unregisterCallbackOptions.CallbackURL))
 
@@ -766,7 +814,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 // create it.
 //
 // **See also:** [Create a custom language
-// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#createModel).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#createModel-language).
 func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptions *CreateLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createLanguageModelOptions, "createLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -784,7 +832,12 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 	for headerName, headerValue := range createLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=CreateLanguageModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CreateLanguageModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -830,7 +883,7 @@ func (speechToText *SpeechToTextV1) GetCreateLanguageModelResult(response *core.
 // service that owns a model to delete it.
 //
 // **See also:** [Deleting a custom language
-// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#deleteModel).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#deleteModel-language).
 func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptions *DeleteLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteLanguageModelOptions, "deleteLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -848,7 +901,12 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 	for headerName, headerValue := range deleteLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=DeleteLanguageModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteLanguageModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -865,7 +923,7 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 // that owns a model to list information about it.
 //
 // **See also:** [Listing custom language
-// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels).
+// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels-language).
 func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *GetLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getLanguageModelOptions, "getLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -883,7 +941,12 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 	for headerName, headerValue := range getLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=GetLanguageModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetLanguageModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -911,7 +974,7 @@ func (speechToText *SpeechToTextV1) GetGetLanguageModelResult(response *core.Det
 // information about it.
 //
 // **See also:** [Listing custom language
-// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels).
+// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels-language).
 func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions *ListLanguageModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listLanguageModelsOptions, "listLanguageModelsOptions"); err != nil {
 		return nil, err
@@ -926,7 +989,12 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 	for headerName, headerValue := range listLanguageModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ListLanguageModels")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListLanguageModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listLanguageModelsOptions.Language != nil {
@@ -958,7 +1026,7 @@ func (speechToText *SpeechToTextV1) GetListLanguageModelsResult(response *core.D
 // credentials for the instance of the service that owns a model to reset it.
 //
 // **See also:** [Resetting a custom language
-// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#resetModel).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#resetModel-language).
 func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions *ResetLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(resetLanguageModelOptions, "resetLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -976,7 +1044,12 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 	for headerName, headerValue := range resetLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ResetLanguageModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ResetLanguageModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1012,7 +1085,7 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 // * One or more words that were added to the custom model have invalid sounds-like pronunciations that you must fix.
 //
 // **See also:** [Train the custom language
-// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#trainModel).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#trainModel-language).
 func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions *TrainLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainLanguageModelOptions, "trainLanguageModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1030,7 +1103,12 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 	for headerName, headerValue := range trainLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=TrainLanguageModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "TrainLanguageModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if trainLanguageModelOptions.WordTypeToAdd != nil {
@@ -1081,7 +1159,12 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 	for headerName, headerValue := range upgradeLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=UpgradeLanguageModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "UpgradeLanguageModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1146,14 +1229,19 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 	for headerName, headerValue := range addCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=AddCorpus")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddCorpus")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if addCorpusOptions.AllowOverwrite != nil {
 		builder.AddQuery("allow_overwrite", fmt.Sprint(*addCorpusOptions.AllowOverwrite))
 	}
 
-	builder.AddFormData("corpus_file", core.StringNilMapper(addCorpusOptions.CorpusFilename),
+	builder.AddFormData("corpus_file", "filename",
 		"text/plain", addCorpusOptions.CorpusFile)
 
 	request, err := builder.Build()
@@ -1191,7 +1279,12 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 	for headerName, headerValue := range deleteCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=DeleteCorpus")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteCorpus")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1227,7 +1320,12 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 	for headerName, headerValue := range getCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=GetCorpus")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetCorpus")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1272,7 +1370,12 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 	for headerName, headerValue := range listCorporaOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ListCorpora")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListCorpora")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1339,7 +1442,12 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 	for headerName, headerValue := range addWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=AddWord")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -1427,7 +1535,12 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 	for headerName, headerValue := range addWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=AddWords")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddWords")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -1475,7 +1588,12 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 	for headerName, headerValue := range deleteWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=DeleteWord")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1510,7 +1628,12 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (*co
 	for headerName, headerValue := range getWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=GetWord")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1557,7 +1680,12 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 	for headerName, headerValue := range listWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ListWords")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListWords")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listWordsOptions.WordType != nil {
@@ -1632,7 +1760,12 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 	for headerName, headerValue := range addGrammarOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=AddGrammar")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddGrammar")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	if addGrammarOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*addGrammarOptions.ContentType))
@@ -1681,7 +1814,12 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 	for headerName, headerValue := range deleteGrammarOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=DeleteGrammar")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteGrammar")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1716,7 +1854,12 @@ func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOpti
 	for headerName, headerValue := range getGrammarOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=GetGrammar")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetGrammar")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1760,7 +1903,12 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 	for headerName, headerValue := range listGrammarsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ListGrammars")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListGrammars")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1787,7 +1935,7 @@ func (speechToText *SpeechToTextV1) GetListGrammarsResult(response *core.Detaile
 // create it.
 //
 // **See also:** [Create a custom acoustic
-// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel-acoustic).
 func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptions *CreateAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createAcousticModelOptions, "createAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1805,7 +1953,12 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 	for headerName, headerValue := range createAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=CreateAcousticModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "CreateAcousticModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -1848,7 +2001,7 @@ func (speechToText *SpeechToTextV1) GetCreateAcousticModelResult(response *core.
 // that owns a model to delete it.
 //
 // **See also:** [Deleting a custom acoustic
-// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#deleteModel).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#deleteModel-acoustic).
 func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptions *DeleteAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteAcousticModelOptions, "deleteAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1866,7 +2019,12 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 	for headerName, headerValue := range deleteAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=DeleteAcousticModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteAcousticModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1883,7 +2041,7 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // that owns a model to list information about it.
 //
 // **See also:** [Listing custom acoustic
-// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels).
+// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels-acoustic).
 func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *GetAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getAcousticModelOptions, "getAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1901,7 +2059,12 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 	for headerName, headerValue := range getAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=GetAcousticModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetAcousticModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1929,7 +2092,7 @@ func (speechToText *SpeechToTextV1) GetGetAcousticModelResult(response *core.Det
 // information about it.
 //
 // **See also:** [Listing custom acoustic
-// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels).
+// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels-acoustic).
 func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions *ListAcousticModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listAcousticModelsOptions, "listAcousticModelsOptions"); err != nil {
 		return nil, err
@@ -1944,7 +2107,12 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 	for headerName, headerValue := range listAcousticModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ListAcousticModels")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListAcousticModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listAcousticModelsOptions.Language != nil {
@@ -1976,7 +2144,7 @@ func (speechToText *SpeechToTextV1) GetListAcousticModelsResult(response *core.D
 // instance of the service that owns a model to reset it.
 //
 // **See also:** [Resetting a custom acoustic
-// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#resetModel).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#resetModel-acoustic).
 func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions *ResetAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(resetAcousticModelOptions, "resetAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1994,7 +2162,12 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 	for headerName, headerValue := range resetAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ResetAcousticModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ResetAcousticModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2039,7 +2212,7 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 // models must be based on the same version of the same base model.
 //
 // **See also:** [Train the custom acoustic
-// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#trainModel).
+// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#trainModel-acoustic).
 func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions *TrainAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainAcousticModelOptions, "trainAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2057,7 +2230,12 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 	for headerName, headerValue := range trainAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=TrainAcousticModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "TrainAcousticModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if trainAcousticModelOptions.CustomLanguageModelID != nil {
@@ -2111,7 +2289,12 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 	for headerName, headerValue := range upgradeAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=UpgradeAcousticModel")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "UpgradeAcousticModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if upgradeAcousticModelOptions.CustomLanguageModelID != nil {
@@ -2167,6 +2350,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 //  You can add an individual audio file in any format that the service supports for speech recognition. For an
 // audio-type resource, use the `Content-Type` parameter to specify the audio format (MIME type) of the audio file,
 // including specifying the sampling rate, channels, and endianness where indicated.
+// * `audio/alaw` (Specify the sampling rate (`rate`) of the audio.)
 // * `audio/basic` (Use only with narrowband models.)
 // * `audio/flac`
 // * `audio/g729` (Use only with narrowband models.)
@@ -2198,10 +2382,17 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 // * `application/zip` for a **.zip** file
 // * `application/gzip` for a **.tar.gz** file.
 //
-// All audio files contained in the archive must have the same audio format. Use the `Contained-Content-Type` parameter
-// to specify the format of the contained audio files. The parameter accepts all of the audio formats supported for use
-// with speech recognition and with the `Content-Type` header, including the `rate`, `channels`, and `endianness`
-// parameters that are used with some formats. The default contained audio format is `audio/wav`.
+// When you add an archive-type resource, the `Contained-Content-Type` header is optional depending on the format of the
+// files that you are adding:
+// * For audio files of type `audio/alaw`, `audio/basic`, `audio/l16`, or `audio/mulaw`, you must use the
+// `Contained-Content-Type` header to specify the format of the contained audio files. Include the `rate`, `channels`,
+// and `endianness` parameters where necessary. In this case, all audio files contained in the archive file must have
+// the same audio format.
+// * For audio files of all other types, you can omit the `Contained-Content-Type` header. In this case, the audio files
+// contained in the archive file can have any of the formats not listed in the previous bullet. The audio files do not
+// need to have the same format.
+//
+// Do not use the `Contained-Content-Type` header when adding an audio-type resource.
 //
 // ### Naming restrictions for embedded audio files
 //
@@ -2227,13 +2418,18 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 	for headerName, headerValue := range addAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=AddAudio")
-	builder.AddHeader("Accept", "application/json")
-	if addAudioOptions.ContentType != nil {
-		builder.AddHeader("Content-Type", fmt.Sprint(*addAudioOptions.ContentType))
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "AddAudio")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
 	}
+
+	builder.AddHeader("Accept", "application/json")
 	if addAudioOptions.ContainedContentType != nil {
 		builder.AddHeader("Contained-Content-Type", fmt.Sprint(*addAudioOptions.ContainedContentType))
+	}
+	if addAudioOptions.ContentType != nil {
+		builder.AddHeader("Content-Type", fmt.Sprint(*addAudioOptions.ContentType))
 	}
 
 	if addAudioOptions.AllowOverwrite != nil {
@@ -2280,7 +2476,12 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 	for headerName, headerValue := range deleteAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=DeleteAudio")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteAudio")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2328,7 +2529,12 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 	for headerName, headerValue := range getAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=GetAudio")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "GetAudio")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2375,7 +2581,12 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 	for headerName, headerValue := range listAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=ListAudio")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "ListAudio")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2422,8 +2633,13 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=speech_to_text;service_version=V1;operation_id=DeleteUserData")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("speech_to_text", "V1", "DeleteUserData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 
@@ -2531,17 +2747,18 @@ type AddAudioOptions struct {
 	// The audio resource that is to be added to the custom acoustic model, an individual audio file or an archive file.
 	AudioResource *io.ReadCloser `json:"audio_resource" validate:"required"`
 
-	// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
-	// audio-type resources** in the method description.
+	// **For an archive-type resource,** specify the format of the audio files that are contained in the archive file if
+	// they are of type `audio/alaw`, `audio/basic`, `audio/l16`, or `audio/mulaw`. Include the `rate`, `channels`, and
+	// `endianness` parameters where necessary. In this case, all audio files that are contained in the archive file must
+	// be of the indicated type.
 	//
-	// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
-	// archive-type resources** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
-
-	// For an archive-type resource, specifies the format of the audio files that are contained in the archive file. The
-	// parameter accepts all of the audio formats that are supported for use with speech recognition, including the `rate`,
-	// `channels`, and `endianness` parameters that are used with some formats. For more information, see **Content types
-	// for audio-type resources** in the method description.
+	// For all other audio formats, you can omit the header. In this case, the audio files can be of multiple types as long
+	// as they are not of the types listed in the previous paragraph.
+	//
+	// The parameter accepts all of the audio formats that are supported for use with speech recognition. For more
+	// information, see **Content types for audio-type resources** in the method description.
+	//
+	// **For an audio-type resource,** omit the header.
 	ContainedContentType *string `json:"Contained-Content-Type,omitempty"`
 
 	// If `true`, the specified audio resource overwrites an existing audio resource with the same name. If `false`, the
@@ -2549,41 +2766,32 @@ type AddAudioOptions struct {
 	// resource with the same name does not already exist.
 	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
 
+	// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
+	// audio-type resources** in the method description.
+	//
+	// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
+	// archive-type resources** in the method description.
+	ContentType *string `json:"Content-Type,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
-// Constants associated with the AddAudioOptions.ContentType property.
-// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
-// audio-type resources** in the method description.
-//
-// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
-// archive-type resources** in the method description.
-const (
-	AddAudioOptions_ContentType_ApplicationGzip       = "application/gzip"
-	AddAudioOptions_ContentType_ApplicationZip        = "application/zip"
-	AddAudioOptions_ContentType_AudioBasic            = "audio/basic"
-	AddAudioOptions_ContentType_AudioFlac             = "audio/flac"
-	AddAudioOptions_ContentType_AudioG729             = "audio/g729"
-	AddAudioOptions_ContentType_AudioL16              = "audio/l16"
-	AddAudioOptions_ContentType_AudioMp3              = "audio/mp3"
-	AddAudioOptions_ContentType_AudioMpeg             = "audio/mpeg"
-	AddAudioOptions_ContentType_AudioMulaw            = "audio/mulaw"
-	AddAudioOptions_ContentType_AudioOgg              = "audio/ogg"
-	AddAudioOptions_ContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
-	AddAudioOptions_ContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
-	AddAudioOptions_ContentType_AudioWav              = "audio/wav"
-	AddAudioOptions_ContentType_AudioWebm             = "audio/webm"
-	AddAudioOptions_ContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
-	AddAudioOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
-)
-
 // Constants associated with the AddAudioOptions.ContainedContentType property.
-// For an archive-type resource, specifies the format of the audio files that are contained in the archive file. The
-// parameter accepts all of the audio formats that are supported for use with speech recognition, including the `rate`,
-// `channels`, and `endianness` parameters that are used with some formats. For more information, see **Content types
-// for audio-type resources** in the method description.
+// **For an archive-type resource,** specify the format of the audio files that are contained in the archive file if
+// they are of type `audio/alaw`, `audio/basic`, `audio/l16`, or `audio/mulaw`. Include the `rate`, `channels`, and
+// `endianness` parameters where necessary. In this case, all audio files that are contained in the archive file must be
+// of the indicated type.
+//
+// For all other audio formats, you can omit the header. In this case, the audio files can be of multiple types as long
+// as they are not of the types listed in the previous paragraph.
+//
+// The parameter accepts all of the audio formats that are supported for use with speech recognition. For more
+// information, see **Content types for audio-type resources** in the method description.
+//
+// **For an audio-type resource,** omit the header.
 const (
+	AddAudioOptions_ContainedContentType_AudioAlaw             = "audio/alaw"
 	AddAudioOptions_ContainedContentType_AudioBasic            = "audio/basic"
 	AddAudioOptions_ContainedContentType_AudioFlac             = "audio/flac"
 	AddAudioOptions_ContainedContentType_AudioG729             = "audio/g729"
@@ -2598,6 +2806,32 @@ const (
 	AddAudioOptions_ContainedContentType_AudioWebm             = "audio/webm"
 	AddAudioOptions_ContainedContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
 	AddAudioOptions_ContainedContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
+
+// Constants associated with the AddAudioOptions.ContentType property.
+// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
+// audio-type resources** in the method description.
+//
+// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
+// archive-type resources** in the method description.
+const (
+	AddAudioOptions_ContentType_ApplicationGzip       = "application/gzip"
+	AddAudioOptions_ContentType_ApplicationZip        = "application/zip"
+	AddAudioOptions_ContentType_AudioAlaw             = "audio/alaw"
+	AddAudioOptions_ContentType_AudioBasic            = "audio/basic"
+	AddAudioOptions_ContentType_AudioFlac             = "audio/flac"
+	AddAudioOptions_ContentType_AudioG729             = "audio/g729"
+	AddAudioOptions_ContentType_AudioL16              = "audio/l16"
+	AddAudioOptions_ContentType_AudioMp3              = "audio/mp3"
+	AddAudioOptions_ContentType_AudioMpeg             = "audio/mpeg"
+	AddAudioOptions_ContentType_AudioMulaw            = "audio/mulaw"
+	AddAudioOptions_ContentType_AudioOgg              = "audio/ogg"
+	AddAudioOptions_ContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
+	AddAudioOptions_ContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
+	AddAudioOptions_ContentType_AudioWav              = "audio/wav"
+	AddAudioOptions_ContentType_AudioWebm             = "audio/webm"
+	AddAudioOptions_ContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
+	AddAudioOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
 )
 
 // NewAddAudioOptions : Instantiate AddAudioOptions
@@ -2627,12 +2861,6 @@ func (options *AddAudioOptions) SetAudioResource(audioResource io.ReadCloser) *A
 	return options
 }
 
-// SetContentType : Allow user to set ContentType
-func (options *AddAudioOptions) SetContentType(contentType string) *AddAudioOptions {
-	options.ContentType = core.StringPtr(contentType)
-	return options
-}
-
 // SetContainedContentType : Allow user to set ContainedContentType
 func (options *AddAudioOptions) SetContainedContentType(containedContentType string) *AddAudioOptions {
 	options.ContainedContentType = core.StringPtr(containedContentType)
@@ -2642,6 +2870,12 @@ func (options *AddAudioOptions) SetContainedContentType(containedContentType str
 // SetAllowOverwrite : Allow user to set AllowOverwrite
 func (options *AddAudioOptions) SetAllowOverwrite(allowOverwrite bool) *AddAudioOptions {
 	options.AllowOverwrite = core.BoolPtr(allowOverwrite)
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *AddAudioOptions) SetContentType(contentType string) *AddAudioOptions {
+	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -2677,9 +2911,6 @@ type AddCorpusOptions struct {
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
 	CorpusFile *os.File `json:"corpus_file" validate:"required"`
 
-	// The filename for corpusFile.
-	CorpusFilename *string `json:"corpus_filename,omitempty"`
-
 	// If `true`, the specified corpus overwrites an existing corpus with the same name. If `false`, the request fails if a
 	// corpus with the same name already exists. The parameter has no effect if a corpus with the same name does not
 	// already exist.
@@ -2713,12 +2944,6 @@ func (options *AddCorpusOptions) SetCorpusName(corpusName string) *AddCorpusOpti
 // SetCorpusFile : Allow user to set CorpusFile
 func (options *AddCorpusOptions) SetCorpusFile(corpusFile *os.File) *AddCorpusOptions {
 	options.CorpusFile = corpusFile
-	return options
-}
-
-// SetCorpusFilename : Allow user to set CorpusFilename
-func (options *AddCorpusOptions) SetCorpusFilename(corpusFilename string) *AddCorpusOptions {
-	options.CorpusFilename = core.StringPtr(corpusFilename)
 	return options
 }
 
@@ -3003,9 +3228,8 @@ const (
 // AudioListing : AudioListing struct
 type AudioListing struct {
 
-	// **For an audio-type resource,**  the total seconds of audio in the resource. The value is always a whole number.
-	// Omitted for an archive-type resource.
-	Duration *float64 `json:"duration,omitempty"`
+	// **For an audio-type resource,**  the total seconds of audio in the resource. Omitted for an archive-type resource.
+	Duration *int64 `json:"duration,omitempty"`
 
 	// **For an audio-type resource,** the user-specified name of the resource. Omitted for an archive-type resource.
 	Name *string `json:"name,omitempty"`
@@ -3051,8 +3275,8 @@ const (
 // AudioResource : AudioResource struct
 type AudioResource struct {
 
-	// The total seconds of audio in the audio resource. The value is always a whole number.
-	Duration *float64 `json:"duration" validate:"required"`
+	// The total seconds of audio in the audio resource.
+	Duration *int64 `json:"duration" validate:"required"`
 
 	// **For an archive-type resource,** the user-specified name of the resource.
 	//
@@ -3286,10 +3510,6 @@ type CreateJobOptions struct {
 	// The audio to transcribe.
 	Audio *io.ReadCloser `json:"audio" validate:"required"`
 
-	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-	// (content types)** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
-
 	// The identifier of the model that is to be used for the recognition request. See [Languages and
 	// models](https://cloud.ibm.com/docs/services/speech-to-text/models.html).
 	Model *string `json:"model,omitempty"`
@@ -3332,7 +3552,8 @@ type CreateJobOptions struct {
 	// The customization ID (GUID) of a custom language model that is to be used with the recognition request. The base
 	// model of the specified custom language model must match the model specified with the `model` parameter. You must
 	// make the request with credentials for the instance of the service that owns the custom model. By default, no custom
-	// language model is used. See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+	// language model is used. See [Custom
+	// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
 	//
 	// **Note:** Use this parameter instead of the deprecated `customization_id` parameter.
 	LanguageCustomizationID *string `json:"language_customization_id,omitempty"`
@@ -3340,7 +3561,8 @@ type CreateJobOptions struct {
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
 	// make the request with credentials for the instance of the service that owns the custom model. By default, no custom
-	// acoustic model is used. See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+	// acoustic model is used. See [Custom
+	// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
 	AcousticCustomizationID *string `json:"acoustic_customization_id,omitempty"`
 
 	// The version of the specified base model that is to be used with recognition request. Multiple versions of a base
@@ -3362,13 +3584,13 @@ type CreateJobOptions struct {
 	// OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
 	//
-	// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+	// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
 	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
-	// The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is
+	// The time in seconds after which, if only silence (no speech) is detected in streaming audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
-	// simply walks away. Use `-1` for infinity. See
-	// [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts).
+	// simply walks away. Use `-1` for infinity. See [Inactivity
+	// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity).
 	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
@@ -3385,7 +3607,7 @@ type CreateJobOptions struct {
 	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
 
 	// The maximum number of alternative transcripts that the service is to return. By default, the service returns a
-	// single transcript. See [Maximum
+	// single transcript. If you specify a value of `0`, the service uses the default value, `1`. See [Maximum
 	// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives).
 	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
 
@@ -3439,7 +3661,7 @@ type CreateJobOptions struct {
 	// the `language_customization_id` parameter to specify the name of the custom language model for which the grammar is
 	// defined. The service recognizes only strings that are recognized by the specified grammar; it does not recognize
 	// other custom words from the model's words resource. See
-	// [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/output.html).
+	// [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/input.html#grammars-input).
 	GrammarName *string `json:"grammar_name,omitempty"`
 
 	// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that
@@ -3456,30 +3678,13 @@ type CreateJobOptions struct {
 	// See [Numeric redaction](https://cloud.ibm.com/docs/services/speech-to-text/output.html#redaction).
 	Redaction *bool `json:"redaction,omitempty"`
 
+	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
+	// (content types)** in the method description.
+	ContentType *string `json:"Content-Type,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the CreateJobOptions.ContentType property.
-// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-// (content types)** in the method description.
-const (
-	CreateJobOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
-	CreateJobOptions_ContentType_AudioBasic             = "audio/basic"
-	CreateJobOptions_ContentType_AudioFlac              = "audio/flac"
-	CreateJobOptions_ContentType_AudioG729              = "audio/g729"
-	CreateJobOptions_ContentType_AudioL16               = "audio/l16"
-	CreateJobOptions_ContentType_AudioMp3               = "audio/mp3"
-	CreateJobOptions_ContentType_AudioMpeg              = "audio/mpeg"
-	CreateJobOptions_ContentType_AudioMulaw             = "audio/mulaw"
-	CreateJobOptions_ContentType_AudioOgg               = "audio/ogg"
-	CreateJobOptions_ContentType_AudioOggCodecsOpus     = "audio/ogg;codecs=opus"
-	CreateJobOptions_ContentType_AudioOggCodecsVorbis   = "audio/ogg;codecs=vorbis"
-	CreateJobOptions_ContentType_AudioWav               = "audio/wav"
-	CreateJobOptions_ContentType_AudioWebm              = "audio/webm"
-	CreateJobOptions_ContentType_AudioWebmCodecsOpus    = "audio/webm;codecs=opus"
-	CreateJobOptions_ContentType_AudioWebmCodecsVorbis  = "audio/webm;codecs=vorbis"
-)
 
 // Constants associated with the CreateJobOptions.Model property.
 // The identifier of the model that is to be used for the recognition request. See [Languages and
@@ -3530,6 +3735,28 @@ const (
 	CreateJobOptions_Events_RecognitionsStarted              = "recognitions.started"
 )
 
+// Constants associated with the CreateJobOptions.ContentType property.
+// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
+// (content types)** in the method description.
+const (
+	CreateJobOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
+	CreateJobOptions_ContentType_AudioAlaw              = "audio/alaw"
+	CreateJobOptions_ContentType_AudioBasic             = "audio/basic"
+	CreateJobOptions_ContentType_AudioFlac              = "audio/flac"
+	CreateJobOptions_ContentType_AudioG729              = "audio/g729"
+	CreateJobOptions_ContentType_AudioL16               = "audio/l16"
+	CreateJobOptions_ContentType_AudioMp3               = "audio/mp3"
+	CreateJobOptions_ContentType_AudioMpeg              = "audio/mpeg"
+	CreateJobOptions_ContentType_AudioMulaw             = "audio/mulaw"
+	CreateJobOptions_ContentType_AudioOgg               = "audio/ogg"
+	CreateJobOptions_ContentType_AudioOggCodecsOpus     = "audio/ogg;codecs=opus"
+	CreateJobOptions_ContentType_AudioOggCodecsVorbis   = "audio/ogg;codecs=vorbis"
+	CreateJobOptions_ContentType_AudioWav               = "audio/wav"
+	CreateJobOptions_ContentType_AudioWebm              = "audio/webm"
+	CreateJobOptions_ContentType_AudioWebmCodecsOpus    = "audio/webm;codecs=opus"
+	CreateJobOptions_ContentType_AudioWebmCodecsVorbis  = "audio/webm;codecs=vorbis"
+)
+
 // NewCreateJobOptions : Instantiate CreateJobOptions
 func (speechToText *SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser) *CreateJobOptions {
 	return &CreateJobOptions{
@@ -3540,12 +3767,6 @@ func (speechToText *SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser) *Cr
 // SetAudio : Allow user to set Audio
 func (options *CreateJobOptions) SetAudio(audio io.ReadCloser) *CreateJobOptions {
 	options.Audio = &audio
-	return options
-}
-
-// SetContentType : Allow user to set ContentType
-func (options *CreateJobOptions) SetContentType(contentType string) *CreateJobOptions {
-	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -3678,6 +3899,12 @@ func (options *CreateJobOptions) SetGrammarName(grammarName string) *CreateJobOp
 // SetRedaction : Allow user to set Redaction
 func (options *CreateJobOptions) SetRedaction(redaction bool) *CreateJobOptions {
 	options.Redaction = core.BoolPtr(redaction)
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *CreateJobOptions) SetContentType(contentType string) *CreateJobOptions {
+	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -4846,10 +5073,6 @@ type RecognizeOptions struct {
 	// The audio to transcribe.
 	Audio *io.ReadCloser `json:"audio" validate:"required"`
 
-	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-	// (content types)** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
-
 	// The identifier of the model that is to be used for the recognition request. See [Languages and
 	// models](https://cloud.ibm.com/docs/services/speech-to-text/models.html).
 	Model *string `json:"model,omitempty"`
@@ -4857,7 +5080,8 @@ type RecognizeOptions struct {
 	// The customization ID (GUID) of a custom language model that is to be used with the recognition request. The base
 	// model of the specified custom language model must match the model specified with the `model` parameter. You must
 	// make the request with credentials for the instance of the service that owns the custom model. By default, no custom
-	// language model is used. See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+	// language model is used. See [Custom
+	// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
 	//
 	// **Note:** Use this parameter instead of the deprecated `customization_id` parameter.
 	LanguageCustomizationID *string `json:"language_customization_id,omitempty"`
@@ -4865,7 +5089,8 @@ type RecognizeOptions struct {
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
 	// make the request with credentials for the instance of the service that owns the custom model. By default, no custom
-	// acoustic model is used. See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+	// acoustic model is used. See [Custom
+	// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
 	AcousticCustomizationID *string `json:"acoustic_customization_id,omitempty"`
 
 	// The version of the specified base model that is to be used with recognition request. Multiple versions of a base
@@ -4887,13 +5112,13 @@ type RecognizeOptions struct {
 	// OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
 	//
-	// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+	// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
 	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
-	// The time in seconds after which, if only silence (no speech) is detected in submitted audio, the connection is
+	// The time in seconds after which, if only silence (no speech) is detected in streaming audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
-	// simply walks away. Use `-1` for infinity. See
-	// [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts).
+	// simply walks away. Use `-1` for infinity. See [Inactivity
+	// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity).
 	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
@@ -4910,7 +5135,7 @@ type RecognizeOptions struct {
 	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
 
 	// The maximum number of alternative transcripts that the service is to return. By default, the service returns a
-	// single transcript. See [Maximum
+	// single transcript. If you specify a value of `0`, the service uses the default value, `1`. See [Maximum
 	// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives).
 	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
 
@@ -4964,7 +5189,7 @@ type RecognizeOptions struct {
 	// the `language_customization_id` parameter to specify the name of the custom language model for which the grammar is
 	// defined. The service recognizes only strings that are recognized by the specified grammar; it does not recognize
 	// other custom words from the model's words resource. See
-	// [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/output.html).
+	// [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/input.html#grammars-input).
 	GrammarName *string `json:"grammar_name,omitempty"`
 
 	// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that
@@ -4981,30 +5206,13 @@ type RecognizeOptions struct {
 	// See [Numeric redaction](https://cloud.ibm.com/docs/services/speech-to-text/output.html#redaction).
 	Redaction *bool `json:"redaction,omitempty"`
 
+	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
+	// (content types)** in the method description.
+	ContentType *string `json:"Content-Type,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the RecognizeOptions.ContentType property.
-// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-// (content types)** in the method description.
-const (
-	RecognizeOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
-	RecognizeOptions_ContentType_AudioBasic             = "audio/basic"
-	RecognizeOptions_ContentType_AudioFlac              = "audio/flac"
-	RecognizeOptions_ContentType_AudioG729              = "audio/g729"
-	RecognizeOptions_ContentType_AudioL16               = "audio/l16"
-	RecognizeOptions_ContentType_AudioMp3               = "audio/mp3"
-	RecognizeOptions_ContentType_AudioMpeg              = "audio/mpeg"
-	RecognizeOptions_ContentType_AudioMulaw             = "audio/mulaw"
-	RecognizeOptions_ContentType_AudioOgg               = "audio/ogg"
-	RecognizeOptions_ContentType_AudioOggCodecsOpus     = "audio/ogg;codecs=opus"
-	RecognizeOptions_ContentType_AudioOggCodecsVorbis   = "audio/ogg;codecs=vorbis"
-	RecognizeOptions_ContentType_AudioWav               = "audio/wav"
-	RecognizeOptions_ContentType_AudioWebm              = "audio/webm"
-	RecognizeOptions_ContentType_AudioWebmCodecsOpus    = "audio/webm;codecs=opus"
-	RecognizeOptions_ContentType_AudioWebmCodecsVorbis  = "audio/webm;codecs=vorbis"
-)
 
 // Constants associated with the RecognizeOptions.Model property.
 // The identifier of the model that is to be used for the recognition request. See [Languages and
@@ -5032,6 +5240,28 @@ const (
 	RecognizeOptions_Model_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
 )
 
+// Constants associated with the RecognizeOptions.ContentType property.
+// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
+// (content types)** in the method description.
+const (
+	RecognizeOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
+	RecognizeOptions_ContentType_AudioAlaw              = "audio/alaw"
+	RecognizeOptions_ContentType_AudioBasic             = "audio/basic"
+	RecognizeOptions_ContentType_AudioFlac              = "audio/flac"
+	RecognizeOptions_ContentType_AudioG729              = "audio/g729"
+	RecognizeOptions_ContentType_AudioL16               = "audio/l16"
+	RecognizeOptions_ContentType_AudioMp3               = "audio/mp3"
+	RecognizeOptions_ContentType_AudioMpeg              = "audio/mpeg"
+	RecognizeOptions_ContentType_AudioMulaw             = "audio/mulaw"
+	RecognizeOptions_ContentType_AudioOgg               = "audio/ogg"
+	RecognizeOptions_ContentType_AudioOggCodecsOpus     = "audio/ogg;codecs=opus"
+	RecognizeOptions_ContentType_AudioOggCodecsVorbis   = "audio/ogg;codecs=vorbis"
+	RecognizeOptions_ContentType_AudioWav               = "audio/wav"
+	RecognizeOptions_ContentType_AudioWebm              = "audio/webm"
+	RecognizeOptions_ContentType_AudioWebmCodecsOpus    = "audio/webm;codecs=opus"
+	RecognizeOptions_ContentType_AudioWebmCodecsVorbis  = "audio/webm;codecs=vorbis"
+)
+
 // NewRecognizeOptions : Instantiate RecognizeOptions
 func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser) *RecognizeOptions {
 	return &RecognizeOptions{
@@ -5042,12 +5272,6 @@ func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser) *Re
 // SetAudio : Allow user to set Audio
 func (options *RecognizeOptions) SetAudio(audio io.ReadCloser) *RecognizeOptions {
 	options.Audio = &audio
-	return options
-}
-
-// SetContentType : Allow user to set ContentType
-func (options *RecognizeOptions) SetContentType(contentType string) *RecognizeOptions {
-	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -5156,6 +5380,12 @@ func (options *RecognizeOptions) SetGrammarName(grammarName string) *RecognizeOp
 // SetRedaction : Allow user to set Redaction
 func (options *RecognizeOptions) SetRedaction(redaction bool) *RecognizeOptions {
 	options.Redaction = core.BoolPtr(redaction)
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *RecognizeOptions) SetContentType(contentType string) *RecognizeOptions {
+	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
