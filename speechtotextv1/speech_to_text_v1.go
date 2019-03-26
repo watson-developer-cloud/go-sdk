@@ -2536,7 +2536,7 @@ type AddAudioOptions struct {
 	//
 	// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
 	// archive-type resources** in the method description.
-	ContentType *string `json:"Content-Type" validate:"required"`
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// For an archive-type resource, specifies the format of the audio files that are contained in the archive file. The
 	// parameter accepts all of the audio formats that are supported for use with speech recognition, including the `rate`,
@@ -2601,12 +2601,11 @@ const (
 )
 
 // NewAddAudioOptions : Instantiate AddAudioOptions
-func (speechToText *SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, audioResource io.ReadCloser, contentType string) *AddAudioOptions {
+func (speechToText *SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, audioResource io.ReadCloser) *AddAudioOptions {
 	return &AddAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
 		AudioName:       core.StringPtr(audioName),
 		AudioResource:   &audioResource,
-		ContentType:     core.StringPtr(contentType),
 	}
 }
 
@@ -3289,7 +3288,7 @@ type CreateJobOptions struct {
 
 	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
 	// (content types)** in the method description.
-	ContentType *string `json:"Content-Type" validate:"required"`
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// The identifier of the model that is to be used for the recognition request. See [Languages and
 	// models](https://cloud.ibm.com/docs/services/speech-to-text/models.html).
@@ -3532,10 +3531,9 @@ const (
 )
 
 // NewCreateJobOptions : Instantiate CreateJobOptions
-func (speechToText *SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser, contentType string) *CreateJobOptions {
+func (speechToText *SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser) *CreateJobOptions {
 	return &CreateJobOptions{
-		Audio:       &audio,
-		ContentType: core.StringPtr(contentType),
+		Audio: &audio,
 	}
 }
 
@@ -4850,7 +4848,7 @@ type RecognizeOptions struct {
 
 	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
 	// (content types)** in the method description.
-	ContentType *string `json:"Content-Type" validate:"required"`
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// The identifier of the model that is to be used for the recognition request. See [Languages and
 	// models](https://cloud.ibm.com/docs/services/speech-to-text/models.html).
@@ -5035,10 +5033,9 @@ const (
 )
 
 // NewRecognizeOptions : Instantiate RecognizeOptions
-func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser, contentType string) *RecognizeOptions {
+func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser) *RecognizeOptions {
 	return &RecognizeOptions{
-		ContentType: core.StringPtr(contentType),
-		Audio:       &audio,
+		Audio: &audio,
 	}
 }
 

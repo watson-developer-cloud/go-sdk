@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -230,18 +229,14 @@ func (service *WatsonService) Request(req *http.Request, result interface{}) (*D
 		if IsJSONMimeType(contentType) && result != nil {
 			json.NewDecoder(resp.Body).Decode(&result)
 			response.Result = result
+			defer resp.Body.Close()
 		}
 	}
 
 	if response.Result == nil && result != nil {
-		bodyBytes, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return response, err
-		}
-		response.Result = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+		response.Result = resp.Body
 	}
 
-	defer resp.Body.Close()
 	return response, nil
 }
 

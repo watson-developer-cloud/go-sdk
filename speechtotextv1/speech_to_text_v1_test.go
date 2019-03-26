@@ -178,7 +178,7 @@ var _ = Describe("SpeechToTextV1", func() {
 					panic(err)
 				}
 				recognizeOptions := testService.
-					NewRecognizeOptions(file, speechtotextv1.RecognizeOptions_ContentType_AudioWav)
+					NewRecognizeOptions(file)
 				returnValue, returnValueErr = testService.Recognize(recognizeOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -309,7 +309,8 @@ var _ = Describe("SpeechToTextV1", func() {
 					panic(err)
 				}
 				createJobOptions := testService.
-					NewCreateJobOptions(file, speechtotextv1.CreateJobOptions_ContentType_AudioWav)
+					NewCreateJobOptions(file).
+					SetContentType(speechtotextv1.CreateJobOptions_ContentType_AudioWav)
 				returnValue, returnValueErr = testService.CreateJob(createJobOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -1436,8 +1437,8 @@ var _ = Describe("SpeechToTextV1", func() {
 				addAudioOptions := testService.
 					NewAddAudioOptions(customizationID,
 						audioName,
-						file,
-						speechtotextv1.AddAudioOptions_ContentType_AudioWav)
+						file).
+					SetContentType(speechtotextv1.AddAudioOptions_ContentType_AudioWav)
 				returnValue, returnValueErr = testService.AddAudio(addAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

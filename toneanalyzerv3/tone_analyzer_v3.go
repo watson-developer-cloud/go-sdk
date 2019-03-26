@@ -422,7 +422,7 @@ type ToneOptions struct {
 
 	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
 	// 'text/plain;charset=utf-8'.
-	ContentType *string `json:"Content-Type" validate:"required"`
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// Indicates whether the service is to return an analysis of each individual sentence in addition to its analysis of
 	// the full document. If `true` (the default), the service returns results for each sentence.
@@ -500,10 +500,8 @@ const (
 )
 
 // NewToneOptions : Instantiate ToneOptions
-func (toneAnalyzer *ToneAnalyzerV3) NewToneOptions(contentType string) *ToneOptions {
-	return &ToneOptions{
-		ContentType: core.StringPtr(contentType),
-	}
+func (toneAnalyzer *ToneAnalyzerV3) NewToneOptions() *ToneOptions {
+	return &ToneOptions{}
 }
 
 // SetToneInput : Allow user to set ToneInput
