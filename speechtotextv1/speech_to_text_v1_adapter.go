@@ -44,7 +44,8 @@ func (recognizeWSOptions *RecognizeUsingWebsocketOptions) SetInterimResults(inte
 
 // NewRecognizeUsingWebsocketOptions: Instantiate RecognizeOptions to enable websocket support
 func (speechToText *SpeechToTextV1) NewRecognizeUsingWebsocketOptions(audio io.ReadCloser, contentType string) *RecognizeUsingWebsocketOptions {
-	recognizeOptions := speechToText.NewRecognizeOptions(audio, contentType)
+	recognizeOptions := speechToText.NewRecognizeOptions(audio)
+	recognizeOptions.SetContentType(contentType)
 	recognizeWSOptions := &RecognizeUsingWebsocketOptions{*recognizeOptions, nil, nil}
 	return recognizeWSOptions
 }
