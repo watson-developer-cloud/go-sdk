@@ -18,8 +18,9 @@ package naturallanguageclassifierv1
  */
 
 import (
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"os"
 )
 
@@ -30,7 +31,7 @@ import (
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/natural-language-classifier.html
 type NaturalLanguageClassifierV1 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // NaturalLanguageClassifierV1Options : Service options
@@ -57,7 +58,7 @@ func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options)
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "natural_language_classifier", "Natural Language Classifier")
+	service, serviceErr := core.NewBaseService(serviceOptions, "natural_language_classifier", "Natural Language Classifier")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -85,7 +86,12 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyO
 	for headerName, headerValue := range classifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=Classify")
+
+	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "Classify")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -138,7 +144,12 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 	for headerName, headerValue := range classifyCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=ClassifyCollection")
+
+	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "ClassifyCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -188,12 +199,17 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(c
 	for headerName, headerValue := range createClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=CreateClassifier")
+
+	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "CreateClassifier")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
-	builder.AddFormData("training_metadata", core.StringNilMapper(createClassifierOptions.MetadataFilename),
+	builder.AddFormData("training_metadata", "filename",
 		"application/json", createClassifierOptions.Metadata)
-	builder.AddFormData("training_data", core.StringNilMapper(createClassifierOptions.TrainingDataFilename),
+	builder.AddFormData("training_data", "filename",
 		"text/csv", createClassifierOptions.TrainingData)
 
 	request, err := builder.Build()
@@ -232,7 +248,12 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(d
 	for headerName, headerValue := range deleteClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=DeleteClassifier")
+
+	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "DeleteClassifier")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -263,7 +284,12 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getC
 	for headerName, headerValue := range getClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=GetClassifier")
+
+	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "GetClassifier")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -300,7 +326,12 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(li
 	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural_language_classifier;service_version=V1;operation_id=ListClassifiers")
+
+	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "ListClassifiers")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -514,16 +545,10 @@ type CreateClassifierOptions struct {
 	// (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).
 	Metadata *os.File `json:"training_metadata" validate:"required"`
 
-	// The filename for trainingMetadata.
-	MetadataFilename *string `json:"metadata_filename,omitempty"`
-
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
 	// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier/using-your-data.html).
 	TrainingData *os.File `json:"training_data" validate:"required"`
-
-	// The filename for trainingData.
-	TrainingDataFilename *string `json:"training_data_filename,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -543,21 +568,9 @@ func (options *CreateClassifierOptions) SetMetadata(metadata *os.File) *CreateCl
 	return options
 }
 
-// SetMetadataFilename : Allow user to set MetadataFilename
-func (options *CreateClassifierOptions) SetMetadataFilename(metadataFilename string) *CreateClassifierOptions {
-	options.MetadataFilename = core.StringPtr(metadataFilename)
-	return options
-}
-
 // SetTrainingData : Allow user to set TrainingData
 func (options *CreateClassifierOptions) SetTrainingData(trainingData *os.File) *CreateClassifierOptions {
 	options.TrainingData = trainingData
-	return options
-}
-
-// SetTrainingDataFilename : Allow user to set TrainingDataFilename
-func (options *CreateClassifierOptions) SetTrainingDataFilename(trainingDataFilename string) *CreateClassifierOptions {
-	options.TrainingDataFilename = core.StringPtr(trainingDataFilename)
 	return options
 }
 
