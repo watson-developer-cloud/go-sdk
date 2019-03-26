@@ -19,7 +19,8 @@ package personalityinsightsv3
 
 import (
 	"fmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 )
 
@@ -42,7 +43,7 @@ import (
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/personality-insights.html
 type PersonalityInsightsV3 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // PersonalityInsightsV3Options : Service options
@@ -71,7 +72,7 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "personality_insights", "Personality Insights")
+	service, serviceErr := core.NewBaseService(serviceOptions, "personality_insights", "Personality Insights")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -128,16 +129,21 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 	for headerName, headerValue := range profileOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=personality_insights;service_version=V3;operation_id=Profile")
-	builder.AddHeader("Accept", "application/json")
-	if profileOptions.ContentType != nil {
-		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
+
+	sdkHeaders := common.GetSdkHeaders("personality_insights", "V3", "Profile")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
 	}
+
+	builder.AddHeader("Accept", "application/json")
 	if profileOptions.ContentLanguage != nil {
 		builder.AddHeader("Content-Language", fmt.Sprint(*profileOptions.ContentLanguage))
 	}
 	if profileOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*profileOptions.AcceptLanguage))
+	}
+	if profileOptions.ContentType != nil {
+		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
 	}
 
 	if profileOptions.RawScores != nil {
@@ -223,16 +229,21 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 	for headerName, headerValue := range profileOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=personality_insights;service_version=V3;operation_id=ProfileAsCsv")
-	builder.AddHeader("Accept", "text/csv")
-	if profileOptions.ContentType != nil {
-		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
+
+	sdkHeaders := common.GetSdkHeaders("personality_insights", "V3", "ProfileAsCsv")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
 	}
+
+	builder.AddHeader("Accept", "text/csv")
 	if profileOptions.ContentLanguage != nil {
 		builder.AddHeader("Content-Language", fmt.Sprint(*profileOptions.ContentLanguage))
 	}
 	if profileOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*profileOptions.AcceptLanguage))
+	}
+	if profileOptions.ContentType != nil {
+		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
 	}
 
 	if profileOptions.RawScores != nil {
@@ -453,11 +464,6 @@ type ProfileOptions struct {
 	// JSON input, provide an object of type `Content`.
 	Body *string `json:"body,omitempty"`
 
-	// The type of the input. For more information, see **Content types** in the method description.
-	//
-	// Default: `text/plain`.
-	ContentType *string `json:"Content-Type,omitempty"`
-
 	// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are
 	// treated as their parent language; for example, `en-US` is interpreted as `en`.
 	//
@@ -486,19 +492,14 @@ type ProfileOptions struct {
 	// returned.
 	ConsumptionPreferences *bool `json:"consumption_preferences,omitempty"`
 
+	// The type of the input. For more information, see **Content types** in the method description.
+	//
+	// Default: `text/plain`.
+	ContentType *string `json:"Content-Type,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the ProfileOptions.ContentType property.
-// The type of the input. For more information, see **Content types** in the method description.
-//
-// Default: `text/plain`.
-const (
-	ProfileOptions_ContentType_ApplicationJSON = "application/json"
-	ProfileOptions_ContentType_TextHTML        = "text/html"
-	ProfileOptions_ContentType_TextPlain       = "text/plain"
-)
 
 // Constants associated with the ProfileOptions.ContentLanguage property.
 // The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are
@@ -536,6 +537,16 @@ const (
 	ProfileOptions_AcceptLanguage_ZhTw = "zh-tw"
 )
 
+// Constants associated with the ProfileOptions.ContentType property.
+// The type of the input. For more information, see **Content types** in the method description.
+//
+// Default: `text/plain`.
+const (
+	ProfileOptions_ContentType_ApplicationJSON = "application/json"
+	ProfileOptions_ContentType_TextHTML        = "text/html"
+	ProfileOptions_ContentType_TextPlain       = "text/plain"
+)
+
 // NewProfileOptions : Instantiate ProfileOptions
 func (personalityInsights *PersonalityInsightsV3) NewProfileOptions() *ProfileOptions {
 	return &ProfileOptions{}
@@ -550,12 +561,6 @@ func (options *ProfileOptions) SetContent(content *Content) *ProfileOptions {
 // SetBody : Allow user to set Body
 func (options *ProfileOptions) SetBody(body string) *ProfileOptions {
 	options.Body = core.StringPtr(body)
-	return options
-}
-
-// SetContentType : Allow user to set ContentType
-func (options *ProfileOptions) SetContentType(contentType string) *ProfileOptions {
-	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -586,6 +591,12 @@ func (options *ProfileOptions) SetCsvHeaders(csvHeaders bool) *ProfileOptions {
 // SetConsumptionPreferences : Allow user to set ConsumptionPreferences
 func (options *ProfileOptions) SetConsumptionPreferences(consumptionPreferences bool) *ProfileOptions {
 	options.ConsumptionPreferences = core.BoolPtr(consumptionPreferences)
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *ProfileOptions) SetContentType(contentType string) *ProfileOptions {
+	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
