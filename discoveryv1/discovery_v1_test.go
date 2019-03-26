@@ -2,15 +2,13 @@ package discoveryv1_test
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
 
-	cfenv "github.com/cloudfoundry-community/go-cfenv"
-	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 
 	discoveryv1 "github.com/watson-developer-cloud/go-sdk/discoveryv1"
 
@@ -19,49 +17,6 @@ import (
 )
 
 var _ = Describe("DiscoveryV1", func() {
-	Describe("Get credentials from VCAP", func() {
-		version := "exampleString"
-		username := "hyphenated-user"
-		password := "hyphenated-pass"
-		VCAPservices := cfenv.Services{
-			"conversation": {
-				{
-					Name: "discovery",
-					Tags: []string{},
-					Credentials: map[string]interface{}{
-						"url":      "https://gateway.watsonplatform.net/discovery/api",
-						"username": username,
-						"password": password,
-					},
-				},
-			},
-		}
-		VCAPbytes, _ := json.Marshal(cfenv.App{})
-		os.Setenv("VCAP_APPLICATION", string(VCAPbytes))
-		VCAPbytes, _ = json.Marshal(VCAPservices)
-		os.Setenv("VCAP_SERVICES", string(VCAPbytes))
-		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-		Context("Successfully - Create DiscoveryV1 with VCAP credentials", func() {
-			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-				defer GinkgoRecover()
-
-				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-			}))
-			It("Succeed to create DiscoveryV1", func() {
-				defer testServer.Close()
-
-				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     testServer.URL,
-					Version: version,
-				})
-				Expect(testServiceErr).To(BeNil())
-				Expect(testService).ToNot(BeNil())
-
-				testService.QueryLog(testService.NewQueryLogOptions())
-			})
-		})
-	})
 	Describe("CreateEnvironment(options *CreateEnvironmentOptions)", func() {
 		createEnvironmentPath := "/v1/environments"
 		version := "exampleString"
@@ -347,7 +302,8 @@ var _ = Describe("DiscoveryV1", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				createConfigurationOptions := testService.NewCreateConfigurationOptions(environmentID)
+				createConfigurationOptions := testService.
+					NewCreateConfigurationOptions(environmentID, "test configuration id")
 				returnValue, returnValueErr := testService.CreateConfiguration(createConfigurationOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -521,7 +477,8 @@ var _ = Describe("DiscoveryV1", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				updateConfigurationOptions := testService.NewUpdateConfigurationOptions(environmentID, configurationID)
+				updateConfigurationOptions := testService.
+					NewUpdateConfigurationOptions(environmentID, configurationID, "new configuration")
 				returnValue, returnValueErr := testService.UpdateConfiguration(updateConfigurationOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -868,7 +825,18 @@ var _ = Describe("DiscoveryV1", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				createExpansionsOptions := testService.NewCreateExpansionsOptions(environmentID, collectionID)
+				expansions := []discoveryv1.Expansion{
+					discoveryv1.Expansion{
+						InputTerms: []string{"banana"},
+						ExpandedTerms: []string{
+							"banana",
+							"plantain",
+							"fruit",
+						},
+					},
+				}
+				createExpansionsOptions := testService.
+					NewCreateExpansionsOptions(environmentID, collectionID, expansions)
 				returnValue, returnValueErr := testService.CreateExpansions(createExpansionsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

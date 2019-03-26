@@ -19,8 +19,9 @@ package discoveryv1
 
 import (
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"os"
 	"strings"
 )
@@ -33,7 +34,7 @@ import (
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/discovery.html
 type DiscoveryV1 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // DiscoveryV1Options : Service options
@@ -62,7 +63,7 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (*DiscoveryV1, error) {
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "discovery", "Discovery")
+	service, serviceErr := core.NewBaseService(serviceOptions, "discovery", "Discovery")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -92,7 +93,12 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 	for headerName, headerValue := range createEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateEnvironment")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateEnvironment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -148,7 +154,12 @@ func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *Delete
 	for headerName, headerValue := range deleteEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteEnvironment")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteEnvironment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -188,7 +199,12 @@ func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironme
 	for headerName, headerValue := range getEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetEnvironment")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetEnvironment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -226,7 +242,12 @@ func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvi
 	for headerName, headerValue := range listEnvironmentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListEnvironments")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListEnvironments")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listEnvironmentsOptions.Name != nil {
@@ -271,7 +292,12 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 	for headerName, headerValue := range listFieldsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListFields")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListFields")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("collection_ids", strings.Join(listFieldsOptions.CollectionIds, ","))
@@ -315,7 +341,12 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 	for headerName, headerValue := range updateEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateEnvironment")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "UpdateEnvironment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -380,7 +411,12 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 	for headerName, headerValue := range createConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateConfiguration")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateConfiguration")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -449,7 +485,12 @@ func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *De
 	for headerName, headerValue := range deleteConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteConfiguration")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteConfiguration")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -489,7 +530,12 @@ func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfi
 	for headerName, headerValue := range getConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetConfiguration")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetConfiguration")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -530,7 +576,12 @@ func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *List
 	for headerName, headerValue := range listConfigurationsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListConfigurations")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListConfigurations")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listConfigurationsOptions.Name != nil {
@@ -581,7 +632,12 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 	for headerName, headerValue := range updateConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateConfiguration")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "UpdateConfiguration")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -651,7 +707,12 @@ func (discovery *DiscoveryV1) TestConfigurationInEnvironment(testConfigurationIn
 	for headerName, headerValue := range testConfigurationInEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=TestConfigurationInEnvironment")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "TestConfigurationInEnvironment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if testConfigurationInEnvironmentOptions.Step != nil {
@@ -709,7 +770,12 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 	for headerName, headerValue := range createCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateCollection")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -768,7 +834,12 @@ func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCo
 	for headerName, headerValue := range deleteCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteCollection")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -808,7 +879,12 @@ func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionO
 	for headerName, headerValue := range getCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetCollection")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -849,7 +925,12 @@ func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *
 	for headerName, headerValue := range listCollectionFieldsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListCollectionFields")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListCollectionFields")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -890,7 +971,12 @@ func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollec
 	for headerName, headerValue := range listCollectionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListCollections")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListCollections")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listCollectionsOptions.Name != nil {
@@ -934,7 +1020,12 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 	for headerName, headerValue := range updateCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateCollection")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "UpdateCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -993,7 +1084,12 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 	for headerName, headerValue := range createExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateExpansions")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateExpansions")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -1044,7 +1140,12 @@ func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *Crea
 	for headerName, headerValue := range createStopwordListOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateStopwordList")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateStopwordList")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1088,7 +1189,12 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 	for headerName, headerValue := range createTokenizationDictionaryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateTokenizationDictionary")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateTokenizationDictionary")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -1140,8 +1246,13 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 	for headerName, headerValue := range deleteExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteExpansions")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteExpansions")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -1173,8 +1284,13 @@ func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *Dele
 	for headerName, headerValue := range deleteStopwordListOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteStopwordList")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteStopwordList")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -1205,8 +1321,13 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDic
 	for headerName, headerValue := range deleteTokenizationDictionaryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteTokenizationDictionary")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteTokenizationDictionary")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -1237,7 +1358,12 @@ func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions
 	for headerName, headerValue := range getStopwordListStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetStopwordListStatus")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetStopwordListStatus")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1278,7 +1404,12 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDic
 	for headerName, headerValue := range getTokenizationDictionaryStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetTokenizationDictionaryStatus")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetTokenizationDictionaryStatus")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1320,7 +1451,12 @@ func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansio
 	for headerName, headerValue := range listExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListExpansions")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListExpansions")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1361,7 +1497,10 @@ func (discovery *DiscoveryV1) GetListExpansionsResult(response *core.DetailedRes
 //
 //   * Fields with empty name values after normalization are filtered out before indexing.
 //
-//   * Fields containing the following characters after normalization are filtered out before indexing: `#` and `,`.
+//   * Fields containing the following characters after normalization are filtered out before indexing: `#` and `,`
+//
+//  **Note:** Documents can be added with a specific **document_id** by using the
+// **_/v1/environments/{environment_id}/collections/{collection_id}/documents** method.
 func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addDocumentOptions, "addDocumentOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1382,7 +1521,12 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 	for headerName, headerValue := range addDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=AddDocument")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "AddDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1432,7 +1576,12 @@ func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocume
 	for headerName, headerValue := range deleteDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteDocument")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1475,7 +1624,12 @@ func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDoc
 	for headerName, headerValue := range getDocumentStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetDocumentStatus")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetDocumentStatus")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1498,7 +1652,11 @@ func (discovery *DiscoveryV1) GetGetDocumentStatusResult(response *core.Detailed
 }
 
 // UpdateDocument : Update a document
-// Replace an existing document. Starts ingesting a document with optional metadata.
+// Replace an existing document or add a document with a specified **document_id**. Starts ingesting a document with
+// optional metadata.
+//
+// **Note:** When uploading a new document with this method it automatically replaces any document stored with the same
+// **document_id** if it exists.
 func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1519,7 +1677,12 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 	for headerName, headerValue := range updateDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateDocument")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "UpdateDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1552,7 +1715,7 @@ func (discovery *DiscoveryV1) GetUpdateDocumentResult(response *core.DetailedRes
 // FederatedQuery : Long environment queries
 // Complex queries might be too long for a standard method query. By using this method, you can construct longer
 // queries. However, these queries may take longer to complete than the standard method. For details, see the [Discovery
-// service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
+// service documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
 func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQueryOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(federatedQueryOptions, "federatedQueryOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1570,7 +1733,12 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	for headerName, headerValue := range federatedQueryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=FederatedQuery")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "FederatedQuery")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	if federatedQueryOptions.LoggingOptOut != nil {
@@ -1665,8 +1833,8 @@ func (discovery *DiscoveryV1) GetFederatedQueryResult(response *core.DetailedRes
 // FederatedQueryNotices : Query multiple collection system notices
 // Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated when
 // ingesting documents and performing relevance training. See the [Discovery service
-// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
-// language.
+// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts) for more
+// details on the query language.
 func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions *FederatedQueryNoticesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(federatedQueryNoticesOptions, "federatedQueryNoticesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1684,7 +1852,12 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	for headerName, headerValue := range federatedQueryNoticesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=FederatedQueryNotices")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "FederatedQueryNotices")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("collection_ids", strings.Join(federatedQueryNoticesOptions.CollectionIds, ","))
@@ -1750,7 +1923,7 @@ func (discovery *DiscoveryV1) GetFederatedQueryNoticesResult(response *core.Deta
 // Query : Long collection queries
 // Complex queries might be too long for a standard method query. By using this method, you can construct longer
 // queries. However, these queries may take longer to complete than the standard method. For details, see the [Discovery
-// service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
+// service documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
 func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryOptions, "queryOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1768,7 +1941,12 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 	for headerName, headerValue := range queryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=Query")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "Query")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	if queryOptions.LoggingOptOut != nil {
@@ -1861,8 +2039,8 @@ func (discovery *DiscoveryV1) GetQueryResult(response *core.DetailedResponse) *Q
 }
 
 // QueryEntities : Knowledge Graph entity query
-// See the [Knowledge Graph documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for
-// more details.
+// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg) for more
+// details.
 func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryEntitiesOptions, "queryEntitiesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1880,7 +2058,12 @@ func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesO
 	for headerName, headerValue := range queryEntitiesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=QueryEntities")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "QueryEntities")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -1927,8 +2110,8 @@ func (discovery *DiscoveryV1) GetQueryEntitiesResult(response *core.DetailedResp
 // QueryNotices : Query system notices
 // Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated when
 // ingesting documents and performing relevance training. See the [Discovery service
-// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
-// language.
+// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts) for more
+// details on the query language.
 func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryNoticesOptions, "queryNoticesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1946,7 +2129,12 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 	for headerName, headerValue := range queryNoticesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=QueryNotices")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "QueryNotices")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if queryNoticesOptions.Filter != nil {
@@ -2021,8 +2209,8 @@ func (discovery *DiscoveryV1) GetQueryNoticesResult(response *core.DetailedRespo
 }
 
 // QueryRelations : Knowledge Graph relationship query
-// See the [Knowledge Graph documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for
-// more details.
+// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg) for more
+// details.
 func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelationsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(queryRelationsOptions, "queryRelationsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2040,7 +2228,12 @@ func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelatio
 	for headerName, headerValue := range queryRelationsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=QueryRelations")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "QueryRelations")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2106,7 +2299,12 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 	for headerName, headerValue := range addTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=AddTrainingData")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "AddTrainingData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2163,7 +2361,12 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 	for headerName, headerValue := range createTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateTrainingExample")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateTrainingExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2220,8 +2423,13 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 	for headerName, headerValue := range deleteAllTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteAllTrainingData")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteAllTrainingData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -2252,8 +2460,13 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 	for headerName, headerValue := range deleteTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteTrainingData")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteTrainingData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -2284,8 +2497,13 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 	for headerName, headerValue := range deleteTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteTrainingExample")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteTrainingExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -2316,7 +2534,12 @@ func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainin
 	for headerName, headerValue := range getTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetTrainingData")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetTrainingData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2357,7 +2580,12 @@ func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetT
 	for headerName, headerValue := range getTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetTrainingExample")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetTrainingExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2398,7 +2626,12 @@ func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrai
 	for headerName, headerValue := range listTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListTrainingData")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListTrainingData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2439,7 +2672,12 @@ func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *
 	for headerName, headerValue := range listTrainingExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListTrainingExamples")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListTrainingExamples")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2480,7 +2718,12 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 	for headerName, headerValue := range updateTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateTrainingExample")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "UpdateTrainingExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2521,7 +2764,7 @@ func (discovery *DiscoveryV1) GetUpdateTrainingExampleResult(response *core.Deta
 //
 // You associate a customer ID with data by passing the **X-Watson-Metadata** header with a request that passes data.
 // For more information about personal data and customer IDs, see [Information
-// security](https://console.bluemix.net/docs/services/discovery/information-security.html).
+// security](https://cloud.ibm.com/docs/services/discovery?topic=discovery-information-security#information-security).
 func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2539,8 +2782,13 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteUserData")
-	builder.AddHeader("Accept", "application/json")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteUserData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2574,7 +2822,12 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 	for headerName, headerValue := range createEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateEvent")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateEvent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2627,7 +2880,12 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 	for headerName, headerValue := range getMetricsEventRateOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsEventRate")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetMetricsEventRate")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsEventRateOptions.StartTime != nil {
@@ -2675,7 +2933,12 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 	for headerName, headerValue := range getMetricsQueryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsQuery")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetMetricsQuery")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsQueryOptions.StartTime != nil {
@@ -2725,7 +2988,12 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 	for headerName, headerValue := range getMetricsQueryEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryEvent")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryEvent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsQueryEventOptions.StartTime != nil {
@@ -2774,7 +3042,12 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 	for headerName, headerValue := range getMetricsQueryNoResultsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryNoResults")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryNoResults")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsQueryNoResultsOptions.StartTime != nil {
@@ -2824,7 +3097,12 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEven
 	for headerName, headerValue := range getMetricsQueryTokenEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryTokenEvent")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryTokenEvent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getMetricsQueryTokenEventOptions.Count != nil {
@@ -2867,7 +3145,12 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (*core.
 	for headerName, headerValue := range queryLogOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=QueryLog")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "QueryLog")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if queryLogOptions.Filter != nil {
@@ -2927,7 +3210,12 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 	for headerName, headerValue := range createCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateCredentials")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateCredentials")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -2981,7 +3269,12 @@ func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *Delete
 	for headerName, headerValue := range deleteCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteCredentials")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteCredentials")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3025,7 +3318,12 @@ func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentia
 	for headerName, headerValue := range getCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetCredentials")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetCredentials")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3068,7 +3366,12 @@ func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCreden
 	for headerName, headerValue := range listCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListCredentials")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListCredentials")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3111,7 +3414,12 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 	for headerName, headerValue := range updateCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=UpdateCredentials")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "UpdateCredentials")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -3165,7 +3473,12 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 	for headerName, headerValue := range createGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=CreateGateway")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "CreateGateway")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
@@ -3216,7 +3529,12 @@ func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayO
 	for headerName, headerValue := range deleteGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=DeleteGateway")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "DeleteGateway")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3257,7 +3575,12 @@ func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (
 	for headerName, headerValue := range getGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=GetGateway")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetGateway")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3298,7 +3621,12 @@ func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOpti
 	for headerName, headerValue := range listGatewaysOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=discovery;service_version=V1;operation_id=ListGateways")
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "ListGateways")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -3329,12 +3657,16 @@ type AddDocumentOptions struct {
 	// The ID of the collection.
 	CollectionID *string `json:"collection_id" validate:"required"`
 
-	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50
-	// megabytes is rejected.
+	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
+	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
+	// supported size are rejected.
 	File *os.File `json:"file,omitempty"`
 
 	// The filename for file.
 	Filename *string `json:"filename,omitempty"`
+
+	// The content type of file.
+	FileContentType *string `json:"file_content_type,omitempty"`
 
 	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that
 	// the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
@@ -3344,9 +3676,6 @@ type AddDocumentOptions struct {
 	//   "Subject": "Apples"
 	// } ```.
 	Metadata *string `json:"metadata,omitempty"`
-
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
-	FileContentType *string `json:"file_content_type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3384,15 +3713,15 @@ func (options *AddDocumentOptions) SetFilename(filename string) *AddDocumentOpti
 	return options
 }
 
-// SetMetadata : Allow user to set Metadata
-func (options *AddDocumentOptions) SetMetadata(metadata string) *AddDocumentOptions {
-	options.Metadata = core.StringPtr(metadata)
-	return options
-}
-
 // SetFileContentType : Allow user to set FileContentType
 func (options *AddDocumentOptions) SetFileContentType(fileContentType string) *AddDocumentOptions {
 	options.FileContentType = core.StringPtr(fileContentType)
+	return options
+}
+
+// SetMetadata : Allow user to set Metadata
+func (options *AddDocumentOptions) SetMetadata(metadata string) *AddDocumentOptions {
+	options.Metadata = core.StringPtr(metadata)
 	return options
 }
 
@@ -3411,10 +3740,13 @@ type AddTrainingDataOptions struct {
 	// The ID of the collection.
 	CollectionID *string `json:"collection_id" validate:"required"`
 
+	// The natural text query for the new training query.
 	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
+	// The filter used on the collection before the **natural_language_query** is applied.
 	Filter *string `json:"filter,omitempty"`
 
+	// Array of training examples.
 	Examples []TrainingExample `json:"examples,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3478,6 +3810,16 @@ type AggregationResult struct {
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 }
 
+// Calculation : Calculation struct
+type Calculation struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	// Value of the aggregation.
+	Value *float64 `json:"value,omitempty"`
+}
+
 // Collection : A collection for storing documents.
 type Collection struct {
 
@@ -3506,14 +3848,11 @@ type Collection struct {
 	// `es` (Spanish).
 	Language *string `json:"language,omitempty"`
 
-	// The object providing information about the documents in the collection. Present only when retrieving details of a
-	// collection.
 	DocumentCounts *DocumentCounts `json:"document_counts,omitempty"`
 
 	// Summary of the disk usage statistics for this collection.
 	DiskUsage *CollectionDiskUsage `json:"disk_usage,omitempty"`
 
-	// Provides information about the status of relevance training for collection.
 	TrainingStatus *TrainingStatus `json:"training_status,omitempty"`
 
 	// Object containing source crawl status information.
@@ -3552,7 +3891,7 @@ type Configuration struct {
 	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// The name of the configuration.
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name" validate:"required"`
 
 	// The creation date of the configuration in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
 	Created *strfmt.DateTime `json:"created,omitempty"`
@@ -3622,16 +3961,17 @@ type CreateCollectionOptions struct {
 // Constants associated with the CreateCollectionOptions.Language property.
 // The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
 const (
-	CreateCollectionOptions_Language_Ar = "ar"
-	CreateCollectionOptions_Language_De = "de"
-	CreateCollectionOptions_Language_En = "en"
-	CreateCollectionOptions_Language_Es = "es"
-	CreateCollectionOptions_Language_Fr = "fr"
-	CreateCollectionOptions_Language_It = "it"
-	CreateCollectionOptions_Language_Ja = "ja"
-	CreateCollectionOptions_Language_Ko = "ko"
-	CreateCollectionOptions_Language_Nl = "nl"
-	CreateCollectionOptions_Language_Pt = "pt"
+	CreateCollectionOptions_Language_Ar   = "ar"
+	CreateCollectionOptions_Language_De   = "de"
+	CreateCollectionOptions_Language_En   = "en"
+	CreateCollectionOptions_Language_Es   = "es"
+	CreateCollectionOptions_Language_Fr   = "fr"
+	CreateCollectionOptions_Language_It   = "it"
+	CreateCollectionOptions_Language_Ja   = "ja"
+	CreateCollectionOptions_Language_Ko   = "ko"
+	CreateCollectionOptions_Language_Nl   = "nl"
+	CreateCollectionOptions_Language_Pt   = "pt"
+	CreateCollectionOptions_Language_ZhCn = "zh-CN"
 )
 
 // NewCreateCollectionOptions : Instantiate CreateCollectionOptions
@@ -3685,7 +4025,7 @@ type CreateConfigurationOptions struct {
 	EnvironmentID *string `json:"environment_id" validate:"required"`
 
 	// The name of the configuration.
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name" validate:"required"`
 
 	// The description of the configuration, if available.
 	Description *string `json:"description,omitempty"`
@@ -3708,9 +4048,10 @@ type CreateConfigurationOptions struct {
 }
 
 // NewCreateConfigurationOptions : Instantiate CreateConfigurationOptions
-func (discovery *DiscoveryV1) NewCreateConfigurationOptions(environmentID string) *CreateConfigurationOptions {
+func (discovery *DiscoveryV1) NewCreateConfigurationOptions(environmentID string, name string) *CreateConfigurationOptions {
 	return &CreateConfigurationOptions{
 		EnvironmentID: core.StringPtr(environmentID),
+		Name:          core.StringPtr(name),
 	}
 }
 
@@ -3773,6 +4114,7 @@ type CreateCredentialsOptions struct {
 	// -  `salesforce` indicates the credentials are used to connect to Salesforce.
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+	// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials.
@@ -3790,11 +4132,13 @@ type CreateCredentialsOptions struct {
 // -  `salesforce` indicates the credentials are used to connect to Salesforce.
 // -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
+// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	CreateCredentialsOptions_SourceType_Box        = "box"
-	CreateCredentialsOptions_SourceType_Salesforce = "salesforce"
-	CreateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
-	CreateCredentialsOptions_SourceType_WebCrawl   = "web_crawl"
+	CreateCredentialsOptions_SourceType_Box                = "box"
+	CreateCredentialsOptions_SourceType_CloudObjectStorage = "cloud_object_storage"
+	CreateCredentialsOptions_SourceType_Salesforce         = "salesforce"
+	CreateCredentialsOptions_SourceType_Sharepoint         = "sharepoint"
+	CreateCredentialsOptions_SourceType_WebCrawl           = "web_crawl"
 )
 
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
@@ -3975,17 +4319,18 @@ type CreateExpansionsOptions struct {
 	//  To create a uni-directional expansion, specify both an array of **input_terms** and an array of **expanded_terms**.
 	// When items in the **input_terms** array are present in a query, they are expanded using the items listed in the
 	// **expanded_terms** array.
-	Expansions []Expansion `json:"expansions,omitempty"`
+	Expansions []Expansion `json:"expansions" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewCreateExpansionsOptions : Instantiate CreateExpansionsOptions
-func (discovery *DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string) *CreateExpansionsOptions {
+func (discovery *DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string, expansions []Expansion) *CreateExpansionsOptions {
 	return &CreateExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
+		Expansions:    expansions,
 	}
 }
 
@@ -4171,10 +4516,13 @@ type CreateTrainingExampleOptions struct {
 	// The ID of the query used for training.
 	QueryID *string `json:"query_id" validate:"required"`
 
+	// The document ID associated with this training example.
 	DocumentID *string `json:"document_id,omitempty"`
 
+	// The cross reference associated with this training example.
 	CrossReference *string `json:"cross_reference,omitempty"`
 
+	// The relevance of the training example.
 	Relevance *int64 `json:"relevance,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -4244,7 +4592,8 @@ type CredentialDetails struct {
 	// -  `"source_type": "salesforce"` - valid `credential_type`s: `username_password`
 	// -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml` with **source_version** of `online`, or
 	// `ntml_v1` with **source_version** of `2016`
-	// -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`.
+	// -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`
+	// -  "source_type": "cloud_object_storage"` - valid `credential_type`s: `aws4_hmac`.
 	CredentialType *string `json:"credential_type,omitempty"`
 
 	// The **client_id** of the source that these credentials connect to. Only valid, and required, with a
@@ -4313,6 +4662,21 @@ type CredentialDetails struct {
 	// The domain used to log in to your OnPrem SharePoint account. Only valid, and required, with a **source_version** of
 	// `2016`.
 	Domain *string `json:"domain,omitempty"`
+
+	// The endpoint associated with the cloud object store that your are connecting to. Only valid, and required, with a
+	// **credential_type** of `aws4_hmac`.
+	Endpoint *string `json:"endpoint,omitempty"`
+
+	// The access key ID associated with the cloud object store. Only valid, and required, with a **credential_type** of
+	// `aws4_hmac`. For more infomation, see the [cloud object store
+	// documentation](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-using-hmac-credentials#using-hmac-credentials).
+	AccessKeyID *string `json:"access_key_id,omitempty"`
+
+	// The secret access key associated with the cloud object store. Only valid, and required, with a **credential_type**
+	// of `aws4_hmac`. This value is never returned and is only used when creating or modifying **credentials**. For more
+	// infomation, see the [cloud object store
+	// documentation](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-using-hmac-credentials#using-hmac-credentials).
+	SecretAccessKey *string `json:"secret_access_key,omitempty"`
 }
 
 // Constants associated with the CredentialDetails.CredentialType property.
@@ -4323,8 +4687,10 @@ type CredentialDetails struct {
 // -  `"source_type": "salesforce"` - valid `credential_type`s: `username_password`
 // -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml` with **source_version** of `online`, or `ntml_v1`
 // with **source_version** of `2016`
-// -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`.
+// -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`
+// -  "source_type": "cloud_object_storage"` - valid `credential_type`s: `aws4_hmac`.
 const (
+	CredentialDetails_CredentialType_Aws4Hmac         = "aws4_hmac"
 	CredentialDetails_CredentialType_Basic            = "basic"
 	CredentialDetails_CredentialType_Noauth           = "noauth"
 	CredentialDetails_CredentialType_NtmlV1           = "ntml_v1"
@@ -4336,7 +4702,6 @@ const (
 // Constants associated with the CredentialDetails.SourceVersion property.
 // The type of Sharepoint repository to connect to. Only valid, and required, with a **source_type** of `sharepoint`.
 const (
-	CredentialDetails_SourceVersion_2016   = "2016"
 	CredentialDetails_SourceVersion_Online = "online"
 )
 
@@ -4351,6 +4716,7 @@ type Credentials struct {
 	// -  `salesforce` indicates the credentials are used to connect to Salesforce.
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+	// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials.
@@ -4365,11 +4731,13 @@ type Credentials struct {
 // -  `salesforce` indicates the credentials are used to connect to Salesforce.
 // -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
+// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	Credentials_SourceType_Box        = "box"
-	Credentials_SourceType_Salesforce = "salesforce"
-	Credentials_SourceType_Sharepoint = "sharepoint"
-	Credentials_SourceType_WebCrawl   = "web_crawl"
+	Credentials_SourceType_Box                = "box"
+	Credentials_SourceType_CloudObjectStorage = "cloud_object_storage"
+	Credentials_SourceType_Salesforce         = "salesforce"
+	Credentials_SourceType_Sharepoint         = "sharepoint"
+	Credentials_SourceType_WebCrawl           = "web_crawl"
 )
 
 // CredentialsList : CredentialsList struct
@@ -4997,18 +5365,6 @@ type DiskUsage struct {
 
 	// Total number of bytes available in the environment's disk capacity.
 	MaximumAllowedBytes *int64 `json:"maximum_allowed_bytes,omitempty"`
-
-	// **Deprecated**: Total number of bytes available in the environment's disk capacity.
-	TotalBytes *int64 `json:"total_bytes,omitempty"`
-
-	// **Deprecated**: Amount of disk capacity used, in KB or GB format.
-	Used *string `json:"used,omitempty"`
-
-	// **Deprecated**: Total amount of the environment's disk capacity, in KB or GB format.
-	Total *string `json:"total,omitempty"`
-
-	// **Deprecated**: Percentage of the environment's disk capacity that is being used.
-	PercentUsed *float64 `json:"percent_used,omitempty"`
 }
 
 // DocumentAccepted : DocumentAccepted struct
@@ -5051,12 +5407,16 @@ type DocumentCounts struct {
 
 // DocumentSnapshot : DocumentSnapshot struct
 type DocumentSnapshot struct {
+
+	// The step in the document conversion process that the snapshot object represents.
 	Step *string `json:"step,omitempty"`
 
-	Snapshot interface{} `json:"snapshot,omitempty"`
+	// Snapshot of the conversion.
+	Snapshot map[string]interface{} `json:"snapshot,omitempty"`
 }
 
 // Constants associated with the DocumentSnapshot.Step property.
+// The step in the document conversion process that the snapshot object represents.
 const (
 	DocumentSnapshot_Step_EnrichmentsOutput        = "enrichments_output"
 	DocumentSnapshot_Step_HTMLInput                = "html_input"
@@ -5074,12 +5434,6 @@ type DocumentStatus struct {
 
 	// The unique identifier for the configuration.
 	ConfigurationID *string `json:"configuration_id,omitempty"`
-
-	// The creation date of the document in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// Date of the most recent document update, in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
 	// Status of the document in the ingestion process.
 	Status *string `json:"status" validate:"required"`
@@ -5131,6 +5485,9 @@ type Enrichment struct {
 	DestinationField *string `json:"destination_field" validate:"required"`
 
 	// Field to be enriched.
+	//
+	// Arrays can be specified as the **source_field** if the **enrichment** service for this enrichment is set to
+	// `natural_language_undstanding`.
 	SourceField *string `json:"source_field" validate:"required"`
 
 	// Indicates that the enrichments will overwrite the destination_field field if it already exists.
@@ -5143,25 +5500,20 @@ type Enrichment struct {
 	//
 	//  When using `elements` the **options** object must contain Element Classification options. Additionally, when using
 	// the `elements` enrichment the configuration specified and files ingested must meet all the criteria specified in
-	// [the documentation](https://console.bluemix.net/docs/services/discovery/element-classification.html)
-	//
-	//
-	//
-	//  Previous API versions also supported `alchemy_language`.
+	// [the
+	// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-element-classification#element-classification).
 	EnrichmentName *string `json:"enrichment" validate:"required"`
 
 	// If true, then most errors generated during the enrichment process will be treated as warnings and will not cause the
 	// document to fail processing.
 	IgnoreDownstreamErrors *bool `json:"ignore_downstream_errors,omitempty"`
 
-	// Options which are specific to a particular enrichment.
+	// An object representing the configuration options to use for the `elements` enrichment.
 	Options *EnrichmentOptions `json:"options,omitempty"`
 }
 
-// EnrichmentOptions : Options which are specific to a particular enrichment.
+// EnrichmentOptions : An object representing the configuration options to use for the `elements` enrichment.
 type EnrichmentOptions struct {
-
-	// An object representing the enrichment features that will be applied to the specified field.
 	Features *NluEnrichmentFeatures `json:"features,omitempty"`
 
 	// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language detection
@@ -5321,7 +5673,7 @@ type Expansions struct {
 	//  To create a uni-directional expansion, specify both an array of **input_terms** and an array of **expanded_terms**.
 	// When items in the **input_terms** array are present in a query, they are expanded using the items listed in the
 	// **expanded_terms** array.
-	Expansions []Expansion `json:"expansions,omitempty"`
+	Expansions []Expansion `json:"expansions" validate:"required"`
 }
 
 // FederatedQueryNoticesOptions : The federatedQueryNotices options.
@@ -5350,14 +5702,16 @@ type FederatedQueryNoticesOptions struct {
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
 	Aggregation *string `json:"aggregation,omitempty"`
 
-	// Number of results to return.
+	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
+	// **10000**.
 	Count *int64 `json:"count,omitempty"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
 	ReturnFields []string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
-	// is 10 and the offset is 8, it returns the last two results.
+	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
+	// together in any one query is **10000**.
 	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
@@ -5553,7 +5907,7 @@ type FederatedQueryOptions struct {
 	// The approximate number of characters that any one passage will have.
 	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
-	// When `true` and used with a Watson Discovery News collection, duplicate results (based on the contents of the
+	// When `true`, and used with a Watson Discovery News collection, duplicate results (based on the contents of the
 	// **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not
 	// considered. This parameter is currently Beta functionality.
 	Deduplicate *bool `json:"deduplicate,omitempty"`
@@ -5766,18 +6120,32 @@ const (
 	Field_FieldType_String  = "string"
 )
 
+// Filter : Filter struct
+type Filter struct {
+
+	// The match the aggregated results queried for.
+	Match *string `json:"match,omitempty"`
+}
+
 // FontSetting : FontSetting struct
 type FontSetting struct {
+
+	// The HTML heading level that any content with the matching font will be converted to.
 	Level *int64 `json:"level,omitempty"`
 
+	// The minimum size of the font to match.
 	MinSize *int64 `json:"min_size,omitempty"`
 
+	// The maximum size of the font to match.
 	MaxSize *int64 `json:"max_size,omitempty"`
 
+	// When `true`, the font is matched if it is bold.
 	Bold *bool `json:"bold,omitempty"`
 
+	// When `true`, the font is matched if it is italic.
 	Italic *bool `json:"italic,omitempty"`
 
+	// The name of the font.
 	Name *string `json:"name,omitempty"`
 }
 
@@ -6269,7 +6637,8 @@ func (options *GetMetricsQueryOptions) SetHeaders(param map[string]string) *GetM
 // GetMetricsQueryTokenEventOptions : The getMetricsQueryTokenEvent options.
 type GetMetricsQueryTokenEventOptions struct {
 
-	// Number of results to return.
+	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
+	// **10000**.
 	Count *int64 `json:"count,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6481,17 +6850,32 @@ func (options *GetTrainingExampleOptions) SetHeaders(param map[string]string) *G
 
 // HTMLSettings : A list of HTML conversion settings.
 type HTMLSettings struct {
+
+	// Array of HTML tags that are excluded completely.
 	ExcludeTagsCompletely []string `json:"exclude_tags_completely,omitempty"`
 
+	// Array of HTML tags which are excluded but still retain content.
 	ExcludeTagsKeepContent []string `json:"exclude_tags_keep_content,omitempty"`
 
 	KeepContent *XPathPatterns `json:"keep_content,omitempty"`
 
 	ExcludeContent *XPathPatterns `json:"exclude_content,omitempty"`
 
+	// An array of HTML tag attributes to keep in the converted document.
 	KeepTagAttributes []string `json:"keep_tag_attributes,omitempty"`
 
+	// Array of HTML tag attributes to exclude.
 	ExcludeTagAttributes []string `json:"exclude_tag_attributes,omitempty"`
+}
+
+// Histogram : Histogram struct
+type Histogram struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	// Interval of the aggregation. (For 'histogram' type).
+	Interval *int64 `json:"interval,omitempty"`
 }
 
 // IndexCapacity : Details about the resource usage and capacity of the environment.
@@ -6505,9 +6889,6 @@ type IndexCapacity struct {
 
 	// Summary of the collection usage in the environment.
 	Collections *CollectionUsage `json:"collections,omitempty"`
-
-	// **Deprecated**: Summary of the memory usage statistics for this environment.
-	MemoryUsage *MemoryUsage `json:"memory_usage,omitempty"`
 }
 
 // ListCollectionFieldsOptions : The listCollectionFields options.
@@ -6921,6 +7302,7 @@ type LogQueryResponse struct {
 	// Number of matching results.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
+	// Array of log query response results.
 	Results []LogQueryResponseResult `json:"results,omitempty"`
 }
 
@@ -7027,6 +7409,8 @@ const (
 // LogQueryResponseResultDocuments : Object containing result information that was returned by the query used to create this log entry. Only returned with
 // logs of type `query`.
 type LogQueryResponseResultDocuments struct {
+
+	// Array of log query response results.
 	Results []LogQueryResponseResultDocumentsResult `json:"results,omitempty"`
 
 	// The number of results returned in the query associate with this log.
@@ -7052,25 +7436,6 @@ type LogQueryResponseResultDocumentsResult struct {
 	CollectionID *string `json:"collection_id,omitempty"`
 }
 
-// MemoryUsage : **Deprecated**: Summary of the memory usage statistics for this environment.
-type MemoryUsage struct {
-
-	// **Deprecated**: Number of bytes used in the environment's memory capacity.
-	UsedBytes *int64 `json:"used_bytes,omitempty"`
-
-	// **Deprecated**: Total number of bytes available in the environment's memory capacity.
-	TotalBytes *int64 `json:"total_bytes,omitempty"`
-
-	// **Deprecated**: Amount of memory capacity used, in KB or GB format.
-	Used *string `json:"used,omitempty"`
-
-	// **Deprecated**: Total amount of the environment's memory capacity, in KB or GB format.
-	Total *string `json:"total,omitempty"`
-
-	// **Deprecated**: Percentage of the environment's memory capacity that is being used.
-	PercentUsed *float64 `json:"percent_used,omitempty"`
-}
-
 // MetricAggregation : An aggregation analyzing log information for queries and events.
 type MetricAggregation struct {
 
@@ -7080,6 +7445,7 @@ type MetricAggregation struct {
 	// The event type associated with this metric result. This field, when present, will always be `click`.
 	EventType *string `json:"event_type,omitempty"`
 
+	// Array of metric aggregation query results.
 	Results []MetricAggregationResult `json:"results,omitempty"`
 }
 
@@ -7102,6 +7468,8 @@ type MetricAggregationResult struct {
 
 // MetricResponse : The response generated from a call to a **metrics** method.
 type MetricResponse struct {
+
+	// Array of metric aggregations.
 	Aggregations []MetricAggregation `json:"aggregations,omitempty"`
 }
 
@@ -7111,6 +7479,7 @@ type MetricTokenAggregation struct {
 	// The event type associated with this metric result. This field, when present, will always be `click`.
 	EventType *string `json:"event_type,omitempty"`
 
+	// Array of results for the metric token aggregation.
 	Results []MetricTokenAggregationResult `json:"results,omitempty"`
 }
 
@@ -7130,7 +7499,16 @@ type MetricTokenAggregationResult struct {
 
 // MetricTokenResponse : The response generated from a call to a **metrics** method that evaluates tokens.
 type MetricTokenResponse struct {
+
+	// Array of metric token aggregations.
 	Aggregations []MetricTokenAggregation `json:"aggregations,omitempty"`
+}
+
+// Nested : Nested struct
+type Nested struct {
+
+	// The area of the results the aggregation was restricted to.
+	Path *string `json:"path,omitempty"`
 }
 
 // NluEnrichmentCategories : An object that indicates the Categories enrichment will be applied to the specified field.
@@ -7275,8 +7653,8 @@ type NormalizationOperation struct {
 	//
 	// **remove** - Deletes the **source_field** field. The **destination_field** is ignored for this operation.
 	//
-	// **remove_nulls** - Removes all nested null (blank) field values from the JSON tree. **source_field** and
-	// **destination_field** are ignored by this operation because _remove_nulls_ operates on the entire JSON tree.
+	// **remove_nulls** - Removes all nested null (blank) field values from the ingested document. **source_field** and
+	// **destination_field** are ignored by this operation because _remove_nulls_ operates on the entire ingested document.
 	// Typically, **remove_nulls** is invoked as the last normalization operation (if it is invoked at all, it can be
 	// time-expensive).
 	Operation *string `json:"operation,omitempty"`
@@ -7307,8 +7685,8 @@ type NormalizationOperation struct {
 //
 // **remove** - Deletes the **source_field** field. The **destination_field** is ignored for this operation.
 //
-// **remove_nulls** - Removes all nested null (blank) field values from the JSON tree. **source_field** and
-// **destination_field** are ignored by this operation because _remove_nulls_ operates on the entire JSON tree.
+// **remove_nulls** - Removes all nested null (blank) field values from the ingested document. **source_field** and
+// **destination_field** are ignored by this operation because _remove_nulls_ operates on the entire ingested document.
 // Typically, **remove_nulls** is invoked as the last normalization operation (if it is invoked at all, it can be
 // time-expensive).
 const (
@@ -7323,7 +7701,13 @@ const (
 type Notice struct {
 
 	// Identifies the notice. Many notices might have the same ID. This field exists so that user applications can
-	// programmatically identify a notice and take automatic corrective action.
+	// programmatically identify a notice and take automatic corrective action. Typical notice IDs include: `index_failed`,
+	// `index_failed_too_many_requests`, `index_failed_incompatible_field`, `index_failed_cluster_unavailable`,
+	// `ingestion_timeout`, `ingestion_error`, `bad_request`, `internal_error`, `missing_model`, `unsupported_model`,
+	// `smart_document_understanding_failed_incompatible_field`, `smart_document_understanding_failed_internal_error`,
+	// `smart_document_understanding_failed_internal_error`, `smart_document_understanding_failed_warning`,
+	// `smart_document_understanding_page_error`, `smart_document_understanding_page_warning`. **Note:** This is not a
+	// complete list, other values might be returned.
 	NoticeID *string `json:"notice_id,omitempty"`
 
 	// The creation date of the collection in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
@@ -7338,7 +7722,9 @@ type Notice struct {
 	// Severity level of the notice.
 	Severity *string `json:"severity,omitempty"`
 
-	// Ingestion or training step in which the notice occurred.
+	// Ingestion or training step in which the notice occurred. Typical step values include: `classify_elements`,
+	// `smartDocumentUnderstanding`, `ingestion`, `indexing`, `convert`. **Note:** This is not a complete list, other
+	// values might be returned.
 	Step *string `json:"step,omitempty"`
 
 	// The description of the notice.
@@ -7368,6 +7754,7 @@ type QueryAggregation struct {
 	// The type of aggregation command used. For example: term, filter, max, min, etc.
 	Type *string `json:"type,omitempty"`
 
+	// Array of aggregation results.
 	Results []AggregationResult `json:"results,omitempty"`
 
 	// Number of matching results.
@@ -7482,8 +7869,10 @@ func (options *QueryEntitiesOptions) SetHeaders(param map[string]string) *QueryE
 	return options
 }
 
-// QueryEntitiesResponse : An array of entities resulting from the query.
+// QueryEntitiesResponse : An object that contains an array of entities resulting from the query.
 type QueryEntitiesResponse struct {
+
+	// Array of entities that results from the query.
 	Entities []QueryEntitiesResponseItem `json:"entities,omitempty"`
 }
 
@@ -7557,11 +7946,13 @@ type QueryLogOptions struct {
 	// cannot use **natural_language_query** and **query** at the same time.
 	Query *string `json:"query,omitempty"`
 
-	// Number of results to return.
+	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
+	// **10000**.
 	Count *int64 `json:"count,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
-	// is 10 and the offset is 8, it returns the last two results.
+	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
+	// together in any one query is **10000**.
 	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
@@ -7643,14 +8034,16 @@ type QueryNoticesOptions struct {
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
 	Aggregation *string `json:"aggregation,omitempty"`
 
-	// Number of results to return.
+	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
+	// **10000**.
 	Count *int64 `json:"count,omitempty"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
 	ReturnFields []string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
-	// is 10 and the offset is 8, it returns the last two results.
+	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
+	// together in any one query is **10000**.
 	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
@@ -7826,14 +8219,20 @@ func (options *QueryNoticesOptions) SetHeaders(param map[string]string) *QueryNo
 
 // QueryNoticesResponse : QueryNoticesResponse struct
 type QueryNoticesResponse struct {
+
+	// The number of matching results.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
+	// Array of document results that match the query.
 	Results []QueryNoticesResult `json:"results,omitempty"`
 
+	// Array of aggregation results that match the query.
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 
+	// Array of passage results that match the query.
 	Passages []QueryPassages `json:"passages,omitempty"`
 
+	// The number of duplicates removed from this notices query.
 	DuplicatesRemoved *int64 `json:"duplicates_removed,omitempty"`
 }
 
@@ -7850,24 +8249,14 @@ func (this *QueryNoticesResult) GetID() *string {
 	return (*this)["id"].(*string)
 }
 
-// SetScore : Allow user to set Score
-func (this *QueryNoticesResult) SetScore(Score *float64) {
-	(*this)["score"] = Score
-}
-
-// GetScore : Allow user to get Score
-func (this *QueryNoticesResult) GetScore() *float64 {
-	return (*this)["score"].(*float64)
-}
-
 // SetMetadata : Allow user to set Metadata
-func (this *QueryNoticesResult) SetMetadata(Metadata *interface{}) {
+func (this *QueryNoticesResult) SetMetadata(Metadata *map[string]interface{}) {
 	(*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
-func (this *QueryNoticesResult) GetMetadata() *interface{} {
-	return (*this)["metadata"].(*interface{})
+func (this *QueryNoticesResult) GetMetadata() *map[string]interface{} {
+	return (*this)["metadata"].(*map[string]interface{})
 }
 
 // SetCollectionID : Allow user to set CollectionID
@@ -7888,6 +8277,16 @@ func (this *QueryNoticesResult) SetResultMetadata(ResultMetadata *QueryResultMet
 // GetResultMetadata : Allow user to get ResultMetadata
 func (this *QueryNoticesResult) GetResultMetadata() *QueryResultMetadata {
 	return (*this)["result_metadata"].(*QueryResultMetadata)
+}
+
+// SetTitle : Allow user to set Title
+func (this *QueryNoticesResult) SetTitle(Title *string) {
+	(*this)["title"] = Title
+}
+
+// GetTitle : Allow user to get Title
+func (this *QueryNoticesResult) GetTitle() *string {
+	return (*this)["title"].(*string)
 }
 
 // SetCode : Allow user to set Code
@@ -8008,7 +8407,7 @@ type QueryOptions struct {
 	// The approximate number of characters that any one passage will have.
 	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
-	// When `true` and used with a Watson Discovery News collection, duplicate results (based on the contents of the
+	// When `true`, and used with a Watson Discovery News collection, duplicate results (based on the contents of the
 	// **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not
 	// considered. This parameter is currently Beta functionality.
 	Deduplicate *bool `json:"deduplicate,omitempty"`
@@ -8226,6 +8625,8 @@ type QueryPassages struct {
 
 // QueryRelationsArgument : QueryRelationsArgument struct
 type QueryRelationsArgument struct {
+
+	// Array of query entities.
 	Entities []QueryEntitiesEntity `json:"entities,omitempty"`
 }
 
@@ -8244,11 +8645,8 @@ type QueryRelationsEntity struct {
 
 // QueryRelationsFilter : QueryRelationsFilter struct
 type QueryRelationsFilter struct {
-
-	// A list of relation types to include or exclude from the query.
 	RelationTypes *QueryFilterType `json:"relation_types,omitempty"`
 
-	// A list of entity types to include or exclude from the query.
 	EntityTypes *QueryFilterType `json:"entity_types,omitempty"`
 
 	// A comma-separated list of document IDs to include in the query.
@@ -8276,7 +8674,6 @@ type QueryRelationsOptions struct {
 	// parameter.
 	Sort *string `json:"sort,omitempty"`
 
-	// Filters to apply to the relationship query.
 	Filter *QueryRelationsFilter `json:"filter,omitempty"`
 
 	// The number of results to return. The default is `10`. The maximum is `1000`.
@@ -8379,19 +8776,27 @@ type QueryRelationsRelationship struct {
 
 // QueryRelationsResponse : QueryRelationsResponse struct
 type QueryRelationsResponse struct {
+
+	// Array of relationships for the relations query.
 	Relations []QueryRelationsRelationship `json:"relations,omitempty"`
 }
 
 // QueryResponse : A response containing the documents and aggregations for the query.
 type QueryResponse struct {
+
+	// The number of matching results for the query.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
+	// Array of document results for the query.
 	Results []QueryResult `json:"results,omitempty"`
 
+	// Array of aggregation results for the query.
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 
+	// Array of passage results for the query.
 	Passages []QueryPassages `json:"passages,omitempty"`
 
+	// The number of duplicate results removed.
 	DuplicatesRemoved *int64 `json:"duplicates_removed,omitempty"`
 
 	// The session token for this query. The session token can be used to add events associated with this query to the
@@ -8417,24 +8822,14 @@ func (this *QueryResult) GetID() *string {
 	return (*this)["id"].(*string)
 }
 
-// SetScore : Allow user to set Score
-func (this *QueryResult) SetScore(Score *float64) {
-	(*this)["score"] = Score
-}
-
-// GetScore : Allow user to get Score
-func (this *QueryResult) GetScore() *float64 {
-	return (*this)["score"].(*float64)
-}
-
 // SetMetadata : Allow user to set Metadata
-func (this *QueryResult) SetMetadata(Metadata *interface{}) {
+func (this *QueryResult) SetMetadata(Metadata *map[string]interface{}) {
 	(*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
-func (this *QueryResult) GetMetadata() *interface{} {
-	return (*this)["metadata"].(*interface{})
+func (this *QueryResult) GetMetadata() *map[string]interface{} {
+	return (*this)["metadata"].(*map[string]interface{})
 }
 
 // SetCollectionID : Allow user to set CollectionID
@@ -8457,6 +8852,16 @@ func (this *QueryResult) GetResultMetadata() *QueryResultMetadata {
 	return (*this)["result_metadata"].(*QueryResultMetadata)
 }
 
+// SetTitle : Allow user to set Title
+func (this *QueryResult) SetTitle(Title *string) {
+	(*this)["title"] = Title
+}
+
+// GetTitle : Allow user to get Title
+func (this *QueryResult) GetTitle() *string {
+	return (*this)["title"].(*string)
+}
+
 // QueryResultMetadata : Metadata of a query result.
 type QueryResultMetadata struct {
 
@@ -8468,7 +8873,7 @@ type QueryResultMetadata struct {
 	// confidence can range from `0.0` to `1.0`. The higher the number, the more relevant the document. The `confidence`
 	// value for a result was calculated using the model specified in the `document_retrieval_strategy` field of the result
 	// set.
-	Confidence *float64 `json:"confidence" validate:"required"`
+	Confidence *float64 `json:"confidence,omitempty"`
 }
 
 // RetrievalDetails : An object contain retrieval type information.
@@ -8530,7 +8935,8 @@ type SegmentSettings struct {
 	// Enables/disables the Document Segmentation feature.
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// Defines the heading level that splits into document segments. Valid values are h1, h2, h3, h4, h5, h6.
+	// Defines the heading level that splits into document segments. Valid values are h1, h2, h3, h4, h5, h6. The content
+	// of the header field that the segmentation splits at is used as the **title** field for that segmented result.
 	SelectorTags []string `json:"selector_tags,omitempty"`
 }
 
@@ -8542,6 +8948,7 @@ type Source struct {
 	// -  `salesforce` indicates the configuration is to connect to Salesforce.
 	// -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
 	// -  `web_crawl` indicates the configuration is to perform a web page crawl.
+	// -  `cloud_object_storage` indicates the configuration is to connect to a cloud object store.
 	Type *string `json:"type,omitempty"`
 
 	// The **credential_id** of the credentials to use to connect to the source. Credentials are defined using the
@@ -8562,11 +8969,13 @@ type Source struct {
 // -  `salesforce` indicates the configuration is to connect to Salesforce.
 // -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
 // -  `web_crawl` indicates the configuration is to perform a web page crawl.
+// -  `cloud_object_storage` indicates the configuration is to connect to a cloud object store.
 const (
-	Source_Type_Box        = "box"
-	Source_Type_Salesforce = "salesforce"
-	Source_Type_Sharepoint = "sharepoint"
-	Source_Type_WebCrawl   = "web_crawl"
+	Source_Type_Box                = "box"
+	Source_Type_CloudObjectStorage = "cloud_object_storage"
+	Source_Type_Salesforce         = "salesforce"
+	Source_Type_Sharepoint         = "sharepoint"
+	Source_Type_WebCrawl           = "web_crawl"
 )
 
 // SourceOptions : The **options** object defines which items to crawl from the source system.
@@ -8587,6 +8996,25 @@ type SourceOptions struct {
 	// Array of Web page URLs to begin crawling the web from. Only valid and required when the **type** field of the
 	// **source** object is set to `web_crawl`.
 	Urls []SourceOptionsWebCrawl `json:"urls,omitempty"`
+
+	// Array of cloud object store buckets to begin crawling. Only valid and required when the **type** field of the
+	// **source** object is set to `cloud_object_store`, and the **crawl_all_buckets** field is `false` or not specified.
+	Buckets []SourceOptionsBuckets `json:"buckets,omitempty"`
+
+	// When `true`, all buckets in the specified cloud object store are crawled. If set to `true`, the **buckets** array
+	// must not be specified.
+	CrawlAllBuckets *bool `json:"crawl_all_buckets,omitempty"`
+}
+
+// SourceOptionsBuckets : Object defining a cloud object store bucket to crawl.
+type SourceOptionsBuckets struct {
+
+	// The name of the cloud object store bucket to crawl.
+	Name *string `json:"name" validate:"required"`
+
+	// The number of documents to crawl from this cloud object store bucket. If not specified, all documents in the bucket
+	// are crawled.
+	Limit *int64 `json:"limit,omitempty"`
 }
 
 // SourceOptionsFolder : Object that defines a box folder to crawl with this configuration.
@@ -8705,9 +9133,7 @@ type SourceStatus struct {
 	//
 	// -  `running` indicates that a crawl to fetch more documents is in progress.
 	// -  `complete` indicates that the crawl has completed with no errors.
-	// -  `complete_with_notices` indicates that some notices were generated during the crawl. Notices can be checked by
-	// using the **notices** query method.
-	// -  `stopped` indicates that the crawl has stopped but is not complete.
+	// -  `queued` indicates that the crawl has been paused by the system and will automatically restart when possible.
 	Status *string `json:"status,omitempty"`
 
 	// Date in UTC format indicating when the last crawl was attempted. If `null`, no crawl was completed.
@@ -8720,16 +9146,22 @@ type SourceStatus struct {
 //
 // -  `running` indicates that a crawl to fetch more documents is in progress.
 // -  `complete` indicates that the crawl has completed with no errors.
-// -  `complete_with_notices` indicates that some notices were generated during the crawl. Notices can be checked by
-// using the **notices** query method.
-// -  `stopped` indicates that the crawl has stopped but is not complete.
+// -  `queued` indicates that the crawl has been paused by the system and will automatically restart when possible.
 const (
-	SourceStatus_Status_Complete            = "complete"
-	SourceStatus_Status_CompleteWithNotices = "complete_with_notices"
-	SourceStatus_Status_NotConfigured       = "not_configured"
-	SourceStatus_Status_Running             = "running"
-	SourceStatus_Status_Stopped             = "stopped"
+	SourceStatus_Status_Complete      = "complete"
+	SourceStatus_Status_NotConfigured = "not_configured"
+	SourceStatus_Status_Queued        = "queued"
+	SourceStatus_Status_Running       = "running"
 )
+
+// Term : Term struct
+type Term struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	Count *int64 `json:"count,omitempty"`
+}
 
 // TestConfigurationInEnvironmentOptions : The testConfigurationInEnvironment options.
 type TestConfigurationInEnvironmentOptions struct {
@@ -8744,20 +9176,16 @@ type TestConfigurationInEnvironmentOptions struct {
 	// See the `GET /configurations/{configuration_id}` operation for an example configuration.
 	Configuration *string `json:"configuration,omitempty"`
 
-	// Specify to only run the input document through the given step instead of running the input document through the
-	// entire ingestion workflow. Valid values are `convert`, `enrich`, and `normalize`.
-	Step *string `json:"step,omitempty"`
-
-	// The ID of the configuration to use to process the document. If the **configuration** form part is also provided
-	// (both are present at the same time), then the request will be rejected.
-	ConfigurationID *string `json:"configuration_id,omitempty"`
-
-	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50
-	// megabytes is rejected.
+	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
+	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
+	// supported size are rejected.
 	File *os.File `json:"file,omitempty"`
 
 	// The filename for file.
 	Filename *string `json:"filename,omitempty"`
+
+	// The content type of file.
+	FileContentType *string `json:"file_content_type,omitempty"`
 
 	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that
 	// the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
@@ -8768,8 +9196,13 @@ type TestConfigurationInEnvironmentOptions struct {
 	// } ```.
 	Metadata *string `json:"metadata,omitempty"`
 
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
-	FileContentType *string `json:"file_content_type,omitempty"`
+	// Specify to only run the input document through the given step instead of running the input document through the
+	// entire ingestion workflow. Valid values are `convert`, `enrich`, and `normalize`.
+	Step *string `json:"step,omitempty"`
+
+	// The ID of the configuration to use to process the document. If the **configuration** form part is also provided
+	// (both are present at the same time), then the request will be rejected.
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -8806,18 +9239,6 @@ func (options *TestConfigurationInEnvironmentOptions) SetConfiguration(configura
 	return options
 }
 
-// SetStep : Allow user to set Step
-func (options *TestConfigurationInEnvironmentOptions) SetStep(step string) *TestConfigurationInEnvironmentOptions {
-	options.Step = core.StringPtr(step)
-	return options
-}
-
-// SetConfigurationID : Allow user to set ConfigurationID
-func (options *TestConfigurationInEnvironmentOptions) SetConfigurationID(configurationID string) *TestConfigurationInEnvironmentOptions {
-	options.ConfigurationID = core.StringPtr(configurationID)
-	return options
-}
-
 // SetFile : Allow user to set File
 func (options *TestConfigurationInEnvironmentOptions) SetFile(file *os.File) *TestConfigurationInEnvironmentOptions {
 	options.File = file
@@ -8830,15 +9251,27 @@ func (options *TestConfigurationInEnvironmentOptions) SetFilename(filename strin
 	return options
 }
 
+// SetFileContentType : Allow user to set FileContentType
+func (options *TestConfigurationInEnvironmentOptions) SetFileContentType(fileContentType string) *TestConfigurationInEnvironmentOptions {
+	options.FileContentType = core.StringPtr(fileContentType)
+	return options
+}
+
 // SetMetadata : Allow user to set Metadata
 func (options *TestConfigurationInEnvironmentOptions) SetMetadata(metadata string) *TestConfigurationInEnvironmentOptions {
 	options.Metadata = core.StringPtr(metadata)
 	return options
 }
 
-// SetFileContentType : Allow user to set FileContentType
-func (options *TestConfigurationInEnvironmentOptions) SetFileContentType(fileContentType string) *TestConfigurationInEnvironmentOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
+// SetStep : Allow user to set Step
+func (options *TestConfigurationInEnvironmentOptions) SetStep(step string) *TestConfigurationInEnvironmentOptions {
+	options.Step = core.StringPtr(step)
+	return options
+}
+
+// SetConfigurationID : Allow user to set ConfigurationID
+func (options *TestConfigurationInEnvironmentOptions) SetConfigurationID(configurationID string) *TestConfigurationInEnvironmentOptions {
+	options.ConfigurationID = core.StringPtr(configurationID)
 	return options
 }
 
@@ -8869,6 +9302,21 @@ type TestDocument struct {
 
 	// An array of notice messages about the preview operation.
 	Notices []Notice `json:"notices,omitempty"`
+}
+
+// Timeslice : Timeslice struct
+type Timeslice struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	// Interval of the aggregation. Valid date interval values are second/seconds minute/minutes, hour/hours, day/days,
+	// week/weeks, month/months, and year/years.
+	Interval *string `json:"interval,omitempty"`
+
+	// Used to indicate that anomaly detection should be performed. Anomaly detection is used to locate unusual datapoints
+	// within a time series.
+	Anomaly *bool `json:"anomaly,omitempty"`
 }
 
 // TokenDictRule : An object defining a single tokenizaion rule.
@@ -8905,6 +9353,15 @@ const (
 	TokenDictStatusResponse_Status_Pending  = "pending"
 )
 
+// TopHits : TopHits struct
+type TopHits struct {
+
+	// Number of top hits returned by the aggregation.
+	Size *int64 `json:"size,omitempty"`
+
+	Hits *TopHitsResults `json:"hits,omitempty"`
+}
+
 // TopHitsResults : TopHitsResults struct
 type TopHitsResults struct {
 
@@ -8917,56 +9374,81 @@ type TopHitsResults struct {
 
 // TrainingDataSet : TrainingDataSet struct
 type TrainingDataSet struct {
+
+	// The environment id associated with this training data set.
 	EnvironmentID *string `json:"environment_id,omitempty"`
 
+	// The collection id associated with this training data set.
 	CollectionID *string `json:"collection_id,omitempty"`
 
+	// Array of training queries.
 	Queries []TrainingQuery `json:"queries,omitempty"`
 }
 
 // TrainingExample : TrainingExample struct
 type TrainingExample struct {
+
+	// The document ID associated with this training example.
 	DocumentID *string `json:"document_id,omitempty"`
 
+	// The cross reference associated with this training example.
 	CrossReference *string `json:"cross_reference,omitempty"`
 
+	// The relevance of the training example.
 	Relevance *int64 `json:"relevance,omitempty"`
 }
 
 // TrainingExampleList : TrainingExampleList struct
 type TrainingExampleList struct {
+
+	// Array of training examples.
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
 // TrainingQuery : TrainingQuery struct
 type TrainingQuery struct {
+
+	// The query ID associated with the training query.
 	QueryID *string `json:"query_id,omitempty"`
 
+	// The natural text query for the training query.
 	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
+	// The filter used on the collection before the **natural_language_query** is applied.
 	Filter *string `json:"filter,omitempty"`
 
+	// Array of training examples.
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
 // TrainingStatus : TrainingStatus struct
 type TrainingStatus struct {
+
+	// The total number of training examples uploaded to this collection.
 	TotalExamples *int64 `json:"total_examples,omitempty"`
 
+	// When `true`, the collection has been successfully trained.
 	Available *bool `json:"available,omitempty"`
 
+	// When `true`, the collection is currently processing training.
 	Processing *bool `json:"processing,omitempty"`
 
+	// When `true`, the collection has a sufficent amount of queries added for training to occur.
 	MinimumQueriesAdded *bool `json:"minimum_queries_added,omitempty"`
 
+	// When `true`, the collection has a sufficent amount of examples added for training to occur.
 	MinimumExamplesAdded *bool `json:"minimum_examples_added,omitempty"`
 
+	// When `true`, the collection has a sufficent amount of diversity in labeled results for training to occur.
 	SufficientLabelDiversity *bool `json:"sufficient_label_diversity,omitempty"`
 
+	// The number of notices associated with this data set.
 	Notices *int64 `json:"notices,omitempty"`
 
+	// The timestamp of when the collection was successfully trained.
 	SuccessfullyTrained *strfmt.DateTime `json:"successfully_trained,omitempty"`
 
+	// The timestamp of when the data was uploaded.
 	DataUpdated *strfmt.DateTime `json:"data_updated,omitempty"`
 }
 
@@ -9046,7 +9528,7 @@ type UpdateConfigurationOptions struct {
 	ConfigurationID *string `json:"configuration_id" validate:"required"`
 
 	// The name of the configuration.
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name" validate:"required"`
 
 	// The description of the configuration, if available.
 	Description *string `json:"description,omitempty"`
@@ -9069,10 +9551,11 @@ type UpdateConfigurationOptions struct {
 }
 
 // NewUpdateConfigurationOptions : Instantiate UpdateConfigurationOptions
-func (discovery *DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string) *UpdateConfigurationOptions {
+func (discovery *DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string, name string) *UpdateConfigurationOptions {
 	return &UpdateConfigurationOptions{
 		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
+		Name:            core.StringPtr(name),
 	}
 }
 
@@ -9144,6 +9627,7 @@ type UpdateCredentialsOptions struct {
 	// -  `salesforce` indicates the credentials are used to connect to Salesforce.
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+	// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials.
@@ -9161,11 +9645,13 @@ type UpdateCredentialsOptions struct {
 // -  `salesforce` indicates the credentials are used to connect to Salesforce.
 // -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
+// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	UpdateCredentialsOptions_SourceType_Box        = "box"
-	UpdateCredentialsOptions_SourceType_Salesforce = "salesforce"
-	UpdateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
-	UpdateCredentialsOptions_SourceType_WebCrawl   = "web_crawl"
+	UpdateCredentialsOptions_SourceType_Box                = "box"
+	UpdateCredentialsOptions_SourceType_CloudObjectStorage = "cloud_object_storage"
+	UpdateCredentialsOptions_SourceType_Salesforce         = "salesforce"
+	UpdateCredentialsOptions_SourceType_Sharepoint         = "sharepoint"
+	UpdateCredentialsOptions_SourceType_WebCrawl           = "web_crawl"
 )
 
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
@@ -9218,12 +9704,16 @@ type UpdateDocumentOptions struct {
 	// The ID of the document.
 	DocumentID *string `json:"document_id" validate:"required"`
 
-	// The content of the document to ingest. The maximum supported file size is 50 megabytes. Files larger than 50
-	// megabytes is rejected.
+	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
+	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
+	// supported size are rejected.
 	File *os.File `json:"file,omitempty"`
 
 	// The filename for file.
 	Filename *string `json:"filename,omitempty"`
+
+	// The content type of file.
+	FileContentType *string `json:"file_content_type,omitempty"`
 
 	// If you're using the Data Crawler to upload your documents, you can test a document against the type of metadata that
 	// the Data Crawler might send. The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
@@ -9233,9 +9723,6 @@ type UpdateDocumentOptions struct {
 	//   "Subject": "Apples"
 	// } ```.
 	Metadata *string `json:"metadata,omitempty"`
-
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
-	FileContentType *string `json:"file_content_type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -9280,15 +9767,15 @@ func (options *UpdateDocumentOptions) SetFilename(filename string) *UpdateDocume
 	return options
 }
 
-// SetMetadata : Allow user to set Metadata
-func (options *UpdateDocumentOptions) SetMetadata(metadata string) *UpdateDocumentOptions {
-	options.Metadata = core.StringPtr(metadata)
-	return options
-}
-
 // SetFileContentType : Allow user to set FileContentType
 func (options *UpdateDocumentOptions) SetFileContentType(fileContentType string) *UpdateDocumentOptions {
 	options.FileContentType = core.StringPtr(fileContentType)
+	return options
+}
+
+// SetMetadata : Allow user to set Metadata
+func (options *UpdateDocumentOptions) SetMetadata(metadata string) *UpdateDocumentOptions {
+	options.Metadata = core.StringPtr(metadata)
 	return options
 }
 
@@ -9384,8 +9871,10 @@ type UpdateTrainingExampleOptions struct {
 	// The ID of the document as it is indexed.
 	ExampleID *string `json:"example_id" validate:"required"`
 
+	// The example to add.
 	CrossReference *string `json:"cross_reference,omitempty"`
 
+	// The relevance value for this example.
 	Relevance *int64 `json:"relevance,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -9458,79 +9947,17 @@ type WordSettings struct {
 
 // WordStyle : WordStyle struct
 type WordStyle struct {
+
+	// HTML head level that content matching this style is tagged with.
 	Level *int64 `json:"level,omitempty"`
 
+	// Array of word style names to convert.
 	Names []string `json:"names,omitempty"`
 }
 
 // XPathPatterns : XPathPatterns struct
 type XPathPatterns struct {
+
+	// An array to XPaths.
 	Xpaths []string `json:"xpaths,omitempty"`
-}
-
-// Calculation : Calculation struct
-type Calculation struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	// Value of the aggregation.
-	Value *float64 `json:"value,omitempty"`
-}
-
-// Filter : Filter struct
-type Filter struct {
-
-	// The match the aggregated results queried for.
-	Match *string `json:"match,omitempty"`
-}
-
-// Histogram : Histogram struct
-type Histogram struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	// Interval of the aggregation. (For 'histogram' type).
-	Interval *int64 `json:"interval,omitempty"`
-}
-
-// Nested : Nested struct
-type Nested struct {
-
-	// The area of the results the aggregation was restricted to.
-	Path *string `json:"path,omitempty"`
-}
-
-// Term : Term struct
-type Term struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	Count *int64 `json:"count,omitempty"`
-}
-
-// Timeslice : Timeslice struct
-type Timeslice struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	// Interval of the aggregation. Valid date interval values are second/seconds minute/minutes, hour/hours, day/days,
-	// week/weeks, month/months, and year/years.
-	Interval *string `json:"interval,omitempty"`
-
-	// Used to indicate that anomaly detection should be performed. Anomaly detection is used to locate unusual datapoints
-	// within a time series.
-	Anomaly *bool `json:"anomaly,omitempty"`
-}
-
-// TopHits : TopHits struct
-type TopHits struct {
-
-	// Number of top hits returned by the aggregation.
-	Size *int64 `json:"size,omitempty"`
-
-	Hits *TopHitsResults `json:"hits,omitempty"`
 }
