@@ -65,7 +65,7 @@ func TestConvertToHTML(t *testing.T) {
 			Filename: core.StringPtr("contract_A.pdf"),
 		},
 	)
-	assert.Nil(t, responseErr.Error())
+	assert.Nil(t, responseErr)
 
 	html := service.GetConvertToHTMLResult(response)
 	assert.NotNil(t, html)
@@ -82,7 +82,8 @@ func TestClassifyElements(t *testing.T) {
 
 	response, responseErr := service.ClassifyElements(
 		&comparecomplyv1.ClassifyElementsOptions{
-			File: testPDF,
+			File:            testPDF,
+			FileContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -102,7 +103,8 @@ func TestExtractTables(t *testing.T) {
 
 	response, responseErr := service.ExtractTables(
 		&comparecomplyv1.ExtractTablesOptions{
-			File: file,
+			File:            file,
+			FileContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -127,8 +129,10 @@ func TestCompareDocuments(t *testing.T) {
 
 	response, responseErr := service.CompareDocuments(
 		&comparecomplyv1.CompareDocumentsOptions{
-			File1: file1,
-			File2: file2,
+			File1:            file1,
+			File2:            file2,
+			File1ContentType: core.StringPtr("application/pdf"),
+			File2ContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)
