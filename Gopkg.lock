@@ -72,6 +72,14 @@
   version = "v0.16.0"
 
 [[projects]]
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
+
+[[projects]]
   branch = "master"
   digest = "1:59392ed8afb901aab4287d4894df8191722e34f3957716f4350c8c133ce99046"
   name = "github.com/hpcloud/tail"
@@ -178,6 +186,28 @@
   version = "v1.2.2"
 
 [[projects]]
+  digest = "1:1ebea1c1ab79460d756ef9bd702fe0007002fd8711d3cf32cbd8daf18e34c6b6"
+  name = "github.com/watson-developer-cloud/go-sdk"
+  packages = [
+    "assistantv1",
+    "assistantv2",
+    "comparecomplyv1",
+    "core",
+    "discoveryv1",
+    "languagetranslatorv3",
+    "naturallanguageclassifierv1",
+    "naturallanguageunderstandingv1",
+    "personalityinsightsv3",
+    "speechtotextv1",
+    "texttospeechv1",
+    "toneanalyzerv3",
+    "visualrecognitionv3",
+  ]
+  pruneopts = "UT"
+  revision = "6f7ab39b95dc86a94c3904340bf495456c51b58e"
+  version = "v0.6.0"
+
+[[projects]]
   branch = "master"
   digest = "1:5193d913046443e59093d66a97a40c51f4a5ea4ceba60f3b3ecf89694de5d16f"
   name = "golang.org/x/net"
@@ -260,10 +290,24 @@
   input-imports = [
     "github.com/cloudfoundry-community/go-cfenv",
     "github.com/go-openapi/strfmt",
+    "github.com/gorilla/websocket",
     "github.com/joho/godotenv",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/stretchr/testify/assert",
+    "github.com/watson-developer-cloud/go-sdk/assistantv1",
+    "github.com/watson-developer-cloud/go-sdk/assistantv2",
+    "github.com/watson-developer-cloud/go-sdk/comparecomplyv1",
+    "github.com/watson-developer-cloud/go-sdk/core",
+    "github.com/watson-developer-cloud/go-sdk/discoveryv1",
+    "github.com/watson-developer-cloud/go-sdk/languagetranslatorv3",
+    "github.com/watson-developer-cloud/go-sdk/naturallanguageclassifierv1",
+    "github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1",
+    "github.com/watson-developer-cloud/go-sdk/personalityinsightsv3",
+    "github.com/watson-developer-cloud/go-sdk/speechtotextv1",
+    "github.com/watson-developer-cloud/go-sdk/texttospeechv1",
+    "github.com/watson-developer-cloud/go-sdk/toneanalyzerv3",
+    "github.com/watson-developer-cloud/go-sdk/visualrecognitionv3",
     "gopkg.in/go-playground/validator.v9",
   ]
   solver-name = "gps-cdcl"
