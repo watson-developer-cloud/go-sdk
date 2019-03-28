@@ -19,7 +19,8 @@ package texttospeechv1
 
 import (
 	"fmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 )
 
@@ -42,7 +43,7 @@ import (
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/text-to-speech.html
 type TextToSpeechV1 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // TextToSpeechV1Options : Service options
@@ -69,7 +70,7 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) 
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "text_to_speech", "Text to Speech")
+	service, serviceErr := core.NewBaseService(serviceOptions, "text_to_speech", "Text to Speech")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -82,7 +83,7 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) 
 // about the voice. Specify a customization ID to obtain information for that custom voice model of the specified voice.
 // To list information about all available voices, use the **List voices** method.
 //
-// **See also:** [Specifying a voice](https://cloud.ibm.com/docs/services/text-to-speech/http.html#voices).
+// **See also:** [Listing a specific voice](https://cloud.ibm.com/docs/services/text-to-speech/voices.html#listVoice).
 func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceOptions, "getVoiceOptions cannot be nil"); err != nil {
 		return nil, err
@@ -100,7 +101,12 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 	for headerName, headerValue := range getVoiceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=GetVoice")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "GetVoice")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getVoiceOptions.CustomizationID != nil {
@@ -129,7 +135,8 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedRes
 // Lists all voices available for use with the service. The information includes the name, language, gender, and other
 // details about the voice. To see information about a specific voice, use the **Get a voice** method.
 //
-// **See also:** [Specifying a voice](https://cloud.ibm.com/docs/services/text-to-speech/http.html#voices).
+// **See also:** [Listing all available
+// voices](https://cloud.ibm.com/docs/services/text-to-speech/voices.html#listVoices).
 func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoicesOptions, "listVoicesOptions"); err != nil {
 		return nil, err
@@ -144,7 +151,12 @@ func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOpti
 	for headerName, headerValue := range listVoicesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=ListVoices")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "ListVoices")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -169,10 +181,11 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 // Synthesizes text to audio that is spoken in the specified voice. The service bases its understanding of the language
 // for the input text on the specified voice. Use a voice that matches the language of the input text.
 //
-// The service returns the synthesized audio stream as an array of bytes. You can pass a maximum of 5 KB of text to the
-// service.
+// The method accepts a maximum of 5 KB of input text in the body of the request, and 8 KB for the URL and headers. The
+// 5 KB limit includes any SSML tags that you specify. The service returns the synthesized audio stream as an array of
+// bytes.
 //
-// **See also:** [Synthesizing text to audio](https://cloud.ibm.com/docs/services/text-to-speech/http.html#synthesize).
+// **See also:** [The HTTP interface](https://cloud.ibm.com/docs/services/text-to-speech/http.html).
 //
 // ### Audio formats (accept types)
 //
@@ -229,7 +242,7 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 //   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
 //
 // For more information about specifying an audio format, including additional details about some of the formats, see
-// [Specifying an audio format](https://cloud.ibm.com/docs/services/text-to-speech/http.html#format).
+// [Audio formats](https://cloud.ibm.com/docs/services/text-to-speech/audio-formats.html).
 //
 // ### Warning messages
 //
@@ -254,7 +267,12 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 	for headerName, headerValue := range synthesizeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=Synthesize")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "Synthesize")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "audio/basic")
 	builder.AddHeader("Content-Type", "application/json")
 	if synthesizeOptions.Accept != nil {
@@ -321,7 +339,12 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 	for headerName, headerValue := range getPronunciationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=GetPronunciation")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "GetPronunciation")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("text", fmt.Sprint(*getPronunciationOptions.Text))
@@ -379,7 +402,12 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *Cr
 	for headerName, headerValue := range createVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=CreateVoiceModel")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "CreateVoiceModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -441,7 +469,13 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 	for headerName, headerValue := range deleteVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=DeleteVoiceModel")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "DeleteVoiceModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 
 	request, err := builder.Build()
 	if err != nil {
@@ -478,7 +512,12 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoice
 	for headerName, headerValue := range getVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=GetVoiceModel")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "GetVoiceModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -523,7 +562,12 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *List
 	for headerName, headerValue := range listVoiceModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=ListVoiceModels")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "ListVoiceModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listVoiceModelsOptions.Language != nil {
@@ -588,7 +632,12 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 	for headerName, headerValue := range updateVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=UpdateVoiceModel")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "UpdateVoiceModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -656,7 +705,13 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 	for headerName, headerValue := range addWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=AddWord")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "AddWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 	builder.AddHeader("Content-Type", "application/json")
 
 	body := make(map[string]interface{})
@@ -721,7 +776,12 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 	for headerName, headerValue := range addWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=AddWords")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "AddWords")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -768,7 +828,13 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 	for headerName, headerValue := range deleteWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=DeleteWord")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "DeleteWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 
 	request, err := builder.Build()
 	if err != nil {
@@ -804,7 +870,12 @@ func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*co
 	for headerName, headerValue := range getWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=GetWord")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "GetWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -851,7 +922,12 @@ func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions
 	for headerName, headerValue := range listWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=ListWords")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "ListWords")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -898,7 +974,13 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=text_to_speech;service_version=V1;operation_id=DeleteUserData")
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "DeleteUserData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 
@@ -924,7 +1006,7 @@ type AddWordOptions struct {
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
 	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. A sounds-like
 	// is one or more words that, when combined, sound like the word.
-	Translation *string `json:"translation,omitempty"`
+	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
@@ -962,10 +1044,11 @@ const (
 )
 
 // NewAddWordOptions : Instantiate AddWordOptions
-func (textToSpeech *TextToSpeechV1) NewAddWordOptions(customizationID string, word string) *AddWordOptions {
+func (textToSpeech *TextToSpeechV1) NewAddWordOptions(customizationID string, word string, translation string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
 		Word:            core.StringPtr(word),
+		Translation:     core.StringPtr(translation),
 	}
 }
 
@@ -1012,16 +1095,17 @@ type AddWordsOptions struct {
 	// The **List custom words** method returns an array of `Word` objects. Each object shows a word and its translation
 	// from the custom voice model. The words are listed in alphabetical order, with uppercase letters listed before
 	// lowercase letters. The array is empty if the custom model contains no words.
-	Words []Word `json:"words,omitempty"`
+	Words []Word `json:"words" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewAddWordsOptions : Instantiate AddWordsOptions
-func (textToSpeech *TextToSpeechV1) NewAddWordsOptions(customizationID string) *AddWordsOptions {
+func (textToSpeech *TextToSpeechV1) NewAddWordsOptions(customizationID string, words []Word) *AddWordsOptions {
 	return &AddWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
+		Words:           words,
 	}
 }
 
@@ -1233,20 +1317,26 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
-	GetPronunciationOptions_Voice_DeDeBirgitvoice    = "de-DE_BirgitVoice"
-	GetPronunciationOptions_Voice_DeDeDietervoice    = "de-DE_DieterVoice"
-	GetPronunciationOptions_Voice_EnGbKatevoice      = "en-GB_KateVoice"
-	GetPronunciationOptions_Voice_EnUsAllisonvoice   = "en-US_AllisonVoice"
-	GetPronunciationOptions_Voice_EnUsLisavoice      = "en-US_LisaVoice"
-	GetPronunciationOptions_Voice_EnUsMichaelvoice   = "en-US_MichaelVoice"
-	GetPronunciationOptions_Voice_EsEsEnriquevoice   = "es-ES_EnriqueVoice"
-	GetPronunciationOptions_Voice_EsEsLauravoice     = "es-ES_LauraVoice"
-	GetPronunciationOptions_Voice_EsLaSofiavoice     = "es-LA_SofiaVoice"
-	GetPronunciationOptions_Voice_EsUsSofiavoice     = "es-US_SofiaVoice"
-	GetPronunciationOptions_Voice_FrFrReneevoice     = "fr-FR_ReneeVoice"
-	GetPronunciationOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	GetPronunciationOptions_Voice_JaJpEmivoice       = "ja-JP_EmiVoice"
-	GetPronunciationOptions_Voice_PtBrIsabelavoice   = "pt-BR_IsabelaVoice"
+	GetPronunciationOptions_Voice_DeDeBirgitv2voice    = "de-DE_BirgitV2Voice"
+	GetPronunciationOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	GetPronunciationOptions_Voice_DeDeDieterv2voice    = "de-DE_DieterV2Voice"
+	GetPronunciationOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	GetPronunciationOptions_Voice_EnUsAllisonv2voice   = "en-US_AllisonV2Voice"
+	GetPronunciationOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	GetPronunciationOptions_Voice_EnUsLisav2voice      = "en-US_LisaV2Voice"
+	GetPronunciationOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	GetPronunciationOptions_Voice_EnUsMichaelv2voice   = "en-US_MichaelV2Voice"
+	GetPronunciationOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	GetPronunciationOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	GetPronunciationOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	GetPronunciationOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
+	GetPronunciationOptions_Voice_ItItFrancescav2voice = "it-IT_FrancescaV2Voice"
+	GetPronunciationOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	GetPronunciationOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
@@ -1342,20 +1432,26 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
-	GetVoiceOptions_Voice_DeDeBirgitvoice    = "de-DE_BirgitVoice"
-	GetVoiceOptions_Voice_DeDeDietervoice    = "de-DE_DieterVoice"
-	GetVoiceOptions_Voice_EnGbKatevoice      = "en-GB_KateVoice"
-	GetVoiceOptions_Voice_EnUsAllisonvoice   = "en-US_AllisonVoice"
-	GetVoiceOptions_Voice_EnUsLisavoice      = "en-US_LisaVoice"
-	GetVoiceOptions_Voice_EnUsMichaelvoice   = "en-US_MichaelVoice"
-	GetVoiceOptions_Voice_EsEsEnriquevoice   = "es-ES_EnriqueVoice"
-	GetVoiceOptions_Voice_EsEsLauravoice     = "es-ES_LauraVoice"
-	GetVoiceOptions_Voice_EsLaSofiavoice     = "es-LA_SofiaVoice"
-	GetVoiceOptions_Voice_EsUsSofiavoice     = "es-US_SofiaVoice"
-	GetVoiceOptions_Voice_FrFrReneevoice     = "fr-FR_ReneeVoice"
-	GetVoiceOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	GetVoiceOptions_Voice_JaJpEmivoice       = "ja-JP_EmiVoice"
-	GetVoiceOptions_Voice_PtBrIsabelavoice   = "pt-BR_IsabelaVoice"
+	GetVoiceOptions_Voice_DeDeBirgitv2voice    = "de-DE_BirgitV2Voice"
+	GetVoiceOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	GetVoiceOptions_Voice_DeDeDieterv2voice    = "de-DE_DieterV2Voice"
+	GetVoiceOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	GetVoiceOptions_Voice_EnUsAllisonv2voice   = "en-US_AllisonV2Voice"
+	GetVoiceOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	GetVoiceOptions_Voice_EnUsLisav2voice      = "en-US_LisaV2Voice"
+	GetVoiceOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	GetVoiceOptions_Voice_EnUsMichaelv2voice   = "en-US_MichaelV2Voice"
+	GetVoiceOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	GetVoiceOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	GetVoiceOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	GetVoiceOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
+	GetVoiceOptions_Voice_ItItFrancescav2voice = "it-IT_FrancescaV2Voice"
+	GetVoiceOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	GetVoiceOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
@@ -1540,13 +1636,6 @@ type SynthesizeOptions struct {
 	// The text to synthesize.
 	Text *string `json:"text" validate:"required"`
 
-	// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
-	// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
-	// method description.
-	//
-	// Default: `audio/ogg;codecs=opus`.
-	Accept *string `json:"Accept,omitempty"`
-
 	// The voice to use for synthesis.
 	Voice *string `json:"voice,omitempty"`
 
@@ -1556,9 +1645,41 @@ type SynthesizeOptions struct {
 	// the specified voice with no customization.
 	CustomizationID *string `json:"customization_id,omitempty"`
 
+	// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
+	// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
+	// method description.
+	//
+	// Default: `audio/ogg;codecs=opus`.
+	Accept *string `json:"Accept,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the SynthesizeOptions.Voice property.
+// The voice to use for synthesis.
+const (
+	SynthesizeOptions_Voice_DeDeBirgitv2voice    = "de-DE_BirgitV2Voice"
+	SynthesizeOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	SynthesizeOptions_Voice_DeDeDieterv2voice    = "de-DE_DieterV2Voice"
+	SynthesizeOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	SynthesizeOptions_Voice_EnUsAllisonv2voice   = "en-US_AllisonV2Voice"
+	SynthesizeOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	SynthesizeOptions_Voice_EnUsLisav2voice      = "en-US_LisaV2Voice"
+	SynthesizeOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	SynthesizeOptions_Voice_EnUsMichaelv2voice   = "en-US_MichaelV2Voice"
+	SynthesizeOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	SynthesizeOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	SynthesizeOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	SynthesizeOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
+	SynthesizeOptions_Voice_ItItFrancescav2voice = "it-IT_FrancescaV2Voice"
+	SynthesizeOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	SynthesizeOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
+)
 
 // Constants associated with the SynthesizeOptions.Accept property.
 // The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
@@ -1582,25 +1703,6 @@ const (
 	SynthesizeOptions_Accept_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
 )
 
-// Constants associated with the SynthesizeOptions.Voice property.
-// The voice to use for synthesis.
-const (
-	SynthesizeOptions_Voice_DeDeBirgitvoice    = "de-DE_BirgitVoice"
-	SynthesizeOptions_Voice_DeDeDietervoice    = "de-DE_DieterVoice"
-	SynthesizeOptions_Voice_EnGbKatevoice      = "en-GB_KateVoice"
-	SynthesizeOptions_Voice_EnUsAllisonvoice   = "en-US_AllisonVoice"
-	SynthesizeOptions_Voice_EnUsLisavoice      = "en-US_LisaVoice"
-	SynthesizeOptions_Voice_EnUsMichaelvoice   = "en-US_MichaelVoice"
-	SynthesizeOptions_Voice_EsEsEnriquevoice   = "es-ES_EnriqueVoice"
-	SynthesizeOptions_Voice_EsEsLauravoice     = "es-ES_LauraVoice"
-	SynthesizeOptions_Voice_EsLaSofiavoice     = "es-LA_SofiaVoice"
-	SynthesizeOptions_Voice_EsUsSofiavoice     = "es-US_SofiaVoice"
-	SynthesizeOptions_Voice_FrFrReneevoice     = "fr-FR_ReneeVoice"
-	SynthesizeOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	SynthesizeOptions_Voice_JaJpEmivoice       = "ja-JP_EmiVoice"
-	SynthesizeOptions_Voice_PtBrIsabelavoice   = "pt-BR_IsabelaVoice"
-)
-
 // NewSynthesizeOptions : Instantiate SynthesizeOptions
 func (textToSpeech *TextToSpeechV1) NewSynthesizeOptions(text string) *SynthesizeOptions {
 	return &SynthesizeOptions{
@@ -1611,12 +1713,6 @@ func (textToSpeech *TextToSpeechV1) NewSynthesizeOptions(text string) *Synthesiz
 // SetText : Allow user to set Text
 func (options *SynthesizeOptions) SetText(text string) *SynthesizeOptions {
 	options.Text = core.StringPtr(text)
-	return options
-}
-
-// SetAccept : Allow user to set Accept
-func (options *SynthesizeOptions) SetAccept(accept string) *SynthesizeOptions {
-	options.Accept = core.StringPtr(accept)
 	return options
 }
 
@@ -1632,6 +1728,12 @@ func (options *SynthesizeOptions) SetCustomizationID(customizationID string) *Sy
 	return options
 }
 
+// SetAccept : Allow user to set Accept
+func (options *SynthesizeOptions) SetAccept(accept string) *SynthesizeOptions {
+	options.Accept = core.StringPtr(accept)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *SynthesizeOptions) SetHeaders(param map[string]string) *SynthesizeOptions {
 	options.Headers = param
@@ -1644,7 +1746,7 @@ type Translation struct {
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
 	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. A sounds-like
 	// is one or more words that, when combined, sound like the word.
-	Translation *string `json:"translation,omitempty"`
+	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
@@ -1869,5 +1971,5 @@ type Words struct {
 	// The **List custom words** method returns an array of `Word` objects. Each object shows a word and its translation
 	// from the custom voice model. The words are listed in alphabetical order, with uppercase letters listed before
 	// lowercase letters. The array is empty if the custom model contains no words.
-	Words []Word `json:"words,omitempty"`
+	Words []Word `json:"words" validate:"required"`
 }
