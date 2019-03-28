@@ -2,7 +2,6 @@ package visualrecognitionv3_test
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -10,57 +9,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cloudfoundry-community/go-cfenv"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
 )
 
 var _ = Describe("VisualRecognitionV3", func() {
-	Describe("Get credentials from VCAP", func() {
-		version := "exampleString"
-		username := "hyphenated-user"
-		password := "hyphenated-pass"
-		VCAPservices := cfenv.Services{
-			"conversation": {
-				{
-					Name: "watson_vision_combined",
-					Tags: []string{},
-					Credentials: map[string]interface{}{
-						"url":      "https://gateway.watsonplatform.net/visual-recognition/api",
-						"username": username,
-						"password": password,
-					},
-				},
-			},
-		}
-		VCAPbytes, _ := json.Marshal(cfenv.App{})
-		os.Setenv("VCAP_APPLICATION", string(VCAPbytes))
-		VCAPbytes, _ = json.Marshal(VCAPservices)
-		os.Setenv("VCAP_SERVICES", string(VCAPbytes))
-		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-		Context("Successfully - Create VisualRecognitionV3 with VCAP credentials", func() {
-			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-				defer GinkgoRecover()
-
-				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-			}))
-			It("Succeed to create VisualRecognitionV3", func() {
-				defer testServer.Close()
-
-				testService, testServiceErr := visualrecognitionv3.
-					NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-						URL:     testServer.URL,
-						Version: version,
-					})
-				Expect(testServiceErr).To(BeNil())
-				Expect(testService).ToNot(BeNil())
-
-				testService.ListClassifiers(testService.NewListClassifiersOptions())
-			})
-		})
-	})
 	Describe("Classify(classifyOptions *ClassifyOptions)", func() {
 		ClassifyPath := "/v3/classify"
 		version := "exampleString"
@@ -184,8 +138,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 
 				CreateClassifierOptions := testService.
 					NewCreateClassifierOptions("cars vs trucks").
-					AddPositiveExamples("cars", cars).
-					AddPositiveExamplesFilename("cars", "cars.zip")
+					AddPositiveExamples("cars", cars)
 				returnValue, returnValueErr := testService.CreateClassifier(CreateClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

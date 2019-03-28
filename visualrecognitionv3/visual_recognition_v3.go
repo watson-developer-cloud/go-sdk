@@ -19,8 +19,9 @@ package visualrecognitionv3
 
 import (
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"os"
 	"strings"
@@ -33,7 +34,7 @@ import (
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/visual-recognition.html
 type VisualRecognitionV3 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // VisualRecognitionV3Options : Service options
@@ -58,7 +59,7 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (*VisualRecogni
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "watson_vision_combined", "Visual Recognition")
+	service, serviceErr := core.NewBaseService(serviceOptions, "watson_vision_combined", "Visual Recognition")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -88,7 +89,12 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 	for headerName, headerValue := range classifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=Classify")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "Classify")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	if classifyOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*classifyOptions.AcceptLanguage))
@@ -163,7 +169,12 @@ func (visualRecognition *VisualRecognitionV3) DetectFaces(detectFacesOptions *De
 	for headerName, headerValue := range detectFacesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=DetectFaces")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "DetectFaces")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	if detectFacesOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*detectFacesOptions.AcceptLanguage))
@@ -220,14 +231,19 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	for headerName, headerValue := range createClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=CreateClassifier")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "CreateClassifier")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	builder.AddFormData("name", "", "", fmt.Sprint(*createClassifierOptions.Name))
 	for key, value := range createClassifierOptions.PositiveExamples {
 		partName := fmt.Sprintf("%s_positive_examples", key)
-		builder.AddFormData(partName, core.StringNilMapper(createClassifierOptions.PositiveExamplesFilename[key]), "application/octet-stream", value)
+		builder.AddFormData(partName, key, "application/octet-stream", value)
 	}
 	if createClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(createClassifierOptions.NegativeExamplesFilename),
@@ -270,7 +286,12 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 	for headerName, headerValue := range deleteClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=DeleteClassifier")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteClassifier")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
@@ -302,7 +323,12 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 	for headerName, headerValue := range getClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=GetClassifier")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "GetClassifier")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
@@ -339,7 +365,12 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=ListClassifiers")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "ListClassifiers")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listClassifiersOptions.Verbose != nil {
@@ -396,13 +427,18 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	for headerName, headerValue := range updateClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=UpdateClassifier")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "UpdateClassifier")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	for key, value := range updateClassifierOptions.PositiveExamples {
 		partName := fmt.Sprintf("%s_positive_examples", key)
-		builder.AddFormData(partName, core.StringNilMapper(updateClassifierOptions.PositiveExamplesFilename[key]), "application/octet-stream", value)
+		builder.AddFormData(partName, key, "application/octet-stream", value)
 	}
 	if updateClassifierOptions.NegativeExamples != nil {
 		builder.AddFormData("negative_examples", core.StringNilMapper(updateClassifierOptions.NegativeExamplesFilename),
@@ -447,7 +483,12 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 	for headerName, headerValue := range getCoreMlModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=GetCoreMlModel")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "GetCoreMlModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/octet-stream")
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
@@ -461,8 +502,8 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 }
 
 // GetGetCoreMlModelResult : Retrieve result of GetCoreMlModel operation
-func (visualRecognition *VisualRecognitionV3) GetGetCoreMlModelResult(response *core.DetailedResponse) *io.ReadCloser {
-	result, ok := response.Result.(*io.ReadCloser)
+func (visualRecognition *VisualRecognitionV3) GetGetCoreMlModelResult(response *core.DetailedResponse) io.ReadCloser {
+	result, ok := response.Result.(io.ReadCloser)
 	if ok {
 		return result
 	}
@@ -493,7 +534,12 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=watson_vision_combined;service_version=V3;operation_id=DeleteUserData")
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteUserData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
@@ -651,8 +697,8 @@ type ClassifyOptions struct {
 	// The filename for imagesFile.
 	ImagesFilename *string `json:"images_filename,omitempty"`
 
-	// The desired language of parts of the response. See the response for details.
-	AcceptLanguage *string `json:"Accept-Language,omitempty"`
+	// The content type of imagesFile.
+	ImagesFileContentType *string `json:"images_file_content_type,omitempty"`
 
 	// The URL of an image (.gif, .jpg, .png, .tif) to analyze. The minimum recommended pixel density is 32X32 pixels, but
 	// the service tends to perform better with images that are at least 224 x 224 pixels. The maximum image size is 10 MB.
@@ -682,8 +728,8 @@ type ClassifyOptions struct {
 	// - `explicit`: Evaluates whether the image might be pornographic.
 	ClassifierIds []string `json:"classifier_ids,omitempty"`
 
-	// The content type of imagesFile. Values for this parameter can be obtained from the HttpMediaType class.
-	ImagesFileContentType *string `json:"images_file_content_type,omitempty"`
+	// The desired language of parts of the response. See the response for details.
+	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -722,9 +768,9 @@ func (options *ClassifyOptions) SetImagesFilename(imagesFilename string) *Classi
 	return options
 }
 
-// SetAcceptLanguage : Allow user to set AcceptLanguage
-func (options *ClassifyOptions) SetAcceptLanguage(acceptLanguage string) *ClassifyOptions {
-	options.AcceptLanguage = core.StringPtr(acceptLanguage)
+// SetImagesFileContentType : Allow user to set ImagesFileContentType
+func (options *ClassifyOptions) SetImagesFileContentType(imagesFileContentType string) *ClassifyOptions {
+	options.ImagesFileContentType = core.StringPtr(imagesFileContentType)
 	return options
 }
 
@@ -752,9 +798,9 @@ func (options *ClassifyOptions) SetClassifierIds(classifierIds []string) *Classi
 	return options
 }
 
-// SetImagesFileContentType : Allow user to set ImagesFileContentType
-func (options *ClassifyOptions) SetImagesFileContentType(imagesFileContentType string) *ClassifyOptions {
-	options.ImagesFileContentType = core.StringPtr(imagesFileContentType)
+// SetAcceptLanguage : Allow user to set AcceptLanguage
+func (options *ClassifyOptions) SetAcceptLanguage(acceptLanguage string) *ClassifyOptions {
+	options.AcceptLanguage = core.StringPtr(acceptLanguage)
 	return options
 }
 
@@ -781,9 +827,6 @@ type CreateClassifierOptions struct {
 	//
 	// Encode special characters in the file name in UTF-8.
 	PositiveExamples map[string]*os.File `json:"positive_examples" validate:"required"`
-
-	// The filename for positiveExamples.
-	PositiveExamplesFilename map[string]*string `json:"positive_examples_filename,omitempty"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
@@ -817,15 +860,6 @@ func (options *CreateClassifierOptions) AddPositiveExamples(classname string, po
 		options.PositiveExamples = make(map[string]*os.File)
 	}
 	options.PositiveExamples[classname] = positiveExamples
-	return options
-}
-
-// AddPositiveExamplesFilename : Allow user to add a new entry to the PositiveExamplesFilename map
-func (options *CreateClassifierOptions) AddPositiveExamplesFilename(classname string, positiveExamplesFilename string) *CreateClassifierOptions {
-	if options.PositiveExamplesFilename == nil {
-		options.PositiveExamplesFilename = make(map[string]*string)
-	}
-	options.PositiveExamplesFilename[classname] = core.StringPtr(positiveExamplesFilename)
 	return options
 }
 
@@ -920,6 +954,9 @@ type DetectFacesOptions struct {
 	// The filename for imagesFile.
 	ImagesFilename *string `json:"images_filename,omitempty"`
 
+	// The content type of imagesFile.
+	ImagesFileContentType *string `json:"images_file_content_type,omitempty"`
+
 	// The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum recommended pixel density
 	// is 32X32 pixels, but the service tends to perform better with images that are at least 224 x 224 pixels. The maximum
 	// image size is 10 MB. Redirects are followed, so you can use a shortened URL.
@@ -929,9 +966,6 @@ type DetectFacesOptions struct {
 
 	// The desired language of parts of the response. See the response for details.
 	AcceptLanguage *string `json:"Accept-Language,omitempty"`
-
-	// The content type of imagesFile. Values for this parameter can be obtained from the HttpMediaType class.
-	ImagesFileContentType *string `json:"images_file_content_type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -970,6 +1004,12 @@ func (options *DetectFacesOptions) SetImagesFilename(imagesFilename string) *Det
 	return options
 }
 
+// SetImagesFileContentType : Allow user to set ImagesFileContentType
+func (options *DetectFacesOptions) SetImagesFileContentType(imagesFileContentType string) *DetectFacesOptions {
+	options.ImagesFileContentType = core.StringPtr(imagesFileContentType)
+	return options
+}
+
 // SetURL : Allow user to set URL
 func (options *DetectFacesOptions) SetURL(URL string) *DetectFacesOptions {
 	options.URL = core.StringPtr(URL)
@@ -979,12 +1019,6 @@ func (options *DetectFacesOptions) SetURL(URL string) *DetectFacesOptions {
 // SetAcceptLanguage : Allow user to set AcceptLanguage
 func (options *DetectFacesOptions) SetAcceptLanguage(acceptLanguage string) *DetectFacesOptions {
 	options.AcceptLanguage = core.StringPtr(acceptLanguage)
-	return options
-}
-
-// SetImagesFileContentType : Allow user to set ImagesFileContentType
-func (options *DetectFacesOptions) SetImagesFileContentType(imagesFileContentType string) *DetectFacesOptions {
-	options.ImagesFileContentType = core.StringPtr(imagesFileContentType)
 	return options
 }
 
@@ -1203,9 +1237,6 @@ type UpdateClassifierOptions struct {
 	// Encode special characters in the file name in UTF-8.
 	PositiveExamples map[string]*os.File `json:"positive_examples,omitempty"`
 
-	// The filename for positiveExamples.
-	PositiveExamplesFilename map[string]*string `json:"positive_examples_filename,omitempty"`
-
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
 	//
@@ -1238,15 +1269,6 @@ func (options *UpdateClassifierOptions) AddPositiveExamples(classname string, po
 		options.PositiveExamples = make(map[string]*os.File)
 	}
 	options.PositiveExamples[classname] = positiveExamples
-	return options
-}
-
-// AddPositiveExamplesFilename : Allow user to add a new entry to the PositiveExamplesFilename map
-func (options *UpdateClassifierOptions) AddPositiveExamplesFilename(classname string, positiveExamplesFilename string) *UpdateClassifierOptions {
-	if options.PositiveExamplesFilename == nil {
-		options.PositiveExamplesFilename = make(map[string]*string)
-	}
-	options.PositiveExamplesFilename[classname] = core.StringPtr(positiveExamplesFilename)
 	return options
 }
 
