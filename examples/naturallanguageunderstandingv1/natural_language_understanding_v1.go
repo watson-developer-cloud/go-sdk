@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 	nlu "github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
 )
 
@@ -13,10 +13,9 @@ func main() {
 	// Instantiate the Watson Natural Language Understanding service
 	service, serviceErr := nlu.
 		NewNaturalLanguageUnderstandingV1(&nlu.NaturalLanguageUnderstandingV1Options{
-			URL:      "YOUR SERVICE URL",
-			Version:  "2017-02-27",
-			Username: "YOUR SERVICE USERNAME",
-			Password: "YOUR SERVICE PASSWORD",
+			URL:       "YOUR SERVICE URL",
+			Version:   "2017-02-27",
+			IAMApiKey: "YOUR API KEY",
 		})
 
 	// Check successful instantiation

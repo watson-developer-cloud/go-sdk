@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 )
 
@@ -15,10 +15,9 @@ func main() {
 	// Instantiate the Watson Personality Insights service
 	service, serviceErr := personalityinsightsv3.
 		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-			URL:      "YOUR SERVICE URL",
-			Version:  "2017-10-13",
-			Username: "YOUR SERVICE USERNAME",
-			Password: "YOUR SERVICE PASSWORD",
+			URL:       "YOUR SERVICE URL",
+			Version:   "2017-10-13",
+			IAMApiKey: "YOUR API KEY",
 		})
 
 	// Check successful instantiation

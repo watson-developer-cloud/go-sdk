@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 	"os"
 
 	discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 	nlc "github.com/watson-developer-cloud/go-sdk/naturallanguageclassifierv1"
 )
 

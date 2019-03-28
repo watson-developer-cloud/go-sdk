@@ -3,17 +3,16 @@ package main
 import (
 	"fmt"
 
+	"github.com/IBM/go-sdk-core/core"
 	assistant "github.com/watson-developer-cloud/go-sdk/assistantv1"
-	core "github.com/watson-developer-cloud/go-sdk/core"
 )
 
 func main() {
 	// Instantiate the Watson Assistant service
 	service, serviceErr := assistant.NewAssistantV1(&assistant.AssistantV1Options{
-		URL:      "YOUR SERVICE URL",
-		Version:  "2018-07-10",
-		Username: "YOUR SERVICE USERNAME",
-		Password: "YOUR SERVICE PASSWORD",
+		URL:       "YOUR SERVICE URL",
+		Version:   "2018-07-10",
+		IAMApiKey: "YOUR API KEY",
 	})
 
 	// Check successful instantiation
@@ -34,10 +33,13 @@ func main() {
 
 	/* CREATE WORKSPACE */
 
+	metadata := make(map[string]interface{})
+	metadata["property"] = "value"
+
 	createEntity := assistant.CreateEntity{
 		Entity:      core.StringPtr("pizzatoppingstest"),
 		Description: core.StringPtr("Tasty pizza topping"),
-		Metadata:    map[string]string{"property": "value"},
+		Metadata:    metadata,
 	}
 	createWorkspaceOptions := service.NewCreateWorkspaceOptions().
 		SetName("Test Workspace").
@@ -88,11 +90,11 @@ func main() {
 	fmt.Println(response)
 
 	// 	/* MESSAGE */
-	inputData := &assistant.InputData{}
-	inputData.SetText(core.StringPtr("Hello, how are you?"))
+	input := &assistant.MessageInput{}
+	input.SetText(core.StringPtr("Hello, how are you?"))
 
 	messageOptions := service.NewMessageOptions(*workspaceID).
-		SetInput(inputData)
+		SetInput(input)
 
 	// Call the Message method with no specified context
 	response, responseErr = service.Message(messageOptions)
@@ -107,9 +109,9 @@ func main() {
 	// To continue with the same assistant, pass in the context from the previous call
 	context := service.GetMessageResult(response).Context
 
-	inputData.SetText(core.StringPtr("What's the weather right now?"))
+	input.SetText(core.StringPtr("What's the weather right now?"))
 	messageOptions.SetContext(context).
-		SetInput(inputData)
+		SetInput(input)
 
 	response, responseErr = service.Message(messageOptions)
 
