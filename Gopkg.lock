@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:1e5f48094fcba09f5ec6ea06c35f76d9dea8846be1a2ee6bc2d9f057d4610bda"
+  name = "github.com/IBM/go-sdk-core"
+  packages = ["core"]
+  pruneopts = "UT"
+  revision = "e8994555bd204074bb3c3f5a35fcf1381df6a97e"
+  version = "v0.2.3"
+
+[[projects]]
   digest = "1:320e7ead93de9fd2b0e59b50fd92a4d50c1f8ab455d96bc2eb083267453a9709"
   name = "github.com/asaskevich/govalidator"
   packages = ["."]
@@ -72,6 +80,14 @@
   version = "v0.16.0"
 
 [[projects]]
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
+
+[[projects]]
   branch = "master"
   digest = "1:59392ed8afb901aab4287d4894df8191722e34f3957716f4350c8c133ce99046"
   name = "github.com/hpcloud/tail"
@@ -92,6 +108,14 @@
   pruneopts = "UT"
   revision = "23d116af351c84513e1946b527c88823e476be13"
   version = "v1.3.0"
+
+[[projects]]
+  digest = "1:6782ffc812e8e700e6952ede1e60487ff1fd9da489eff762985be662a7cfc431"
+  name = "github.com/leodido/go-urn"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "70078a794e8ea4b497ba7c19a78cd60f90ccf0f4"
+  version = "v1.1.0"
 
 [[projects]]
   branch = "master"
@@ -232,14 +256,6 @@
   version = "v1.4.7"
 
 [[projects]]
-  digest = "1:e2f64cca6e235f32cd4c2f9be9ae0cda1f8608fc6fdb68936e8d10e4e0bb074d"
-  name = "gopkg.in/go-playground/validator.v9"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "e69e9a28bb62b977fdc58d051f1bb477b7cbe486"
-  version = "v9.21.0"
-
-[[projects]]
   digest = "1:3c839a777de0e6da035c9de900b60cbec463b0a89351192c1ea083eaf9e0fce0"
   name = "gopkg.in/tomb.v1"
   packages = ["."]
@@ -258,13 +274,14 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/IBM/go-sdk-core/core",
     "github.com/cloudfoundry-community/go-cfenv",
     "github.com/go-openapi/strfmt",
+    "github.com/gorilla/websocket",
     "github.com/joho/godotenv",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/stretchr/testify/assert",
-    "gopkg.in/go-playground/validator.v9",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
