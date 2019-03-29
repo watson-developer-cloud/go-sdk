@@ -3,7 +3,7 @@ package speechtotextv1
 import (
 	"encoding/base64"
 	"fmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 	"io"
 
 	"net/http"
@@ -67,7 +67,6 @@ type RecognizeCallbackWrapper interface {
 
 // RecognizeUsingWebsockets: Recognize audio over websocket connection
 func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeWSOptions *RecognizeUsingWebsocketOptions, callback RecognizeCallbackWrapper) {
-	var token string
 	headers := http.Header{}
 
 	if err := core.ValidateNotNil(recognizeWSOptions, "recognizeOptions cannot be nil"); err != nil {
@@ -78,7 +77,10 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeWSOptions 
 	}
 
 	if speechToText.Service.Options.IAMApiKey != "" || speechToText.Service.TokenManager != nil || speechToText.Service.Options.IAMAccessToken != "" {
-		token = speechToText.Service.TokenManager.GetToken()
+		token, err := speechToText.Service.TokenManager.GetToken()
+		if err != nil {
+			panic(err)
+		}
 		headers.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	} else {
 		auth := []byte(speechToText.Service.Options.Username + ":" + speechToText.Service.Options.Password)

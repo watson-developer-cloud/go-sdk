@@ -20,10 +20,10 @@ package comparecomplyv1_test
 
 import (
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/comparecomplyv1"
-	"github.com/watson-developer-cloud/go-sdk/core"
 	"os"
 	"testing"
 )
@@ -82,8 +82,8 @@ func TestClassifyElements(t *testing.T) {
 
 	response, responseErr := service.ClassifyElements(
 		&comparecomplyv1.ClassifyElementsOptions{
-			File:     testPDF,
-			Filename: core.StringPtr("contract_A.pdf"),
+			File:            testPDF,
+			FileContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -103,8 +103,8 @@ func TestExtractTables(t *testing.T) {
 
 	response, responseErr := service.ExtractTables(
 		&comparecomplyv1.ExtractTablesOptions{
-			File:     file,
-			Filename: core.StringPtr("sample-tables.pdf"),
+			File:            file,
+			FileContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -129,8 +129,10 @@ func TestCompareDocuments(t *testing.T) {
 
 	response, responseErr := service.CompareDocuments(
 		&comparecomplyv1.CompareDocumentsOptions{
-			File1: file1,
-			File2: file2,
+			File1:            file1,
+			File2:            file2,
+			File1ContentType: core.StringPtr("application/pdf"),
+			File2ContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)

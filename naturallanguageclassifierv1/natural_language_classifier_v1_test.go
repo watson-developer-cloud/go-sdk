@@ -2,103 +2,18 @@ package naturallanguageclassifierv1_test
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
 
-	"github.com/cloudfoundry-community/go-cfenv"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/naturallanguageclassifierv1"
 )
 
 var _ = Describe("NaturalLanguageClassifierV1", func() {
-	Describe("Get credentials from VCAP", func() {
-		username := "hyphenated-user"
-		password := "hyphenated-pass"
-		VCAPservices := cfenv.Services{
-			"conversation": {
-				{
-					Name: "natural_language_classifier",
-					Tags: []string{},
-					Credentials: map[string]interface{}{
-						"url":      "https://gateway.watsonplatform.net/natural-language-classifier/api",
-						"username": username,
-						"password": password,
-					},
-				},
-			},
-		}
-		VCAPbytes, _ := json.Marshal(cfenv.App{})
-		os.Setenv("VCAP_APPLICATION", string(VCAPbytes))
-		VCAPbytes, _ = json.Marshal(VCAPservices)
-		os.Setenv("VCAP_SERVICES", string(VCAPbytes))
-		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-		Context("Successfully - Create NaturalLanguageClassifierV1 with VCAP credentials", func() {
-			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-				defer GinkgoRecover()
-
-				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-			}))
-			It("Succeed to create NaturalLanguageClassifierV1", func() {
-				defer testServer.Close()
-
-				testService, testServiceErr := naturallanguageclassifierv1.
-					NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-						URL: testServer.URL,
-					})
-				Expect(testServiceErr).To(BeNil())
-				Expect(testService).ToNot(BeNil())
-
-				testService.ListClassifiers(testService.NewListClassifiersOptions())
-			})
-		})
-	})
-	Describe("Classify(classifyOptions *ClassifyOptions)", func() {
-		ClassifyPath := "/v1/classifiers/{classifier_id}/classify"
-		ClassifierID := "exampleString"
-		Text := "exampleString"
-		username := "user1"
-		password := "pass1"
-		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-		ClassifyPath = strings.Replace(ClassifyPath, "{classifier_id}", ClassifierID, 1)
-		Context("Successfully - Classify a phrase", func() {
-			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-				defer GinkgoRecover()
-
-				Expect(req.URL.Path).To(Equal(ClassifyPath))
-				Expect(req.Method).To(Equal("POST"))
-				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"classifier_id":"xxx"}`)
-			}))
-			It("Succeed to call Classify", func() {
-				defer testServer.Close()
-
-				testService, testServiceErr := naturallanguageclassifierv1.
-					NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-						URL:      testServer.URL,
-						Username: username,
-						Password: password,
-					})
-				Expect(testServiceErr).To(BeNil())
-				Expect(testService).ToNot(BeNil())
-
-				ClassifyOptions := testService.NewClassifyOptions(ClassifierID, Text)
-				returnValue, returnValueErr := testService.Classify(ClassifyOptions)
-				Expect(returnValueErr).To(BeNil())
-				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetClassifyResult(returnValue)
-				Expect(result).ToNot(BeNil())
-			})
-		})
-	})
 	Describe("ClassifyCollection(classifyCollectionOptions *ClassifyCollectionOptions)", func() {
 		ClassifyCollectionPath := "/v1/classifiers/{classifier_id}/classify_collection"
 		ClassifierID := "exampleString"

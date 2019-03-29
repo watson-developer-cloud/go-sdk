@@ -19,9 +19,9 @@ package toneanalyzerv3_test
  */
 
 import (
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
 	"os"
 	"testing"

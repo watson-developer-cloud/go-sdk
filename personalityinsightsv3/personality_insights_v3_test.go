@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	core "github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	core "github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 )
 

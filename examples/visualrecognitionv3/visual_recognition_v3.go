@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
 )
 
@@ -13,7 +13,7 @@ func main() {
 		NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 			URL:       "YOUR SERVICE URL",
 			Version:   "2018-03-19",
-			IAMApiKey: "YOUR SERVICE IAM API KEY",
+			IAMApiKey: "YOUR API KEY",
 		})
 
 	// Check successful instantiation
@@ -69,8 +69,7 @@ func main() {
 
 	createClassifierOptions := service.
 		NewCreateClassifierOptions("Cars vs Trucks").
-		AddPositiveExamples("cars", carsFile).
-		AddPositiveExamplesFilename("cars", "cars.zip")
+		AddPositiveExamples("cars", carsFile)
 	createClassifierOptions.NegativeExamples = trucksFile
 
 	response, responseErr = service.CreateClassifier(createClassifierOptions)

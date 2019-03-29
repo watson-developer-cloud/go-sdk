@@ -19,10 +19,10 @@ package assistantv2_test
  */
 
 import (
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/assistantv2"
-	"github.com/watson-developer-cloud/go-sdk/core"
 	"os"
 	"testing"
 )

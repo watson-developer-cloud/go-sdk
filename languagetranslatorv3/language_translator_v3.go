@@ -19,7 +19,8 @@ package languagetranslatorv3
 
 import (
 	"fmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"os"
 )
 
@@ -31,7 +32,7 @@ import (
 // Version: V3
 // See: http://www.ibm.com/watson/developercloud/language-translator.html
 type LanguageTranslatorV3 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // LanguageTranslatorV3Options : Service options
@@ -60,7 +61,7 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (*LanguageTra
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "language_translator", "Language Translator")
+	service, serviceErr := core.NewBaseService(serviceOptions, "language_translator", "Language Translator")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -87,7 +88,12 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 	for headerName, headerValue := range translateOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=Translate")
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "Translate")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
@@ -147,7 +153,12 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 	for headerName, headerValue := range identifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=Identify")
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "Identify")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "text/plain")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
@@ -192,7 +203,12 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listId
 	for headerName, headerValue := range listIdentifiableLanguagesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=ListIdentifiableLanguages")
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "ListIdentifiableLanguages")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
@@ -247,7 +263,12 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 	for headerName, headerValue := range createModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=CreateModel")
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "CreateModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("base_model_id", fmt.Sprint(*createModelOptions.BaseModelID))
@@ -257,11 +278,11 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	if createModelOptions.ForcedGlossary != nil {
-		builder.AddFormData("forced_glossary", core.StringNilMapper(createModelOptions.ForcedGlossaryFilename),
+		builder.AddFormData("forced_glossary", "filename",
 			"application/octet-stream", createModelOptions.ForcedGlossary)
 	}
 	if createModelOptions.ParallelCorpus != nil {
-		builder.AddFormData("parallel_corpus", core.StringNilMapper(createModelOptions.ParallelCorpusFilename),
+		builder.AddFormData("parallel_corpus", "filename",
 			"application/octet-stream", createModelOptions.ParallelCorpus)
 	}
 
@@ -302,7 +323,12 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 	for headerName, headerValue := range deleteModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=DeleteModel")
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "DeleteModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
@@ -344,7 +370,12 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetMod
 	for headerName, headerValue := range getModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=GetModel")
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "GetModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
@@ -382,7 +413,12 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=language_translator;service_version=V3;operation_id=ListModels")
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "ListModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listModelsOptions.Source != nil {
@@ -422,25 +458,19 @@ type CreateModelOptions struct {
 	// parallel corpus customization, can be further customized with a forced glossary.
 	BaseModelID *string `json:"base_model_id" validate:"required"`
 
-	// An optional model name that you can use to identify the model. Valid characters are letters, numbers, dashes,
-	// underscores, spaces and apostrophes. The maximum length is 32 characters.
-	Name *string `json:"name,omitempty"`
-
 	// A TMX file with your customizations. The customizations in the file completely overwrite the domain translaton data,
 	// including high frequency or high confidence phrase translations. You can upload only one glossary with a file size
 	// less than 10 MB per call. A forced glossary should contain single words or short phrases.
 	ForcedGlossary *os.File `json:"forced_glossary,omitempty"`
-
-	// The filename for forcedGlossary.
-	ForcedGlossaryFilename *string `json:"forced_glossary_filename,omitempty"`
 
 	// A TMX file with parallel sentences for source and target language. You can upload multiple parallel_corpus files in
 	// one request. All uploaded parallel_corpus files combined, your parallel corpus must contain at least 5,000 parallel
 	// sentences to train successfully.
 	ParallelCorpus *os.File `json:"parallel_corpus,omitempty"`
 
-	// The filename for parallelCorpus.
-	ParallelCorpusFilename *string `json:"parallel_corpus_filename,omitempty"`
+	// An optional model name that you can use to identify the model. Valid characters are letters, numbers, dashes,
+	// underscores, spaces and apostrophes. The maximum length is 32 characters.
+	Name *string `json:"name,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -459,21 +489,9 @@ func (options *CreateModelOptions) SetBaseModelID(baseModelID string) *CreateMod
 	return options
 }
 
-// SetName : Allow user to set Name
-func (options *CreateModelOptions) SetName(name string) *CreateModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
-}
-
 // SetForcedGlossary : Allow user to set ForcedGlossary
 func (options *CreateModelOptions) SetForcedGlossary(forcedGlossary *os.File) *CreateModelOptions {
 	options.ForcedGlossary = forcedGlossary
-	return options
-}
-
-// SetForcedGlossaryFilename : Allow user to set ForcedGlossaryFilename
-func (options *CreateModelOptions) SetForcedGlossaryFilename(forcedGlossaryFilename string) *CreateModelOptions {
-	options.ForcedGlossaryFilename = core.StringPtr(forcedGlossaryFilename)
 	return options
 }
 
@@ -483,9 +501,9 @@ func (options *CreateModelOptions) SetParallelCorpus(parallelCorpus *os.File) *C
 	return options
 }
 
-// SetParallelCorpusFilename : Allow user to set ParallelCorpusFilename
-func (options *CreateModelOptions) SetParallelCorpusFilename(parallelCorpusFilename string) *CreateModelOptions {
-	options.ParallelCorpusFilename = core.StringPtr(parallelCorpusFilename)
+// SetName : Allow user to set Name
+func (options *CreateModelOptions) SetName(name string) *CreateModelOptions {
+	options.Name = core.StringPtr(name)
 	return options
 }
 

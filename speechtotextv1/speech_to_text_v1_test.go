@@ -2,61 +2,18 @@ package speechtotextv1_test
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
 
-	"github.com/cloudfoundry-community/go-cfenv"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
 )
 
 var _ = Describe("SpeechToTextV1", func() {
-	Describe("Get credentials from VCAP", func() {
-		username := "hyphenated-user"
-		password := "hyphenated-pass"
-		VCAPservices := cfenv.Services{
-			"conversation": {
-				{
-					Name: "speech_to_text",
-					Tags: []string{},
-					Credentials: map[string]interface{}{
-						"url":      "https://stream.watsonplatform.net/speech-to-text/api",
-						"username": username,
-						"password": password,
-					},
-				},
-			},
-		}
-		VCAPbytes, _ := json.Marshal(cfenv.App{})
-		os.Setenv("VCAP_APPLICATION", string(VCAPbytes))
-		VCAPbytes, _ = json.Marshal(VCAPservices)
-		os.Setenv("VCAP_SERVICES", string(VCAPbytes))
-		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-		Context("Successfully - Create SpeechToTextV1 with VCAP credentials", func() {
-			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-				defer GinkgoRecover()
-
-				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-			}))
-			It("Succeed to create SpeechToTextV1", func() {
-				defer testServer.Close()
-
-				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL: testServer.URL,
-				})
-				Expect(testServiceErr).To(BeNil())
-				Expect(testService).ToNot(BeNil())
-
-				testService.ListAcousticModels(testService.NewListAcousticModelsOptions())
-			})
-		})
-	})
 	Describe("GetModel(getModelOptions *GetModelOptions)", func() {
 		getModelPath := "/v1/models/{model_id}"
 		modelID := "exampleString"

@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
 )
 
@@ -12,10 +12,9 @@ func main() {
 	// Instantiate the Watson Tone Analyzer service
 	service, serviceErr := toneanalyzerv3.
 		NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-			URL:      "YOUR SERVICE URL",
-			Version:  "2017-09-21",
-			Username: "YOUR SERVICE USERNAME",
-			Password: "YOUR SERVICE PASSWORD",
+			URL:       "YOUR SERVICE URL",
+			Version:   "2017-09-21",
+			IAMApiKey: "YOUR API KEY",
 		})
 
 	// Check successful instantiation

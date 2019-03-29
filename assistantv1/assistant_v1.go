@@ -19,8 +19,9 @@ package assistantv1
 
 import (
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
@@ -29,7 +30,7 @@ import (
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/assistant.html
 type AssistantV1 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // AssistantV1Options : Service options
@@ -58,7 +59,7 @@ func NewAssistantV1(options *AssistantV1Options) (*AssistantV1, error) {
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "conversation", "Assistant")
+	service, serviceErr := core.NewBaseService(serviceOptions, "conversation", "Assistant")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -87,7 +88,12 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	for headerName, headerValue := range messageOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=Message")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "Message")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -100,17 +106,17 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	if messageOptions.Input != nil {
 		body["input"] = messageOptions.Input
 	}
+	if messageOptions.Intents != nil {
+		body["intents"] = messageOptions.Intents
+	}
+	if messageOptions.Entities != nil {
+		body["entities"] = messageOptions.Entities
+	}
 	if messageOptions.AlternateIntents != nil {
 		body["alternate_intents"] = messageOptions.AlternateIntents
 	}
 	if messageOptions.Context != nil {
 		body["context"] = messageOptions.Context
-	}
-	if messageOptions.Entities != nil {
-		body["entities"] = messageOptions.Entities
-	}
-	if messageOptions.Intents != nil {
-		body["intents"] = messageOptions.Intents
 	}
 	if messageOptions.Output != nil {
 		body["output"] = messageOptions.Output
@@ -157,7 +163,12 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	for headerName, headerValue := range createWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateWorkspace")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateWorkspace")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -172,6 +183,15 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	if createWorkspaceOptions.Language != nil {
 		body["language"] = createWorkspaceOptions.Language
 	}
+	if createWorkspaceOptions.Metadata != nil {
+		body["metadata"] = createWorkspaceOptions.Metadata
+	}
+	if createWorkspaceOptions.LearningOptOut != nil {
+		body["learning_opt_out"] = createWorkspaceOptions.LearningOptOut
+	}
+	if createWorkspaceOptions.SystemSettings != nil {
+		body["system_settings"] = createWorkspaceOptions.SystemSettings
+	}
 	if createWorkspaceOptions.Intents != nil {
 		body["intents"] = createWorkspaceOptions.Intents
 	}
@@ -183,15 +203,6 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	}
 	if createWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = createWorkspaceOptions.Counterexamples
-	}
-	if createWorkspaceOptions.Metadata != nil {
-		body["metadata"] = createWorkspaceOptions.Metadata
-	}
-	if createWorkspaceOptions.LearningOptOut != nil {
-		body["learning_opt_out"] = createWorkspaceOptions.LearningOptOut
-	}
-	if createWorkspaceOptions.SystemSettings != nil {
-		body["system_settings"] = createWorkspaceOptions.SystemSettings
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -237,7 +248,12 @@ func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWork
 	for headerName, headerValue := range deleteWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteWorkspace")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteWorkspace")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -272,7 +288,12 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 	for headerName, headerValue := range getWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetWorkspace")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetWorkspace")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getWorkspaceOptions.Export != nil {
@@ -291,13 +312,13 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 		return nil, err
 	}
 
-	response, err := assistant.Service.Request(request, new(WorkspaceExport))
+	response, err := assistant.Service.Request(request, new(Workspace))
 	return response, err
 }
 
 // GetGetWorkspaceResult : Retrieve result of GetWorkspace operation
-func (assistant *AssistantV1) GetGetWorkspaceResult(response *core.DetailedResponse) *WorkspaceExport {
-	result, ok := response.Result.(*WorkspaceExport)
+func (assistant *AssistantV1) GetGetWorkspaceResult(response *core.DetailedResponse) *Workspace {
+	result, ok := response.Result.(*Workspace)
 	if ok {
 		return result
 	}
@@ -322,7 +343,12 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 	for headerName, headerValue := range listWorkspacesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListWorkspaces")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListWorkspaces")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listWorkspacesOptions.PageLimit != nil {
@@ -382,7 +408,12 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	for headerName, headerValue := range updateWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateWorkspace")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "UpdateWorkspace")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -401,6 +432,15 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	if updateWorkspaceOptions.Language != nil {
 		body["language"] = updateWorkspaceOptions.Language
 	}
+	if updateWorkspaceOptions.Metadata != nil {
+		body["metadata"] = updateWorkspaceOptions.Metadata
+	}
+	if updateWorkspaceOptions.LearningOptOut != nil {
+		body["learning_opt_out"] = updateWorkspaceOptions.LearningOptOut
+	}
+	if updateWorkspaceOptions.SystemSettings != nil {
+		body["system_settings"] = updateWorkspaceOptions.SystemSettings
+	}
 	if updateWorkspaceOptions.Intents != nil {
 		body["intents"] = updateWorkspaceOptions.Intents
 	}
@@ -412,15 +452,6 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	}
 	if updateWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = updateWorkspaceOptions.Counterexamples
-	}
-	if updateWorkspaceOptions.Metadata != nil {
-		body["metadata"] = updateWorkspaceOptions.Metadata
-	}
-	if updateWorkspaceOptions.LearningOptOut != nil {
-		body["learning_opt_out"] = updateWorkspaceOptions.LearningOptOut
-	}
-	if updateWorkspaceOptions.SystemSettings != nil {
-		body["system_settings"] = updateWorkspaceOptions.SystemSettings
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -466,7 +497,12 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 	for headerName, headerValue := range createIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateIntent")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateIntent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -525,7 +561,12 @@ func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOpti
 	for headerName, headerValue := range deleteIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteIntent")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteIntent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -560,7 +601,12 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*co
 	for headerName, headerValue := range getIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetIntent")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetIntent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getIntentOptions.Export != nil {
@@ -576,13 +622,13 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*co
 		return nil, err
 	}
 
-	response, err := assistant.Service.Request(request, new(IntentExport))
+	response, err := assistant.Service.Request(request, new(Intent))
 	return response, err
 }
 
 // GetGetIntentResult : Retrieve result of GetIntent operation
-func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse) *IntentExport {
-	result, ok := response.Result.(*IntentExport)
+func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse) *Intent {
+	result, ok := response.Result.(*Intent)
 	if ok {
 		return result
 	}
@@ -611,7 +657,12 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 	for headerName, headerValue := range listIntentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListIntents")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListIntents")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listIntentsOptions.Export != nil {
@@ -674,7 +725,12 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	for headerName, headerValue := range updateIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateIntent")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "UpdateIntent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -683,11 +739,11 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	if updateIntentOptions.NewIntent != nil {
 		body["intent"] = updateIntentOptions.NewIntent
 	}
-	if updateIntentOptions.NewExamples != nil {
-		body["examples"] = updateIntentOptions.NewExamples
-	}
 	if updateIntentOptions.NewDescription != nil {
 		body["description"] = updateIntentOptions.NewDescription
+	}
+	if updateIntentOptions.NewExamples != nil {
+		body["examples"] = updateIntentOptions.NewExamples
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -733,7 +789,12 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 	for headerName, headerValue := range createExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateExample")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -789,7 +850,12 @@ func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleO
 	for headerName, headerValue := range deleteExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteExample")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -823,7 +889,12 @@ func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (
 	for headerName, headerValue := range getExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetExample")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getExampleOptions.IncludeAudit != nil {
@@ -870,7 +941,12 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 	for headerName, headerValue := range listExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListExamples")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListExamples")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listExamplesOptions.PageLimit != nil {
@@ -929,7 +1005,12 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 	for headerName, headerValue := range updateExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateExample")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "UpdateExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -985,7 +1066,12 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 	for headerName, headerValue := range createCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateCounterexample")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateCounterexample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1038,7 +1124,12 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 	for headerName, headerValue := range deleteCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteCounterexample")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteCounterexample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1072,7 +1163,12 @@ func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCou
 	for headerName, headerValue := range getCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetCounterexample")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetCounterexample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getCounterexampleOptions.IncludeAudit != nil {
@@ -1119,7 +1215,12 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 	for headerName, headerValue := range listCounterexamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListCounterexamples")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListCounterexamples")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listCounterexamplesOptions.PageLimit != nil {
@@ -1178,7 +1279,12 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 	for headerName, headerValue := range updateCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateCounterexample")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "UpdateCounterexample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1231,7 +1337,12 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	for headerName, headerValue := range createEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateEntity")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateEntity")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1246,11 +1357,11 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	if createEntityOptions.Metadata != nil {
 		body["metadata"] = createEntityOptions.Metadata
 	}
-	if createEntityOptions.Values != nil {
-		body["values"] = createEntityOptions.Values
-	}
 	if createEntityOptions.FuzzyMatch != nil {
 		body["fuzzy_match"] = createEntityOptions.FuzzyMatch
+	}
+	if createEntityOptions.Values != nil {
+		body["values"] = createEntityOptions.Values
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -1296,7 +1407,12 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 	for headerName, headerValue := range deleteEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteEntity")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteEntity")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1331,7 +1447,12 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*co
 	for headerName, headerValue := range getEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetEntity")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetEntity")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getEntityOptions.Export != nil {
@@ -1347,13 +1468,13 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*co
 		return nil, err
 	}
 
-	response, err := assistant.Service.Request(request, new(EntityExport))
+	response, err := assistant.Service.Request(request, new(Entity))
 	return response, err
 }
 
 // GetGetEntityResult : Retrieve result of GetEntity operation
-func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse) *EntityExport {
-	result, ok := response.Result.(*EntityExport)
+func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse) *Entity {
+	result, ok := response.Result.(*Entity)
 	if ok {
 		return result
 	}
@@ -1382,7 +1503,12 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 	for headerName, headerValue := range listEntitiesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListEntities")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListEntities")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listEntitiesOptions.Export != nil {
@@ -1445,26 +1571,31 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 	for headerName, headerValue := range updateEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateEntity")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "UpdateEntity")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
-	if updateEntityOptions.NewFuzzyMatch != nil {
-		body["fuzzy_match"] = updateEntityOptions.NewFuzzyMatch
-	}
 	if updateEntityOptions.NewEntity != nil {
 		body["entity"] = updateEntityOptions.NewEntity
+	}
+	if updateEntityOptions.NewDescription != nil {
+		body["description"] = updateEntityOptions.NewDescription
 	}
 	if updateEntityOptions.NewMetadata != nil {
 		body["metadata"] = updateEntityOptions.NewMetadata
 	}
+	if updateEntityOptions.NewFuzzyMatch != nil {
+		body["fuzzy_match"] = updateEntityOptions.NewFuzzyMatch
+	}
 	if updateEntityOptions.NewValues != nil {
 		body["values"] = updateEntityOptions.NewValues
-	}
-	if updateEntityOptions.NewDescription != nil {
-		body["description"] = updateEntityOptions.NewDescription
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -1511,7 +1642,12 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 	for headerName, headerValue := range listMentionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListMentions")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListMentions")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listMentionsOptions.Export != nil {
@@ -1540,7 +1676,7 @@ func (assistant *AssistantV1) GetListMentionsResult(response *core.DetailedRespo
 	return nil
 }
 
-// CreateValue : Add entity value
+// CreateValue : Create entity value
 // Create a new value for an entity.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
@@ -1561,7 +1697,12 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	for headerName, headerValue := range createValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateValue")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateValue")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1573,14 +1714,14 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	if createValueOptions.Metadata != nil {
 		body["metadata"] = createValueOptions.Metadata
 	}
+	if createValueOptions.ValueType != nil {
+		body["type"] = createValueOptions.ValueType
+	}
 	if createValueOptions.Synonyms != nil {
 		body["synonyms"] = createValueOptions.Synonyms
 	}
 	if createValueOptions.Patterns != nil {
 		body["patterns"] = createValueOptions.Patterns
-	}
-	if createValueOptions.ValueType != nil {
-		body["type"] = createValueOptions.ValueType
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -1626,7 +1767,12 @@ func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions
 	for headerName, headerValue := range deleteValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteValue")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteValue")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1660,7 +1806,12 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.
 	for headerName, headerValue := range getValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetValue")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetValue")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getValueOptions.Export != nil {
@@ -1676,13 +1827,13 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.
 		return nil, err
 	}
 
-	response, err := assistant.Service.Request(request, new(ValueExport))
+	response, err := assistant.Service.Request(request, new(Value))
 	return response, err
 }
 
 // GetGetValueResult : Retrieve result of GetValue operation
-func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse) *ValueExport {
-	result, ok := response.Result.(*ValueExport)
+func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse) *Value {
+	result, ok := response.Result.(*Value)
 	if ok {
 		return result
 	}
@@ -1710,7 +1861,12 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 	for headerName, headerValue := range listValuesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListValues")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListValues")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listValuesOptions.Export != nil {
@@ -1773,26 +1929,31 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	for headerName, headerValue := range updateValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateValue")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "UpdateValue")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
-	if updateValueOptions.NewSynonyms != nil {
-		body["synonyms"] = updateValueOptions.NewSynonyms
-	}
-	if updateValueOptions.ValueType != nil {
-		body["type"] = updateValueOptions.ValueType
+	if updateValueOptions.NewValue != nil {
+		body["value"] = updateValueOptions.NewValue
 	}
 	if updateValueOptions.NewMetadata != nil {
 		body["metadata"] = updateValueOptions.NewMetadata
 	}
+	if updateValueOptions.ValueType != nil {
+		body["type"] = updateValueOptions.ValueType
+	}
+	if updateValueOptions.NewSynonyms != nil {
+		body["synonyms"] = updateValueOptions.NewSynonyms
+	}
 	if updateValueOptions.NewPatterns != nil {
 		body["patterns"] = updateValueOptions.NewPatterns
-	}
-	if updateValueOptions.NewValue != nil {
-		body["value"] = updateValueOptions.NewValue
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -1817,7 +1978,7 @@ func (assistant *AssistantV1) GetUpdateValueResult(response *core.DetailedRespon
 	return nil
 }
 
-// CreateSynonym : Add entity value synonym
+// CreateSynonym : Create entity value synonym
 // Add a new synonym to an entity value.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
@@ -1838,7 +1999,12 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 	for headerName, headerValue := range createSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateSynonym")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateSynonym")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -1891,7 +2057,12 @@ func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymO
 	for headerName, headerValue := range deleteSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteSynonym")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteSynonym")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -1925,7 +2096,12 @@ func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (
 	for headerName, headerValue := range getSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetSynonym")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetSynonym")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getSynonymOptions.IncludeAudit != nil {
@@ -1972,7 +2148,12 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 	for headerName, headerValue := range listSynonymsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListSynonyms")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListSynonyms")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listSynonymsOptions.PageLimit != nil {
@@ -2031,7 +2212,12 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 	for headerName, headerValue := range updateSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateSynonym")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "UpdateSynonym")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -2084,7 +2270,12 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	for headerName, headerValue := range createDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=CreateDialogNode")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateDialogNode")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -2117,9 +2308,6 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	if createDialogNodeOptions.NextStep != nil {
 		body["next_step"] = createDialogNodeOptions.NextStep
 	}
-	if createDialogNodeOptions.Actions != nil {
-		body["actions"] = createDialogNodeOptions.Actions
-	}
 	if createDialogNodeOptions.Title != nil {
 		body["title"] = createDialogNodeOptions.Title
 	}
@@ -2131,6 +2319,9 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	}
 	if createDialogNodeOptions.Variable != nil {
 		body["variable"] = createDialogNodeOptions.Variable
+	}
+	if createDialogNodeOptions.Actions != nil {
+		body["actions"] = createDialogNodeOptions.Actions
 	}
 	if createDialogNodeOptions.DigressIn != nil {
 		body["digress_in"] = createDialogNodeOptions.DigressIn
@@ -2188,7 +2379,12 @@ func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDi
 	for headerName, headerValue := range deleteDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteDialogNode")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteDialogNode")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -2222,7 +2418,12 @@ func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeO
 	for headerName, headerValue := range getDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=GetDialogNode")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetDialogNode")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if getDialogNodeOptions.IncludeAudit != nil {
@@ -2269,7 +2470,12 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 	for headerName, headerValue := range listDialogNodesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListDialogNodes")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListDialogNodes")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listDialogNodesOptions.PageLimit != nil {
@@ -2328,65 +2534,70 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	for headerName, headerValue := range updateDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=UpdateDialogNode")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "UpdateDialogNode")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	body := make(map[string]interface{})
-	if updateDialogNodeOptions.NodeType != nil {
-		body["type"] = updateDialogNodeOptions.NodeType
-	}
-	if updateDialogNodeOptions.NewActions != nil {
-		body["actions"] = updateDialogNodeOptions.NewActions
-	}
-	if updateDialogNodeOptions.NewConditions != nil {
-		body["conditions"] = updateDialogNodeOptions.NewConditions
-	}
-	if updateDialogNodeOptions.NewContext != nil {
-		body["context"] = updateDialogNodeOptions.NewContext
-	}
-	if updateDialogNodeOptions.NewPreviousSibling != nil {
-		body["previous_sibling"] = updateDialogNodeOptions.NewPreviousSibling
-	}
-	if updateDialogNodeOptions.NewVariable != nil {
-		body["variable"] = updateDialogNodeOptions.NewVariable
-	}
-	if updateDialogNodeOptions.NewUserLabel != nil {
-		body["user_label"] = updateDialogNodeOptions.NewUserLabel
-	}
-	if updateDialogNodeOptions.NewMetadata != nil {
-		body["metadata"] = updateDialogNodeOptions.NewMetadata
-	}
-	if updateDialogNodeOptions.NewTitle != nil {
-		body["title"] = updateDialogNodeOptions.NewTitle
+	if updateDialogNodeOptions.NewDialogNode != nil {
+		body["dialog_node"] = updateDialogNodeOptions.NewDialogNode
 	}
 	if updateDialogNodeOptions.NewDescription != nil {
 		body["description"] = updateDialogNodeOptions.NewDescription
 	}
-	if updateDialogNodeOptions.NewDigressOut != nil {
-		body["digress_out"] = updateDialogNodeOptions.NewDigressOut
-	}
-	if updateDialogNodeOptions.NewEventName != nil {
-		body["event_name"] = updateDialogNodeOptions.NewEventName
-	}
-	if updateDialogNodeOptions.NewDigressOutSlots != nil {
-		body["digress_out_slots"] = updateDialogNodeOptions.NewDigressOutSlots
-	}
-	if updateDialogNodeOptions.NewNextStep != nil {
-		body["next_step"] = updateDialogNodeOptions.NewNextStep
-	}
-	if updateDialogNodeOptions.NewDigressIn != nil {
-		body["digress_in"] = updateDialogNodeOptions.NewDigressIn
-	}
-	if updateDialogNodeOptions.NewOutput != nil {
-		body["output"] = updateDialogNodeOptions.NewOutput
+	if updateDialogNodeOptions.NewConditions != nil {
+		body["conditions"] = updateDialogNodeOptions.NewConditions
 	}
 	if updateDialogNodeOptions.NewParent != nil {
 		body["parent"] = updateDialogNodeOptions.NewParent
 	}
-	if updateDialogNodeOptions.NewDialogNode != nil {
-		body["dialog_node"] = updateDialogNodeOptions.NewDialogNode
+	if updateDialogNodeOptions.NewPreviousSibling != nil {
+		body["previous_sibling"] = updateDialogNodeOptions.NewPreviousSibling
+	}
+	if updateDialogNodeOptions.NewOutput != nil {
+		body["output"] = updateDialogNodeOptions.NewOutput
+	}
+	if updateDialogNodeOptions.NewContext != nil {
+		body["context"] = updateDialogNodeOptions.NewContext
+	}
+	if updateDialogNodeOptions.NewMetadata != nil {
+		body["metadata"] = updateDialogNodeOptions.NewMetadata
+	}
+	if updateDialogNodeOptions.NewNextStep != nil {
+		body["next_step"] = updateDialogNodeOptions.NewNextStep
+	}
+	if updateDialogNodeOptions.NewTitle != nil {
+		body["title"] = updateDialogNodeOptions.NewTitle
+	}
+	if updateDialogNodeOptions.NodeType != nil {
+		body["type"] = updateDialogNodeOptions.NodeType
+	}
+	if updateDialogNodeOptions.NewEventName != nil {
+		body["event_name"] = updateDialogNodeOptions.NewEventName
+	}
+	if updateDialogNodeOptions.NewVariable != nil {
+		body["variable"] = updateDialogNodeOptions.NewVariable
+	}
+	if updateDialogNodeOptions.NewActions != nil {
+		body["actions"] = updateDialogNodeOptions.NewActions
+	}
+	if updateDialogNodeOptions.NewDigressIn != nil {
+		body["digress_in"] = updateDialogNodeOptions.NewDigressIn
+	}
+	if updateDialogNodeOptions.NewDigressOut != nil {
+		body["digress_out"] = updateDialogNodeOptions.NewDigressOut
+	}
+	if updateDialogNodeOptions.NewDigressOutSlots != nil {
+		body["digress_out_slots"] = updateDialogNodeOptions.NewDigressOutSlots
+	}
+	if updateDialogNodeOptions.NewUserLabel != nil {
+		body["user_label"] = updateDialogNodeOptions.NewUserLabel
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -2433,7 +2644,12 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 	for headerName, headerValue := range listAllLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListAllLogs")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListAllLogs")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("filter", fmt.Sprint(*listAllLogsOptions.Filter))
@@ -2488,7 +2704,12 @@ func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.
 	for headerName, headerValue := range listLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=ListLogs")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListLogs")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listLogsOptions.Sort != nil {
@@ -2547,7 +2768,12 @@ func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V1;operation_id=DeleteUserData")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteUserData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
@@ -2562,7 +2788,7 @@ func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	return response, err
 }
 
-// CaptureGroup : CaptureGroup struct
+// CaptureGroup : A recognized capture group for a pattern-based entity.
 type CaptureGroup struct {
 
 	// A recognized capture group for the entity.
@@ -2608,13 +2834,16 @@ func (this *Context) GetMetadata() *MessageContextMetadata {
 // Counterexample : Counterexample struct
 type Counterexample struct {
 
-	// The text of the counterexample.
+	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters
+	// - It cannot consist of only whitespace characters
+	// - It must be no longer than 1024 characters.
 	Text *string `json:"text" validate:"required"`
 
-	// The timestamp for creation of the counterexample.
+	// The timestamp for creation of the object.
 	Created *strfmt.DateTime `json:"created,omitempty"`
 
-	// The timestamp for the last update to the counterexample.
+	// The timestamp for the most recent update to the object.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
@@ -2626,16 +2855,6 @@ type CounterexampleCollection struct {
 
 	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
-}
-
-// CreateCounterexample : CreateCounterexample struct
-type CreateCounterexample struct {
-
-	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
-	// - It cannot contain carriage return, newline, or tab characters
-	// - It cannot consist of only whitespace characters
-	// - It must be no longer than 1024 characters.
-	Text *string `json:"text" validate:"required"`
 }
 
 // CreateCounterexampleOptions : The createCounterexample options.
@@ -2680,121 +2899,6 @@ func (options *CreateCounterexampleOptions) SetHeaders(param map[string]string) 
 	return options
 }
 
-// CreateDialogNode : CreateDialogNode struct
-type CreateDialogNode struct {
-
-	// The dialog node ID. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 1024 characters.
-	DialogNode *string `json:"dialog_node" validate:"required"`
-
-	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
-	// must be no longer than 128 characters.
-	Description *string `json:"description,omitempty"`
-
-	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
-	// characters, and it must be no longer than 2048 characters.
-	Conditions *string `json:"conditions,omitempty"`
-
-	// The ID of the parent dialog node.
-	Parent *string `json:"parent,omitempty"`
-
-	// The ID of the previous dialog node.
-	PreviousSibling *string `json:"previous_sibling,omitempty"`
-
-	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
-	Output *DialogNodeOutput `json:"output,omitempty"`
-
-	// The context for the dialog node.
-	Context interface{} `json:"context,omitempty"`
-
-	// The metadata for the dialog node.
-	Metadata interface{} `json:"metadata,omitempty"`
-
-	// The next step to execute following this dialog node.
-	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
-
-	// An array of objects describing any actions to be invoked by the dialog node.
-	Actions []DialogNodeAction `json:"actions,omitempty"`
-
-	// The alias used to identify the dialog node. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 64 characters.
-	Title *string `json:"title,omitempty"`
-
-	// How the dialog node is processed.
-	NodeType *string `json:"type,omitempty"`
-
-	// How an `event_handler` node is processed.
-	EventName *string `json:"event_name,omitempty"`
-
-	// The location in the dialog context where output is stored.
-	Variable *string `json:"variable,omitempty"`
-
-	// Whether this top-level dialog node can be digressed into.
-	DigressIn *string `json:"digress_in,omitempty"`
-
-	// Whether this dialog node can be returned to after a digression.
-	DigressOut *string `json:"digress_out,omitempty"`
-
-	// Whether the user can digress to top-level nodes while filling out slots.
-	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
-
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
-	// than 512 characters.
-	UserLabel *string `json:"user_label,omitempty"`
-}
-
-// Constants associated with the CreateDialogNode.NodeType property.
-// How the dialog node is processed.
-const (
-	CreateDialogNode_NodeType_EventHandler      = "event_handler"
-	CreateDialogNode_NodeType_Folder            = "folder"
-	CreateDialogNode_NodeType_Frame             = "frame"
-	CreateDialogNode_NodeType_ResponseCondition = "response_condition"
-	CreateDialogNode_NodeType_Slot              = "slot"
-	CreateDialogNode_NodeType_Standard          = "standard"
-)
-
-// Constants associated with the CreateDialogNode.EventName property.
-// How an `event_handler` node is processed.
-const (
-	CreateDialogNode_EventName_DigressionReturnPrompt   = "digression_return_prompt"
-	CreateDialogNode_EventName_Filled                   = "filled"
-	CreateDialogNode_EventName_FilledMultiple           = "filled_multiple"
-	CreateDialogNode_EventName_Focus                    = "focus"
-	CreateDialogNode_EventName_Generic                  = "generic"
-	CreateDialogNode_EventName_Input                    = "input"
-	CreateDialogNode_EventName_Nomatch                  = "nomatch"
-	CreateDialogNode_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	CreateDialogNode_EventName_Validate                 = "validate"
-)
-
-// Constants associated with the CreateDialogNode.DigressIn property.
-// Whether this top-level dialog node can be digressed into.
-const (
-	CreateDialogNode_DigressIn_DoesNotReturn = "does_not_return"
-	CreateDialogNode_DigressIn_NotAvailable  = "not_available"
-	CreateDialogNode_DigressIn_Returns       = "returns"
-)
-
-// Constants associated with the CreateDialogNode.DigressOut property.
-// Whether this dialog node can be returned to after a digression.
-const (
-	CreateDialogNode_DigressOut_AllowAll            = "allow_all"
-	CreateDialogNode_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	CreateDialogNode_DigressOut_AllowReturning      = "allow_returning"
-)
-
-// Constants associated with the CreateDialogNode.DigressOutSlots property.
-// Whether the user can digress to top-level nodes while filling out slots.
-const (
-	CreateDialogNode_DigressOutSlots_AllowAll       = "allow_all"
-	CreateDialogNode_DigressOutSlots_AllowReturning = "allow_returning"
-	CreateDialogNode_DigressOutSlots_NotAllowed     = "not_allowed"
-)
-
 // CreateDialogNodeOptions : The createDialogNode options.
 type CreateDialogNodeOptions struct {
 
@@ -2814,27 +2918,24 @@ type CreateDialogNodeOptions struct {
 	// characters, and it must be no longer than 2048 characters.
 	Conditions *string `json:"conditions,omitempty"`
 
-	// The ID of the parent dialog node.
+	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
 	Parent *string `json:"parent,omitempty"`
 
-	// The ID of the previous dialog node.
+	// The ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous sibling.
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
-	Context interface{} `json:"context,omitempty"`
+	Context map[string]interface{} `json:"context,omitempty"`
 
 	// The metadata for the dialog node.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// The next step to execute following this dialog node.
 	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
-
-	// An array of objects describing any actions to be invoked by the dialog node.
-	Actions []DialogNodeAction `json:"actions,omitempty"`
 
 	// The alias used to identify the dialog node. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
@@ -2849,6 +2950,9 @@ type CreateDialogNodeOptions struct {
 
 	// The location in the dialog context where output is stored.
 	Variable *string `json:"variable,omitempty"`
+
+	// An array of objects describing any actions to be invoked by the dialog node.
+	Actions []DialogNodeAction `json:"actions,omitempty"`
 
 	// Whether this top-level dialog node can be digressed into.
 	DigressIn *string `json:"digress_in,omitempty"`
@@ -2967,13 +3071,13 @@ func (options *CreateDialogNodeOptions) SetOutput(output *DialogNodeOutput) *Cre
 }
 
 // SetContext : Allow user to set Context
-func (options *CreateDialogNodeOptions) SetContext(context interface{}) *CreateDialogNodeOptions {
+func (options *CreateDialogNodeOptions) SetContext(context map[string]interface{}) *CreateDialogNodeOptions {
 	options.Context = context
 	return options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateDialogNodeOptions) SetMetadata(metadata interface{}) *CreateDialogNodeOptions {
+func (options *CreateDialogNodeOptions) SetMetadata(metadata map[string]interface{}) *CreateDialogNodeOptions {
 	options.Metadata = metadata
 	return options
 }
@@ -2981,12 +3085,6 @@ func (options *CreateDialogNodeOptions) SetMetadata(metadata interface{}) *Creat
 // SetNextStep : Allow user to set NextStep
 func (options *CreateDialogNodeOptions) SetNextStep(nextStep *DialogNodeNextStep) *CreateDialogNodeOptions {
 	options.NextStep = nextStep
-	return options
-}
-
-// SetActions : Allow user to set Actions
-func (options *CreateDialogNodeOptions) SetActions(actions []DialogNodeAction) *CreateDialogNodeOptions {
-	options.Actions = actions
 	return options
 }
 
@@ -3011,6 +3109,12 @@ func (options *CreateDialogNodeOptions) SetEventName(eventName string) *CreateDi
 // SetVariable : Allow user to set Variable
 func (options *CreateDialogNodeOptions) SetVariable(variable string) *CreateDialogNodeOptions {
 	options.Variable = core.StringPtr(variable)
+	return options
+}
+
+// SetActions : Allow user to set Actions
+func (options *CreateDialogNodeOptions) SetActions(actions []DialogNodeAction) *CreateDialogNodeOptions {
+	options.Actions = actions
 	return options
 }
 
@@ -3059,14 +3163,20 @@ type CreateEntity struct {
 	// be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
-	// Any metadata related to the value.
-	Metadata interface{} `json:"metadata,omitempty"`
-
-	// An array of objects describing the entity values.
-	Values []CreateValue `json:"values,omitempty"`
+	// Any metadata related to the entity.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Whether to use fuzzy matching for the entity.
 	FuzzyMatch *bool `json:"fuzzy_match,omitempty"`
+
+	// The timestamp for creation of the object.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// The timestamp for the most recent update to the object.
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
+
+	// An array of objects describing the entity values.
+	Values []CreateValue `json:"values,omitempty"`
 }
 
 // CreateEntityOptions : The createEntity options.
@@ -3087,14 +3197,14 @@ type CreateEntityOptions struct {
 	// be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
-	// Any metadata related to the value.
-	Metadata interface{} `json:"metadata,omitempty"`
-
-	// An array of objects describing the entity values.
-	Values []CreateValue `json:"values,omitempty"`
+	// Any metadata related to the entity.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Whether to use fuzzy matching for the entity.
 	FuzzyMatch *bool `json:"fuzzy_match,omitempty"`
+
+	// An array of objects describing the entity values.
+	Values []CreateValue `json:"values,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3127,14 +3237,8 @@ func (options *CreateEntityOptions) SetDescription(description string) *CreateEn
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateEntityOptions) SetMetadata(metadata interface{}) *CreateEntityOptions {
+func (options *CreateEntityOptions) SetMetadata(metadata map[string]interface{}) *CreateEntityOptions {
 	options.Metadata = metadata
-	return options
-}
-
-// SetValues : Allow user to set Values
-func (options *CreateEntityOptions) SetValues(values []CreateValue) *CreateEntityOptions {
-	options.Values = values
 	return options
 }
 
@@ -3144,23 +3248,16 @@ func (options *CreateEntityOptions) SetFuzzyMatch(fuzzyMatch bool) *CreateEntity
 	return options
 }
 
+// SetValues : Allow user to set Values
+func (options *CreateEntityOptions) SetValues(values []CreateValue) *CreateEntityOptions {
+	options.Values = values
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateEntityOptions) SetHeaders(param map[string]string) *CreateEntityOptions {
 	options.Headers = param
 	return options
-}
-
-// CreateExample : CreateExample struct
-type CreateExample struct {
-
-	// The text of a user input example. This string must conform to the following restrictions:
-	// - It cannot contain carriage return, newline, or tab characters.
-	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 1024 characters.
-	Text *string `json:"text" validate:"required"`
-
-	// An array of contextual entity mentions.
-	Mentions []Mentions `json:"mentions,omitempty"`
 }
 
 // CreateExampleOptions : The createExample options.
@@ -3179,7 +3276,7 @@ type CreateExampleOptions struct {
 	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
-	Mentions []Mentions `json:"mentions,omitempty"`
+	Mentions []Mention `json:"mentions,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3213,7 +3310,7 @@ func (options *CreateExampleOptions) SetText(text string) *CreateExampleOptions 
 }
 
 // SetMentions : Allow user to set Mentions
-func (options *CreateExampleOptions) SetMentions(mentions []Mentions) *CreateExampleOptions {
+func (options *CreateExampleOptions) SetMentions(mentions []Mention) *CreateExampleOptions {
 	options.Mentions = mentions
 	return options
 }
@@ -3237,8 +3334,14 @@ type CreateIntent struct {
 	// be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
+	// The timestamp for creation of the object.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// The timestamp for the most recent update to the object.
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
+
 	// An array of user input examples for the intent.
-	Examples []CreateExample `json:"examples,omitempty"`
+	Examples []Example `json:"examples,omitempty"`
 }
 
 // CreateIntentOptions : The createIntent options.
@@ -3258,7 +3361,7 @@ type CreateIntentOptions struct {
 	Description *string `json:"description,omitempty"`
 
 	// An array of user input examples for the intent.
-	Examples []CreateExample `json:"examples,omitempty"`
+	Examples []Example `json:"examples,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3291,7 +3394,7 @@ func (options *CreateIntentOptions) SetDescription(description string) *CreateIn
 }
 
 // SetExamples : Allow user to set Examples
-func (options *CreateIntentOptions) SetExamples(examples []CreateExample) *CreateIntentOptions {
+func (options *CreateIntentOptions) SetExamples(examples []Example) *CreateIntentOptions {
 	options.Examples = examples
 	return options
 }
@@ -3374,27 +3477,33 @@ type CreateValue struct {
 	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-	// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as indicated by
-	// **type**), but not both. A synonym must conform to the following restrictions:
+	// Specifies the type of entity value.
+	ValueType *string `json:"type,omitempty"`
+
+	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
+	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
 	// - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
 
-	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
-	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
-	// specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
+	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
+	// type), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how
+	// to specify a pattern, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
 
-	// Specifies the type of value.
-	ValueType *string `json:"type,omitempty"`
+	// The timestamp for creation of the object.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// The timestamp for the most recent update to the object.
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
 // Constants associated with the CreateValue.ValueType property.
-// Specifies the type of value.
+// Specifies the type of entity value.
 const (
 	CreateValue_ValueType_Patterns = "patterns"
 	CreateValue_ValueType_Synonyms = "synonyms"
@@ -3416,30 +3525,30 @@ type CreateValueOptions struct {
 	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-	// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as indicated by
-	// **type**), but not both. A synonym must conform to the following restrictions:
+	// Specifies the type of entity value.
+	ValueType *string `json:"type,omitempty"`
+
+	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
+	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
 	// - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
 
-	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
-	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
-	// specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
+	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
+	// type), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how
+	// to specify a pattern, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
-
-	// Specifies the type of value.
-	ValueType *string `json:"type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // Constants associated with the CreateValueOptions.ValueType property.
-// Specifies the type of value.
+// Specifies the type of entity value.
 const (
 	CreateValueOptions_ValueType_Patterns = "patterns"
 	CreateValueOptions_ValueType_Synonyms = "synonyms"
@@ -3473,8 +3582,14 @@ func (options *CreateValueOptions) SetValue(value string) *CreateValueOptions {
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateValueOptions) SetMetadata(metadata interface{}) *CreateValueOptions {
+func (options *CreateValueOptions) SetMetadata(metadata map[string]interface{}) *CreateValueOptions {
 	options.Metadata = metadata
+	return options
+}
+
+// SetValueType : Allow user to set ValueType
+func (options *CreateValueOptions) SetValueType(valueType string) *CreateValueOptions {
+	options.ValueType = core.StringPtr(valueType)
 	return options
 }
 
@@ -3487,12 +3602,6 @@ func (options *CreateValueOptions) SetSynonyms(synonyms []string) *CreateValueOp
 // SetPatterns : Allow user to set Patterns
 func (options *CreateValueOptions) SetPatterns(patterns []string) *CreateValueOptions {
 	options.Patterns = patterns
-	return options
-}
-
-// SetValueType : Allow user to set ValueType
-func (options *CreateValueOptions) SetValueType(valueType string) *CreateValueOptions {
-	options.ValueType = core.StringPtr(valueType)
 	return options
 }
 
@@ -3516,27 +3625,27 @@ type CreateWorkspaceOptions struct {
 	// The language of the workspace.
 	Language *string `json:"language,omitempty"`
 
-	// An array of objects defining the intents for the workspace.
-	Intents []CreateIntent `json:"intents,omitempty"`
-
-	// An array of objects defining the entities for the workspace.
-	Entities []CreateEntity `json:"entities,omitempty"`
-
-	// An array of objects defining the nodes in the dialog.
-	DialogNodes []CreateDialogNode `json:"dialog_nodes,omitempty"`
-
-	// An array of objects defining input examples that have been marked as irrelevant input.
-	Counterexamples []CreateCounterexample `json:"counterexamples,omitempty"`
-
 	// Any metadata related to the workspace.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that
-	// workspace training data is not to be used.
+	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
+	// general service improvements. `true` indicates that workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
 
 	// Global settings for the workspace.
 	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
+
+	// An array of objects defining the intents for the workspace.
+	Intents []CreateIntent `json:"intents,omitempty"`
+
+	// An array of objects describing the entities for the workspace.
+	Entities []CreateEntity `json:"entities,omitempty"`
+
+	// An array of objects describing the dialog nodes in the workspace.
+	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
+
+	// An array of objects defining input examples that have been marked as irrelevant input.
+	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3565,32 +3674,8 @@ func (options *CreateWorkspaceOptions) SetLanguage(language string) *CreateWorks
 	return options
 }
 
-// SetIntents : Allow user to set Intents
-func (options *CreateWorkspaceOptions) SetIntents(intents []CreateIntent) *CreateWorkspaceOptions {
-	options.Intents = intents
-	return options
-}
-
-// SetEntities : Allow user to set Entities
-func (options *CreateWorkspaceOptions) SetEntities(entities []CreateEntity) *CreateWorkspaceOptions {
-	options.Entities = entities
-	return options
-}
-
-// SetDialogNodes : Allow user to set DialogNodes
-func (options *CreateWorkspaceOptions) SetDialogNodes(dialogNodes []CreateDialogNode) *CreateWorkspaceOptions {
-	options.DialogNodes = dialogNodes
-	return options
-}
-
-// SetCounterexamples : Allow user to set Counterexamples
-func (options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []CreateCounterexample) *CreateWorkspaceOptions {
-	options.Counterexamples = counterexamples
-	return options
-}
-
 // SetMetadata : Allow user to set Metadata
-func (options *CreateWorkspaceOptions) SetMetadata(metadata interface{}) *CreateWorkspaceOptions {
+func (options *CreateWorkspaceOptions) SetMetadata(metadata map[string]interface{}) *CreateWorkspaceOptions {
 	options.Metadata = metadata
 	return options
 }
@@ -3604,6 +3689,30 @@ func (options *CreateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *C
 // SetSystemSettings : Allow user to set SystemSettings
 func (options *CreateWorkspaceOptions) SetSystemSettings(systemSettings *WorkspaceSystemSettings) *CreateWorkspaceOptions {
 	options.SystemSettings = systemSettings
+	return options
+}
+
+// SetIntents : Allow user to set Intents
+func (options *CreateWorkspaceOptions) SetIntents(intents []CreateIntent) *CreateWorkspaceOptions {
+	options.Intents = intents
+	return options
+}
+
+// SetEntities : Allow user to set Entities
+func (options *CreateWorkspaceOptions) SetEntities(entities []CreateEntity) *CreateWorkspaceOptions {
+	options.Entities = entities
+	return options
+}
+
+// SetDialogNodes : Allow user to set DialogNodes
+func (options *CreateWorkspaceOptions) SetDialogNodes(dialogNodes []DialogNode) *CreateWorkspaceOptions {
+	options.DialogNodes = dialogNodes
+	return options
+}
+
+// SetCounterexamples : Allow user to set Counterexamples
+func (options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []Counterexample) *CreateWorkspaceOptions {
+	options.Counterexamples = counterexamples
 	return options
 }
 
@@ -3987,49 +4096,42 @@ func (options *DeleteWorkspaceOptions) SetHeaders(param map[string]string) *Dele
 // DialogNode : DialogNode struct
 type DialogNode struct {
 
-	// The dialog node ID.
-	DialogNodeID *string `json:"dialog_node" validate:"required"`
+	// The dialog node ID. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 1024 characters.
+	DialogNode *string `json:"dialog_node" validate:"required"`
 
-	// The description of the dialog node.
+	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
+	// must be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
-	// The condition that triggers the dialog node.
+	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
+	// characters, and it must be no longer than 2048 characters.
 	Conditions *string `json:"conditions,omitempty"`
 
-	// The ID of the parent dialog node. This property is not returned if the dialog node has no parent.
+	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
 	Parent *string `json:"parent,omitempty"`
 
-	// The ID of the previous sibling dialog node. This property is not returned if the dialog node has no previous
-	// sibling.
+	// The ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous sibling.
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
-	// The context (if defined) for the dialog node.
-	Context interface{} `json:"context,omitempty"`
+	// The context for the dialog node.
+	Context map[string]interface{} `json:"context,omitempty"`
 
-	// Any metadata for the dialog node.
-	Metadata interface{} `json:"metadata,omitempty"`
+	// The metadata for the dialog node.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// The next step to execute following this dialog node.
 	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
 
-	// The timestamp for creation of the dialog node.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// The timestamp for the most recent update to the dialog node.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
-
-	// The actions for the dialog node.
-	Actions []DialogNodeAction `json:"actions,omitempty"`
-
-	// The alias used to identify the dialog node.
+	// The alias used to identify the dialog node. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 64 characters.
 	Title *string `json:"title,omitempty"`
-
-	// For internal use only.
-	Disabled *bool `json:"disabled,omitempty"`
 
 	// How the dialog node is processed.
 	NodeType *string `json:"type,omitempty"`
@@ -4039,6 +4141,9 @@ type DialogNode struct {
 
 	// The location in the dialog context where output is stored.
 	Variable *string `json:"variable,omitempty"`
+
+	// An array of objects describing any actions to be invoked by the dialog node.
+	Actions []DialogNodeAction `json:"actions,omitempty"`
 
 	// Whether this top-level dialog node can be digressed into.
 	DigressIn *string `json:"digress_in,omitempty"`
@@ -4052,6 +4157,15 @@ type DialogNode struct {
 	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
 	// than 512 characters.
 	UserLabel *string `json:"user_label,omitempty"`
+
+	// For internal use only.
+	Disabled *bool `json:"disabled,omitempty"`
+
+	// The timestamp for creation of the object.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// The timestamp for the most recent update to the object.
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
 // Constants associated with the DialogNode.NodeType property.
@@ -4113,7 +4227,7 @@ type DialogNodeAction struct {
 	ActionType *string `json:"type,omitempty"`
 
 	// A map of key/value pairs to be provided to the action.
-	Parameters interface{} `json:"parameters,omitempty"`
+	Parameters map[string]interface{} `json:"parameters,omitempty"`
 
 	// The location in the dialog context where the result of the action is stored.
 	ResultVariable *string `json:"result_variable" validate:"required"`
@@ -4213,7 +4327,7 @@ const (
 )
 
 // DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the
-// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
 type DialogNodeOutput map[string]interface{}
 
 // SetGeneric : Allow user to set Generic
@@ -4334,15 +4448,14 @@ type DialogNodeOutputOptionsElement struct {
 type DialogNodeOutputOptionsElementValue struct {
 
 	// An input object that includes the input text.
-	Input *InputData `json:"input,omitempty"`
+	Input *MessageInput `json:"input,omitempty"`
 }
 
 // DialogNodeOutputTextValuesElement : DialogNodeOutputTextValuesElement struct
 type DialogNodeOutputTextValuesElement struct {
 
-	// The text of a response. This string can include newline characters (`
-	// `), Markdown tagging, or other special characters, if supported by the channel. It must be no longer than 4096
-	// characters.
+	// The text of a response. This string can include newline characters (`\\n`), Markdown tagging, or other special
+	// characters, if supported by the channel. It must be no longer than 4096 characters.
 	Text *string `json:"text,omitempty"`
 }
 
@@ -4399,6 +4512,10 @@ type DialogRuntimeResponseGeneric struct {
 	// A label identifying the topic of the conversation, derived from the **user_label** property of the relevant node.
 	Topic *string `json:"topic,omitempty"`
 
+	// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated using the
+	// value of the dialog node's **user_label** property.
+	DialogNode *string `json:"dialog_node,omitempty"`
+
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
 	//
 	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium
@@ -4441,7 +4558,11 @@ type DialogSuggestion struct {
 
 	// The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding
 	// option.
-	Output interface{} `json:"output,omitempty"`
+	Output map[string]interface{} `json:"output,omitempty"`
+
+	// The ID of the dialog node that the **label** property is taken from. The **label** property is populated using the
+	// value of the dialog node's **user_label** property.
+	DialogNode *string `json:"dialog_node,omitempty"`
 }
 
 // DialogSuggestionValue : An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
@@ -4449,7 +4570,7 @@ type DialogSuggestion struct {
 type DialogSuggestionValue struct {
 
 	// An input object that includes the input text.
-	Input *InputData `json:"input,omitempty"`
+	Input *MessageInput `json:"input,omitempty"`
 
 	// An array of intents to be sent along with the user input.
 	Intents []RuntimeIntent `json:"intents,omitempty"`
@@ -4461,68 +4582,52 @@ type DialogSuggestionValue struct {
 // Entity : Entity struct
 type Entity struct {
 
-	// The name of the entity.
-	EntityName *string `json:"entity" validate:"required"`
+	// The name of the entity. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
+	// - It must be no longer than 64 characters.
+	//
+	// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity that
+	// you want to enable. (Any entity content specified with the request is ignored.).
+	Entity *string `json:"entity" validate:"required"`
 
-	// The timestamp for creation of the entity.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// The timestamp for the last update to the entity.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
-
-	// The description of the entity.
+	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
+	// be no longer than 128 characters.
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the entity.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-	// Whether fuzzy matching is used for the entity.
+	// Whether to use fuzzy matching for the entity.
 	FuzzyMatch *bool `json:"fuzzy_match,omitempty"`
+
+	// The timestamp for creation of the object.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// The timestamp for the most recent update to the object.
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
+
+	// An array of objects describing the entity values.
+	Values []Value `json:"values,omitempty"`
 }
 
-// EntityCollection : An array of entities.
+// EntityCollection : An array of objects describing the entities for the workspace.
 type EntityCollection struct {
 
 	// An array of objects describing the entities defined for the workspace.
-	Entities []EntityExport `json:"entities" validate:"required"`
+	Entities []Entity `json:"entities" validate:"required"`
 
 	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
-}
-
-// EntityExport : EntityExport struct
-type EntityExport struct {
-
-	// The name of the entity.
-	EntityName *string `json:"entity" validate:"required"`
-
-	// The timestamp for creation of the entity.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// The timestamp for the last update to the entity.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
-
-	// The description of the entity.
-	Description *string `json:"description,omitempty"`
-
-	// Any metadata related to the entity.
-	Metadata interface{} `json:"metadata,omitempty"`
-
-	// Whether fuzzy matching is used for the entity.
-	FuzzyMatch *bool `json:"fuzzy_match,omitempty"`
-
-	// An array objects describing the entity values.
-	Values []ValueExport `json:"values,omitempty"`
 }
 
 // EntityMention : An object describing a contextual entity mention.
 type EntityMention struct {
 
 	// The text of the user input example.
-	ExampleText *string `json:"text" validate:"required"`
+	Text *string `json:"text" validate:"required"`
 
 	// The name of the intent.
-	IntentName *string `json:"intent" validate:"required"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input text.
 	Location []int64 `json:"location" validate:"required"`
@@ -4541,17 +4646,20 @@ type EntityMentionCollection struct {
 // Example : Example struct
 type Example struct {
 
-	// The text of the user input example.
-	ExampleText *string `json:"text" validate:"required"`
-
-	// The timestamp for creation of the example.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// The timestamp for the last update to the example.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
+	// The text of a user input example. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 1024 characters.
+	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
-	Mentions []Mentions `json:"mentions,omitempty"`
+	Mentions []Mention `json:"mentions,omitempty"`
+
+	// The timestamp for creation of the object.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// The timestamp for the most recent update to the object.
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
 // ExampleCollection : ExampleCollection struct
@@ -5035,62 +5143,37 @@ func (options *GetWorkspaceOptions) SetHeaders(param map[string]string) *GetWork
 	return options
 }
 
-// InputData : An input object that includes the input text.
-type InputData map[string]interface{}
-
-// SetText : Allow user to set Text
-func (this *InputData) SetText(Text *string) {
-	(*this)["text"] = Text
-}
-
-// GetText : Allow user to get Text
-func (this *InputData) GetText() *string {
-	return (*this)["text"].(*string)
-}
-
 // Intent : Intent struct
 type Intent struct {
 
-	// The name of the intent.
-	IntentName *string `json:"intent" validate:"required"`
+	// The name of the intent. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+	// - It cannot begin with the reserved prefix `sys-`.
+	// - It must be no longer than 128 characters.
+	Intent *string `json:"intent" validate:"required"`
 
-	// The timestamp for creation of the intent.
+	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
+	// be no longer than 128 characters.
+	Description *string `json:"description,omitempty"`
+
+	// The timestamp for creation of the object.
 	Created *strfmt.DateTime `json:"created,omitempty"`
 
-	// The timestamp for the last update to the intent.
+	// The timestamp for the most recent update to the object.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
-	// The description of the intent.
-	Description *string `json:"description,omitempty"`
+	// An array of user input examples for the intent.
+	Examples []Example `json:"examples,omitempty"`
 }
 
 // IntentCollection : IntentCollection struct
 type IntentCollection struct {
 
 	// An array of objects describing the intents defined for the workspace.
-	Intents []IntentExport `json:"intents" validate:"required"`
+	Intents []Intent `json:"intents" validate:"required"`
 
 	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
-}
-
-// IntentExport : IntentExport struct
-type IntentExport struct {
-
-	// The name of the intent.
-	IntentName *string `json:"intent" validate:"required"`
-
-	// The timestamp for creation of the intent.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// The timestamp for the last update to the intent.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
-
-	// The description of the intent.
-	Description *string `json:"description,omitempty"`
-
-	// An array of objects describing the user input examples for the intent.
-	Examples []Example `json:"examples,omitempty"`
 }
 
 // ListAllLogsOptions : The listAllLogs options.
@@ -5099,7 +5182,7 @@ type ListAllLogsOptions struct {
 	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter
 	// query that includes a value for `language`, as well as a value for `workspace_id` or
 	// `request.context.metadata.deployment`. For more information, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).
 	Filter *string `json:"filter" validate:"required"`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
@@ -5609,7 +5692,7 @@ type ListLogsOptions struct {
 	Sort *string `json:"sort,omitempty"`
 
 	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).
 	Filter *string `json:"filter,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -6001,18 +6084,8 @@ func (options *ListWorkspacesOptions) SetHeaders(param map[string]string) *ListW
 	return options
 }
 
-// LogCollection : LogCollection struct
-type LogCollection struct {
-
-	// An array of objects describing log events.
-	Logs []LogExport `json:"logs" validate:"required"`
-
-	// The pagination data for the returned objects.
-	Pagination *LogPagination `json:"pagination" validate:"required"`
-}
-
-// LogExport : LogExport struct
-type LogExport struct {
+// Log : Log struct
+type Log struct {
 
 	// A request sent to the workspace, including the user input and context.
 	Request *MessageRequest `json:"request" validate:"required"`
@@ -6034,6 +6107,16 @@ type LogExport struct {
 
 	// The language of the workspace where the message request was made.
 	Language *string `json:"language" validate:"required"`
+}
+
+// LogCollection : LogCollection struct
+type LogCollection struct {
+
+	// An array of objects describing log events.
+	Logs []Log `json:"logs" validate:"required"`
+
+	// The pagination data for the returned objects.
+	Pagination *LogPagination `json:"pagination" validate:"required"`
 }
 
 // LogMessage : Log message details.
@@ -6080,8 +6163,8 @@ type LogPagination struct {
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
 
-// Mentions : A mention of a contextual entity.
-type Mentions struct {
+// Mention : A mention of a contextual entity.
+type Mention struct {
 
 	// The name of the entity.
 	Entity *string `json:"entity" validate:"required"`
@@ -6104,11 +6187,17 @@ type MessageContextMetadata struct {
 	UserID *string `json:"user_id,omitempty"`
 }
 
-// MessageInput : The text of the user input.
-type MessageInput struct {
+// MessageInput : An input object that includes the input text.
+type MessageInput map[string]interface{}
 
-	// The user's input.
-	Text *string `json:"text,omitempty"`
+// SetText : Allow user to set Text
+func (this *MessageInput) SetText(Text *string) {
+	(*this)["text"] = Text
+}
+
+// GetText : Allow user to get Text
+func (this *MessageInput) GetText() *string {
+	return (*this)["text"].(*string)
 }
 
 // MessageOptions : The message options.
@@ -6118,21 +6207,21 @@ type MessageOptions struct {
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// An input object that includes the input text.
-	Input *InputData `json:"input,omitempty"`
+	Input *MessageInput `json:"input,omitempty"`
 
-	// Whether to return more than one intent. Set to `true` to return all matching intents.
-	AlternateIntents *bool `json:"alternate_intents,omitempty"`
-
-	// State information for the conversation. To maintain state, include the context from the previous response.
-	Context *Context `json:"context,omitempty"`
+	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
+	// intents rather than trying to recognize intents in the new input.
+	Intents []RuntimeIntent `json:"intents,omitempty"`
 
 	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
 	// entities rather than detecting entities in the new input.
 	Entities []RuntimeEntity `json:"entities,omitempty"`
 
-	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
-	// intents rather than trying to recognize intents in the new input.
-	Intents []RuntimeIntent `json:"intents,omitempty"`
+	// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
+	AlternateIntents *bool `json:"alternate_intents,omitempty"`
+
+	// State information for the conversation. To maintain state, include the context from the previous response.
+	Context *Context `json:"context,omitempty"`
 
 	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
 	// log.
@@ -6160,8 +6249,20 @@ func (options *MessageOptions) SetWorkspaceID(workspaceID string) *MessageOption
 }
 
 // SetInput : Allow user to set Input
-func (options *MessageOptions) SetInput(input *InputData) *MessageOptions {
+func (options *MessageOptions) SetInput(input *MessageInput) *MessageOptions {
 	options.Input = input
+	return options
+}
+
+// SetIntents : Allow user to set Intents
+func (options *MessageOptions) SetIntents(intents []RuntimeIntent) *MessageOptions {
+	options.Intents = intents
+	return options
+}
+
+// SetEntities : Allow user to set Entities
+func (options *MessageOptions) SetEntities(entities []RuntimeEntity) *MessageOptions {
+	options.Entities = entities
 	return options
 }
 
@@ -6174,18 +6275,6 @@ func (options *MessageOptions) SetAlternateIntents(alternateIntents bool) *Messa
 // SetContext : Allow user to set Context
 func (options *MessageOptions) SetContext(context *Context) *MessageOptions {
 	options.Context = context
-	return options
-}
-
-// SetEntities : Allow user to set Entities
-func (options *MessageOptions) SetEntities(entities []RuntimeEntity) *MessageOptions {
-	options.Entities = entities
-	return options
-}
-
-// SetIntents : Allow user to set Intents
-func (options *MessageOptions) SetIntents(intents []RuntimeIntent) *MessageOptions {
-	options.Intents = intents
 	return options
 }
 
@@ -6211,32 +6300,35 @@ func (options *MessageOptions) SetHeaders(param map[string]string) *MessageOptio
 type MessageRequest struct {
 
 	// An input object that includes the input text.
-	Input *InputData `json:"input,omitempty"`
-
-	// Whether to return more than one intent. Set to `true` to return all matching intents.
-	AlternateIntents *bool `json:"alternate_intents,omitempty"`
-
-	// State information for the conversation. To maintain state, include the context from the previous response.
-	Context *Context `json:"context,omitempty"`
-
-	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
-	// entities rather than detecting entities in the new input.
-	Entities []RuntimeEntity `json:"entities,omitempty"`
+	Input *MessageInput `json:"input,omitempty"`
 
 	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
 	// intents rather than trying to recognize intents in the new input.
 	Intents []RuntimeIntent `json:"intents,omitempty"`
 
+	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
+	// entities rather than detecting entities in the new input.
+	Entities []RuntimeEntity `json:"entities,omitempty"`
+
+	// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
+	AlternateIntents *bool `json:"alternate_intents,omitempty"`
+
+	// State information for the conversation. To maintain state, include the context from the previous response.
+	Context *Context `json:"context,omitempty"`
+
 	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
 	// log.
 	Output *OutputData `json:"output,omitempty"`
+
+	// An array of objects describing any actions requested by the dialog node.
+	Actions []DialogNodeAction `json:"actions,omitempty"`
 }
 
 // MessageResponse : The response sent by the workspace, including the output text, detected intents and entities, and context.
 type MessageResponse struct {
 
-	// The text of the user input.
-	Input *MessageInput `json:"input,omitempty"`
+	// An input object that includes the input text.
+	Input *MessageInput `json:"input" validate:"required"`
 
 	// An array of intents recognized in the user input, sorted in descending order of confidence.
 	Intents []RuntimeIntent `json:"intents" validate:"required"`
@@ -6378,13 +6470,13 @@ func (this *RuntimeEntity) GetConfidence() *float64 {
 }
 
 // SetMetadata : Allow user to set Metadata
-func (this *RuntimeEntity) SetMetadata(Metadata *interface{}) {
+func (this *RuntimeEntity) SetMetadata(Metadata *map[string]interface{}) {
 	(*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
-func (this *RuntimeEntity) GetMetadata() *interface{} {
-	return (*this)["metadata"].(*interface{})
+func (this *RuntimeEntity) GetMetadata() *map[string]interface{} {
+	return (*this)["metadata"].(*map[string]interface{})
 }
 
 // SetGroups : Allow user to set Groups
@@ -6423,13 +6515,16 @@ func (this *RuntimeIntent) GetConfidence() *float64 {
 // Synonym : Synonym struct
 type Synonym struct {
 
-	// The text of the synonym.
-	SynonymText *string `json:"synonym" validate:"required"`
+	// The text of the synonym. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
+	Synonym *string `json:"synonym" validate:"required"`
 
-	// The timestamp for creation of the synonym.
+	// The timestamp for creation of the object.
 	Created *strfmt.DateTime `json:"created,omitempty"`
 
-	// The timestamp for the most recent update to the synonym.
+	// The timestamp for the most recent update to the object.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
@@ -6455,7 +6550,10 @@ type UpdateCounterexampleOptions struct {
 	// The text of a user input counterexample (for example, `What are you wearing?`).
 	Text *string `json:"text" validate:"required"`
 
-	// The text of a user input counterexample.
+	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters
+	// - It cannot consist of only whitespace characters
+	// - It must be no longer than 1024 characters.
 	NewText *string `json:"new_text,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6503,67 +6601,67 @@ type UpdateDialogNodeOptions struct {
 	// The dialog node ID (for example, `get_order`).
 	DialogNode *string `json:"dialog_node" validate:"required"`
 
-	// How the dialog node is processed.
-	NodeType *string `json:"new_type,omitempty"`
+	// The dialog node ID. This string must conform to the following restrictions:
+	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// - It must be no longer than 1024 characters.
+	NewDialogNode *string `json:"new_dialog_node,omitempty"`
 
-	// An array of objects describing any actions to be invoked by the dialog node.
-	NewActions []DialogNodeAction `json:"new_actions,omitempty"`
+	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
+	// must be no longer than 128 characters.
+	NewDescription *string `json:"new_description,omitempty"`
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
 	// characters, and it must be no longer than 2048 characters.
 	NewConditions *string `json:"new_conditions,omitempty"`
 
-	// The context for the dialog node.
-	NewContext interface{} `json:"new_context,omitempty"`
+	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
+	NewParent *string `json:"new_parent,omitempty"`
 
-	// The ID of the previous sibling dialog node.
+	// The ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous sibling.
 	NewPreviousSibling *string `json:"new_previous_sibling,omitempty"`
 
-	// The location in the dialog context where output is stored.
-	NewVariable *string `json:"new_variable,omitempty"`
+	// The output of the dialog node. For more information about how to specify dialog node output, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
+	NewOutput *DialogNodeOutput `json:"new_output,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
-	// than 512 characters.
-	NewUserLabel *string `json:"new_user_label,omitempty"`
+	// The context for the dialog node.
+	NewContext map[string]interface{} `json:"new_context,omitempty"`
 
 	// The metadata for the dialog node.
-	NewMetadata interface{} `json:"new_metadata,omitempty"`
+	NewMetadata map[string]interface{} `json:"new_metadata,omitempty"`
+
+	// The next step to execute following this dialog node.
+	NewNextStep *DialogNodeNextStep `json:"new_next_step,omitempty"`
 
 	// The alias used to identify the dialog node. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
 	// - It must be no longer than 64 characters.
 	NewTitle *string `json:"new_title,omitempty"`
 
-	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
-	// must be no longer than 128 characters.
-	NewDescription *string `json:"new_description,omitempty"`
-
-	// Whether this dialog node can be returned to after a digression.
-	NewDigressOut *string `json:"new_digress_out,omitempty"`
+	// How the dialog node is processed.
+	NodeType *string `json:"new_type,omitempty"`
 
 	// How an `event_handler` node is processed.
 	NewEventName *string `json:"new_event_name,omitempty"`
 
-	// Whether the user can digress to top-level nodes while filling out slots.
-	NewDigressOutSlots *string `json:"new_digress_out_slots,omitempty"`
+	// The location in the dialog context where output is stored.
+	NewVariable *string `json:"new_variable,omitempty"`
 
-	// The next step to execute following this dialog node.
-	NewNextStep *DialogNodeNextStep `json:"new_next_step,omitempty"`
+	// An array of objects describing any actions to be invoked by the dialog node.
+	NewActions []DialogNodeAction `json:"new_actions,omitempty"`
 
 	// Whether this top-level dialog node can be digressed into.
 	NewDigressIn *string `json:"new_digress_in,omitempty"`
 
-	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
-	NewOutput *DialogNodeOutput `json:"new_output,omitempty"`
+	// Whether this dialog node can be returned to after a digression.
+	NewDigressOut *string `json:"new_digress_out,omitempty"`
 
-	// The ID of the parent dialog node.
-	NewParent *string `json:"new_parent,omitempty"`
+	// Whether the user can digress to top-level nodes while filling out slots.
+	NewDigressOutSlots *string `json:"new_digress_out_slots,omitempty"`
 
-	// The dialog node ID. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 1024 characters.
-	NewDialogNode *string `json:"new_dialog_node,omitempty"`
+	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
+	// than 512 characters.
+	NewUserLabel *string `json:"new_user_label,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -6580,14 +6678,6 @@ const (
 	UpdateDialogNodeOptions_NodeType_Standard          = "standard"
 )
 
-// Constants associated with the UpdateDialogNodeOptions.NewDigressOut property.
-// Whether this dialog node can be returned to after a digression.
-const (
-	UpdateDialogNodeOptions_NewDigressOut_AllowAll            = "allow_all"
-	UpdateDialogNodeOptions_NewDigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	UpdateDialogNodeOptions_NewDigressOut_AllowReturning      = "allow_returning"
-)
-
 // Constants associated with the UpdateDialogNodeOptions.NewEventName property.
 // How an `event_handler` node is processed.
 const (
@@ -6602,20 +6692,28 @@ const (
 	UpdateDialogNodeOptions_NewEventName_Validate                 = "validate"
 )
 
-// Constants associated with the UpdateDialogNodeOptions.NewDigressOutSlots property.
-// Whether the user can digress to top-level nodes while filling out slots.
-const (
-	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll       = "allow_all"
-	UpdateDialogNodeOptions_NewDigressOutSlots_AllowReturning = "allow_returning"
-	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed     = "not_allowed"
-)
-
 // Constants associated with the UpdateDialogNodeOptions.NewDigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	UpdateDialogNodeOptions_NewDigressIn_DoesNotReturn = "does_not_return"
 	UpdateDialogNodeOptions_NewDigressIn_NotAvailable  = "not_available"
 	UpdateDialogNodeOptions_NewDigressIn_Returns       = "returns"
+)
+
+// Constants associated with the UpdateDialogNodeOptions.NewDigressOut property.
+// Whether this dialog node can be returned to after a digression.
+const (
+	UpdateDialogNodeOptions_NewDigressOut_AllowAll            = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOut_AllowAllNeverReturn = "allow_all_never_return"
+	UpdateDialogNodeOptions_NewDigressOut_AllowReturning      = "allow_returning"
+)
+
+// Constants associated with the UpdateDialogNodeOptions.NewDigressOutSlots property.
+// Whether the user can digress to top-level nodes while filling out slots.
+const (
+	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll       = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOutSlots_AllowReturning = "allow_returning"
+	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed     = "not_allowed"
 )
 
 // NewUpdateDialogNodeOptions : Instantiate UpdateDialogNodeOptions
@@ -6638,57 +6736,9 @@ func (options *UpdateDialogNodeOptions) SetDialogNode(dialogNode string) *Update
 	return options
 }
 
-// SetNodeType : Allow user to set NodeType
-func (options *UpdateDialogNodeOptions) SetNodeType(nodeType string) *UpdateDialogNodeOptions {
-	options.NodeType = core.StringPtr(nodeType)
-	return options
-}
-
-// SetNewActions : Allow user to set NewActions
-func (options *UpdateDialogNodeOptions) SetNewActions(newActions []DialogNodeAction) *UpdateDialogNodeOptions {
-	options.NewActions = newActions
-	return options
-}
-
-// SetNewConditions : Allow user to set NewConditions
-func (options *UpdateDialogNodeOptions) SetNewConditions(newConditions string) *UpdateDialogNodeOptions {
-	options.NewConditions = core.StringPtr(newConditions)
-	return options
-}
-
-// SetNewContext : Allow user to set NewContext
-func (options *UpdateDialogNodeOptions) SetNewContext(newContext interface{}) *UpdateDialogNodeOptions {
-	options.NewContext = newContext
-	return options
-}
-
-// SetNewPreviousSibling : Allow user to set NewPreviousSibling
-func (options *UpdateDialogNodeOptions) SetNewPreviousSibling(newPreviousSibling string) *UpdateDialogNodeOptions {
-	options.NewPreviousSibling = core.StringPtr(newPreviousSibling)
-	return options
-}
-
-// SetNewVariable : Allow user to set NewVariable
-func (options *UpdateDialogNodeOptions) SetNewVariable(newVariable string) *UpdateDialogNodeOptions {
-	options.NewVariable = core.StringPtr(newVariable)
-	return options
-}
-
-// SetNewUserLabel : Allow user to set NewUserLabel
-func (options *UpdateDialogNodeOptions) SetNewUserLabel(newUserLabel string) *UpdateDialogNodeOptions {
-	options.NewUserLabel = core.StringPtr(newUserLabel)
-	return options
-}
-
-// SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateDialogNodeOptions) SetNewMetadata(newMetadata interface{}) *UpdateDialogNodeOptions {
-	options.NewMetadata = newMetadata
-	return options
-}
-
-// SetNewTitle : Allow user to set NewTitle
-func (options *UpdateDialogNodeOptions) SetNewTitle(newTitle string) *UpdateDialogNodeOptions {
-	options.NewTitle = core.StringPtr(newTitle)
+// SetNewDialogNode : Allow user to set NewDialogNode
+func (options *UpdateDialogNodeOptions) SetNewDialogNode(newDialogNode string) *UpdateDialogNodeOptions {
+	options.NewDialogNode = core.StringPtr(newDialogNode)
 	return options
 }
 
@@ -6698,39 +6748,9 @@ func (options *UpdateDialogNodeOptions) SetNewDescription(newDescription string)
 	return options
 }
 
-// SetNewDigressOut : Allow user to set NewDigressOut
-func (options *UpdateDialogNodeOptions) SetNewDigressOut(newDigressOut string) *UpdateDialogNodeOptions {
-	options.NewDigressOut = core.StringPtr(newDigressOut)
-	return options
-}
-
-// SetNewEventName : Allow user to set NewEventName
-func (options *UpdateDialogNodeOptions) SetNewEventName(newEventName string) *UpdateDialogNodeOptions {
-	options.NewEventName = core.StringPtr(newEventName)
-	return options
-}
-
-// SetNewDigressOutSlots : Allow user to set NewDigressOutSlots
-func (options *UpdateDialogNodeOptions) SetNewDigressOutSlots(newDigressOutSlots string) *UpdateDialogNodeOptions {
-	options.NewDigressOutSlots = core.StringPtr(newDigressOutSlots)
-	return options
-}
-
-// SetNewNextStep : Allow user to set NewNextStep
-func (options *UpdateDialogNodeOptions) SetNewNextStep(newNextStep *DialogNodeNextStep) *UpdateDialogNodeOptions {
-	options.NewNextStep = newNextStep
-	return options
-}
-
-// SetNewDigressIn : Allow user to set NewDigressIn
-func (options *UpdateDialogNodeOptions) SetNewDigressIn(newDigressIn string) *UpdateDialogNodeOptions {
-	options.NewDigressIn = core.StringPtr(newDigressIn)
-	return options
-}
-
-// SetNewOutput : Allow user to set NewOutput
-func (options *UpdateDialogNodeOptions) SetNewOutput(newOutput *DialogNodeOutput) *UpdateDialogNodeOptions {
-	options.NewOutput = newOutput
+// SetNewConditions : Allow user to set NewConditions
+func (options *UpdateDialogNodeOptions) SetNewConditions(newConditions string) *UpdateDialogNodeOptions {
+	options.NewConditions = core.StringPtr(newConditions)
 	return options
 }
 
@@ -6740,9 +6760,87 @@ func (options *UpdateDialogNodeOptions) SetNewParent(newParent string) *UpdateDi
 	return options
 }
 
-// SetNewDialogNode : Allow user to set NewDialogNode
-func (options *UpdateDialogNodeOptions) SetNewDialogNode(newDialogNode string) *UpdateDialogNodeOptions {
-	options.NewDialogNode = core.StringPtr(newDialogNode)
+// SetNewPreviousSibling : Allow user to set NewPreviousSibling
+func (options *UpdateDialogNodeOptions) SetNewPreviousSibling(newPreviousSibling string) *UpdateDialogNodeOptions {
+	options.NewPreviousSibling = core.StringPtr(newPreviousSibling)
+	return options
+}
+
+// SetNewOutput : Allow user to set NewOutput
+func (options *UpdateDialogNodeOptions) SetNewOutput(newOutput *DialogNodeOutput) *UpdateDialogNodeOptions {
+	options.NewOutput = newOutput
+	return options
+}
+
+// SetNewContext : Allow user to set NewContext
+func (options *UpdateDialogNodeOptions) SetNewContext(newContext map[string]interface{}) *UpdateDialogNodeOptions {
+	options.NewContext = newContext
+	return options
+}
+
+// SetNewMetadata : Allow user to set NewMetadata
+func (options *UpdateDialogNodeOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateDialogNodeOptions {
+	options.NewMetadata = newMetadata
+	return options
+}
+
+// SetNewNextStep : Allow user to set NewNextStep
+func (options *UpdateDialogNodeOptions) SetNewNextStep(newNextStep *DialogNodeNextStep) *UpdateDialogNodeOptions {
+	options.NewNextStep = newNextStep
+	return options
+}
+
+// SetNewTitle : Allow user to set NewTitle
+func (options *UpdateDialogNodeOptions) SetNewTitle(newTitle string) *UpdateDialogNodeOptions {
+	options.NewTitle = core.StringPtr(newTitle)
+	return options
+}
+
+// SetNodeType : Allow user to set NodeType
+func (options *UpdateDialogNodeOptions) SetNodeType(nodeType string) *UpdateDialogNodeOptions {
+	options.NodeType = core.StringPtr(nodeType)
+	return options
+}
+
+// SetNewEventName : Allow user to set NewEventName
+func (options *UpdateDialogNodeOptions) SetNewEventName(newEventName string) *UpdateDialogNodeOptions {
+	options.NewEventName = core.StringPtr(newEventName)
+	return options
+}
+
+// SetNewVariable : Allow user to set NewVariable
+func (options *UpdateDialogNodeOptions) SetNewVariable(newVariable string) *UpdateDialogNodeOptions {
+	options.NewVariable = core.StringPtr(newVariable)
+	return options
+}
+
+// SetNewActions : Allow user to set NewActions
+func (options *UpdateDialogNodeOptions) SetNewActions(newActions []DialogNodeAction) *UpdateDialogNodeOptions {
+	options.NewActions = newActions
+	return options
+}
+
+// SetNewDigressIn : Allow user to set NewDigressIn
+func (options *UpdateDialogNodeOptions) SetNewDigressIn(newDigressIn string) *UpdateDialogNodeOptions {
+	options.NewDigressIn = core.StringPtr(newDigressIn)
+	return options
+}
+
+// SetNewDigressOut : Allow user to set NewDigressOut
+func (options *UpdateDialogNodeOptions) SetNewDigressOut(newDigressOut string) *UpdateDialogNodeOptions {
+	options.NewDigressOut = core.StringPtr(newDigressOut)
+	return options
+}
+
+// SetNewDigressOutSlots : Allow user to set NewDigressOutSlots
+func (options *UpdateDialogNodeOptions) SetNewDigressOutSlots(newDigressOutSlots string) *UpdateDialogNodeOptions {
+	options.NewDigressOutSlots = core.StringPtr(newDigressOutSlots)
+	return options
+}
+
+// SetNewUserLabel : Allow user to set NewUserLabel
+func (options *UpdateDialogNodeOptions) SetNewUserLabel(newUserLabel string) *UpdateDialogNodeOptions {
+	options.NewUserLabel = core.StringPtr(newUserLabel)
 	return options
 }
 
@@ -6761,24 +6859,24 @@ type UpdateEntityOptions struct {
 	// The name of the entity.
 	Entity *string `json:"entity" validate:"required"`
 
-	// Whether to use fuzzy matching for the entity.
-	NewFuzzyMatch *bool `json:"new_fuzzy_match,omitempty"`
-
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
 	// - It cannot begin with the reserved prefix `sys-`.
 	// - It must be no longer than 64 characters.
 	NewEntity *string `json:"new_entity,omitempty"`
 
-	// Any metadata related to the entity.
-	NewMetadata interface{} `json:"new_metadata,omitempty"`
-
-	// An array of entity values.
-	NewValues []CreateValue `json:"new_values,omitempty"`
-
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
 	// be no longer than 128 characters.
 	NewDescription *string `json:"new_description,omitempty"`
+
+	// Any metadata related to the entity.
+	NewMetadata map[string]interface{} `json:"new_metadata,omitempty"`
+
+	// Whether to use fuzzy matching for the entity.
+	NewFuzzyMatch *bool `json:"new_fuzzy_match,omitempty"`
+
+	// An array of objects describing the entity values.
+	NewValues []CreateValue `json:"new_values,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -6804,33 +6902,33 @@ func (options *UpdateEntityOptions) SetEntity(entity string) *UpdateEntityOption
 	return options
 }
 
-// SetNewFuzzyMatch : Allow user to set NewFuzzyMatch
-func (options *UpdateEntityOptions) SetNewFuzzyMatch(newFuzzyMatch bool) *UpdateEntityOptions {
-	options.NewFuzzyMatch = core.BoolPtr(newFuzzyMatch)
-	return options
-}
-
 // SetNewEntity : Allow user to set NewEntity
 func (options *UpdateEntityOptions) SetNewEntity(newEntity string) *UpdateEntityOptions {
 	options.NewEntity = core.StringPtr(newEntity)
 	return options
 }
 
+// SetNewDescription : Allow user to set NewDescription
+func (options *UpdateEntityOptions) SetNewDescription(newDescription string) *UpdateEntityOptions {
+	options.NewDescription = core.StringPtr(newDescription)
+	return options
+}
+
 // SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateEntityOptions) SetNewMetadata(newMetadata interface{}) *UpdateEntityOptions {
+func (options *UpdateEntityOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateEntityOptions {
 	options.NewMetadata = newMetadata
+	return options
+}
+
+// SetNewFuzzyMatch : Allow user to set NewFuzzyMatch
+func (options *UpdateEntityOptions) SetNewFuzzyMatch(newFuzzyMatch bool) *UpdateEntityOptions {
+	options.NewFuzzyMatch = core.BoolPtr(newFuzzyMatch)
 	return options
 }
 
 // SetNewValues : Allow user to set NewValues
 func (options *UpdateEntityOptions) SetNewValues(newValues []CreateValue) *UpdateEntityOptions {
 	options.NewValues = newValues
-	return options
-}
-
-// SetNewDescription : Allow user to set NewDescription
-func (options *UpdateEntityOptions) SetNewDescription(newDescription string) *UpdateEntityOptions {
-	options.NewDescription = core.StringPtr(newDescription)
 	return options
 }
 
@@ -6859,7 +6957,7 @@ type UpdateExampleOptions struct {
 	NewText *string `json:"new_text,omitempty"`
 
 	// An array of contextual entity mentions.
-	NewMentions []Mentions `json:"new_mentions,omitempty"`
+	NewMentions []Mention `json:"new_mentions,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -6899,7 +6997,7 @@ func (options *UpdateExampleOptions) SetNewText(newText string) *UpdateExampleOp
 }
 
 // SetNewMentions : Allow user to set NewMentions
-func (options *UpdateExampleOptions) SetNewMentions(newMentions []Mentions) *UpdateExampleOptions {
+func (options *UpdateExampleOptions) SetNewMentions(newMentions []Mention) *UpdateExampleOptions {
 	options.NewMentions = newMentions
 	return options
 }
@@ -6925,11 +7023,12 @@ type UpdateIntentOptions struct {
 	// - It must be no longer than 128 characters.
 	NewIntent *string `json:"new_intent,omitempty"`
 
-	// An array of user input examples for the intent.
-	NewExamples []CreateExample `json:"new_examples,omitempty"`
-
-	// The description of the intent.
+	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
+	// be no longer than 128 characters.
 	NewDescription *string `json:"new_description,omitempty"`
+
+	// An array of user input examples for the intent.
+	NewExamples []Example `json:"new_examples,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -6961,15 +7060,15 @@ func (options *UpdateIntentOptions) SetNewIntent(newIntent string) *UpdateIntent
 	return options
 }
 
-// SetNewExamples : Allow user to set NewExamples
-func (options *UpdateIntentOptions) SetNewExamples(newExamples []CreateExample) *UpdateIntentOptions {
-	options.NewExamples = newExamples
-	return options
-}
-
 // SetNewDescription : Allow user to set NewDescription
 func (options *UpdateIntentOptions) SetNewDescription(newDescription string) *UpdateIntentOptions {
 	options.NewDescription = core.StringPtr(newDescription)
+	return options
+}
+
+// SetNewExamples : Allow user to set NewExamples
+func (options *UpdateIntentOptions) SetNewExamples(newExamples []Example) *UpdateIntentOptions {
+	options.NewExamples = newExamples
 	return options
 }
 
@@ -7062,37 +7161,37 @@ type UpdateValueOptions struct {
 	// The text of the entity value.
 	Value *string `json:"value" validate:"required"`
 
-	// An array of synonyms for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
-	// but not both. A synonym must conform to the following resrictions:
-	// - It cannot contain carriage return, newline, or tab characters.
-	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
-	NewSynonyms []string `json:"new_synonyms,omitempty"`
-
-	// Specifies the type of value.
-	ValueType *string `json:"new_type,omitempty"`
-
-	// Any metadata related to the entity value.
-	NewMetadata interface{} `json:"new_metadata,omitempty"`
-
-	// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by **type**),
-	// but not both. A pattern is a regular expression no longer than 512 characters. For more information about how to
-	// specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
-	NewPatterns []string `json:"new_patterns,omitempty"`
-
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
 	// - It must be no longer than 64 characters.
 	NewValue *string `json:"new_value,omitempty"`
 
+	// Any metadata related to the entity value.
+	NewMetadata map[string]interface{} `json:"new_metadata,omitempty"`
+
+	// Specifies the type of entity value.
+	ValueType *string `json:"new_type,omitempty"`
+
+	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
+	// type), but not both. A synonym must conform to the following resrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
+	NewSynonyms []string `json:"new_synonyms,omitempty"`
+
+	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
+	// type), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how
+	// to specify a pattern, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
+	NewPatterns []string `json:"new_patterns,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // Constants associated with the UpdateValueOptions.ValueType property.
-// Specifies the type of value.
+// Specifies the type of entity value.
 const (
 	UpdateValueOptions_ValueType_Patterns = "patterns"
 	UpdateValueOptions_ValueType_Synonyms = "synonyms"
@@ -7125,9 +7224,15 @@ func (options *UpdateValueOptions) SetValue(value string) *UpdateValueOptions {
 	return options
 }
 
-// SetNewSynonyms : Allow user to set NewSynonyms
-func (options *UpdateValueOptions) SetNewSynonyms(newSynonyms []string) *UpdateValueOptions {
-	options.NewSynonyms = newSynonyms
+// SetNewValue : Allow user to set NewValue
+func (options *UpdateValueOptions) SetNewValue(newValue string) *UpdateValueOptions {
+	options.NewValue = core.StringPtr(newValue)
+	return options
+}
+
+// SetNewMetadata : Allow user to set NewMetadata
+func (options *UpdateValueOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateValueOptions {
+	options.NewMetadata = newMetadata
 	return options
 }
 
@@ -7137,21 +7242,15 @@ func (options *UpdateValueOptions) SetValueType(valueType string) *UpdateValueOp
 	return options
 }
 
-// SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateValueOptions) SetNewMetadata(newMetadata interface{}) *UpdateValueOptions {
-	options.NewMetadata = newMetadata
+// SetNewSynonyms : Allow user to set NewSynonyms
+func (options *UpdateValueOptions) SetNewSynonyms(newSynonyms []string) *UpdateValueOptions {
+	options.NewSynonyms = newSynonyms
 	return options
 }
 
 // SetNewPatterns : Allow user to set NewPatterns
 func (options *UpdateValueOptions) SetNewPatterns(newPatterns []string) *UpdateValueOptions {
 	options.NewPatterns = newPatterns
-	return options
-}
-
-// SetNewValue : Allow user to set NewValue
-func (options *UpdateValueOptions) SetNewValue(newValue string) *UpdateValueOptions {
-	options.NewValue = core.StringPtr(newValue)
 	return options
 }
 
@@ -7178,27 +7277,27 @@ type UpdateWorkspaceOptions struct {
 	// The language of the workspace.
 	Language *string `json:"language,omitempty"`
 
-	// An array of objects defining the intents for the workspace.
-	Intents []CreateIntent `json:"intents,omitempty"`
-
-	// An array of objects defining the entities for the workspace.
-	Entities []CreateEntity `json:"entities,omitempty"`
-
-	// An array of objects defining the nodes in the dialog.
-	DialogNodes []CreateDialogNode `json:"dialog_nodes,omitempty"`
-
-	// An array of objects defining input examples that have been marked as irrelevant input.
-	Counterexamples []CreateCounterexample `json:"counterexamples,omitempty"`
-
 	// Any metadata related to the workspace.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that
-	// workspace training data is not to be used.
+	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
+	// general service improvements. `true` indicates that workspace training data is not to be used.
 	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
 
 	// Global settings for the workspace.
 	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
+
+	// An array of objects defining the intents for the workspace.
+	Intents []CreateIntent `json:"intents,omitempty"`
+
+	// An array of objects describing the entities for the workspace.
+	Entities []CreateEntity `json:"entities,omitempty"`
+
+	// An array of objects describing the dialog nodes in the workspace.
+	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
+
+	// An array of objects defining input examples that have been marked as irrelevant input.
+	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
 	// Whether the new data is to be appended to the existing data in the workspace. If **append**=`false`, elements
 	// included in the new data completely replace the corresponding existing elements, including all subelements. For
@@ -7244,32 +7343,8 @@ func (options *UpdateWorkspaceOptions) SetLanguage(language string) *UpdateWorks
 	return options
 }
 
-// SetIntents : Allow user to set Intents
-func (options *UpdateWorkspaceOptions) SetIntents(intents []CreateIntent) *UpdateWorkspaceOptions {
-	options.Intents = intents
-	return options
-}
-
-// SetEntities : Allow user to set Entities
-func (options *UpdateWorkspaceOptions) SetEntities(entities []CreateEntity) *UpdateWorkspaceOptions {
-	options.Entities = entities
-	return options
-}
-
-// SetDialogNodes : Allow user to set DialogNodes
-func (options *UpdateWorkspaceOptions) SetDialogNodes(dialogNodes []CreateDialogNode) *UpdateWorkspaceOptions {
-	options.DialogNodes = dialogNodes
-	return options
-}
-
-// SetCounterexamples : Allow user to set Counterexamples
-func (options *UpdateWorkspaceOptions) SetCounterexamples(counterexamples []CreateCounterexample) *UpdateWorkspaceOptions {
-	options.Counterexamples = counterexamples
-	return options
-}
-
 // SetMetadata : Allow user to set Metadata
-func (options *UpdateWorkspaceOptions) SetMetadata(metadata interface{}) *UpdateWorkspaceOptions {
+func (options *UpdateWorkspaceOptions) SetMetadata(metadata map[string]interface{}) *UpdateWorkspaceOptions {
 	options.Metadata = metadata
 	return options
 }
@@ -7283,6 +7358,30 @@ func (options *UpdateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *U
 // SetSystemSettings : Allow user to set SystemSettings
 func (options *UpdateWorkspaceOptions) SetSystemSettings(systemSettings *WorkspaceSystemSettings) *UpdateWorkspaceOptions {
 	options.SystemSettings = systemSettings
+	return options
+}
+
+// SetIntents : Allow user to set Intents
+func (options *UpdateWorkspaceOptions) SetIntents(intents []CreateIntent) *UpdateWorkspaceOptions {
+	options.Intents = intents
+	return options
+}
+
+// SetEntities : Allow user to set Entities
+func (options *UpdateWorkspaceOptions) SetEntities(entities []CreateEntity) *UpdateWorkspaceOptions {
+	options.Entities = entities
+	return options
+}
+
+// SetDialogNodes : Allow user to set DialogNodes
+func (options *UpdateWorkspaceOptions) SetDialogNodes(dialogNodes []DialogNode) *UpdateWorkspaceOptions {
+	options.DialogNodes = dialogNodes
+	return options
+}
+
+// SetCounterexamples : Allow user to set Counterexamples
+func (options *UpdateWorkspaceOptions) SetCounterexamples(counterexamples []Counterexample) *UpdateWorkspaceOptions {
+	options.Counterexamples = counterexamples
 	return options
 }
 
@@ -7301,30 +7400,40 @@ func (options *UpdateWorkspaceOptions) SetHeaders(param map[string]string) *Upda
 // Value : Value struct
 type Value struct {
 
-	// The text of the entity value.
-	ValueText *string `json:"value" validate:"required"`
+	// The text of the entity value. This string must conform to the following restrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
+	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-	// The timestamp for creation of the entity value.
-	Created *strfmt.DateTime `json:"created,omitempty"`
+	// Specifies the type of entity value.
+	ValueType *string `json:"type" validate:"required"`
 
-	// The timestamp for the last update to the entity value.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
-
-	// An array containing any synonyms for the entity value.
+	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
+	// type), but not both. A synonym must conform to the following resrictions:
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
+	// - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
 
-	// An array containing any patterns for the entity value.
+	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
+	// type), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how
+	// to specify a pattern, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
 
-	// Specifies the type of value.
-	ValueType *string `json:"type" validate:"required"`
+	// The timestamp for creation of the object.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// The timestamp for the most recent update to the object.
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
 // Constants associated with the Value.ValueType property.
-// Specifies the type of value.
+// Specifies the type of entity value.
 const (
 	Value_ValueType_Patterns = "patterns"
 	Value_ValueType_Synonyms = "synonyms"
@@ -7334,75 +7443,70 @@ const (
 type ValueCollection struct {
 
 	// An array of entity values.
-	Values []ValueExport `json:"values" validate:"required"`
+	Values []Value `json:"values" validate:"required"`
 
 	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-// ValueExport : ValueExport struct
-type ValueExport struct {
-
-	// The text of the entity value.
-	ValueText *string `json:"value" validate:"required"`
-
-	// Any metadata related to the entity value.
-	Metadata interface{} `json:"metadata,omitempty"`
-
-	// The timestamp for creation of the entity value.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// The timestamp for the last update to the entity value.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
-
-	// An array containing any synonyms for the entity value.
-	Synonyms []string `json:"synonyms,omitempty"`
-
-	// An array containing any patterns for the entity value.
-	Patterns []string `json:"patterns,omitempty"`
-
-	// Specifies the type of value.
-	ValueType *string `json:"type" validate:"required"`
-}
-
-// Constants associated with the ValueExport.ValueType property.
-// Specifies the type of value.
-const (
-	ValueExport_ValueType_Patterns = "patterns"
-	ValueExport_ValueType_Synonyms = "synonyms"
-)
-
 // Workspace : Workspace struct
 type Workspace struct {
 
-	// The name of the workspace.
+	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no
+	// longer than 64 characters.
 	Name *string `json:"name" validate:"required"`
+
+	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters, and it
+	// must be no longer than 128 characters.
+	Description *string `json:"description,omitempty"`
 
 	// The language of the workspace.
 	Language *string `json:"language" validate:"required"`
 
-	// The timestamp for creation of the workspace.
-	Created *strfmt.DateTime `json:"created,omitempty"`
+	// Any metadata related to the workspace.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-	// The timestamp for the last update to the workspace.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
+	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
+	// general service improvements. `true` indicates that workspace training data is not to be used.
+	LearningOptOut *bool `json:"learning_opt_out" validate:"required"`
+
+	// Global settings for the workspace.
+	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
 
 	// The workspace ID of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// The description of the workspace.
-	Description *string `json:"description,omitempty"`
+	// The current status of the workspace.
+	Status *string `json:"status,omitempty"`
 
-	// Any metadata related to the workspace.
-	Metadata interface{} `json:"metadata,omitempty"`
+	// The timestamp for creation of the object.
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
-	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
-	// general service improvements. `true` indicates that workspace training data is not to be used.
-	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
+	// The timestamp for the most recent update to the object.
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
-	// Global settings for the workspace.
-	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
+	// An array of intents.
+	Intents []Intent `json:"intents,omitempty"`
+
+	// An array of objects describing the entities for the workspace.
+	Entities []Entity `json:"entities,omitempty"`
+
+	// An array of objects describing the dialog nodes in the workspace.
+	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
+
+	// An array of counterexamples.
+	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 }
+
+// Constants associated with the Workspace.Status property.
+// The current status of the workspace.
+const (
+	Workspace_Status_Available   = "Available"
+	Workspace_Status_Failed      = "Failed"
+	Workspace_Status_NonExistent = "Non Existent"
+	Workspace_Status_Training    = "Training"
+	Workspace_Status_Unavailable = "Unavailable"
+)
 
 // WorkspaceCollection : WorkspaceCollection struct
 type WorkspaceCollection struct {
@@ -7413,63 +7517,6 @@ type WorkspaceCollection struct {
 	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
-
-// WorkspaceExport : WorkspaceExport struct
-type WorkspaceExport struct {
-
-	// The name of the workspace.
-	Name *string `json:"name" validate:"required"`
-
-	// The description of the workspace.
-	Description *string `json:"description" validate:"required"`
-
-	// The language of the workspace.
-	Language *string `json:"language" validate:"required"`
-
-	// Any metadata that is required by the workspace.
-	Metadata interface{} `json:"metadata" validate:"required"`
-
-	// The timestamp for creation of the workspace.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// The timestamp for the last update to the workspace.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
-
-	// The workspace ID of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required"`
-
-	// The current status of the workspace.
-	Status *string `json:"status" validate:"required"`
-
-	// Whether training data from the workspace can be used by IBM for general service improvements. `true` indicates that
-	// workspace training data is not to be used.
-	LearningOptOut *bool `json:"learning_opt_out" validate:"required"`
-
-	// Global settings for the workspace.
-	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
-
-	// An array of intents.
-	Intents []IntentExport `json:"intents,omitempty"`
-
-	// An array of entities.
-	Entities []EntityExport `json:"entities,omitempty"`
-
-	// An array of counterexamples.
-	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
-
-	// An array of objects describing the dialog nodes in the workspace.
-	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
-}
-
-// Constants associated with the WorkspaceExport.Status property.
-// The current status of the workspace.
-const (
-	WorkspaceExport_Status_Available   = "Available"
-	WorkspaceExport_Status_Failed      = "Failed"
-	WorkspaceExport_Status_NonExistent = "Non Existent"
-	WorkspaceExport_Status_Training    = "Training"
-	WorkspaceExport_Status_Unavailable = "Unavailable"
-)
 
 // WorkspaceSystemSettings : Global settings for the workspace.
 type WorkspaceSystemSettings struct {
@@ -7483,7 +7530,7 @@ type WorkspaceSystemSettings struct {
 	Disambiguation *WorkspaceSystemSettingsDisambiguation `json:"disambiguation,omitempty"`
 
 	// For internal use only.
-	HumanAgentAssist interface{} `json:"human_agent_assist,omitempty"`
+	HumanAgentAssist map[string]interface{} `json:"human_agent_assist,omitempty"`
 }
 
 // WorkspaceSystemSettingsDisambiguation : Workspace settings related to the disambiguation feature.

@@ -3,8 +3,8 @@ package speechtotextv1
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/gorilla/websocket"
-	core "github.com/watson-developer-cloud/go-sdk/core"
 	"io"
 	"net/http"
 	"net/url"

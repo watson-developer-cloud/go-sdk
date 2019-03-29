@@ -18,7 +18,8 @@ package assistantv2
  */
 
 import (
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // AssistantV2 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
@@ -27,7 +28,7 @@ import (
 // Version: V2
 // See: http://www.ibm.com/watson/developercloud/assistant.html
 type AssistantV2 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // AssistantV2Options : Service options
@@ -56,7 +57,7 @@ func NewAssistantV2(options *AssistantV2Options) (*AssistantV2, error) {
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "conversation", "Assistant")
+	service, serviceErr := core.NewBaseService(serviceOptions, "conversation", "Assistant")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -84,7 +85,12 @@ func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionO
 	for headerName, headerValue := range createSessionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V2;operation_id=CreateSession")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V2", "CreateSession")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -125,7 +131,12 @@ func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionO
 	for headerName, headerValue := range deleteSessionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V2;operation_id=DeleteSession")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V2", "DeleteSession")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
@@ -159,7 +170,12 @@ func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (*core.Det
 	for headerName, headerValue := range messageOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=conversation;service_version=V2;operation_id=Message")
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V2", "Message")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", assistant.Service.Options.Version)
@@ -209,7 +225,7 @@ type CreateSessionOptions struct {
 
 	// Unique identifier of the assistant. You can find the assistant ID of an assistant on the **Assistants** tab of the
 	// Watson Assistant tool. For information about creating assistants, see the
-	// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+	// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
 	AssistantID *string `json:"assistant_id" validate:"required"`
@@ -242,7 +258,7 @@ type DeleteSessionOptions struct {
 
 	// Unique identifier of the assistant. You can find the assistant ID of an assistant on the **Assistants** tab of the
 	// Watson Assistant tool. For information about creating assistants, see the
-	// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+	// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
 	AssistantID *string `json:"assistant_id" validate:"required"`
@@ -308,7 +324,7 @@ type DialogNodeAction struct {
 	ActionType *string `json:"type,omitempty"`
 
 	// A map of key/value pairs to be provided to the action.
-	Parameters interface{} `json:"parameters,omitempty"`
+	Parameters map[string]interface{} `json:"parameters,omitempty"`
 
 	// The location in the dialog context where the result of the action is stored.
 	ResultVariable *string `json:"result_variable" validate:"required"`
@@ -378,7 +394,7 @@ type DialogRuntimeResponseGeneric struct {
 	// The URL of the image.
 	Source *string `json:"source,omitempty"`
 
-	// The title to show before the response.
+	// The title or introductory text to show before the response.
 	Title *string `json:"title,omitempty"`
 
 	// The description to show with the the response.
@@ -438,7 +454,7 @@ type DialogSuggestion struct {
 
 	// The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding
 	// option.
-	Output interface{} `json:"output,omitempty"`
+	Output map[string]interface{} `json:"output,omitempty"`
 }
 
 // DialogSuggestionValue : An object defining the message input to be sent to the assistant if the user selects the corresponding disambiguation
@@ -449,24 +465,27 @@ type DialogSuggestionValue struct {
 	Input *MessageInput `json:"input,omitempty"`
 }
 
-// MessageContext : State information for the conversation.
+// MessageContext : MessageContext struct
 type MessageContext struct {
 
-	// Contains information that can be shared by all skills within the Assistant.
+	// Information that is shared by all skills used by the Assistant.
 	Global *MessageContextGlobal `json:"global,omitempty"`
 
-	// Contains information specific to particular skills within the Assistant.
+	// Information specific to particular skills used by the Assistant.
+	//
+	// **Note:** Currently, only a single property named `main skill` is supported. This object contains variables that
+	// apply to the dialog skill used by the assistant.
 	Skills *MessageContextSkills `json:"skills,omitempty"`
 }
 
-// MessageContextGlobal : Contains information that can be shared by all skills within the Assistant.
+// MessageContextGlobal : Information that is shared by all skills used by the Assistant.
 type MessageContextGlobal struct {
 
-	// Properties that are shared by all skills used by the assistant.
+	// Built-in system properties that apply to all skills used by the assistant.
 	System *MessageContextGlobalSystem `json:"system,omitempty"`
 }
 
-// MessageContextGlobalSystem : Properties that are shared by all skills used by the assistant.
+// MessageContextGlobalSystem : Built-in system properties that apply to all skills used by the assistant.
 type MessageContextGlobalSystem struct {
 
 	// The user time zone. The assistant uses the time zone to correctly resolve relative time references.
@@ -479,18 +498,15 @@ type MessageContextGlobalSystem struct {
 	UserID *string `json:"user_id,omitempty"`
 
 	// A counter that is automatically incremented with each turn of the conversation. A value of 1 indicates that this is
-	// the the first turn of a new conversation, which can affect the behavior of some skills.
+	// the the first turn of a new conversation, which can affect the behavior of some skills (for example, triggering the
+	// start node of a dialog).
 	TurnCount *int64 `json:"turn_count,omitempty"`
 }
 
-// MessageContextSkill : Contains information specific to a particular skill within the Assistant.
-type MessageContextSkill struct {
-
-	// Arbitrary variables that can be read and written to by a particular skill within the Assistant.
-	UserDefined *string `json:"user_defined,omitempty"`
-}
-
-// MessageContextSkills : Contains information specific to particular skills within the Assistant.
+// MessageContextSkills : Information specific to particular skills used by the Assistant.
+//
+// **Note:** Currently, only a single property named `main skill` is supported. This object contains variables that
+// apply to the dialog skill used by the assistant.
 type MessageContextSkills map[string]interface{}
 
 // MessageInput : An input object that includes the input text.
@@ -548,7 +564,7 @@ type MessageOptions struct {
 
 	// Unique identifier of the assistant. You can find the assistant ID of an assistant on the **Assistants** tab of the
 	// Watson Assistant tool. For information about creating assistants, see the
-	// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+	// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
 	AssistantID *string `json:"assistant_id" validate:"required"`
@@ -559,7 +575,8 @@ type MessageOptions struct {
 	// An input object that includes the input text.
 	Input *MessageInput `json:"input,omitempty"`
 
-	// State information for the conversation.
+	// State information for the conversation. The context is stored by the assistant on a per-session basis. You can use
+	// this property to set or modify context variables, which can also be accessed by dialog nodes.
 	Context *MessageContext `json:"context,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -625,7 +642,7 @@ type MessageOutput struct {
 
 	// An object containing any custom properties included in the response. This object includes any arbitrary properties
 	// defined in the dialog JSON editor as part of the dialog node output.
-	UserDefined interface{} `json:"user_defined,omitempty"`
+	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
 }
 
 // MessageOutputDebug : Additional detailed information about a message response and how it was generated.
@@ -660,7 +677,10 @@ type MessageResponse struct {
 	// Assistant output to be rendered or processed by the client.
 	Output *MessageOutput `json:"output" validate:"required"`
 
-	// State information for the conversation.
+	// State information for the conversation. The context is stored by the assistant on a per-session basis. You can use
+	// this property to access context variables.
+	//
+	// **Note:** The context is included in message responses only if **return_context**=`true` in the message request.
 	Context *MessageContext `json:"context,omitempty"`
 }
 
@@ -681,7 +701,7 @@ type RuntimeEntity struct {
 	Confidence *float64 `json:"confidence,omitempty"`
 
 	// Any metadata for the entity.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// The recognized capture groups for the entity, as defined by the entity pattern.
 	Groups []CaptureGroup `json:"groups,omitempty"`

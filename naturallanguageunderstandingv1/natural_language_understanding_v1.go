@@ -18,8 +18,9 @@ package naturallanguageunderstandingv1
  */
 
 import (
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // NaturalLanguageUnderstandingV1 : Analyze various features of text content at scale. Provide text, raw HTML, or a
@@ -28,12 +29,12 @@ import (
 // unwanted content.
 //
 // You can create [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html)
-// with Watson Knowledge Studio to detect custom entities and relations in Natural Language Understanding.
+// with Watson Knowledge Studio to detect custom entities, relations, and categories in Natural Language Understanding.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/natural-language-understanding.html
 type NaturalLanguageUnderstandingV1 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // NaturalLanguageUnderstandingV1Options : Service options
@@ -62,7 +63,7 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "natural-language-understanding", "Natural Language Understanding")
+	service, serviceErr := core.NewBaseService(serviceOptions, "natural-language-understanding", "Natural Language Understanding")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -80,7 +81,8 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 // - Metadata
 // - Relations
 // - Semantic roles
-// - Sentiment.
+// - Sentiment
+// - Syntax (Experimental).
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(analyzeOptions *AnalyzeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(analyzeOptions, "analyzeOptions cannot be nil"); err != nil {
 		return nil, err
@@ -98,12 +100,20 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 	for headerName, headerValue := range analyzeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural-language-understanding;service_version=V1;operation_id=Analyze")
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "Analyze")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
 
 	body := make(map[string]interface{})
+	if analyzeOptions.Features != nil {
+		body["features"] = analyzeOptions.Features
+	}
 	if analyzeOptions.Text != nil {
 		body["text"] = analyzeOptions.Text
 	}
@@ -112,9 +122,6 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 	}
 	if analyzeOptions.URL != nil {
 		body["url"] = analyzeOptions.URL
-	}
-	if analyzeOptions.Features != nil {
-		body["features"] = analyzeOptions.Features
 	}
 	if analyzeOptions.Clean != nil {
 		body["clean"] = analyzeOptions.Clean
@@ -176,7 +183,12 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 	for headerName, headerValue := range deleteModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural-language-understanding;service_version=V1;operation_id=DeleteModel")
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "DeleteModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
 
@@ -216,7 +228,12 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(l
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=natural-language-understanding;service_version=V1;operation_id=ListModels")
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "ListModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
 
@@ -238,7 +255,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetListModel
 	return nil
 }
 
-// AnalysisResults : Results of the analysis, organized by feature.
+// AnalysisResults : Analysis results for each requested feature.
 type AnalysisResults struct {
 
 	// Language used to analyze the text.
@@ -250,8 +267,8 @@ type AnalysisResults struct {
 	// URL of the webpage that was analyzed.
 	RetrievedURL *string `json:"retrieved_url,omitempty"`
 
-	// Usage information.
-	Usage *Usage `json:"usage,omitempty"`
+	// API usage information for the request.
+	Usage *AnalysisResultsUsage `json:"usage,omitempty"`
 
 	// The general concepts referenced or alluded to in the analyzed text.
 	Concepts []ConceptsResult `json:"concepts,omitempty"`
@@ -265,13 +282,11 @@ type AnalysisResults struct {
 	// The categories that the service assigned to the analyzed text.
 	Categories []CategoriesResult `json:"categories,omitempty"`
 
-	// The detected anger, disgust, fear, joy, or sadness that is conveyed by the content. Emotion information can be
-	// returned for detected entities, keywords, or user-specified target phrases found in the text.
+	// The anger, disgust, fear, joy, or sadness conveyed by the content.
 	Emotion *EmotionResult `json:"emotion,omitempty"`
 
-	// The authors, publication date, title, prominent page image, and RSS/ATOM feeds of the webpage. Supports URL and HTML
-	// input types.
-	Metadata *MetadataResult `json:"metadata,omitempty"`
+	// Webpage metadata, such as the author and the title of the page.
+	Metadata *AnalysisResultsMetadata `json:"metadata,omitempty"`
 
 	// The relationships between entities in the content.
 	Relations []RelationsResult `json:"relations,omitempty"`
@@ -281,10 +296,48 @@ type AnalysisResults struct {
 
 	// The sentiment of the content.
 	Sentiment *SentimentResult `json:"sentiment,omitempty"`
+
+	// Tokens and sentences returned from syntax analysis.
+	Syntax *SyntaxResult `json:"syntax,omitempty"`
+}
+
+// AnalysisResultsMetadata : Webpage metadata, such as the author and the title of the page.
+type AnalysisResultsMetadata struct {
+
+	// The authors of the document.
+	Authors []Author `json:"authors,omitempty"`
+
+	// The publication date in the format ISO 8601.
+	PublicationDate *string `json:"publication_date,omitempty"`
+
+	// The title of the document.
+	Title *string `json:"title,omitempty"`
+
+	// URL of a prominent image on the webpage.
+	Image *string `json:"image,omitempty"`
+
+	// RSS/ATOM feeds found on the webpage.
+	Feeds []Feed `json:"feeds,omitempty"`
+}
+
+// AnalysisResultsUsage : API usage information for the request.
+type AnalysisResultsUsage struct {
+
+	// Number of features used in the API call.
+	Features *int64 `json:"features,omitempty"`
+
+	// Number of text characters processed.
+	TextCharacters *int64 `json:"text_characters,omitempty"`
+
+	// Number of 10,000-character units processed.
+	TextUnits *int64 `json:"text_units,omitempty"`
 }
 
 // AnalyzeOptions : The analyze options.
 type AnalyzeOptions struct {
+
+	// Specific features to analyze the document for.
+	Features *Features `json:"features" validate:"required"`
 
 	// The plain text to analyze. One of the `text`, `html`, or `url` parameters is required.
 	Text *string `json:"text,omitempty"`
@@ -294,9 +347,6 @@ type AnalyzeOptions struct {
 
 	// The webpage to analyze. One of the `text`, `html`, or `url` parameters is required.
 	URL *string `json:"url,omitempty"`
-
-	// Analysis features and options.
-	Features *Features `json:"features" validate:"required"`
 
 	// Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning, see the [Analyzing
 	// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html) documentation.
@@ -333,6 +383,12 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) NewAnalyzeOp
 	}
 }
 
+// SetFeatures : Allow user to set Features
+func (options *AnalyzeOptions) SetFeatures(features *Features) *AnalyzeOptions {
+	options.Features = features
+	return options
+}
+
 // SetText : Allow user to set Text
 func (options *AnalyzeOptions) SetText(text string) *AnalyzeOptions {
 	options.Text = core.StringPtr(text)
@@ -348,12 +404,6 @@ func (options *AnalyzeOptions) SetHTML(HTML string) *AnalyzeOptions {
 // SetURL : Allow user to set URL
 func (options *AnalyzeOptions) SetURL(URL string) *AnalyzeOptions {
 	options.URL = core.StringPtr(URL)
-	return options
-}
-
-// SetFeatures : Allow user to set Features
-func (options *AnalyzeOptions) SetFeatures(features *Features) *AnalyzeOptions {
-	options.Features = features
 	return options
 }
 
@@ -413,6 +463,10 @@ type CategoriesOptions struct {
 
 	// Maximum number of categories to return.
 	Limit *int64 `json:"limit,omitempty"`
+
+	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to
+	// override the standard categories model.
+	Model *string `json:"model,omitempty"`
 }
 
 // CategoriesResult : A categorization of the analyzed text.
@@ -685,6 +739,9 @@ type Features struct {
 	//
 	// Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 	Categories *CategoriesOptions `json:"categories,omitempty"`
+
+	// Returns tokens and sentences from the input text.
+	Syntax *SyntaxOptions `json:"syntax,omitempty"`
 }
 
 // Feed : RSS or ATOM feed found on the webpage.
@@ -755,26 +812,7 @@ type ListModelsResults struct {
 
 // MetadataOptions : Returns information from the document, including author name, title, RSS/ATOM feeds, prominent page image, and
 // publication date. Supports URL and HTML input types only.
-type MetadataOptions map[string]interface{}
-
-// MetadataResult : The authors, publication date, title, prominent page image, and RSS/ATOM feeds of the webpage. Supports URL and HTML
-// input types.
-type MetadataResult struct {
-
-	// The authors of the document.
-	Authors []Author `json:"authors,omitempty"`
-
-	// The publication date in the format ISO 8601.
-	PublicationDate *string `json:"publication_date,omitempty"`
-
-	// The title of the document.
-	Title *string `json:"title,omitempty"`
-
-	// URL of a prominent image on the webpage.
-	Image *string `json:"image,omitempty"`
-
-	// RSS/ATOM feeds found on the webpage.
-	Feeds []Feed `json:"feeds,omitempty"`
+type MetadataOptions struct {
 }
 
 // Model : Model struct
@@ -857,18 +895,6 @@ type RelationsResult struct {
 	Arguments []RelationArgument `json:"arguments,omitempty"`
 }
 
-// SemanticRolesAction : SemanticRolesAction struct
-type SemanticRolesAction struct {
-
-	// Analyzed text that corresponds to the action.
-	Text *string `json:"text,omitempty"`
-
-	// normalized version of the action.
-	Normalized *string `json:"normalized,omitempty"`
-
-	Verb *SemanticRolesVerb `json:"verb,omitempty"`
-}
-
 // SemanticRolesEntity : SemanticRolesEntity struct
 type SemanticRolesEntity struct {
 
@@ -884,16 +910,6 @@ type SemanticRolesKeyword struct {
 
 	// The keyword text.
 	Text *string `json:"text,omitempty"`
-}
-
-// SemanticRolesObject : SemanticRolesObject struct
-type SemanticRolesObject struct {
-
-	// Object text.
-	Text *string `json:"text,omitempty"`
-
-	// An array of extracted keywords.
-	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
 }
 
 // SemanticRolesOptions : Parses sentences into subject, action, and object form.
@@ -918,17 +934,39 @@ type SemanticRolesResult struct {
 	Sentence *string `json:"sentence,omitempty"`
 
 	// The extracted subject from the sentence.
-	Subject *SemanticRolesSubject `json:"subject,omitempty"`
+	Subject *SemanticRolesResultSubject `json:"subject,omitempty"`
 
 	// The extracted action from the sentence.
-	Action *SemanticRolesAction `json:"action,omitempty"`
+	Action *SemanticRolesResultAction `json:"action,omitempty"`
 
 	// The extracted object from the sentence.
-	Object *SemanticRolesObject `json:"object,omitempty"`
+	Object *SemanticRolesResultObject `json:"object,omitempty"`
 }
 
-// SemanticRolesSubject : SemanticRolesSubject struct
-type SemanticRolesSubject struct {
+// SemanticRolesResultAction : The extracted action from the sentence.
+type SemanticRolesResultAction struct {
+
+	// Analyzed text that corresponds to the action.
+	Text *string `json:"text,omitempty"`
+
+	// normalized version of the action.
+	Normalized *string `json:"normalized,omitempty"`
+
+	Verb *SemanticRolesVerb `json:"verb,omitempty"`
+}
+
+// SemanticRolesResultObject : The extracted object from the sentence.
+type SemanticRolesResultObject struct {
+
+	// Object text.
+	Text *string `json:"text,omitempty"`
+
+	// An array of extracted keywords.
+	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
+}
+
+// SemanticRolesResultSubject : The extracted subject from the sentence.
+type SemanticRolesResultSubject struct {
 
 	// Text that corresponds to the subject role.
 	Text *string `json:"text,omitempty"`
@@ -948,6 +986,16 @@ type SemanticRolesVerb struct {
 
 	// Verb tense.
 	Tense *string `json:"tense,omitempty"`
+}
+
+// SentenceResult : SentenceResult struct
+type SentenceResult struct {
+
+	// The sentence.
+	Text *string `json:"text,omitempty"`
+
+	// Character offsets indicating the beginning and end of the sentence in the analyzed text.
+	Location []int64 `json:"location,omitempty"`
 }
 
 // SentimentOptions : Analyzes the general sentiment of your content or the sentiment toward specific target phrases. You can analyze
@@ -973,6 +1021,33 @@ type SentimentResult struct {
 	Targets []TargetedSentimentResults `json:"targets,omitempty"`
 }
 
+// SyntaxOptions : Returns tokens and sentences from the input text.
+type SyntaxOptions struct {
+
+	// Tokenization options.
+	Tokens *SyntaxOptionsTokens `json:"tokens,omitempty"`
+
+	// Set this to `true` to return sentence information.
+	Sentences *bool `json:"sentences,omitempty"`
+}
+
+// SyntaxOptionsTokens : Tokenization options.
+type SyntaxOptionsTokens struct {
+
+	// Set this to `true` to return the lemma for each token.
+	Lemma *bool `json:"lemma,omitempty"`
+
+	// Set this to `true` to return the part of speech for each token.
+	PartOfSpeech *bool `json:"part_of_speech,omitempty"`
+}
+
+// SyntaxResult : Tokens and sentences returned from syntax analysis.
+type SyntaxResult struct {
+	Tokens []TokenResult `json:"tokens,omitempty"`
+
+	Sentences []SentenceResult `json:"sentences,omitempty"`
+}
+
 // TargetedEmotionResults : Emotion results for a specified target.
 type TargetedEmotionResults struct {
 
@@ -993,15 +1068,42 @@ type TargetedSentimentResults struct {
 	Score *float64 `json:"score,omitempty"`
 }
 
-// Usage : Usage information.
-type Usage struct {
+// TokenResult : TokenResult struct
+type TokenResult struct {
 
-	// Number of features used in the API call.
-	Features *int64 `json:"features,omitempty"`
+	// The token as it appears in the analyzed text.
+	Text *string `json:"text,omitempty"`
 
-	// Number of text characters processed.
-	TextCharacters *int64 `json:"text_characters,omitempty"`
+	// The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
+	// tags](https://universaldependencies.org/u/pos/).
+	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 
-	// Number of 10,000-character units processed.
-	TextUnits *int64 `json:"text_units,omitempty"`
+	// Character offsets indicating the beginning and end of the token in the analyzed text.
+	Location []int64 `json:"location,omitempty"`
+
+	// The [lemma](https://wikipedia.org/wiki/Lemma_%28morphology%29) of the token.
+	Lemma *string `json:"lemma,omitempty"`
 }
+
+// Constants associated with the TokenResult.PartOfSpeech property.
+// The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
+// tags](https://universaldependencies.org/u/pos/).
+const (
+	TokenResult_PartOfSpeech_Adj   = "ADJ"
+	TokenResult_PartOfSpeech_Adp   = "ADP"
+	TokenResult_PartOfSpeech_Adv   = "ADV"
+	TokenResult_PartOfSpeech_Aux   = "AUX"
+	TokenResult_PartOfSpeech_Cconj = "CCONJ"
+	TokenResult_PartOfSpeech_Det   = "DET"
+	TokenResult_PartOfSpeech_Intj  = "INTJ"
+	TokenResult_PartOfSpeech_Noun  = "NOUN"
+	TokenResult_PartOfSpeech_Num   = "NUM"
+	TokenResult_PartOfSpeech_Part  = "PART"
+	TokenResult_PartOfSpeech_Pron  = "PRON"
+	TokenResult_PartOfSpeech_Propn = "PROPN"
+	TokenResult_PartOfSpeech_Punct = "PUNCT"
+	TokenResult_PartOfSpeech_Sconj = "SCONJ"
+	TokenResult_PartOfSpeech_Sym   = "SYM"
+	TokenResult_PartOfSpeech_Verb  = "VERB"
+	TokenResult_PartOfSpeech_X     = "X"
+)

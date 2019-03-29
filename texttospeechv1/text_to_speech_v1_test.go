@@ -2,7 +2,6 @@ package texttospeechv1_test
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -10,55 +9,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cloudfoundry-community/go-cfenv"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
 )
 
 var _ = Describe("TextToSpeechV1", func() {
-	Describe("Get credentials from VCAP", func() {
-		username := "hyphenated-user"
-		password := "hyphenated-pass"
-		VCAPservices := cfenv.Services{
-			"conversation": {
-				{
-					Name: "text_to_speech",
-					Tags: []string{},
-					Credentials: map[string]interface{}{
-						"url":      "https://stream.watsonplatform.net/text-to-speech/api",
-						"username": username,
-						"password": password,
-					},
-				},
-			},
-		}
-		VCAPbytes, _ := json.Marshal(cfenv.App{})
-		os.Setenv("VCAP_APPLICATION", string(VCAPbytes))
-		VCAPbytes, _ = json.Marshal(VCAPservices)
-		os.Setenv("VCAP_SERVICES", string(VCAPbytes))
-		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-		Context("Successfully - Create TextToSpeechV1 with VCAP credentials", func() {
-			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-				defer GinkgoRecover()
-
-				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-			}))
-			It("Succeed to create TextToSpeechV1", func() {
-				defer testServer.Close()
-
-				testService, testServiceErr := texttospeechv1.
-					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL: testServer.URL,
-					})
-				Expect(testServiceErr).To(BeNil())
-				Expect(testService).ToNot(BeNil())
-
-				testService.ListVoiceModels(testService.NewListVoiceModelsOptions())
-			})
-		})
-	})
 	Describe("GetVoice(getVoiceOptions *GetVoiceOptions)", func() {
 		GetVoicePath := "/v1/voices/{voice}"
 		Voice := "exampleString"
@@ -421,6 +377,7 @@ var _ = Describe("TextToSpeechV1", func() {
 		AddWordPath := "/v1/customizations/{customization_id}/words/{word}"
 		CustomizationID := "exampleString"
 		Word := "exampleString"
+		Translation := "ex ample string"
 		username := "user1"
 		password := "pass1"
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
@@ -449,7 +406,7 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				AddWordOptions := testService.NewAddWordOptions(CustomizationID, Word)
+				AddWordOptions := testService.NewAddWordOptions(CustomizationID, Word, Translation)
 				returnValue, returnValueErr := testService.AddWord(AddWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -461,6 +418,7 @@ var _ = Describe("TextToSpeechV1", func() {
 		CustomizationID := "exampleString"
 		username := "user1"
 		password := "pass1"
+		words := []texttospeechv1.Word{}
 		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
 		AddWordsPath = strings.Replace(AddWordsPath, "{customization_id}", CustomizationID, 1)
 		Context("Successfully - Add custom words", func() {
@@ -486,7 +444,7 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
 
-				AddWordsOptions := testService.NewAddWordsOptions(CustomizationID)
+				AddWordsOptions := testService.NewAddWordsOptions(CustomizationID, words)
 				returnValue, returnValueErr := testService.AddWords(AddWordsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())

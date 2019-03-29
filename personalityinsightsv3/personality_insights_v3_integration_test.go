@@ -20,9 +20,9 @@ package personalityinsightsv3_test
 
 import (
 	"encoding/json"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 	"io/ioutil"
 	"os"

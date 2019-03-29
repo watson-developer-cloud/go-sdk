@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/IBM/go-sdk-core/core"
 	languagetranslator "github.com/watson-developer-cloud/go-sdk/languagetranslatorv3"
 )
 

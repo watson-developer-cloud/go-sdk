@@ -3,18 +3,17 @@ package main
 import (
 	"fmt"
 
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/watson-developer-cloud/go-sdk/assistantv2"
-	core "github.com/watson-developer-cloud/go-sdk/core"
 )
 
 func main() {
 	// Instantiate the Watson AssistantV2 service
 	service, serviceErr := assistantv2.
 		NewAssistantV2(&assistantv2.AssistantV2Options{
-			URL:      "YOUR SERVICE URL",
-			Version:  "2017-04-21",
-			Username: "YOUR SERVICE USERNAME",
-			Password: "YOUR SERVICE PASSWORD",
+			URL:       "YOUR SERVICE URL",
+			Version:   "2017-04-21",
+			IAMApiKey: "YOUR API KEY",
 		})
 
 	// Check successful instantiation

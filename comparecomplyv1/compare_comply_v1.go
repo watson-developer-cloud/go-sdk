@@ -19,8 +19,9 @@ package comparecomplyv1
 
 import (
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
-	core "github.com/watson-developer-cloud/go-sdk/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"os"
 )
 
@@ -30,7 +31,7 @@ import (
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/compare-comply.html
 type CompareComplyV1 struct {
-	Service *core.WatsonService
+	Service *core.BaseService
 }
 
 // CompareComplyV1Options : Service options
@@ -55,7 +56,7 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 		IAMAccessToken: options.IAMAccessToken,
 		IAMURL:         options.IAMURL,
 	}
-	service, serviceErr := core.NewWatsonService(serviceOptions, "compare-comply", "Compare Comply")
+	service, serviceErr := core.NewBaseService(serviceOptions, "compare-comply", "Compare Comply")
 	if serviceErr != nil {
 		return nil, serviceErr
 	}
@@ -63,8 +64,8 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 	return &CompareComplyV1{Service: service}, nil
 }
 
-// ConvertToHTML : Convert file to HTML
-// Convert an uploaded file to HTML.
+// ConvertToHTML : Convert document to HTML
+// Converts a document to HTML.
 func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *ConvertToHTMLOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(convertToHTMLOptions, "convertToHTMLOptions cannot be nil"); err != nil {
 		return nil, err
@@ -82,11 +83,16 @@ func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *Conver
 	for headerName, headerValue := range convertToHTMLOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ConvertToHTML")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ConvertToHTML")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
-	if convertToHTMLOptions.ModelID != nil {
-		builder.AddQuery("model_id", fmt.Sprint(*convertToHTMLOptions.ModelID))
+	if convertToHTMLOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*convertToHTMLOptions.Model))
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -112,7 +118,7 @@ func (compareComply *CompareComplyV1) GetConvertToHTMLResult(response *core.Deta
 }
 
 // ClassifyElements : Classify the elements of a document
-// Analyze an uploaded file's structural and semantic elements.
+// Analyzes the structural and semantic elements of a document.
 func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *ClassifyElementsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(classifyElementsOptions, "classifyElementsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -130,15 +136,20 @@ func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *
 	for headerName, headerValue := range classifyElementsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ClassifyElements")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ClassifyElements")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
-	if classifyElementsOptions.ModelID != nil {
-		builder.AddQuery("model_id", fmt.Sprint(*classifyElementsOptions.ModelID))
+	if classifyElementsOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*classifyElementsOptions.Model))
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("file", core.StringNilMapper(classifyElementsOptions.Filename),
+	builder.AddFormData("file", "filename",
 		core.StringNilMapper(classifyElementsOptions.FileContentType), classifyElementsOptions.File)
 
 	request, err := builder.Build()
@@ -160,7 +171,7 @@ func (compareComply *CompareComplyV1) GetClassifyElementsResult(response *core.D
 }
 
 // ExtractTables : Extract a document's tables
-// Extract and analyze an uploaded file's tables.
+// Analyzes the tables in a document.
 func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *ExtractTablesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(extractTablesOptions, "extractTablesOptions cannot be nil"); err != nil {
 		return nil, err
@@ -178,15 +189,20 @@ func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *Extrac
 	for headerName, headerValue := range extractTablesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ExtractTables")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ExtractTables")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
-	if extractTablesOptions.ModelID != nil {
-		builder.AddQuery("model_id", fmt.Sprint(*extractTablesOptions.ModelID))
+	if extractTablesOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*extractTablesOptions.Model))
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("file", core.StringNilMapper(extractTablesOptions.Filename),
+	builder.AddFormData("file", "filename",
 		core.StringNilMapper(extractTablesOptions.FileContentType), extractTablesOptions.File)
 
 	request, err := builder.Build()
@@ -208,7 +224,7 @@ func (compareComply *CompareComplyV1) GetExtractTablesResult(response *core.Deta
 }
 
 // CompareDocuments : Compare two documents
-// Compare two uploaded input files. Uploaded files must be in the same file format.
+// Compares two input documents. Documents must be in the same format.
 func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *CompareDocumentsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(compareDocumentsOptions, "compareDocumentsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -226,7 +242,12 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 	for headerName, headerValue := range compareDocumentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=CompareDocuments")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "CompareDocuments")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if compareDocumentsOptions.File1Label != nil {
@@ -235,14 +256,14 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 	if compareDocumentsOptions.File2Label != nil {
 		builder.AddQuery("file_2_label", fmt.Sprint(*compareDocumentsOptions.File2Label))
 	}
-	if compareDocumentsOptions.ModelID != nil {
-		builder.AddQuery("model_id", fmt.Sprint(*compareDocumentsOptions.ModelID))
+	if compareDocumentsOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*compareDocumentsOptions.Model))
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("file_1", core.StringNilMapper(compareDocumentsOptions.File1Filename),
+	builder.AddFormData("file_1", "filename",
 		core.StringNilMapper(compareDocumentsOptions.File1ContentType), compareDocumentsOptions.File1)
-	builder.AddFormData("file_2", core.StringNilMapper(compareDocumentsOptions.File2Filename),
+	builder.AddFormData("file_2", "filename",
 		core.StringNilMapper(compareDocumentsOptions.File2ContentType), compareDocumentsOptions.File2)
 
 	request, err := builder.Build()
@@ -284,20 +305,25 @@ func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbac
 	for headerName, headerValue := range addFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=AddFeedback")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "AddFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
 	body := make(map[string]interface{})
+	if addFeedbackOptions.FeedbackData != nil {
+		body["feedback_data"] = addFeedbackOptions.FeedbackData
+	}
 	if addFeedbackOptions.UserID != nil {
 		body["user_id"] = addFeedbackOptions.UserID
 	}
 	if addFeedbackOptions.Comment != nil {
 		body["comment"] = addFeedbackOptions.Comment
-	}
-	if addFeedbackOptions.FeedbackData != nil {
-		body["feedback_data"] = addFeedbackOptions.FeedbackData
 	}
 	_, err := builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -322,7 +348,8 @@ func (compareComply *CompareComplyV1) GetAddFeedbackResult(response *core.Detail
 	return nil
 }
 
-// DeleteFeedback : Deletes a specified feedback entry
+// DeleteFeedback : Delete a specified feedback entry
+// Deletes a feedback entry with a specified `feedback_id`.
 func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *DeleteFeedbackOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteFeedbackOptions, "deleteFeedbackOptions cannot be nil"); err != nil {
 		return nil, err
@@ -340,11 +367,16 @@ func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *Dele
 	for headerName, headerValue := range deleteFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=DeleteFeedback")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "DeleteFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
-	if deleteFeedbackOptions.ModelID != nil {
-		builder.AddQuery("model_id", fmt.Sprint(*deleteFeedbackOptions.ModelID))
+	if deleteFeedbackOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*deleteFeedbackOptions.Model))
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -367,6 +399,7 @@ func (compareComply *CompareComplyV1) GetDeleteFeedbackResult(response *core.Det
 }
 
 // GetFeedback : List a specified feedback entry
+// Lists a feedback entry with a specified `feedback_id`.
 func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbackOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getFeedbackOptions, "getFeedbackOptions cannot be nil"); err != nil {
 		return nil, err
@@ -384,11 +417,16 @@ func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbac
 	for headerName, headerValue := range getFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=GetFeedback")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "GetFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
-	if getFeedbackOptions.ModelID != nil {
-		builder.AddQuery("model_id", fmt.Sprint(*getFeedbackOptions.ModelID))
+	if getFeedbackOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*getFeedbackOptions.Model))
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -410,7 +448,8 @@ func (compareComply *CompareComplyV1) GetGetFeedbackResult(response *core.Detail
 	return nil
 }
 
-// ListFeedback : List the feedback in documents
+// ListFeedback : List the feedback in a document
+// Lists the feedback in a document.
 func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeedbackOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listFeedbackOptions, "listFeedbackOptions"); err != nil {
 		return nil, err
@@ -425,7 +464,12 @@ func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeed
 	for headerName, headerValue := range listFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ListFeedback")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ListFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	if listFeedbackOptions.FeedbackType != nil {
@@ -519,20 +563,25 @@ func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatc
 	for headerName, headerValue := range createBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=CreateBatch")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "CreateBatch")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("function", fmt.Sprint(*createBatchOptions.Function))
-	if createBatchOptions.ModelID != nil {
-		builder.AddQuery("model_id", fmt.Sprint(*createBatchOptions.ModelID))
+	if createBatchOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*createBatchOptions.Model))
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("input_credentials_file", core.StringNilMapper(createBatchOptions.InputCredentialsFilename),
+	builder.AddFormData("input_credentials_file", "filename",
 		"application/json", createBatchOptions.InputCredentialsFile)
 	builder.AddFormData("input_bucket_location", "", "", fmt.Sprint(*createBatchOptions.InputBucketLocation))
 	builder.AddFormData("input_bucket_name", "", "", fmt.Sprint(*createBatchOptions.InputBucketName))
-	builder.AddFormData("output_credentials_file", core.StringNilMapper(createBatchOptions.OutputCredentialsFilename),
+	builder.AddFormData("output_credentials_file", "filename",
 		"application/json", createBatchOptions.OutputCredentialsFile)
 	builder.AddFormData("output_bucket_location", "", "", fmt.Sprint(*createBatchOptions.OutputBucketLocation))
 	builder.AddFormData("output_bucket_name", "", "", fmt.Sprint(*createBatchOptions.OutputBucketName))
@@ -555,8 +604,8 @@ func (compareComply *CompareComplyV1) GetCreateBatchResult(response *core.Detail
 	return nil
 }
 
-// GetBatch : Get information about a specific batch-processing request
-// Get information about a batch-processing request with a specified ID.
+// GetBatch : Get information about a specific batch-processing job
+// Gets information about a batch-processing job with a specified ID.
 func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getBatchOptions, "getBatchOptions cannot be nil"); err != nil {
 		return nil, err
@@ -574,7 +623,12 @@ func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions)
 	for headerName, headerValue := range getBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=GetBatch")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "GetBatch")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -597,7 +651,7 @@ func (compareComply *CompareComplyV1) GetGetBatchResult(response *core.DetailedR
 }
 
 // ListBatches : List submitted batch-processing jobs
-// List the batch-processing jobs submitted by users.
+// Lists batch-processing jobs submitted by users.
 func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatchesOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listBatchesOptions, "listBatchesOptions"); err != nil {
 		return nil, err
@@ -612,7 +666,12 @@ func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatche
 	for headerName, headerValue := range listBatchesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=ListBatches")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ListBatches")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -634,9 +693,9 @@ func (compareComply *CompareComplyV1) GetListBatchesResult(response *core.Detail
 	return nil
 }
 
-// UpdateBatch : Update a pending or active batch-processing request
-// Update a pending or active batch-processing request. You can rescan the input bucket to check for new documents or
-// cancel a request.
+// UpdateBatch : Update a pending or active batch-processing job
+// Updates a pending or active batch-processing job. You can rescan the input bucket to check for new documents or
+// cancel a job.
 func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatchOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateBatchOptions, "updateBatchOptions cannot be nil"); err != nil {
 		return nil, err
@@ -654,12 +713,17 @@ func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatc
 	for headerName, headerValue := range updateBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
-	builder.AddHeader("X-IBMCloud-SDK-Analytics", "service_name=compare-comply;service_version=V1;operation_id=UpdateBatch")
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "UpdateBatch")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("action", fmt.Sprint(*updateBatchOptions.Action))
-	if updateBatchOptions.ModelID != nil {
-		builder.AddQuery("model_id", fmt.Sprint(*updateBatchOptions.ModelID))
+	if updateBatchOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*updateBatchOptions.Model))
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
@@ -684,14 +748,14 @@ func (compareComply *CompareComplyV1) GetUpdateBatchResult(response *core.Detail
 // AddFeedbackOptions : The addFeedback options.
 type AddFeedbackOptions struct {
 
+	// Feedback data for submission.
+	FeedbackData *FeedbackDataInput `json:"feedback_data" validate:"required"`
+
 	// An optional string identifying the user.
 	UserID *string `json:"user_id,omitempty"`
 
 	// An optional comment on or description of the feedback.
 	Comment *string `json:"comment,omitempty"`
-
-	// Feedback data for submission.
-	FeedbackData *FeedbackDataInput `json:"feedback_data" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -704,6 +768,12 @@ func (compareComply *CompareComplyV1) NewAddFeedbackOptions(feedbackData *Feedba
 	}
 }
 
+// SetFeedbackData : Allow user to set FeedbackData
+func (options *AddFeedbackOptions) SetFeedbackData(feedbackData *FeedbackDataInput) *AddFeedbackOptions {
+	options.FeedbackData = feedbackData
+	return options
+}
+
 // SetUserID : Allow user to set UserID
 func (options *AddFeedbackOptions) SetUserID(userID string) *AddFeedbackOptions {
 	options.UserID = core.StringPtr(userID)
@@ -713,12 +783,6 @@ func (options *AddFeedbackOptions) SetUserID(userID string) *AddFeedbackOptions 
 // SetComment : Allow user to set Comment
 func (options *AddFeedbackOptions) SetComment(comment string) *AddFeedbackOptions {
 	options.Comment = core.StringPtr(comment)
-	return options
-}
-
-// SetFeedbackData : Allow user to set FeedbackData
-func (options *AddFeedbackOptions) SetFeedbackData(feedbackData *FeedbackDataInput) *AddFeedbackOptions {
-	options.FeedbackData = feedbackData
 	return options
 }
 
@@ -745,14 +809,16 @@ type AlignedElement struct {
 	// Identifies two elements that semantically align between the compared documents.
 	ElementPair []ElementPair `json:"element_pair,omitempty"`
 
-	// Specifies whether the text is identical.
+	// Specifies whether the aligned element is identical. Elements are considered identical despite minor differences such
+	// as leading punctuation, end-of-sentence punctuation, whitespace, the presence or absence of definite or indefinite
+	// articles, and others.
 	IdenticalText *bool `json:"identical_text,omitempty"`
-
-	// Indicates that the elements aligned are contractual clauses of significance.
-	SignificantElements *bool `json:"significant_elements,omitempty"`
 
 	// One or more hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
+
+	// Indicates that the elements aligned are contractual clauses of significance.
+	SignificantElements *bool `json:"significant_elements,omitempty"`
 }
 
 // Attribute : List of document attributes.
@@ -772,11 +838,12 @@ type Attribute struct {
 // Constants associated with the Attribute.Type property.
 // The type of attribute.
 const (
-	Attribute_Type_Address      = "Address"
 	Attribute_Type_Currency     = "Currency"
 	Attribute_Type_Datetime     = "DateTime"
+	Attribute_Type_Duration     = "Duration"
 	Attribute_Type_Location     = "Location"
 	Attribute_Type_Organization = "Organization"
+	Attribute_Type_Percentage   = "Percentage"
 	Attribute_Type_Person       = "Person"
 )
 
@@ -836,8 +903,7 @@ type Batches struct {
 // BodyCells : Cells that are not table header, column header, or row header cells.
 type BodyCells struct {
 
-	// A string value in the format `columnHeader-x-y`, where `x` and `y` are the begin and end offsets of this column
-	// header cell in the input document.
+	// The unique ID of the cell in the current table.
 	CellID *string `json:"cell_id,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -859,25 +925,17 @@ type BodyCells struct {
 	// The `end` index of this cell's `column` location in the current table.
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 
-	// An array of values, each being the `id` value of a row header that is applicable to this body cell.
-	RowHeaderIds []string `json:"row_header_ids,omitempty"`
+	RowHeaderIds []RowHeaderIds `json:"row_header_ids,omitempty"`
 
-	// An array of values, each being the `text` value of a row header that is applicable to this body cell.
-	RowHeaderTexts []string `json:"row_header_texts,omitempty"`
+	RowHeaderTexts []RowHeaderTexts `json:"row_header_texts,omitempty"`
 
-	// If you provide customization input, the normalized version of the row header texts according to the customization;
-	// otherwise, the same value as `row_header_texts`.
-	RowHeaderTextsNormalized []string `json:"row_header_texts_normalized,omitempty"`
+	RowHeaderTextsNormalized []RowHeaderTextsNormalized `json:"row_header_texts_normalized,omitempty"`
 
-	// An array of values, each being the `id` value of a column header that is applicable to the current cell.
-	ColumnHeaderIds []string `json:"column_header_ids,omitempty"`
+	ColumnHeaderIds []ColumnHeaderIds `json:"column_header_ids,omitempty"`
 
-	// An array of values, each being the `text` value of a column header that is applicable to the current cell.
-	ColumnHeaderTexts []string `json:"column_header_texts,omitempty"`
+	ColumnHeaderTexts []ColumnHeaderTexts `json:"column_header_texts,omitempty"`
 
-	// If you provide customization input, the normalized version of the column header texts according to the
-	// customization; otherwise, the same value as `column_header_texts`.
-	ColumnHeaderTextsNormalized []string `json:"column_header_texts_normalized,omitempty"`
+	ColumnHeaderTextsNormalized []ColumnHeaderTextsNormalized `json:"column_header_texts_normalized,omitempty"`
 
 	Attributes []Attribute `json:"attributes,omitempty"`
 }
@@ -921,34 +979,67 @@ const (
 	Category_Label_Warranties           = "Warranties"
 )
 
+// CategoryComparison : Information defining an element's subject matter.
+type CategoryComparison struct {
+
+	// The category of the associated element.
+	Label *string `json:"label,omitempty"`
+}
+
+// Constants associated with the CategoryComparison.Label property.
+// The category of the associated element.
+const (
+	CategoryComparison_Label_Amendments           = "Amendments"
+	CategoryComparison_Label_AssetUse             = "Asset Use"
+	CategoryComparison_Label_Assignments          = "Assignments"
+	CategoryComparison_Label_Audits               = "Audits"
+	CategoryComparison_Label_BusinessContinuity   = "Business Continuity"
+	CategoryComparison_Label_Communication        = "Communication"
+	CategoryComparison_Label_Confidentiality      = "Confidentiality"
+	CategoryComparison_Label_Deliverables         = "Deliverables"
+	CategoryComparison_Label_Delivery             = "Delivery"
+	CategoryComparison_Label_DisputeResolution    = "Dispute Resolution"
+	CategoryComparison_Label_ForceMajeure         = "Force Majeure"
+	CategoryComparison_Label_Indemnification      = "Indemnification"
+	CategoryComparison_Label_Insurance            = "Insurance"
+	CategoryComparison_Label_IntellectualProperty = "Intellectual Property"
+	CategoryComparison_Label_Liability            = "Liability"
+	CategoryComparison_Label_PaymentTermsBilling  = "Payment Terms & Billing"
+	CategoryComparison_Label_PricingTaxes         = "Pricing & Taxes"
+	CategoryComparison_Label_Privacy              = "Privacy"
+	CategoryComparison_Label_Responsibilities     = "Responsibilities"
+	CategoryComparison_Label_SafetyAndSecurity    = "Safety and Security"
+	CategoryComparison_Label_ScopeOfWork          = "Scope of Work"
+	CategoryComparison_Label_Subcontracts         = "Subcontracts"
+	CategoryComparison_Label_TermTermination      = "Term & Termination"
+	CategoryComparison_Label_Warranties           = "Warranties"
+)
+
 // ClassifyElementsOptions : The classifyElements options.
 type ClassifyElementsOptions struct {
 
-	// The file to classify.
+	// The document to classify.
 	File *os.File `json:"file" validate:"required"`
 
-	// The filename for file.
-	Filename *string `json:"filename,omitempty"`
-
-	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-	// methods as well as to the methods' use in batch-processing requests.
-	ModelID *string `json:"model_id,omitempty"`
-
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
+
+	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
+	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
+	Model *string `json:"model,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
-// Constants associated with the ClassifyElementsOptions.ModelID property.
-// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-// methods as well as to the methods' use in batch-processing requests.
+// Constants associated with the ClassifyElementsOptions.Model property.
+// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults apply
+// to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
-	ClassifyElementsOptions_ModelID_Contracts = "contracts"
-	ClassifyElementsOptions_ModelID_Tables    = "tables"
+	ClassifyElementsOptions_Model_Contracts = "contracts"
+	ClassifyElementsOptions_Model_Tables    = "tables"
 )
 
 // NewClassifyElementsOptions : Instantiate ClassifyElementsOptions
@@ -964,21 +1055,15 @@ func (options *ClassifyElementsOptions) SetFile(file *os.File) *ClassifyElements
 	return options
 }
 
-// SetFilename : Allow user to set Filename
-func (options *ClassifyElementsOptions) SetFilename(filename string) *ClassifyElementsOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
-}
-
-// SetModelID : Allow user to set ModelID
-func (options *ClassifyElementsOptions) SetModelID(modelID string) *ClassifyElementsOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
-}
-
 // SetFileContentType : Allow user to set FileContentType
 func (options *ClassifyElementsOptions) SetFileContentType(fileContentType string) *ClassifyElementsOptions {
 	options.FileContentType = core.StringPtr(fileContentType)
+	return options
+}
+
+// SetModel : Allow user to set Model
+func (options *ClassifyElementsOptions) SetModel(model string) *ClassifyElementsOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
@@ -988,13 +1073,13 @@ func (options *ClassifyElementsOptions) SetHeaders(param map[string]string) *Cla
 	return options
 }
 
-// ClassifyReturn : The analysis of objects returned by the `/v1/element_classification` method.
+// ClassifyReturn : The analysis of objects returned by the **Element classification** method.
 type ClassifyReturn struct {
 
 	// Basic information about the input document.
 	Document *Document `json:"document,omitempty"`
 
-	// The analysis model used to classify the input document. For the `/v1/element_classification` method, the only valid
+	// The analysis model used to classify the input document. For the **Element classification** method, the only valid
 	// value is `contracts`.
 	ModelID *string `json:"model_id,omitempty"`
 
@@ -1013,21 +1098,45 @@ type ClassifyReturn struct {
 	// Definitions of the parties identified in the input document.
 	Parties []Parties `json:"parties,omitempty"`
 
-	// The effective dates of the input document.
+	// The date or dates on which the document becomes effective.
 	EffectiveDates []EffectiveDates `json:"effective_dates,omitempty"`
 
-	// The monetary amounts identified in the input document.
+	// The monetary amounts that identify the total amount of the contract that needs to be paid from one party to another.
 	ContractAmounts []ContractAmts `json:"contract_amounts,omitempty"`
 
-	// The input document's termination dates.
+	// The date or dates on which the document is to be terminated.
 	TerminationDates []TerminationDates `json:"termination_dates,omitempty"`
+
+	// The document's contract type or types as declared in the document.
+	ContractType []ContractType `json:"contract_type,omitempty"`
+}
+
+// ColumnHeaderIds : An array of values, each being the `id` value of a column header that is applicable to the current cell.
+type ColumnHeaderIds struct {
+
+	// The `id` value of a column header.
+	ID *string `json:"id,omitempty"`
+}
+
+// ColumnHeaderTexts : An array of values, each being the `text` value of a column header that is applicable to the current cell.
+type ColumnHeaderTexts struct {
+
+	// The `text` value of a column header.
+	Text *string `json:"text,omitempty"`
+}
+
+// ColumnHeaderTextsNormalized : If you provide customization input, the normalized version of the column header texts according to the customization;
+// otherwise, the same value as `column_header_texts`.
+type ColumnHeaderTextsNormalized struct {
+
+	// The normalized version of a column header text.
+	TextNormalized *string `json:"text_normalized,omitempty"`
 }
 
 // ColumnHeaders : Column-level cells, each applicable as a header to other cells in the same column as itself, of the current table.
 type ColumnHeaders struct {
 
-	// A string value in the format `columnHeader-x-y`, where `x` and `y` are the begin and end offsets of this column
-	// header cell in the input document.
+	// The unique ID of the cell in the current table.
 	CellID *string `json:"cell_id,omitempty"`
 
 	// The location of the column header cell in the current table as defined by its `begin` and `end` offsets,
@@ -1057,46 +1166,40 @@ type ColumnHeaders struct {
 // CompareDocumentsOptions : The compareDocuments options.
 type CompareDocumentsOptions struct {
 
-	// The first file to compare.
+	// The first document to compare.
 	File1 *os.File `json:"file_1" validate:"required"`
 
-	// The filename for file1.
-	File1Filename *string `json:"file_1_filename,omitempty"`
-
-	// The second file to compare.
+	// The second document to compare.
 	File2 *os.File `json:"file_2" validate:"required"`
 
-	// The filename for file2.
-	File2Filename *string `json:"file_2_filename,omitempty"`
-
-	// A text label for the first file.
-	File1Label *string `json:"file_1_label,omitempty"`
-
-	// A text label for the second file.
-	File2Label *string `json:"file_2_label,omitempty"`
-
-	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-	// methods as well as to the methods' use in batch-processing requests.
-	ModelID *string `json:"model_id,omitempty"`
-
-	// The content type of file1. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file1.
 	File1ContentType *string `json:"file_1_content_type,omitempty"`
 
-	// The content type of file2. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file2.
 	File2ContentType *string `json:"file_2_content_type,omitempty"`
+
+	// A text label for the first document.
+	File1Label *string `json:"file_1_label,omitempty"`
+
+	// A text label for the second document.
+	File2Label *string `json:"file_2_label,omitempty"`
+
+	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
+	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
+	Model *string `json:"model,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
-// Constants associated with the CompareDocumentsOptions.ModelID property.
-// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-// methods as well as to the methods' use in batch-processing requests.
+// Constants associated with the CompareDocumentsOptions.Model property.
+// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults apply
+// to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
-	CompareDocumentsOptions_ModelID_Contracts = "contracts"
-	CompareDocumentsOptions_ModelID_Tables    = "tables"
+	CompareDocumentsOptions_Model_Contracts = "contracts"
+	CompareDocumentsOptions_Model_Tables    = "tables"
 )
 
 // NewCompareDocumentsOptions : Instantiate CompareDocumentsOptions
@@ -1113,39 +1216,9 @@ func (options *CompareDocumentsOptions) SetFile1(file1 *os.File) *CompareDocumen
 	return options
 }
 
-// SetFile1Filename : Allow user to set File1Filename
-func (options *CompareDocumentsOptions) SetFile1Filename(file1Filename string) *CompareDocumentsOptions {
-	options.File1Filename = core.StringPtr(file1Filename)
-	return options
-}
-
 // SetFile2 : Allow user to set File2
 func (options *CompareDocumentsOptions) SetFile2(file2 *os.File) *CompareDocumentsOptions {
 	options.File2 = file2
-	return options
-}
-
-// SetFile2Filename : Allow user to set File2Filename
-func (options *CompareDocumentsOptions) SetFile2Filename(file2Filename string) *CompareDocumentsOptions {
-	options.File2Filename = core.StringPtr(file2Filename)
-	return options
-}
-
-// SetFile1Label : Allow user to set File1Label
-func (options *CompareDocumentsOptions) SetFile1Label(file1Label string) *CompareDocumentsOptions {
-	options.File1Label = core.StringPtr(file1Label)
-	return options
-}
-
-// SetFile2Label : Allow user to set File2Label
-func (options *CompareDocumentsOptions) SetFile2Label(file2Label string) *CompareDocumentsOptions {
-	options.File2Label = core.StringPtr(file2Label)
-	return options
-}
-
-// SetModelID : Allow user to set ModelID
-func (options *CompareDocumentsOptions) SetModelID(modelID string) *CompareDocumentsOptions {
-	options.ModelID = core.StringPtr(modelID)
 	return options
 }
 
@@ -1161,6 +1234,24 @@ func (options *CompareDocumentsOptions) SetFile2ContentType(file2ContentType str
 	return options
 }
 
+// SetFile1Label : Allow user to set File1Label
+func (options *CompareDocumentsOptions) SetFile1Label(file1Label string) *CompareDocumentsOptions {
+	options.File1Label = core.StringPtr(file1Label)
+	return options
+}
+
+// SetFile2Label : Allow user to set File2Label
+func (options *CompareDocumentsOptions) SetFile2Label(file2Label string) *CompareDocumentsOptions {
+	options.File2Label = core.StringPtr(file2Label)
+	return options
+}
+
+// SetModel : Allow user to set Model
+func (options *CompareDocumentsOptions) SetModel(model string) *CompareDocumentsOptions {
+	options.Model = core.StringPtr(model)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CompareDocumentsOptions) SetHeaders(param map[string]string) *CompareDocumentsOptions {
 	options.Headers = param
@@ -1170,6 +1261,13 @@ func (options *CompareDocumentsOptions) SetHeaders(param map[string]string) *Com
 // CompareReturn : The comparison of the two submitted documents.
 type CompareReturn struct {
 
+	// The analysis model used to compare the input documents. For the **Compare two documents** method, the only valid
+	// value is `contracts`.
+	ModelID *string `json:"model_id,omitempty"`
+
+	// The version of the analysis model identified by the value of the `model_id` key.
+	ModelVersion *string `json:"model_version,omitempty"`
+
 	// Information about the documents being compared.
 	Documents []Document `json:"documents,omitempty"`
 
@@ -1178,13 +1276,6 @@ type CompareReturn struct {
 
 	// A list of elements that do not semantically align between the compared documents.
 	UnalignedElements []UnalignedElement `json:"unaligned_elements,omitempty"`
-
-	// The analysis model used to classify the input document. For the `/v1/element_classification` method, the only valid
-	// value is `contracts`.
-	ModelID *string `json:"model_id,omitempty"`
-
-	// The version of the analysis model identified by the value of the `model_id` key.
-	ModelVersion *string `json:"model_version,omitempty"`
 }
 
 // Contact : A contact.
@@ -1219,34 +1310,56 @@ const (
 	ContractAmts_ConfidenceLevel_Medium = "Medium"
 )
 
+// ContractType : The contract type identified in the input document.
+type ContractType struct {
+
+	// The contract type.
+	Text *string `json:"text,omitempty"`
+
+	// The confidence level in the identification of the termination date.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+}
+
+// Constants associated with the ContractType.ConfidenceLevel property.
+// The confidence level in the identification of the termination date.
+const (
+	ContractType_ConfidenceLevel_High   = "High"
+	ContractType_ConfidenceLevel_Low    = "Low"
+	ContractType_ConfidenceLevel_Medium = "Medium"
+)
+
 // ConvertToHTMLOptions : The convertToHtml options.
 type ConvertToHTMLOptions struct {
 
-	// The file to convert.
+	// The document to convert.
 	File *os.File `json:"file" validate:"required"`
 
 	// The filename for file.
 	Filename *string `json:"filename" validate:"required"`
 
-	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-	// methods as well as to the methods' use in batch-processing requests.
-	ModelID *string `json:"model_id,omitempty"`
-
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
+
+	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
+	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
+	Model *string `json:"model,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
-// Constants associated with the ConvertToHTMLOptions.ModelID property.
-// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-// methods as well as to the methods' use in batch-processing requests.
+// Constants associated with the ConvertToHTMLOptions.Model property.
+// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults apply
+// to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
-	ConvertToHTMLOptions_ModelID_Contracts = "contracts"
-	ConvertToHTMLOptions_ModelID_Tables    = "tables"
+	ConvertToHTMLOptions_Model_Contracts = "contracts"
+	ConvertToHTMLOptions_Model_Tables    = "tables"
 )
 
 // NewConvertToHTMLOptions : Instantiate ConvertToHTMLOptions
@@ -1269,15 +1382,15 @@ func (options *ConvertToHTMLOptions) SetFilename(filename string) *ConvertToHTML
 	return options
 }
 
-// SetModelID : Allow user to set ModelID
-func (options *ConvertToHTMLOptions) SetModelID(modelID string) *ConvertToHTMLOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
-}
-
 // SetFileContentType : Allow user to set FileContentType
 func (options *ConvertToHTMLOptions) SetFileContentType(fileContentType string) *ConvertToHTMLOptions {
 	options.FileContentType = core.StringPtr(fileContentType)
+	return options
+}
+
+// SetModel : Allow user to set Model
+func (options *ConvertToHTMLOptions) SetModel(model string) *ConvertToHTMLOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
@@ -1297,9 +1410,6 @@ type CreateBatchOptions struct {
 	// permissions on the bucket defined by the `input_bucket_name` parameter.
 	InputCredentialsFile *os.File `json:"input_credentials_file" validate:"required"`
 
-	// The filename for inputCredentialsFile.
-	InputCredentialsFilename *string `json:"input_credentials_filename,omitempty"`
-
 	// The geographical location of the Cloud Object Storage input bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
 	InputBucketLocation *string `json:"input_bucket_location" validate:"required"`
@@ -1311,9 +1421,6 @@ type CreateBatchOptions struct {
 	// and `WRITE` permissions on the bucket defined by the `output_bucket_name` parameter.
 	OutputCredentialsFile *os.File `json:"output_credentials_file" validate:"required"`
 
-	// The filename for outputCredentialsFile.
-	OutputCredentialsFilename *string `json:"output_credentials_filename,omitempty"`
-
 	// The geographical location of the Cloud Object Storage output bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
 	OutputBucketLocation *string `json:"output_bucket_location" validate:"required"`
@@ -1321,10 +1428,10 @@ type CreateBatchOptions struct {
 	// The name of the Cloud Object Storage output bucket.
 	OutputBucketName *string `json:"output_bucket_name" validate:"required"`
 
-	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-	// methods as well as to the methods' use in batch-processing requests.
-	ModelID *string `json:"model_id,omitempty"`
+	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
+	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
+	Model *string `json:"model,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -1338,13 +1445,13 @@ const (
 	CreateBatchOptions_Function_Tables                = "tables"
 )
 
-// Constants associated with the CreateBatchOptions.ModelID property.
-// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-// methods as well as to the methods' use in batch-processing requests.
+// Constants associated with the CreateBatchOptions.Model property.
+// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults apply
+// to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
-	CreateBatchOptions_ModelID_Contracts = "contracts"
-	CreateBatchOptions_ModelID_Tables    = "tables"
+	CreateBatchOptions_Model_Contracts = "contracts"
+	CreateBatchOptions_Model_Tables    = "tables"
 )
 
 // NewCreateBatchOptions : Instantiate CreateBatchOptions
@@ -1372,12 +1479,6 @@ func (options *CreateBatchOptions) SetInputCredentialsFile(inputCredentialsFile 
 	return options
 }
 
-// SetInputCredentialsFilename : Allow user to set InputCredentialsFilename
-func (options *CreateBatchOptions) SetInputCredentialsFilename(inputCredentialsFilename string) *CreateBatchOptions {
-	options.InputCredentialsFilename = core.StringPtr(inputCredentialsFilename)
-	return options
-}
-
 // SetInputBucketLocation : Allow user to set InputBucketLocation
 func (options *CreateBatchOptions) SetInputBucketLocation(inputBucketLocation string) *CreateBatchOptions {
 	options.InputBucketLocation = core.StringPtr(inputBucketLocation)
@@ -1396,12 +1497,6 @@ func (options *CreateBatchOptions) SetOutputCredentialsFile(outputCredentialsFil
 	return options
 }
 
-// SetOutputCredentialsFilename : Allow user to set OutputCredentialsFilename
-func (options *CreateBatchOptions) SetOutputCredentialsFilename(outputCredentialsFilename string) *CreateBatchOptions {
-	options.OutputCredentialsFilename = core.StringPtr(outputCredentialsFilename)
-	return options
-}
-
 // SetOutputBucketLocation : Allow user to set OutputBucketLocation
 func (options *CreateBatchOptions) SetOutputBucketLocation(outputBucketLocation string) *CreateBatchOptions {
 	options.OutputBucketLocation = core.StringPtr(outputBucketLocation)
@@ -1414,9 +1509,9 @@ func (options *CreateBatchOptions) SetOutputBucketName(outputBucketName string) 
 	return options
 }
 
-// SetModelID : Allow user to set ModelID
-func (options *CreateBatchOptions) SetModelID(modelID string) *CreateBatchOptions {
-	options.ModelID = core.StringPtr(modelID)
+// SetModel : Allow user to set Model
+func (options *CreateBatchOptions) SetModel(model string) *CreateBatchOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
@@ -1432,22 +1527,22 @@ type DeleteFeedbackOptions struct {
 	// A string that specifies the feedback entry to be deleted from the document.
 	FeedbackID *string `json:"feedback_id" validate:"required"`
 
-	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-	// methods as well as to the methods' use in batch-processing requests.
-	ModelID *string `json:"model_id,omitempty"`
+	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
+	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
+	Model *string `json:"model,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
-// Constants associated with the DeleteFeedbackOptions.ModelID property.
-// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-// methods as well as to the methods' use in batch-processing requests.
+// Constants associated with the DeleteFeedbackOptions.Model property.
+// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults apply
+// to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
-	DeleteFeedbackOptions_ModelID_Contracts = "contracts"
-	DeleteFeedbackOptions_ModelID_Tables    = "tables"
+	DeleteFeedbackOptions_Model_Contracts = "contracts"
+	DeleteFeedbackOptions_Model_Tables    = "tables"
 )
 
 // NewDeleteFeedbackOptions : Instantiate DeleteFeedbackOptions
@@ -1463,9 +1558,9 @@ func (options *DeleteFeedbackOptions) SetFeedbackID(feedbackID string) *DeleteFe
 	return options
 }
 
-// SetModelID : Allow user to set ModelID
-func (options *DeleteFeedbackOptions) SetModelID(modelID string) *DeleteFeedbackOptions {
-	options.ModelID = core.StringPtr(modelID)
+// SetModel : Allow user to set Model
+func (options *DeleteFeedbackOptions) SetModel(model string) *DeleteFeedbackOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
@@ -1591,18 +1686,18 @@ type ElementPair struct {
 	// the element occurs.
 	DocumentLabel *string `json:"document_label,omitempty"`
 
-	// The text of the element.
+	// The contents of the element.
 	Text *string `json:"text,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
 	Location *Location `json:"location,omitempty"`
 
-	// Description of the action specified by the element  and whom it affects.
-	Types []TypeLabel `json:"types,omitempty"`
+	// Description of the action specified by the element and whom it affects.
+	Types []TypeLabelComparison `json:"types,omitempty"`
 
 	// List of functional categories into which the element falls; in other words, the subject matter of the element.
-	Categories []Category `json:"categories,omitempty"`
+	Categories []CategoryComparison `json:"categories,omitempty"`
 
 	// List of document attributes.
 	Attributes []Attribute `json:"attributes,omitempty"`
@@ -1611,31 +1706,28 @@ type ElementPair struct {
 // ExtractTablesOptions : The extractTables options.
 type ExtractTablesOptions struct {
 
-	// The file on which to run table extraction.
+	// The document on which to run table extraction.
 	File *os.File `json:"file" validate:"required"`
 
-	// The filename for file.
-	Filename *string `json:"filename,omitempty"`
-
-	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-	// methods as well as to the methods' use in batch-processing requests.
-	ModelID *string `json:"model_id,omitempty"`
-
-	// The content type of file. Values for this parameter can be obtained from the HttpMediaType class.
+	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
+
+	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
+	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
+	Model *string `json:"model,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
-// Constants associated with the ExtractTablesOptions.ModelID property.
-// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-// methods as well as to the methods' use in batch-processing requests.
+// Constants associated with the ExtractTablesOptions.Model property.
+// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults apply
+// to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
-	ExtractTablesOptions_ModelID_Contracts = "contracts"
-	ExtractTablesOptions_ModelID_Tables    = "tables"
+	ExtractTablesOptions_Model_Contracts = "contracts"
+	ExtractTablesOptions_Model_Tables    = "tables"
 )
 
 // NewExtractTablesOptions : Instantiate ExtractTablesOptions
@@ -1651,21 +1743,15 @@ func (options *ExtractTablesOptions) SetFile(file *os.File) *ExtractTablesOption
 	return options
 }
 
-// SetFilename : Allow user to set Filename
-func (options *ExtractTablesOptions) SetFilename(filename string) *ExtractTablesOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
-}
-
-// SetModelID : Allow user to set ModelID
-func (options *ExtractTablesOptions) SetModelID(modelID string) *ExtractTablesOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
-}
-
 // SetFileContentType : Allow user to set FileContentType
 func (options *ExtractTablesOptions) SetFileContentType(fileContentType string) *ExtractTablesOptions {
 	options.FileContentType = core.StringPtr(fileContentType)
+	return options
+}
+
+// SetModel : Allow user to set Model
+func (options *ExtractTablesOptions) SetModel(model string) *ExtractTablesOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
@@ -1775,7 +1861,7 @@ type FeedbackReturn struct {
 // GetBatchOptions : The getBatch options.
 type GetBatchOptions struct {
 
-	// The ID of the batch-processing request whose information you want to retrieve.
+	// The ID of the batch-processing job whose information you want to retrieve.
 	BatchID *string `json:"batch_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1823,22 +1909,22 @@ type GetFeedbackOptions struct {
 	// A string that specifies the feedback entry to be included in the output.
 	FeedbackID *string `json:"feedback_id" validate:"required"`
 
-	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-	// methods as well as to the methods' use in batch-processing requests.
-	ModelID *string `json:"model_id,omitempty"`
+	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
+	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
+	Model *string `json:"model,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
-// Constants associated with the GetFeedbackOptions.ModelID property.
-// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-// methods as well as to the methods' use in batch-processing requests.
+// Constants associated with the GetFeedbackOptions.Model property.
+// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults apply
+// to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
-	GetFeedbackOptions_ModelID_Contracts = "contracts"
-	GetFeedbackOptions_ModelID_Tables    = "tables"
+	GetFeedbackOptions_Model_Contracts = "contracts"
+	GetFeedbackOptions_Model_Tables    = "tables"
 )
 
 // NewGetFeedbackOptions : Instantiate GetFeedbackOptions
@@ -1854,9 +1940,9 @@ func (options *GetFeedbackOptions) SetFeedbackID(feedbackID string) *GetFeedback
 	return options
 }
 
-// SetModelID : Allow user to set ModelID
-func (options *GetFeedbackOptions) SetModelID(modelID string) *GetFeedbackOptions {
-	options.ModelID = core.StringPtr(modelID)
+// SetModel : Allow user to set Model
+func (options *GetFeedbackOptions) SetModel(model string) *GetFeedbackOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
@@ -1883,6 +1969,30 @@ type HTMLReturn struct {
 
 	// The HTML version of the input document.
 	HTML *string `json:"html,omitempty"`
+}
+
+// Key : A key in a key-value pair.
+type Key struct {
+
+	// The unique ID of the key in the table.
+	CellID *string `json:"cell_id,omitempty"`
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+
+	// The text content of the table cell without HTML markup.
+	Text *string `json:"text,omitempty"`
+}
+
+// KeyValuePair : Key-value pairs detected across cell boundaries.
+type KeyValuePair struct {
+
+	// A key in a key-value pair.
+	Key *Key `json:"key,omitempty"`
+
+	// A value in a key-value pair.
+	Value *Value `json:"value,omitempty"`
 }
 
 // Label : A pair of `nature` and `party` objects. The `nature` object identifies the effect of the element on the identified
@@ -2194,11 +2304,32 @@ const (
 	Parties_Importance_Unknown = "Unknown"
 )
 
+// RowHeaderIds : An array of values, each being the `id` value of a row header that is applicable to this body cell.
+type RowHeaderIds struct {
+
+	// The `id` values of a row header.
+	ID *string `json:"id,omitempty"`
+}
+
+// RowHeaderTexts : An array of values, each being the `text` value of a row header that is applicable to this body cell.
+type RowHeaderTexts struct {
+
+	// The `text` value of a row header.
+	Text *string `json:"text,omitempty"`
+}
+
+// RowHeaderTextsNormalized : If you provide customization input, the normalized version of the row header texts according to the customization;
+// otherwise, the same value as `row_header_texts`.
+type RowHeaderTextsNormalized struct {
+
+	// The normalized version of a row header text.
+	TextNormalized *string `json:"text_normalized,omitempty"`
+}
+
 // RowHeaders : Row-level cells, each applicable as a header to other cells in the same row as itself, of the current table.
 type RowHeaders struct {
 
-	// A string value in the format `rowHeader-x-y`, where `x` and `y` are the begin and end offsets of this row header
-	// cell in the input document.
+	// The unique ID of the cell in the current table.
 	CellID *string `json:"cell_id,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -2269,8 +2400,7 @@ type ShortDoc struct {
 // TableHeaders : The contents of the current table's header.
 type TableHeaders struct {
 
-	// String value in the format `tableHeader-x-y` where `x` and `y` are the `begin` and `end` offsets, respectfully, of
-	// the cell value in the input document.
+	// The unique ID of the cell in the current table.
 	CellID *string `json:"cell_id,omitempty"`
 
 	// The location of the table header cell in the current table as defined by its `begin` and `end` offsets,
@@ -2333,6 +2463,9 @@ type Tables struct {
 	// current table.
 	ColumnHeaders []ColumnHeaders `json:"column_headers,omitempty"`
 
+	// An array of key-value pairs identified in the current table.
+	KeyValuePairs []KeyValuePair `json:"key_value_pairs,omitempty"`
+
 	// An array of cells that are neither table header nor column header nor row header cells, of the current table with
 	// corresponding row and column header associations.
 	BodyCells []BodyCells `json:"body_cells,omitempty"`
@@ -2371,11 +2504,19 @@ type TypeLabel struct {
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 }
 
+// TypeLabelComparison : Identification of a specific type.
+type TypeLabelComparison struct {
+
+	// A pair of `nature` and `party` objects. The `nature` object identifies the effect of the element on the identified
+	// `party`, and the `party` object identifies the affected party.
+	Label *Label `json:"label,omitempty"`
+}
+
 // UnalignedElement : Element that does not align semantically between two compared documents.
 type UnalignedElement struct {
 
-	// The label assigned to the document by the value of the `file_1_label` or `file_2_label` parameters on the
-	// `/v1/compare` method.
+	// The label assigned to the document by the value of the `file_1_label` or `file_2_label` parameters on the **Compare
+	// two documents** method.
 	DocumentLabel *string `json:"document_label,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -2386,10 +2527,10 @@ type UnalignedElement struct {
 	Text *string `json:"text,omitempty"`
 
 	// Description of the action specified by the element and whom it affects.
-	Types []TypeLabel `json:"types,omitempty"`
+	Types []TypeLabelComparison `json:"types,omitempty"`
 
 	// List of functional categories into which the element falls; in other words, the subject matter of the element.
-	Categories []Category `json:"categories,omitempty"`
+	Categories []CategoryComparison `json:"categories,omitempty"`
 
 	// List of document attributes.
 	Attributes []Attribute `json:"attributes,omitempty"`
@@ -2398,35 +2539,35 @@ type UnalignedElement struct {
 // UpdateBatchOptions : The updateBatch options.
 type UpdateBatchOptions struct {
 
-	// The ID of the batch-processing request you want to update.
+	// The ID of the batch-processing job you want to update.
 	BatchID *string `json:"batch_id" validate:"required"`
 
-	// The action you want to perform on the specified batch-processing request.
+	// The action you want to perform on the specified batch-processing job.
 	Action *string `json:"action" validate:"required"`
 
-	// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-	// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-	// methods as well as to the methods' use in batch-processing requests.
-	ModelID *string `json:"model_id,omitempty"`
+	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
+	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
+	Model *string `json:"model,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // Constants associated with the UpdateBatchOptions.Action property.
-// The action you want to perform on the specified batch-processing request.
+// The action you want to perform on the specified batch-processing job.
 const (
 	UpdateBatchOptions_Action_Cancel = "cancel"
 	UpdateBatchOptions_Action_Rescan = "rescan"
 )
 
-// Constants associated with the UpdateBatchOptions.ModelID property.
-// The analysis model to be used by the service. For the `/v1/element_classification` and `/v1/comparison` methods, the
-// default is `contracts`. For the `/v1/tables` method, the default is `tables`. These defaults apply to the standalone
-// methods as well as to the methods' use in batch-processing requests.
+// Constants associated with the UpdateBatchOptions.Model property.
+// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
+// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults apply
+// to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
-	UpdateBatchOptions_ModelID_Contracts = "contracts"
-	UpdateBatchOptions_ModelID_Tables    = "tables"
+	UpdateBatchOptions_Model_Contracts = "contracts"
+	UpdateBatchOptions_Model_Tables    = "tables"
 )
 
 // NewUpdateBatchOptions : Instantiate UpdateBatchOptions
@@ -2449,9 +2590,9 @@ func (options *UpdateBatchOptions) SetAction(action string) *UpdateBatchOptions 
 	return options
 }
 
-// SetModelID : Allow user to set ModelID
-func (options *UpdateBatchOptions) SetModelID(modelID string) *UpdateBatchOptions {
-	options.ModelID = core.StringPtr(modelID)
+// SetModel : Allow user to set Model
+func (options *UpdateBatchOptions) SetModel(model string) *UpdateBatchOptions {
+	options.Model = core.StringPtr(model)
 	return options
 }
 
@@ -2493,3 +2634,17 @@ const (
 	UpdatedLabelsOut_Modification_NotChanged = "not_changed"
 	UpdatedLabelsOut_Modification_Removed    = "removed"
 )
+
+// Value : A value in a key-value pair.
+type Value struct {
+
+	// The unique ID of the value in the table.
+	CellID *string `json:"cell_id,omitempty"`
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+
+	// The text content of the table cell without HTML markup.
+	Text *string `json:"text,omitempty"`
+}

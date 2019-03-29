@@ -2,10 +2,10 @@ package comparecomplyv1_test
 
 import (
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/comparecomplyv1"
-	"github.com/watson-developer-cloud/go-sdk/core"
 	"net/http"
 	"net/http/httptest"
 	"os"
