@@ -422,7 +422,7 @@ func (cb myCallBack) OnError(err error) {
 	cb.T.Fail()
 }
 
-func TestRecognizeUsingWebsockets(t *testing.T) {
+func TestRecognizeUsingWebsocket(t *testing.T) {
 	shouldSkipTest(t)
 	f, _ := os.Open("../resources/audio_example.mp3")
 	callback := myCallBack{T: t}
@@ -431,6 +431,6 @@ func TestRecognizeUsingWebsockets(t *testing.T) {
 
 	recognizeOptions.SetModel("en-US_BroadbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
 
-	service.RecognizeUsingWebsockets(recognizeOptions, callback)
+	service.RecognizeUsingWebsocket(recognizeOptions, callback)
 
 }

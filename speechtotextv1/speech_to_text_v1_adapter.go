@@ -65,8 +65,8 @@ type RecognizeCallbackWrapper interface {
 	OnError(error)
 }
 
-// RecognizeUsingWebsockets: Recognize audio over websocket connection
-func (speechToText *SpeechToTextV1) RecognizeUsingWebsockets(recognizeWSOptions *RecognizeUsingWebsocketOptions, callback RecognizeCallbackWrapper) {
+// RecognizeUsingWebsocket: Recognize audio over websocket connection
+func (speechToText *SpeechToTextV1) RecognizeUsingWebsocket(recognizeWSOptions *RecognizeUsingWebsocketOptions, callback RecognizeCallbackWrapper) {
 	headers := http.Header{}
 
 	if err := core.ValidateNotNil(recognizeWSOptions, "recognizeOptions cannot be nil"); err != nil {

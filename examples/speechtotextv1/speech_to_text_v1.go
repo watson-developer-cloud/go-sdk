@@ -68,7 +68,7 @@ func main() {
 		SetSpeakerLabels(true).
 		SetTimestamps(true)
 
-	service.RecognizeUsingWebsockets(recognizeUsingWebsocketOptions, callback)
+	service.RecognizeUsingWebsocket(recognizeUsingWebsocketOptions, callback)
 }
 
 type myCallBack struct{}
