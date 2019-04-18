@@ -1,6 +1,7 @@
 # Watson Developer Cloud Go SDK
 [![Build Status](https://travis-ci.org/watson-developer-cloud/go-sdk.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/go-sdk)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![wdc-community.slack.com](https://wdc-slack-inviter.mybluemix.net/badge.svg)](http://wdc-slack-inviter.mybluemix.net/)
 
 
 Go client library to quickly get started with the various [Watson APIs](https://www.ibm.com/watson/developercloud/) services.
@@ -20,6 +21,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 * [Tests](#tests)
 * [Contributing](#contributing)
 * [License](#license)
+* [Featured Projects](#featured-projects)
 
 </details>
 
@@ -221,6 +223,10 @@ go test ./assistantv1
 ## Contributing
 
 See [CONTRIBUTING][CONTRIBUTING].
+
+## Featured Projects
+
+We'd love to highlight cool open-source projects that use this SDK! If you'd like to get your project added to the list, feel free to make an issue linking us to it.
 
 ## License
 
