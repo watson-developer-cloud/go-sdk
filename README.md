@@ -20,6 +20,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 * [Tests](#tests)
 * [Contributing](#contributing)
 * [License](#license)
+* [Featured Projects](#featured-projects)
 
 </details>
 
@@ -221,6 +222,10 @@ go test ./assistantv1
 ## Contributing
 
 See [CONTRIBUTING][CONTRIBUTING].
+
+## Featured Projects
+
+We'd love to highlight cool open-source projects that use this SDK! If you'd like to get your project added to the list, feel free to make an issue linking us to it.
 
 ## License
 
