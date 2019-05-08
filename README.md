@@ -99,7 +99,7 @@ You supply either an IAM service **API key** or an **access token**:
 
 * Use the API key to have the SDK manage the lifecycle of the access token. The SDK requests an access token, ensures that the access token is valid, and refreshes it if necessary.
 
-* Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://console.bluemix.net/docs/services/watson/getting-started-iam.html#iam).
+* Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://cloud.ibm.com/docs/services/watson?topic=watson-iam#iam).
 
 **Supplying the IAM API key**
 
@@ -232,7 +232,7 @@ We'd love to highlight cool open-source projects that use this SDK! If you'd lik
 
 This library is licensed under the [Apache 2.0 license][license].
 
-[ibm-cloud-onboarding]: http://console.bluemix.net/registration?target=%2Fdeveloper%2Fwatson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Go
+[ibm-cloud-onboarding]: https://cloud.ibm.com/registration?target=%2Fdeveloper%2Fwatson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Go
 [examples]: https://github.com/watson-developer-cloud/go-sdk/tree/master/examples
 [CONTRIBUTING]: https://github.com/watson-developer-cloud/go-sdk/blob/master/.github/CONTRIBUTING.md
 [license]: http://www.apache.org/licenses/LICENSE-2.0
