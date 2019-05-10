@@ -9,3 +9,7 @@ node_modules/
 
 # ignore vendor/
 vendor/
+
+# ignore detect secrets files
+.pre-commit-config.yaml
+.secrets.baseline
