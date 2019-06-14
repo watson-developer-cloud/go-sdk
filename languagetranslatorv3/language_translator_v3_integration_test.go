@@ -19,12 +19,13 @@ package languagetranslatorv3_test
  */
 
 import (
+	"os"
+	"testing"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/languagetranslatorv3"
-	"os"
-	"testing"
 )
 
 var service *languagetranslatorv3.LanguageTranslatorV3
@@ -37,7 +38,7 @@ func init() {
 		service, serviceErr = languagetranslatorv3.
 			NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				URL:      os.Getenv("LANGUAGE_TRANSLATOR_URL"),
-				Version:  "2018-05-01",
+				Version:  "2019-06-03",
 				Username: os.Getenv("LANGUAGE_TRANSLATOR_USERNAME"),
 				Password: os.Getenv("LANGUAGE_TRANSLATOR_PASSWORD"),
 			})
@@ -49,6 +50,7 @@ func shouldSkipTest(t *testing.T) {
 		t.Skip("Skipping test as service credentials are missing")
 	}
 }
+
 func TestModels(t *testing.T) {
 	shouldSkipTest(t)
 
@@ -137,4 +139,56 @@ func TestIdentify(t *testing.T) {
 
 	identify := service.GetIdentifyResult(response)
 	assert.NotNil(t, identify)
+}
+
+func TestDocumentTranslation(t *testing.T) {
+	shouldSkipTest(t)
+
+	// List documents
+	response, responseErr := service.ListDocuments(
+		&languagetranslatorv3.ListDocumentsOptions{},
+	)
+	assert.Nil(t, responseErr)
+
+	listDocuments := service.GetListDocumentsResult(response)
+	assert.NotNil(t, listDocuments)
+	core.PrettyPrint(listDocuments, "list docs")
+
+	// translate document
+	t.Skip("Skip: Client.Timeout exceeded while awaiting headers")
+	pwd, _ := os.Getwd()
+	document, documentErr := os.Open(pwd + "/../resources/hello_world.txt")
+	assert.Nil(t, documentErr)
+
+	response, responseErr = service.TranslateDocument(
+		&languagetranslatorv3.TranslateDocumentOptions{
+			File:            document,
+			Filename:        core.StringPtr("hello_world"),
+			FileContentType: core.StringPtr("text/plain"),
+			ModelID:         core.StringPtr("en-es"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	translateDocument := service.GetTranslateDocumentResult(response)
+	assert.NotNil(t, translateDocument)
+
+	// Document status
+	response, responseErr = service.GetDocumentStatus(
+		&languagetranslatorv3.GetDocumentStatusOptions{
+			DocumentID: translateDocument.DocumentID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	documentStatus := service.GetGetDocumentStatusResult(response)
+	assert.NotNil(t, documentStatus)
+
+	// Delete document
+	response, responseErr = service.DeleteDocument(
+		&languagetranslatorv3.DeleteDocumentOptions{
+			DocumentID: translateDocument.DocumentID,
+		},
+	)
+	assert.Nil(t, responseErr)
 }
