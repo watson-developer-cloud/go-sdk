@@ -461,12 +461,24 @@ type Author struct {
 // Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 type CategoriesOptions struct {
 
+	// Set this to `true` to return explanations for each categorization. **This is available only for English
+	// categories.**.
+	Explanation *bool `json:"explanation,omitempty"`
+
 	// Maximum number of categories to return.
 	Limit *int64 `json:"limit,omitempty"`
 
-	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to
-	// override the standard categories model.
+	// Enter a [custom
+	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// ID to override the standard categories model.
 	Model *string `json:"model,omitempty"`
+}
+
+// CategoriesRelevantText : Relevant text that contributed to the categorization.
+type CategoriesRelevantText struct {
+
+	// Text from the analyzed source that supports the categorization.
+	Text *string `json:"text,omitempty"`
 }
 
 // CategoriesResult : A categorization of the analyzed text.
@@ -474,12 +486,23 @@ type CategoriesResult struct {
 
 	// The path to the category through the 5-level taxonomy hierarchy. For the complete list of categories, see the
 	// [Categories
-	// hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding/categories.html#categories-hierarchy)
+	// hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy)
 	// documentation.
 	Label *string `json:"label,omitempty"`
 
 	// Confidence score for the category classification. Higher values indicate greater confidence.
 	Score *float64 `json:"score,omitempty"`
+
+	// Information that helps to explain what contributed to the categories result.
+	Explanation *CategoriesResultExplanation `json:"explanation,omitempty"`
+}
+
+// CategoriesResultExplanation : Information that helps to explain what contributed to the categories result.
+type CategoriesResultExplanation struct {
+
+	// An array of relevant text from the source that contributed to the categorization. The sorted array begins with the
+	// phrase that contributed most significantly to the result, followed by phrases that were less and less impactful.
+	RelevantText []CategoriesRelevantText `json:"relevant_text,omitempty"`
 }
 
 // ConceptsOptions : Returns high-level concepts in the content. For example, a research paper about deep learning might return the
