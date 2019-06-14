@@ -343,12 +343,6 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	if recognizeOptions.Redaction != nil {
 		builder.AddQuery("redaction", fmt.Sprint(*recognizeOptions.Redaction))
 	}
-	if recognizeOptions.ProcessingMetrics != nil {
-		builder.AddQuery("processing_metrics", fmt.Sprint(*recognizeOptions.ProcessingMetrics))
-	}
-	if recognizeOptions.ProcessingMetricsInterval != nil {
-		builder.AddQuery("processing_metrics_interval", fmt.Sprint(*recognizeOptions.ProcessingMetricsInterval))
-	}
 	if recognizeOptions.AudioMetrics != nil {
 		builder.AddQuery("audio_metrics", fmt.Sprint(*recognizeOptions.AudioMetrics))
 	}
@@ -5450,23 +5444,6 @@ type RecognizeOptions struct {
 	// See [Numeric redaction](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#redaction).
 	Redaction *bool `json:"redaction,omitempty"`
 
-	// If `true`, requests processing metrics about the service's transcription of the input audio. The service returns
-	// processing metrics at the interval specified by the `processing_metrics_interval` parameter. It also returns
-	// processing metrics for transcription events, for example, for final and interim results. By default, the service
-	// returns no processing metrics.
-	ProcessingMetrics *bool `json:"processing_metrics,omitempty"`
-
-	// Specifies the interval in real wall-clock seconds at which the service is to return processing metrics. The
-	// parameter is ignored unless the `processing_metrics` parameter is set to `true`.
-	//
-	// The parameter accepts a minimum value of 0.1 seconds. The level of precision is not restricted, so you can specify
-	// values such as 0.25 and 0.125.
-	//
-	// The service does not impose a maximum value. If you want to receive processing metrics only for transcription events
-	// instead of at periodic intervals, set the value to a large number. If the value is larger than the duration of the
-	// audio, the service returns processing metrics only for transcription events.
-	ProcessingMetricsInterval *float32 `json:"processing_metrics_interval,omitempty"`
-
 	// If `true`, requests detailed information about the signal characteristics of the input audio. The service returns
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
 	AudioMetrics *bool `json:"audio_metrics,omitempty"`
@@ -5645,18 +5622,6 @@ func (options *RecognizeOptions) SetGrammarName(grammarName string) *RecognizeOp
 // SetRedaction : Allow user to set Redaction
 func (options *RecognizeOptions) SetRedaction(redaction bool) *RecognizeOptions {
 	options.Redaction = core.BoolPtr(redaction)
-	return options
-}
-
-// SetProcessingMetrics : Allow user to set ProcessingMetrics
-func (options *RecognizeOptions) SetProcessingMetrics(processingMetrics bool) *RecognizeOptions {
-	options.ProcessingMetrics = core.BoolPtr(processingMetrics)
-	return options
-}
-
-// SetProcessingMetricsInterval : Allow user to set ProcessingMetricsInterval
-func (options *RecognizeOptions) SetProcessingMetricsInterval(processingMetricsInterval float32) *RecognizeOptions {
-	options.ProcessingMetricsInterval = core.Float32Ptr(processingMetricsInterval)
 	return options
 }
 
