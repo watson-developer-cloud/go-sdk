@@ -17,6 +17,9 @@ Go client library to quickly get started with the various [Watson APIs](https://
 	* [IAM](#iam)
 	* [Username-and-password](#username-and-password)
 * [Use](#use)
+* [Configuring the HTTP Client](#configuring-the-http-client)
+* [Disable SSL certificate verification](#disable-ssl-certificate-verification)
+* [IBM Cloud Pak for Data(ICP4D)](#ibm-cloud-pak-for-data(icp4d))
 * [Examples](#examples)
 * [Tests](#tests)
 * [Contributing](#contributing)
@@ -72,7 +75,9 @@ The file downloaded will be called `ibm-credentials.env`. This is the name the S
 As long as you set that up correctly, you don't have to worry about setting any authentication options in your code. So, for example, if you created and downloaded the credential file for your Discovery instance, you just need to do the following:
 
 ```go
-discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
+import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+
+service, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 	Version:   "2018-03-05",
 })
 ```
@@ -105,7 +110,9 @@ You supply either an IAM service **API key** or an **access token**:
 
 ```go
 // In the constructor, letting the SDK manage the IAM token
-discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
+import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+
+discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 		URL:       "<service_url>",
 		Version:   "2018-03-05",
 		IAMApiKey: "<apikey>",
@@ -116,7 +123,9 @@ discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
 
 ```go
 // In the constructor, assuming control of managing IAM token
-discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
+import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+
+discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 		URL:            "<service_url>",
 		Version:        "2018-03-05",
 		IAMAccessToken: "<IAM_access_token>",
@@ -127,7 +136,9 @@ discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
 
 ```go
 // In the constructor
-discovery, discoveryErr := NewDiscoveryV1(&DiscoveryV1Options{
+import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+
+discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 		URL:      "<service_url>",
 		Version:  "2018-03-05",
 		Username: "<username>",
@@ -198,6 +209,143 @@ if listEnvironmentResult != nil {
 }
 ```
 
+## Configuring the HTTP Client
+
+To change client configs like timeout, setting proxy, etc, pass in your own client using the `SetHTTPClient()` method. Below is an example to pass a proxy
+
+```go
+package main
+
+import (
+  "fmt"
+  "log"
+  "net/http"
+  "net/url"
+
+  discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+)
+
+func main() {
+  // Instantiate the Watson Discovery service
+  discoveryService, discoveryServiceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
+    URL:       "YOUR SERVICE URL",
+    Version:   "2018-03-05",
+    IAMApiKey: "YOUR IAM API KEY",
+  })
+  // Check successful instantiation
+  if discoveryServiceErr != nil {
+    fmt.Println(discoveryServiceErr)
+    return
+  }
+
+  //creating the proxyURL
+  proxyStr := "http://<proxy host>:<port>"
+  proxyURL, err := url.Parse(proxyStr)
+  if err != nil {
+    log.Println(err)
+  }
+
+  //adding the proxy settings to the Transport object
+  transport := &http.Transport{
+    Proxy: http.ProxyURL(proxyURL),
+  }
+
+  //adding the Transport object to the http Client
+  client := &http.Client{
+    Transport: transport,
+  }
+
+  discoveryService.Service.SetHTTPClient(client)
+}
+```
+
+## Disable SSL certificate verification
+Disable the SSL verification using `DisableSSLVerification()` method
+
+```go
+package main
+
+import (
+  "fmt"
+  discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+)
+
+func main() {
+  // Instantiate the Watson Discovery service
+  discoveryService, discoveryServiceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
+    URL:       "YOUR SERVICE URL",
+    Version:   "2018-03-05",
+    IAMApiKey: "YOUR IAM API KEY",
+  })
+  // Check successful instantiation
+  if discoveryServiceErr != nil {
+    fmt.Println(discoveryServiceErr)
+    return
+  }
+
+  discoveryService.Service.DisableSSLVerification()
+}
+```
+
+## IBM Cloud Pak for Data(ICP4D)
+If your service instance is of ICP4D, below are two ways of initializing the assistant service.
+
+1) Supplying the `Username`, `Password`, `ICP4DURL` and `AuthenticationType`
+
+```go
+package main
+
+import (
+  "fmt"
+  discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+)
+
+func main() {
+  // Instantiate the Watson Discovery service
+  discoveryService, discoveryServiceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
+    URL:                "YOUR SERVICE URL", // should be of the form https://{icp_cluster_host}/{deployment}/discovery/{instance-id}/api
+    Version:            "2018-03-05",
+    Username:           "YOUR USERNAME",
+    Password:           "YOUR PASSWORD",
+    ICP4DURL:           "ICP4D URL FOR AUTHENTICATION", // should be of the form https://{icp_cluster_host}
+    AuthenticationType: "icp4d",
+  })
+
+  // Check successful instantiation
+  if discoveryServiceErr != nil {
+    fmt.Println(discoveryServiceErr)
+    return
+  }
+
+  discoveryService.Service.DisableSSLVerification() // MAKE SURE SSL VERIFICATION IS DISABLED
+}
+```
+
+2) Supplying the access token
+```go
+package main
+
+import (
+  "fmt"
+  discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+)
+
+func main() {
+  // Instantiate the Watson Discovery service
+  discoveryService, discoveryServiceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
+    URL:              "YOUR SERVICE URL", // should be of the form https://{icp_cluster_host}/{deployment}/discovery/{instance-id}/api
+    Version:          "2018-03-05",
+    ICP4DAccessToken: "YOUR ACCESSTOKEN",
+  })
+  // Check successful instantiation
+  if discoveryServiceErr != nil {
+    fmt.Println(discoveryServiceErr)
+    return
+  }
+
+  discoveryService.Service.DisableSSLVerification() // MAKE SURE SSL VERIFICATION IS DISABLED
+}
+```
 ## Examples
 
 The [examples][examples] folder has basic and advanced examples. The examples within each service assume that you already have [service credentials](#getting-credentials).
