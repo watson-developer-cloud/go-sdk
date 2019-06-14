@@ -152,10 +152,8 @@ func TestDocumentTranslation(t *testing.T) {
 
 	listDocuments := service.GetListDocumentsResult(response)
 	assert.NotNil(t, listDocuments)
-	core.PrettyPrint(listDocuments, "list docs")
 
 	// translate document
-	t.Skip("Skip: Client.Timeout exceeded while awaiting headers")
 	pwd, _ := os.Getwd()
 	document, documentErr := os.Open(pwd + "/../resources/hello_world.txt")
 	assert.Nil(t, documentErr)
