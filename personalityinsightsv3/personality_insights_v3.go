@@ -19,9 +19,10 @@ package personalityinsightsv3
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights
@@ -33,9 +34,11 @@ import (
 // personality characteristics. The service can infer consumption preferences based on the results of its analysis and,
 // for JSON content that is timestamped, can report temporal behavior.
 // * For information about the meaning of the models that the service uses to describe personality characteristics, see
-// [Personality models](https://cloud.ibm.com/docs/services/personality-insights/models.html).
+// [Personality
+// models](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-models#models).
 // * For information about the meaning of the consumption preferences, see [Consumption
-// preferences](https://cloud.ibm.com/docs/services/personality-insights/preferences.html).
+// preferences](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-preferences#preferences).
+//
 //
 // **Note:** Request logging is disabled for the Personality Insights service. Regardless of whether you set the
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
@@ -48,13 +51,18 @@ type PersonalityInsightsV3 struct {
 
 // PersonalityInsightsV3Options : Service options
 type PersonalityInsightsV3Options struct {
-	Version        string
-	URL            string
-	Username       string
-	Password       string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	Version            string
+	URL                string
+	Username           string
+	Password           string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewPersonalityInsightsV3 : Instantiate PersonalityInsightsV3
@@ -64,13 +72,18 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Version:        options.Version,
-		Username:       options.Username,
-		Password:       options.Password,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		Version:            options.Version,
+		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "personality_insights", "Personality Insights")
 	if serviceErr != nil {
@@ -86,8 +99,10 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 // English, Japanese, Korean, or Spanish. It can return its results in a variety of languages.
 //
 // **See also:**
-// * [Requesting a profile](https://cloud.ibm.com/docs/services/personality-insights/input.html)
-// * [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient)
+// * [Requesting a
+// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#input)
+// * [Providing sufficient
+// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient)
 //
 // ### Content types
 //
@@ -101,7 +116,7 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 // encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
 //
 // **See also:** [Specifying request and response
-// formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
+// formats](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#formats)
 //
 // ### Accept types
 //
@@ -110,8 +125,10 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (*Personali
 // request optional column headers for CSV output.
 //
 // **See also:**
-// * [Understanding a JSON profile](https://cloud.ibm.com/docs/services/personality-insights/output.html)
-// * [Understanding a CSV profile](https://cloud.ibm.com/docs/services/personality-insights/output-csv.html).
+// * [Understanding a JSON
+// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-output#output)
+// * [Understanding a CSV
+// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-outputCSV#outputCSV).
 func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -186,8 +203,10 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // English, Japanese, Korean, or Spanish. It can return its results in a variety of languages.
 //
 // **See also:**
-// * [Requesting a profile](https://cloud.ibm.com/docs/services/personality-insights/input.html)
-// * [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient)
+// * [Requesting a
+// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#input)
+// * [Providing sufficient
+// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient)
 //
 // ### Content types
 //
@@ -201,7 +220,7 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
 //
 // **See also:** [Specifying request and response
-// formats](https://cloud.ibm.com/docs/services/personality-insights/input.html#formats)
+// formats](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#formats)
 //
 // ### Accept types
 //
@@ -210,8 +229,10 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // request optional column headers for CSV output.
 //
 // **See also:**
-// * [Understanding a JSON profile](https://cloud.ibm.com/docs/services/personality-insights/output.html)
-// * [Understanding a CSV profile](https://cloud.ibm.com/docs/services/personality-insights/output-csv.html).
+// * [Understanding a JSON
+// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-output#output)
+// * [Understanding a CSV
+// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-outputCSV#outputCSV).
 func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
 		return nil, err
@@ -280,7 +301,7 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileAsCsvResult(response
 	return nil
 }
 
-// Behavior : Behavior struct
+// Behavior : The temporal behavior for the input content.
 type Behavior struct {
 
 	// The unique, non-localized identifier of the characteristic to which the results pertain. IDs have the form
@@ -298,7 +319,7 @@ type Behavior struct {
 	Percentage *float64 `json:"percentage" validate:"required"`
 }
 
-// ConsumptionPreferences : ConsumptionPreferences struct
+// ConsumptionPreferences : A consumption preference that the service inferred from the input content.
 type ConsumptionPreferences struct {
 
 	// The unique, non-localized identifier of the consumption preference to which the results pertain. IDs have the form
@@ -318,7 +339,7 @@ type ConsumptionPreferences struct {
 	Score *float64 `json:"score" validate:"required"`
 }
 
-// ConsumptionPreferencesCategory : ConsumptionPreferencesCategory struct
+// ConsumptionPreferencesCategory : The consumption preferences that the service inferred from the input content.
 type ConsumptionPreferencesCategory struct {
 
 	// The unique, non-localized identifier of the consumption preferences category to which the results pertain. IDs have
@@ -332,14 +353,14 @@ type ConsumptionPreferencesCategory struct {
 	ConsumptionPreferences []ConsumptionPreferences `json:"consumption_preferences" validate:"required"`
 }
 
-// Content : Content struct
+// Content : The full input content that the service is to analyze.
 type Content struct {
 
 	// An array of `ContentItem` objects that provides the text that is to be analyzed.
 	ContentItems []ContentItem `json:"contentItems" validate:"required"`
 }
 
-// ContentItem : ContentItem struct
+// ContentItem : An input content item that the service is to analyze.
 type ContentItem struct {
 
 	// The content that is to be analyzed. The service supports up to 20 MB of content for all `ContentItem` objects
@@ -403,7 +424,7 @@ const (
 	ContentItem_Language_Ko = "ko"
 )
 
-// Profile : Profile struct
+// Profile : The personality profile that the service generated for the input content.
 type Profile struct {
 
 	// The language model that was used to process the input.
@@ -436,8 +457,8 @@ type Profile struct {
 	// preferences of that category.
 	ConsumptionPreferences []ConsumptionPreferencesCategory `json:"consumption_preferences,omitempty"`
 
-	// Warning messages associated with the input text submitted with the request. The array is empty if the input
-	// generated no warnings.
+	// An array of warning messages that are associated with the input text for the request. The array is empty if the
+	// input generated no warnings.
 	Warnings []Warning `json:"warnings" validate:"required"`
 }
 
@@ -451,16 +472,18 @@ const (
 	Profile_ProcessedLanguage_Ko = "ko"
 )
 
-// ProfileOptions : The profile options.
+// ProfileOptions : The Profile options.
 type ProfileOptions struct {
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
-	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For
+	// [Providing sufficient
+	// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient). For
 	// JSON input, provide an object of type `Content`.
 	Content *Content `json:"content,omitempty"`
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
-	// [Providing sufficient input](https://cloud.ibm.com/docs/services/personality-insights/input.html#sufficient). For
+	// [Providing sufficient
+	// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient). For
 	// JSON input, provide an object of type `Content`.
 	Body *string `json:"body,omitempty"`
 
@@ -606,7 +629,7 @@ func (options *ProfileOptions) SetHeaders(param map[string]string) *ProfileOptio
 	return options
 }
 
-// Trait : Trait struct
+// Trait : The characteristics that the service inferred from the input content.
 type Trait struct {
 
 	// The unique, non-localized identifier of the characteristic to which the results pertain. IDs have the form
@@ -658,7 +681,7 @@ const (
 	Trait_Category_Values      = "values"
 )
 
-// Warning : Warning struct
+// Warning : A warning message that is associated with the input content.
 type Warning struct {
 
 	// The identifier of the warning message.
