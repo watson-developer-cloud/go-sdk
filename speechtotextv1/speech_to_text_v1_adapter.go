@@ -3,8 +3,9 @@ package speechtotextv1
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
 	"io"
+
+	"github.com/IBM/go-sdk-core/core"
 
 	"net/http"
 	"net/url"
@@ -28,6 +29,23 @@ type RecognizeUsingWebsocketOptions struct {
 	// If true, the service returns interim results as a stream of JSON SpeechRecognitionResults objects.
 	// If false, the service returns a single SpeechRecognitionResults object with final results only.
 	InterimResults *bool `json:"interim_results,omitempty"`
+
+	// If `true`, requests processing metrics about the service's transcription of the input audio. The service returns
+	// processing metrics at the interval specified by the `processing_metrics_interval` parameter. It also returns
+	// processing metrics for transcription events, for example, for final and interim results. By default, the service
+	// returns no processing metrics.
+	ProcessingMetrics *bool `json:"processing_metrics,omitempty"`
+
+	// Specifies the interval in real wall-clock seconds at which the service is to return processing metrics. The
+	// parameter is ignored unless the `processing_metrics` parameter is set to `true`.
+	//
+	// The parameter accepts a minimum value of 0.1 seconds. The level of precision is not restricted, so you can specify
+	// values such as 0.25 and 0.125.
+	//
+	// The service does not impose a maximum value. If you want to receive processing metrics only for transcription events
+	// instead of at periodic intervals, set the value to a large number. If the value is larger than the duration of the
+	// audio, the service returns processing metrics only for transcription events.
+	ProcessingMetricsInterval *float32 `json:"processing_metrics_interval,omitempty"`
 }
 
 // SetAction: Allows user to set the Action
@@ -42,11 +60,23 @@ func (recognizeWSOptions *RecognizeUsingWebsocketOptions) SetInterimResults(inte
 	return recognizeWSOptions
 }
 
+// SetProcessingMetrics : Allow user to set ProcessingMetrics
+func (recognizeWSOptions *RecognizeUsingWebsocketOptions) SetProcessingMetrics(processingMetrics bool) *RecognizeUsingWebsocketOptions {
+	recognizeWSOptions.ProcessingMetrics = core.BoolPtr(processingMetrics)
+	return recognizeWSOptions
+}
+
+// SetProcessingMetricsInterval : Allow user to set ProcessingMetricsInterval
+func (recognizeWSOptions *RecognizeUsingWebsocketOptions) SetProcessingMetricsInterval(processingMetricsInterval float32) *RecognizeUsingWebsocketOptions {
+	recognizeWSOptions.ProcessingMetricsInterval = core.Float32Ptr(processingMetricsInterval)
+	return recognizeWSOptions
+}
+
 // NewRecognizeUsingWebsocketOptions: Instantiate RecognizeOptions to enable websocket support
 func (speechToText *SpeechToTextV1) NewRecognizeUsingWebsocketOptions(audio io.ReadCloser, contentType string) *RecognizeUsingWebsocketOptions {
 	recognizeOptions := speechToText.NewRecognizeOptions(audio)
 	recognizeOptions.SetContentType(contentType)
-	recognizeWSOptions := &RecognizeUsingWebsocketOptions{*recognizeOptions, nil, nil}
+	recognizeWSOptions := &RecognizeUsingWebsocketOptions{*recognizeOptions, nil, nil, nil, nil}
 	return recognizeWSOptions
 }
 
@@ -76,12 +106,21 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsocket(recognizeWSOptions *
 		panic(err)
 	}
 
-	if speechToText.Service.Options.IAMApiKey != "" || speechToText.Service.TokenManager != nil || speechToText.Service.Options.IAMAccessToken != "" {
-		token, err := speechToText.Service.TokenManager.GetToken()
-		if err != nil {
-			panic(err)
+	if speechToText.Service.Options.IAMApiKey != "" || speechToText.Service.IAMTokenManager != nil || speechToText.Service.Options.IAMAccessToken != "" ||
+		speechToText.Service.ICP4DTokenManager != nil || speechToText.Service.Options.ICP4DAccessToken != "" {
+		if speechToText.Service.IAMTokenManager != nil {
+			token, err := speechToText.Service.IAMTokenManager.GetToken()
+			if err != nil {
+				panic(err)
+			}
+			headers.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+		} else if speechToText.Service.ICP4DTokenManager != nil {
+			token, err := speechToText.Service.ICP4DTokenManager.GetToken()
+			if err != nil {
+				panic(err)
+			}
+			headers.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 		}
-		headers.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	} else {
 		auth := []byte(speechToText.Service.Options.Username + ":" + speechToText.Service.Options.Password)
 		headers.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString(auth)))
@@ -103,6 +142,12 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsocket(recognizeWSOptions *
 	}
 	if recognizeWSOptions.BaseModelVersion != nil {
 		param.Set("base_model_version", *recognizeWSOptions.BaseModelVersion)
+	}
+	if recognizeWSOptions.ProcessingMetrics != nil {
+		param.Set("processing_metrics", fmt.Sprint(*recognizeWSOptions.ProcessingMetrics))
+	}
+	if recognizeWSOptions.ProcessingMetricsInterval != nil {
+		param.Set("processing_metrics_interval", fmt.Sprint(*recognizeWSOptions.ProcessingMetricsInterval))
 	}
 
 	speechToText.NewRecognizeListener(callback, recognizeWSOptions, dialURL, param, headers)
