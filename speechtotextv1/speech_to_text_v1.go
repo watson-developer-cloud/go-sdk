@@ -1114,9 +1114,6 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 	if trainLanguageModelOptions.CustomizationWeight != nil {
 		builder.AddQuery("customization_weight", fmt.Sprint(*trainLanguageModelOptions.CustomizationWeight))
 	}
-	if trainLanguageModelOptions.Strict != nil {
-		builder.AddQuery("strict", fmt.Sprint(*trainLanguageModelOptions.Strict))
-	}
 
 	request, err := builder.Build()
 	if err != nil {
@@ -6041,12 +6038,6 @@ type TrainLanguageModelOptions struct {
 	// recognition request by specifying a customization weight for that request.
 	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
-	// If `false`, allows training of the custom language model to proceed as long as the model contains at least one valid
-	// resource. The method returns an array of `TrainingWarning` objects that lists any invalid resources. By default
-	// (`true`), training of a custom language model fails (status code 400) if the model contains one or more invalid
-	// resources (corpus files, grammar files, or custom words).
-	Strict *bool `json:"strict,omitempty"`
-
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -6084,12 +6075,6 @@ func (options *TrainLanguageModelOptions) SetWordTypeToAdd(wordTypeToAdd string)
 // SetCustomizationWeight : Allow user to set CustomizationWeight
 func (options *TrainLanguageModelOptions) SetCustomizationWeight(customizationWeight float64) *TrainLanguageModelOptions {
 	options.CustomizationWeight = core.Float64Ptr(customizationWeight)
-	return options
-}
-
-// SetStrict : Allow user to set Strict
-func (options *TrainLanguageModelOptions) SetStrict(strict bool) *TrainLanguageModelOptions {
-	options.Strict = core.BoolPtr(strict)
 	return options
 }
 
