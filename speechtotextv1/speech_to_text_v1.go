@@ -2262,9 +2262,6 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 	if trainAcousticModelOptions.CustomLanguageModelID != nil {
 		builder.AddQuery("custom_language_model_id", fmt.Sprint(*trainAcousticModelOptions.CustomLanguageModelID))
 	}
-	if trainAcousticModelOptions.Strict != nil {
-		builder.AddQuery("strict", fmt.Sprint(*trainAcousticModelOptions.Strict))
-	}
 
 	request, err := builder.Build()
 	if err != nil {
@@ -5971,12 +5968,6 @@ type TrainAcousticModelOptions struct {
 	// request must own both custom models.
 	CustomLanguageModelID *string `json:"custom_language_model_id,omitempty"`
 
-	// If `false`, allows training of the custom acoustic model to proceed as long as the model contains at least one valid
-	// audio resource. The method returns an array of `TrainingWarning` objects that lists any invalid resources. By
-	// default (`true`), training of a custom acoustic model fails (status code 400) if the model contains one or more
-	// invalid audio resources.
-	Strict *bool `json:"strict,omitempty"`
-
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -5997,12 +5988,6 @@ func (options *TrainAcousticModelOptions) SetCustomizationID(customizationID str
 // SetCustomLanguageModelID : Allow user to set CustomLanguageModelID
 func (options *TrainAcousticModelOptions) SetCustomLanguageModelID(customLanguageModelID string) *TrainAcousticModelOptions {
 	options.CustomLanguageModelID = core.StringPtr(customLanguageModelID)
-	return options
-}
-
-// SetStrict : Allow user to set Strict
-func (options *TrainAcousticModelOptions) SetStrict(strict bool) *TrainAcousticModelOptions {
-	options.Strict = core.BoolPtr(strict)
 	return options
 }
 
