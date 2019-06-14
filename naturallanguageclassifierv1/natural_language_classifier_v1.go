@@ -18,10 +18,11 @@ package naturallanguageclassifierv1
  */
 
 import (
+	"os"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"os"
 )
 
 // NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to
@@ -36,12 +37,17 @@ type NaturalLanguageClassifierV1 struct {
 
 // NaturalLanguageClassifierV1Options : Service options
 type NaturalLanguageClassifierV1Options struct {
-	URL            string
-	Username       string
-	Password       string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	URL                string
+	Username           string
+	Password           string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewNaturalLanguageClassifierV1 : Instantiate NaturalLanguageClassifierV1
@@ -51,12 +57,17 @@ func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options)
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Username:       options.Username,
-		Password:       options.Password,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "natural_language_classifier", "Natural Language Classifier")
 	if serviceErr != nil {
@@ -230,26 +241,24 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetCreateClassifie
 	return nil
 }
 
-// DeleteClassifier : Delete classifier
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteClassifierOptions, "deleteClassifierOptions"); err != nil {
+// ListClassifiers : List classifiers
+// Returns an empty array if no classifiers are available.
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions"); err != nil {
 		return nil, err
 	}
 
 	pathSegments := []string{"v1/classifiers"}
-	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
+	pathParameters := []string{}
 
-	builder := core.NewRequestBuilder(core.DELETE)
+	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range deleteClassifierOptions.Headers {
+	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "DeleteClassifier")
+	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "ListClassifiers")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -261,8 +270,17 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(d
 		return nil, err
 	}
 
-	response, err := naturalLanguageClassifier.Service.Request(request, nil)
+	response, err := naturalLanguageClassifier.Service.Request(request, new(ClassifierList))
 	return response, err
+}
+
+// GetListClassifiersResult : Retrieve result of ListClassifiers operation
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetListClassifiersResult(response *core.DetailedResponse) *ClassifierList {
+	result, ok := response.Result.(*ClassifierList)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetClassifier : Get information about a classifier
@@ -310,24 +328,26 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetGetClassifierRe
 	return nil
 }
 
-// ListClassifiers : List classifiers
-// Returns an empty array if no classifiers are available.
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions"); err != nil {
+// DeleteClassifier : Delete classifier
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteClassifierOptions, "deleteClassifierOptions"); err != nil {
 		return nil, err
 	}
 
 	pathSegments := []string{"v1/classifiers"}
-	pathParameters := []string{}
+	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
 
-	builder := core.NewRequestBuilder(core.GET)
+	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range listClassifiersOptions.Headers {
+	for headerName, headerValue := range deleteClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "ListClassifiers")
+	sdkHeaders := common.GetSdkHeaders("natural_language_classifier", "V1", "DeleteClassifier")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -339,17 +359,8 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(li
 		return nil, err
 	}
 
-	response, err := naturalLanguageClassifier.Service.Request(request, new(ClassifierList))
+	response, err := naturalLanguageClassifier.Service.Request(request, nil)
 	return response, err
-}
-
-// GetListClassifiersResult : Retrieve result of ListClassifiers operation
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetListClassifiersResult(response *core.DetailedResponse) *ClassifierList {
-	result, ok := response.Result.(*ClassifierList)
-	if ok {
-		return result
-	}
-	return nil
 }
 
 // Classification : Response from the classifier for a phrase.
@@ -437,7 +448,7 @@ type ClassifierList struct {
 	Classifiers []Classifier `json:"classifiers" validate:"required"`
 }
 
-// ClassifyCollectionOptions : The classifyCollection options.
+// ClassifyCollectionOptions : The ClassifyCollection options.
 type ClassifyCollectionOptions struct {
 
 	// Classifier ID to use.
@@ -483,7 +494,7 @@ type ClassifyInput struct {
 	Text *string `json:"text" validate:"required"`
 }
 
-// ClassifyOptions : The classify options.
+// ClassifyOptions : The Classify options.
 type ClassifyOptions struct {
 
 	// Classifier ID to use.
@@ -535,7 +546,7 @@ type CollectionItem struct {
 	Classes []ClassifiedClass `json:"classes,omitempty"`
 }
 
-// CreateClassifierOptions : The createClassifier options.
+// CreateClassifierOptions : The CreateClassifier options.
 type CreateClassifierOptions struct {
 
 	// Metadata in JSON format. The metadata identifies the language of the data, and an optional name to identify the
@@ -547,7 +558,7 @@ type CreateClassifierOptions struct {
 
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
-	// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier/using-your-data.html).
+	// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier?topic=natural-language-classifier-using-your-data).
 	TrainingData *os.File `json:"training_data" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -580,7 +591,7 @@ func (options *CreateClassifierOptions) SetHeaders(param map[string]string) *Cre
 	return options
 }
 
-// DeleteClassifierOptions : The deleteClassifier options.
+// DeleteClassifierOptions : The DeleteClassifier options.
 type DeleteClassifierOptions struct {
 
 	// Classifier ID to delete.
@@ -609,7 +620,7 @@ func (options *DeleteClassifierOptions) SetHeaders(param map[string]string) *Del
 	return options
 }
 
-// GetClassifierOptions : The getClassifier options.
+// GetClassifierOptions : The GetClassifier options.
 type GetClassifierOptions struct {
 
 	// Classifier ID to query.
@@ -638,7 +649,7 @@ func (options *GetClassifierOptions) SetHeaders(param map[string]string) *GetCla
 	return options
 }
 
-// ListClassifiersOptions : The listClassifiers options.
+// ListClassifiersOptions : The ListClassifiers options.
 type ListClassifiersOptions struct {
 
 	// Allows users to set headers to be GDPR compliant
