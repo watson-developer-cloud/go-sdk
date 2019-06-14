@@ -19,6 +19,7 @@ package languagetranslatorv3_test
  */
 
 import (
+	"net/http"
 	"os"
 	"testing"
 
@@ -42,6 +43,13 @@ func init() {
 				Username: os.Getenv("LANGUAGE_TRANSLATOR_USERNAME"),
 				Password: os.Getenv("LANGUAGE_TRANSLATOR_PASSWORD"),
 			})
+
+		if serviceErr == nil {
+			customHeaders := http.Header{}
+			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+			customHeaders.Add("X-Watson-Test", "1")
+			service.Service.SetDefaultHeaders(customHeaders)
+		}
 	}
 }
 

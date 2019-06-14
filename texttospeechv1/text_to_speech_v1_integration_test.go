@@ -19,12 +19,14 @@ package texttospeechv1_test
  */
 
 import (
+	"net/http"
+	"os"
+	"testing"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
-	"os"
-	"testing"
 )
 
 var service *texttospeechv1.TextToSpeechV1
@@ -41,6 +43,13 @@ func init() {
 				Username: os.Getenv("TEXT_TO_SPEECH_USERNAME"),
 				Password: os.Getenv("TEXT_TO_SPEECH_PASSWORD"),
 			})
+
+		if serviceErr == nil {
+			customHeaders := http.Header{}
+			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+			customHeaders.Add("X-Watson-Test", "1")
+			service.Service.SetDefaultHeaders(customHeaders)
+		}
 	}
 }
 

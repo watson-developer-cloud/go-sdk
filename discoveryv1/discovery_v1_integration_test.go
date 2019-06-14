@@ -20,12 +20,14 @@ package discoveryv1_test
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"testing"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/discoveryv1"
-	"os"
-	"testing"
 )
 
 var service *discoveryv1.DiscoveryV1
@@ -45,6 +47,13 @@ func init() {
 				IAMApiKey: os.Getenv("DISCOVERY_IAMAPIKEY"),
 			})
 		environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
+
+		if serviceErr == nil {
+			customHeaders := http.Header{}
+			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+			customHeaders.Add("X-Watson-Test", "1")
+			service.Service.SetDefaultHeaders(customHeaders)
+		}
 	}
 }
 

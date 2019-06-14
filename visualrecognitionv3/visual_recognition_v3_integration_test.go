@@ -19,12 +19,14 @@ package visualrecognitionv3_test
  */
 
 import (
+	"net/http"
+	"os"
+	"testing"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
-	"os"
-	"testing"
 )
 
 var service *visualrecognitionv3.VisualRecognitionV3
@@ -40,6 +42,13 @@ func init() {
 				Version:   "2018-03-19",
 				IAMApiKey: os.Getenv("VISUAL_RECOGNITION_APIKEY"),
 			})
+
+		if serviceErr == nil {
+			customHeaders := http.Header{}
+			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+			customHeaders.Add("X-Watson-Test", "1")
+			service.Service.SetDefaultHeaders(customHeaders)
+		}
 	}
 }
 

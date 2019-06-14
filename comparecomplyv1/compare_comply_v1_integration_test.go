@@ -20,12 +20,14 @@ package comparecomplyv1_test
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"testing"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/comparecomplyv1"
-	"os"
-	"testing"
 )
 
 var service *comparecomplyv1.CompareComplyV1
@@ -41,6 +43,13 @@ func init() {
 				Version:   "2018-10-15",
 				IAMApiKey: os.Getenv("COMPARE_COMPLY_IAMAPIKEY"),
 			})
+
+		if serviceErr == nil {
+			customHeaders := http.Header{}
+			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+			customHeaders.Add("X-Watson-Test", "1")
+			service.Service.SetDefaultHeaders(customHeaders)
+		}
 	}
 }
 
