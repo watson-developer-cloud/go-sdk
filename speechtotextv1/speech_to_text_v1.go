@@ -1080,8 +1080,7 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 // request to add a corpus or grammar to the model.
 // * No training data have been added to the custom model.
 // * The custom model contains one or more invalid corpora, grammars, or words (for example, a custom word has an
-// invalid sounds-like pronunciation). You can correct the invalid resources or set the `strict` parameter to `false` to
-// exclude the invalid resources from the training. The model must contain at least one valid resource for training to
+// invalid sounds-like pronunciation). You can correct the invalid resources. The model must contain at least one valid resource for training to
 // succeed.
 func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions *TrainLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainLanguageModelOptions, "trainLanguageModelOptions cannot be nil"); err != nil {
@@ -2231,9 +2230,8 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // * The custom model contains less than 10 minutes or more than 200 hours of audio data.
 // * You passed an incompatible custom language model with the `custom_language_model_id` query parameter. Both custom
 // models must be based on the same version of the same base model.
-// * The custom model contains one or more invalid audio resources. You can correct the invalid audio resources or set
-// the `strict` parameter to `false` to exclude the invalid resources from the training. The model must contain at least
-// one valid resource for training to succeed.
+// * The custom model contains one or more invalid audio resources. You can correct the invalid audio resources.
+// The model must contain at least one valid resource for training to succeed.
 func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions *TrainAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainAcousticModelOptions, "trainAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2758,8 +2756,7 @@ type AcousticModel struct {
 	// The current status of the custom acoustic model:
 	// * `pending`: The model was created but is waiting either for valid training data to be added or for the service to
 	// finish analyzing added data.
-	// * `ready`: The model contains valid data and is ready to be trained. If the model contains a mix of valid and
-	// invalid resources, you need to set the `strict` parameter to `false` for the training to proceed.
+	// * `ready`: The model contains valid data and is ready to be trained.
 	// * `training`: The model is currently being trained.
 	// * `available`: The model is trained and ready to use.
 	// * `upgrading`: The model is currently being upgraded.
@@ -2780,8 +2777,7 @@ type AcousticModel struct {
 // The current status of the custom acoustic model:
 // * `pending`: The model was created but is waiting either for valid training data to be added or for the service to
 // finish analyzing added data.
-// * `ready`: The model contains valid data and is ready to be trained. If the model contains a mix of valid and invalid
-// resources, you need to set the `strict` parameter to `false` for the training to proceed.
+// * `ready`: The model contains valid data and is ready to be trained.
 // * `training`: The model is currently being trained.
 // * `available`: The model is trained and ready to use.
 // * `upgrading`: The model is currently being upgraded.
@@ -4897,8 +4893,7 @@ type LanguageModel struct {
 	// The current status of the custom language model:
 	// * `pending`: The model was created but is waiting either for valid training data to be added or for the service to
 	// finish analyzing added data.
-	// * `ready`: The model contains valid data and is ready to be trained. If the model contains a mix of valid and
-	// invalid resources, you need to set the `strict` parameter to `false` for the training to proceed.
+	// * `ready`: The model contains valid data and is ready to be trained.
 	// * `training`: The model is currently being trained.
 	// * `available`: The model is trained and ready to use.
 	// * `upgrading`: The model is currently being upgraded.
@@ -4924,8 +4919,7 @@ type LanguageModel struct {
 // The current status of the custom language model:
 // * `pending`: The model was created but is waiting either for valid training data to be added or for the service to
 // finish analyzing added data.
-// * `ready`: The model contains valid data and is ready to be trained. If the model contains a mix of valid and invalid
-// resources, you need to set the `strict` parameter to `false` for the training to proceed.
+// * `ready`: The model contains valid data and is ready to be trained.
 // * `training`: The model is currently being trained.
 // * `available`: The model is trained and ready to use.
 // * `upgrading`: The model is currently being upgraded.
@@ -6073,8 +6067,7 @@ func (options *TrainLanguageModelOptions) SetHeaders(param map[string]string) *T
 type TrainingResponse struct {
 
 	// An array of `TrainingWarning` objects that lists any invalid resources contained in the custom model. For custom
-	// language models, invalid resources are grouped and identified by type of resource. The method can return warnings
-	// only if the `strict` parameter is set to `false`.
+	// language models, invalid resources are grouped and identified by type of resource.
 	Warnings []TrainingWarning `json:"warnings,omitempty"`
 }
 
