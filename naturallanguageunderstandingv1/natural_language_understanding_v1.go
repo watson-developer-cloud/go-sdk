@@ -28,7 +28,8 @@ import (
 // service cleans HTML content before analysis by default, so the results can ignore most advertisements and other
 // unwanted content.
 //
-// You can create [custom models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html)
+// You can create [custom
+// models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
 // with Watson Knowledge Studio to detect custom entities, relations, and categories in Natural Language Understanding.
 //
 // Version: V1
@@ -39,13 +40,18 @@ type NaturalLanguageUnderstandingV1 struct {
 
 // NaturalLanguageUnderstandingV1Options : Service options
 type NaturalLanguageUnderstandingV1Options struct {
-	Version        string
-	URL            string
-	Username       string
-	Password       string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	Version         string
+	URL             string
+	Username        string
+	Password        string
+	IAMApiKey       string
+	IAMAccessToken  string
+	IAMURL          string
+	IAMClientId     string
+	IAMClientSecret string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewNaturalLanguageUnderstandingV1 : Instantiate NaturalLanguageUnderstandingV1
@@ -55,13 +61,18 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Version:        options.Version,
-		Username:       options.Username,
-		Password:       options.Password,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		Version:         options.Version,
+		URL:             options.URL,
+		Username:        options.Username,
+		Password:        options.Password,
+		IAMApiKey:       options.IAMApiKey,
+		IAMAccessToken:  options.IAMAccessToken,
+		IAMURL:          options.IAMURL,
+		IAMClientId:     options.IAMClientId,
+		IAMClientSecret: options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "natural-language-understanding", "Natural Language Understanding")
 	if serviceErr != nil {
@@ -164,6 +175,51 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetAnalyzeRe
 	return nil
 }
 
+// ListModels : List models
+// Lists Watson Knowledge Studio [custom entities and relations
+// models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+// that are deployed to your Natural Language Understanding service.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/models"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listModelsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "ListModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := naturalLanguageUnderstanding.Service.Request(request, new(ListModelsResults))
+	return response, err
+}
+
+// GetListModelsResult : Retrieve result of ListModels operation
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetListModelsResult(response *core.DetailedResponse) *ListModelsResults {
+	result, ok := response.Result.(*ListModelsResults)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // DeleteModel : Delete model
 // Deletes a custom model.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(deleteModelOptions *DeleteModelOptions) (*core.DetailedResponse, error) {
@@ -210,52 +266,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetDeleteMod
 	return nil
 }
 
-// ListModels : List models
-// Lists Watson Knowledge Studio [custom
-// models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) that are deployed to
-// your Natural Language Understanding service.
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/models"}
-	pathParameters := []string{}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range listModelsOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "ListModels")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := naturalLanguageUnderstanding.Service.Request(request, new(ListModelsResults))
-	return response, err
-}
-
-// GetListModelsResult : Retrieve result of ListModels operation
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetListModelsResult(response *core.DetailedResponse) *ListModelsResults {
-	result, ok := response.Result.(*ListModelsResults)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// AnalysisResults : Analysis results for each requested feature.
+// AnalysisResults : Results of the analysis, organized by feature.
 type AnalysisResults struct {
 
 	// Language used to analyze the text.
@@ -333,7 +344,7 @@ type AnalysisResultsUsage struct {
 	TextUnits *int64 `json:"text_units,omitempty"`
 }
 
-// AnalyzeOptions : The analyze options.
+// AnalyzeOptions : The Analyze options.
 type AnalyzeOptions struct {
 
 	// Specific features to analyze the document for.
@@ -349,10 +360,12 @@ type AnalyzeOptions struct {
 	URL *string `json:"url,omitempty"`
 
 	// Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning, see the [Analyzing
-	// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html) documentation.
+	// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages)
+	// documentation.
 	Clean *bool `json:"clean,omitempty"`
 
-	// An [XPath query](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html#xpath)
+	// An [XPath
+	// query](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages#xpath)
 	// to perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text before it is
 	// analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
 	Xpath *string `json:"xpath,omitempty"`
@@ -365,8 +378,8 @@ type AnalyzeOptions struct {
 
 	// ISO 639-1 code that specifies the language of your text. This overrides automatic language detection. Language
 	// support differs depending on the features you include in your analysis. See [Language
-	// support](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding
-	// -language-support) for more information.
+	// support](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-language-support)
+	// for more information.
 	Language *string `json:"language,omitempty"`
 
 	// Sets the maximum number of characters that are processed by the service.
@@ -461,12 +474,24 @@ type Author struct {
 // Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 type CategoriesOptions struct {
 
+	// Set this to `true` to return explanations for each categorization. **This is available only for English
+	// categories.**.
+	Explanation *bool `json:"explanation,omitempty"`
+
 	// Maximum number of categories to return.
 	Limit *int64 `json:"limit,omitempty"`
 
-	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to
-	// override the standard categories model.
+	// Enter a [custom
+	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// ID to override the standard categories model.
 	Model *string `json:"model,omitempty"`
+}
+
+// CategoriesRelevantText : Relevant text that contributed to the categorization.
+type CategoriesRelevantText struct {
+
+	// Text from the analyzed source that supports the categorization.
+	Text *string `json:"text,omitempty"`
 }
 
 // CategoriesResult : A categorization of the analyzed text.
@@ -474,12 +499,23 @@ type CategoriesResult struct {
 
 	// The path to the category through the 5-level taxonomy hierarchy. For the complete list of categories, see the
 	// [Categories
-	// hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding/categories.html#categories-hierarchy)
+	// hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy)
 	// documentation.
 	Label *string `json:"label,omitempty"`
 
 	// Confidence score for the category classification. Higher values indicate greater confidence.
 	Score *float64 `json:"score,omitempty"`
+
+	// Information that helps to explain what contributed to the categories result.
+	Explanation *CategoriesResultExplanation `json:"explanation,omitempty"`
+}
+
+// CategoriesResultExplanation : Information that helps to explain what contributed to the categories result.
+type CategoriesResultExplanation struct {
+
+	// An array of relevant text from the source that contributed to the categorization. The sorted array begins with the
+	// phrase that contributed most significantly to the result, followed by phrases that were less and less impactful.
+	RelevantText []CategoriesRelevantText `json:"relevant_text,omitempty"`
 }
 
 // ConceptsOptions : Returns high-level concepts in the content. For example, a research paper about deep learning might return the
@@ -505,7 +541,7 @@ type ConceptsResult struct {
 	DbpediaResource *string `json:"dbpedia_resource,omitempty"`
 }
 
-// DeleteModelOptions : The deleteModel options.
+// DeleteModelOptions : The DeleteModel options.
 type DeleteModelOptions struct {
 
 	// Model ID of the model to delete.
@@ -616,7 +652,7 @@ type EmotionScores struct {
 }
 
 // EntitiesOptions : Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
+// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-entity-types).
 //
 // Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 // Arabic, Chinese, and Dutch are supported only through custom models.
@@ -628,8 +664,9 @@ type EntitiesOptions struct {
 	// Set this to `true` to return locations of entity mentions.
 	Mentions *bool `json:"mentions,omitempty"`
 
-	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to
-	// override the standard entity detection model.
+	// Enter a [custom
+	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// ID to override the standard entity detection model.
 	Model *string `json:"model,omitempty"`
 
 	// Set this to `true` to return sentiment information for detected entities.
@@ -701,7 +738,7 @@ type Features struct {
 	Emotion *EmotionOptions `json:"emotion,omitempty"`
 
 	// Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-	// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
+	// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-entity-types).
 	//
 	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 	// Arabic, Chinese, and Dutch are supported only through custom models.
@@ -718,7 +755,7 @@ type Features struct {
 
 	// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 	// might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-	// types](https://cloud.ibm.com/docs/services/natural-language-understanding/relations.html).
+	// types](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-relations).
 	//
 	// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
 	// Portuguese custom models are also supported.
@@ -785,7 +822,7 @@ type KeywordsResult struct {
 	Sentiment *FeatureSentimentResults `json:"sentiment,omitempty"`
 }
 
-// ListModelsOptions : The listModels options.
+// ListModelsOptions : The ListModels options.
 type ListModelsOptions struct {
 
 	// Allows users to set headers to be GDPR compliant
@@ -868,14 +905,15 @@ type RelationEntity struct {
 
 // RelationsOptions : Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 // might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-// types](https://cloud.ibm.com/docs/services/natural-language-understanding/relations.html).
+// types](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-relations).
 //
 // Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
 // Portuguese custom models are also supported.
 type RelationsOptions struct {
 
-	// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) ID to
-	// override the default model.
+	// Enter a [custom
+	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// ID to override the default model.
 	Model *string `json:"model,omitempty"`
 }
 
@@ -1043,6 +1081,7 @@ type SyntaxOptionsTokens struct {
 
 // SyntaxResult : Tokens and sentences returned from syntax analysis.
 type SyntaxResult struct {
+
 	Tokens []TokenResult `json:"tokens,omitempty"`
 
 	Sentences []SentenceResult `json:"sentences,omitempty"`
@@ -1089,21 +1128,21 @@ type TokenResult struct {
 // The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
 // tags](https://universaldependencies.org/u/pos/).
 const (
-	TokenResult_PartOfSpeech_Adj   = "ADJ"
-	TokenResult_PartOfSpeech_Adp   = "ADP"
-	TokenResult_PartOfSpeech_Adv   = "ADV"
-	TokenResult_PartOfSpeech_Aux   = "AUX"
+	TokenResult_PartOfSpeech_Adj = "ADJ"
+	TokenResult_PartOfSpeech_Adp = "ADP"
+	TokenResult_PartOfSpeech_Adv = "ADV"
+	TokenResult_PartOfSpeech_Aux = "AUX"
 	TokenResult_PartOfSpeech_Cconj = "CCONJ"
-	TokenResult_PartOfSpeech_Det   = "DET"
-	TokenResult_PartOfSpeech_Intj  = "INTJ"
-	TokenResult_PartOfSpeech_Noun  = "NOUN"
-	TokenResult_PartOfSpeech_Num   = "NUM"
-	TokenResult_PartOfSpeech_Part  = "PART"
-	TokenResult_PartOfSpeech_Pron  = "PRON"
+	TokenResult_PartOfSpeech_Det = "DET"
+	TokenResult_PartOfSpeech_Intj = "INTJ"
+	TokenResult_PartOfSpeech_Noun = "NOUN"
+	TokenResult_PartOfSpeech_Num = "NUM"
+	TokenResult_PartOfSpeech_Part = "PART"
+	TokenResult_PartOfSpeech_Pron = "PRON"
 	TokenResult_PartOfSpeech_Propn = "PROPN"
 	TokenResult_PartOfSpeech_Punct = "PUNCT"
 	TokenResult_PartOfSpeech_Sconj = "SCONJ"
-	TokenResult_PartOfSpeech_Sym   = "SYM"
-	TokenResult_PartOfSpeech_Verb  = "VERB"
-	TokenResult_PartOfSpeech_X     = "X"
+	TokenResult_PartOfSpeech_Sym = "SYM"
+	TokenResult_PartOfSpeech_Verb = "VERB"
+	TokenResult_PartOfSpeech_X = "X"
 )

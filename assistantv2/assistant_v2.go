@@ -23,7 +23,7 @@ import (
 )
 
 // AssistantV2 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
-// integrated dialog tools to create conversation flows between your apps and your users.
+// an integrated dialog editor to create conversation flows between your apps and your users.
 //
 // Version: V2
 // See: http://www.ibm.com/watson/developercloud/assistant.html
@@ -33,13 +33,18 @@ type AssistantV2 struct {
 
 // AssistantV2Options : Service options
 type AssistantV2Options struct {
-	Version        string
-	URL            string
-	Username       string
-	Password       string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	Version            string
+	URL                string
+	Username           string
+	Password           string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewAssistantV2 : Instantiate AssistantV2
@@ -49,13 +54,18 @@ func NewAssistantV2(options *AssistantV2Options) (*AssistantV2, error) {
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Version:        options.Version,
-		Username:       options.Username,
-		Password:       options.Password,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		Version:            options.Version,
+		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "conversation", "Assistant")
 	if serviceErr != nil {
@@ -220,11 +230,11 @@ type CaptureGroup struct {
 	Location []int64 `json:"location,omitempty"`
 }
 
-// CreateSessionOptions : The createSession options.
+// CreateSessionOptions : The CreateSession options.
 type CreateSessionOptions struct {
 
-	// Unique identifier of the assistant. You can find the assistant ID of an assistant on the **Assistants** tab of the
-	// Watson Assistant tool. For information about creating assistants, see the
+	// Unique identifier of the assistant. To find the assistant ID in the Watson Assistant user interface, open the
+	// assistant settings and click **API Details**. For information about creating assistants, see the
 	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
@@ -253,11 +263,11 @@ func (options *CreateSessionOptions) SetHeaders(param map[string]string) *Create
 	return options
 }
 
-// DeleteSessionOptions : The deleteSession options.
+// DeleteSessionOptions : The DeleteSession options.
 type DeleteSessionOptions struct {
 
-	// Unique identifier of the assistant. You can find the assistant ID of an assistant on the **Assistants** tab of the
-	// Watson Assistant tool. For information about creating assistants, see the
+	// Unique identifier of the assistant. To find the assistant ID in the Watson Assistant user interface, open the
+	// assistant settings and click **API Details**. For information about creating assistants, see the
 	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
@@ -430,6 +440,7 @@ const (
 	DialogRuntimeResponseGeneric_ResponseType_Image          = "image"
 	DialogRuntimeResponseGeneric_ResponseType_Option         = "option"
 	DialogRuntimeResponseGeneric_ResponseType_Pause          = "pause"
+	DialogRuntimeResponseGeneric_ResponseType_Search         = "search"
 	DialogRuntimeResponseGeneric_ResponseType_Suggestion     = "suggestion"
 	DialogRuntimeResponseGeneric_ResponseType_Text           = "text"
 )
@@ -503,11 +514,28 @@ type MessageContextGlobalSystem struct {
 	TurnCount *int64 `json:"turn_count,omitempty"`
 }
 
+// MessageContextSkill : Contains information specific to a particular skill used by the Assistant.
+type MessageContextSkill struct {
+
+	// Arbitrary variables that can be read and written by a particular skill.
+	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
+}
+
 // MessageContextSkills : Information specific to particular skills used by the Assistant.
 //
 // **Note:** Currently, only a single property named `main skill` is supported. This object contains variables that
 // apply to the dialog skill used by the assistant.
 type MessageContextSkills map[string]interface{}
+
+// SetProperty : Allow user to set arbitrary property
+func (this *MessageContextSkills) SetProperty(Key string, Value *MessageContextSkill) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *MessageContextSkills) GetProperty(Key string) *MessageContextSkill {
+	return (*this)[Key].(*MessageContextSkill)
+}
 
 // MessageInput : An input object that includes the input text.
 type MessageInput struct {
@@ -515,8 +543,7 @@ type MessageInput struct {
 	// The type of user input. Currently, only text input is supported.
 	MessageType *string `json:"message_type,omitempty"`
 
-	// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be
-	// no longer than 2048 characters.
+	// The text of the user input. This string cannot contain carriage return, newline, or tab characters.
 	Text *string `json:"text,omitempty"`
 
 	// Optional properties that control how the assistant responds.
@@ -559,11 +586,11 @@ type MessageInputOptions struct {
 	ReturnContext *bool `json:"return_context,omitempty"`
 }
 
-// MessageOptions : The message options.
+// MessageOptions : The Message options.
 type MessageOptions struct {
 
-	// Unique identifier of the assistant. You can find the assistant ID of an assistant on the **Assistants** tab of the
-	// Watson Assistant tool. For information about creating assistants, see the
+	// Unique identifier of the assistant. To find the assistant ID in the Watson Assistant user interface, open the
+	// assistant settings and click **API Details**. For information about creating assistants, see the
 	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.

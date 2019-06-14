@@ -19,12 +19,14 @@ package toneanalyzerv3_test
  */
 
 import (
+	"net/http"
+	"os"
+	"testing"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
-	"os"
-	"testing"
 )
 
 var service *toneanalyzerv3.ToneAnalyzerV3
@@ -41,6 +43,13 @@ func init() {
 				Username: os.Getenv("TONE_ANALYZER_USERNAME"),
 				Password: os.Getenv("TONE_ANALYZER_PASSWORD"),
 			})
+
+		if serviceErr == nil {
+			customHeaders := http.Header{}
+			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+			customHeaders.Add("X-Watson-Test", "1")
+			service.Service.SetDefaultHeaders(customHeaders)
+		}
 	}
 }
 

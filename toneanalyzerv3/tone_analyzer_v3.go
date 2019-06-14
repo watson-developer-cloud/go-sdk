@@ -19,9 +19,10 @@ package toneanalyzerv3
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"strings"
 )
 
 // ToneAnalyzerV3 : The IBM Watson&trade; Tone Analyzer service uses linguistic analysis to detect emotional and
@@ -41,13 +42,18 @@ type ToneAnalyzerV3 struct {
 
 // ToneAnalyzerV3Options : Service options
 type ToneAnalyzerV3Options struct {
-	Version        string
-	URL            string
-	Username       string
-	Password       string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	Version            string
+	URL                string
+	Username           string
+	Password           string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewToneAnalyzerV3 : Instantiate ToneAnalyzerV3
@@ -57,13 +63,18 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (*ToneAnalyzerV3, error) 
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Version:        options.Version,
-		Username:       options.Username,
-		Password:       options.Password,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		Version:            options.Version,
+		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "tone_analyzer", "Tone Analyzer")
 	if serviceErr != nil {
@@ -74,7 +85,7 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (*ToneAnalyzerV3, error) 
 }
 
 // Tone : Analyze general tone
-// Use the general purpose endpoint to analyze the tone of your input content. The service analyzes the content for
+// Use the general-purpose endpoint to analyze the tone of your input content. The service analyzes the content for
 // emotional and language tones. The method always analyzes the tone of the full document; by default, it also analyzes
 // the tone of each individual sentence of the content.
 //
@@ -89,7 +100,7 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (*ToneAnalyzerV3, error) 
 // removes HTML tags and analyzes only the textual content.
 //
 // **See also:** [Using the general-purpose
-// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone.html#using-the-general-purpose-endpoint).
+// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utgpe#utgpe).
 func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(toneOptions, "toneOptions cannot be nil"); err != nil {
 		return nil, err
@@ -155,8 +166,8 @@ func (toneAnalyzer *ToneAnalyzerV3) GetToneResult(response *core.DetailedRespons
 	return nil
 }
 
-// ToneChat : Analyze customer engagement tone
-// Use the customer engagement endpoint to analyze the tone of customer service and customer support conversations. For
+// ToneChat : Analyze customer-engagement tone
+// Use the customer-engagement endpoint to analyze the tone of customer service and customer support conversations. For
 // each utterance of a conversation, the method reports the most prevalent subset of the following seven tones: sad,
 // frustrated, satisfied, excited, polite, impolite, and sympathetic.
 //
@@ -166,7 +177,7 @@ func (toneAnalyzer *ToneAnalyzerV3) GetToneResult(response *core.DetailedRespons
 // characters. Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8.
 //
 // **See also:** [Using the customer-engagement
-// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone-chat.html#using-the-customer-engagement-endpoint).
+// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utco#utco).
 func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(toneChatOptions, "toneChatOptions cannot be nil"); err != nil {
 		return nil, err
@@ -227,7 +238,7 @@ func (toneAnalyzer *ToneAnalyzerV3) GetToneChatResult(response *core.DetailedRes
 	return nil
 }
 
-// DocumentAnalysis : An object of type `DocumentAnalysis` that provides the results of the analysis for the full input document.
+// DocumentAnalysis : The results of the analysis for the full input content.
 type DocumentAnalysis struct {
 
 	// **`2017-09-21`:** An array of `ToneScore` objects that provides the results of the analysis for each qualifying tone
@@ -246,7 +257,7 @@ type DocumentAnalysis struct {
 	Warning *string `json:"warning,omitempty"`
 }
 
-// SentenceAnalysis : SentenceAnalysis struct
+// SentenceAnalysis : The results of the analysis for the individual sentences of the input content.
 type SentenceAnalysis struct {
 
 	// The unique identifier of a sentence of the input content. The first sentence has ID 0, and the ID of each subsequent
@@ -275,10 +286,10 @@ type SentenceAnalysis struct {
 	InputTo *int64 `json:"input_to,omitempty"`
 }
 
-// ToneAnalysis : ToneAnalysis struct
+// ToneAnalysis : The tone analysis results for the input from the general-purpose endpoint.
 type ToneAnalysis struct {
 
-	// An object of type `DocumentAnalysis` that provides the results of the analysis for the full input document.
+	// The results of the analysis for the full input content.
 	DocumentTone *DocumentAnalysis `json:"document_tone" validate:"required"`
 
 	// An array of `SentenceAnalysis` objects that provides the results of the analysis for the individual sentences of the
@@ -287,7 +298,7 @@ type ToneAnalysis struct {
 	SentencesTone []SentenceAnalysis `json:"sentences_tone,omitempty"`
 }
 
-// ToneCategory : ToneCategory struct
+// ToneCategory : The category for a tone from the input content.
 type ToneCategory struct {
 
 	// An array of `ToneScore` objects that provides the results for the tones of the category.
@@ -301,7 +312,7 @@ type ToneCategory struct {
 	CategoryName *string `json:"category_name" validate:"required"`
 }
 
-// ToneChatOptions : The toneChat options.
+// ToneChatOptions : The ToneChat options.
 type ToneChatOptions struct {
 
 	// An array of `Utterance` objects that provides the input content that the service is to analyze.
@@ -341,14 +352,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneChatOptions_AcceptLanguage_Ar = "ar"
-	ToneChatOptions_AcceptLanguage_De = "de"
-	ToneChatOptions_AcceptLanguage_En = "en"
-	ToneChatOptions_AcceptLanguage_Es = "es"
-	ToneChatOptions_AcceptLanguage_Fr = "fr"
-	ToneChatOptions_AcceptLanguage_It = "it"
-	ToneChatOptions_AcceptLanguage_Ja = "ja"
-	ToneChatOptions_AcceptLanguage_Ko = "ko"
+	ToneChatOptions_AcceptLanguage_Ar   = "ar"
+	ToneChatOptions_AcceptLanguage_De   = "de"
+	ToneChatOptions_AcceptLanguage_En   = "en"
+	ToneChatOptions_AcceptLanguage_Es   = "es"
+	ToneChatOptions_AcceptLanguage_Fr   = "fr"
+	ToneChatOptions_AcceptLanguage_It   = "it"
+	ToneChatOptions_AcceptLanguage_Ja   = "ja"
+	ToneChatOptions_AcceptLanguage_Ko   = "ko"
 	ToneChatOptions_AcceptLanguage_PtBr = "pt-br"
 	ToneChatOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ToneChatOptions_AcceptLanguage_ZhTw = "zh-tw"
@@ -385,7 +396,7 @@ func (options *ToneChatOptions) SetHeaders(param map[string]string) *ToneChatOpt
 	return options
 }
 
-// ToneChatScore : ToneChatScore struct
+// ToneChatScore : The score for an utterance from the input content.
 type ToneChatScore struct {
 
 	// The score for the tone in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone
@@ -404,23 +415,23 @@ type ToneChatScore struct {
 // The unique, non-localized identifier of the tone for the results. The service returns results only for tones whose
 // scores meet a minimum threshold of 0.5.
 const (
-	ToneChatScore_ToneID_Excited = "excited"
-	ToneChatScore_ToneID_Frustrated = "frustrated"
-	ToneChatScore_ToneID_Impolite = "impolite"
-	ToneChatScore_ToneID_Polite = "polite"
-	ToneChatScore_ToneID_Sad = "sad"
-	ToneChatScore_ToneID_Satisfied = "satisfied"
+	ToneChatScore_ToneID_Excited     = "excited"
+	ToneChatScore_ToneID_Frustrated  = "frustrated"
+	ToneChatScore_ToneID_Impolite    = "impolite"
+	ToneChatScore_ToneID_Polite      = "polite"
+	ToneChatScore_ToneID_Sad         = "sad"
+	ToneChatScore_ToneID_Satisfied   = "satisfied"
 	ToneChatScore_ToneID_Sympathetic = "sympathetic"
 )
 
-// ToneInput : ToneInput struct
+// ToneInput : Input for the general-purpose endpoint.
 type ToneInput struct {
 
 	// The input content that the service is to analyze.
 	Text *string `json:"text" validate:"required"`
 }
 
-// ToneOptions : The tone options.
+// ToneOptions : The Tone options.
 type ToneOptions struct {
 
 	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type
@@ -466,9 +477,9 @@ type ToneOptions struct {
 
 // Constants associated with the ToneOptions.Tone property.
 const (
-	ToneOptions_Tone_Emotion = "emotion"
+	ToneOptions_Tone_Emotion  = "emotion"
 	ToneOptions_Tone_Language = "language"
-	ToneOptions_Tone_Social = "social"
+	ToneOptions_Tone_Social   = "social"
 )
 
 // Constants associated with the ToneOptions.ContentLanguage property.
@@ -488,14 +499,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneOptions_AcceptLanguage_Ar = "ar"
-	ToneOptions_AcceptLanguage_De = "de"
-	ToneOptions_AcceptLanguage_En = "en"
-	ToneOptions_AcceptLanguage_Es = "es"
-	ToneOptions_AcceptLanguage_Fr = "fr"
-	ToneOptions_AcceptLanguage_It = "it"
-	ToneOptions_AcceptLanguage_Ja = "ja"
-	ToneOptions_AcceptLanguage_Ko = "ko"
+	ToneOptions_AcceptLanguage_Ar   = "ar"
+	ToneOptions_AcceptLanguage_De   = "de"
+	ToneOptions_AcceptLanguage_En   = "en"
+	ToneOptions_AcceptLanguage_Es   = "es"
+	ToneOptions_AcceptLanguage_Fr   = "fr"
+	ToneOptions_AcceptLanguage_It   = "it"
+	ToneOptions_AcceptLanguage_Ja   = "ja"
+	ToneOptions_AcceptLanguage_Ko   = "ko"
 	ToneOptions_AcceptLanguage_PtBr = "pt-br"
 	ToneOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ToneOptions_AcceptLanguage_ZhTw = "zh-tw"
@@ -506,8 +517,8 @@ const (
 // 'text/plain;charset=utf-8'.
 const (
 	ToneOptions_ContentType_ApplicationJSON = "application/json"
-	ToneOptions_ContentType_TextHTML = "text/html"
-	ToneOptions_ContentType_TextPlain = "text/plain"
+	ToneOptions_ContentType_TextHTML        = "text/html"
+	ToneOptions_ContentType_TextPlain       = "text/plain"
 )
 
 // NewToneOptions : Instantiate ToneOptions
@@ -563,7 +574,7 @@ func (options *ToneOptions) SetHeaders(param map[string]string) *ToneOptions {
 	return options
 }
 
-// ToneScore : ToneScore struct
+// ToneScore : The score for a tone from the input content.
 type ToneScore struct {
 
 	// The score for the tone.
@@ -589,7 +600,7 @@ type ToneScore struct {
 	ToneName *string `json:"tone_name" validate:"required"`
 }
 
-// Utterance : Utterance struct
+// Utterance : An utterance for the input of the general-purpose endpoint.
 type Utterance struct {
 
 	// An utterance contributed by a user in the conversation that is to be analyzed. The utterance can contain multiple
@@ -600,7 +611,7 @@ type Utterance struct {
 	User *string `json:"user,omitempty"`
 }
 
-// UtteranceAnalyses : UtteranceAnalyses struct
+// UtteranceAnalyses : The results of the analysis for the utterances of the input content.
 type UtteranceAnalyses struct {
 
 	// An array of `UtteranceAnalysis` objects that provides the results for each utterance of the input.
@@ -611,7 +622,7 @@ type UtteranceAnalyses struct {
 	Warning *string `json:"warning,omitempty"`
 }
 
-// UtteranceAnalysis : UtteranceAnalysis struct
+// UtteranceAnalysis : The results of the analysis for an utterance of the input content.
 type UtteranceAnalysis struct {
 
 	// The unique identifier of the utterance. The first utterance has ID 0, and the ID of each subsequent utterance is

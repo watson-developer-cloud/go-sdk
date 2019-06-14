@@ -19,12 +19,14 @@ package assistantv2_test
  */
 
 import (
+	"net/http"
+	"os"
+	"testing"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/assistantv2"
-	"os"
-	"testing"
 )
 
 var service *assistantv2.AssistantV2
@@ -41,6 +43,13 @@ func init() {
 				Username: os.Getenv("ASSISTANT_USERNAME"),
 				Password: os.Getenv("ASSISTANT_PASSWORD"),
 			})
+
+		if serviceErr == nil {
+			customHeaders := http.Header{}
+			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+			customHeaders.Add("X-Watson-Test", "1")
+			service.Service.SetDefaultHeaders(customHeaders)
+		}
 	}
 }
 

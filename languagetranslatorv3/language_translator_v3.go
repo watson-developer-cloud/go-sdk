@@ -19,9 +19,12 @@ package languagetranslatorv3
 
 import (
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
 	"os"
+
+	"github.com/IBM/go-sdk-core/core"
+	"github.com/go-openapi/strfmt"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The
@@ -37,13 +40,18 @@ type LanguageTranslatorV3 struct {
 
 // LanguageTranslatorV3Options : Service options
 type LanguageTranslatorV3Options struct {
-	Version        string
-	URL            string
-	Username       string
-	Password       string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	Version            string
+	URL                string
+	Username           string
+	Password           string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewLanguageTranslatorV3 : Instantiate LanguageTranslatorV3
@@ -53,13 +61,18 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (*LanguageTra
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Version:        options.Version,
-		Username:       options.Username,
-		Password:       options.Password,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		Version:            options.Version,
+		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "language_translator", "Language Translator")
 	if serviceErr != nil {
@@ -134,6 +147,50 @@ func (languageTranslator *LanguageTranslatorV3) GetTranslateResult(response *cor
 	return nil
 }
 
+// ListIdentifiableLanguages : List identifiable languages
+// Lists the languages that the service can identify. Returns the language code (for example, `en` for English or `es`
+// for Spanish) and name of each language.
+func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listIdentifiableLanguagesOptions, "listIdentifiableLanguagesOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v3/identifiable_languages"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listIdentifiableLanguagesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "ListIdentifiableLanguages")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := languageTranslator.Service.Request(request, new(IdentifiableLanguages))
+	return response, err
+}
+
+// GetListIdentifiableLanguagesResult : Retrieve result of ListIdentifiableLanguages operation
+func (languageTranslator *LanguageTranslatorV3) GetListIdentifiableLanguagesResult(response *core.DetailedResponse) *IdentifiableLanguages {
+	result, ok := response.Result.(*IdentifiableLanguages)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // Identify : Identify language
 // Identifies the language of the input text.
 func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *IdentifyOptions) (*core.DetailedResponse, error) {
@@ -186,30 +243,39 @@ func (languageTranslator *LanguageTranslatorV3) GetIdentifyResult(response *core
 	return nil
 }
 
-// ListIdentifiableLanguages : List identifiable languages
-// Lists the languages that the service can identify. Returns the language code (for example, `en` for English or `es`
-// for Spanish) and name of each language.
-func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listIdentifiableLanguagesOptions, "listIdentifiableLanguagesOptions"); err != nil {
+// ListModels : List models
+// Lists available translation models.
+func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
 		return nil, err
 	}
 
-	pathSegments := []string{"v3/identifiable_languages"}
+	pathSegments := []string{"v3/models"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range listIdentifiableLanguagesOptions.Headers {
+	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "ListIdentifiableLanguages")
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "ListModels")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
 
 	builder.AddHeader("Accept", "application/json")
+
+	if listModelsOptions.Source != nil {
+		builder.AddQuery("source", fmt.Sprint(*listModelsOptions.Source))
+	}
+	if listModelsOptions.Target != nil {
+		builder.AddQuery("target", fmt.Sprint(*listModelsOptions.Target))
+	}
+	if listModelsOptions.DefaultModels != nil {
+		builder.AddQuery("default", fmt.Sprint(*listModelsOptions.DefaultModels))
+	}
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -217,13 +283,13 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listId
 		return nil, err
 	}
 
-	response, err := languageTranslator.Service.Request(request, new(IdentifiableLanguages))
+	response, err := languageTranslator.Service.Request(request, new(TranslationModels))
 	return response, err
 }
 
-// GetListIdentifiableLanguagesResult : Retrieve result of ListIdentifiableLanguages operation
-func (languageTranslator *LanguageTranslatorV3) GetListIdentifiableLanguagesResult(response *core.DetailedResponse) *IdentifiableLanguages {
-	result, ok := response.Result.(*IdentifiableLanguages)
+// GetListModelsResult : Retrieve result of ListModels operation
+func (languageTranslator *LanguageTranslatorV3) GetListModelsResult(response *core.DetailedResponse) *TranslationModels {
+	result, ok := response.Result.(*TranslationModels)
 	if ok {
 		return result
 	}
@@ -397,38 +463,221 @@ func (languageTranslator *LanguageTranslatorV3) GetGetModelResult(response *core
 	return nil
 }
 
-// ListModels : List models
-// Lists available translation models.
-func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
+// ListDocuments : List documents
+// Lists documents that have been submitted for translation.
+func (languageTranslator *LanguageTranslatorV3) ListDocuments(listDocumentsOptions *ListDocumentsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listDocumentsOptions, "listDocumentsOptions"); err != nil {
 		return nil, err
 	}
 
-	pathSegments := []string{"v3/models"}
+	pathSegments := []string{"v3/documents"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range listModelsOptions.Headers {
+	for headerName, headerValue := range listDocumentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "ListModels")
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "ListDocuments")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
 
 	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
-	if listModelsOptions.Source != nil {
-		builder.AddQuery("source", fmt.Sprint(*listModelsOptions.Source))
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
 	}
-	if listModelsOptions.Target != nil {
-		builder.AddQuery("target", fmt.Sprint(*listModelsOptions.Target))
+
+	response, err := languageTranslator.Service.Request(request, new(DocumentList))
+	return response, err
+}
+
+// GetListDocumentsResult : Retrieve result of ListDocuments operation
+func (languageTranslator *LanguageTranslatorV3) GetListDocumentsResult(response *core.DetailedResponse) *DocumentList {
+	result, ok := response.Result.(*DocumentList)
+	if ok {
+		return result
 	}
-	if listModelsOptions.DefaultModels != nil {
-		builder.AddQuery("default", fmt.Sprint(*listModelsOptions.DefaultModels))
+	return nil
+}
+
+// TranslateDocument : Translate document
+// Submit a document for translation. You can submit the document contents in the `file` parameter, or you can reference
+// a previously submitted document by document ID.
+func (languageTranslator *LanguageTranslatorV3) TranslateDocument(translateDocumentOptions *TranslateDocumentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(translateDocumentOptions, "translateDocumentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(translateDocumentOptions, "translateDocumentOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v3/documents"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range translateDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "TranslateDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
+
+	builder.AddFormData("file", core.StringNilMapper(translateDocumentOptions.Filename),
+		core.StringNilMapper(translateDocumentOptions.FileContentType), translateDocumentOptions.File)
+	if translateDocumentOptions.ModelID != nil {
+		builder.AddFormData("model_id", "", "", fmt.Sprint(*translateDocumentOptions.ModelID))
+	}
+	if translateDocumentOptions.Source != nil {
+		builder.AddFormData("source", "", "", fmt.Sprint(*translateDocumentOptions.Source))
+	}
+	if translateDocumentOptions.Target != nil {
+		builder.AddFormData("target", "", "", fmt.Sprint(*translateDocumentOptions.Target))
+	}
+	if translateDocumentOptions.DocumentID != nil {
+		builder.AddFormData("document_id", "", "", fmt.Sprint(*translateDocumentOptions.DocumentID))
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := languageTranslator.Service.Request(request, new(DocumentStatus))
+	return response, err
+}
+
+// GetTranslateDocumentResult : Retrieve result of TranslateDocument operation
+func (languageTranslator *LanguageTranslatorV3) GetTranslateDocumentResult(response *core.DetailedResponse) *DocumentStatus {
+	result, ok := response.Result.(*DocumentStatus)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// GetDocumentStatus : Get document status
+// Gets the translation status of a document.
+func (languageTranslator *LanguageTranslatorV3) GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getDocumentStatusOptions, "getDocumentStatusOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getDocumentStatusOptions, "getDocumentStatusOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v3/documents"}
+	pathParameters := []string{*getDocumentStatusOptions.DocumentID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getDocumentStatusOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "GetDocumentStatus")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := languageTranslator.Service.Request(request, new(DocumentStatus))
+	return response, err
+}
+
+// GetGetDocumentStatusResult : Retrieve result of GetDocumentStatus operation
+func (languageTranslator *LanguageTranslatorV3) GetGetDocumentStatusResult(response *core.DetailedResponse) *DocumentStatus {
+	result, ok := response.Result.(*DocumentStatus)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// DeleteDocument : Delete document
+// Deletes a document.
+func (languageTranslator *LanguageTranslatorV3) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteDocumentOptions, "deleteDocumentOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v3/documents"}
+	pathParameters := []string{*deleteDocumentOptions.DocumentID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "DeleteDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddQuery("version", languageTranslator.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := languageTranslator.Service.Request(request, nil)
+	return response, err
+}
+
+// GetTranslatedDocument : Get translated document
+// Gets the translated document associated with the given document ID.
+func (languageTranslator *LanguageTranslatorV3) GetTranslatedDocument(getTranslatedDocumentOptions *GetTranslatedDocumentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getTranslatedDocumentOptions, "getTranslatedDocumentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getTranslatedDocumentOptions, "getTranslatedDocumentOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v3/documents", "translated_document"}
+	pathParameters := []string{*getTranslatedDocumentOptions.DocumentID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getTranslatedDocumentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "GetTranslatedDocument")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/powerpoint")
+	if getTranslatedDocumentOptions.Accept != nil {
+		builder.AddHeader("Accept", fmt.Sprint(*getTranslatedDocumentOptions.Accept))
 	}
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
@@ -437,20 +686,20 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 		return nil, err
 	}
 
-	response, err := languageTranslator.Service.Request(request, new(TranslationModels))
+	response, err := languageTranslator.Service.Request(request, new(io.ReadCloser))
 	return response, err
 }
 
-// GetListModelsResult : Retrieve result of ListModels operation
-func (languageTranslator *LanguageTranslatorV3) GetListModelsResult(response *core.DetailedResponse) *TranslationModels {
-	result, ok := response.Result.(*TranslationModels)
+// GetGetTranslatedDocumentResult : Retrieve result of GetTranslatedDocument operation
+func (languageTranslator *LanguageTranslatorV3) GetGetTranslatedDocumentResult(response *core.DetailedResponse) io.ReadCloser {
+	result, ok := response.Result.(io.ReadCloser)
 	if ok {
 		return result
 	}
 	return nil
 }
 
-// CreateModelOptions : The createModel options.
+// CreateModelOptions : The CreateModel options.
 type CreateModelOptions struct {
 
 	// The model ID of the model to use as the base for customization. To see available models, use the `List models`
@@ -513,7 +762,36 @@ func (options *CreateModelOptions) SetHeaders(param map[string]string) *CreateMo
 	return options
 }
 
-// DeleteModelOptions : The deleteModel options.
+// DeleteDocumentOptions : The DeleteDocument options.
+type DeleteDocumentOptions struct {
+
+	// Document ID of the document to delete.
+	DocumentID *string `json:"document_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteDocumentOptions : Instantiate DeleteDocumentOptions
+func (languageTranslator *LanguageTranslatorV3) NewDeleteDocumentOptions(documentID string) *DeleteDocumentOptions {
+	return &DeleteDocumentOptions{
+		DocumentID: core.StringPtr(documentID),
+	}
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (options *DeleteDocumentOptions) SetDocumentID(documentID string) *DeleteDocumentOptions {
+	options.DocumentID = core.StringPtr(documentID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteDocumentOptions) SetHeaders(param map[string]string) *DeleteDocumentOptions {
+	options.Headers = param
+	return options
+}
+
+// DeleteModelOptions : The DeleteModel options.
 type DeleteModelOptions struct {
 
 	// Model ID of the model to delete.
@@ -549,7 +827,89 @@ type DeleteModelResult struct {
 	Status *string `json:"status" validate:"required"`
 }
 
-// GetModelOptions : The getModel options.
+// DocumentList : DocumentList struct
+type DocumentList struct {
+
+	// An array of all previously submitted documents.
+	Documents []DocumentStatus `json:"documents" validate:"required"`
+}
+
+// DocumentStatus : Document information, including translation status.
+type DocumentStatus struct {
+
+	// System generated ID identifying a document being translated using one specific translation model.
+	DocumentID *string `json:"document_id" validate:"required"`
+
+	// filename from the submission (if it was missing in the multipart-form, 'noname.<ext matching content type>' is used.
+	Filename *string `json:"filename" validate:"required"`
+
+	// The status of the translation job associated with a submitted document.
+	Status *string `json:"status" validate:"required"`
+
+	// A globally unique string that identifies the underlying model that is used for translation.
+	ModelID *string `json:"model_id" validate:"required"`
+
+	// Model ID of the base model that was used to customize the model. If the model is not a custom model, this will be
+	// absent or an empty string.
+	BaseModelID *string `json:"base_model_id,omitempty"`
+
+	// Translation source language code.
+	Source *string `json:"source" validate:"required"`
+
+	// Translation target language code.
+	Target *string `json:"target" validate:"required"`
+
+	// The time when the document was submitted.
+	Created *strfmt.DateTime `json:"created" validate:"required"`
+
+	// The time when the translation completed.
+	Completed *strfmt.DateTime `json:"completed,omitempty"`
+
+	// The number of words in the source document, present only if status=available.
+	WordCount *int64 `json:"word_count,omitempty"`
+
+	// The number of characters in the source document, present only if status=available.
+	CharacterCount *int64 `json:"character_count,omitempty"`
+}
+
+// Constants associated with the DocumentStatus.Status property.
+// The status of the translation job associated with a submitted document.
+const (
+	DocumentStatus_Status_Available  = "available"
+	DocumentStatus_Status_Failed     = "failed"
+	DocumentStatus_Status_Processing = "processing"
+)
+
+// GetDocumentStatusOptions : The GetDocumentStatus options.
+type GetDocumentStatusOptions struct {
+
+	// The document ID of the document.
+	DocumentID *string `json:"document_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetDocumentStatusOptions : Instantiate GetDocumentStatusOptions
+func (languageTranslator *LanguageTranslatorV3) NewGetDocumentStatusOptions(documentID string) *GetDocumentStatusOptions {
+	return &GetDocumentStatusOptions{
+		DocumentID: core.StringPtr(documentID),
+	}
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (options *GetDocumentStatusOptions) SetDocumentID(documentID string) *GetDocumentStatusOptions {
+	options.DocumentID = core.StringPtr(documentID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *GetDocumentStatusOptions {
+	options.Headers = param
+	return options
+}
+
+// GetModelOptions : The GetModel options.
 type GetModelOptions struct {
 
 	// Model ID of the model to get.
@@ -574,6 +934,85 @@ func (options *GetModelOptions) SetModelID(modelID string) *GetModelOptions {
 
 // SetHeaders : Allow user to set Headers
 func (options *GetModelOptions) SetHeaders(param map[string]string) *GetModelOptions {
+	options.Headers = param
+	return options
+}
+
+// GetTranslatedDocumentOptions : The GetTranslatedDocument options.
+type GetTranslatedDocumentOptions struct {
+
+	// The document ID of the document that was submitted for translation.
+	DocumentID *string `json:"document_id" validate:"required"`
+
+	// The type of the response: application/powerpoint, application/mspowerpoint, application/x-rtf, application/json,
+	// application/xml, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+	// application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation,
+	// application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+	// application/vnd.oasis.opendocument.spreadsheet, application/vnd.oasis.opendocument.presentation,
+	// application/vnd.oasis.opendocument.text, application/pdf, application/rtf, text/html, text/json, text/plain,
+	// text/richtext, text/rtf, or text/xml. A character encoding can be specified by including a `charset` parameter. For
+	// example, 'text/html;charset=utf-8'.
+	Accept *string `json:"Accept,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// Constants associated with the GetTranslatedDocumentOptions.Accept property.
+// The type of the response: application/powerpoint, application/mspowerpoint, application/x-rtf, application/json,
+// application/xml, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+// application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation,
+// application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+// application/vnd.oasis.opendocument.spreadsheet, application/vnd.oasis.opendocument.presentation,
+// application/vnd.oasis.opendocument.text, application/pdf, application/rtf, text/html, text/json, text/plain,
+// text/richtext, text/rtf, or text/xml. A character encoding can be specified by including a `charset` parameter. For
+// example, 'text/html;charset=utf-8'.
+const (
+	GetTranslatedDocumentOptions_Accept_ApplicationJSON                                                      = "application/json"
+	GetTranslatedDocumentOptions_Accept_ApplicationMspowerpoint                                              = "application/mspowerpoint"
+	GetTranslatedDocumentOptions_Accept_ApplicationMsword                                                    = "application/msword"
+	GetTranslatedDocumentOptions_Accept_ApplicationPdf                                                       = "application/pdf"
+	GetTranslatedDocumentOptions_Accept_ApplicationPowerpoint                                                = "application/powerpoint"
+	GetTranslatedDocumentOptions_Accept_ApplicationRtf                                                       = "application/rtf"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndMsExcel                                                = "application/vnd.ms-excel"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndMsPowerpoint                                           = "application/vnd.ms-powerpoint"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentPresentation                          = "application/vnd.oasis.opendocument.presentation"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentSpreadsheet                           = "application/vnd.oasis.opendocument.spreadsheet"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentText                                  = "application/vnd.oasis.opendocument.text"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOpenxmlformatsOfficedocumentPresentationmlPresentation = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet         = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOpenxmlformatsOfficedocumentWordprocessingmlDocument   = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+	GetTranslatedDocumentOptions_Accept_ApplicationXRtf                                                      = "application/x-rtf"
+	GetTranslatedDocumentOptions_Accept_ApplicationXml                                                       = "application/xml"
+	GetTranslatedDocumentOptions_Accept_TextHTML                                                             = "text/html"
+	GetTranslatedDocumentOptions_Accept_TextJSON                                                             = "text/json"
+	GetTranslatedDocumentOptions_Accept_TextPlain                                                            = "text/plain"
+	GetTranslatedDocumentOptions_Accept_TextRichtext                                                         = "text/richtext"
+	GetTranslatedDocumentOptions_Accept_TextRtf                                                              = "text/rtf"
+	GetTranslatedDocumentOptions_Accept_TextXml                                                              = "text/xml"
+)
+
+// NewGetTranslatedDocumentOptions : Instantiate GetTranslatedDocumentOptions
+func (languageTranslator *LanguageTranslatorV3) NewGetTranslatedDocumentOptions(documentID string) *GetTranslatedDocumentOptions {
+	return &GetTranslatedDocumentOptions{
+		DocumentID: core.StringPtr(documentID),
+	}
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (options *GetTranslatedDocumentOptions) SetDocumentID(documentID string) *GetTranslatedDocumentOptions {
+	options.DocumentID = core.StringPtr(documentID)
+	return options
+}
+
+// SetAccept : Allow user to set Accept
+func (options *GetTranslatedDocumentOptions) SetAccept(accept string) *GetTranslatedDocumentOptions {
+	options.Accept = core.StringPtr(accept)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetTranslatedDocumentOptions) SetHeaders(param map[string]string) *GetTranslatedDocumentOptions {
 	options.Headers = param
 	return options
 }
@@ -612,7 +1051,7 @@ type IdentifiedLanguages struct {
 	Languages []IdentifiedLanguage `json:"languages" validate:"required"`
 }
 
-// IdentifyOptions : The identify options.
+// IdentifyOptions : The Identify options.
 type IdentifyOptions struct {
 
 	// Input text in UTF-8 format.
@@ -641,7 +1080,25 @@ func (options *IdentifyOptions) SetHeaders(param map[string]string) *IdentifyOpt
 	return options
 }
 
-// ListIdentifiableLanguagesOptions : The listIdentifiableLanguages options.
+// ListDocumentsOptions : The ListDocuments options.
+type ListDocumentsOptions struct {
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewListDocumentsOptions : Instantiate ListDocumentsOptions
+func (languageTranslator *LanguageTranslatorV3) NewListDocumentsOptions() *ListDocumentsOptions {
+	return &ListDocumentsOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListDocumentsOptions) SetHeaders(param map[string]string) *ListDocumentsOptions {
+	options.Headers = param
+	return options
+}
+
+// ListIdentifiableLanguagesOptions : The ListIdentifiableLanguages options.
 type ListIdentifiableLanguagesOptions struct {
 
 	// Allows users to set headers to be GDPR compliant
@@ -659,7 +1116,7 @@ func (options *ListIdentifiableLanguagesOptions) SetHeaders(param map[string]str
 	return options
 }
 
-// ListModelsOptions : The listModels options.
+// ListModelsOptions : The ListModels options.
 type ListModelsOptions struct {
 
 	// Specify a language code to filter results by source language.
@@ -706,7 +1163,96 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 	return options
 }
 
-// TranslateOptions : The translate options.
+// TranslateDocumentOptions : The TranslateDocument options.
+type TranslateDocumentOptions struct {
+
+	// The source file to translate.
+	//
+	// [Supported file
+	// types](https://cloud.ibm.com/docs/services/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
+	//
+	// Maximum file size: **20 MB**.
+	File *os.File `json:"file" validate:"required"`
+
+	// The filename for file.
+	Filename *string `json:"filename" validate:"required"`
+
+	// The content type of file.
+	FileContentType *string `json:"file_content_type,omitempty"`
+
+	// The model to use for translation. `model_id` or both `source` and `target` are required.
+	ModelID *string `json:"model_id,omitempty"`
+
+	// Language code that specifies the language of the source document.
+	Source *string `json:"source,omitempty"`
+
+	// Language code that specifies the target language for translation.
+	Target *string `json:"target,omitempty"`
+
+	// To use a previously submitted document as the source for a new translation, enter the `document_id` of the document.
+	DocumentID *string `json:"document_id,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewTranslateDocumentOptions : Instantiate TranslateDocumentOptions
+func (languageTranslator *LanguageTranslatorV3) NewTranslateDocumentOptions(file *os.File, filename string) *TranslateDocumentOptions {
+	return &TranslateDocumentOptions{
+		File:     file,
+		Filename: core.StringPtr(filename),
+	}
+}
+
+// SetFile : Allow user to set File
+func (options *TranslateDocumentOptions) SetFile(file *os.File) *TranslateDocumentOptions {
+	options.File = file
+	return options
+}
+
+// SetFilename : Allow user to set Filename
+func (options *TranslateDocumentOptions) SetFilename(filename string) *TranslateDocumentOptions {
+	options.Filename = core.StringPtr(filename)
+	return options
+}
+
+// SetFileContentType : Allow user to set FileContentType
+func (options *TranslateDocumentOptions) SetFileContentType(fileContentType string) *TranslateDocumentOptions {
+	options.FileContentType = core.StringPtr(fileContentType)
+	return options
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *TranslateDocumentOptions) SetModelID(modelID string) *TranslateDocumentOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetSource : Allow user to set Source
+func (options *TranslateDocumentOptions) SetSource(source string) *TranslateDocumentOptions {
+	options.Source = core.StringPtr(source)
+	return options
+}
+
+// SetTarget : Allow user to set Target
+func (options *TranslateDocumentOptions) SetTarget(target string) *TranslateDocumentOptions {
+	options.Target = core.StringPtr(target)
+	return options
+}
+
+// SetDocumentID : Allow user to set DocumentID
+func (options *TranslateDocumentOptions) SetDocumentID(documentID string) *TranslateDocumentOptions {
+	options.DocumentID = core.StringPtr(documentID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *TranslateDocumentOptions) SetHeaders(param map[string]string) *TranslateDocumentOptions {
+	options.Headers = param
+	return options
+}
+
+// TranslateOptions : The Translate options.
 type TranslateOptions struct {
 
 	// Input text in UTF-8 encoding. Multiple entries will result in multiple translations in the response.

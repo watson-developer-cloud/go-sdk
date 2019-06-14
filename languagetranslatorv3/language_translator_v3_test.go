@@ -3,6 +3,7 @@ package languagetranslatorv3_test
 import (
 	"encoding/base64"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -305,6 +306,266 @@ var _ = Describe("LanguageTranslatorV3", func() {
 				Expect(returnValue).ToNot(BeNil())
 
 				result := testService.GetListModelsResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("ListDocuments(listDocumentsOptions *ListDocumentsOptions)", func() {
+		listDocumentsPath := "/v3/documents"
+		version := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - List documents", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(listDocumentsPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(listDocumentsPath))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"documents": [
+					{
+						"document_id": "docid",
+						"filename": "hello_world.txt",
+						"model_id": "en-es",
+						"status": "processing",
+						"created": "2019-06-14T14:49:54Z"}
+					]}`)
+			}))
+			It("Succeed to call ListDocuments", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.ListDocuments(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				listDocumentsOptions := testService.NewListDocumentsOptions()
+				returnValue, returnValueErr = testService.ListDocuments(listDocumentsOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetListDocumentsResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("TranslateDocument(translateDocumentOptions *TranslateDocumentOptions)", func() {
+		translateDocumentPath := "/v3/documents"
+		version := "exampleString"
+		filename := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Context("Successfully - Translate document", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(translateDocumentPath + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(translateDocumentPath))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{
+					"document_id": "doc_id",
+					"filename": "hello_world.txt",
+					"model_id": "en-es",
+					"source": "en",
+					"target": "es",
+					"status": "processing",
+					"created": "2019-06-14T14:49:54Z"
+				}`)
+			}))
+			It("Succeed to call TranslateDocument", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.TranslateDocument(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				pwd, _ := os.Getwd()
+				file, err := os.Open(pwd + "/../resources/hello_world.txt")
+				Expect(err).To(BeNil())
+				defer file.Close()
+
+				translateDocumentOptions := testService.NewTranslateDocumentOptions(file, filename)
+				returnValue, returnValueErr = testService.TranslateDocument(translateDocumentOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetTranslateDocumentResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions)", func() {
+		getDocumentStatusPath := "/v3/documents/{document_id}"
+		version := "exampleString"
+		documentID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(getDocumentStatusPath, "{document_id}", documentID, 1)
+		Context("Successfully - Get document status", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{
+					"document_id": "doc_id",
+					"filename": "hello_world.txt",
+					"model_id": "en-es",
+					"source": "en",
+					"target": "es",
+					"status": "processing",
+					"created": "2019-06-14T14:49:54Z"
+				}`)
+			}))
+			It("Succeed to call GetDocumentStatus", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.GetDocumentStatus(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				getDocumentStatusOptions := testService.NewGetDocumentStatusOptions(documentID)
+				returnValue, returnValueErr = testService.GetDocumentStatus(getDocumentStatusOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetGetDocumentStatusResult(returnValue)
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions)", func() {
+		deleteDocumentPath := "/v3/documents/{document_id}"
+		version := "exampleString"
+		documentID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(deleteDocumentPath, "{document_id}", documentID, 1)
+		Context("Successfully - Delete document", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(200)
+			}))
+			It("Succeed to call DeleteDocument", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.DeleteDocument(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				deleteDocumentOptions := testService.NewDeleteDocumentOptions(documentID)
+				returnValue, returnValueErr = testService.DeleteDocument(deleteDocumentOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("GetTranslatedDocument(getTranslatedDocumentOptions *GetTranslatedDocumentOptions)", func() {
+		getTranslatedDocumentPath := "/v3/documents/{document_id}/translated_document"
+		version := "exampleString"
+		documentID := "exampleString"
+		username := "user1"
+		password := "pass1"
+		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+		Path := strings.Replace(getTranslatedDocumentPath, "{document_id}", documentID, 1)
+		Context("Successfully - Get translated document", func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				Expect(req.URL.String()).To(Equal(Path + "?version=" + version))
+				Expect(req.URL.Path).To(Equal(Path))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				res.WriteHeader(http.StatusOK)
+				pwd, _ := os.Getwd()
+				file, err := os.Open(pwd + "/../resources/hello_world.txt")
+				if err != nil {
+					panic(err)
+				}
+				bytes, err := ioutil.ReadAll(file)
+				if err != nil {
+					panic(err)
+				}
+				res.Write(bytes)
+			}))
+			It("Succeed to call GetTranslatedDocument", func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:      testServer.URL,
+					Version:  version,
+					Username: username,
+					Password: password,
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				returnValue, returnValueErr := testService.GetTranslatedDocument(nil)
+				Expect(returnValueErr).NotTo(BeNil())
+
+				getTranslatedDocumentOptions := testService.NewGetTranslatedDocumentOptions(documentID)
+				returnValue, returnValueErr = testService.GetTranslatedDocument(getTranslatedDocumentOptions)
+				Expect(returnValueErr).To(BeNil())
+				Expect(returnValue).ToNot(BeNil())
+
+				result := testService.GetGetTranslatedDocumentResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})

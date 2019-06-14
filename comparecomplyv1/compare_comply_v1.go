@@ -19,10 +19,11 @@ package comparecomplyv1
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"os"
 )
 
 // CompareComplyV1 : IBM Watson&trade; Compare and Comply analyzes governing documents to provide details about critical
@@ -36,11 +37,16 @@ type CompareComplyV1 struct {
 
 // CompareComplyV1Options : Service options
 type CompareComplyV1Options struct {
-	Version        string
-	URL            string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	Version            string
+	URL                string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewCompareComplyV1 : Instantiate CompareComplyV1
@@ -50,11 +56,16 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Version:        options.Version,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		Version:            options.Version,
+		URL:                options.URL,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "compare-comply", "Compare Comply")
 	if serviceErr != nil {
@@ -348,106 +359,6 @@ func (compareComply *CompareComplyV1) GetAddFeedbackResult(response *core.Detail
 	return nil
 }
 
-// DeleteFeedback : Delete a specified feedback entry
-// Deletes a feedback entry with a specified `feedback_id`.
-func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *DeleteFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteFeedbackOptions, "deleteFeedbackOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteFeedbackOptions, "deleteFeedbackOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/feedback"}
-	pathParameters := []string{*deleteFeedbackOptions.FeedbackID}
-
-	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range deleteFeedbackOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "DeleteFeedback")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if deleteFeedbackOptions.Model != nil {
-		builder.AddQuery("model", fmt.Sprint(*deleteFeedbackOptions.Model))
-	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := compareComply.Service.Request(request, new(FeedbackDeleted))
-	return response, err
-}
-
-// GetDeleteFeedbackResult : Retrieve result of DeleteFeedback operation
-func (compareComply *CompareComplyV1) GetDeleteFeedbackResult(response *core.DetailedResponse) *FeedbackDeleted {
-	result, ok := response.Result.(*FeedbackDeleted)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// GetFeedback : List a specified feedback entry
-// Lists a feedback entry with a specified `feedback_id`.
-func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getFeedbackOptions, "getFeedbackOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getFeedbackOptions, "getFeedbackOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/feedback"}
-	pathParameters := []string{*getFeedbackOptions.FeedbackID}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getFeedbackOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "GetFeedback")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if getFeedbackOptions.Model != nil {
-		builder.AddQuery("model", fmt.Sprint(*getFeedbackOptions.Model))
-	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := compareComply.Service.Request(request, new(GetFeedback))
-	return response, err
-}
-
-// GetGetFeedbackResult : Retrieve result of GetFeedback operation
-func (compareComply *CompareComplyV1) GetGetFeedbackResult(response *core.DetailedResponse) *GetFeedback {
-	result, ok := response.Result.(*GetFeedback)
-	if ok {
-		return result
-	}
-	return nil
-}
-
 // ListFeedback : List the feedback in a document
 // Lists the feedback in a document.
 func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeedbackOptions) (*core.DetailedResponse, error) {
@@ -540,12 +451,113 @@ func (compareComply *CompareComplyV1) GetListFeedbackResult(response *core.Detai
 	return nil
 }
 
+// GetFeedback : Get a specified feedback entry
+// Gets a feedback entry with a specified `feedback_id`.
+func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbackOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getFeedbackOptions, "getFeedbackOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getFeedbackOptions, "getFeedbackOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/feedback"}
+	pathParameters := []string{*getFeedbackOptions.FeedbackID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getFeedbackOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "GetFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getFeedbackOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*getFeedbackOptions.Model))
+	}
+	builder.AddQuery("version", compareComply.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := compareComply.Service.Request(request, new(GetFeedback))
+	return response, err
+}
+
+// GetGetFeedbackResult : Retrieve result of GetFeedback operation
+func (compareComply *CompareComplyV1) GetGetFeedbackResult(response *core.DetailedResponse) *GetFeedback {
+	result, ok := response.Result.(*GetFeedback)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// DeleteFeedback : Delete a specified feedback entry
+// Deletes a feedback entry with a specified `feedback_id`.
+func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *DeleteFeedbackOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteFeedbackOptions, "deleteFeedbackOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteFeedbackOptions, "deleteFeedbackOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/feedback"}
+	pathParameters := []string{*deleteFeedbackOptions.FeedbackID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteFeedbackOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "DeleteFeedback")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if deleteFeedbackOptions.Model != nil {
+		builder.AddQuery("model", fmt.Sprint(*deleteFeedbackOptions.Model))
+	}
+	builder.AddQuery("version", compareComply.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := compareComply.Service.Request(request, new(FeedbackDeleted))
+	return response, err
+}
+
+// GetDeleteFeedbackResult : Retrieve result of DeleteFeedback operation
+func (compareComply *CompareComplyV1) GetDeleteFeedbackResult(response *core.DetailedResponse) *FeedbackDeleted {
+	result, ok := response.Result.(*FeedbackDeleted)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // CreateBatch : Submit a batch-processing request
 // Run Compare and Comply methods over a collection of input documents.
+//
 // **Important:** Batch processing requires the use of the [IBM Cloud Object Storage
-// service](https://cloud.ibm.com/docs/services/cloud-object-storage/about-cos.html#about-ibm-cloud-object-storage). The
-// use of IBM Cloud Object Storage with Compare and Comply is discussed at [Using batch
-// processing](https://cloud.ibm.com/docs/services/compare-comply/batching.html#before-you-batch).
+// service](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-about#about-ibm-cloud-object-storage).
+// The use of IBM Cloud Object Storage with Compare and Comply is discussed at [Using batch
+// processing](https://cloud.ibm.com/docs/services/compare-comply?topic=compare-comply-batching#before-you-batch).
 func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatchOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createBatchOptions, "createBatchOptions cannot be nil"); err != nil {
 		return nil, err
@@ -604,6 +616,49 @@ func (compareComply *CompareComplyV1) GetCreateBatchResult(response *core.Detail
 	return nil
 }
 
+// ListBatches : List submitted batch-processing jobs
+// Lists batch-processing jobs submitted by users.
+func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatchesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listBatchesOptions, "listBatchesOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/batches"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listBatchesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ListBatches")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", compareComply.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := compareComply.Service.Request(request, new(Batches))
+	return response, err
+}
+
+// GetListBatchesResult : Retrieve result of ListBatches operation
+func (compareComply *CompareComplyV1) GetListBatchesResult(response *core.DetailedResponse) *Batches {
+	result, ok := response.Result.(*Batches)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // GetBatch : Get information about a specific batch-processing job
 // Gets information about a batch-processing job with a specified ID.
 func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions) (*core.DetailedResponse, error) {
@@ -644,49 +699,6 @@ func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions)
 // GetGetBatchResult : Retrieve result of GetBatch operation
 func (compareComply *CompareComplyV1) GetGetBatchResult(response *core.DetailedResponse) *BatchStatus {
 	result, ok := response.Result.(*BatchStatus)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// ListBatches : List submitted batch-processing jobs
-// Lists batch-processing jobs submitted by users.
-func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatchesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listBatchesOptions, "listBatchesOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/batches"}
-	pathParameters := []string{}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range listBatchesOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("compare-comply", "V1", "ListBatches")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", compareComply.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := compareComply.Service.Request(request, new(Batches))
-	return response, err
-}
-
-// GetListBatchesResult : Retrieve result of ListBatches operation
-func (compareComply *CompareComplyV1) GetListBatchesResult(response *core.DetailedResponse) *Batches {
-	result, ok := response.Result.(*Batches)
 	if ok {
 		return result
 	}
@@ -745,7 +757,7 @@ func (compareComply *CompareComplyV1) GetUpdateBatchResult(response *core.Detail
 	return nil
 }
 
-// AddFeedbackOptions : The addFeedback options.
+// AddFeedbackOptions : The AddFeedback options.
 type AddFeedbackOptions struct {
 
 	// Feedback data for submission.
@@ -893,7 +905,7 @@ const (
 	BatchStatus_Function_Tables                = "tables"
 )
 
-// Batches : The results of a successful `GET /v1/batches` request.
+// Batches : The results of a successful **List Batches** request.
 type Batches struct {
 
 	// A list of the status of all batch requests.
@@ -1015,7 +1027,7 @@ const (
 	CategoryComparison_Label_Warranties           = "Warranties"
 )
 
-// ClassifyElementsOptions : The classifyElements options.
+// ClassifyElementsOptions : The ClassifyElements options.
 type ClassifyElementsOptions struct {
 
 	// The document to classify.
@@ -1163,7 +1175,7 @@ type ColumnHeaders struct {
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 }
 
-// CompareDocumentsOptions : The compareDocuments options.
+// CompareDocumentsOptions : The CompareDocuments options.
 type CompareDocumentsOptions struct {
 
 	// The first document to compare.
@@ -1332,7 +1344,7 @@ const (
 	ContractType_ConfidenceLevel_Medium = "Medium"
 )
 
-// ConvertToHTMLOptions : The convertToHtml options.
+// ConvertToHTMLOptions : The ConvertToHTML options.
 type ConvertToHTMLOptions struct {
 
 	// The document to convert.
@@ -1400,7 +1412,7 @@ func (options *ConvertToHTMLOptions) SetHeaders(param map[string]string) *Conver
 	return options
 }
 
-// CreateBatchOptions : The createBatch options.
+// CreateBatchOptions : The CreateBatch options.
 type CreateBatchOptions struct {
 
 	// The Compare and Comply method to run across the submitted input documents.
@@ -1521,7 +1533,7 @@ func (options *CreateBatchOptions) SetHeaders(param map[string]string) *CreateBa
 	return options
 }
 
-// DeleteFeedbackOptions : The deleteFeedback options.
+// DeleteFeedbackOptions : The DeleteFeedback options.
 type DeleteFeedbackOptions struct {
 
 	// A string that specifies the feedback entry to be deleted from the document.
@@ -1703,7 +1715,7 @@ type ElementPair struct {
 	Attributes []Attribute `json:"attributes,omitempty"`
 }
 
-// ExtractTablesOptions : The extractTables options.
+// ExtractTablesOptions : The ExtractTables options.
 type ExtractTablesOptions struct {
 
 	// The document on which to run table extraction.
@@ -1790,7 +1802,7 @@ type FeedbackDataInput struct {
 	UpdatedLabels *UpdatedLabelsIn `json:"updated_labels" validate:"required"`
 }
 
-// FeedbackDataOutput : Information returned from the `POST /v1/feedback` method.
+// FeedbackDataOutput : Information returned from the **Add Feedback** method.
 type FeedbackDataOutput struct {
 
 	// A string identifying the user adding the feedback. The only permitted value is `element_classification`.
@@ -1832,7 +1844,7 @@ type FeedbackDeleted struct {
 	Message *string `json:"message,omitempty"`
 }
 
-// FeedbackList : The results of a successful `GET /v1/feedback` request.
+// FeedbackList : The results of a successful **List Feedback** request for all feedback.
 type FeedbackList struct {
 
 	// A list of all feedback for the document.
@@ -1854,11 +1866,11 @@ type FeedbackReturn struct {
 	// Timestamp listing the creation time of the feedback submission.
 	Created *strfmt.DateTime `json:"created,omitempty"`
 
-	// Information returned from the `POST /v1/feedback` method.
+	// Information returned from the **Add Feedback** method.
 	FeedbackData *FeedbackDataOutput `json:"feedback_data,omitempty"`
 }
 
-// GetBatchOptions : The getBatch options.
+// GetBatchOptions : The GetBatch options.
 type GetBatchOptions struct {
 
 	// The ID of the batch-processing job whose information you want to retrieve.
@@ -1887,7 +1899,7 @@ func (options *GetBatchOptions) SetHeaders(param map[string]string) *GetBatchOpt
 	return options
 }
 
-// GetFeedback : The results of a single feedback query.
+// GetFeedback : The results of a successful **Get Feedback** request for a single feedback entry.
 type GetFeedback struct {
 
 	// A string uniquely identifying the feedback entry.
@@ -1899,11 +1911,11 @@ type GetFeedback struct {
 	// A string containing the user's comment about the feedback entry.
 	Comment *string `json:"comment,omitempty"`
 
-	// Information returned from the `POST /v1/feedback` method.
+	// Information returned from the **Add Feedback** method.
 	FeedbackData *FeedbackDataOutput `json:"feedback_data,omitempty"`
 }
 
-// GetFeedbackOptions : The getFeedback options.
+// GetFeedbackOptions : The GetFeedback options.
 type GetFeedbackOptions struct {
 
 	// A string that specifies the feedback entry to be included in the output.
@@ -2020,7 +2032,7 @@ type LeadingSentence struct {
 	ElementLocations []ElementLocations `json:"element_locations,omitempty"`
 }
 
-// ListBatchesOptions : The listBatches options.
+// ListBatchesOptions : The ListBatches options.
 type ListBatchesOptions struct {
 
 	// Allows users to set headers to be GDPR compliant
@@ -2038,7 +2050,7 @@ func (options *ListBatchesOptions) SetHeaders(param map[string]string) *ListBatc
 	return options
 }
 
-// ListFeedbackOptions : The listFeedback options.
+// ListFeedbackOptions : The ListFeedback options.
 type ListFeedbackOptions struct {
 
 	// An optional string that filters the output to include only feedback with the specified feedback type. The only
@@ -2536,7 +2548,7 @@ type UnalignedElement struct {
 	Attributes []Attribute `json:"attributes,omitempty"`
 }
 
-// UpdateBatchOptions : The updateBatch options.
+// UpdateBatchOptions : The UpdateBatch options.
 type UpdateBatchOptions struct {
 
 	// The ID of the batch-processing job you want to update.

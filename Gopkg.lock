@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:1e5f48094fcba09f5ec6ea06c35f76d9dea8846be1a2ee6bc2d9f057d4610bda"
+  digest = "1:0f5a0001405e7d59d2786ac0ad796603e8223239ff5d65a0b41fd04253455938"
   name = "github.com/IBM/go-sdk-core"
   packages = ["core"]
   pruneopts = "UT"
-  revision = "e8994555bd204074bb3c3f5a35fcf1381df6a97e"
-  version = "v0.2.3"
+  revision = "fec31e02faade6bb13679f3c96e0c7cd94c46f6c"
+  version = "v0.4.1"
 
 [[projects]]
   digest = "1:320e7ead93de9fd2b0e59b50fd92a4d50c1f8ab455d96bc2eb083267453a9709"
@@ -32,6 +32,14 @@
   pruneopts = "UT"
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
   version = "v1.1.1"
+
+[[projects]]
+  digest = "1:76dc72490af7174349349838f2fe118996381b31ea83243812a97e5a0fd5ed55"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   branch = "master"

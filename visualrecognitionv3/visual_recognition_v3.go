@@ -19,12 +19,13 @@ package visualrecognitionv3
 
 import (
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
-	"github.com/go-openapi/strfmt"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"os"
 	"strings"
+
+	"github.com/IBM/go-sdk-core/core"
+	"github.com/go-openapi/strfmt"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
@@ -39,11 +40,16 @@ type VisualRecognitionV3 struct {
 
 // VisualRecognitionV3Options : Service options
 type VisualRecognitionV3Options struct {
-	Version        string
-	URL            string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	Version            string
+	URL                string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewVisualRecognitionV3 : Instantiate VisualRecognitionV3
@@ -53,11 +59,16 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (*VisualRecogni
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Version:        options.Version,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		Version:            options.Version,
+		URL:                options.URL,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "watson_vision_combined", "Visual Recognition")
 	if serviceErr != nil {
@@ -140,10 +151,10 @@ func (visualRecognition *VisualRecognitionV3) GetClassifyResult(response *core.D
 // **Important:** On April 2, 2018, the identity information in the response to calls to the Face model was removed. The
 // identity information refers to the `name` of the person, `score`, and `type_hierarchy` knowledge graph. For details
 // about the enhanced Face model, see the [Release
-// notes](https://cloud.ibm.com/docs/services/visual-recognition/release-notes.html#2april2018).
+// notes](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-release-notes#2april2018).
 //
 // Analyze and get data about faces in images. Responses can include estimated age and gender. This feature uses a
-// built-in model, so no training is necessary. The Detect faces method does not support general biometric facial
+// built-in model, so no training is necessary. The **Detect faces** method does not support general biometric facial
 // recognition.
 //
 // Supported image formats include .gif, .jpg, .png, and .tif. The maximum image size is 10 MB. The minimum recommended
@@ -268,31 +279,32 @@ func (visualRecognition *VisualRecognitionV3) GetCreateClassifierResult(response
 	return nil
 }
 
-// DeleteClassifier : Delete a classifier
-func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteClassifierOptions, "deleteClassifierOptions"); err != nil {
+// ListClassifiers : Retrieve a list of classifiers
+func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions"); err != nil {
 		return nil, err
 	}
 
 	pathSegments := []string{"v3/classifiers"}
-	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
+	pathParameters := []string{}
 
-	builder := core.NewRequestBuilder(core.DELETE)
+	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range deleteClassifierOptions.Headers {
+	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteClassifier")
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "ListClassifiers")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
 
 	builder.AddHeader("Accept", "application/json")
+
+	if listClassifiersOptions.Verbose != nil {
+		builder.AddQuery("verbose", fmt.Sprint(*listClassifiersOptions.Verbose))
+	}
 	builder.AddQuery("version", visualRecognition.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -300,8 +312,17 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 		return nil, err
 	}
 
-	response, err := visualRecognition.Service.Request(request, nil)
+	response, err := visualRecognition.Service.Request(request, new(Classifiers))
 	return response, err
+}
+
+// GetListClassifiersResult : Retrieve result of ListClassifiers operation
+func (visualRecognition *VisualRecognitionV3) GetListClassifiersResult(response *core.DetailedResponse) *Classifiers {
+	result, ok := response.Result.(*Classifiers)
+	if ok {
+		return result
+	}
+	return nil
 }
 
 // GetClassifier : Retrieve classifier details
@@ -350,56 +371,10 @@ func (visualRecognition *VisualRecognitionV3) GetGetClassifierResult(response *c
 	return nil
 }
 
-// ListClassifiers : Retrieve a list of classifiers
-func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v3/classifiers"}
-	pathParameters := []string{}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range listClassifiersOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "ListClassifiers")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if listClassifiersOptions.Verbose != nil {
-		builder.AddQuery("verbose", fmt.Sprint(*listClassifiersOptions.Verbose))
-	}
-	builder.AddQuery("version", visualRecognition.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := visualRecognition.Service.Request(request, new(Classifiers))
-	return response, err
-}
-
-// GetListClassifiersResult : Retrieve result of ListClassifiers operation
-func (visualRecognition *VisualRecognitionV3) GetListClassifiersResult(response *core.DetailedResponse) *Classifiers {
-	result, ok := response.Result.(*Classifiers)
-	if ok {
-		return result
-	}
-	return nil
-}
-
 // UpdateClassifier : Update a classifier
 // Update a custom classifier by adding new positive or negative classes or by adding new images to existing classes.
 // You must supply at least one set of positive or negative examples. For details, see [Updating custom
-// classifiers](https://cloud.ibm.com/docs/services/visual-recognition/customizing.html#updating-custom-classifiers).
+// classifiers](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-customizing#updating-custom-classifiers).
 //
 // Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
 // names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
@@ -463,6 +438,42 @@ func (visualRecognition *VisualRecognitionV3) GetUpdateClassifierResult(response
 	return nil
 }
 
+// DeleteClassifier : Delete a classifier
+func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteClassifierOptions, "deleteClassifierOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v3/classifiers"}
+	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteClassifierOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteClassifier")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", visualRecognition.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := visualRecognition.Service.Request(request, nil)
+	return response, err
+}
+
 // GetCoreMlModel : Retrieve a Core ML model of a classifier
 // Download a Core ML model file (.mlmodel) of a custom classifier that returns <tt>\"core_ml_enabled\": true</tt> in
 // the classifier details.
@@ -516,7 +527,7 @@ func (visualRecognition *VisualRecognitionV3) GetGetCoreMlModelResult(response *
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
-// security](https://cloud.ibm.com/docs/services/visual-recognition/information-security.html).
+// security](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-information-security).
 func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -684,7 +695,7 @@ type Classifiers struct {
 	Classifiers []Classifier `json:"classifiers" validate:"required"`
 }
 
-// ClassifyOptions : The classify options.
+// ClassifyOptions : The Classify options.
 type ClassifyOptions struct {
 
 	// An image file (.gif, .jpg, .png, .tif) or .zip file with images. Maximum image size is 10 MB. Include no more than
@@ -810,7 +821,7 @@ func (options *ClassifyOptions) SetHeaders(param map[string]string) *ClassifyOpt
 	return options
 }
 
-// CreateClassifierOptions : The createClassifier options.
+// CreateClassifierOptions : The CreateClassifier options.
 type CreateClassifierOptions struct {
 
 	// The name of the new classifier. Encode special characters in UTF-8.
@@ -881,7 +892,7 @@ func (options *CreateClassifierOptions) SetHeaders(param map[string]string) *Cre
 	return options
 }
 
-// DeleteClassifierOptions : The deleteClassifier options.
+// DeleteClassifierOptions : The DeleteClassifier options.
 type DeleteClassifierOptions struct {
 
 	// The ID of the classifier.
@@ -910,7 +921,7 @@ func (options *DeleteClassifierOptions) SetHeaders(param map[string]string) *Del
 	return options
 }
 
-// DeleteUserDataOptions : The deleteUserData options.
+// DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 
 	// The customer ID for which all data is to be deleted.
@@ -939,7 +950,7 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 	return options
 }
 
-// DetectFacesOptions : The detectFaces options.
+// DetectFacesOptions : The DetectFaces options.
 type DetectFacesOptions struct {
 
 	// An image file (gif, .jpg, .png, .tif.) or .zip file with images. Limit the .zip file to 100 MB. You can include a
@@ -1114,7 +1125,7 @@ type FaceLocation struct {
 	Top *float64 `json:"top" validate:"required"`
 }
 
-// GetClassifierOptions : The getClassifier options.
+// GetClassifierOptions : The GetClassifier options.
 type GetClassifierOptions struct {
 
 	// The ID of the classifier.
@@ -1143,7 +1154,7 @@ func (options *GetClassifierOptions) SetHeaders(param map[string]string) *GetCla
 	return options
 }
 
-// GetCoreMlModelOptions : The getCoreMlModel options.
+// GetCoreMlModelOptions : The GetCoreMlModel options.
 type GetCoreMlModelOptions struct {
 
 	// The ID of the classifier.
@@ -1192,7 +1203,7 @@ type ImageWithFaces struct {
 	Error *ErrorInfo `json:"error,omitempty"`
 }
 
-// ListClassifiersOptions : The listClassifiers options.
+// ListClassifiersOptions : The ListClassifiers options.
 type ListClassifiersOptions struct {
 
 	// Specify `true` to return details about the classifiers. Omit this parameter to return a brief list of classifiers.
@@ -1219,7 +1230,7 @@ func (options *ListClassifiersOptions) SetHeaders(param map[string]string) *List
 	return options
 }
 
-// UpdateClassifierOptions : The updateClassifier options.
+// UpdateClassifierOptions : The UpdateClassifier options.
 type UpdateClassifierOptions struct {
 
 	// The ID of the classifier.

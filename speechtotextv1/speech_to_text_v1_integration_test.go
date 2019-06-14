@@ -20,13 +20,15 @@ package speechtotextv1_test
 
 import (
 	"encoding/json"
+	"io"
+	"net/http"
+	"os"
+	"testing"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
-	"io"
-	"os"
-	"testing"
 )
 
 var service *speechtotextv1.SpeechToTextV1
@@ -43,6 +45,13 @@ func init() {
 				Username: os.Getenv("SPEECH_TO_TEXT_USERNAME"),
 				Password: os.Getenv("SPEECH_TO_TEXT_PASSWORD"),
 			})
+
+		if serviceErr == nil {
+			customHeaders := http.Header{}
+			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+			customHeaders.Add("X-Watson-Test", "1")
+			service.Service.SetDefaultHeaders(customHeaders)
+		}
 	}
 }
 func shouldSkipTest(t *testing.T) {

@@ -19,13 +19,14 @@ package assistantv1
 
 import (
 	"fmt"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
-// integrated dialog tools to create conversation flows between your apps and your users.
+// an integrated dialog editor to create conversation flows between your apps and your users.
 //
 // Version: V1
 // See: http://www.ibm.com/watson/developercloud/assistant.html
@@ -35,13 +36,18 @@ type AssistantV1 struct {
 
 // AssistantV1Options : Service options
 type AssistantV1Options struct {
-	Version        string
-	URL            string
-	Username       string
-	Password       string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	Version            string
+	URL                string
+	Username           string
+	Password           string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewAssistantV1 : Instantiate AssistantV1
@@ -51,13 +57,18 @@ func NewAssistantV1(options *AssistantV1Options) (*AssistantV1, error) {
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Version:        options.Version,
-		Username:       options.Username,
-		Password:       options.Password,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		Version:            options.Version,
+		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "conversation", "Assistant")
 	if serviceErr != nil {
@@ -138,6 +149,67 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 // GetMessageResult : Retrieve result of Message operation
 func (assistant *AssistantV1) GetMessageResult(response *core.DetailedResponse) *MessageResponse {
 	result, ok := response.Result.(*MessageResponse)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// ListWorkspaces : List workspaces
+// List the workspaces associated with a Watson Assistant service instance.
+//
+// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listWorkspacesOptions, "listWorkspacesOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listWorkspacesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListWorkspaces")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if listWorkspacesOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listWorkspacesOptions.PageLimit))
+	}
+	if listWorkspacesOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listWorkspacesOptions.IncludeCount))
+	}
+	if listWorkspacesOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listWorkspacesOptions.Sort))
+	}
+	if listWorkspacesOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listWorkspacesOptions.Cursor))
+	}
+	if listWorkspacesOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listWorkspacesOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(WorkspaceCollection))
+	return response, err
+}
+
+// GetListWorkspacesResult : Retrieve result of ListWorkspaces operation
+func (assistant *AssistantV1) GetListWorkspacesResult(response *core.DetailedResponse) *WorkspaceCollection {
+	result, ok := response.Result.(*WorkspaceCollection)
 	if ok {
 		return result
 	}
@@ -227,45 +299,6 @@ func (assistant *AssistantV1) GetCreateWorkspaceResult(response *core.DetailedRe
 	return nil
 }
 
-// DeleteWorkspace : Delete workspace
-// Delete a workspace from the service instance.
-//
-// This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteWorkspaceOptions, "deleteWorkspaceOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteWorkspaceOptions, "deleteWorkspaceOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces"}
-	pathParameters := []string{*deleteWorkspaceOptions.WorkspaceID}
-
-	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range deleteWorkspaceOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteWorkspace")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
-}
-
 // GetWorkspace : Get information about a workspace
 // Get information about a workspace, optionally including all workspace content.
 //
@@ -319,67 +352,6 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 // GetGetWorkspaceResult : Retrieve result of GetWorkspace operation
 func (assistant *AssistantV1) GetGetWorkspaceResult(response *core.DetailedResponse) *Workspace {
 	result, ok := response.Result.(*Workspace)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// ListWorkspaces : List workspaces
-// List the workspaces associated with a Watson Assistant service instance.
-//
-// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listWorkspacesOptions, "listWorkspacesOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces"}
-	pathParameters := []string{}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range listWorkspacesOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListWorkspaces")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if listWorkspacesOptions.PageLimit != nil {
-		builder.AddQuery("page_limit", fmt.Sprint(*listWorkspacesOptions.PageLimit))
-	}
-	if listWorkspacesOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listWorkspacesOptions.IncludeCount))
-	}
-	if listWorkspacesOptions.Sort != nil {
-		builder.AddQuery("sort", fmt.Sprint(*listWorkspacesOptions.Sort))
-	}
-	if listWorkspacesOptions.Cursor != nil {
-		builder.AddQuery("cursor", fmt.Sprint(*listWorkspacesOptions.Cursor))
-	}
-	if listWorkspacesOptions.IncludeAudit != nil {
-		builder.AddQuery("include_audit", fmt.Sprint(*listWorkspacesOptions.IncludeAudit))
-	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(WorkspaceCollection))
-	return response, err
-}
-
-// GetListWorkspacesResult : Retrieve result of ListWorkspaces operation
-func (assistant *AssistantV1) GetListWorkspacesResult(response *core.DetailedResponse) *WorkspaceCollection {
-	result, ok := response.Result.(*WorkspaceCollection)
 	if ok {
 		return result
 	}
@@ -476,93 +448,29 @@ func (assistant *AssistantV1) GetUpdateWorkspaceResult(response *core.DetailedRe
 	return nil
 }
 
-// CreateIntent : Create intent
-// Create a new intent.
+// DeleteWorkspace : Delete workspace
+// Delete a workspace from the service instance.
 //
-// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createIntentOptions, "createIntentOptions cannot be nil"); err != nil {
+// This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteWorkspaceOptions, "deleteWorkspaceOptions cannot be nil"); err != nil {
 		return nil, err
 	}
-	if err := core.ValidateStruct(createIntentOptions, "createIntentOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "intents"}
-	pathParameters := []string{*createIntentOptions.WorkspaceID}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range createIntentOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateIntent")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	body := make(map[string]interface{})
-	if createIntentOptions.Intent != nil {
-		body["intent"] = createIntentOptions.Intent
-	}
-	if createIntentOptions.Description != nil {
-		body["description"] = createIntentOptions.Description
-	}
-	if createIntentOptions.Examples != nil {
-		body["examples"] = createIntentOptions.Examples
-	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if err := core.ValidateStruct(deleteWorkspaceOptions, "deleteWorkspaceOptions"); err != nil {
 		return nil, err
 	}
 
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Intent))
-	return response, err
-}
-
-// GetCreateIntentResult : Retrieve result of CreateIntent operation
-func (assistant *AssistantV1) GetCreateIntentResult(response *core.DetailedResponse) *Intent {
-	result, ok := response.Result.(*Intent)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// DeleteIntent : Delete intent
-// Delete an intent from a workspace.
-//
-// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteIntentOptions, "deleteIntentOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteIntentOptions, "deleteIntentOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "intents"}
-	pathParameters := []string{*deleteIntentOptions.WorkspaceID, *deleteIntentOptions.Intent}
+	pathSegments := []string{"v1/workspaces"}
+	pathParameters := []string{*deleteWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range deleteIntentOptions.Headers {
+	for headerName, headerValue := range deleteWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteIntent")
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteWorkspace")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -577,62 +485,6 @@ func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOpti
 
 	response, err := assistant.Service.Request(request, nil)
 	return response, err
-}
-
-// GetIntent : Get intent
-// Get information about an intent, optionally including all intent content.
-//
-// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
-// is 400 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getIntentOptions, "getIntentOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getIntentOptions, "getIntentOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "intents"}
-	pathParameters := []string{*getIntentOptions.WorkspaceID, *getIntentOptions.Intent}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getIntentOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetIntent")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if getIntentOptions.Export != nil {
-		builder.AddQuery("export", fmt.Sprint(*getIntentOptions.Export))
-	}
-	if getIntentOptions.IncludeAudit != nil {
-		builder.AddQuery("include_audit", fmt.Sprint(*getIntentOptions.IncludeAudit))
-	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Intent))
-	return response, err
-}
-
-// GetGetIntentResult : Retrieve result of GetIntent operation
-func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse) *Intent {
-	result, ok := response.Result.(*Intent)
-	if ok {
-		return result
-	}
-	return nil
 }
 
 // ListIntents : List intents
@@ -703,9 +555,135 @@ func (assistant *AssistantV1) GetListIntentsResult(response *core.DetailedRespon
 	return nil
 }
 
+// CreateIntent : Create intent
+// Create a new intent.
+//
+// If you want to create multiple intents with a single API call, consider using the **[Update
+// workspace](#update-workspace)** method instead.
+//
+// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createIntentOptions, "createIntentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createIntentOptions, "createIntentOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "intents"}
+	pathParameters := []string{*createIntentOptions.WorkspaceID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createIntentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateIntent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	body := make(map[string]interface{})
+	if createIntentOptions.Intent != nil {
+		body["intent"] = createIntentOptions.Intent
+	}
+	if createIntentOptions.Description != nil {
+		body["description"] = createIntentOptions.Description
+	}
+	if createIntentOptions.Examples != nil {
+		body["examples"] = createIntentOptions.Examples
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Intent))
+	return response, err
+}
+
+// GetCreateIntentResult : Retrieve result of CreateIntent operation
+func (assistant *AssistantV1) GetCreateIntentResult(response *core.DetailedResponse) *Intent {
+	result, ok := response.Result.(*Intent)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// GetIntent : Get intent
+// Get information about an intent, optionally including all intent content.
+//
+// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
+// is 400 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getIntentOptions, "getIntentOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getIntentOptions, "getIntentOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "intents"}
+	pathParameters := []string{*getIntentOptions.WorkspaceID, *getIntentOptions.Intent}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getIntentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetIntent")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getIntentOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*getIntentOptions.Export))
+	}
+	if getIntentOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getIntentOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Intent))
+	return response, err
+}
+
+// GetGetIntentResult : Retrieve result of GetIntent operation
+func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse) *Intent {
+	result, ok := response.Result.(*Intent)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // UpdateIntent : Update intent
 // Update an existing intent with new or modified data. You must provide component objects defining the content of the
 // updated intent.
+//
+// If you want to update multiple intents with a single API call, consider using the **[Update
+// workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOptions) (*core.DetailedResponse, error) {
@@ -768,90 +746,29 @@ func (assistant *AssistantV1) GetUpdateIntentResult(response *core.DetailedRespo
 	return nil
 }
 
-// CreateExample : Create user input example
-// Add a new user input example to an intent.
+// DeleteIntent : Delete intent
+// Delete an intent from a workspace.
 //
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createExampleOptions, "createExampleOptions cannot be nil"); err != nil {
+// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteIntentOptions, "deleteIntentOptions cannot be nil"); err != nil {
 		return nil, err
 	}
-	if err := core.ValidateStruct(createExampleOptions, "createExampleOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "intents", "examples"}
-	pathParameters := []string{*createExampleOptions.WorkspaceID, *createExampleOptions.Intent}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range createExampleOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateExample")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	body := make(map[string]interface{})
-	if createExampleOptions.Text != nil {
-		body["text"] = createExampleOptions.Text
-	}
-	if createExampleOptions.Mentions != nil {
-		body["mentions"] = createExampleOptions.Mentions
-	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if err := core.ValidateStruct(deleteIntentOptions, "deleteIntentOptions"); err != nil {
 		return nil, err
 	}
 
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Example))
-	return response, err
-}
-
-// GetCreateExampleResult : Retrieve result of CreateExample operation
-func (assistant *AssistantV1) GetCreateExampleResult(response *core.DetailedResponse) *Example {
-	result, ok := response.Result.(*Example)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// DeleteExample : Delete user input example
-// Delete a user input example from an intent.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteExampleOptions, "deleteExampleOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteExampleOptions, "deleteExampleOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "intents", "examples"}
-	pathParameters := []string{*deleteExampleOptions.WorkspaceID, *deleteExampleOptions.Intent, *deleteExampleOptions.Text}
+	pathSegments := []string{"v1/workspaces", "intents"}
+	pathParameters := []string{*deleteIntentOptions.WorkspaceID, *deleteIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range deleteExampleOptions.Headers {
+	for headerName, headerValue := range deleteIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteExample")
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteIntent")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -866,58 +783,6 @@ func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleO
 
 	response, err := assistant.Service.Request(request, nil)
 	return response, err
-}
-
-// GetExample : Get user input example
-// Get information about a user input example.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getExampleOptions, "getExampleOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getExampleOptions, "getExampleOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "intents", "examples"}
-	pathParameters := []string{*getExampleOptions.WorkspaceID, *getExampleOptions.Intent, *getExampleOptions.Text}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getExampleOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetExample")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if getExampleOptions.IncludeAudit != nil {
-		builder.AddQuery("include_audit", fmt.Sprint(*getExampleOptions.IncludeAudit))
-	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Example))
-	return response, err
-}
-
-// GetGetExampleResult : Retrieve result of GetExample operation
-func (assistant *AssistantV1) GetGetExampleResult(response *core.DetailedResponse) *Example {
-	result, ok := response.Result.(*Example)
-	if ok {
-		return result
-	}
-	return nil
 }
 
 // ListExamples : List user input examples
@@ -984,8 +849,127 @@ func (assistant *AssistantV1) GetListExamplesResult(response *core.DetailedRespo
 	return nil
 }
 
+// CreateExample : Create user input example
+// Add a new user input example to an intent.
+//
+// If you want to add multiple exaples with a single API call, consider using the **[Update intent](#update-intent)**
+// method instead.
+//
+// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createExampleOptions, "createExampleOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createExampleOptions, "createExampleOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "intents", "examples"}
+	pathParameters := []string{*createExampleOptions.WorkspaceID, *createExampleOptions.Intent}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	body := make(map[string]interface{})
+	if createExampleOptions.Text != nil {
+		body["text"] = createExampleOptions.Text
+	}
+	if createExampleOptions.Mentions != nil {
+		body["mentions"] = createExampleOptions.Mentions
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Example))
+	return response, err
+}
+
+// GetCreateExampleResult : Retrieve result of CreateExample operation
+func (assistant *AssistantV1) GetCreateExampleResult(response *core.DetailedResponse) *Example {
+	result, ok := response.Result.(*Example)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// GetExample : Get user input example
+// Get information about a user input example.
+//
+// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getExampleOptions, "getExampleOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getExampleOptions, "getExampleOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "intents", "examples"}
+	pathParameters := []string{*getExampleOptions.WorkspaceID, *getExampleOptions.Intent, *getExampleOptions.Text}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getExampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetExample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getExampleOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getExampleOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Example))
+	return response, err
+}
+
+// GetGetExampleResult : Retrieve result of GetExample operation
+func (assistant *AssistantV1) GetGetExampleResult(response *core.DetailedResponse) *Example {
+	result, ok := response.Result.(*Example)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // UpdateExample : Update user input example
 // Update the text of a user input example.
+//
+// If you want to update multiple examples with a single API call, consider using the **[Update
+// intent](#update-intent)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleOptions) (*core.DetailedResponse, error) {
@@ -1045,87 +1029,29 @@ func (assistant *AssistantV1) GetUpdateExampleResult(response *core.DetailedResp
 	return nil
 }
 
-// CreateCounterexample : Create counterexample
-// Add a new counterexample to a workspace. Counterexamples are examples that have been marked as irrelevant input.
+// DeleteExample : Delete user input example
+// Delete a user input example from an intent.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createCounterexampleOptions, "createCounterexampleOptions cannot be nil"); err != nil {
+func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteExampleOptions, "deleteExampleOptions cannot be nil"); err != nil {
 		return nil, err
 	}
-	if err := core.ValidateStruct(createCounterexampleOptions, "createCounterexampleOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "counterexamples"}
-	pathParameters := []string{*createCounterexampleOptions.WorkspaceID}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range createCounterexampleOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateCounterexample")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	body := make(map[string]interface{})
-	if createCounterexampleOptions.Text != nil {
-		body["text"] = createCounterexampleOptions.Text
-	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if err := core.ValidateStruct(deleteExampleOptions, "deleteExampleOptions"); err != nil {
 		return nil, err
 	}
 
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Counterexample))
-	return response, err
-}
-
-// GetCreateCounterexampleResult : Retrieve result of CreateCounterexample operation
-func (assistant *AssistantV1) GetCreateCounterexampleResult(response *core.DetailedResponse) *Counterexample {
-	result, ok := response.Result.(*Counterexample)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// DeleteCounterexample : Delete counterexample
-// Delete a counterexample from a workspace. Counterexamples are examples that have been marked as irrelevant input.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteCounterexampleOptions, "deleteCounterexampleOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteCounterexampleOptions, "deleteCounterexampleOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "counterexamples"}
-	pathParameters := []string{*deleteCounterexampleOptions.WorkspaceID, *deleteCounterexampleOptions.Text}
+	pathSegments := []string{"v1/workspaces", "intents", "examples"}
+	pathParameters := []string{*deleteExampleOptions.WorkspaceID, *deleteExampleOptions.Intent, *deleteExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range deleteCounterexampleOptions.Headers {
+	for headerName, headerValue := range deleteExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteCounterexample")
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteExample")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1140,58 +1066,6 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 
 	response, err := assistant.Service.Request(request, nil)
 	return response, err
-}
-
-// GetCounterexample : Get counterexample
-// Get information about a counterexample. Counterexamples are examples that have been marked as irrelevant input.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getCounterexampleOptions, "getCounterexampleOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getCounterexampleOptions, "getCounterexampleOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "counterexamples"}
-	pathParameters := []string{*getCounterexampleOptions.WorkspaceID, *getCounterexampleOptions.Text}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getCounterexampleOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetCounterexample")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if getCounterexampleOptions.IncludeAudit != nil {
-		builder.AddQuery("include_audit", fmt.Sprint(*getCounterexampleOptions.IncludeAudit))
-	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Counterexample))
-	return response, err
-}
-
-// GetGetCounterexampleResult : Retrieve result of GetCounterexample operation
-func (assistant *AssistantV1) GetGetCounterexampleResult(response *core.DetailedResponse) *Counterexample {
-	result, ok := response.Result.(*Counterexample)
-	if ok {
-		return result
-	}
-	return nil
 }
 
 // ListCounterexamples : List counterexamples
@@ -1258,8 +1132,124 @@ func (assistant *AssistantV1) GetListCounterexamplesResult(response *core.Detail
 	return nil
 }
 
+// CreateCounterexample : Create counterexample
+// Add a new counterexample to a workspace. Counterexamples are examples that have been marked as irrelevant input.
+//
+// If you want to add multiple counterexamples with a single API call, consider using the **[Update
+// workspace](#update-workspace)** method instead.
+//
+// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createCounterexampleOptions, "createCounterexampleOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createCounterexampleOptions, "createCounterexampleOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "counterexamples"}
+	pathParameters := []string{*createCounterexampleOptions.WorkspaceID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createCounterexampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateCounterexample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	body := make(map[string]interface{})
+	if createCounterexampleOptions.Text != nil {
+		body["text"] = createCounterexampleOptions.Text
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Counterexample))
+	return response, err
+}
+
+// GetCreateCounterexampleResult : Retrieve result of CreateCounterexample operation
+func (assistant *AssistantV1) GetCreateCounterexampleResult(response *core.DetailedResponse) *Counterexample {
+	result, ok := response.Result.(*Counterexample)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// GetCounterexample : Get counterexample
+// Get information about a counterexample. Counterexamples are examples that have been marked as irrelevant input.
+//
+// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getCounterexampleOptions, "getCounterexampleOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getCounterexampleOptions, "getCounterexampleOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "counterexamples"}
+	pathParameters := []string{*getCounterexampleOptions.WorkspaceID, *getCounterexampleOptions.Text}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getCounterexampleOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetCounterexample")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getCounterexampleOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getCounterexampleOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Counterexample))
+	return response, err
+}
+
+// GetGetCounterexampleResult : Retrieve result of GetCounterexample operation
+func (assistant *AssistantV1) GetGetCounterexampleResult(response *core.DetailedResponse) *Counterexample {
+	result, ok := response.Result.(*Counterexample)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // UpdateCounterexample : Update counterexample
 // Update the text of a counterexample. Counterexamples are examples that have been marked as irrelevant input.
+//
+// If you want to update multiple counterexamples with a single API call, consider using the **[Update
+// workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions) (*core.DetailedResponse, error) {
@@ -1316,99 +1306,29 @@ func (assistant *AssistantV1) GetUpdateCounterexampleResult(response *core.Detai
 	return nil
 }
 
-// CreateEntity : Create entity
-// Create a new entity, or enable a system entity.
+// DeleteCounterexample : Delete counterexample
+// Delete a counterexample from a workspace. Counterexamples are examples that have been marked as irrelevant input.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createEntityOptions, "createEntityOptions cannot be nil"); err != nil {
+func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteCounterexampleOptions, "deleteCounterexampleOptions cannot be nil"); err != nil {
 		return nil, err
 	}
-	if err := core.ValidateStruct(createEntityOptions, "createEntityOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities"}
-	pathParameters := []string{*createEntityOptions.WorkspaceID}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range createEntityOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateEntity")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	body := make(map[string]interface{})
-	if createEntityOptions.Entity != nil {
-		body["entity"] = createEntityOptions.Entity
-	}
-	if createEntityOptions.Description != nil {
-		body["description"] = createEntityOptions.Description
-	}
-	if createEntityOptions.Metadata != nil {
-		body["metadata"] = createEntityOptions.Metadata
-	}
-	if createEntityOptions.FuzzyMatch != nil {
-		body["fuzzy_match"] = createEntityOptions.FuzzyMatch
-	}
-	if createEntityOptions.Values != nil {
-		body["values"] = createEntityOptions.Values
-	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if err := core.ValidateStruct(deleteCounterexampleOptions, "deleteCounterexampleOptions"); err != nil {
 		return nil, err
 	}
 
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Entity))
-	return response, err
-}
-
-// GetCreateEntityResult : Retrieve result of CreateEntity operation
-func (assistant *AssistantV1) GetCreateEntityResult(response *core.DetailedResponse) *Entity {
-	result, ok := response.Result.(*Entity)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// DeleteEntity : Delete entity
-// Delete an entity from a workspace, or disable a system entity.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteEntityOptions, "deleteEntityOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteEntityOptions, "deleteEntityOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities"}
-	pathParameters := []string{*deleteEntityOptions.WorkspaceID, *deleteEntityOptions.Entity}
+	pathSegments := []string{"v1/workspaces", "counterexamples"}
+	pathParameters := []string{*deleteCounterexampleOptions.WorkspaceID, *deleteCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range deleteEntityOptions.Headers {
+	for headerName, headerValue := range deleteCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteEntity")
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteCounterexample")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -1423,62 +1343,6 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 
 	response, err := assistant.Service.Request(request, nil)
 	return response, err
-}
-
-// GetEntity : Get entity
-// Get information about an entity, optionally including all entity content.
-//
-// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
-// is 200 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getEntityOptions, "getEntityOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getEntityOptions, "getEntityOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities"}
-	pathParameters := []string{*getEntityOptions.WorkspaceID, *getEntityOptions.Entity}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getEntityOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetEntity")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if getEntityOptions.Export != nil {
-		builder.AddQuery("export", fmt.Sprint(*getEntityOptions.Export))
-	}
-	if getEntityOptions.IncludeAudit != nil {
-		builder.AddQuery("include_audit", fmt.Sprint(*getEntityOptions.IncludeAudit))
-	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Entity))
-	return response, err
-}
-
-// GetGetEntityResult : Retrieve result of GetEntity operation
-func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse) *Entity {
-	result, ok := response.Result.(*Entity)
-	if ok {
-		return result
-	}
-	return nil
 }
 
 // ListEntities : List entities
@@ -1549,9 +1413,141 @@ func (assistant *AssistantV1) GetListEntitiesResult(response *core.DetailedRespo
 	return nil
 }
 
+// CreateEntity : Create entity
+// Create a new entity, or enable a system entity.
+//
+// If you want to create multiple entities with a single API call, consider using the **[Update
+// workspace](#update-workspace)** method instead.
+//
+// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createEntityOptions, "createEntityOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createEntityOptions, "createEntityOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "entities"}
+	pathParameters := []string{*createEntityOptions.WorkspaceID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createEntityOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateEntity")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	body := make(map[string]interface{})
+	if createEntityOptions.Entity != nil {
+		body["entity"] = createEntityOptions.Entity
+	}
+	if createEntityOptions.Description != nil {
+		body["description"] = createEntityOptions.Description
+	}
+	if createEntityOptions.Metadata != nil {
+		body["metadata"] = createEntityOptions.Metadata
+	}
+	if createEntityOptions.FuzzyMatch != nil {
+		body["fuzzy_match"] = createEntityOptions.FuzzyMatch
+	}
+	if createEntityOptions.Values != nil {
+		body["values"] = createEntityOptions.Values
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Entity))
+	return response, err
+}
+
+// GetCreateEntityResult : Retrieve result of CreateEntity operation
+func (assistant *AssistantV1) GetCreateEntityResult(response *core.DetailedResponse) *Entity {
+	result, ok := response.Result.(*Entity)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// GetEntity : Get entity
+// Get information about an entity, optionally including all entity content.
+//
+// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
+// is 200 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getEntityOptions, "getEntityOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getEntityOptions, "getEntityOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "entities"}
+	pathParameters := []string{*getEntityOptions.WorkspaceID, *getEntityOptions.Entity}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getEntityOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetEntity")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getEntityOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*getEntityOptions.Export))
+	}
+	if getEntityOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getEntityOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Entity))
+	return response, err
+}
+
+// GetGetEntityResult : Retrieve result of GetEntity operation
+func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse) *Entity {
+	result, ok := response.Result.(*Entity)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // UpdateEntity : Update entity
 // Update an existing entity with new or modified data. You must provide component objects defining the content of the
 // updated entity.
+//
+// If you want to update multiple entities with a single API call, consider using the **[Update
+// workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOptions) (*core.DetailedResponse, error) {
@@ -1620,6 +1616,45 @@ func (assistant *AssistantV1) GetUpdateEntityResult(response *core.DetailedRespo
 	return nil
 }
 
+// DeleteEntity : Delete entity
+// Delete an entity from a workspace, or disable a system entity.
+//
+// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteEntityOptions, "deleteEntityOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteEntityOptions, "deleteEntityOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "entities"}
+	pathParameters := []string{*deleteEntityOptions.WorkspaceID, *deleteEntityOptions.Entity}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteEntityOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteEntity")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, nil)
+	return response, err
+}
+
 // ListMentions : List entity mentions
 // List mentions for a contextual entity. An entity mention is an occurrence of a contextual entity in the context of an
 // intent user input example.
@@ -1670,170 +1705,6 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 // GetListMentionsResult : Retrieve result of ListMentions operation
 func (assistant *AssistantV1) GetListMentionsResult(response *core.DetailedResponse) *EntityMentionCollection {
 	result, ok := response.Result.(*EntityMentionCollection)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// CreateValue : Create entity value
-// Create a new value for an entity.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createValueOptions, "createValueOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(createValueOptions, "createValueOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities", "values"}
-	pathParameters := []string{*createValueOptions.WorkspaceID, *createValueOptions.Entity}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range createValueOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateValue")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	body := make(map[string]interface{})
-	if createValueOptions.Value != nil {
-		body["value"] = createValueOptions.Value
-	}
-	if createValueOptions.Metadata != nil {
-		body["metadata"] = createValueOptions.Metadata
-	}
-	if createValueOptions.ValueType != nil {
-		body["type"] = createValueOptions.ValueType
-	}
-	if createValueOptions.Synonyms != nil {
-		body["synonyms"] = createValueOptions.Synonyms
-	}
-	if createValueOptions.Patterns != nil {
-		body["patterns"] = createValueOptions.Patterns
-	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
-		return nil, err
-	}
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Value))
-	return response, err
-}
-
-// GetCreateValueResult : Retrieve result of CreateValue operation
-func (assistant *AssistantV1) GetCreateValueResult(response *core.DetailedResponse) *Value {
-	result, ok := response.Result.(*Value)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// DeleteValue : Delete entity value
-// Delete a value from an entity.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteValueOptions, "deleteValueOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteValueOptions, "deleteValueOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities", "values"}
-	pathParameters := []string{*deleteValueOptions.WorkspaceID, *deleteValueOptions.Entity, *deleteValueOptions.Value}
-
-	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range deleteValueOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteValue")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
-}
-
-// GetValue : Get entity value
-// Get information about an entity value.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getValueOptions, "getValueOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getValueOptions, "getValueOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities", "values"}
-	pathParameters := []string{*getValueOptions.WorkspaceID, *getValueOptions.Entity, *getValueOptions.Value}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getValueOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetValue")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if getValueOptions.Export != nil {
-		builder.AddQuery("export", fmt.Sprint(*getValueOptions.Export))
-	}
-	if getValueOptions.IncludeAudit != nil {
-		builder.AddQuery("include_audit", fmt.Sprint(*getValueOptions.IncludeAudit))
-	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Value))
-	return response, err
-}
-
-// GetGetValueResult : Retrieve result of GetValue operation
-func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse) *Value {
-	result, ok := response.Result.(*Value)
 	if ok {
 		return result
 	}
@@ -1907,9 +1778,140 @@ func (assistant *AssistantV1) GetListValuesResult(response *core.DetailedRespons
 	return nil
 }
 
+// CreateValue : Create entity value
+// Create a new value for an entity.
+//
+// If you want to create multiple entity values with a single API call, consider using the **[Update
+// entity](#update-entity)** method instead.
+//
+// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createValueOptions, "createValueOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createValueOptions, "createValueOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "entities", "values"}
+	pathParameters := []string{*createValueOptions.WorkspaceID, *createValueOptions.Entity}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createValueOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateValue")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	body := make(map[string]interface{})
+	if createValueOptions.Value != nil {
+		body["value"] = createValueOptions.Value
+	}
+	if createValueOptions.Metadata != nil {
+		body["metadata"] = createValueOptions.Metadata
+	}
+	if createValueOptions.ValueType != nil {
+		body["type"] = createValueOptions.ValueType
+	}
+	if createValueOptions.Synonyms != nil {
+		body["synonyms"] = createValueOptions.Synonyms
+	}
+	if createValueOptions.Patterns != nil {
+		body["patterns"] = createValueOptions.Patterns
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Value))
+	return response, err
+}
+
+// GetCreateValueResult : Retrieve result of CreateValue operation
+func (assistant *AssistantV1) GetCreateValueResult(response *core.DetailedResponse) *Value {
+	result, ok := response.Result.(*Value)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// GetValue : Get entity value
+// Get information about an entity value.
+//
+// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getValueOptions, "getValueOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getValueOptions, "getValueOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "entities", "values"}
+	pathParameters := []string{*getValueOptions.WorkspaceID, *getValueOptions.Entity, *getValueOptions.Value}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getValueOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetValue")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getValueOptions.Export != nil {
+		builder.AddQuery("export", fmt.Sprint(*getValueOptions.Export))
+	}
+	if getValueOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getValueOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Value))
+	return response, err
+}
+
+// GetGetValueResult : Retrieve result of GetValue operation
+func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse) *Value {
+	result, ok := response.Result.(*Value)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // UpdateValue : Update entity value
 // Update an existing entity value with new or modified data. You must provide component objects defining the content of
 // the updated entity value.
+//
+// If you want to update multiple entity values with a single API call, consider using the **[Update
+// entity](#update-entity)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions) (*core.DetailedResponse, error) {
@@ -1978,87 +1980,29 @@ func (assistant *AssistantV1) GetUpdateValueResult(response *core.DetailedRespon
 	return nil
 }
 
-// CreateSynonym : Create entity value synonym
-// Add a new synonym to an entity value.
+// DeleteValue : Delete entity value
+// Delete a value from an entity.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createSynonymOptions, "createSynonymOptions cannot be nil"); err != nil {
+func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteValueOptions, "deleteValueOptions cannot be nil"); err != nil {
 		return nil, err
 	}
-	if err := core.ValidateStruct(createSynonymOptions, "createSynonymOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
-	pathParameters := []string{*createSynonymOptions.WorkspaceID, *createSynonymOptions.Entity, *createSynonymOptions.Value}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range createSynonymOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateSynonym")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	body := make(map[string]interface{})
-	if createSynonymOptions.Synonym != nil {
-		body["synonym"] = createSynonymOptions.Synonym
-	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if err := core.ValidateStruct(deleteValueOptions, "deleteValueOptions"); err != nil {
 		return nil, err
 	}
 
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Synonym))
-	return response, err
-}
-
-// GetCreateSynonymResult : Retrieve result of CreateSynonym operation
-func (assistant *AssistantV1) GetCreateSynonymResult(response *core.DetailedResponse) *Synonym {
-	result, ok := response.Result.(*Synonym)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// DeleteSynonym : Delete entity value synonym
-// Delete a synonym from an entity value.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteSynonymOptions, "deleteSynonymOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteSynonymOptions, "deleteSynonymOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
-	pathParameters := []string{*deleteSynonymOptions.WorkspaceID, *deleteSynonymOptions.Entity, *deleteSynonymOptions.Value, *deleteSynonymOptions.Synonym}
+	pathSegments := []string{"v1/workspaces", "entities", "values"}
+	pathParameters := []string{*deleteValueOptions.WorkspaceID, *deleteValueOptions.Entity, *deleteValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range deleteSynonymOptions.Headers {
+	for headerName, headerValue := range deleteValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteSynonym")
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteValue")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
@@ -2073,58 +2017,6 @@ func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymO
 
 	response, err := assistant.Service.Request(request, nil)
 	return response, err
-}
-
-// GetSynonym : Get entity value synonym
-// Get information about a synonym of an entity value.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getSynonymOptions, "getSynonymOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getSynonymOptions, "getSynonymOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
-	pathParameters := []string{*getSynonymOptions.WorkspaceID, *getSynonymOptions.Entity, *getSynonymOptions.Value, *getSynonymOptions.Synonym}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getSynonymOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetSynonym")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if getSynonymOptions.IncludeAudit != nil {
-		builder.AddQuery("include_audit", fmt.Sprint(*getSynonymOptions.IncludeAudit))
-	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(Synonym))
-	return response, err
-}
-
-// GetGetSynonymResult : Retrieve result of GetSynonym operation
-func (assistant *AssistantV1) GetGetSynonymResult(response *core.DetailedResponse) *Synonym {
-	result, ok := response.Result.(*Synonym)
-	if ok {
-		return result
-	}
-	return nil
 }
 
 // ListSynonyms : List entity value synonyms
@@ -2191,8 +2083,124 @@ func (assistant *AssistantV1) GetListSynonymsResult(response *core.DetailedRespo
 	return nil
 }
 
+// CreateSynonym : Create entity value synonym
+// Add a new synonym to an entity value.
+//
+// If you want to create multiple synonyms with a single API call, consider using the **[Update
+// entity](#update-entity)** or **[Update entity value](#update-entity-value)** method instead.
+//
+// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(createSynonymOptions, "createSynonymOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(createSynonymOptions, "createSynonymOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
+	pathParameters := []string{*createSynonymOptions.WorkspaceID, *createSynonymOptions.Entity, *createSynonymOptions.Value}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range createSynonymOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "CreateSynonym")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	body := make(map[string]interface{})
+	if createSynonymOptions.Synonym != nil {
+		body["synonym"] = createSynonymOptions.Synonym
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Synonym))
+	return response, err
+}
+
+// GetCreateSynonymResult : Retrieve result of CreateSynonym operation
+func (assistant *AssistantV1) GetCreateSynonymResult(response *core.DetailedResponse) *Synonym {
+	result, ok := response.Result.(*Synonym)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// GetSynonym : Get entity value synonym
+// Get information about a synonym of an entity value.
+//
+// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getSynonymOptions, "getSynonymOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getSynonymOptions, "getSynonymOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
+	pathParameters := []string{*getSynonymOptions.WorkspaceID, *getSynonymOptions.Entity, *getSynonymOptions.Value, *getSynonymOptions.Synonym}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getSynonymOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "GetSynonym")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getSynonymOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*getSynonymOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(Synonym))
+	return response, err
+}
+
+// GetGetSynonymResult : Retrieve result of GetSynonym operation
+func (assistant *AssistantV1) GetGetSynonymResult(response *core.DetailedResponse) *Synonym {
+	result, ok := response.Result.(*Synonym)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // UpdateSynonym : Update entity value synonym
 // Update an existing entity value synonym with new text.
+//
+// If you want to update multiple synonyms with a single API call, consider using the **[Update
+// entity](#update-entity)** or **[Update entity value](#update-entity-value)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions) (*core.DetailedResponse, error) {
@@ -2249,8 +2257,114 @@ func (assistant *AssistantV1) GetUpdateSynonymResult(response *core.DetailedResp
 	return nil
 }
 
+// DeleteSynonym : Delete entity value synonym
+// Delete a synonym from an entity value.
+//
+// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteSynonymOptions, "deleteSynonymOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteSynonymOptions, "deleteSynonymOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
+	pathParameters := []string{*deleteSynonymOptions.WorkspaceID, *deleteSynonymOptions.Entity, *deleteSynonymOptions.Value, *deleteSynonymOptions.Synonym}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteSynonymOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteSynonym")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, nil)
+	return response, err
+}
+
+// ListDialogNodes : List dialog nodes
+// List the dialog nodes for a workspace.
+//
+// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listDialogNodesOptions, "listDialogNodesOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listDialogNodesOptions, "listDialogNodesOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
+	pathParameters := []string{*listDialogNodesOptions.WorkspaceID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listDialogNodesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListDialogNodes")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if listDialogNodesOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listDialogNodesOptions.PageLimit))
+	}
+	if listDialogNodesOptions.IncludeCount != nil {
+		builder.AddQuery("include_count", fmt.Sprint(*listDialogNodesOptions.IncludeCount))
+	}
+	if listDialogNodesOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listDialogNodesOptions.Sort))
+	}
+	if listDialogNodesOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listDialogNodesOptions.Cursor))
+	}
+	if listDialogNodesOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*listDialogNodesOptions.IncludeAudit))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(DialogNodeCollection))
+	return response, err
+}
+
+// GetListDialogNodesResult : Retrieve result of ListDialogNodes operation
+func (assistant *AssistantV1) GetListDialogNodesResult(response *core.DetailedResponse) *DialogNodeCollection {
+	result, ok := response.Result.(*DialogNodeCollection)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // CreateDialogNode : Create dialog node
 // Create a new dialog node.
+//
+// If you want to create multiple dialog nodes with a single API call, consider using the **[Update
+// workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions) (*core.DetailedResponse, error) {
@@ -2358,45 +2472,6 @@ func (assistant *AssistantV1) GetCreateDialogNodeResult(response *core.DetailedR
 	return nil
 }
 
-// DeleteDialogNode : Delete dialog node
-// Delete a dialog node from a workspace.
-//
-// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteDialogNodeOptions, "deleteDialogNodeOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteDialogNodeOptions, "deleteDialogNodeOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
-	pathParameters := []string{*deleteDialogNodeOptions.WorkspaceID, *deleteDialogNodeOptions.DialogNode}
-
-	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range deleteDialogNodeOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteDialogNode")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
-}
-
 // GetDialogNode : Get dialog node
 // Get information about a dialog node.
 //
@@ -2449,72 +2524,11 @@ func (assistant *AssistantV1) GetGetDialogNodeResult(response *core.DetailedResp
 	return nil
 }
 
-// ListDialogNodes : List dialog nodes
-// List the dialog nodes for a workspace.
-//
-// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listDialogNodesOptions, "listDialogNodesOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(listDialogNodesOptions, "listDialogNodesOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
-	pathParameters := []string{*listDialogNodesOptions.WorkspaceID}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range listDialogNodesOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListDialogNodes")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if listDialogNodesOptions.PageLimit != nil {
-		builder.AddQuery("page_limit", fmt.Sprint(*listDialogNodesOptions.PageLimit))
-	}
-	if listDialogNodesOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listDialogNodesOptions.IncludeCount))
-	}
-	if listDialogNodesOptions.Sort != nil {
-		builder.AddQuery("sort", fmt.Sprint(*listDialogNodesOptions.Sort))
-	}
-	if listDialogNodesOptions.Cursor != nil {
-		builder.AddQuery("cursor", fmt.Sprint(*listDialogNodesOptions.Cursor))
-	}
-	if listDialogNodesOptions.IncludeAudit != nil {
-		builder.AddQuery("include_audit", fmt.Sprint(*listDialogNodesOptions.IncludeAudit))
-	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := assistant.Service.Request(request, new(DialogNodeCollection))
-	return response, err
-}
-
-// GetListDialogNodesResult : Retrieve result of ListDialogNodes operation
-func (assistant *AssistantV1) GetListDialogNodesResult(response *core.DetailedResponse) *DialogNodeCollection {
-	result, ok := response.Result.(*DialogNodeCollection)
-	if ok {
-		return result
-	}
-	return nil
-}
-
 // UpdateDialogNode : Update dialog node
 // Update an existing dialog node with new or modified data.
+//
+// If you want to update multiple dialog nodes with a single API call, consider using the **[Update
+// workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions) (*core.DetailedResponse, error) {
@@ -2622,46 +2636,34 @@ func (assistant *AssistantV1) GetUpdateDialogNodeResult(response *core.DetailedR
 	return nil
 }
 
-// ListAllLogs : List log events in all workspaces
-// List the events from the logs of all workspaces in the service instance.
+// DeleteDialogNode : Delete dialog node
+// Delete a dialog node from a workspace.
 //
-// If **cursor** is not specified, this operation is limited to 40 requests per 30 minutes. If **cursor** is specified,
-// the limit is 120 requests per minute. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listAllLogsOptions, "listAllLogsOptions cannot be nil"); err != nil {
+// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteDialogNodeOptions, "deleteDialogNodeOptions cannot be nil"); err != nil {
 		return nil, err
 	}
-	if err := core.ValidateStruct(listAllLogsOptions, "listAllLogsOptions"); err != nil {
+	if err := core.ValidateStruct(deleteDialogNodeOptions, "deleteDialogNodeOptions"); err != nil {
 		return nil, err
 	}
 
-	pathSegments := []string{"v1/logs"}
-	pathParameters := []string{}
+	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
+	pathParameters := []string{*deleteDialogNodeOptions.WorkspaceID, *deleteDialogNodeOptions.DialogNode}
 
-	builder := core.NewRequestBuilder(core.GET)
+	builder := core.NewRequestBuilder(core.DELETE)
 	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range listAllLogsOptions.Headers {
+	for headerName, headerValue := range deleteDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListAllLogs")
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "DeleteDialogNode")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
 
 	builder.AddHeader("Accept", "application/json")
-
-	builder.AddQuery("filter", fmt.Sprint(*listAllLogsOptions.Filter))
-	if listAllLogsOptions.Sort != nil {
-		builder.AddQuery("sort", fmt.Sprint(*listAllLogsOptions.Sort))
-	}
-	if listAllLogsOptions.PageLimit != nil {
-		builder.AddQuery("page_limit", fmt.Sprint(*listAllLogsOptions.PageLimit))
-	}
-	if listAllLogsOptions.Cursor != nil {
-		builder.AddQuery("cursor", fmt.Sprint(*listAllLogsOptions.Cursor))
-	}
 	builder.AddQuery("version", assistant.Service.Options.Version)
 
 	request, err := builder.Build()
@@ -2669,17 +2671,8 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 		return nil, err
 	}
 
-	response, err := assistant.Service.Request(request, new(LogCollection))
+	response, err := assistant.Service.Request(request, nil)
 	return response, err
-}
-
-// GetListAllLogsResult : Retrieve result of ListAllLogs operation
-func (assistant *AssistantV1) GetListAllLogsResult(response *core.DetailedResponse) *LogCollection {
-	result, ok := response.Result.(*LogCollection)
-	if ok {
-		return result
-	}
-	return nil
 }
 
 // ListLogs : List log events in a workspace
@@ -2744,13 +2737,73 @@ func (assistant *AssistantV1) GetListLogsResult(response *core.DetailedResponse)
 	return nil
 }
 
+// ListAllLogs : List log events in all workspaces
+// List the events from the logs of all workspaces in the service instance.
+//
+// If **cursor** is not specified, this operation is limited to 40 requests per 30 minutes. If **cursor** is specified,
+// the limit is 120 requests per minute. For more information, see **Rate limiting**.
+func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(listAllLogsOptions, "listAllLogsOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(listAllLogsOptions, "listAllLogsOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/logs"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listAllLogsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "ListAllLogs")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("filter", fmt.Sprint(*listAllLogsOptions.Filter))
+	if listAllLogsOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listAllLogsOptions.Sort))
+	}
+	if listAllLogsOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listAllLogsOptions.PageLimit))
+	}
+	if listAllLogsOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listAllLogsOptions.Cursor))
+	}
+	builder.AddQuery("version", assistant.Service.Options.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := assistant.Service.Request(request, new(LogCollection))
+	return response, err
+}
+
+// GetListAllLogsResult : Retrieve result of ListAllLogs operation
+func (assistant *AssistantV1) GetListAllLogsResult(response *core.DetailedResponse) *LogCollection {
+	result, ok := response.Result.(*LogCollection)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // DeleteUserData : Delete labeled data
 // Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
 // customer ID.
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
-// security](https://cloud.ibm.com/docs/services/assistant/information-security.html).
+// security](https://cloud.ibm.com/docs/services/assistant?topic=assistant-information-security#information-security).
 func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2831,13 +2884,22 @@ func (this *Context) GetMetadata() *MessageContextMetadata {
 	return (*this)["metadata"].(*MessageContextMetadata)
 }
 
+// SetProperty : Allow user to set arbitrary property
+func (this *Context) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *Context) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
+}
+
 // Counterexample : Counterexample struct
 type Counterexample struct {
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
-	// - It cannot contain carriage return, newline, or tab characters
-	// - It cannot consist of only whitespace characters
-	// - It must be no longer than 1024 characters.
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
 	Text *string `json:"text" validate:"required"`
 
 	// The timestamp for creation of the object.
@@ -2857,16 +2919,15 @@ type CounterexampleCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-// CreateCounterexampleOptions : The createCounterexample options.
+// CreateCounterexampleOptions : The CreateCounterexample options.
 type CreateCounterexampleOptions struct {
 
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
-	// - It cannot contain carriage return, newline, or tab characters
-	// - It cannot consist of only whitespace characters
-	// - It must be no longer than 1024 characters.
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
 	Text *string `json:"text" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -2899,7 +2960,7 @@ func (options *CreateCounterexampleOptions) SetHeaders(param map[string]string) 
 	return options
 }
 
-// CreateDialogNodeOptions : The createDialogNode options.
+// CreateDialogNodeOptions : The CreateDialogNode options.
 type CreateDialogNodeOptions struct {
 
 	// Unique identifier of the workspace.
@@ -2907,15 +2968,13 @@ type CreateDialogNodeOptions struct {
 
 	// The dialog node ID. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 1024 characters.
 	DialogNode *string `json:"dialog_node" validate:"required"`
 
-	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
-	// must be no longer than 128 characters.
+	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
-	// characters, and it must be no longer than 2048 characters.
+	// characters.
 	Conditions *string `json:"conditions,omitempty"`
 
 	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
@@ -2925,7 +2984,7 @@ type CreateDialogNodeOptions struct {
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
@@ -2939,7 +2998,6 @@ type CreateDialogNodeOptions struct {
 
 	// The alias used to identify the dialog node. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 64 characters.
 	Title *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
@@ -2963,8 +3021,7 @@ type CreateDialogNodeOptions struct {
 	// Whether the user can digress to top-level nodes while filling out slots.
 	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
-	// than 512 characters.
+	// A label that can be displayed externally to describe the purpose of the node to users.
 	UserLabel *string `json:"user_label,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3153,14 +3210,11 @@ type CreateEntity struct {
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
-	// - It must be no longer than 64 characters.
-	//
-	// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity that
-	// you want to enable. (Any entity content specified with the request is ignored.).
+	// - If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity
+	// that you want to enable. (Any entity content specified with the request is ignored.).
 	Entity *string `json:"entity" validate:"required"`
 
-	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
-	// be no longer than 128 characters.
+	// The description of the entity. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the entity.
@@ -3179,7 +3233,7 @@ type CreateEntity struct {
 	Values []CreateValue `json:"values,omitempty"`
 }
 
-// CreateEntityOptions : The createEntity options.
+// CreateEntityOptions : The CreateEntity options.
 type CreateEntityOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3187,14 +3241,11 @@ type CreateEntityOptions struct {
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
-	// - It must be no longer than 64 characters.
-	//
-	// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity that
-	// you want to enable. (Any entity content specified with the request is ignored.).
+	// - If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity
+	// that you want to enable. (Any entity content specified with the request is ignored.).
 	Entity *string `json:"entity" validate:"required"`
 
-	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
-	// be no longer than 128 characters.
+	// The description of the entity. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the entity.
@@ -3260,7 +3311,7 @@ func (options *CreateEntityOptions) SetHeaders(param map[string]string) *CreateE
 	return options
 }
 
-// CreateExampleOptions : The createExample options.
+// CreateExampleOptions : The CreateExample options.
 type CreateExampleOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3272,7 +3323,6 @@ type CreateExampleOptions struct {
 	// The text of a user input example. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 1024 characters.
 	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
@@ -3327,11 +3377,9 @@ type CreateIntent struct {
 	// The name of the intent. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	// - It must be no longer than 128 characters.
 	Intent *string `json:"intent" validate:"required"`
 
-	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
-	// be no longer than 128 characters.
+	// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// The timestamp for creation of the object.
@@ -3344,7 +3392,7 @@ type CreateIntent struct {
 	Examples []Example `json:"examples,omitempty"`
 }
 
-// CreateIntentOptions : The createIntent options.
+// CreateIntentOptions : The CreateIntent options.
 type CreateIntentOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3353,11 +3401,9 @@ type CreateIntentOptions struct {
 	// The name of the intent. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	// - It must be no longer than 128 characters.
 	Intent *string `json:"intent" validate:"required"`
 
-	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
-	// be no longer than 128 characters.
+	// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// An array of user input examples for the intent.
@@ -3405,7 +3451,7 @@ func (options *CreateIntentOptions) SetHeaders(param map[string]string) *CreateI
 	return options
 }
 
-// CreateSynonymOptions : The createSynonym options.
+// CreateSynonymOptions : The CreateSynonym options.
 type CreateSynonymOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3420,7 +3466,6 @@ type CreateSynonymOptions struct {
 	// The text of the synonym. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	Synonym *string `json:"synonym" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3473,7 +3518,6 @@ type CreateValue struct {
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
@@ -3486,13 +3530,11 @@ type CreateValue struct {
 	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
-	// type), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how
-	// to specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
+	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// The timestamp for creation of the object.
@@ -3509,7 +3551,7 @@ const (
 	CreateValue_ValueType_Synonyms = "synonyms"
 )
 
-// CreateValueOptions : The createValue options.
+// CreateValueOptions : The CreateValue options.
 type CreateValueOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3521,7 +3563,6 @@ type CreateValueOptions struct {
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
@@ -3534,13 +3575,11 @@ type CreateValueOptions struct {
 	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
-	// type), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how
-	// to specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
+	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -3611,15 +3650,13 @@ func (options *CreateValueOptions) SetHeaders(param map[string]string) *CreateVa
 	return options
 }
 
-// CreateWorkspaceOptions : The createWorkspace options.
+// CreateWorkspaceOptions : The CreateWorkspace options.
 type CreateWorkspaceOptions struct {
 
-	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no
-	// longer than 64 characters.
+	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters.
 	Name *string `json:"name,omitempty"`
 
-	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters, and it
-	// must be no longer than 128 characters.
+	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// The language of the workspace.
@@ -3722,7 +3759,7 @@ func (options *CreateWorkspaceOptions) SetHeaders(param map[string]string) *Crea
 	return options
 }
 
-// DeleteCounterexampleOptions : The deleteCounterexample options.
+// DeleteCounterexampleOptions : The DeleteCounterexample options.
 type DeleteCounterexampleOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3761,7 +3798,7 @@ func (options *DeleteCounterexampleOptions) SetHeaders(param map[string]string) 
 	return options
 }
 
-// DeleteDialogNodeOptions : The deleteDialogNode options.
+// DeleteDialogNodeOptions : The DeleteDialogNode options.
 type DeleteDialogNodeOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3800,7 +3837,7 @@ func (options *DeleteDialogNodeOptions) SetHeaders(param map[string]string) *Del
 	return options
 }
 
-// DeleteEntityOptions : The deleteEntity options.
+// DeleteEntityOptions : The DeleteEntity options.
 type DeleteEntityOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3839,7 +3876,7 @@ func (options *DeleteEntityOptions) SetHeaders(param map[string]string) *DeleteE
 	return options
 }
 
-// DeleteExampleOptions : The deleteExample options.
+// DeleteExampleOptions : The DeleteExample options.
 type DeleteExampleOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3888,7 +3925,7 @@ func (options *DeleteExampleOptions) SetHeaders(param map[string]string) *Delete
 	return options
 }
 
-// DeleteIntentOptions : The deleteIntent options.
+// DeleteIntentOptions : The DeleteIntent options.
 type DeleteIntentOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3927,7 +3964,7 @@ func (options *DeleteIntentOptions) SetHeaders(param map[string]string) *DeleteI
 	return options
 }
 
-// DeleteSynonymOptions : The deleteSynonym options.
+// DeleteSynonymOptions : The DeleteSynonym options.
 type DeleteSynonymOptions struct {
 
 	// Unique identifier of the workspace.
@@ -3986,7 +4023,7 @@ func (options *DeleteSynonymOptions) SetHeaders(param map[string]string) *Delete
 	return options
 }
 
-// DeleteUserDataOptions : The deleteUserData options.
+// DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 
 	// The customer ID for which all data is to be deleted.
@@ -4015,7 +4052,7 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 	return options
 }
 
-// DeleteValueOptions : The deleteValue options.
+// DeleteValueOptions : The DeleteValue options.
 type DeleteValueOptions struct {
 
 	// Unique identifier of the workspace.
@@ -4064,7 +4101,7 @@ func (options *DeleteValueOptions) SetHeaders(param map[string]string) *DeleteVa
 	return options
 }
 
-// DeleteWorkspaceOptions : The deleteWorkspace options.
+// DeleteWorkspaceOptions : The DeleteWorkspace options.
 type DeleteWorkspaceOptions struct {
 
 	// Unique identifier of the workspace.
@@ -4098,15 +4135,13 @@ type DialogNode struct {
 
 	// The dialog node ID. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 1024 characters.
 	DialogNode *string `json:"dialog_node" validate:"required"`
 
-	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
-	// must be no longer than 128 characters.
+	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
-	// characters, and it must be no longer than 2048 characters.
+	// characters.
 	Conditions *string `json:"conditions,omitempty"`
 
 	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
@@ -4116,7 +4151,7 @@ type DialogNode struct {
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
@@ -4130,7 +4165,6 @@ type DialogNode struct {
 
 	// The alias used to identify the dialog node. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 64 characters.
 	Title *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
@@ -4154,8 +4188,7 @@ type DialogNode struct {
 	// Whether the user can digress to top-level nodes while filling out slots.
 	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
-	// than 512 characters.
+	// A label that can be displayed externally to describe the purpose of the node to users.
 	UserLabel *string `json:"user_label,omitempty"`
 
 	// For internal use only.
@@ -4327,7 +4360,7 @@ const (
 )
 
 // DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the
-// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
+// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
 type DialogNodeOutput map[string]interface{}
 
 // SetGeneric : Allow user to set Generic
@@ -4348,6 +4381,16 @@ func (this *DialogNodeOutput) SetModifiers(Modifiers *DialogNodeOutputModifiers)
 // GetModifiers : Allow user to get Modifiers
 func (this *DialogNodeOutput) GetModifiers() *DialogNodeOutputModifiers {
 	return (*this)["modifiers"].(*DialogNodeOutputModifiers)
+}
+
+// SetProperty : Allow user to set arbitrary property
+func (this *DialogNodeOutput) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *DialogNodeOutput) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
 }
 
 // DialogNodeOutputGeneric : DialogNodeOutputGeneric struct
@@ -4377,12 +4420,10 @@ type DialogNodeOutputGeneric struct {
 	// The URL of the image. Required when **response_type**=`image`.
 	Source *string `json:"source,omitempty"`
 
-	// An optional title to show before the response. Valid only when **response_type**=`image` or `option`. This string
-	// must be no longer than 512 characters.
+	// An optional title to show before the response. Valid only when **response_type**=`image` or `option`.
 	Title *string `json:"title,omitempty"`
 
-	// An optional description to show with the response. Valid only when **response_type**=`image` or `option`. This
-	// string must be no longer than 256 characters.
+	// An optional description to show with the response. Valid only when **response_type**=`image` or `option`.
 	Description *string `json:"description,omitempty"`
 
 	// The preferred type of control to display, if supported by the channel. Valid only when **response_type**=`option`.
@@ -4393,7 +4434,7 @@ type DialogNodeOutputGeneric struct {
 	Options []DialogNodeOutputOptionsElement `json:"options,omitempty"`
 
 	// An optional message to be sent to the human agent who will be taking over the conversation. Valid only when
-	// **reponse_type**=`connect_to_agent`. This string must be no longer than 256 characters.
+	// **reponse_type**=`connect_to_agent`.
 	MessageToHumanAgent *string `json:"message_to_human_agent,omitempty"`
 }
 
@@ -4428,7 +4469,7 @@ const (
 type DialogNodeOutputModifiers struct {
 
 	// Whether values in the output will overwrite output values in an array specified by previously executed dialog nodes.
-	// If this option is set to **false**, new values will be appended to previously specified values.
+	// If this option is set to `false`, new values will be appended to previously specified values.
 	Overwrite *bool `json:"overwrite,omitempty"`
 }
 
@@ -4449,13 +4490,25 @@ type DialogNodeOutputOptionsElementValue struct {
 
 	// An input object that includes the input text.
 	Input *MessageInput `json:"input,omitempty"`
+
+	// An array of intents to be used while processing the input.
+	//
+	// **Note:** This property is supported for backward compatibility with applications that use the v1 **Get response to
+	// user input** method.
+	Intents []RuntimeIntent `json:"intents,omitempty"`
+
+	// An array of entities to be used while processing the user input.
+	//
+	// **Note:** This property is supported for backward compatibility with applications that use the v1 **Get response to
+	// user input** method.
+	Entities []RuntimeEntity `json:"entities,omitempty"`
 }
 
 // DialogNodeOutputTextValuesElement : DialogNodeOutputTextValuesElement struct
 type DialogNodeOutputTextValuesElement struct {
 
 	// The text of a response. This string can include newline characters (`\\n`), Markdown tagging, or other special
-	// characters, if supported by the channel. It must be no longer than 4096 characters.
+	// characters, if supported by the channel.
 	Text *string `json:"text,omitempty"`
 }
 
@@ -4584,14 +4637,11 @@ type Entity struct {
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
-	// - It must be no longer than 64 characters.
-	//
-	// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity that
-	// you want to enable. (Any entity content specified with the request is ignored.).
+	// - If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity
+	// that you want to enable. (Any entity content specified with the request is ignored.).
 	Entity *string `json:"entity" validate:"required"`
 
-	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
-	// be no longer than 128 characters.
+	// The description of the entity. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the entity.
@@ -4649,7 +4699,6 @@ type Example struct {
 	// The text of a user input example. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 1024 characters.
 	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
@@ -4672,7 +4721,7 @@ type ExampleCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-// GetCounterexampleOptions : The getCounterexample options.
+// GetCounterexampleOptions : The GetCounterexample options.
 type GetCounterexampleOptions struct {
 
 	// Unique identifier of the workspace.
@@ -4720,7 +4769,7 @@ func (options *GetCounterexampleOptions) SetHeaders(param map[string]string) *Ge
 	return options
 }
 
-// GetDialogNodeOptions : The getDialogNode options.
+// GetDialogNodeOptions : The GetDialogNode options.
 type GetDialogNodeOptions struct {
 
 	// Unique identifier of the workspace.
@@ -4768,7 +4817,7 @@ func (options *GetDialogNodeOptions) SetHeaders(param map[string]string) *GetDia
 	return options
 }
 
-// GetEntityOptions : The getEntity options.
+// GetEntityOptions : The GetEntity options.
 type GetEntityOptions struct {
 
 	// Unique identifier of the workspace.
@@ -4826,7 +4875,7 @@ func (options *GetEntityOptions) SetHeaders(param map[string]string) *GetEntityO
 	return options
 }
 
-// GetExampleOptions : The getExample options.
+// GetExampleOptions : The GetExample options.
 type GetExampleOptions struct {
 
 	// Unique identifier of the workspace.
@@ -4884,7 +4933,7 @@ func (options *GetExampleOptions) SetHeaders(param map[string]string) *GetExampl
 	return options
 }
 
-// GetIntentOptions : The getIntent options.
+// GetIntentOptions : The GetIntent options.
 type GetIntentOptions struct {
 
 	// Unique identifier of the workspace.
@@ -4942,7 +4991,7 @@ func (options *GetIntentOptions) SetHeaders(param map[string]string) *GetIntentO
 	return options
 }
 
-// GetSynonymOptions : The getSynonym options.
+// GetSynonymOptions : The GetSynonym options.
 type GetSynonymOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5010,7 +5059,7 @@ func (options *GetSynonymOptions) SetHeaders(param map[string]string) *GetSynony
 	return options
 }
 
-// GetValueOptions : The getValue options.
+// GetValueOptions : The GetValue options.
 type GetValueOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5078,7 +5127,7 @@ func (options *GetValueOptions) SetHeaders(param map[string]string) *GetValueOpt
 	return options
 }
 
-// GetWorkspaceOptions : The getWorkspace options.
+// GetWorkspaceOptions : The GetWorkspace options.
 type GetWorkspaceOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5149,11 +5198,9 @@ type Intent struct {
 	// The name of the intent. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	// - It must be no longer than 128 characters.
 	Intent *string `json:"intent" validate:"required"`
 
-	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
-	// be no longer than 128 characters.
+	// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// The timestamp for creation of the object.
@@ -5176,13 +5223,13 @@ type IntentCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-// ListAllLogsOptions : The listAllLogs options.
+// ListAllLogsOptions : The ListAllLogs options.
 type ListAllLogsOptions struct {
 
 	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter
 	// query that includes a value for `language`, as well as a value for `workspace_id` or
 	// `request.context.metadata.deployment`. For more information, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
 	Filter *string `json:"filter" validate:"required"`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
@@ -5236,7 +5283,7 @@ func (options *ListAllLogsOptions) SetHeaders(param map[string]string) *ListAllL
 	return options
 }
 
-// ListCounterexamplesOptions : The listCounterexamples options.
+// ListCounterexamplesOptions : The ListCounterexamples options.
 type ListCounterexamplesOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5319,7 +5366,7 @@ func (options *ListCounterexamplesOptions) SetHeaders(param map[string]string) *
 	return options
 }
 
-// ListDialogNodesOptions : The listDialogNodes options.
+// ListDialogNodesOptions : The ListDialogNodes options.
 type ListDialogNodesOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5402,7 +5449,7 @@ func (options *ListDialogNodesOptions) SetHeaders(param map[string]string) *List
 	return options
 }
 
-// ListEntitiesOptions : The listEntities options.
+// ListEntitiesOptions : The ListEntities options.
 type ListEntitiesOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5495,7 +5542,7 @@ func (options *ListEntitiesOptions) SetHeaders(param map[string]string) *ListEnt
 	return options
 }
 
-// ListExamplesOptions : The listExamples options.
+// ListExamplesOptions : The ListExamples options.
 type ListExamplesOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5588,7 +5635,7 @@ func (options *ListExamplesOptions) SetHeaders(param map[string]string) *ListExa
 	return options
 }
 
-// ListIntentsOptions : The listIntents options.
+// ListIntentsOptions : The ListIntents options.
 type ListIntentsOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5681,7 +5728,7 @@ func (options *ListIntentsOptions) SetHeaders(param map[string]string) *ListInte
 	return options
 }
 
-// ListLogsOptions : The listLogs options.
+// ListLogsOptions : The ListLogs options.
 type ListLogsOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5692,7 +5739,7 @@ type ListLogsOptions struct {
 	Sort *string `json:"sort,omitempty"`
 
 	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
 	Filter *string `json:"filter,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -5748,7 +5795,7 @@ func (options *ListLogsOptions) SetHeaders(param map[string]string) *ListLogsOpt
 	return options
 }
 
-// ListMentionsOptions : The listMentions options.
+// ListMentionsOptions : The ListMentions options.
 type ListMentionsOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5806,7 +5853,7 @@ func (options *ListMentionsOptions) SetHeaders(param map[string]string) *ListMen
 	return options
 }
 
-// ListSynonymsOptions : The listSynonyms options.
+// ListSynonymsOptions : The ListSynonyms options.
 type ListSynonymsOptions struct {
 
 	// Unique identifier of the workspace.
@@ -5909,7 +5956,7 @@ func (options *ListSynonymsOptions) SetHeaders(param map[string]string) *ListSyn
 	return options
 }
 
-// ListValuesOptions : The listValues options.
+// ListValuesOptions : The ListValues options.
 type ListValuesOptions struct {
 
 	// Unique identifier of the workspace.
@@ -6012,7 +6059,7 @@ func (options *ListValuesOptions) SetHeaders(param map[string]string) *ListValue
 	return options
 }
 
-// ListWorkspacesOptions : The listWorkspaces options.
+// ListWorkspacesOptions : The ListWorkspaces options.
 type ListWorkspacesOptions struct {
 
 	// The number of records to return in each page of results.
@@ -6142,6 +6189,16 @@ func (this *LogMessage) GetMsg() *string {
 	return (*this)["msg"].(*string)
 }
 
+// SetProperty : Allow user to set arbitrary property
+func (this *LogMessage) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *LogMessage) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
+}
+
 // Constants associated with the LogMessage.Level property.
 // The severity of the log message.
 const (
@@ -6200,7 +6257,17 @@ func (this *MessageInput) GetText() *string {
 	return (*this)["text"].(*string)
 }
 
-// MessageOptions : The message options.
+// SetProperty : Allow user to set arbitrary property
+func (this *MessageInput) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *MessageInput) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
+}
+
+// MessageOptions : The Message options.
 type MessageOptions struct {
 
 	// Unique identifier of the workspace.
@@ -6404,6 +6471,16 @@ func (this *OutputData) GetNodesVisitedDetails() *[]DialogNodeVisitedDetails {
 	return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
 }
 
+// SetProperty : Allow user to set arbitrary property
+func (this *OutputData) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *OutputData) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
+}
+
 // Pagination : The pagination data for the returned objects.
 type Pagination struct {
 
@@ -6489,6 +6566,16 @@ func (this *RuntimeEntity) GetGroups() *[]CaptureGroup {
 	return (*this)["groups"].(*[]CaptureGroup)
 }
 
+// SetProperty : Allow user to set arbitrary property
+func (this *RuntimeEntity) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *RuntimeEntity) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
+}
+
 // RuntimeIntent : An intent identified in the user input.
 type RuntimeIntent map[string]interface{}
 
@@ -6512,13 +6599,22 @@ func (this *RuntimeIntent) GetConfidence() *float64 {
 	return (*this)["confidence"].(*float64)
 }
 
+// SetProperty : Allow user to set arbitrary property
+func (this *RuntimeIntent) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *RuntimeIntent) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
+}
+
 // Synonym : Synonym struct
 type Synonym struct {
 
 	// The text of the synonym. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	Synonym *string `json:"synonym" validate:"required"`
 
 	// The timestamp for creation of the object.
@@ -6541,7 +6637,17 @@ type SynonymCollection struct {
 // SystemResponse : For internal use only.
 type SystemResponse map[string]interface{}
 
-// UpdateCounterexampleOptions : The updateCounterexample options.
+// SetProperty : Allow user to set arbitrary property
+func (this *SystemResponse) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *SystemResponse) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
+}
+
+// UpdateCounterexampleOptions : The UpdateCounterexample options.
 type UpdateCounterexampleOptions struct {
 
 	// Unique identifier of the workspace.
@@ -6551,9 +6657,8 @@ type UpdateCounterexampleOptions struct {
 	Text *string `json:"text" validate:"required"`
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
-	// - It cannot contain carriage return, newline, or tab characters
-	// - It cannot consist of only whitespace characters
-	// - It must be no longer than 1024 characters.
+	// - It cannot contain carriage return, newline, or tab characters.
+	// - It cannot consist of only whitespace characters.
 	NewText *string `json:"new_text,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6592,7 +6697,7 @@ func (options *UpdateCounterexampleOptions) SetHeaders(param map[string]string) 
 	return options
 }
 
-// UpdateDialogNodeOptions : The updateDialogNode options.
+// UpdateDialogNodeOptions : The UpdateDialogNode options.
 type UpdateDialogNodeOptions struct {
 
 	// Unique identifier of the workspace.
@@ -6603,15 +6708,13 @@ type UpdateDialogNodeOptions struct {
 
 	// The dialog node ID. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 1024 characters.
 	NewDialogNode *string `json:"new_dialog_node,omitempty"`
 
-	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it
-	// must be no longer than 128 characters.
+	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
 	NewDescription *string `json:"new_description,omitempty"`
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
-	// characters, and it must be no longer than 2048 characters.
+	// characters.
 	NewConditions *string `json:"new_conditions,omitempty"`
 
 	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
@@ -6621,7 +6724,7 @@ type UpdateDialogNodeOptions struct {
 	NewPreviousSibling *string `json:"new_previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
 	NewOutput *DialogNodeOutput `json:"new_output,omitempty"`
 
 	// The context for the dialog node.
@@ -6635,7 +6738,6 @@ type UpdateDialogNodeOptions struct {
 
 	// The alias used to identify the dialog node. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	// - It must be no longer than 64 characters.
 	NewTitle *string `json:"new_title,omitempty"`
 
 	// How the dialog node is processed.
@@ -6659,8 +6761,7 @@ type UpdateDialogNodeOptions struct {
 	// Whether the user can digress to top-level nodes while filling out slots.
 	NewDigressOutSlots *string `json:"new_digress_out_slots,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users. This string must be no longer
-	// than 512 characters.
+	// A label that can be displayed externally to describe the purpose of the node to users.
 	NewUserLabel *string `json:"new_user_label,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6850,7 +6951,7 @@ func (options *UpdateDialogNodeOptions) SetHeaders(param map[string]string) *Upd
 	return options
 }
 
-// UpdateEntityOptions : The updateEntity options.
+// UpdateEntityOptions : The UpdateEntity options.
 type UpdateEntityOptions struct {
 
 	// Unique identifier of the workspace.
@@ -6862,11 +6963,9 @@ type UpdateEntityOptions struct {
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	// - It must be no longer than 64 characters.
 	NewEntity *string `json:"new_entity,omitempty"`
 
-	// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and it must
-	// be no longer than 128 characters.
+	// The description of the entity. This string cannot contain carriage return, newline, or tab characters.
 	NewDescription *string `json:"new_description,omitempty"`
 
 	// Any metadata related to the entity.
@@ -6938,7 +7037,7 @@ func (options *UpdateEntityOptions) SetHeaders(param map[string]string) *UpdateE
 	return options
 }
 
-// UpdateExampleOptions : The updateExample options.
+// UpdateExampleOptions : The UpdateExample options.
 type UpdateExampleOptions struct {
 
 	// Unique identifier of the workspace.
@@ -6953,7 +7052,6 @@ type UpdateExampleOptions struct {
 	// The text of the user input example. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 1024 characters.
 	NewText *string `json:"new_text,omitempty"`
 
 	// An array of contextual entity mentions.
@@ -7008,7 +7106,7 @@ func (options *UpdateExampleOptions) SetHeaders(param map[string]string) *Update
 	return options
 }
 
-// UpdateIntentOptions : The updateIntent options.
+// UpdateIntentOptions : The UpdateIntent options.
 type UpdateIntentOptions struct {
 
 	// Unique identifier of the workspace.
@@ -7020,11 +7118,9 @@ type UpdateIntentOptions struct {
 	// The name of the intent. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	// - It must be no longer than 128 characters.
 	NewIntent *string `json:"new_intent,omitempty"`
 
-	// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and it must
-	// be no longer than 128 characters.
+	// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
 	NewDescription *string `json:"new_description,omitempty"`
 
 	// An array of user input examples for the intent.
@@ -7078,7 +7174,7 @@ func (options *UpdateIntentOptions) SetHeaders(param map[string]string) *UpdateI
 	return options
 }
 
-// UpdateSynonymOptions : The updateSynonym options.
+// UpdateSynonymOptions : The UpdateSynonym options.
 type UpdateSynonymOptions struct {
 
 	// Unique identifier of the workspace.
@@ -7096,7 +7192,6 @@ type UpdateSynonymOptions struct {
 	// The text of the synonym. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	NewSynonym *string `json:"new_synonym,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -7149,7 +7244,7 @@ func (options *UpdateSynonymOptions) SetHeaders(param map[string]string) *Update
 	return options
 }
 
-// UpdateValueOptions : The updateValue options.
+// UpdateValueOptions : The UpdateValue options.
 type UpdateValueOptions struct {
 
 	// Unique identifier of the workspace.
@@ -7164,7 +7259,6 @@ type UpdateValueOptions struct {
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	NewValue *string `json:"new_value,omitempty"`
 
 	// Any metadata related to the entity value.
@@ -7177,13 +7271,11 @@ type UpdateValueOptions struct {
 	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	NewSynonyms []string `json:"new_synonyms,omitempty"`
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
-	// type), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how
-	// to specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
+	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
 	NewPatterns []string `json:"new_patterns,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -7260,18 +7352,16 @@ func (options *UpdateValueOptions) SetHeaders(param map[string]string) *UpdateVa
 	return options
 }
 
-// UpdateWorkspaceOptions : The updateWorkspace options.
+// UpdateWorkspaceOptions : The UpdateWorkspace options.
 type UpdateWorkspaceOptions struct {
 
 	// Unique identifier of the workspace.
 	WorkspaceID *string `json:"workspace_id" validate:"required"`
 
-	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no
-	// longer than 64 characters.
+	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters.
 	Name *string `json:"name,omitempty"`
 
-	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters, and it
-	// must be no longer than 128 characters.
+	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// The language of the workspace.
@@ -7403,7 +7493,6 @@ type Value struct {
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
@@ -7416,13 +7505,11 @@ type Value struct {
 	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	// - It must be no longer than 64 characters.
 	Synonyms []string `json:"synonyms,omitempty"`
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
-	// type), but not both. A pattern is a regular expression no longer than 512 characters. For more information about how
-	// to specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
+	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
+	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// The timestamp for creation of the object.
@@ -7452,12 +7539,10 @@ type ValueCollection struct {
 // Workspace : Workspace struct
 type Workspace struct {
 
-	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it must be no
-	// longer than 64 characters.
+	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters.
 	Name *string `json:"name" validate:"required"`
 
-	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters, and it
-	// must be no longer than 128 characters.
+	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters.
 	Description *string `json:"description,omitempty"`
 
 	// The language of the workspace.
@@ -7521,7 +7606,7 @@ type WorkspaceCollection struct {
 // WorkspaceSystemSettings : Global settings for the workspace.
 type WorkspaceSystemSettings struct {
 
-	// Workspace settings related to the Watson Assistant tool.
+	// Workspace settings related to the Watson Assistant user interface.
 	Tooling *WorkspaceSystemSettingsTooling `json:"tooling,omitempty"`
 
 	// Workspace settings related to the disambiguation feature.
@@ -7561,7 +7646,7 @@ const (
 	WorkspaceSystemSettingsDisambiguation_Sensitivity_High = "high"
 )
 
-// WorkspaceSystemSettingsTooling : Workspace settings related to the Watson Assistant tool.
+// WorkspaceSystemSettingsTooling : Workspace settings related to the Watson Assistant user interface.
 type WorkspaceSystemSettingsTooling struct {
 
 	// Whether the dialog JSON editor displays text responses within the `output.generic` object.
