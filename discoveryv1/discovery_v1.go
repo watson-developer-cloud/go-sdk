@@ -3855,8 +3855,11 @@ type Collection struct {
 
 	TrainingStatus *TrainingStatus `json:"training_status,omitempty"`
 
-	// Object containing source crawl status information.
-	SourceCrawl *SourceStatus `json:"source_crawl,omitempty"`
+	// Object containing information about the crawl status of this collection.
+	CrawlStatus *CollectionCrawlStatus `json:"crawl_status,omitempty"`
+
+	// Object containing smart document understanding information for this collection.
+	SmartDocumentUnderstanding *SduStatus `json:"smart_document_understanding,omitempty"`
 }
 
 // Constants associated with the Collection.Status property.
