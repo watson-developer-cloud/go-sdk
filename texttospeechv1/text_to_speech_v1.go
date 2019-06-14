@@ -19,15 +19,16 @@ package texttospeechv1
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
-// TextToSpeechV1 : ### Service Overview
-// The IBM&reg; Text to Speech service provides APIs that use IBM's speech-synthesis capabilities to synthesize text
-// into natural-sounding speech in a variety of languages, dialects, and voices. The service supports at least one male
-// or female voice, sometimes both, for each language. The audio is streamed back to the client with minimal delay.
+// TextToSpeechV1 : The IBM&reg; Text to Speech service provides APIs that use IBM's speech-synthesis capabilities to
+// synthesize text into natural-sounding speech in a variety of languages, dialects, and voices. The service supports at
+// least one male or female voice, sometimes both, for each language. The audio is streamed back to the client with
+// minimal delay.
 //
 // For speech synthesis, the service supports a synchronous HTTP Representational State Transfer (REST) interface. It
 // also supports a WebSocket interface that provides both plain text and SSML input, including the SSML &lt;mark&gt;
@@ -48,12 +49,17 @@ type TextToSpeechV1 struct {
 
 // TextToSpeechV1Options : Service options
 type TextToSpeechV1Options struct {
-	URL            string
-	Username       string
-	Password       string
-	IAMApiKey      string
-	IAMAccessToken string
-	IAMURL         string
+	URL                string
+	Username           string
+	Password           string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
+	ICP4DAccessToken   string
+	ICP4DURL           string
+	AuthenticationType string
 }
 
 // NewTextToSpeechV1 : Instantiate TextToSpeechV1
@@ -63,12 +69,17 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) 
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:            options.URL,
-		Username:       options.Username,
-		Password:       options.Password,
-		IAMApiKey:      options.IAMApiKey,
-		IAMAccessToken: options.IAMAccessToken,
-		IAMURL:         options.IAMURL,
+		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
+		ICP4DAccessToken:   options.ICP4DAccessToken,
+		ICP4DURL:           options.ICP4DURL,
+		AuthenticationType: options.AuthenticationType,
 	}
 	service, serviceErr := core.NewBaseService(serviceOptions, "text_to_speech", "Text to Speech")
 	if serviceErr != nil {
@@ -78,12 +89,59 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) 
 	return &TextToSpeechV1{Service: service}, nil
 }
 
+// ListVoices : List voices
+// Lists all voices available for use with the service. The information includes the name, language, gender, and other
+// details about the voice. To see information about a specific voice, use the **Get a voice** method.
+//
+// **See also:** [Listing all available
+// voices](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoices).
+func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateStruct(listVoicesOptions, "listVoicesOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/voices"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range listVoicesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "ListVoices")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := textToSpeech.Service.Request(request, new(Voices))
+	return response, err
+}
+
+// GetListVoicesResult : Retrieve result of ListVoices operation
+func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedResponse) *Voices {
+	result, ok := response.Result.(*Voices)
+	if ok {
+		return result
+	}
+	return nil
+}
+
 // GetVoice : Get a voice
 // Gets information about the specified voice. The information includes the name, language, gender, and other details
 // about the voice. Specify a customization ID to obtain information for that custom voice model of the specified voice.
 // To list information about all available voices, use the **List voices** method.
 //
-// **See also:** [Listing a specific voice](https://cloud.ibm.com/docs/services/text-to-speech/voices.html#listVoice).
+// **See also:** [Listing a specific
+// voice](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoice).
 func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getVoiceOptions, "getVoiceOptions cannot be nil"); err != nil {
 		return nil, err
@@ -131,52 +189,6 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedRes
 	return nil
 }
 
-// ListVoices : List voices
-// Lists all voices available for use with the service. The information includes the name, language, gender, and other
-// details about the voice. To see information about a specific voice, use the **Get a voice** method.
-//
-// **See also:** [Listing all available
-// voices](https://cloud.ibm.com/docs/services/text-to-speech/voices.html#listVoices).
-func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listVoicesOptions, "listVoicesOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/voices"}
-	pathParameters := []string{}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range listVoicesOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "ListVoices")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := textToSpeech.Service.Request(request, new(Voices))
-	return response, err
-}
-
-// GetListVoicesResult : Retrieve result of ListVoices operation
-func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedResponse) *Voices {
-	result, ok := response.Result.(*Voices)
-	if ok {
-		return result
-	}
-	return nil
-}
-
 // Synthesize : Synthesize audio
 // Synthesizes text to audio that is spoken in the specified voice. The service bases its understanding of the language
 // for the input text on the specified voice. Use a voice that matches the language of the input text.
@@ -185,7 +197,8 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 // 5 KB limit includes any SSML tags that you specify. The service returns the synthesized audio stream as an array of
 // bytes.
 //
-// **See also:** [The HTTP interface](https://cloud.ibm.com/docs/services/text-to-speech/http.html).
+// **See also:** [The HTTP
+// interface](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingHTTP#usingHTTP).
 //
 // ### Audio formats (accept types)
 //
@@ -242,7 +255,7 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 //   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
 //
 // For more information about specifying an audio format, including additional details about some of the formats, see
-// [Audio formats](https://cloud.ibm.com/docs/services/text-to-speech/audio-formats.html).
+// [Audio formats](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
 //
 // ### Warning messages
 //
@@ -321,7 +334,7 @@ func (textToSpeech *TextToSpeechV1) GetSynthesizeResult(response *core.DetailedR
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying a word from a
-// language](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordsQueryLanguage).
+// language](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
 func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getPronunciationOptions, "getPronunciationOptions cannot be nil"); err != nil {
 		return nil, err
@@ -384,7 +397,7 @@ func (textToSpeech *TextToSpeechV1) GetGetPronunciationResult(response *core.Det
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Creating a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsCreate).
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
 func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createVoiceModelOptions, "createVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -444,100 +457,6 @@ func (textToSpeech *TextToSpeechV1) GetCreateVoiceModelResult(response *core.Det
 	return nil
 }
 
-// DeleteVoiceModel : Delete a custom model
-// Deletes the specified custom voice model. You must use credentials for the instance of the service that owns a model
-// to delete it.
-//
-// **Note:** This method is currently a beta release.
-//
-// **See also:** [Deleting a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsDelete).
-func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteVoiceModelOptions, "deleteVoiceModelOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/customizations"}
-	pathParameters := []string{*deleteVoiceModelOptions.CustomizationID}
-
-	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range deleteVoiceModelOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "DeleteVoiceModel")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "")
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := textToSpeech.Service.Request(request, nil)
-	return response, err
-}
-
-// GetVoiceModel : Get a custom model
-// Gets all information about a specified custom voice model. In addition to metadata such as the name and description
-// of the voice model, the output includes the words and their translations as defined in the model. To see just the
-// metadata for a voice model, use the **List custom models** method.
-//
-// **Note:** This method is currently a beta release.
-//
-// **See also:** [Querying a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsQuery).
-func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getVoiceModelOptions, "getVoiceModelOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/customizations"}
-	pathParameters := []string{*getVoiceModelOptions.CustomizationID}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getVoiceModelOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "GetVoiceModel")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := textToSpeech.Service.Request(request, new(VoiceModel))
-	return response, err
-}
-
-// GetGetVoiceModelResult : Retrieve result of GetVoiceModel operation
-func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.DetailedResponse) *VoiceModel {
-	result, ok := response.Result.(*VoiceModel)
-	if ok {
-		return result
-	}
-	return nil
-}
-
 // ListVoiceModels : List custom models
 // Lists metadata such as the name and description for all custom voice models that are owned by an instance of the
 // service. Specify a language to list the voice models for that language only. To see the words in addition to the
@@ -547,7 +466,7 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.Detail
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying all custom
-// models](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsQueryAll).
+// models](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
 func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(listVoiceModelsOptions, "listVoiceModelsOptions"); err != nil {
 		return nil, err
@@ -611,10 +530,12 @@ func (textToSpeech *TextToSpeechV1) GetListVoiceModelsResult(response *core.Deta
 // **Note:** This method is currently a beta release.
 //
 // **See also:**
-// * [Updating a custom model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsUpdate)
+// * [Updating a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsUpdate)
 // * [Adding words to a Japanese custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-// * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+// * [Understanding
+// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
 func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateVoiceModelOptions, "updateVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -665,65 +586,87 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 	return response, err
 }
 
-// AddWord : Add a custom word
-// Adds a single word and its translation to the specified custom voice model. Adding a new translation for a word that
-// already exists in a custom model overwrites the word's existing translation. A custom model can contain no more than
-// 20,000 entries. You must use credentials for the instance of the service that owns a model to add a word to it.
-//
-// You can define sounds-like or phonetic translations for words. A sounds-like translation consists of one or more
-// words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme format for
-// representing a word. You can specify them in standard International Phonetic Alphabet (IPA) representation
-//
-//   <code>&lt;phoneme alphabet=\"ipa\" ph=\"t&#601;m&#712;&#593;to\"&gt;&lt;/phoneme&gt;</code>
-//
-//   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
-//
-//   <code>&lt;phoneme alphabet=\"ibm\" ph=\"1gAstroEntxrYFXs\"&gt;&lt;/phoneme&gt;</code>
+// GetVoiceModel : Get a custom model
+// Gets all information about a specified custom voice model. In addition to metadata such as the name and description
+// of the voice model, the output includes the words and their translations as defined in the model. To see just the
+// metadata for a voice model, use the **List custom models** method.
 //
 // **Note:** This method is currently a beta release.
 //
-// **See also:**
-// * [Adding a single word to a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordAdd)
-// * [Adding words to a Japanese custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-// * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
-func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
+// **See also:** [Querying a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
+func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil"); err != nil {
 		return nil, err
 	}
-	if err := core.ValidateStruct(addWordOptions, "addWordOptions"); err != nil {
+	if err := core.ValidateStruct(getVoiceModelOptions, "getVoiceModelOptions"); err != nil {
 		return nil, err
 	}
 
-	pathSegments := []string{"v1/customizations", "words"}
-	pathParameters := []string{*addWordOptions.CustomizationID, *addWordOptions.Word}
+	pathSegments := []string{"v1/customizations"}
+	pathParameters := []string{*getVoiceModelOptions.CustomizationID}
 
-	builder := core.NewRequestBuilder(core.PUT)
+	builder := core.NewRequestBuilder(core.GET)
 	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
 
-	for headerName, headerValue := range addWordOptions.Headers {
+	for headerName, headerValue := range getVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "AddWord")
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "GetVoiceModel")
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddHeader("Accept", "")
-	builder.AddHeader("Content-Type", "application/json")
+	builder.AddHeader("Accept", "application/json")
 
-	body := make(map[string]interface{})
-	if addWordOptions.Translation != nil {
-		body["translation"] = addWordOptions.Translation
-	}
-	if addWordOptions.PartOfSpeech != nil {
-		body["part_of_speech"] = addWordOptions.PartOfSpeech
-	}
-	_, err := builder.SetBodyContentJSON(body)
+	request, err := builder.Build()
 	if err != nil {
 		return nil, err
+	}
+
+	response, err := textToSpeech.Service.Request(request, new(VoiceModel))
+	return response, err
+}
+
+// GetGetVoiceModelResult : Retrieve result of GetVoiceModel operation
+func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.DetailedResponse) *VoiceModel {
+	result, ok := response.Result.(*VoiceModel)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// DeleteVoiceModel : Delete a custom model
+// Deletes the specified custom voice model. You must use credentials for the instance of the service that owns a model
+// to delete it.
+//
+// **Note:** This method is currently a beta release.
+//
+// **See also:** [Deleting a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsDelete).
+func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteVoiceModelOptions, "deleteVoiceModelOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/customizations"}
+	pathParameters := []string{*deleteVoiceModelOptions.CustomizationID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteVoiceModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "DeleteVoiceModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
 	}
 
 	request, err := builder.Build()
@@ -755,10 +698,11 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 //
 // **See also:**
 // * [Adding multiple words to a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordsAdd)
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsAdd)
 // * [Adding words to a Japanese custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-// * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+// * [Understanding
+// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
 func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -803,99 +747,6 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 	return response, err
 }
 
-// DeleteWord : Delete a custom word
-// Deletes a single word from the specified custom voice model. You must use credentials for the instance of the service
-// that owns a model to delete its words.
-//
-// **Note:** This method is currently a beta release.
-//
-// **See also:** [Deleting a word from a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordDelete).
-func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(deleteWordOptions, "deleteWordOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/customizations", "words"}
-	pathParameters := []string{*deleteWordOptions.CustomizationID, *deleteWordOptions.Word}
-
-	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range deleteWordOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "DeleteWord")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "")
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := textToSpeech.Service.Request(request, nil)
-	return response, err
-}
-
-// GetWord : Get a custom word
-// Gets the translation for a single word from the specified custom model. The output shows the translation as it is
-// defined in the model. You must use credentials for the instance of the service that owns a model to list its words.
-//
-// **Note:** This method is currently a beta release.
-//
-// **See also:** [Querying a single word from a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordQueryModel).
-func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(getWordOptions, "getWordOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/customizations", "words"}
-	pathParameters := []string{*getWordOptions.CustomizationID, *getWordOptions.Word}
-
-	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range getWordOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "GetWord")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := textToSpeech.Service.Request(request, new(Translation))
-	return response, err
-}
-
-// GetGetWordResult : Retrieve result of GetWord operation
-func (textToSpeech *TextToSpeechV1) GetGetWordResult(response *core.DetailedResponse) *Translation {
-	result, ok := response.Result.(*Translation)
-	if ok {
-		return result
-	}
-	return nil
-}
-
 // ListWords : List custom words
 // Lists all of the words and their translations for the specified custom voice model. The output shows the translations
 // as they are defined in the model. You must use credentials for the instance of the service that owns a model to list
@@ -904,7 +755,7 @@ func (textToSpeech *TextToSpeechV1) GetGetWordResult(response *core.DetailedResp
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying all words from a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordsQueryModel).
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryModel).
 func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -948,6 +799,167 @@ func (textToSpeech *TextToSpeechV1) GetListWordsResult(response *core.DetailedRe
 	return nil
 }
 
+// AddWord : Add a custom word
+// Adds a single word and its translation to the specified custom voice model. Adding a new translation for a word that
+// already exists in a custom model overwrites the word's existing translation. A custom model can contain no more than
+// 20,000 entries. You must use credentials for the instance of the service that owns a model to add a word to it.
+//
+// You can define sounds-like or phonetic translations for words. A sounds-like translation consists of one or more
+// words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme format for
+// representing a word. You can specify them in standard International Phonetic Alphabet (IPA) representation
+//
+//   <code>&lt;phoneme alphabet=\"ipa\" ph=\"t&#601;m&#712;&#593;to\"&gt;&lt;/phoneme&gt;</code>
+//
+//   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
+//
+//   <code>&lt;phoneme alphabet=\"ibm\" ph=\"1gAstroEntxrYFXs\"&gt;&lt;/phoneme&gt;</code>
+//
+// **Note:** This method is currently a beta release.
+//
+// **See also:**
+// * [Adding a single word to a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordAdd)
+// * [Adding words to a Japanese custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+// * [Understanding
+// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
+func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(addWordOptions, "addWordOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/customizations", "words"}
+	pathParameters := []string{*addWordOptions.CustomizationID, *addWordOptions.Word}
+
+	builder := core.NewRequestBuilder(core.PUT)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range addWordOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "AddWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Content-Type", "application/json")
+
+	body := make(map[string]interface{})
+	if addWordOptions.Translation != nil {
+		body["translation"] = addWordOptions.Translation
+	}
+	if addWordOptions.PartOfSpeech != nil {
+		body["part_of_speech"] = addWordOptions.PartOfSpeech
+	}
+	_, err := builder.SetBodyContentJSON(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := textToSpeech.Service.Request(request, nil)
+	return response, err
+}
+
+// GetWord : Get a custom word
+// Gets the translation for a single word from the specified custom model. The output shows the translation as it is
+// defined in the model. You must use credentials for the instance of the service that owns a model to list its words.
+//
+// **Note:** This method is currently a beta release.
+//
+// **See also:** [Querying a single word from a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordQueryModel).
+func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(getWordOptions, "getWordOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/customizations", "words"}
+	pathParameters := []string{*getWordOptions.CustomizationID, *getWordOptions.Word}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range getWordOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "GetWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := textToSpeech.Service.Request(request, new(Translation))
+	return response, err
+}
+
+// GetGetWordResult : Retrieve result of GetWord operation
+func (textToSpeech *TextToSpeechV1) GetGetWordResult(response *core.DetailedResponse) *Translation {
+	result, ok := response.Result.(*Translation)
+	if ok {
+		return result
+	}
+	return nil
+}
+
+// DeleteWord : Delete a custom word
+// Deletes a single word from the specified custom voice model. You must use credentials for the instance of the service
+// that owns a model to delete its words.
+//
+// **Note:** This method is currently a beta release.
+//
+// **See also:** [Deleting a word from a custom
+// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordDelete).
+func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
+	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
+		return nil, err
+	}
+	if err := core.ValidateStruct(deleteWordOptions, "deleteWordOptions"); err != nil {
+		return nil, err
+	}
+
+	pathSegments := []string{"v1/customizations", "words"}
+	pathParameters := []string{*deleteWordOptions.CustomizationID, *deleteWordOptions.Word}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+
+	for headerName, headerValue := range deleteWordOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("text_to_speech", "V1", "DeleteWord")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := textToSpeech.Service.Request(request, nil)
+	return response, err
+}
+
 // DeleteUserData : Delete labeled data
 // Deletes all data that is associated with a specified customer ID. The method deletes all data for the customer ID,
 // regardless of the method by which the information was added. The method has no effect if no data is associated with
@@ -956,7 +968,8 @@ func (textToSpeech *TextToSpeechV1) GetListWordsResult(response *core.DetailedRe
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
 //
-// **See also:** [Information security](https://cloud.ibm.com/docs/services/text-to-speech/information-security.html).
+// **See also:** [Information
+// security](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-information-security#information-security).
 func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
 		return nil, err
@@ -980,8 +993,6 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddHeader("Accept", "")
-
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 
 	request, err := builder.Build()
@@ -993,7 +1004,7 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 	return response, err
 }
 
-// AddWordOptions : The addWord options.
+// AddWordOptions : The AddWord options.
 type AddWordOptions struct {
 
 	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
@@ -1011,7 +1022,7 @@ type AddWordOptions struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes).
+	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1022,7 +1033,7 @@ type AddWordOptions struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes).
+// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
 const (
 	AddWordOptions_PartOfSpeech_Dosi = "Dosi"
 	AddWordOptions_PartOfSpeech_Fuku = "Fuku"
@@ -1082,7 +1093,7 @@ func (options *AddWordOptions) SetHeaders(param map[string]string) *AddWordOptio
 	return options
 }
 
-// AddWordsOptions : The addWords options.
+// AddWordsOptions : The AddWords options.
 type AddWordsOptions struct {
 
 	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
@@ -1127,7 +1138,7 @@ func (options *AddWordsOptions) SetHeaders(param map[string]string) *AddWordsOpt
 	return options
 }
 
-// CreateVoiceModelOptions : The createVoiceModel options.
+// CreateVoiceModelOptions : The CreateVoiceModel options.
 type CreateVoiceModelOptions struct {
 
 	// The name of the new custom voice model.
@@ -1189,7 +1200,7 @@ func (options *CreateVoiceModelOptions) SetHeaders(param map[string]string) *Cre
 	return options
 }
 
-// DeleteUserDataOptions : The deleteUserData options.
+// DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 
 	// The customer ID for which all data is to be deleted.
@@ -1218,7 +1229,7 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 	return options
 }
 
-// DeleteVoiceModelOptions : The deleteVoiceModel options.
+// DeleteVoiceModelOptions : The DeleteVoiceModel options.
 type DeleteVoiceModelOptions struct {
 
 	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
@@ -1248,7 +1259,7 @@ func (options *DeleteVoiceModelOptions) SetHeaders(param map[string]string) *Del
 	return options
 }
 
-// DeleteWordOptions : The deleteWord options.
+// DeleteWordOptions : The DeleteWord options.
 type DeleteWordOptions struct {
 
 	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
@@ -1288,7 +1299,7 @@ func (options *DeleteWordOptions) SetHeaders(param map[string]string) *DeleteWor
 	return options
 }
 
-// GetPronunciationOptions : The getPronunciation options.
+// GetPronunciationOptions : The GetPronunciation options.
 type GetPronunciationOptions struct {
 
 	// The word for which the pronunciation is requested.
@@ -1384,7 +1395,7 @@ func (options *GetPronunciationOptions) SetHeaders(param map[string]string) *Get
 	return options
 }
 
-// GetVoiceModelOptions : The getVoiceModel options.
+// GetVoiceModelOptions : The GetVoiceModel options.
 type GetVoiceModelOptions struct {
 
 	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
@@ -1414,7 +1425,7 @@ func (options *GetVoiceModelOptions) SetHeaders(param map[string]string) *GetVoi
 	return options
 }
 
-// GetVoiceOptions : The getVoice options.
+// GetVoiceOptions : The GetVoice options.
 type GetVoiceOptions struct {
 
 	// The voice for which information is to be returned.
@@ -1479,7 +1490,7 @@ func (options *GetVoiceOptions) SetHeaders(param map[string]string) *GetVoiceOpt
 	return options
 }
 
-// GetWordOptions : The getWord options.
+// GetWordOptions : The GetWord options.
 type GetWordOptions struct {
 
 	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
@@ -1519,7 +1530,7 @@ func (options *GetWordOptions) SetHeaders(param map[string]string) *GetWordOptio
 	return options
 }
 
-// ListVoiceModelsOptions : The listVoiceModels options.
+// ListVoiceModelsOptions : The ListVoiceModels options.
 type ListVoiceModelsOptions struct {
 
 	// The language for which custom voice models that are owned by the requesting service credentials are to be returned.
@@ -1563,7 +1574,7 @@ func (options *ListVoiceModelsOptions) SetHeaders(param map[string]string) *List
 	return options
 }
 
-// ListVoicesOptions : The listVoices options.
+// ListVoicesOptions : The ListVoices options.
 type ListVoicesOptions struct {
 
 	// Allows users to set headers to be GDPR compliant
@@ -1581,7 +1592,7 @@ func (options *ListVoicesOptions) SetHeaders(param map[string]string) *ListVoice
 	return options
 }
 
-// ListWordsOptions : The listWords options.
+// ListWordsOptions : The ListWords options.
 type ListWordsOptions struct {
 
 	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
@@ -1611,7 +1622,7 @@ func (options *ListWordsOptions) SetHeaders(param map[string]string) *ListWordsO
 	return options
 }
 
-// Pronunciation : Pronunciation struct
+// Pronunciation : The pronunciation of the specified text.
 type Pronunciation struct {
 
 	// The pronunciation of the specified text in the requested voice and format. If a custom voice model is specified, the
@@ -1619,7 +1630,7 @@ type Pronunciation struct {
 	Pronunciation *string `json:"pronunciation" validate:"required"`
 }
 
-// SupportedFeatures : Describes the additional service features that are supported with the voice.
+// SupportedFeatures : Additional service features that are supported with the voice.
 type SupportedFeatures struct {
 
 	// If `true`, the voice can be customized; if `false`, the voice cannot be customized. (Same as `customizable`.).
@@ -1630,7 +1641,7 @@ type SupportedFeatures struct {
 	VoiceTransformation *bool `json:"voice_transformation" validate:"required"`
 }
 
-// SynthesizeOptions : The synthesize options.
+// SynthesizeOptions : The Synthesize options.
 type SynthesizeOptions struct {
 
 	// The text to synthesize.
@@ -1740,7 +1751,7 @@ func (options *SynthesizeOptions) SetHeaders(param map[string]string) *Synthesiz
 	return options
 }
 
-// Translation : Translation struct
+// Translation : Information about the translation for the specified text.
 type Translation struct {
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
@@ -1751,7 +1762,7 @@ type Translation struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes).
+	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 }
 
@@ -1759,7 +1770,7 @@ type Translation struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes).
+// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
 const (
 	Translation_PartOfSpeech_Dosi = "Dosi"
 	Translation_PartOfSpeech_Fuku = "Fuku"
@@ -1780,7 +1791,7 @@ const (
 	Translation_PartOfSpeech_Suji = "Suji"
 )
 
-// UpdateVoiceModelOptions : The updateVoiceModel options.
+// UpdateVoiceModelOptions : The UpdateVoiceModel options.
 type UpdateVoiceModelOptions struct {
 
 	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
@@ -1838,7 +1849,7 @@ func (options *UpdateVoiceModelOptions) SetHeaders(param map[string]string) *Upd
 	return options
 }
 
-// Voice : Voice struct
+// Voice : Information about an available voice model.
 type Voice struct {
 
 	// The URI of the voice.
@@ -1860,7 +1871,7 @@ type Voice struct {
 	// maintained for backward compatibility.).
 	Customizable *bool `json:"customizable" validate:"required"`
 
-	// Describes the additional service features that are supported with the voice.
+	// Additional service features that are supported with the voice.
 	SupportedFeatures *SupportedFeatures `json:"supported_features" validate:"required"`
 
 	// Returns information about a specified custom voice model. This field is returned only by the **Get a voice** method
@@ -1868,7 +1879,7 @@ type Voice struct {
 	Customization *VoiceModel `json:"customization,omitempty"`
 }
 
-// VoiceModel : VoiceModel struct
+// VoiceModel : Information about an existing custom voice model.
 type VoiceModel struct {
 
 	// The customization ID (GUID) of the custom voice model. The **Create a custom model** method returns only this field.
@@ -1903,7 +1914,7 @@ type VoiceModel struct {
 	Words []Word `json:"words,omitempty"`
 }
 
-// VoiceModels : VoiceModels struct
+// VoiceModels : Information about existing custom voice models.
 type VoiceModels struct {
 
 	// An array of `VoiceModel` objects that provides information about each available custom voice model. The array is
@@ -1912,17 +1923,17 @@ type VoiceModels struct {
 	Customizations []VoiceModel `json:"customizations" validate:"required"`
 }
 
-// Voices : Voices struct
+// Voices : Information about all available voice models.
 type Voices struct {
 
 	// A list of available voices.
 	Voices []Voice `json:"voices" validate:"required"`
 }
 
-// Word : Word struct
+// Word : Information about a word for the custom voice model.
 type Word struct {
 
-	// A word from the custom voice model.
+	// The word for the custom voice model.
 	Word *string `json:"word" validate:"required"`
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
@@ -1933,7 +1944,7 @@ type Word struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes).
+	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 }
 
@@ -1941,7 +1952,7 @@ type Word struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes).
+// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
 const (
 	Word_PartOfSpeech_Dosi = "Dosi"
 	Word_PartOfSpeech_Fuku = "Fuku"
@@ -1962,7 +1973,10 @@ const (
 	Word_PartOfSpeech_Suji = "Suji"
 )
 
-// Words : Words struct
+// Words : For the **Add custom words** method, one or more words that are to be added or updated for the custom voice model and
+// the translation for each specified word.
+//
+// For the **List custom words** method, the words and their translations from the custom voice model.
 type Words struct {
 
 	// The **Add custom words** method accepts an array of `Word` objects. Each object provides a word that is to be added
