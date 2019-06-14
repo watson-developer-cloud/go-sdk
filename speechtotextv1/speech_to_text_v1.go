@@ -5882,9 +5882,6 @@ type SpeechRecognitionResults struct {
 	// only the `speaker_labels` field.
 	SpeakerLabels []SpeakerLabelsResult `json:"speaker_labels,omitempty"`
 
-	// If processing metrics are requested, information about the service's processing of the input audio.
-	ProcessingMetrics *ProcessingMetrics `json:"processing_metrics,omitempty"`
-
 	// If audio metrics are requested, information about the signal characteristics of the input audio.
 	AudioMetrics *AudioMetrics `json:"audio_metrics,omitempty"`
 
