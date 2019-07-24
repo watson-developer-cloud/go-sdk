@@ -39,6 +39,8 @@ type CompareComplyV1 struct {
 type CompareComplyV1Options struct {
 	Version            string
 	URL                string
+	Username           string
+	Password           string
 	IAMApiKey          string
 	IAMAccessToken     string
 	IAMURL             string
@@ -58,6 +60,8 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, erro
 	serviceOptions := &core.ServiceOptions{
 		Version:            options.Version,
 		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
 		IAMApiKey:          options.IAMApiKey,
 		IAMAccessToken:     options.IAMAccessToken,
 		IAMURL:             options.IAMURL,
