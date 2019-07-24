@@ -308,7 +308,7 @@ func (languageTranslator *LanguageTranslatorV3) GetListModelsResult(response *co
 // to <b>250 MB</b>. To successfully train with a parallel corpus you must have at least <b>5,000 parallel sentences</b>
 // in your corpus.
 //
-// You can have a <b>maxium of 10 custom models per language pair</b>.
+// You can have a <b>maximum of 10 custom models per language pair</b>.
 func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *CreateModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createModelOptions, "createModelOptions cannot be nil"); err != nil {
 		return nil, err
