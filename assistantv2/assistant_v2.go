@@ -427,6 +427,12 @@ type DialogRuntimeResponseGeneric struct {
 	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium
 	// users.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
+
+	// The title or introductory text to show before the response. This text is defined in the search skill configuration.
+	Header *string `json:"header,omitempty"`
+
+	// An array of objects containing search results.
+	Results []SearchResult `json:"results,omitempty"`
 }
 
 // Constants associated with the DialogRuntimeResponseGeneric.ResponseType property.
@@ -711,7 +717,7 @@ type MessageResponse struct {
 	Context *MessageContext `json:"context,omitempty"`
 }
 
-// RuntimeEntity : A term from the request that was identified as an entity.
+// RuntimeEntity : The entity value that was recognized in the user input.
 type RuntimeEntity struct {
 
 	// An entity detected in the input.
@@ -724,7 +730,7 @@ type RuntimeEntity struct {
 	// The term in the input text that was recognized as an entity value.
 	Value *string `json:"value" validate:"required"`
 
-	// A decimal percentage that represents Watson's confidence in the entity.
+	// A decimal percentage that represents Watson's confidence in the recognized entity.
 	Confidence *float64 `json:"confidence,omitempty"`
 
 	// Any metadata for the entity.
@@ -742,6 +748,88 @@ type RuntimeIntent struct {
 
 	// A decimal percentage that represents Watson's confidence in the intent.
 	Confidence *float64 `json:"confidence" validate:"required"`
+}
+
+// SearchResult : SearchResult struct
+type SearchResult struct {
+
+	// The unique identifier of the document in the Discovery service collection.
+	//
+	// This property is included in responses from search skills, which are a beta feature available only to Plus or
+	// Premium plan users.
+	ID *string `json:"id" validate:"required"`
+
+	// An object containing search result metadata from the Discovery service.
+	ResultMetadata *SearchResultMetadata `json:"result_metadata" validate:"required"`
+
+	// A description of the search result. This is taken from an abstract, summary, or highlight field in the Discovery
+	// service response, as specified in the search skill configuration.
+	Body *string `json:"body,omitempty"`
+
+	// The title of the search result. This is taken from a title or name field in the Discovery service response, as
+	// specified in the search skill configuration.
+	Title *string `json:"title,omitempty"`
+
+	// The URL of the original data object in its native data source.
+	URL *string `json:"url,omitempty"`
+
+	// An object containing segments of text from search results with query-matching text highlighted using HTML <em> tags.
+	Highlight *SearchResultHighlight `json:"highlight,omitempty"`
+}
+
+// SearchResultHighlight : An object containing segments of text from search results with query-matching text highlighted using HTML <em> tags.
+type SearchResultHighlight map[string]interface{}
+
+// SetBody : Allow user to set Body
+func (this *SearchResultHighlight) SetBody(Body *[]string) {
+	(*this)["body"] = Body
+}
+
+// GetBody : Allow user to get Body
+func (this *SearchResultHighlight) GetBody() *[]string {
+	return (*this)["body"].(*[]string)
+}
+
+// SetTitle : Allow user to set Title
+func (this *SearchResultHighlight) SetTitle(Title *[]string) {
+	(*this)["title"] = Title
+}
+
+// GetTitle : Allow user to get Title
+func (this *SearchResultHighlight) GetTitle() *[]string {
+	return (*this)["title"].(*[]string)
+}
+
+// SetURL : Allow user to set URL
+func (this *SearchResultHighlight) SetURL(URL *[]string) {
+	(*this)["url"] = URL
+}
+
+// GetURL : Allow user to get URL
+func (this *SearchResultHighlight) GetURL() *[]string {
+	return (*this)["url"].(*[]string)
+}
+
+// SetProperty : Allow user to set arbitrary property
+func (this *SearchResultHighlight) SetProperty(Key string, Value *[]string) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *SearchResultHighlight) GetProperty(Key string) *[]string {
+	return (*this)[Key].(*[]string)
+}
+
+// SearchResultMetadata : An object containing search result metadata from the Discovery service.
+type SearchResultMetadata struct {
+
+	// The confidence score for the given result. For more information about how the confidence is calculated, see the
+	// Discovery service [documentation](../discovery#query-your-collection).
+	Confidence *float64 `json:"confidence,omitempty"`
+
+	// An unbounded measure of the relevance of a particular result, dependent on the query and matching document. A higher
+	// score indicates a greater match to the query parameters.
+	Score *float64 `json:"score,omitempty"`
 }
 
 // SessionResponse : SessionResponse struct
