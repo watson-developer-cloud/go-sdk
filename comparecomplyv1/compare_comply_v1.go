@@ -856,8 +856,10 @@ type Attribute struct {
 const (
 	Attribute_Type_Currency     = "Currency"
 	Attribute_Type_Datetime     = "DateTime"
+	Attribute_Type_Definedterm  = "DefinedTerm"
 	Attribute_Type_Duration     = "Duration"
 	Attribute_Type_Location     = "Location"
+	Attribute_Type_Number       = "Number"
 	Attribute_Type_Organization = "Organization"
 	Attribute_Type_Percentage   = "Percentage"
 	Attribute_Type_Person       = "Person"
@@ -984,6 +986,7 @@ const (
 	Category_Label_Insurance            = "Insurance"
 	Category_Label_IntellectualProperty = "Intellectual Property"
 	Category_Label_Liability            = "Liability"
+	Category_Label_OrderOfPrecedence    = "Order of Precedence"
 	Category_Label_PaymentTermsBilling  = "Payment Terms & Billing"
 	Category_Label_PricingTaxes         = "Pricing & Taxes"
 	Category_Label_Privacy              = "Privacy"
@@ -1020,6 +1023,7 @@ const (
 	CategoryComparison_Label_Insurance            = "Insurance"
 	CategoryComparison_Label_IntellectualProperty = "Intellectual Property"
 	CategoryComparison_Label_Liability            = "Liability"
+	CategoryComparison_Label_OrderOfPrecedence    = "Order of Precedence"
 	CategoryComparison_Label_PaymentTermsBilling  = "Payment Terms & Billing"
 	CategoryComparison_Label_PricingTaxes         = "Pricing & Taxes"
 	CategoryComparison_Label_Privacy              = "Privacy"
@@ -1713,11 +1717,18 @@ type Document struct {
 // EffectiveDates : An effective date.
 type EffectiveDates struct {
 
+	// The confidence level in the identification of the effective date.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
 	// The effective date, listed as a string.
 	Text *string `json:"text,omitempty"`
 
-	// The confidence level in the identification of the effective date.
-	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+	// The normalized form of the effective date, which is listed as a string. This element is optional; that is, the
+	// service output lists it only if normalized text exists.
+	TextNormalized *string `json:"text_normalized,omitempty"`
+
+	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
@@ -2054,6 +2065,24 @@ type HTMLReturn struct {
 	HTML *string `json:"html,omitempty"`
 }
 
+// Interpretation : The details of the normalized text, if applicable. This element is optional; that is, the service output lists it
+// only if normalized text exists.
+type Interpretation struct {
+
+	// The value that was located in the normalized text.
+	Value *string `json:"value,omitempty"`
+
+	// An integer or float expressing the numeric value of the `value` key.
+	NumericValue *float64 `json:"numeric_value,omitempty"`
+
+	// A string listing the unit of the value that was found in the normalized text.
+	//
+	// **Note:** The value of `unit` is the [ISO-4217 currency code](https://www.iso.org/iso-4217-currency-codes.html)
+	// identified for the currency amount (for example, `USD` or `EUR`). If the service cannot disambiguate a currency
+	// symbol (for example, `$` or `£`), the value of `unit` contains the ambiguous symbol as-is.
+	Unit *string `json:"unit,omitempty"`
+}
+
 // Key : A key in a key-value pair.
 type Key struct {
 
@@ -2307,6 +2336,17 @@ type Location struct {
 
 	// The element's `end` index.
 	End *int64 `json:"end" validate:"required"`
+}
+
+// Mention : A mention of a party.
+type Mention struct {
+
+	// The name of the party.
+	Text *string `json:"text,omitempty"`
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
 }
 
 // OriginalLabelsIn : The original labeling from the input document, without the submitted feedback.
