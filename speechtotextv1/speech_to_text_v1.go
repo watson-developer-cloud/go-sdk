@@ -1074,7 +1074,8 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 // request to add a corpus or grammar to the model.
 // * No training data have been added to the custom model.
 // * The custom model contains one or more invalid corpora, grammars, or words (for example, a custom word has an
-// invalid sounds-like pronunciation). You can correct the invalid resources. The model must contain at least one valid resource for training to
+// invalid sounds-like pronunciation). You can correct the invalid resources or set the `strict` parameter to `false` to
+// exclude the invalid resources from the training. The model must contain at least one valid resource for training to
 // succeed.
 func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions *TrainLanguageModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainLanguageModelOptions, "trainLanguageModelOptions cannot be nil"); err != nil {
@@ -2201,8 +2202,8 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // You can monitor the status of the training by using the **Get a custom acoustic model** method to poll the model's
 // status. Use a loop to check the status once a minute. The method returns an `AcousticModel` object that includes
 // `status` and `progress` fields. A status of `available` indicates that the custom model is trained and ready to use.
-// The service cannot accept subsequent training requests, or requests to add new audio resources, until the existing
-// request completes.
+// The service cannot train a model while it is handling another request for the model. The service cannot accept
+// subsequent training requests, or requests to add new audio resources, until the existing training request completes.
 //
 // You can use the optional `custom_language_model_id` parameter to specify the GUID of a separately created custom
 // language model that is to be used during training. Train with a custom language model if you have verbatim
@@ -2224,8 +2225,9 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // * The custom model contains less than 10 minutes or more than 200 hours of audio data.
 // * You passed an incompatible custom language model with the `custom_language_model_id` query parameter. Both custom
 // models must be based on the same version of the same base model.
-// * The custom model contains one or more invalid audio resources. You can correct the invalid audio resources.
-// The model must contain at least one valid resource for training to succeed.
+// * The custom model contains one or more invalid audio resources. You can correct the invalid audio resources or set
+// the `strict` parameter to `false` to exclude the invalid resources from the training. The model must contain at least
+// one valid resource for training to succeed.
 func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions *TrainAcousticModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(trainAcousticModelOptions, "trainAcousticModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2276,8 +2278,10 @@ func (speechToText *SpeechToTextV1) GetTrainAcousticModelResult(response *core.D
 // ResetAcousticModel : Reset a custom acoustic model
 // Resets a custom acoustic model by removing all audio resources from the model. Resetting a custom acoustic model
 // initializes the model to its state when it was first created. Metadata such as the name and language of the model are
-// preserved, but the model's audio resources are removed and must be re-created. You must use credentials for the
-// instance of the service that owns a model to reset it.
+// preserved, but the model's audio resources are removed and must be re-created. The service cannot reset a model while
+// it is handling another request for the model. The service cannot accept subsequent requests for the model until the
+// existing reset request completes. You must use credentials for the instance of the service that owns a model to reset
+// it.
 //
 // **See also:** [Resetting a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageAcousticModels#resetModel-acoustic).
@@ -2326,8 +2330,9 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 // monitor the status of the upgrade by using the **Get a custom acoustic model** method to poll the model's status. The
 // method returns an `AcousticModel` object that includes `status` and `progress` fields. Use a loop to check the status
 // once a minute. While it is being upgraded, the custom model has the status `upgrading`. When the upgrade is complete,
-// the model resumes the status that it had prior to upgrade. The service cannot accept subsequent requests for the
-// model until the upgrade completes.
+// the model resumes the status that it had prior to upgrade. The service cannot upgrade a model while it is handling
+// another request for the model. The service cannot accept subsequent requests for the model until the existing upgrade
+// request completes.
 //
 // If the custom acoustic model was trained with a separately created custom language model, you must use the
 // `custom_language_model_id` parameter to specify the GUID of that custom language model. The custom language model
@@ -2440,18 +2445,17 @@ func (speechToText *SpeechToTextV1) GetListAudioResult(response *core.DetailedRe
 // resources in any format that the service supports for speech recognition.
 //
 // You can use this method to add any number of audio resources to a custom model by calling the method once for each
-// audio or archive file. But the addition of one audio resource must be fully complete before you can add another. You
-// must add a minimum of 10 minutes and a maximum of 200 hours of audio that includes speech, not just silence, to a
-// custom acoustic model before you can train it. No audio resource, audio- or archive-type, can be larger than 100 MB.
-// To add an audio resource that has the same name as an existing audio resource, set the `allow_overwrite` parameter to
-// `true`; otherwise, the request fails.
+// audio or archive file. You can add multiple different audio resources at the same time. You must add a minimum of 10
+// minutes and a maximum of 200 hours of audio that includes speech, not just silence, to a custom acoustic model before
+// you can train it. No audio resource, audio- or archive-type, can be larger than 100 MB. To add an audio resource that
+// has the same name as an existing audio resource, set the `allow_overwrite` parameter to `true`; otherwise, the
+// request fails.
 //
 // The method is asynchronous. It can take several seconds to complete depending on the duration of the audio and, in
 // the case of an archive file, the total number of audio files being processed. The service returns a 201 response code
 // if the audio is valid. It then asynchronously analyzes the contents of the audio file or files and automatically
 // extracts information about the audio such as its length, sampling rate, and encoding. You cannot submit requests to
-// add additional audio resources to a custom acoustic model, or to train the model, until the service's analysis of all
-// audio files for the current request completes.
+// train or upgrade the model until the service's analysis of all audio resources for current requests completes.
 //
 // To determine the status of the service's analysis of the audio, use the **Get an audio resource** method to poll the
 // status of the audio. The method accepts the customization ID of the custom model and the name of the audio resource,
@@ -2513,11 +2517,8 @@ func (speechToText *SpeechToTextV1) GetListAudioResult(response *core.DetailedRe
 //
 // ### Naming restrictions for embedded audio files
 //
-//  The name of an audio file that is embedded within an archive-type resource must meet the following restrictions:
-// * Include a maximum of 128 characters in the file name; this includes the file extension.
-// * Do not include spaces, slashes, or backslashes in the file name.
-// * Do not use the name of an audio file that has already been added to the custom model as part of an archive-type
-// resource.
+//  The name of an audio file that is contained in an archive-type resource can include a maximum of 128 characters.
+// This includes the file extension and all elements of the name (for example, slashes).
 func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(addAudioOptions, "addAudioOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2631,9 +2632,11 @@ func (speechToText *SpeechToTextV1) GetGetAudioResult(response *core.DetailedRes
 
 // DeleteAudio : Delete an audio resource
 // Deletes an existing audio resource from a custom acoustic model. Deleting an archive-type audio resource removes the
-// entire archive of files; the current interface does not allow deletion of individual files from an archive resource.
+// entire archive of files. The service does not allow deletion of individual files from an archive resource.
+//
 // Removing an audio resource does not affect the custom model until you train the model on its updated data by using
-// the **Train a custom acoustic model** method. You must use credentials for the instance of the service that owns a
+// the **Train a custom acoustic model** method. You can delete an existing audio resource from a model while a
+// different resource is being added to the model. You must use credentials for the instance of the service that owns a
 // model to delete its audio resources.
 //
 // **See also:** [Deleting an audio resource from a custom acoustic
@@ -2755,7 +2758,8 @@ type AcousticModel struct {
 	// The current status of the custom acoustic model:
 	// * `pending`: The model was created but is waiting either for valid training data to be added or for the service to
 	// finish analyzing added data.
-	// * `ready`: The model contains valid data and is ready to be trained.
+	// * `ready`: The model contains valid data and is ready to be trained. If the model contains a mix of valid and
+	// invalid resources, you need to set the `strict` parameter to `false` for the training to proceed.
 	// * `training`: The model is currently being trained.
 	// * `available`: The model is trained and ready to use.
 	// * `upgrading`: The model is currently being upgraded.
@@ -2776,7 +2780,8 @@ type AcousticModel struct {
 // The current status of the custom acoustic model:
 // * `pending`: The model was created but is waiting either for valid training data to be added or for the service to
 // finish analyzing added data.
-// * `ready`: The model contains valid data and is ready to be trained.
+// * `ready`: The model contains valid data and is ready to be trained. If the model contains a mix of valid and invalid
+// resources, you need to set the `strict` parameter to `false` for the training to proceed.
 // * `training`: The model is currently being trained.
 // * `available`: The model is trained and ready to use.
 // * `upgrading`: The model is currently being upgraded.
@@ -2809,7 +2814,10 @@ type AddAudioOptions struct {
 	// The name of the new audio resource for the custom acoustic model. Use a localized name that matches the language of
 	// the custom model and reflects the contents of the resource.
 	// * Include a maximum of 128 characters in the name.
-	// * Do not include spaces, slashes, or backslashes in the name.
+	// * Do not use characters that need to be URL-encoded. For example, do not use spaces, slashes, backslashes, colons,
+	// ampersands, double quotes, plus signs, equals signs, questions marks, and so on in the name. (The service does not
+	// prevent the use of these characters. But because they must be URL-encoded wherever used, their use is strongly
+	// discouraged.)
 	// * Do not use the name of an audio resource that has already been added to the custom model.
 	AudioName *string `json:"audio_name" validate:"required"`
 
@@ -2966,10 +2974,14 @@ type AddCorpusOptions struct {
 	// The name of the new corpus for the custom language model. Use a localized name that matches the language of the
 	// custom model and reflects the contents of the corpus.
 	// * Include a maximum of 128 characters in the name.
-	// * Do not include spaces, slashes, or backslashes in the name.
+	// * Do not use characters that need to be URL-encoded. For example, do not use spaces, slashes, backslashes, colons,
+	// ampersands, double quotes, plus signs, equals signs, questions marks, and so on in the name. (The service does not
+	// prevent the use of these characters. But because they must be URL-encoded wherever used, their use is strongly
+	// discouraged.)
 	// * Do not use the name of an existing corpus or grammar that is already defined for the custom model.
 	// * Do not use the name `user`, which is reserved by the service to denote custom words that are added or modified by
 	// the user.
+	// * Do not use the name `base_lm` or `default_lm`. Both names are reserved for future use by the service.
 	CorpusName *string `json:"corpus_name" validate:"required"`
 
 	// A plain text file that contains the training data for the corpus. Encode the file in UTF-8 if it contains non-ASCII
@@ -3040,10 +3052,14 @@ type AddGrammarOptions struct {
 	// The name of the new grammar for the custom language model. Use a localized name that matches the language of the
 	// custom model and reflects the contents of the grammar.
 	// * Include a maximum of 128 characters in the name.
-	// * Do not include spaces, slashes, or backslashes in the name.
+	// * Do not use characters that need to be URL-encoded. For example, do not use spaces, slashes, backslashes, colons,
+	// ampersands, double quotes, plus signs, equals signs, questions marks, and so on in the name. (The service does not
+	// prevent the use of these characters. But because they must be URL-encoded wherever used, their use is strongly
+	// discouraged.)
 	// * Do not use the name of an existing grammar or corpus that is already defined for the custom model.
 	// * Do not use the name `user`, which is reserved by the service to denote custom words that are added or modified by
 	// the user.
+	// * Do not use the name `base_lm` or `default_lm`. Both names are reserved for future use by the service.
 	GrammarName *string `json:"grammar_name" validate:"required"`
 
 	// A plain text file that contains the grammar in the format specified by the `Content-Type` header. Encode the file in
@@ -4897,7 +4913,8 @@ type LanguageModel struct {
 	// The current status of the custom language model:
 	// * `pending`: The model was created but is waiting either for valid training data to be added or for the service to
 	// finish analyzing added data.
-	// * `ready`: The model contains valid data and is ready to be trained.
+	// * `ready`: The model contains valid data and is ready to be trained. If the model contains a mix of valid and
+	// invalid resources, you need to set the `strict` parameter to `false` for the training to proceed.
 	// * `training`: The model is currently being trained.
 	// * `available`: The model is trained and ready to use.
 	// * `upgrading`: The model is currently being upgraded.
@@ -4923,7 +4940,8 @@ type LanguageModel struct {
 // The current status of the custom language model:
 // * `pending`: The model was created but is waiting either for valid training data to be added or for the service to
 // finish analyzing added data.
-// * `ready`: The model contains valid data and is ready to be trained.
+// * `ready`: The model contains valid data and is ready to be trained. If the model contains a mix of valid and invalid
+// resources, you need to set the `strict` parameter to `false` for the training to proceed.
 // * `training`: The model is currently being trained.
 // * `available`: The model is trained and ready to use.
 // * `upgrading`: The model is currently being upgraded.
@@ -5130,7 +5148,7 @@ type ListWordsOptions struct {
 	// `+` or `-` to an argument to indicate whether the results are to be sorted in ascending or descending order. By
 	// default, words are sorted in ascending alphabetical order. For alphabetical ordering, the lexicographical precedence
 	// is numeric values, uppercase letters, and lowercase letters. For count ordering, values with the same count are
-	// ordered alphabetically. With the `curl` command, URL encode the `+` symbol as `%2B`.
+	// ordered alphabetically. With the `curl` command, URL-encode the `+` symbol as `%2B`.
 	Sort *string `json:"sort,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -5155,7 +5173,7 @@ const (
 // `+` or `-` to an argument to indicate whether the results are to be sorted in ascending or descending order. By
 // default, words are sorted in ascending alphabetical order. For alphabetical ordering, the lexicographical precedence
 // is numeric values, uppercase letters, and lowercase letters. For count ordering, values with the same count are
-// ordered alphabetically. With the `curl` command, URL encode the `+` symbol as `%2B`.
+// ordered alphabetically. With the `curl` command, URL-encode the `+` symbol as `%2B`.
 const (
 	ListWordsOptions_Sort_Alphabetical = "alphabetical"
 	ListWordsOptions_Sort_Count        = "count"
@@ -6044,29 +6062,30 @@ func (options *TrainLanguageModelOptions) SetHeaders(param map[string]string) *T
 type TrainingResponse struct {
 
 	// An array of `TrainingWarning` objects that lists any invalid resources contained in the custom model. For custom
-	// language models, invalid resources are grouped and identified by type of resource.
+	// language models, invalid resources are grouped and identified by type of resource. The method can return warnings
+	// only if the `strict` parameter is set to `false`.
 	Warnings []TrainingWarning `json:"warnings,omitempty"`
 }
 
 // TrainingWarning : A warning from training of a custom language or custom acoustic model.
 type TrainingWarning struct {
 
+	// An identifier for the type of invalid resources listed in the `description` field.
+	Code *string `json:"code" validate:"required"`
+
 	// A warning message that lists the invalid resources that are excluded from the custom model's training. The message
 	// has the following format: `Analysis of the following {resource_type} has not completed successfully:
 	// [{resource_names}]. They will be excluded from custom {model_type} model training.`.
-	Description *string `json:"description" validate:"required"`
-
-	// An identifier for the type of invalid resources listed in the `description` field.
-	WarningID *string `json:"warning_id" validate:"required"`
+	Message *string `json:"message" validate:"required"`
 }
 
-// Constants associated with the TrainingWarning.WarningID property.
+// Constants associated with the TrainingWarning.Code property.
 // An identifier for the type of invalid resources listed in the `description` field.
 const (
-	TrainingWarning_WarningID_InvalidAudioFiles   = "invalid_audio_files"
-	TrainingWarning_WarningID_InvalidCorpusFiles  = "invalid_corpus_files"
-	TrainingWarning_WarningID_InvalidGrammarFiles = "invalid_grammar_files"
-	TrainingWarning_WarningID_InvalidWords        = "invalid_words"
+	TrainingWarning_Code_InvalidAudioFiles   = "invalid_audio_files"
+	TrainingWarning_Code_InvalidCorpusFiles  = "invalid_corpus_files"
+	TrainingWarning_Code_InvalidGrammarFiles = "invalid_grammar_files"
+	TrainingWarning_Code_InvalidWords        = "invalid_words"
 )
 
 // UnregisterCallbackOptions : The UnregisterCallback options.
