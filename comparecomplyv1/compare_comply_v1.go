@@ -1688,6 +1688,9 @@ type DocStructure struct {
 	// An array containing one object per section or subsection, in parallel with the `section_titles` array, that details
 	// the leading sentences in the corresponding section or subsection.
 	LeadingSentences []LeadingSentence `json:"leading_sentences,omitempty"`
+
+	// An array containing one object per paragraph, in parallel with the `section_titles` and `leading_sentences` arrays.
+	Paragraphs []Paragraphs `json:"paragraphs,omitempty"`
 }
 
 // Document : Basic information about the input document.
@@ -2358,23 +2361,34 @@ type Pagination struct {
 	Total *int64 `json:"total,omitempty"`
 }
 
+// Paragraphs : The locations of each paragraph in the input document.
+type Paragraphs struct {
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+}
+
 // Parties : A party and its corresponding role, including address and contact information if identified.
 type Parties struct {
 
-	// A string identifying the party.
+	// The normalized form of the party's name.
 	Party *string `json:"party,omitempty"`
-
-	// A string that identifies the importance of the party.
-	Importance *string `json:"importance,omitempty"`
 
 	// A string identifying the party's role.
 	Role *string `json:"role,omitempty"`
 
-	// List of the party's address or addresses.
+	// A string that identifies the importance of the party.
+	Importance *string `json:"importance,omitempty"`
+
+	// A list of the party's address or addresses.
 	Addresses []Address `json:"addresses,omitempty"`
 
-	// List of the names and roles of contacts identified in the input document.
+	// A list of the names and roles of contacts identified in the input document.
 	Contacts []Contact `json:"contacts,omitempty"`
+
+	// A list of the party's mentions in the input document.
+	Mentions []Mention `json:"mentions,omitempty"`
 }
 
 // Constants associated with the Parties.Importance property.
