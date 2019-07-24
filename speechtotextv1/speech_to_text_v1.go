@@ -5218,7 +5218,8 @@ type ProcessedAudio struct {
 	SpeakerLabels *float32 `json:"speaker_labels,omitempty"`
 }
 
-// ProcessingMetrics : If processing metrics are requested, information about the service's processing of the input audio.
+// ProcessingMetrics : If processing metrics are requested, information about the service's processing of the input audio. Processing
+// metrics are not available with the synchronous **Recognize audio** method.
 type ProcessingMetrics struct {
 
 	// Detailed timing information about the service's processing of the input audio.
@@ -5891,6 +5892,10 @@ type SpeechRecognitionResults struct {
 	// are also requested for methods that support them, it is possible for a `SpeechRecognitionResults` object to include
 	// only the `speaker_labels` field.
 	SpeakerLabels []SpeakerLabelsResult `json:"speaker_labels,omitempty"`
+
+	// If processing metrics are requested, information about the service's processing of the input audio. Processing
+	// metrics are not available with the synchronous **Recognize audio** method.
+	ProcessingMetrics *ProcessingMetrics `json:"processing_metrics,omitempty"`
 
 	// If audio metrics are requested, information about the signal characteristics of the input audio.
 	AudioMetrics *AudioMetrics `json:"audio_metrics,omitempty"`
