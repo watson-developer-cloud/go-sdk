@@ -1105,15 +1105,6 @@ type ClassifyReturn struct {
 	// Document elements identified by the service.
 	Elements []Element `json:"elements,omitempty"`
 
-	// Definition of tables identified in the input document.
-	Tables []Tables `json:"tables,omitempty"`
-
-	// The structure of the input document.
-	DocumentStructure *DocStructure `json:"document_structure,omitempty"`
-
-	// Definitions of the parties identified in the input document.
-	Parties []Parties `json:"parties,omitempty"`
-
 	// The date or dates on which the document becomes effective.
 	EffectiveDates []EffectiveDates `json:"effective_dates,omitempty"`
 
@@ -1124,7 +1115,22 @@ type ClassifyReturn struct {
 	TerminationDates []TerminationDates `json:"termination_dates,omitempty"`
 
 	// The document's contract type or types as declared in the document.
-	ContractType []ContractType `json:"contract_type,omitempty"`
+	ContractTypes []ContractTypes `json:"contract_types,omitempty"`
+
+	// The duration or durations of the contract.
+	ContractTerms []ContractTerms `json:"contract_terms,omitempty"`
+
+	// The document's payment duration or durations.
+	PaymentTerms []PaymentTerms `json:"payment_terms,omitempty"`
+
+	// Definition of tables identified in the input document.
+	Tables []Tables `json:"tables,omitempty"`
+
+	// The structure of the input document.
+	DocumentStructure *DocStructure `json:"document_structure,omitempty"`
+
+	// Definitions of the parties identified in the input document.
+	Parties []Parties `json:"parties,omitempty"`
 }
 
 // ColumnHeaderIds : An array of values, each being the `id` value of a column header that is applicable to the current cell.
@@ -1326,26 +1332,62 @@ const (
 	ContractAmts_ConfidenceLevel_Medium = "Medium"
 )
 
-// ContractType : The contract type identified in the input document.
-type ContractType struct {
+// ContractTerms : The duration or durations of the contract.
+type ContractTerms struct {
 
-	// The contract type.
+	// The confidence level in the identification of the contract term.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
+	// The contract term (duration).
 	Text *string `json:"text,omitempty"`
 
-	// The confidence level in the identification of the termination date.
-	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+	// The normalized form of the contract term, which is listed as a string. This element is optional; that is, the
+	// service output lists it only if normalized text exists.
+	TextNormalized *string `json:"text_normalized,omitempty"`
+
+	// The details of the normalized text, if applicable. This element is optional; that is, the service output lists it
+	// only if normalized text exists.
+	Interpretation *Interpretation `json:"interpretation,omitempty"`
+
+	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
 	Location *Location `json:"location,omitempty"`
 }
 
-// Constants associated with the ContractType.ConfidenceLevel property.
-// The confidence level in the identification of the termination date.
+// Constants associated with the ContractTerms.ConfidenceLevel property.
+// The confidence level in the identification of the contract term.
 const (
-	ContractType_ConfidenceLevel_High   = "High"
-	ContractType_ConfidenceLevel_Low    = "Low"
-	ContractType_ConfidenceLevel_Medium = "Medium"
+	ContractTerms_ConfidenceLevel_High   = "High"
+	ContractTerms_ConfidenceLevel_Low    = "Low"
+	ContractTerms_ConfidenceLevel_Medium = "Medium"
+)
+
+// ContractTypes : The contract type identified in the input document.
+type ContractTypes struct {
+
+	// The confidence level in the identification of the contract type.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
+	// The contract type.
+	Text *string `json:"text,omitempty"`
+
+	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	ProvenanceIds []string `json:"provenance_ids,omitempty"`
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+}
+
+// Constants associated with the ContractTypes.ConfidenceLevel property.
+// The confidence level in the identification of the contract type.
+const (
+	ContractTypes_ConfidenceLevel_High   = "High"
+	ContractTypes_ConfidenceLevel_Low    = "Low"
+	ContractTypes_ConfidenceLevel_Medium = "Medium"
 )
 
 // ConvertToHTMLOptions : The ConvertToHTML options.
@@ -2318,6 +2360,39 @@ type Parties struct {
 const (
 	Parties_Importance_Primary = "Primary"
 	Parties_Importance_Unknown = "Unknown"
+)
+
+// PaymentTerms : The document's payment duration or durations.
+type PaymentTerms struct {
+
+	// The confidence level in the identification of the payment term.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
+	// The payment term (duration).
+	Text *string `json:"text,omitempty"`
+
+	// The normalized form of the payment term, which is listed as a string. This element is optional; that is, the service
+	// output lists it only if normalized text exists.
+	TextNormalized *string `json:"text_normalized,omitempty"`
+
+	// The details of the normalized text, if applicable. This element is optional; that is, the service output lists it
+	// only if normalized text exists.
+	Interpretation *Interpretation `json:"interpretation,omitempty"`
+
+	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	ProvenanceIds []string `json:"provenance_ids,omitempty"`
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+}
+
+// Constants associated with the PaymentTerms.ConfidenceLevel property.
+// The confidence level in the identification of the payment term.
+const (
+	PaymentTerms_ConfidenceLevel_High   = "High"
+	PaymentTerms_ConfidenceLevel_Low    = "Low"
+	PaymentTerms_ConfidenceLevel_Medium = "Medium"
 )
 
 // RowHeaderIds : An array of values, each being the `id` value of a row header that is applicable to this body cell.
