@@ -1310,14 +1310,36 @@ type Contact struct {
 	Role *string `json:"role,omitempty"`
 }
 
+// Contexts : Text that is related to the contents of the table and that precedes or follows the current table.
+type Contexts struct {
+
+	// The related text.
+	Text *string `json:"text,omitempty"`
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+}
+
 // ContractAmts : A monetary amount identified in the input document.
 type ContractAmts struct {
+
+	// The confidence level in the identification of the contract amount.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
 
 	// The monetary amount.
 	Text *string `json:"text,omitempty"`
 
-	// The confidence level in the identification of the contract amount.
-	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+	// The normalized form of the amount, which is listed as a string. This element is optional; that is, the service
+	// output lists it only if normalized text exists.
+	TextNormalized *string `json:"text_normalized,omitempty"`
+
+	// The details of the normalized text, if applicable. This element is optional; that is, the service output lists it
+	// only if normalized text exists.
+	Interpretation *Interpretation `json:"interpretation,omitempty"`
+
+	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
@@ -2570,22 +2592,33 @@ type Tables struct {
 	// current table.
 	ColumnHeaders []ColumnHeaders `json:"column_headers,omitempty"`
 
-	// An array of key-value pairs identified in the current table.
-	KeyValuePairs []KeyValuePair `json:"key_value_pairs,omitempty"`
-
 	// An array of cells that are neither table header nor column header nor row header cells, of the current table with
 	// corresponding row and column header associations.
 	BodyCells []BodyCells `json:"body_cells,omitempty"`
+
+	// An array of objects that list text that is related to the table contents and that precedes or follows the current
+	// table.
+	Contexts []Contexts `json:"contexts,omitempty"`
+
+	// An array of key-value pairs identified in the current table.
+	KeyValuePairs []KeyValuePair `json:"key_value_pairs,omitempty"`
 }
 
 // TerminationDates : Termination dates identified in the input document.
 type TerminationDates struct {
 
+	// The confidence level in the identification of the termination date.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
 	// The termination date.
 	Text *string `json:"text,omitempty"`
 
-	// The confidence level in the identification of the termination date.
-	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+	// The normalized form of the termination date, which is listed as a string. This element is optional; that is, the
+	// service output lists it only if normalized text exists.
+	TextNormalized *string `json:"text_normalized,omitempty"`
+
+	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
