@@ -2727,6 +2727,11 @@ type AcousticModel struct {
 	// provided in full ISO 8601 format (`YYYY-MM-DDThh:mm:ss.sTZD`).
 	Created *string `json:"created,omitempty"`
 
+	// The date and time in Coordinated Universal Time (UTC) at which the custom acoustic model was last modified. The
+	// `created` and `updated` fields are equal when an acoustic model is first added but has yet to be updated. The value
+	// is provided in full ISO 8601 format (YYYY-MM-DDThh:mm:ss.sTZD).
+	Updated *string `json:"updated,omitempty"`
+
 	// The language identifier of the custom acoustic model (for example, `en-US`).
 	Language *string `json:"language,omitempty"`
 
@@ -4855,6 +4860,11 @@ type LanguageModel struct {
 	// The date and time in Coordinated Universal Time (UTC) at which the custom language model was created. The value is
 	// provided in full ISO 8601 format (`YYYY-MM-DDThh:mm:ss.sTZD`).
 	Created *string `json:"created,omitempty"`
+
+	// The date and time in Coordinated Universal Time (UTC) at which the custom language model was last modified. The
+	// `created` and `updated` fields are equal when a language model is first added but has yet to be updated. The value
+	// is provided in full ISO 8601 format (YYYY-MM-DDThh:mm:ss.sTZD).
+	Updated *string `json:"updated,omitempty"`
 
 	// The language identifier of the custom language model (for example, `en-US`).
 	Language *string `json:"language,omitempty"`
