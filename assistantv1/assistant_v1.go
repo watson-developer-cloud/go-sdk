@@ -81,6 +81,10 @@ func NewAssistantV1(options *AssistantV1Options) (*AssistantV1, error) {
 // Message : Get response to user input
 // Send user input to a workspace and receive a response.
 //
+// **Note:** For most applications, there are significant advantages to using the v2 runtime API instead. These
+// advantages include ease of deployment, automatic state management, versioning, and search capabilities. For more
+// information, see the [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-api-overview).
+//
 // There is no rate limit for this operation.
 func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(messageOptions, "messageOptions cannot be nil"); err != nil {
