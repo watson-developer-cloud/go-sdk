@@ -2530,6 +2530,18 @@ type TableReturn struct {
 	Tables []Tables `json:"tables,omitempty"`
 }
 
+// TableTitle : If identified, the title or caption of the current table of the form `Table x.: ...`. Empty when no title is
+// identified. When exposed, the `title` is also excluded from the `contexts` array of the same table.
+type TableTitle struct {
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+
+	// The text of the identified table title or caption.
+	Text *string `json:"text,omitempty"`
+}
+
 // Tables : The contents of the tables extracted from a document.
 type Tables struct {
 
@@ -2542,6 +2554,10 @@ type Tables struct {
 
 	// The table's section title, if identified.
 	SectionTitle *SectionTitle `json:"section_title,omitempty"`
+
+	// If identified, the title or caption of the current table of the form `Table x.: ...`. Empty when no title is
+	// identified. When exposed, the `title` is also excluded from the `contexts` array of the same table.
+	Title *TableTitle `json:"title,omitempty"`
 
 	// An array of table-level cells that apply as headers to all the other cells in the current table.
 	TableHeaders []TableHeaders `json:"table_headers,omitempty"`
