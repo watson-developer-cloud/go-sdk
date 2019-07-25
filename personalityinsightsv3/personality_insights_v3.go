@@ -516,8 +516,6 @@ type ProfileOptions struct {
 	ConsumptionPreferences *bool `json:"consumption_preferences,omitempty"`
 
 	// The type of the input. For more information, see **Content types** in the method description.
-	//
-	// Default: `text/plain`.
 	ContentType *string `json:"Content-Type,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -562,8 +560,6 @@ const (
 
 // Constants associated with the ProfileOptions.ContentType property.
 // The type of the input. For more information, see **Content types** in the method description.
-//
-// Default: `text/plain`.
 const (
 	ProfileOptions_ContentType_ApplicationJSON = "application/json"
 	ProfileOptions_ContentType_TextHTML        = "text/html"

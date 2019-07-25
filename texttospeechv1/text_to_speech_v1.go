@@ -137,8 +137,8 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 
 // GetVoice : Get a voice
 // Gets information about the specified voice. The information includes the name, language, gender, and other details
-// about the voice. Specify a customization ID to obtain information for that custom voice model of the specified voice.
-// To list information about all available voices, use the **List voices** method.
+// about the voice. Specify a customization ID to obtain information for a custom voice model that is defined for the
+// language of the specified voice. To list information about all available voices, use the **List voices** method.
 //
 // **See also:** [Listing a specific
 // voice](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoice).
@@ -1007,8 +1007,8 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 // AddWordOptions : The AddWord options.
 type AddWordOptions struct {
 
-	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom voice model. You must make the request with credentials for the instance
+	// of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The word that is to be added or updated for the custom voice model.
@@ -1096,8 +1096,8 @@ func (options *AddWordOptions) SetHeaders(param map[string]string) *AddWordOptio
 // AddWordsOptions : The AddWords options.
 type AddWordsOptions struct {
 
-	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom voice model. You must make the request with credentials for the instance
+	// of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The **Add custom words** method accepts an array of `Word` objects. Each object provides a word that is to be added
@@ -1232,8 +1232,8 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 // DeleteVoiceModelOptions : The DeleteVoiceModel options.
 type DeleteVoiceModelOptions struct {
 
-	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom voice model. You must make the request with credentials for the instance
+	// of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1262,8 +1262,8 @@ func (options *DeleteVoiceModelOptions) SetHeaders(param map[string]string) *Del
 // DeleteWordOptions : The DeleteWord options.
 type DeleteWordOptions struct {
 
-	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom voice model. You must make the request with credentials for the instance
+	// of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The word that is to be deleted from the custom voice model.
@@ -1316,8 +1316,8 @@ type GetPronunciationOptions struct {
 	// The customization ID (GUID) of a custom voice model for which the pronunciation is to be returned. The language of a
 	// specified custom model must match the language of the specified voice. If the word is not defined in the specified
 	// custom model, the service returns the default translation for the custom model's language. You must make the request
-	// with service credentials created for the instance of the service that owns the custom model. Omit the parameter to
-	// see the translation for the specified voice with no customization.
+	// with credentials for the instance of the service that owns the custom model. Omit the parameter to see the
+	// translation for the specified voice with no customization.
 	CustomizationID *string `json:"customization_id,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1328,25 +1328,32 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
-	GetPronunciationOptions_Voice_DeDeBirgitv2voice    = "de-DE_BirgitV2Voice"
+	GetPronunciationOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
 	GetPronunciationOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
-	GetPronunciationOptions_Voice_DeDeDieterv2voice    = "de-DE_DieterV2Voice"
+	GetPronunciationOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	GetPronunciationOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	GetPronunciationOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
-	GetPronunciationOptions_Voice_EnUsAllisonv2voice   = "en-US_AllisonV2Voice"
+	GetPronunciationOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
 	GetPronunciationOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
-	GetPronunciationOptions_Voice_EnUsLisav2voice      = "en-US_LisaV2Voice"
+	GetPronunciationOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
 	GetPronunciationOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
-	GetPronunciationOptions_Voice_EnUsMichaelv2voice   = "en-US_MichaelV2Voice"
+	GetPronunciationOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
 	GetPronunciationOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
 	GetPronunciationOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	GetPronunciationOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
 	GetPronunciationOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	GetPronunciationOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
 	GetPronunciationOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	GetPronunciationOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
 	GetPronunciationOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
 	GetPronunciationOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
-	GetPronunciationOptions_Voice_ItItFrancescav2voice = "it-IT_FrancescaV2Voice"
+	GetPronunciationOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
 	GetPronunciationOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
 	GetPronunciationOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
 	GetPronunciationOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
@@ -1398,8 +1405,8 @@ func (options *GetPronunciationOptions) SetHeaders(param map[string]string) *Get
 // GetVoiceModelOptions : The GetVoiceModel options.
 type GetVoiceModelOptions struct {
 
-	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom voice model. You must make the request with credentials for the instance
+	// of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1432,8 +1439,8 @@ type GetVoiceOptions struct {
 	Voice *string `json:"voice" validate:"required"`
 
 	// The customization ID (GUID) of a custom voice model for which information is to be returned. You must make the
-	// request with service credentials created for the instance of the service that owns the custom model. Omit the
-	// parameter to see information about the specified voice with no customization.
+	// request with credentials for the instance of the service that owns the custom model. Omit the parameter to see
+	// information about the specified voice with no customization.
 	CustomizationID *string `json:"customization_id,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1443,25 +1450,32 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
-	GetVoiceOptions_Voice_DeDeBirgitv2voice    = "de-DE_BirgitV2Voice"
+	GetVoiceOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
 	GetVoiceOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
-	GetVoiceOptions_Voice_DeDeDieterv2voice    = "de-DE_DieterV2Voice"
+	GetVoiceOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	GetVoiceOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	GetVoiceOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
-	GetVoiceOptions_Voice_EnUsAllisonv2voice   = "en-US_AllisonV2Voice"
+	GetVoiceOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
 	GetVoiceOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
-	GetVoiceOptions_Voice_EnUsLisav2voice      = "en-US_LisaV2Voice"
+	GetVoiceOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
 	GetVoiceOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
-	GetVoiceOptions_Voice_EnUsMichaelv2voice   = "en-US_MichaelV2Voice"
+	GetVoiceOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
 	GetVoiceOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
 	GetVoiceOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	GetVoiceOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
 	GetVoiceOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	GetVoiceOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
 	GetVoiceOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	GetVoiceOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
 	GetVoiceOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
 	GetVoiceOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
-	GetVoiceOptions_Voice_ItItFrancescav2voice = "it-IT_FrancescaV2Voice"
+	GetVoiceOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
 	GetVoiceOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
 	GetVoiceOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
 	GetVoiceOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
@@ -1493,8 +1507,8 @@ func (options *GetVoiceOptions) SetHeaders(param map[string]string) *GetVoiceOpt
 // GetWordOptions : The GetWord options.
 type GetWordOptions struct {
 
-	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom voice model. You must make the request with credentials for the instance
+	// of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The word that is to be queried from the custom voice model.
@@ -1533,8 +1547,8 @@ func (options *GetWordOptions) SetHeaders(param map[string]string) *GetWordOptio
 // ListVoiceModelsOptions : The ListVoiceModels options.
 type ListVoiceModelsOptions struct {
 
-	// The language for which custom voice models that are owned by the requesting service credentials are to be returned.
-	// Omit the parameter to see all custom voice models that are owned by the requester.
+	// The language for which custom voice models that are owned by the requesting credentials are to be returned. Omit the
+	// parameter to see all custom voice models that are owned by the requester.
 	Language *string `json:"language,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1542,8 +1556,8 @@ type ListVoiceModelsOptions struct {
 }
 
 // Constants associated with the ListVoiceModelsOptions.Language property.
-// The language for which custom voice models that are owned by the requesting service credentials are to be returned.
-// Omit the parameter to see all custom voice models that are owned by the requester.
+// The language for which custom voice models that are owned by the requesting credentials are to be returned. Omit the
+// parameter to see all custom voice models that are owned by the requester.
 const (
 	ListVoiceModelsOptions_Language_DeDe = "de-DE"
 	ListVoiceModelsOptions_Language_EnGb = "en-GB"
@@ -1595,8 +1609,8 @@ func (options *ListVoicesOptions) SetHeaders(param map[string]string) *ListVoice
 // ListWordsOptions : The ListWords options.
 type ListWordsOptions struct {
 
-	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom voice model. You must make the request with credentials for the instance
+	// of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1652,15 +1666,13 @@ type SynthesizeOptions struct {
 
 	// The customization ID (GUID) of a custom voice model to use for the synthesis. If a custom voice model is specified,
 	// it is guaranteed to work only if it matches the language of the indicated voice. You must make the request with
-	// service credentials created for the instance of the service that owns the custom model. Omit the parameter to use
-	// the specified voice with no customization.
+	// credentials for the instance of the service that owns the custom model. Omit the parameter to use the specified
+	// voice with no customization.
 	CustomizationID *string `json:"customization_id,omitempty"`
 
 	// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
 	// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
 	// method description.
-	//
-	// Default: `audio/ogg;codecs=opus`.
 	Accept *string `json:"Accept,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1671,24 +1683,37 @@ type SynthesizeOptions struct {
 // The voice to use for synthesis.
 const (
 	SynthesizeOptions_Voice_DeDeBirgitv2voice    = "de-DE_BirgitV2Voice"
+	SynthesizeOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
 	SynthesizeOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
 	SynthesizeOptions_Voice_DeDeDieterv2voice    = "de-DE_DieterV2Voice"
+	SynthesizeOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	SynthesizeOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	SynthesizeOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
 	SynthesizeOptions_Voice_EnUsAllisonv2voice   = "en-US_AllisonV2Voice"
+	SynthesizeOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
 	SynthesizeOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
 	SynthesizeOptions_Voice_EnUsLisav2voice      = "en-US_LisaV2Voice"
+	SynthesizeOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
 	SynthesizeOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
 	SynthesizeOptions_Voice_EnUsMichaelv2voice   = "en-US_MichaelV2Voice"
+	SynthesizeOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
 	SynthesizeOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
 	SynthesizeOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	SynthesizeOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
 	SynthesizeOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	SynthesizeOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
 	SynthesizeOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	SynthesizeOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
 	SynthesizeOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
 	SynthesizeOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	SynthesizeOptions_Voice_ItItFrancescav2voice = "it-IT_FrancescaV2Voice"
+	SynthesizeOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
 	SynthesizeOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
 	SynthesizeOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
 	SynthesizeOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
@@ -1696,8 +1721,6 @@ const (
 // The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
 // the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
 // method description.
-//
-// Default: `audio/ogg;codecs=opus`.
 const (
 	SynthesizeOptions_Accept_AudioBasic            = "audio/basic"
 	SynthesizeOptions_Accept_AudioFlac             = "audio/flac"
@@ -1794,8 +1817,8 @@ const (
 // UpdateVoiceModelOptions : The UpdateVoiceModel options.
 type UpdateVoiceModelOptions struct {
 
-	// The customization ID (GUID) of the custom voice model. You must make the request with service credentials created
-	// for the instance of the service that owns the custom model.
+	// The customization ID (GUID) of the custom voice model. You must make the request with credentials for the instance
+	// of the service that owns the custom model.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// A new name for the custom voice model.
@@ -1892,16 +1915,16 @@ type VoiceModel struct {
 	// The language identifier of the custom voice model (for example, `en-US`).
 	Language *string `json:"language,omitempty"`
 
-	// The GUID of the service credentials for the instance of the service that owns the custom voice model.
+	// The GUID of the credentials for the instance of the service that owns the custom voice model.
 	Owner *string `json:"owner,omitempty"`
 
 	// The date and time in Coordinated Universal Time (UTC) at which the custom voice model was created. The value is
 	// provided in full ISO 8601 format (`YYYY-MM-DDThh:mm:ss.sTZD`).
 	Created *string `json:"created,omitempty"`
 
-	// The date and time in Coordinated Universal Time (UTC) at which the custom voice model was last modified. Equals
-	// `created` when a new voice model is first added but has yet to be updated. The value is provided in full ISO 8601
-	// format (`YYYY-MM-DDThh:mm:ss.sTZD`).
+	// The date and time in Coordinated Universal Time (UTC) at which the custom voice model was last modified. The
+	// `created` and `updated` fields are equal when a voice model is first added but has yet to be updated. The value is
+	// provided in full ISO 8601 format (`YYYY-MM-DDThh:mm:ss.sTZD`).
 	LastModified *string `json:"last_modified,omitempty"`
 
 	// The description of the custom voice model.
@@ -1918,8 +1941,8 @@ type VoiceModel struct {
 type VoiceModels struct {
 
 	// An array of `VoiceModel` objects that provides information about each available custom voice model. The array is
-	// empty if the requesting service credentials own no custom voice models (if no language is specified) or own no
-	// custom voice models for the specified language.
+	// empty if the requesting credentials own no custom voice models (if no language is specified) or own no custom voice
+	// models for the specified language.
 	Customizations []VoiceModel `json:"customizations" validate:"required"`
 }
 

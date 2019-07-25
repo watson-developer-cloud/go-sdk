@@ -40,15 +40,15 @@ type NaturalLanguageUnderstandingV1 struct {
 
 // NaturalLanguageUnderstandingV1Options : Service options
 type NaturalLanguageUnderstandingV1Options struct {
-	Version         string
-	URL             string
-	Username        string
-	Password        string
-	IAMApiKey       string
-	IAMAccessToken  string
-	IAMURL          string
-	IAMClientId     string
-	IAMClientSecret string
+	Version            string
+	URL                string
+	Username           string
+	Password           string
+	IAMApiKey          string
+	IAMAccessToken     string
+	IAMURL             string
+	IAMClientId        string
+	IAMClientSecret    string
 	ICP4DAccessToken   string
 	ICP4DURL           string
 	AuthenticationType string
@@ -61,15 +61,15 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
-		URL:             options.URL,
-		Username:        options.Username,
-		Password:        options.Password,
-		IAMApiKey:       options.IAMApiKey,
-		IAMAccessToken:  options.IAMAccessToken,
-		IAMURL:          options.IAMURL,
-		IAMClientId:     options.IAMClientId,
-		IAMClientSecret: options.IAMClientSecret,
+		Version:            options.Version,
+		URL:                options.URL,
+		Username:           options.Username,
+		Password:           options.Password,
+		IAMApiKey:          options.IAMApiKey,
+		IAMAccessToken:     options.IAMAccessToken,
+		IAMURL:             options.IAMURL,
+		IAMClientId:        options.IAMClientId,
+		IAMClientSecret:    options.IAMClientSecret,
 		ICP4DAccessToken:   options.ICP4DAccessToken,
 		ICP4DURL:           options.ICP4DURL,
 		AuthenticationType: options.AuthenticationType,
@@ -688,6 +688,11 @@ type EntitiesResult struct {
 	// Relevance score from 0 to 1. Higher values indicate greater relevance.
 	Relevance *float64 `json:"relevance,omitempty"`
 
+	// Confidence in the entity identification from 0 to 1. Higher values indicate higher confidence. In standard entities
+	// requests, confidence is returned only for English text. All entities requests that use custom models return the
+	// confidence score.
+	Confidence *float64 `json:"confidence,omitempty"`
+
 	// Entity mentions and locations.
 	Mentions []EntityMention `json:"mentions,omitempty"`
 
@@ -712,6 +717,11 @@ type EntityMention struct {
 
 	// Character offsets indicating the beginning and end of the mention in the analyzed text.
 	Location []int64 `json:"location,omitempty"`
+
+	// Confidence in the entity identification from 0 to 1. Higher values indicate higher confidence. In standard entities
+	// requests, confidence is returned only for English text. All entities requests that use custom models return the
+	// confidence score.
+	Confidence *float64 `json:"confidence,omitempty"`
 }
 
 // FeatureSentimentResults : FeatureSentimentResults struct
@@ -1081,7 +1091,6 @@ type SyntaxOptionsTokens struct {
 
 // SyntaxResult : Tokens and sentences returned from syntax analysis.
 type SyntaxResult struct {
-
 	Tokens []TokenResult `json:"tokens,omitempty"`
 
 	Sentences []SentenceResult `json:"sentences,omitempty"`
@@ -1128,21 +1137,21 @@ type TokenResult struct {
 // The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
 // tags](https://universaldependencies.org/u/pos/).
 const (
-	TokenResult_PartOfSpeech_Adj = "ADJ"
-	TokenResult_PartOfSpeech_Adp = "ADP"
-	TokenResult_PartOfSpeech_Adv = "ADV"
-	TokenResult_PartOfSpeech_Aux = "AUX"
+	TokenResult_PartOfSpeech_Adj   = "ADJ"
+	TokenResult_PartOfSpeech_Adp   = "ADP"
+	TokenResult_PartOfSpeech_Adv   = "ADV"
+	TokenResult_PartOfSpeech_Aux   = "AUX"
 	TokenResult_PartOfSpeech_Cconj = "CCONJ"
-	TokenResult_PartOfSpeech_Det = "DET"
-	TokenResult_PartOfSpeech_Intj = "INTJ"
-	TokenResult_PartOfSpeech_Noun = "NOUN"
-	TokenResult_PartOfSpeech_Num = "NUM"
-	TokenResult_PartOfSpeech_Part = "PART"
-	TokenResult_PartOfSpeech_Pron = "PRON"
+	TokenResult_PartOfSpeech_Det   = "DET"
+	TokenResult_PartOfSpeech_Intj  = "INTJ"
+	TokenResult_PartOfSpeech_Noun  = "NOUN"
+	TokenResult_PartOfSpeech_Num   = "NUM"
+	TokenResult_PartOfSpeech_Part  = "PART"
+	TokenResult_PartOfSpeech_Pron  = "PRON"
 	TokenResult_PartOfSpeech_Propn = "PROPN"
 	TokenResult_PartOfSpeech_Punct = "PUNCT"
 	TokenResult_PartOfSpeech_Sconj = "SCONJ"
-	TokenResult_PartOfSpeech_Sym = "SYM"
-	TokenResult_PartOfSpeech_Verb = "VERB"
-	TokenResult_PartOfSpeech_X = "X"
+	TokenResult_PartOfSpeech_Sym   = "SYM"
+	TokenResult_PartOfSpeech_Verb  = "VERB"
+	TokenResult_PartOfSpeech_X     = "X"
 )
