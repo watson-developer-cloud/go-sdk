@@ -2111,8 +2111,8 @@ type KeyValuePair struct {
 	// A key in a key-value pair.
 	Key *Key `json:"key,omitempty"`
 
-	// A value in a key-value pair.
-	Value *Value `json:"value,omitempty"`
+	// A list of values in a key-value pair.
+	Value []Value `json:"value,omitempty"`
 }
 
 // Label : A pair of `nature` and `party` objects. The `nature` object identifies the effect of the element on the identified
