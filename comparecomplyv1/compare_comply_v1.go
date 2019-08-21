@@ -2,7 +2,7 @@
 package comparecomplyv1
 
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -830,7 +830,7 @@ type AlignedElement struct {
 	// articles, and others.
 	IdenticalText *bool `json:"identical_text,omitempty"`
 
-	// One or more hashed values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// Indicates that the elements aligned are contractual clauses of significance.
@@ -972,7 +972,7 @@ type Category struct {
 	// The category of the associated element.
 	Label *string `json:"label,omitempty"`
 
-	// One or more hashed values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 }
 
@@ -1146,28 +1146,6 @@ type ClassifyReturn struct {
 
 	// Definitions of the parties identified in the input document.
 	Parties []Parties `json:"parties,omitempty"`
-}
-
-// ColumnHeaderIds : An array of values, each being the `id` value of a column header that is applicable to the current cell.
-type ColumnHeaderIds struct {
-
-	// The `id` value of a column header.
-	ID *string `json:"id,omitempty"`
-}
-
-// ColumnHeaderTexts : An array of values, each being the `text` value of a column header that is applicable to the current cell.
-type ColumnHeaderTexts struct {
-
-	// The `text` value of a column header.
-	Text *string `json:"text,omitempty"`
-}
-
-// ColumnHeaderTextsNormalized : If you provide customization input, the normalized version of the column header texts according to the customization;
-// otherwise, the same value as `column_header_texts`.
-type ColumnHeaderTextsNormalized struct {
-
-	// The normalized version of a column header text.
-	TextNormalized *string `json:"text_normalized,omitempty"`
 }
 
 // ColumnHeaders : Column-level cells, each applicable as a header to other cells in the same column as itself, of the current table.
@@ -1345,15 +1323,15 @@ type ContractAmts struct {
 	// The monetary amount.
 	Text *string `json:"text,omitempty"`
 
-	// The normalized form of the amount, which is listed as a string. This element is optional; that is, the service
-	// output lists it only if normalized text exists.
+	// The normalized form of the amount, which is listed as a string. This element is optional; it is returned only if
+	// normalized text exists.
 	TextNormalized *string `json:"text_normalized,omitempty"`
 
-	// The details of the normalized text, if applicable. This element is optional; that is, the service output lists it
-	// only if normalized text exists.
+	// The details of the normalized text, if applicable. This element is optional; it is returned only if normalized text
+	// exists.
 	Interpretation *Interpretation `json:"interpretation,omitempty"`
 
-	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -1408,15 +1386,15 @@ type ContractTerms struct {
 	// The contract term (duration).
 	Text *string `json:"text,omitempty"`
 
-	// The normalized form of the contract term, which is listed as a string. This element is optional; that is, the
-	// service output lists it only if normalized text exists.
+	// The normalized form of the contract term, which is listed as a string. This element is optional; it is returned only
+	// if normalized text exists.
 	TextNormalized *string `json:"text_normalized,omitempty"`
 
-	// The details of the normalized text, if applicable. This element is optional; that is, the service output lists it
-	// only if normalized text exists.
+	// The details of the normalized text, if applicable. This element is optional; it is returned only if normalized text
+	// exists.
 	Interpretation *Interpretation `json:"interpretation,omitempty"`
 
-	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -1441,7 +1419,7 @@ type ContractTypes struct {
 	// The contract type.
 	Text *string `json:"text,omitempty"`
 
-	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -1764,11 +1742,11 @@ type EffectiveDates struct {
 	// The effective date, listed as a string.
 	Text *string `json:"text,omitempty"`
 
-	// The normalized form of the effective date, which is listed as a string. This element is optional; that is, the
-	// service output lists it only if normalized text exists.
+	// The normalized form of the effective date, which is listed as a string. This element is optional; it is returned
+	// only if normalized text exists.
 	TextNormalized *string `json:"text_normalized,omitempty"`
 
-	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -2106,8 +2084,8 @@ type HTMLReturn struct {
 	HTML *string `json:"html,omitempty"`
 }
 
-// Interpretation : The details of the normalized text, if applicable. This element is optional; that is, the service output lists it
-// only if normalized text exists.
+// Interpretation : The details of the normalized text, if applicable. This element is optional; it is returned only if normalized text
+// exists.
 type Interpretation struct {
 
 	// The value that was located in the normalized text.
@@ -2217,8 +2195,8 @@ type ListFeedbackOptions struct {
 	// An optional string that filters the output to include only feedback with the specified `model_version`.
 	ModelVersion *string `json:"model_version,omitempty"`
 
-	// An optional string in the form of a comma-separated list of categories. If this is specified, the service filters
-	// the output to include only feedback that has at least one category from the list removed.
+	// An optional string in the form of a comma-separated list of categories. If it is specified, the service filters the
+	// output to include only feedback that has at least one category from the list removed.
 	CategoryRemoved *string `json:"category_removed,omitempty"`
 
 	// An optional string in the form of a comma-separated list of categories. If this is specified, the service filters
@@ -2488,15 +2466,15 @@ type PaymentTerms struct {
 	// The payment term (duration).
 	Text *string `json:"text,omitempty"`
 
-	// The normalized form of the payment term, which is listed as a string. This element is optional; that is, the service
-	// output lists it only if normalized text exists.
+	// The normalized form of the payment term, which is listed as a string. This element is optional; it is returned only
+	// if normalized text exists.
 	TextNormalized *string `json:"text_normalized,omitempty"`
 
-	// The details of the normalized text, if applicable. This element is optional; that is, the service output lists it
-	// only if normalized text exists.
+	// The details of the normalized text, if applicable. This element is optional; it is returned only if normalized text
+	// exists.
 	Interpretation *Interpretation `json:"interpretation,omitempty"`
 
-	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -2511,28 +2489,6 @@ const (
 	PaymentTerms_ConfidenceLevel_Low    = "Low"
 	PaymentTerms_ConfidenceLevel_Medium = "Medium"
 )
-
-// RowHeaderIds : An array of values, each being the `id` value of a row header that is applicable to this body cell.
-type RowHeaderIds struct {
-
-	// The `id` values of a row header.
-	ID *string `json:"id,omitempty"`
-}
-
-// RowHeaderTexts : An array of values, each being the `text` value of a row header that is applicable to this body cell.
-type RowHeaderTexts struct {
-
-	// The `text` value of a row header.
-	Text *string `json:"text,omitempty"`
-}
-
-// RowHeaderTextsNormalized : If you provide customization input, the normalized version of the row header texts according to the customization;
-// otherwise, the same value as `row_header_texts`.
-type RowHeaderTextsNormalized struct {
-
-	// The normalized version of a row header text.
-	TextNormalized *string `json:"text_normalized,omitempty"`
-}
 
 // RowHeaders : Row-level cells, each applicable as a header to other cells in the same row as itself, of the current table.
 type RowHeaders struct {
@@ -2708,11 +2664,11 @@ type TerminationDates struct {
 	// The termination date.
 	Text *string `json:"text,omitempty"`
 
-	// The normalized form of the termination date, which is listed as a string. This element is optional; that is, the
-	// service output lists it only if normalized text exists.
+	// The normalized form of the termination date, which is listed as a string. This element is optional; it is returned
+	// only if normalized text exists.
 	TextNormalized *string `json:"text_normalized,omitempty"`
 
-	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
@@ -2735,7 +2691,7 @@ type TypeLabel struct {
 	// `party`, and the `party` object identifies the affected party.
 	Label *Label `json:"label,omitempty"`
 
-	// One or more hash values that you can send to IBM to provide feedback or receive support.
+	// Hashed values that you can send to IBM to provide feedback or receive support.
 	ProvenanceIds []string `json:"provenance_ids,omitempty"`
 }
 
