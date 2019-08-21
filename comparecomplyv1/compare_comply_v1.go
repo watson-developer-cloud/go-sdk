@@ -1123,17 +1123,20 @@ type ClassifyReturn struct {
 	// The monetary amounts that identify the total amount of the contract that needs to be paid from one party to another.
 	ContractAmounts []ContractAmts `json:"contract_amounts,omitempty"`
 
-	// The date or dates on which the document is to be terminated.
+	// The dates on which the document is to be terminated.
 	TerminationDates []TerminationDates `json:"termination_dates,omitempty"`
 
-	// The document's contract type or types as declared in the document.
+	// The contract type as declared in the document.
 	ContractTypes []ContractTypes `json:"contract_types,omitempty"`
 
-	// The duration or durations of the contract.
+	// The durations of the contract.
 	ContractTerms []ContractTerms `json:"contract_terms,omitempty"`
 
-	// The document's payment duration or durations.
+	// The document's payment durations.
 	PaymentTerms []PaymentTerms `json:"payment_terms,omitempty"`
+
+	// The contract currencies as declared in the document.
+	ContractCurrencies []ContractCurrencies `json:"contract_currencies,omitempty"`
 
 	// Definition of tables identified in the input document.
 	Tables []Tables `json:"tables,omitempty"`
@@ -1364,6 +1367,36 @@ const (
 	ContractAmts_ConfidenceLevel_High   = "High"
 	ContractAmts_ConfidenceLevel_Low    = "Low"
 	ContractAmts_ConfidenceLevel_Medium = "Medium"
+)
+
+// ContractCurrencies : The contract currencies that are declared in the document.
+type ContractCurrencies struct {
+
+	// The confidence level in the identification of the contract currency.
+	ConfidenceLevel *string `json:"confidence_level,omitempty"`
+
+	// The contract currency.
+	Text *string `json:"text,omitempty"`
+
+	// The normalized form of the contract currency, which is listed as a string in
+	// [ISO-4217](https://www.iso.org/iso-4217-currency-codes.html) format. This element is optional; it is returned only
+	// if normalized text exists.
+	TextNormalized *string `json:"text_normalized,omitempty"`
+
+	// Hashed values that you can send to IBM to provide feedback or receive support.
+	ProvenanceIds []string `json:"provenance_ids,omitempty"`
+
+	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
+	// `end`.
+	Location *Location `json:"location,omitempty"`
+}
+
+// Constants associated with the ContractCurrencies.ConfidenceLevel property.
+// The confidence level in the identification of the contract currency.
+const (
+	ContractCurrencies_ConfidenceLevel_High   = "High"
+	ContractCurrencies_ConfidenceLevel_Low    = "Low"
+	ContractCurrencies_ConfidenceLevel_Medium = "Medium"
 )
 
 // ContractTerms : The duration or durations of the contract.
