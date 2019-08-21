@@ -943,17 +943,25 @@ type BodyCells struct {
 	// The `end` index of this cell's `column` location in the current table.
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 
-	RowHeaderIds []RowHeaderIds `json:"row_header_ids,omitempty"`
+	// An array that contains the `id` value of a row header that is applicable to this body cell.
+	RowHeaderIds []string `json:"row_header_ids,omitempty"`
 
-	RowHeaderTexts []RowHeaderTexts `json:"row_header_texts,omitempty"`
+	// An array that contains the `text` value of a row header that is applicable to this body cell.
+	RowHeaderTexts []string `json:"row_header_texts,omitempty"`
 
-	RowHeaderTextsNormalized []RowHeaderTextsNormalized `json:"row_header_texts_normalized,omitempty"`
+	// If you provide customization input, the normalized version of the row header texts according to the customization;
+	// otherwise, the same value as `row_header_texts`.
+	RowHeaderTextsNormalized []string `json:"row_header_texts_normalized,omitempty"`
 
-	ColumnHeaderIds []ColumnHeaderIds `json:"column_header_ids,omitempty"`
+	// An array that contains the `id` value of a column header that is applicable to the current cell.
+	ColumnHeaderIds []string `json:"column_header_ids,omitempty"`
 
-	ColumnHeaderTexts []ColumnHeaderTexts `json:"column_header_texts,omitempty"`
+	// An array that contains the `text` value of a column header that is applicable to the current cell.
+	ColumnHeaderTexts []string `json:"column_header_texts,omitempty"`
 
-	ColumnHeaderTextsNormalized []ColumnHeaderTextsNormalized `json:"column_header_texts_normalized,omitempty"`
+	// If you provide customization input, the normalized version of the column header texts according to the
+	// customization; otherwise, the same value as `column_header_texts`.
+	ColumnHeaderTextsNormalized []string `json:"column_header_texts_normalized,omitempty"`
 
 	Attributes []Attribute `json:"attributes,omitempty"`
 }
