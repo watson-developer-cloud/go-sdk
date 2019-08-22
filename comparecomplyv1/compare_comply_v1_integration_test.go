@@ -105,7 +105,7 @@ func TestExtractTables(t *testing.T) {
 	shouldSkipTest(t)
 
 	pwd, _ := os.Getwd()
-	file, fileErr := os.Open(pwd + "/../resources/sample-tables.pdf")
+	file, fileErr := os.Open(pwd + "/../resources/sample-tables.png")
 	if fileErr != nil {
 		fmt.Println(fileErr)
 	}
@@ -113,7 +113,7 @@ func TestExtractTables(t *testing.T) {
 	response, responseErr := service.ExtractTables(
 		&comparecomplyv1.ExtractTablesOptions{
 			File:            file,
-			FileContentType: core.StringPtr("application/pdf"),
+			FileContentType: core.StringPtr("image/png"),
 		},
 	)
 	assert.Nil(t, responseErr)
