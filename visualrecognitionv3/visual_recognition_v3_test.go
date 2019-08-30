@@ -12,6 +12,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
+	"github.com/IBM/go-sdk-core/core"
 )
 
 var _ = Describe("VisualRecognitionV3", func() {
@@ -41,8 +42,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 					NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 						URL:       testServer.URL,
 						Version:   version,
-						Authenticator: &core.BasicAuthenticator{
-							Apikey: "xxxx",
+						Authenticator: &core.IamAuthenticator{
+							ApiKey: "xxxx",
 							URL: testServer.URL,
 						},
 					})
@@ -85,8 +86,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					Authenticator: &core.BasicAuthenticator{
-						Apikey: "xxxx",
+					Authenticator: &core.IamAuthenticator{
+						ApiKey: "xxxx",
 						URL: testServer.URL,
 					},
 				})
@@ -134,8 +135,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					Authenticator: &core.BasicAuthenticator{
-						Apikey: "xxxx",
+					Authenticator: &core.IamAuthenticator{
+						ApiKey: "xxxx",
 						URL: testServer.URL,
 					},
 				})
@@ -181,8 +182,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					Authenticator: &core.BasicAuthenticator{
-						Apikey: "xxxx",
+					Authenticator: &core.IamAuthenticator{
+						ApiKey: "xxxx",
 						URL: testServer.URL,
 					},
 				})
@@ -224,8 +225,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					Authenticator: &core.BasicAuthenticator{
-						Apikey: "xxxx",
+					Authenticator: &core.IamAuthenticator{
+						ApiKey: "xxxx",
 						URL: testServer.URL,
 					},
 				})
@@ -268,8 +269,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					Authenticator: &core.BasicAuthenticator{
-						Apikey: "xxxx",
+					Authenticator: &core.IamAuthenticator{
+						ApiKey: "xxxx",
 						URL: testServer.URL,
 					},
 				})
@@ -319,8 +320,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					Authenticator: &core.BasicAuthenticator{
-						Apikey: "xxxx",
+					Authenticator: &core.IamAuthenticator{
+						ApiKey: "xxxx",
 						URL: testServer.URL,
 					},
 				})
@@ -378,8 +379,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					Authenticator: &core.BasicAuthenticator{
-						Apikey: "xxxx",
+					Authenticator: &core.IamAuthenticator{
+						ApiKey: "xxxx",
 						URL: testServer.URL,
 					},
 				})
@@ -419,8 +420,8 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					Authenticator: &core.BasicAuthenticator{
-						Apikey: "xxxx",
+					Authenticator: &core.IamAuthenticator{
+						ApiKey: "xxxx",
 						URL: testServer.URL,
 					},
 				})

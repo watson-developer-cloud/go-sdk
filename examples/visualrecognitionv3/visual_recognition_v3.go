@@ -14,7 +14,7 @@ func main() {
 			URL:       "YOUR SERVICE URL",
 			Version:   "2018-03-19",
 			Authenticator: &core.IamAuthenticator{
-				Apikey: "YOUR API KEY",
+				ApiKey: "YOUR API KEY",
 			},
 		})
 
