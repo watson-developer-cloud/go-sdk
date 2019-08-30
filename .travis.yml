@@ -30,8 +30,8 @@ script:
 - go test `go list ./... | grep -v core` -v -tags=integration
 - gometalinter.v2 --errors ./...
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi
-deploy:
-- provider: script
-  skip_cleanup: true
-  script: npx semantic-release --repository-url https://${GH_TOKEN}@github.com/watson-developer-cloud/go-sdk
-    --debug
+# deploy:
+# - provider: script
+#   skip_cleanup: true
+#   script: npx semantic-release --repository-url https://${GH_TOKEN}@github.com/watson-developer-cloud/go-sdk
+#     --debug
