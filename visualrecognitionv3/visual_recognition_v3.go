@@ -1,8 +1,5 @@
-// Package visualrecognitionv3 : Operations and models for the VisualRecognitionV3 service
-package visualrecognitionv3
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,65 +14,63 @@ package visualrecognitionv3
  * limitations under the License.
  */
 
+// Package visualrecognitionv3 : Operations and models for the VisualRecognitionV3 service
+package visualrecognitionv3
+
 import (
 	"fmt"
-	"io"
-	"os"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
+	"os"
+	"strings"
 )
 
 // VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
 // scenes, objects, and faces  in images you upload to the service. You can create and train a custom classifier to
 // identify subjects that suit your needs.
 //
-// Version: V3
-// See: http://www.ibm.com/watson/developercloud/visual-recognition.html
+// Version: 3.0
+// See: https://cloud.ibm.com/docs/services/visual-recognition/
 type VisualRecognitionV3 struct {
 	Service *core.BaseService
 }
 
 // VisualRecognitionV3Options : Service options
 type VisualRecognitionV3Options struct {
-	Version            string
-	URL                string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	Version         string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewVisualRecognitionV3 : Instantiate VisualRecognitionV3
-func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (*VisualRecognitionV3, error) {
+func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (service *VisualRecognitionV3, err error) {
 	if options.URL == "" {
 		options.URL = "https://gateway.watsonplatform.net/visual-recognition/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:            options.Version,
-		URL:                options.URL,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "watson_vision_combined", "Visual Recognition")
-	if serviceErr != nil {
-		return nil, serviceErr
+		Version:         options.Version,
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &VisualRecognitionV3{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("watson_vision_combined")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "watson_vision_combined", "Visual Recognition")
+	if err != nil {
+		return
+	}
+	
+	service = &VisualRecognitionV3{Service: baseService}
+
+	return
 }
 
 // Classify : Classify images
@@ -123,10 +118,10 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		builder.AddFormData("threshold", "", "", fmt.Sprint(*classifyOptions.Threshold))
 	}
 	if classifyOptions.Owners != nil {
-		builder.AddFormData("owners", "", "", strings.Join(classifyOptions.Owners, ","))
+	        builder.AddFormData("owners", "", "", strings.Join(classifyOptions.Owners, ","))
 	}
 	if classifyOptions.ClassifierIds != nil {
-		builder.AddFormData("classifier_ids", "", "", strings.Join(classifyOptions.ClassifierIds, ","))
+	        builder.AddFormData("classifier_ids", "", "", strings.Join(classifyOptions.ClassifierIds, ","))
 	}
 
 	request, err := builder.Build()
@@ -220,10 +215,16 @@ func (visualRecognition *VisualRecognitionV3) GetDetectFacesResult(response *cor
 
 // CreateClassifier : Create a classifier
 // Train a new multi-faceted classifier on the uploaded image data. Create your custom classifier with positive or
-// negative examples. Include at least two sets of examples, either two positive example files or one positive and one
-// negative file. You can upload a maximum of 256 MB per call.
+// negative example training images. Include at least two sets of examples, either two positive example files or one
+// positive and one negative file. You can upload a maximum of 256 MB per call.
 //
-// Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
+// **Tips when creating:**
+//
+// - If you set the **X-Watson-Learning-Opt-Out** header parameter to `true` when you create a classifier, the example
+// training images are not stored. Save your training images locally. For more information, see [Data
+// collection](#data-collection).
+//
+// - Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
 // names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
 func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierOptions *CreateClassifierOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createClassifierOptions, "createClassifierOptions cannot be nil"); err != nil {
@@ -379,8 +380,14 @@ func (visualRecognition *VisualRecognitionV3) GetGetClassifierResult(response *c
 // Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
 // names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
 //
-// **Tip:** Don't make retraining calls on a classifier until the status is ready. When you submit retraining requests
-// in parallel, the last request overwrites the previous requests. The retrained property shows the last time the
+// **Tips about retraining:**
+//
+// - You can't update the classifier if the **X-Watson-Learning-Opt-Out** header parameter was set to `true` when the
+// classifier was created. Training images are not stored in that case. Instead, create another classifier. For more
+// information, see [Data collection](#data-collection).
+//
+// - Don't make retraining calls on a classifier until the status is ready. When you submit retraining requests in
+// parallel, the last request overwrites the previous requests. The `retrained` property shows the last time the
 // classifier retraining finished.
 func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierOptions *UpdateClassifierOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(updateClassifierOptions, "updateClassifierOptions cannot be nil"); err != nil {
@@ -475,8 +482,8 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 }
 
 // GetCoreMlModel : Retrieve a Core ML model of a classifier
-// Download a Core ML model file (.mlmodel) of a custom classifier that returns <tt>\"core_ml_enabled\": true</tt> in
-// the classifier details.
+// Download a Core ML model file (.mlmodel) of a custom classifier that returns <tt>"core_ml_enabled": true</tt> in the
+// classifier details.
 func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptions *GetCoreMlModelOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(getCoreMlModelOptions, "getCoreMlModelOptions cannot be nil"); err != nil {
 		return nil, err
@@ -569,7 +576,7 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 type Class struct {
 
 	// The name of the class.
-	ClassName *string `json:"class" validate:"required"`
+	Class *string `json:"class" validate:"required"`
 }
 
 // ClassResult : Result of a class within a classifier.
@@ -581,7 +588,7 @@ type ClassResult struct {
 	// classifier IDs (`default`, `food`, and `explicit`). Class names of custom classifiers are not translated. The
 	// response might not be in the specified language when the requested language is not supported or when there is no
 	// translation for the class name.
-	ClassName *string `json:"class" validate:"required"`
+	Class *string `json:"class" validate:"required"`
 
 	// Confidence score for the property in the range of 0 to 1. A higher score indicates greater likelihood that the class
 	// is depicted in the image. The default threshold for returning scores from a classifier is 0.5.
@@ -669,10 +676,10 @@ type Classifier struct {
 // Constants associated with the Classifier.Status property.
 // Training status of classifier.
 const (
-	Classifier_Status_Failed     = "failed"
-	Classifier_Status_Ready      = "ready"
+	Classifier_Status_Failed = "failed"
+	Classifier_Status_Ready = "ready"
 	Classifier_Status_Retraining = "retraining"
-	Classifier_Status_Training   = "training"
+	Classifier_Status_Training = "training"
 )
 
 // ClassifierResult : Classifier and score combination.
@@ -749,14 +756,14 @@ type ClassifyOptions struct {
 // Constants associated with the ClassifyOptions.AcceptLanguage property.
 // The desired language of parts of the response. See the response for details.
 const (
-	ClassifyOptions_AcceptLanguage_Ar   = "ar"
-	ClassifyOptions_AcceptLanguage_De   = "de"
-	ClassifyOptions_AcceptLanguage_En   = "en"
-	ClassifyOptions_AcceptLanguage_Es   = "es"
-	ClassifyOptions_AcceptLanguage_Fr   = "fr"
-	ClassifyOptions_AcceptLanguage_It   = "it"
-	ClassifyOptions_AcceptLanguage_Ja   = "ja"
-	ClassifyOptions_AcceptLanguage_Ko   = "ko"
+	ClassifyOptions_AcceptLanguage_Ar = "ar"
+	ClassifyOptions_AcceptLanguage_De = "de"
+	ClassifyOptions_AcceptLanguage_En = "en"
+	ClassifyOptions_AcceptLanguage_Es = "es"
+	ClassifyOptions_AcceptLanguage_Fr = "fr"
+	ClassifyOptions_AcceptLanguage_It = "it"
+	ClassifyOptions_AcceptLanguage_Ja = "ja"
+	ClassifyOptions_AcceptLanguage_Ko = "ko"
 	ClassifyOptions_AcceptLanguage_PtBr = "pt-br"
 	ClassifyOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ClassifyOptions_AcceptLanguage_ZhTw = "zh-tw"
@@ -985,14 +992,14 @@ type DetectFacesOptions struct {
 // Constants associated with the DetectFacesOptions.AcceptLanguage property.
 // The desired language of parts of the response. See the response for details.
 const (
-	DetectFacesOptions_AcceptLanguage_Ar   = "ar"
-	DetectFacesOptions_AcceptLanguage_De   = "de"
-	DetectFacesOptions_AcceptLanguage_En   = "en"
-	DetectFacesOptions_AcceptLanguage_Es   = "es"
-	DetectFacesOptions_AcceptLanguage_Fr   = "fr"
-	DetectFacesOptions_AcceptLanguage_It   = "it"
-	DetectFacesOptions_AcceptLanguage_Ja   = "ja"
-	DetectFacesOptions_AcceptLanguage_Ko   = "ko"
+	DetectFacesOptions_AcceptLanguage_Ar = "ar"
+	DetectFacesOptions_AcceptLanguage_De = "de"
+	DetectFacesOptions_AcceptLanguage_En = "en"
+	DetectFacesOptions_AcceptLanguage_Es = "es"
+	DetectFacesOptions_AcceptLanguage_Fr = "fr"
+	DetectFacesOptions_AcceptLanguage_It = "it"
+	DetectFacesOptions_AcceptLanguage_Ja = "ja"
+	DetectFacesOptions_AcceptLanguage_Ko = "ko"
 	DetectFacesOptions_AcceptLanguage_PtBr = "pt-br"
 	DetectFacesOptions_AcceptLanguage_ZhCn = "zh-cn"
 	DetectFacesOptions_AcceptLanguage_ZhTw = "zh-tw"

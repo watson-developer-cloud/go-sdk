@@ -13,7 +13,9 @@ func main() {
 		NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 			URL:       "YOUR SERVICE URL",
 			Version:   "2018-03-19",
-			IAMApiKey: "YOUR API KEY",
+			Authenticator: &core.BasicAuthenticator{
+				Apikey: "YOUR API KEY",
+			},
 		})
 
 	// Check successful instantiation

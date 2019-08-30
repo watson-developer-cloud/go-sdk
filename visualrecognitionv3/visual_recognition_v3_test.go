@@ -41,8 +41,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 					NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 						URL:       testServer.URL,
 						Version:   version,
-						IAMURL:    testServer.URL,
-						IAMApiKey: "xxxx",
+						Authenticator: &core.BasicAuthenticator{
+							Apikey: "xxxx",
+							URL: testServer.URL,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -83,8 +85,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "xxxx",
+					Authenticator: &core.BasicAuthenticator{
+						Apikey: "xxxx",
+						URL: testServer.URL,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -130,8 +134,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMApiKey: "xxxxx",
-					IAMURL:    testServer.URL,
+					Authenticator: &core.BasicAuthenticator{
+						Apikey: "xxxx",
+						URL: testServer.URL,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -175,8 +181,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMApiKey: "xxxxx",
-					IAMURL:    testServer.URL,
+					Authenticator: &core.BasicAuthenticator{
+						Apikey: "xxxx",
+						URL: testServer.URL,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -216,8 +224,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMApiKey: "xxxxx",
-					IAMURL:    testServer.URL,
+					Authenticator: &core.BasicAuthenticator{
+						Apikey: "xxxx",
+						URL: testServer.URL,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -258,8 +268,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMApiKey: "xxxxx",
-					IAMURL:    testServer.URL,
+					Authenticator: &core.BasicAuthenticator{
+						Apikey: "xxxx",
+						URL: testServer.URL,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -307,8 +319,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMApiKey: "xxxxx",
-					IAMURL:    testServer.URL,
+					Authenticator: &core.BasicAuthenticator{
+						Apikey: "xxxx",
+						URL: testServer.URL,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -364,8 +378,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "xxxx",
+					Authenticator: &core.BasicAuthenticator{
+						Apikey: "xxxx",
+						URL: testServer.URL,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -403,8 +419,10 @@ var _ = Describe("VisualRecognitionV3", func() {
 				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMApiKey: "xxxxx",
-					IAMURL:    testServer.URL,
+					Authenticator: &core.BasicAuthenticator{
+						Apikey: "xxxx",
+						URL: testServer.URL,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())

@@ -40,7 +40,9 @@ func init() {
 			NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 				URL:       os.Getenv("VISUAL_RECOGNITION_URL"),
 				Version:   "2018-03-19",
-				IAMApiKey: os.Getenv("VISUAL_RECOGNITION_APIKEY"),
+				Authenticator: &core.BasicAuthenticator{
+					Apikey: os.Getenv("VISUAL_RECOGNITION_APIKEY"),
+				},
 			})
 
 		if serviceErr == nil {
