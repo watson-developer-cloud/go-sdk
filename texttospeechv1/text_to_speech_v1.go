@@ -1,8 +1,5 @@
-// Package texttospeechv1 : Operations and models for the TextToSpeechV1 service
-package texttospeechv1
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +14,14 @@ package texttospeechv1
  * limitations under the License.
  */
 
+// Package texttospeechv1 : Operations and models for the TextToSpeechV1 service
+package texttospeechv1
+
 import (
 	"fmt"
-	"io"
-
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
 )
 
 // TextToSpeechV1 : The IBM&reg; Text to Speech service provides APIs that use IBM's speech-synthesis capabilities to
@@ -41,52 +40,44 @@ import (
 // translation in standard International Phonetic Alphabet (IPA) representation or in the proprietary IBM Symbolic
 // Phonetic Representation (SPR).
 //
-// Version: V1
-// See: http://www.ibm.com/watson/developercloud/text-to-speech.html
+// Version: 1.0.0
+// See: https://cloud.ibm.com/docs/services/text-to-speech/
 type TextToSpeechV1 struct {
 	Service *core.BaseService
 }
 
 // TextToSpeechV1Options : Service options
 type TextToSpeechV1Options struct {
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewTextToSpeechV1 : Instantiate TextToSpeechV1
-func NewTextToSpeechV1(options *TextToSpeechV1Options) (*TextToSpeechV1, error) {
+func NewTextToSpeechV1(options *TextToSpeechV1Options) (service *TextToSpeechV1, err error) {
 	if options.URL == "" {
 		options.URL = "https://stream.watsonplatform.net/text-to-speech/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "text_to_speech", "Text to Speech")
-	if serviceErr != nil {
-		return nil, serviceErr
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &TextToSpeechV1{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("text_to_speech")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "text_to_speech", "Text to Speech")
+	if err != nil {
+		return
+	}
+	
+	service = &TextToSpeechV1{Service: baseService}
+
+	return
 }
 
 // ListVoices : List voices
@@ -261,8 +252,8 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedRes
 //
 //  If a request includes invalid query parameters, the service returns a `Warnings` response header that provides
 // messages about the invalid parameters. The warning includes a descriptive message and a list of invalid argument
-// strings. For example, a message such as `\"Unknown arguments:\"` or `\"Unknown url query arguments:\"` followed by a
-// list of the form `\"{invalid_arg_1}, {invalid_arg_2}.\"` The request succeeds despite the warnings.
+// strings. For example, a message such as `"Unknown arguments:"` or `"Unknown url query arguments:"` followed by a list
+// of the form `"{invalid_arg_1}, {invalid_arg_2}."` The request succeeds despite the warnings.
 func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(synthesizeOptions, "synthesizeOptions cannot be nil"); err != nil {
 		return nil, err
@@ -303,8 +294,7 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 	if synthesizeOptions.Text != nil {
 		body["text"] = synthesizeOptions.Text
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -434,8 +424,7 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *Cr
 	if createVoiceModelOptions.Description != nil {
 		body["description"] = createVoiceModelOptions.Description
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -521,11 +510,11 @@ func (textToSpeech *TextToSpeechV1) GetListVoiceModelsResult(response *core.Deta
 // words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme format for
 // representing a word. You can specify them in standard International Phonetic Alphabet (IPA) representation
 //
-//   <code>&lt;phoneme alphabet=\"ipa\" ph=\"t&#601;m&#712;&#593;to\"&gt;&lt;/phoneme&gt;</code>
+//   <code>&lt;phoneme alphabet="ipa" ph="t&#601;m&#712;&#593;to"&gt;&lt;/phoneme&gt;</code>
 //
 //   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
 //
-//   <code>&lt;phoneme alphabet=\"ibm\" ph=\"1gAstroEntxrYFXs\"&gt;&lt;/phoneme&gt;</code>
+//   <code>&lt;phoneme alphabet="ibm" ph="1gAstroEntxrYFXs"&gt;&lt;/phoneme&gt;</code>
 //
 // **Note:** This method is currently a beta release.
 //
@@ -572,8 +561,7 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 	if updateVoiceModelOptions.Words != nil {
 		body["words"] = updateVoiceModelOptions.Words
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -669,6 +657,7 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 		builder.AddHeader(headerName, headerValue)
 	}
 
+
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
@@ -688,11 +677,11 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 // words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme format for
 // representing a word. You can specify them in standard International Phonetic Alphabet (IPA) representation
 //
-//   <code>&lt;phoneme alphabet=\"ipa\" ph=\"t&#601;m&#712;&#593;to\"&gt;&lt;/phoneme&gt;</code>
+//   <code>&lt;phoneme alphabet="ipa" ph="t&#601;m&#712;&#593;to"&gt;&lt;/phoneme&gt;</code>
 //
 //   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
 //
-//   <code>&lt;phoneme alphabet=\"ibm\" ph=\"1gAstroEntxrYFXs\"&gt;&lt;/phoneme&gt;</code>
+//   <code>&lt;phoneme alphabet="ibm" ph="1gAstroEntxrYFXs"&gt;&lt;/phoneme&gt;</code>
 //
 // **Note:** This method is currently a beta release.
 //
@@ -733,8 +722,7 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 	if addWordsOptions.Words != nil {
 		body["words"] = addWordsOptions.Words
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -808,11 +796,11 @@ func (textToSpeech *TextToSpeechV1) GetListWordsResult(response *core.DetailedRe
 // words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme format for
 // representing a word. You can specify them in standard International Phonetic Alphabet (IPA) representation
 //
-//   <code>&lt;phoneme alphabet=\"ipa\" ph=\"t&#601;m&#712;&#593;to\"&gt;&lt;/phoneme&gt;</code>
+//   <code>&lt;phoneme alphabet="ipa" ph="t&#601;m&#712;&#593;to"&gt;&lt;/phoneme&gt;</code>
 //
 //   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
 //
-//   <code>&lt;phoneme alphabet=\"ibm\" ph=\"1gAstroEntxrYFXs\"&gt;&lt;/phoneme&gt;</code>
+//   <code>&lt;phoneme alphabet="ibm" ph="1gAstroEntxrYFXs"&gt;&lt;/phoneme&gt;</code>
 //
 // **Note:** This method is currently a beta release.
 //
@@ -855,8 +843,7 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 	if addWordOptions.PartOfSpeech != nil {
 		body["part_of_speech"] = addWordOptions.PartOfSpeech
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -951,6 +938,7 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 		builder.AddHeader(headerName, headerValue)
 	}
 
+
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
@@ -992,6 +980,7 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
+
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 
@@ -1058,8 +1047,8 @@ const (
 func (textToSpeech *TextToSpeechV1) NewAddWordOptions(customizationID string, word string, translation string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word:            core.StringPtr(word),
-		Translation:     core.StringPtr(translation),
+		Word: core.StringPtr(word),
+		Translation: core.StringPtr(translation),
 	}
 }
 
@@ -1116,7 +1105,7 @@ type AddWordsOptions struct {
 func (textToSpeech *TextToSpeechV1) NewAddWordsOptions(customizationID string, words []Word) *AddWordsOptions {
 	return &AddWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Words:           words,
+		Words: words,
 	}
 }
 
@@ -1277,7 +1266,7 @@ type DeleteWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewDeleteWordOptions(customizationID string, word string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word:            core.StringPtr(word),
+		Word: core.StringPtr(word),
 	}
 }
 
@@ -1328,33 +1317,34 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
-	GetPronunciationOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
-	GetPronunciationOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
-	GetPronunciationOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
-	GetPronunciationOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
-	GetPronunciationOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
-	GetPronunciationOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
-	GetPronunciationOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
-	GetPronunciationOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
-	GetPronunciationOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
-	GetPronunciationOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
-	GetPronunciationOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
-	GetPronunciationOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
-	GetPronunciationOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
-	GetPronunciationOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
-	GetPronunciationOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
-	GetPronunciationOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
-	GetPronunciationOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
-	GetPronunciationOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
-	GetPronunciationOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
-	GetPronunciationOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
-	GetPronunciationOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
-	GetPronunciationOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
+	GetPronunciationOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
+	GetPronunciationOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
+	GetPronunciationOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
+	GetPronunciationOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
+	GetPronunciationOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
+	GetPronunciationOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
+	GetPronunciationOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
+	GetPronunciationOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
+	GetPronunciationOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
+	GetPronunciationOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
+	GetPronunciationOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
+	GetPronunciationOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
+	GetPronunciationOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
+	GetPronunciationOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
+	GetPronunciationOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
+	GetPronunciationOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
+	GetPronunciationOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
+	GetPronunciationOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
+	GetPronunciationOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
 	GetPronunciationOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	GetPronunciationOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
-	GetPronunciationOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
-	GetPronunciationOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
-	GetPronunciationOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
+	GetPronunciationOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
+	GetPronunciationOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
+	GetPronunciationOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
+	GetPronunciationOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
@@ -1450,33 +1440,34 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
-	GetVoiceOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
-	GetVoiceOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
-	GetVoiceOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
-	GetVoiceOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
-	GetVoiceOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
-	GetVoiceOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
-	GetVoiceOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
-	GetVoiceOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
-	GetVoiceOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
-	GetVoiceOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
-	GetVoiceOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
-	GetVoiceOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
-	GetVoiceOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
-	GetVoiceOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
-	GetVoiceOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
-	GetVoiceOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
-	GetVoiceOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
-	GetVoiceOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
-	GetVoiceOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
-	GetVoiceOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
-	GetVoiceOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
-	GetVoiceOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
+	GetVoiceOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
+	GetVoiceOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
+	GetVoiceOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
+	GetVoiceOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
+	GetVoiceOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
+	GetVoiceOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
+	GetVoiceOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
+	GetVoiceOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
+	GetVoiceOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
+	GetVoiceOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
+	GetVoiceOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
+	GetVoiceOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
+	GetVoiceOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
+	GetVoiceOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
+	GetVoiceOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
+	GetVoiceOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
+	GetVoiceOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
+	GetVoiceOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
+	GetVoiceOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
 	GetVoiceOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	GetVoiceOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
-	GetVoiceOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
-	GetVoiceOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
-	GetVoiceOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
+	GetVoiceOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
+	GetVoiceOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
+	GetVoiceOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
+	GetVoiceOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
 )
 
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
@@ -1522,7 +1513,7 @@ type GetWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewGetWordOptions(customizationID string, word string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word:            core.StringPtr(word),
+		Word: core.StringPtr(word),
 	}
 }
 
@@ -1661,6 +1652,11 @@ type SynthesizeOptions struct {
 	// The text to synthesize.
 	Text *string `json:"text" validate:"required"`
 
+	// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
+	// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
+	// method description.
+	Accept *string `json:"Accept,omitempty"`
+
 	// The voice to use for synthesis.
 	Voice *string `json:"voice,omitempty"`
 
@@ -1670,71 +1666,61 @@ type SynthesizeOptions struct {
 	// voice with no customization.
 	CustomizationID *string `json:"customization_id,omitempty"`
 
-	// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
-	// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
-	// method description.
-	Accept *string `json:"Accept,omitempty"`
-
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the SynthesizeOptions.Voice property.
-// The voice to use for synthesis.
-const (
-	SynthesizeOptions_Voice_DeDeBirgitv2voice    = "de-DE_BirgitV2Voice"
-	SynthesizeOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
-	SynthesizeOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
-	SynthesizeOptions_Voice_DeDeDieterv2voice    = "de-DE_DieterV2Voice"
-	SynthesizeOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
-	SynthesizeOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
-	SynthesizeOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
-	SynthesizeOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
-	SynthesizeOptions_Voice_EnUsAllisonv2voice   = "en-US_AllisonV2Voice"
-	SynthesizeOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
-	SynthesizeOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
-	SynthesizeOptions_Voice_EnUsLisav2voice      = "en-US_LisaV2Voice"
-	SynthesizeOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
-	SynthesizeOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
-	SynthesizeOptions_Voice_EnUsMichaelv2voice   = "en-US_MichaelV2Voice"
-	SynthesizeOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
-	SynthesizeOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
-	SynthesizeOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
-	SynthesizeOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
-	SynthesizeOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
-	SynthesizeOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
-	SynthesizeOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
-	SynthesizeOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
-	SynthesizeOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
-	SynthesizeOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
-	SynthesizeOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
-	SynthesizeOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
-	SynthesizeOptions_Voice_ItItFrancescav2voice = "it-IT_FrancescaV2Voice"
-	SynthesizeOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	SynthesizeOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
-	SynthesizeOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
-	SynthesizeOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
-	SynthesizeOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
-)
 
 // Constants associated with the SynthesizeOptions.Accept property.
 // The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
 // the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
 // method description.
 const (
-	SynthesizeOptions_Accept_AudioBasic            = "audio/basic"
-	SynthesizeOptions_Accept_AudioFlac             = "audio/flac"
-	SynthesizeOptions_Accept_AudioL16              = "audio/l16"
-	SynthesizeOptions_Accept_AudioMp3              = "audio/mp3"
-	SynthesizeOptions_Accept_AudioMpeg             = "audio/mpeg"
-	SynthesizeOptions_Accept_AudioMulaw            = "audio/mulaw"
-	SynthesizeOptions_Accept_AudioOgg              = "audio/ogg"
-	SynthesizeOptions_Accept_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
-	SynthesizeOptions_Accept_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
-	SynthesizeOptions_Accept_AudioWav              = "audio/wav"
-	SynthesizeOptions_Accept_AudioWebm             = "audio/webm"
-	SynthesizeOptions_Accept_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
+	SynthesizeOptions_Accept_AudioBasic = "audio/basic"
+	SynthesizeOptions_Accept_AudioFlac = "audio/flac"
+	SynthesizeOptions_Accept_AudioL16 = "audio/l16"
+	SynthesizeOptions_Accept_AudioMp3 = "audio/mp3"
+	SynthesizeOptions_Accept_AudioMpeg = "audio/mpeg"
+	SynthesizeOptions_Accept_AudioMulaw = "audio/mulaw"
+	SynthesizeOptions_Accept_AudioOgg = "audio/ogg"
+	SynthesizeOptions_Accept_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
+	SynthesizeOptions_Accept_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
+	SynthesizeOptions_Accept_AudioWav = "audio/wav"
+	SynthesizeOptions_Accept_AudioWebm = "audio/webm"
+	SynthesizeOptions_Accept_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
 	SynthesizeOptions_Accept_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
+
+// Constants associated with the SynthesizeOptions.Voice property.
+// The voice to use for synthesis.
+const (
+	SynthesizeOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
+	SynthesizeOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
+	SynthesizeOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
+	SynthesizeOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
+	SynthesizeOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
+	SynthesizeOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
+	SynthesizeOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
+	SynthesizeOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
+	SynthesizeOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
+	SynthesizeOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
+	SynthesizeOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
+	SynthesizeOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
+	SynthesizeOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
+	SynthesizeOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
+	SynthesizeOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
+	SynthesizeOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
+	SynthesizeOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
+	SynthesizeOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
+	SynthesizeOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
+	SynthesizeOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
+	SynthesizeOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
+	SynthesizeOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
+	SynthesizeOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
+	SynthesizeOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
 )
 
 // NewSynthesizeOptions : Instantiate SynthesizeOptions
@@ -1750,6 +1736,12 @@ func (options *SynthesizeOptions) SetText(text string) *SynthesizeOptions {
 	return options
 }
 
+// SetAccept : Allow user to set Accept
+func (options *SynthesizeOptions) SetAccept(accept string) *SynthesizeOptions {
+	options.Accept = core.StringPtr(accept)
+	return options
+}
+
 // SetVoice : Allow user to set Voice
 func (options *SynthesizeOptions) SetVoice(voice string) *SynthesizeOptions {
 	options.Voice = core.StringPtr(voice)
@@ -1759,12 +1751,6 @@ func (options *SynthesizeOptions) SetVoice(voice string) *SynthesizeOptions {
 // SetCustomizationID : Allow user to set CustomizationID
 func (options *SynthesizeOptions) SetCustomizationID(customizationID string) *SynthesizeOptions {
 	options.CustomizationID = core.StringPtr(customizationID)
-	return options
-}
-
-// SetAccept : Allow user to set Accept
-func (options *SynthesizeOptions) SetAccept(accept string) *SynthesizeOptions {
-	options.Accept = core.StringPtr(accept)
 	return options
 }
 

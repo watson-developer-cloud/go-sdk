@@ -12,6 +12,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
+	"github.com/IBM/go-sdk-core/core"
 )
 
 var _ = Describe("TextToSpeechV1", func() {
@@ -39,8 +40,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -77,8 +80,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -126,8 +131,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -166,8 +173,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -205,8 +214,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -245,8 +256,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -282,8 +295,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -320,8 +335,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -360,8 +377,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -400,8 +419,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -438,8 +459,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -477,8 +500,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -516,8 +541,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -556,8 +583,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -595,8 +624,10 @@ var _ = Describe("TextToSpeechV1", func() {
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 						URL:      testServer.URL,
-						Username: username,
-						Password: password,
+						Authenticator: &core.BasicAuthenticator{
+							Username: username,
+							Password: password,
+						},
 					})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())

@@ -10,10 +10,13 @@ import (
 
 func main() {
 	// Instantiate the Watson Text To Speech service
+		authenticator := &core.IamAuthenticator{
+        	ApiKey:     os.Getenv("YOUR SERVICE API KEY"),
+    	}
 	service, serviceErr := texttospeechv1.
 		NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 			URL:       "YOUR SERVICE URL",
-			IAMApiKey: "YOUR SERVICE API KEY",
+			Authenticator: authenticator,
 		})
 
 	// Check successful instantiation
