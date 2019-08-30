@@ -10,10 +10,13 @@ import (
 
 func main() {
 	// Instantiate the Watson Discovery service
+	authenticator := &core.IamAuthenticator{
+		ApiKey:     os.Getenv("YOUR IAM API KEY"),
+	}
 	service, serviceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
 		URL:       "YOUR SERVICE URL",
 		Version:   "2018-03-05",
-		IAMApiKey: "YOUR IAM API KEY",
+		Authenticator: authenticator,
 	})
 	// Check successful instantiation
 	if serviceErr != nil {
@@ -77,7 +80,7 @@ func main() {
 
 	queryOptions := service.NewQueryOptions(environmentID, collectionID).
 		SetFilter("extracted_metadata.sha1::9181d244*").
-		SetReturnFields("extracted_metadata.sha1")
+		SetReturn("extracted_metadata.sha1")
 
 	response, responseErr = service.Query(queryOptions)
 	if responseErr != nil {

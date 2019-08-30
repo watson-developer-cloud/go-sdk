@@ -1,8 +1,5 @@
-// Package toneanalyzerv3 : Operations and models for the ToneAnalyzerV3 service
-package toneanalyzerv3
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +14,14 @@ package toneanalyzerv3
  * limitations under the License.
  */
 
+// Package toneanalyzerv3 : Operations and models for the ToneAnalyzerV3 service
+package toneanalyzerv3
+
 import (
 	"fmt"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"strings"
 )
 
 // ToneAnalyzerV3 : The IBM Watson&trade; Tone Analyzer service uses linguistic analysis to detect emotional and
@@ -34,54 +33,46 @@ import (
 // **Note:** Request logging is disabled for the Tone Analyzer service. Regardless of whether you set the
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
-// Version: V3
-// See: http://www.ibm.com/watson/developercloud/tone-analyzer.html
+// Version: 3.5.3
+// See: https://cloud.ibm.com/docs/services/tone-analyzer/
 type ToneAnalyzerV3 struct {
 	Service *core.BaseService
 }
 
 // ToneAnalyzerV3Options : Service options
 type ToneAnalyzerV3Options struct {
-	Version            string
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	Version         string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewToneAnalyzerV3 : Instantiate ToneAnalyzerV3
-func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (*ToneAnalyzerV3, error) {
+func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (service *ToneAnalyzerV3, err error) {
 	if options.URL == "" {
 		options.URL = "https://gateway.watsonplatform.net/tone-analyzer/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:            options.Version,
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "tone_analyzer", "Tone Analyzer")
-	if serviceErr != nil {
-		return nil, serviceErr
+		Version:         options.Version,
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &ToneAnalyzerV3{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("tone_analyzer")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "tone_analyzer", "Tone Analyzer")
+	if err != nil {
+		return
+	}
+	
+	service = &ToneAnalyzerV3{Service: baseService}
+
+	return
 }
 
 // Tone : Analyze general tone
@@ -125,14 +116,14 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.Detail
 	}
 
 	builder.AddHeader("Accept", "application/json")
+	if toneOptions.ContentType != nil {
+		builder.AddHeader("Content-Type", fmt.Sprint(*toneOptions.ContentType))
+	}
 	if toneOptions.ContentLanguage != nil {
 		builder.AddHeader("Content-Language", fmt.Sprint(*toneOptions.ContentLanguage))
 	}
 	if toneOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*toneOptions.AcceptLanguage))
-	}
-	if toneOptions.ContentType != nil {
-		builder.AddHeader("Content-Type", fmt.Sprint(*toneOptions.ContentType))
 	}
 
 	if toneOptions.Sentences != nil {
@@ -143,8 +134,7 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.Detail
 	}
 	builder.AddQuery("version", toneAnalyzer.Service.Options.Version)
 
-	_, err := builder.SetBodyContent(core.StringNilMapper(toneOptions.ContentType), toneOptions.ToneInput, nil, toneOptions.Body)
-	if err != nil {
+	if _, err := builder.SetBodyContent(core.StringNilMapper(toneOptions.ContentType), toneOptions.ToneInput, nil, toneOptions.Body); err != nil {
 		return nil, err
 	}
 
@@ -215,8 +205,7 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 	if toneChatOptions.Utterances != nil {
 		body["utterances"] = toneChatOptions.Utterances
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -352,14 +341,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneChatOptions_AcceptLanguage_Ar   = "ar"
-	ToneChatOptions_AcceptLanguage_De   = "de"
-	ToneChatOptions_AcceptLanguage_En   = "en"
-	ToneChatOptions_AcceptLanguage_Es   = "es"
-	ToneChatOptions_AcceptLanguage_Fr   = "fr"
-	ToneChatOptions_AcceptLanguage_It   = "it"
-	ToneChatOptions_AcceptLanguage_Ja   = "ja"
-	ToneChatOptions_AcceptLanguage_Ko   = "ko"
+	ToneChatOptions_AcceptLanguage_Ar = "ar"
+	ToneChatOptions_AcceptLanguage_De = "de"
+	ToneChatOptions_AcceptLanguage_En = "en"
+	ToneChatOptions_AcceptLanguage_Es = "es"
+	ToneChatOptions_AcceptLanguage_Fr = "fr"
+	ToneChatOptions_AcceptLanguage_It = "it"
+	ToneChatOptions_AcceptLanguage_Ja = "ja"
+	ToneChatOptions_AcceptLanguage_Ko = "ko"
 	ToneChatOptions_AcceptLanguage_PtBr = "pt-br"
 	ToneChatOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ToneChatOptions_AcceptLanguage_ZhTw = "zh-tw"
@@ -415,12 +404,12 @@ type ToneChatScore struct {
 // The unique, non-localized identifier of the tone for the results. The service returns results only for tones whose
 // scores meet a minimum threshold of 0.5.
 const (
-	ToneChatScore_ToneID_Excited     = "excited"
-	ToneChatScore_ToneID_Frustrated  = "frustrated"
-	ToneChatScore_ToneID_Impolite    = "impolite"
-	ToneChatScore_ToneID_Polite      = "polite"
-	ToneChatScore_ToneID_Sad         = "sad"
-	ToneChatScore_ToneID_Satisfied   = "satisfied"
+	ToneChatScore_ToneID_Excited = "excited"
+	ToneChatScore_ToneID_Frustrated = "frustrated"
+	ToneChatScore_ToneID_Impolite = "impolite"
+	ToneChatScore_ToneID_Polite = "polite"
+	ToneChatScore_ToneID_Sad = "sad"
+	ToneChatScore_ToneID_Satisfied = "satisfied"
 	ToneChatScore_ToneID_Sympathetic = "sympathetic"
 )
 
@@ -441,6 +430,10 @@ type ToneOptions struct {
 	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type
 	// `ToneInput`.
 	Body *string `json:"body,omitempty"`
+
+	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
+	// 'text/plain;charset=utf-8'.
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// Indicates whether the service is to return an analysis of each individual sentence in addition to its analysis of
 	// the full document. If `true` (the default), the service returns results for each sentence.
@@ -467,19 +460,24 @@ type ToneOptions struct {
 	// **Accept-Language**.
 	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
-	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
-	// 'text/plain;charset=utf-8'.
-	ContentType *string `json:"Content-Type,omitempty"`
-
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
+// Constants associated with the ToneOptions.ContentType property.
+// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
+// 'text/plain;charset=utf-8'.
+const (
+	ToneOptions_ContentType_ApplicationJSON = "application/json"
+	ToneOptions_ContentType_TextHTML = "text/html"
+	ToneOptions_ContentType_TextPlain = "text/plain"
+)
+
 // Constants associated with the ToneOptions.Tone property.
 const (
-	ToneOptions_Tone_Emotion  = "emotion"
+	ToneOptions_Tone_Emotion = "emotion"
 	ToneOptions_Tone_Language = "language"
-	ToneOptions_Tone_Social   = "social"
+	ToneOptions_Tone_Social = "social"
 )
 
 // Constants associated with the ToneOptions.ContentLanguage property.
@@ -499,26 +497,17 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneOptions_AcceptLanguage_Ar   = "ar"
-	ToneOptions_AcceptLanguage_De   = "de"
-	ToneOptions_AcceptLanguage_En   = "en"
-	ToneOptions_AcceptLanguage_Es   = "es"
-	ToneOptions_AcceptLanguage_Fr   = "fr"
-	ToneOptions_AcceptLanguage_It   = "it"
-	ToneOptions_AcceptLanguage_Ja   = "ja"
-	ToneOptions_AcceptLanguage_Ko   = "ko"
+	ToneOptions_AcceptLanguage_Ar = "ar"
+	ToneOptions_AcceptLanguage_De = "de"
+	ToneOptions_AcceptLanguage_En = "en"
+	ToneOptions_AcceptLanguage_Es = "es"
+	ToneOptions_AcceptLanguage_Fr = "fr"
+	ToneOptions_AcceptLanguage_It = "it"
+	ToneOptions_AcceptLanguage_Ja = "ja"
+	ToneOptions_AcceptLanguage_Ko = "ko"
 	ToneOptions_AcceptLanguage_PtBr = "pt-br"
 	ToneOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ToneOptions_AcceptLanguage_ZhTw = "zh-tw"
-)
-
-// Constants associated with the ToneOptions.ContentType property.
-// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
-// 'text/plain;charset=utf-8'.
-const (
-	ToneOptions_ContentType_ApplicationJSON = "application/json"
-	ToneOptions_ContentType_TextHTML        = "text/html"
-	ToneOptions_ContentType_TextPlain       = "text/plain"
 )
 
 // NewToneOptions : Instantiate ToneOptions
@@ -535,6 +524,12 @@ func (options *ToneOptions) SetToneInput(toneInput *ToneInput) *ToneOptions {
 // SetBody : Allow user to set Body
 func (options *ToneOptions) SetBody(body string) *ToneOptions {
 	options.Body = core.StringPtr(body)
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *ToneOptions) SetContentType(contentType string) *ToneOptions {
+	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -559,12 +554,6 @@ func (options *ToneOptions) SetContentLanguage(contentLanguage string) *ToneOpti
 // SetAcceptLanguage : Allow user to set AcceptLanguage
 func (options *ToneOptions) SetAcceptLanguage(acceptLanguage string) *ToneOptions {
 	options.AcceptLanguage = core.StringPtr(acceptLanguage)
-	return options
-}
-
-// SetContentType : Allow user to set ContentType
-func (options *ToneOptions) SetContentType(contentType string) *ToneOptions {
-	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 

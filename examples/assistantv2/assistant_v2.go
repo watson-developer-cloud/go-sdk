@@ -9,11 +9,14 @@ import (
 
 func main() {
 	// Instantiate the Watson AssistantV2 service
+    authenticator := &core.IamAuthenticator{
+        ApiKey:     "my-iam-apikey",
+    }
 	service, serviceErr := assistantv2.
 		NewAssistantV2(&assistantv2.AssistantV2Options{
 			URL:       "YOUR SERVICE URL",
 			Version:   "2017-04-21",
-			IAMApiKey: "YOUR API KEY",
+			Authenticator: authenticator,
 		})
 
 	// Check successful instantiation

@@ -11,11 +11,14 @@ import (
 
 func main() {
 	// Instantiate the Watson Natural Language Understanding service
+	authenticator := &core.IamAuthenticator{
+		ApiKey:     os.Getenv("YOUR IAM API KEY"),
+	}
 	service, serviceErr := nlu.
 		NewNaturalLanguageUnderstandingV1(&nlu.NaturalLanguageUnderstandingV1Options{
 			URL:       "YOUR SERVICE URL",
 			Version:   "2017-02-27",
-			IAMApiKey: "YOUR API KEY",
+			Authenticator: authenticator,
 		})
 
 	// Check successful instantiation

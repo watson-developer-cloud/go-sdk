@@ -40,8 +40,10 @@ func init() {
 			NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 				URL:      os.Getenv("TONE_ANALYZER_URL"),
 				Version:  "2017-09-21",
-				Username: os.Getenv("TONE_ANALYZER_USERNAME"),
-				Password: os.Getenv("TONE_ANALYZER_PASSWORD"),
+				Authenticator: &core.BasicAuthenticator{
+						Username: os.Getenv("TONE_ANALYZER_USERNAME"),
+						Password: os.Getenv("TONE_ANALYZER_PASSWORD"),
+                },
 			})
 
 		if serviceErr == nil {

@@ -1,8 +1,5 @@
-// Package naturallanguageunderstandingv1 : Operations and models for the NaturalLanguageUnderstandingV1 service
-package naturallanguageunderstandingv1
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +13,9 @@ package naturallanguageunderstandingv1
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// Package naturallanguageunderstandingv1 : Operations and models for the NaturalLanguageUnderstandingV1 service
+package naturallanguageunderstandingv1
 
 import (
 	"github.com/IBM/go-sdk-core/core"
@@ -32,54 +32,46 @@ import (
 // models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
 // with Watson Knowledge Studio to detect custom entities, relations, and categories in Natural Language Understanding.
 //
-// Version: V1
-// See: http://www.ibm.com/watson/developercloud/natural-language-understanding.html
+// Version: 1.0
+// See: https://cloud.ibm.com/docs/services/natural-language-understanding/
 type NaturalLanguageUnderstandingV1 struct {
 	Service *core.BaseService
 }
 
 // NaturalLanguageUnderstandingV1Options : Service options
 type NaturalLanguageUnderstandingV1Options struct {
-	Version            string
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	Version         string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewNaturalLanguageUnderstandingV1 : Instantiate NaturalLanguageUnderstandingV1
-func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Options) (*NaturalLanguageUnderstandingV1, error) {
+func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Options) (service *NaturalLanguageUnderstandingV1, err error) {
 	if options.URL == "" {
 		options.URL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:            options.Version,
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "natural-language-understanding", "Natural Language Understanding")
-	if serviceErr != nil {
-		return nil, serviceErr
+		Version:         options.Version,
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &NaturalLanguageUnderstandingV1{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("natural-language-understanding")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "natural-language-understanding", "Natural Language Understanding")
+	if err != nil {
+		return
+	}
+	
+	service = &NaturalLanguageUnderstandingV1{Service: baseService}
+
+	return
 }
 
 // Analyze : Analyze text
@@ -152,8 +144,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 	if analyzeOptions.LimitTextCharacters != nil {
 		body["limit_text_characters"] = analyzeOptions.LimitTextCharacters
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1091,6 +1082,7 @@ type SyntaxOptionsTokens struct {
 
 // SyntaxResult : Tokens and sentences returned from syntax analysis.
 type SyntaxResult struct {
+
 	Tokens []TokenResult `json:"tokens,omitempty"`
 
 	Sentences []SentenceResult `json:"sentences,omitempty"`
@@ -1137,21 +1129,21 @@ type TokenResult struct {
 // The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
 // tags](https://universaldependencies.org/u/pos/).
 const (
-	TokenResult_PartOfSpeech_Adj   = "ADJ"
-	TokenResult_PartOfSpeech_Adp   = "ADP"
-	TokenResult_PartOfSpeech_Adv   = "ADV"
-	TokenResult_PartOfSpeech_Aux   = "AUX"
+	TokenResult_PartOfSpeech_Adj = "ADJ"
+	TokenResult_PartOfSpeech_Adp = "ADP"
+	TokenResult_PartOfSpeech_Adv = "ADV"
+	TokenResult_PartOfSpeech_Aux = "AUX"
 	TokenResult_PartOfSpeech_Cconj = "CCONJ"
-	TokenResult_PartOfSpeech_Det   = "DET"
-	TokenResult_PartOfSpeech_Intj  = "INTJ"
-	TokenResult_PartOfSpeech_Noun  = "NOUN"
-	TokenResult_PartOfSpeech_Num   = "NUM"
-	TokenResult_PartOfSpeech_Part  = "PART"
-	TokenResult_PartOfSpeech_Pron  = "PRON"
+	TokenResult_PartOfSpeech_Det = "DET"
+	TokenResult_PartOfSpeech_Intj = "INTJ"
+	TokenResult_PartOfSpeech_Noun = "NOUN"
+	TokenResult_PartOfSpeech_Num = "NUM"
+	TokenResult_PartOfSpeech_Part = "PART"
+	TokenResult_PartOfSpeech_Pron = "PRON"
 	TokenResult_PartOfSpeech_Propn = "PROPN"
 	TokenResult_PartOfSpeech_Punct = "PUNCT"
 	TokenResult_PartOfSpeech_Sconj = "SCONJ"
-	TokenResult_PartOfSpeech_Sym   = "SYM"
-	TokenResult_PartOfSpeech_Verb  = "VERB"
-	TokenResult_PartOfSpeech_X     = "X"
+	TokenResult_PartOfSpeech_Sym = "SYM"
+	TokenResult_PartOfSpeech_Verb = "VERB"
+	TokenResult_PartOfSpeech_X = "X"
 )

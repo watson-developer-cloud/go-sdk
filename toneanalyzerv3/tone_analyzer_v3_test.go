@@ -8,6 +8,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
 )
 
@@ -36,8 +37,10 @@ var _ = Describe("ToneAnalyzerV3", func() {
 				testService, testServiceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 					URL:      testServer.URL,
 					Version:  version,
-					Username: username,
-					Password: password,
+					Authenticator: &core.BasicAuthenticator{
+						Username: username,
+						Password: password,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -84,8 +87,10 @@ var _ = Describe("ToneAnalyzerV3", func() {
 				testService, testServiceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 					URL:      testServer.URL,
 					Version:  version,
-					Username: username,
-					Password: password,
+					Authenticator: &core.BasicAuthenticator{
+						Username: username,
+						Password: password,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())

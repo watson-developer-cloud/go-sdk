@@ -1,8 +1,5 @@
-// Package languagetranslatorv3 : Operations and models for the LanguageTranslatorV3 service
-package languagetranslatorv3
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +14,16 @@ package languagetranslatorv3
  * limitations under the License.
  */
 
+// Package languagetranslatorv3 : Operations and models for the LanguageTranslatorV3 service
+package languagetranslatorv3
+
 import (
 	"fmt"
-	"io"
-	"os"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
+	"os"
 )
 
 // LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The
@@ -32,54 +31,46 @@ import (
 // language. Use Language Translator to take news from across the globe and present it in your language, communicate
 // with your customers in their own language, and more.
 //
-// Version: V3
-// See: http://www.ibm.com/watson/developercloud/language-translator.html
+// Version: 3.0.0
+// See: https://cloud.ibm.com/docs/services/language-translator/
 type LanguageTranslatorV3 struct {
 	Service *core.BaseService
 }
 
 // LanguageTranslatorV3Options : Service options
 type LanguageTranslatorV3Options struct {
-	Version            string
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	Version         string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewLanguageTranslatorV3 : Instantiate LanguageTranslatorV3
-func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (*LanguageTranslatorV3, error) {
+func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (service *LanguageTranslatorV3, err error) {
 	if options.URL == "" {
 		options.URL = "https://gateway.watsonplatform.net/language-translator/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:            options.Version,
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "language_translator", "Language Translator")
-	if serviceErr != nil {
-		return nil, serviceErr
+		Version:         options.Version,
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &LanguageTranslatorV3{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("language_translator")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "language_translator", "Language Translator")
+	if err != nil {
+		return
+	}
+	
+	service = &LanguageTranslatorV3{Service: baseService}
+
+	return
 }
 
 // Translate : Translate
@@ -124,8 +115,7 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 	if translateOptions.Target != nil {
 		body["target"] = translateOptions.Target
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -220,8 +210,7 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 	builder.AddHeader("Content-Type", "text/plain")
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
-	_, err := builder.SetBodyContent("text/plain", nil, nil, identifyOptions.Text)
-	if err != nil {
+	if _, err := builder.SetBodyContent("text/plain", nil, nil, identifyOptions.Text); err != nil {
 		return nil, err
 	}
 
@@ -273,8 +262,8 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 	if listModelsOptions.Target != nil {
 		builder.AddQuery("target", fmt.Sprint(*listModelsOptions.Target))
 	}
-	if listModelsOptions.DefaultModels != nil {
-		builder.AddQuery("default", fmt.Sprint(*listModelsOptions.DefaultModels))
+	if listModelsOptions.Default != nil {
+		builder.AddQuery("default", fmt.Sprint(*listModelsOptions.Default))
 	}
 	builder.AddQuery("version", languageTranslator.Service.Options.Version)
 
@@ -875,8 +864,8 @@ type DocumentStatus struct {
 // Constants associated with the DocumentStatus.Status property.
 // The status of the translation job associated with a submitted document.
 const (
-	DocumentStatus_Status_Available  = "available"
-	DocumentStatus_Status_Failed     = "failed"
+	DocumentStatus_Status_Available = "available"
+	DocumentStatus_Status_Failed = "failed"
 	DocumentStatus_Status_Processing = "processing"
 )
 
@@ -968,28 +957,28 @@ type GetTranslatedDocumentOptions struct {
 // text/richtext, text/rtf, or text/xml. A character encoding can be specified by including a `charset` parameter. For
 // example, 'text/html;charset=utf-8'.
 const (
-	GetTranslatedDocumentOptions_Accept_ApplicationJSON                                                      = "application/json"
-	GetTranslatedDocumentOptions_Accept_ApplicationMspowerpoint                                              = "application/mspowerpoint"
-	GetTranslatedDocumentOptions_Accept_ApplicationMsword                                                    = "application/msword"
-	GetTranslatedDocumentOptions_Accept_ApplicationPdf                                                       = "application/pdf"
-	GetTranslatedDocumentOptions_Accept_ApplicationPowerpoint                                                = "application/powerpoint"
-	GetTranslatedDocumentOptions_Accept_ApplicationRtf                                                       = "application/rtf"
-	GetTranslatedDocumentOptions_Accept_ApplicationVndMsExcel                                                = "application/vnd.ms-excel"
-	GetTranslatedDocumentOptions_Accept_ApplicationVndMsPowerpoint                                           = "application/vnd.ms-powerpoint"
-	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentPresentation                          = "application/vnd.oasis.opendocument.presentation"
-	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentSpreadsheet                           = "application/vnd.oasis.opendocument.spreadsheet"
-	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentText                                  = "application/vnd.oasis.opendocument.text"
+	GetTranslatedDocumentOptions_Accept_ApplicationJSON = "application/json"
+	GetTranslatedDocumentOptions_Accept_ApplicationMspowerpoint = "application/mspowerpoint"
+	GetTranslatedDocumentOptions_Accept_ApplicationMsword = "application/msword"
+	GetTranslatedDocumentOptions_Accept_ApplicationPdf = "application/pdf"
+	GetTranslatedDocumentOptions_Accept_ApplicationPowerpoint = "application/powerpoint"
+	GetTranslatedDocumentOptions_Accept_ApplicationRtf = "application/rtf"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndMsExcel = "application/vnd.ms-excel"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndMsPowerpoint = "application/vnd.ms-powerpoint"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentPresentation = "application/vnd.oasis.opendocument.presentation"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentSpreadsheet = "application/vnd.oasis.opendocument.spreadsheet"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOasisOpendocumentText = "application/vnd.oasis.opendocument.text"
 	GetTranslatedDocumentOptions_Accept_ApplicationVndOpenxmlformatsOfficedocumentPresentationmlPresentation = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-	GetTranslatedDocumentOptions_Accept_ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet         = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-	GetTranslatedDocumentOptions_Accept_ApplicationVndOpenxmlformatsOfficedocumentWordprocessingmlDocument   = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-	GetTranslatedDocumentOptions_Accept_ApplicationXRtf                                                      = "application/x-rtf"
-	GetTranslatedDocumentOptions_Accept_ApplicationXml                                                       = "application/xml"
-	GetTranslatedDocumentOptions_Accept_TextHTML                                                             = "text/html"
-	GetTranslatedDocumentOptions_Accept_TextJSON                                                             = "text/json"
-	GetTranslatedDocumentOptions_Accept_TextPlain                                                            = "text/plain"
-	GetTranslatedDocumentOptions_Accept_TextRichtext                                                         = "text/richtext"
-	GetTranslatedDocumentOptions_Accept_TextRtf                                                              = "text/rtf"
-	GetTranslatedDocumentOptions_Accept_TextXml                                                              = "text/xml"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+	GetTranslatedDocumentOptions_Accept_ApplicationVndOpenxmlformatsOfficedocumentWordprocessingmlDocument = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+	GetTranslatedDocumentOptions_Accept_ApplicationXRtf = "application/x-rtf"
+	GetTranslatedDocumentOptions_Accept_ApplicationXml = "application/xml"
+	GetTranslatedDocumentOptions_Accept_TextHTML = "text/html"
+	GetTranslatedDocumentOptions_Accept_TextJSON = "text/json"
+	GetTranslatedDocumentOptions_Accept_TextPlain = "text/plain"
+	GetTranslatedDocumentOptions_Accept_TextRichtext = "text/richtext"
+	GetTranslatedDocumentOptions_Accept_TextRtf = "text/rtf"
+	GetTranslatedDocumentOptions_Accept_TextXml = "text/xml"
 )
 
 // NewGetTranslatedDocumentOptions : Instantiate GetTranslatedDocumentOptions
@@ -1128,7 +1117,7 @@ type ListModelsOptions struct {
 	// If the default parameter isn't specified, the service will return all models (default and non-default) for each
 	// language pair. To return only default models, set this to `true`. To return only non-default models, set this to
 	// `false`. There is exactly one default model per language pair, the IBM provided base model.
-	DefaultModels *bool `json:"default,omitempty"`
+	Default *bool `json:"default,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -1151,9 +1140,9 @@ func (options *ListModelsOptions) SetTarget(target string) *ListModelsOptions {
 	return options
 }
 
-// SetDefaultModels : Allow user to set DefaultModels
-func (options *ListModelsOptions) SetDefaultModels(defaultModels bool) *ListModelsOptions {
-	options.DefaultModels = core.BoolPtr(defaultModels)
+// SetDefault : Allow user to set Default
+func (options *ListModelsOptions) SetDefault(defaultVar bool) *ListModelsOptions {
+	options.Default = core.BoolPtr(defaultVar)
 	return options
 }
 
@@ -1199,7 +1188,7 @@ type TranslateDocumentOptions struct {
 // NewTranslateDocumentOptions : Instantiate TranslateDocumentOptions
 func (languageTranslator *LanguageTranslatorV3) NewTranslateDocumentOptions(file *os.File, filename string) *TranslateDocumentOptions {
 	return &TranslateDocumentOptions{
-		File:     file,
+		File: file,
 		Filename: core.StringPtr(filename),
 	}
 }
@@ -1312,7 +1301,7 @@ func (options *TranslateOptions) SetHeaders(param map[string]string) *TranslateO
 type Translation struct {
 
 	// Translation output in UTF-8.
-	TranslationOutput *string `json:"translation" validate:"required"`
+	Translation *string `json:"translation" validate:"required"`
 }
 
 // TranslationModel : Response payload for models.
@@ -1356,16 +1345,16 @@ type TranslationModel struct {
 // Constants associated with the TranslationModel.Status property.
 // Availability of a model.
 const (
-	TranslationModel_Status_Available   = "available"
-	TranslationModel_Status_Deleted     = "deleted"
+	TranslationModel_Status_Available = "available"
+	TranslationModel_Status_Deleted = "deleted"
 	TranslationModel_Status_Dispatching = "dispatching"
-	TranslationModel_Status_Error       = "error"
-	TranslationModel_Status_Publishing  = "publishing"
-	TranslationModel_Status_Queued      = "queued"
-	TranslationModel_Status_Trained     = "trained"
-	TranslationModel_Status_Training    = "training"
-	TranslationModel_Status_Uploaded    = "uploaded"
-	TranslationModel_Status_Uploading   = "uploading"
+	TranslationModel_Status_Error = "error"
+	TranslationModel_Status_Publishing = "publishing"
+	TranslationModel_Status_Queued = "queued"
+	TranslationModel_Status_Trained = "trained"
+	TranslationModel_Status_Training = "training"
+	TranslationModel_Status_Uploaded = "uploaded"
+	TranslationModel_Status_Uploading = "uploading"
 )
 
 // TranslationModels : The response type for listing existing translation models.

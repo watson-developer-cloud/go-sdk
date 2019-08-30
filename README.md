@@ -111,24 +111,13 @@ You supply either an IAM service **API key** or an **access token**:
 ```go
 // In the constructor, letting the SDK manage the IAM token
 import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
-
+authenticator := &core.IamAuthenticator{
+	ApiKey: "<apikey>",
+}
 discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 		URL:       "<service_url>",
 		Version:   "2018-03-05",
-		IAMApiKey: "<apikey>",
-	})
-```
-
-**Supplying the access token**
-
-```go
-// In the constructor, assuming control of managing IAM token
-import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
-
-discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-		URL:            "<service_url>",
-		Version:        "2018-03-05",
-		IAMAccessToken: "<IAM_access_token>",
+		Authenticator: authenticator,
 	})
 ```
 
@@ -141,8 +130,10 @@ import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
 discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 		URL:      "<service_url>",
 		Version:  "2018-03-05",
-		Username: "<username>",
-		Password: "<password>",
+		Authenticator: &core.BasicAuthenticator{
+			Username: "<username>",
+			Password: "<password>",
+		},
 	})
 ```
 
@@ -169,7 +160,9 @@ service, serviceErr := discoveryv1.
   NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
     URL:       "YOUR SERVICE URL",
     Version:   "2018-03-05",
-    IAMApiKey: "YOUR APIKEY",
+	Authenticator: &core.IamAuthenticator{
+		Apikey: "YOUR APIKEY",
+	},
   })
 
 // Check successful instantiation
@@ -230,7 +223,9 @@ func main() {
   discoveryService, discoveryServiceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
     URL:       "YOUR SERVICE URL",
     Version:   "2018-03-05",
-    IAMApiKey: "YOUR IAM API KEY",
+	Authenticator: &core.IamAuthenticator{
+		Apikey: "YOUR APIKEY",
+	},
   })
   // Check successful instantiation
   if discoveryServiceErr != nil {
@@ -275,7 +270,9 @@ func main() {
   discoveryService, discoveryServiceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
     URL:       "YOUR SERVICE URL",
     Version:   "2018-03-05",
-    IAMApiKey: "YOUR IAM API KEY",
+	Authenticator: &core.IamAuthenticator{
+		Apikey: "YOUR APIKEY",
+	},
   })
   // Check successful instantiation
   if discoveryServiceErr != nil {
@@ -287,7 +284,7 @@ func main() {
 }
 ```
 
-## IBM Cloud Pak for Data(ICP4D)
+## Cloud Pak for Data(CP4D)
 If your service instance is of ICP4D, below are two ways of initializing the assistant service.
 
 1) Supplying the `Username`, `Password`, `ICP4DURL` and `AuthenticationType`
@@ -302,13 +299,16 @@ import (
 
 func main() {
   // Instantiate the Watson Discovery service
+	authenticator := &core.CloudPakForDataAuthenticator{
+		URL:                    "CP4D URL FOR AUTHENTICATION", // should be of the form https://{icp_cluster_host}
+		Username:               "YOUR USERNAME", 
+		Password:               "YOUR PASSWORD",
+		DisableSSLVerification: true,
+	}
   discoveryService, discoveryServiceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
     URL:                "YOUR SERVICE URL", // should be of the form https://{icp_cluster_host}/{deployment}/discovery/{instance-id}/api
     Version:            "2018-03-05",
-    Username:           "YOUR USERNAME",
-    Password:           "YOUR PASSWORD",
-    ICP4DURL:           "ICP4D URL FOR AUTHENTICATION", // should be of the form https://{icp_cluster_host}
-    AuthenticationType: "icp4d",
+	Authenticator: authenticator,
   })
 
   // Check successful instantiation
@@ -331,11 +331,15 @@ import (
 )
 
 func main() {
+	authenticator := &core.BearerTokenAuthenticator{
+		BearerToken: "YOUR BEARER TOKEN",
+	}
+
   // Instantiate the Watson Discovery service
   discoveryService, discoveryServiceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
     URL:              "YOUR SERVICE URL", // should be of the form https://{icp_cluster_host}/{deployment}/discovery/{instance-id}/api
     Version:          "2018-03-05",
-    ICP4DAccessToken: "YOUR ACCESSTOKEN",
+    Authenticator: authenticator,
   })
   // Check successful instantiation
   if discoveryServiceErr != nil {

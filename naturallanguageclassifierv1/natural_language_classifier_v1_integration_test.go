@@ -41,8 +41,10 @@ func init() {
 		service, serviceErr = naturallanguageclassifierv1.
 			NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
 				URL:      os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_URL"),
-				Username: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_USERNAME"),
-				Password: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_PASSWORD"),
+				Authenticator: &core.BasicAuthenticator{
+						Username: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_USERNAME"),
+						Password: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_PASSWORD"),
+                },
 			})
 
 		if serviceErr == nil {
@@ -74,7 +76,7 @@ func TestClassifier(t *testing.T) {
 	response, responseErr := service.CreateClassifier(
 		&naturallanguageclassifierv1.CreateClassifierOptions{
 			TrainingData: trainingData,
-			Metadata:     metadata,
+			TrainingMetadata:     metadata,
 		},
 	)
 	assert.Nil(t, responseErr)

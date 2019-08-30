@@ -6,15 +6,19 @@ import (
 	"os"
 
 	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
+	"github.com/IBM/go-sdk-core/core"
 )
 
 func main() {
 	// Instantiate the Watson Text To Speech service
-	service, serviceErr := texttospeechv1.
-		NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-			URL:       "YOUR SERVICE URL",
-			IAMApiKey: "YOUR SERVICE API KEY",
-		})
+	authenticator := &core.IamAuthenticator{
+		ApiKey:     os.Getenv("YOUR SERVICE API KEY"),
+	}
+service, serviceErr := texttospeechv1.
+	NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+		URL:       "YOUR SERVICE URL",
+		Authenticator: authenticator,
+	})
 
 	// Check successful instantiation
 	if serviceErr != nil {

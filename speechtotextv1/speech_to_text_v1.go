@@ -1,8 +1,5 @@
-// Package speechtotextv1 : Operations and models for the SpeechToTextV1 service
-package speechtotextv1
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +14,16 @@ package speechtotextv1
  * limitations under the License.
  */
 
+// Package speechtotextv1 : Operations and models for the SpeechToTextV1 service
+package speechtotextv1
+
 import (
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"os"
 	"strings"
-
-	"github.com/IBM/go-sdk-core/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // SpeechToTextV1 : The IBM&reg; Speech to Text service provides APIs that use IBM's speech-recognition capabilities to
@@ -45,52 +44,44 @@ import (
 // Language model customization is generally available for production use with most supported languages. Acoustic model
 // customization is beta functionality that is available for all supported languages.
 //
-// Version: V1
-// See: http://www.ibm.com/watson/developercloud/speech-to-text.html
+// Version: 1.0.0
+// See: https://cloud.ibm.com/docs/services/speech-to-text/
 type SpeechToTextV1 struct {
 	Service *core.BaseService
 }
 
 // SpeechToTextV1Options : Service options
 type SpeechToTextV1Options struct {
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewSpeechToTextV1 : Instantiate SpeechToTextV1
-func NewSpeechToTextV1(options *SpeechToTextV1Options) (*SpeechToTextV1, error) {
+func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1, err error) {
 	if options.URL == "" {
 		options.URL = "https://stream.watsonplatform.net/speech-to-text/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "speech_to_text", "Speech to Text")
-	if serviceErr != nil {
-		return nil, serviceErr
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &SpeechToTextV1{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("speech_to_text")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "speech_to_text", "Speech to Text")
+	if err != nil {
+		return
+	}
+	
+	service = &SpeechToTextV1{Service: baseService}
+
+	return
 }
 
 // ListModels : List models
@@ -217,7 +208,7 @@ func (speechToText *SpeechToTextV1) GetGetModelResult(response *core.DetailedRes
 // format of the audio.
 // * For all other formats, you can omit the `Content-Type` header or specify `application/octet-stream` with the header
 // to have the service automatically detect the format of the audio. (With the `curl` command, you can specify either
-// `\"Content-Type:\"` or `\"Content-Type: application/octet-stream\"`.)
+// `"Content-Type:"` or `"Content-Type: application/octet-stream"`.)
 //
 // Where indicated, the format that you specify must include the sampling rate and can optionally include the number of
 // channels and the endianness of the audio.
@@ -347,8 +338,7 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 		builder.AddQuery("audio_metrics", fmt.Sprint(*recognizeOptions.AudioMetrics))
 	}
 
-	_, err := builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio)
-	if err != nil {
+	if _, err := builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio); err != nil {
 		return nil, err
 	}
 
@@ -475,6 +465,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
+
 	builder.AddQuery("callback_url", fmt.Sprint(*unregisterCallbackOptions.CallbackURL))
 
 	request, err := builder.Build()
@@ -538,7 +529,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 // format of the audio.
 // * For all other formats, you can omit the `Content-Type` header or specify `application/octet-stream` with the header
 // to have the service automatically detect the format of the audio. (With the `curl` command, you can specify either
-// `\"Content-Type:\"` or `\"Content-Type: application/octet-stream\"`.)
+// `"Content-Type:"` or `"Content-Type: application/octet-stream"`.)
 //
 // Where indicated, the format that you specify must include the sampling rate and can optionally include the number of
 // channels and the endianness of the audio.
@@ -670,8 +661,7 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 		builder.AddQuery("audio_metrics", fmt.Sprint(*createJobOptions.AudioMetrics))
 	}
 
-	_, err := builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio)
-	if err != nil {
+	if _, err := builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio); err != nil {
 		return nil, err
 	}
 
@@ -827,6 +817,7 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
+
 	request, err := builder.Build()
 	if err != nil {
 		return nil, err
@@ -882,8 +873,7 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 	if createLanguageModelOptions.Description != nil {
 		body["description"] = createLanguageModelOptions.Description
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1572,8 +1562,7 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 	if addWordsOptions.Words != nil {
 		body["words"] = addWordsOptions.Words
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1652,8 +1641,7 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 	if addWordOptions.DisplayAs != nil {
 		body["display_as"] = addWordOptions.DisplayAs
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1872,8 +1860,7 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 		builder.AddQuery("allow_overwrite", fmt.Sprint(*addGrammarOptions.AllowOverwrite))
 	}
 
-	_, err := builder.SetBodyContent(core.StringNilMapper(addGrammarOptions.ContentType), nil, nil, addGrammarOptions.GrammarFile)
-	if err != nil {
+	if _, err := builder.SetBodyContent(core.StringNilMapper(addGrammarOptions.ContentType), nil, nil, addGrammarOptions.GrammarFile); err != nil {
 		return nil, err
 	}
 
@@ -2022,8 +2009,7 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 	if createAcousticModelOptions.Description != nil {
 		body["description"] = createAcousticModelOptions.Description
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2543,19 +2529,18 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	if addAudioOptions.ContainedContentType != nil {
-		builder.AddHeader("Contained-Content-Type", fmt.Sprint(*addAudioOptions.ContainedContentType))
-	}
 	if addAudioOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*addAudioOptions.ContentType))
+	}
+	if addAudioOptions.ContainedContentType != nil {
+		builder.AddHeader("Contained-Content-Type", fmt.Sprint(*addAudioOptions.ContainedContentType))
 	}
 
 	if addAudioOptions.AllowOverwrite != nil {
 		builder.AddQuery("allow_overwrite", fmt.Sprint(*addAudioOptions.AllowOverwrite))
 	}
 
-	_, err := builder.SetBodyContent(core.StringNilMapper(addAudioOptions.ContentType), nil, nil, addAudioOptions.AudioResource)
-	if err != nil {
+	if _, err := builder.SetBodyContent(core.StringNilMapper(addAudioOptions.ContentType), nil, nil, addAudioOptions.AudioResource); err != nil {
 		return nil, err
 	}
 
@@ -2708,6 +2693,7 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 		builder.AddHeader(headerName, headerValue)
 	}
 
+
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 
 	request, err := builder.Build()
@@ -2788,10 +2774,10 @@ type AcousticModel struct {
 // * `failed`: Training of the model failed.
 const (
 	AcousticModel_Status_Available = "available"
-	AcousticModel_Status_Failed    = "failed"
-	AcousticModel_Status_Pending   = "pending"
-	AcousticModel_Status_Ready     = "ready"
-	AcousticModel_Status_Training  = "training"
+	AcousticModel_Status_Failed = "failed"
+	AcousticModel_Status_Pending = "pending"
+	AcousticModel_Status_Ready = "ready"
+	AcousticModel_Status_Training = "training"
 	AcousticModel_Status_Upgrading = "upgrading"
 )
 
@@ -2826,6 +2812,13 @@ type AddAudioOptions struct {
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
 	AudioResource *io.ReadCloser `json:"audio_resource" validate:"required"`
 
+	// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
+	// audio-type resources** in the method description.
+	//
+	// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
+	// archive-type resources** in the method description.
+	ContentType *string `json:"Content-Type,omitempty"`
+
 	// **For an archive-type resource,** specify the format of the audio files that are contained in the archive file if
 	// they are of type `audio/alaw`, `audio/basic`, `audio/l16`, or `audio/mulaw`. Include the `rate`, `channels`, and
 	// `endianness` parameters where necessary. In this case, all audio files that are contained in the archive file must
@@ -2845,16 +2838,35 @@ type AddAudioOptions struct {
 	// resource with the same name does not already exist.
 	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
 
-	// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
-	// audio-type resources** in the method description.
-	//
-	// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
-	// archive-type resources** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
-
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the AddAudioOptions.ContentType property.
+// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
+// audio-type resources** in the method description.
+//
+// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
+// archive-type resources** in the method description.
+const (
+	AddAudioOptions_ContentType_ApplicationGzip = "application/gzip"
+	AddAudioOptions_ContentType_ApplicationZip = "application/zip"
+	AddAudioOptions_ContentType_AudioAlaw = "audio/alaw"
+	AddAudioOptions_ContentType_AudioBasic = "audio/basic"
+	AddAudioOptions_ContentType_AudioFlac = "audio/flac"
+	AddAudioOptions_ContentType_AudioG729 = "audio/g729"
+	AddAudioOptions_ContentType_AudioL16 = "audio/l16"
+	AddAudioOptions_ContentType_AudioMp3 = "audio/mp3"
+	AddAudioOptions_ContentType_AudioMpeg = "audio/mpeg"
+	AddAudioOptions_ContentType_AudioMulaw = "audio/mulaw"
+	AddAudioOptions_ContentType_AudioOgg = "audio/ogg"
+	AddAudioOptions_ContentType_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
+	AddAudioOptions_ContentType_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
+	AddAudioOptions_ContentType_AudioWav = "audio/wav"
+	AddAudioOptions_ContentType_AudioWebm = "audio/webm"
+	AddAudioOptions_ContentType_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
+	AddAudioOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
 
 // Constants associated with the AddAudioOptions.ContainedContentType property.
 // **For an archive-type resource,** specify the format of the audio files that are contained in the archive file if
@@ -2870,55 +2882,29 @@ type AddAudioOptions struct {
 //
 // **For an audio-type resource,** omit the header.
 const (
-	AddAudioOptions_ContainedContentType_AudioAlaw             = "audio/alaw"
-	AddAudioOptions_ContainedContentType_AudioBasic            = "audio/basic"
-	AddAudioOptions_ContainedContentType_AudioFlac             = "audio/flac"
-	AddAudioOptions_ContainedContentType_AudioG729             = "audio/g729"
-	AddAudioOptions_ContainedContentType_AudioL16              = "audio/l16"
-	AddAudioOptions_ContainedContentType_AudioMp3              = "audio/mp3"
-	AddAudioOptions_ContainedContentType_AudioMpeg             = "audio/mpeg"
-	AddAudioOptions_ContainedContentType_AudioMulaw            = "audio/mulaw"
-	AddAudioOptions_ContainedContentType_AudioOgg              = "audio/ogg"
-	AddAudioOptions_ContainedContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
-	AddAudioOptions_ContainedContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
-	AddAudioOptions_ContainedContentType_AudioWav              = "audio/wav"
-	AddAudioOptions_ContainedContentType_AudioWebm             = "audio/webm"
-	AddAudioOptions_ContainedContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
+	AddAudioOptions_ContainedContentType_AudioAlaw = "audio/alaw"
+	AddAudioOptions_ContainedContentType_AudioBasic = "audio/basic"
+	AddAudioOptions_ContainedContentType_AudioFlac = "audio/flac"
+	AddAudioOptions_ContainedContentType_AudioG729 = "audio/g729"
+	AddAudioOptions_ContainedContentType_AudioL16 = "audio/l16"
+	AddAudioOptions_ContainedContentType_AudioMp3 = "audio/mp3"
+	AddAudioOptions_ContainedContentType_AudioMpeg = "audio/mpeg"
+	AddAudioOptions_ContainedContentType_AudioMulaw = "audio/mulaw"
+	AddAudioOptions_ContainedContentType_AudioOgg = "audio/ogg"
+	AddAudioOptions_ContainedContentType_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
+	AddAudioOptions_ContainedContentType_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
+	AddAudioOptions_ContainedContentType_AudioWav = "audio/wav"
+	AddAudioOptions_ContainedContentType_AudioWebm = "audio/webm"
+	AddAudioOptions_ContainedContentType_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
 	AddAudioOptions_ContainedContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
-)
-
-// Constants associated with the AddAudioOptions.ContentType property.
-// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
-// audio-type resources** in the method description.
-//
-// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
-// archive-type resources** in the method description.
-const (
-	AddAudioOptions_ContentType_ApplicationGzip       = "application/gzip"
-	AddAudioOptions_ContentType_ApplicationZip        = "application/zip"
-	AddAudioOptions_ContentType_AudioAlaw             = "audio/alaw"
-	AddAudioOptions_ContentType_AudioBasic            = "audio/basic"
-	AddAudioOptions_ContentType_AudioFlac             = "audio/flac"
-	AddAudioOptions_ContentType_AudioG729             = "audio/g729"
-	AddAudioOptions_ContentType_AudioL16              = "audio/l16"
-	AddAudioOptions_ContentType_AudioMp3              = "audio/mp3"
-	AddAudioOptions_ContentType_AudioMpeg             = "audio/mpeg"
-	AddAudioOptions_ContentType_AudioMulaw            = "audio/mulaw"
-	AddAudioOptions_ContentType_AudioOgg              = "audio/ogg"
-	AddAudioOptions_ContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
-	AddAudioOptions_ContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
-	AddAudioOptions_ContentType_AudioWav              = "audio/wav"
-	AddAudioOptions_ContentType_AudioWebm             = "audio/webm"
-	AddAudioOptions_ContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
-	AddAudioOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
 )
 
 // NewAddAudioOptions : Instantiate AddAudioOptions
 func (speechToText *SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, audioResource io.ReadCloser) *AddAudioOptions {
 	return &AddAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName:       core.StringPtr(audioName),
-		AudioResource:   &audioResource,
+		AudioName: core.StringPtr(audioName),
+		AudioResource: &audioResource,
 	}
 }
 
@@ -2940,6 +2926,12 @@ func (options *AddAudioOptions) SetAudioResource(audioResource io.ReadCloser) *A
 	return options
 }
 
+// SetContentType : Allow user to set ContentType
+func (options *AddAudioOptions) SetContentType(contentType string) *AddAudioOptions {
+	options.ContentType = core.StringPtr(contentType)
+	return options
+}
+
 // SetContainedContentType : Allow user to set ContainedContentType
 func (options *AddAudioOptions) SetContainedContentType(containedContentType string) *AddAudioOptions {
 	options.ContainedContentType = core.StringPtr(containedContentType)
@@ -2949,12 +2941,6 @@ func (options *AddAudioOptions) SetContainedContentType(containedContentType str
 // SetAllowOverwrite : Allow user to set AllowOverwrite
 func (options *AddAudioOptions) SetAllowOverwrite(allowOverwrite bool) *AddAudioOptions {
 	options.AllowOverwrite = core.BoolPtr(allowOverwrite)
-	return options
-}
-
-// SetContentType : Allow user to set ContentType
-func (options *AddAudioOptions) SetContentType(contentType string) *AddAudioOptions {
-	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -3007,8 +2993,8 @@ type AddCorpusOptions struct {
 func (speechToText *SpeechToTextV1) NewAddCorpusOptions(customizationID string, corpusName string, corpusFile *os.File) *AddCorpusOptions {
 	return &AddCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName:      core.StringPtr(corpusName),
-		CorpusFile:      corpusFile,
+		CorpusName: core.StringPtr(corpusName),
+		CorpusFile: corpusFile,
 	}
 }
 
@@ -3090,7 +3076,7 @@ type AddGrammarOptions struct {
 // traditional BNF grammars.
 // * `application/srgs+xml` for XML Form, which uses XML elements to represent the grammar.
 const (
-	AddGrammarOptions_ContentType_ApplicationSrgs    = "application/srgs"
+	AddGrammarOptions_ContentType_ApplicationSrgs = "application/srgs"
 	AddGrammarOptions_ContentType_ApplicationSrgsXml = "application/srgs+xml"
 )
 
@@ -3098,9 +3084,9 @@ const (
 func (speechToText *SpeechToTextV1) NewAddGrammarOptions(customizationID string, grammarName string, grammarFile io.ReadCloser, contentType string) *AddGrammarOptions {
 	return &AddGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName:     core.StringPtr(grammarName),
-		GrammarFile:     &grammarFile,
-		ContentType:     core.StringPtr(contentType),
+		GrammarName: core.StringPtr(grammarName),
+		GrammarFile: &grammarFile,
+		ContentType: core.StringPtr(contentType),
 	}
 }
 
@@ -3185,7 +3171,7 @@ type AddWordOptions struct {
 func (speechToText *SpeechToTextV1) NewAddWordOptions(customizationID string, wordName string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName:        core.StringPtr(wordName),
+		WordName: core.StringPtr(wordName),
 	}
 }
 
@@ -3244,7 +3230,7 @@ type AddWordsOptions struct {
 func (speechToText *SpeechToTextV1) NewAddWordsOptions(customizationID string, words []CustomWord) *AddWordsOptions {
 	return &AddWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Words:           words,
+		Words: words,
 	}
 }
 
@@ -3298,8 +3284,8 @@ type AudioDetails struct {
 // * `undetermined` for a resource that the service cannot validate (for example, if the user mistakenly passes a file
 // that does not contain audio, such as a JPEG file).
 const (
-	AudioDetails_Type_Archive      = "archive"
-	AudioDetails_Type_Audio        = "audio"
+	AudioDetails_Type_Archive = "archive"
+	AudioDetails_Type_Audio = "audio"
 	AudioDetails_Type_Undetermined = "undetermined"
 )
 
@@ -3311,7 +3297,7 @@ const (
 // Omitted for an audio-type resource.
 const (
 	AudioDetails_Compression_Gzip = "gzip"
-	AudioDetails_Compression_Zip  = "zip"
+	AudioDetails_Compression_Zip = "zip"
 )
 
 // AudioListing : Information about an audio resource from a custom acoustic model.
@@ -3357,8 +3343,8 @@ type AudioListing struct {
 // Omitted for an archive-type resource.
 const (
 	AudioListing_Status_BeingProcessed = "being_processed"
-	AudioListing_Status_Invalid        = "invalid"
-	AudioListing_Status_Ok             = "ok"
+	AudioListing_Status_Invalid = "invalid"
+	AudioListing_Status_Ok = "ok"
 )
 
 // AudioMetrics : If audio metrics are requested, information about the signal characteristics of the input audio.
@@ -3472,8 +3458,8 @@ type AudioResource struct {
 // files are invalid.
 const (
 	AudioResource_Status_BeingProcessed = "being_processed"
-	AudioResource_Status_Invalid        = "invalid"
-	AudioResource_Status_Ok             = "ok"
+	AudioResource_Status_Invalid = "invalid"
+	AudioResource_Status_Ok = "ok"
 )
 
 // AudioResources : Information about the audio resources from a custom acoustic model.
@@ -3579,9 +3565,9 @@ type Corpus struct {
 // * `undetermined`: The service encountered an error while processing the corpus. The `error` field describes the
 // failure.
 const (
-	Corpus_Status_Analyzed       = "analyzed"
+	Corpus_Status_Analyzed = "analyzed"
 	Corpus_Status_BeingProcessed = "being_processed"
-	Corpus_Status_Undetermined   = "undetermined"
+	Corpus_Status_Undetermined = "undetermined"
 )
 
 // CreateAcousticModelOptions : The CreateAcousticModel options.
@@ -3614,32 +3600,42 @@ type CreateAcousticModelOptions struct {
 // To determine whether a base model supports acoustic model customization, refer to [Language support for
 // customization](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
-	CreateAcousticModelOptions_BaseModelName_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_ArArBroadbandmodel = "ar-AR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_DeDeBroadbandmodel = "de-DE_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_DeDeNarrowbandmodel = "de-DE_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EnGbBroadbandmodel = "en-GB_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EnGbNarrowbandmodel = "en-GB_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EnUsBroadbandmodel = "en-US_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EnUsNarrowbandmodel = "en-US_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsArBroadbandmodel = "es-AR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsArNarrowbandmodel = "es-AR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsClBroadbandmodel = "es-CL_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsClNarrowbandmodel = "es-CL_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsCoBroadbandmodel = "es-CO_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsCoNarrowbandmodel = "es-CO_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsEsBroadbandmodel = "es-ES_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsEsNarrowbandmodel = "es-ES_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsMxBroadbandmodel = "es-MX_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsMxNarrowbandmodel = "es-MX_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsPeBroadbandmodel = "es-PE_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_EsPeNarrowbandmodel = "es-PE_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_FrFrBroadbandmodel = "fr-FR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_FrFrNarrowbandmodel = "fr-FR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_JaJpBroadbandmodel = "ja-JP_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_JaJpNarrowbandmodel = "ja-JP_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_KoKrBroadbandmodel = "ko-KR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_KoKrNarrowbandmodel = "ko-KR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_PtBrBroadbandmodel = "pt-BR_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_PtBrNarrowbandmodel = "pt-BR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_ZhCnBroadbandmodel = "zh-CN_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_ZhCnNarrowbandmodel = "zh-CN_NarrowbandModel"
 )
 
 // NewCreateAcousticModelOptions : Instantiate CreateAcousticModelOptions
 func (speechToText *SpeechToTextV1) NewCreateAcousticModelOptions(name string, baseModelName string) *CreateAcousticModelOptions {
 	return &CreateAcousticModelOptions{
-		Name:          core.StringPtr(name),
+		Name: core.StringPtr(name),
 		BaseModelName: core.StringPtr(baseModelName),
 	}
 }
@@ -3673,6 +3669,10 @@ type CreateJobOptions struct {
 
 	// The audio to transcribe.
 	Audio *io.ReadCloser `json:"audio" validate:"required"`
+
+	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
+	// (content types)** in the method description.
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// The identifier of the model that is to be used for the recognition request. See [Languages and
 	// models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-models#models).
@@ -3813,9 +3813,9 @@ type CreateJobOptions struct {
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
 	// the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
 	//
-	// **Note:** Applies to US English, Japanese, and Spanish transcription only. To determine whether a language model
-	// supports speaker labels, you can also use the **Get a model** method and check that the attribute `speaker_labels`
-	// is set to `true`.
+	// **Note:** Applies to US English, Japanese, and Spanish (both broadband and narrowband models) and UK English
+	// (narrowband model) transcription only. To determine whether a language model supports speaker labels, you can also
+	// use the **Get a model** method and check that the attribute `speaker_labels` is set to `true`.
 	//
 	// See [Speaker labels](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
@@ -3866,38 +3866,66 @@ type CreateJobOptions struct {
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
 	AudioMetrics *bool `json:"audio_metrics,omitempty"`
 
-	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-	// (content types)** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
-
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the CreateJobOptions.ContentType property.
+// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
+// (content types)** in the method description.
+const (
+	CreateJobOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
+	CreateJobOptions_ContentType_AudioAlaw = "audio/alaw"
+	CreateJobOptions_ContentType_AudioBasic = "audio/basic"
+	CreateJobOptions_ContentType_AudioFlac = "audio/flac"
+	CreateJobOptions_ContentType_AudioG729 = "audio/g729"
+	CreateJobOptions_ContentType_AudioL16 = "audio/l16"
+	CreateJobOptions_ContentType_AudioMp3 = "audio/mp3"
+	CreateJobOptions_ContentType_AudioMpeg = "audio/mpeg"
+	CreateJobOptions_ContentType_AudioMulaw = "audio/mulaw"
+	CreateJobOptions_ContentType_AudioOgg = "audio/ogg"
+	CreateJobOptions_ContentType_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
+	CreateJobOptions_ContentType_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
+	CreateJobOptions_ContentType_AudioWav = "audio/wav"
+	CreateJobOptions_ContentType_AudioWebm = "audio/webm"
+	CreateJobOptions_ContentType_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
+	CreateJobOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
 
 // Constants associated with the CreateJobOptions.Model property.
 // The identifier of the model that is to be used for the recognition request. See [Languages and
 // models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-models#models).
 const (
-	CreateJobOptions_Model_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
-	CreateJobOptions_Model_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	CreateJobOptions_Model_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	CreateJobOptions_Model_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	CreateJobOptions_Model_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	CreateJobOptions_Model_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	CreateJobOptions_Model_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
+	CreateJobOptions_Model_ArArBroadbandmodel = "ar-AR_BroadbandModel"
+	CreateJobOptions_Model_DeDeBroadbandmodel = "de-DE_BroadbandModel"
+	CreateJobOptions_Model_DeDeNarrowbandmodel = "de-DE_NarrowbandModel"
+	CreateJobOptions_Model_EnGbBroadbandmodel = "en-GB_BroadbandModel"
+	CreateJobOptions_Model_EnGbNarrowbandmodel = "en-GB_NarrowbandModel"
+	CreateJobOptions_Model_EnUsBroadbandmodel = "en-US_BroadbandModel"
+	CreateJobOptions_Model_EnUsNarrowbandmodel = "en-US_NarrowbandModel"
 	CreateJobOptions_Model_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	CreateJobOptions_Model_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	CreateJobOptions_Model_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	CreateJobOptions_Model_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	CreateJobOptions_Model_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	CreateJobOptions_Model_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	CreateJobOptions_Model_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	CreateJobOptions_Model_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	CreateJobOptions_Model_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	CreateJobOptions_Model_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	CreateJobOptions_Model_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
-	CreateJobOptions_Model_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
-	CreateJobOptions_Model_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
+	CreateJobOptions_Model_EsArBroadbandmodel = "es-AR_BroadbandModel"
+	CreateJobOptions_Model_EsArNarrowbandmodel = "es-AR_NarrowbandModel"
+	CreateJobOptions_Model_EsClBroadbandmodel = "es-CL_BroadbandModel"
+	CreateJobOptions_Model_EsClNarrowbandmodel = "es-CL_NarrowbandModel"
+	CreateJobOptions_Model_EsCoBroadbandmodel = "es-CO_BroadbandModel"
+	CreateJobOptions_Model_EsCoNarrowbandmodel = "es-CO_NarrowbandModel"
+	CreateJobOptions_Model_EsEsBroadbandmodel = "es-ES_BroadbandModel"
+	CreateJobOptions_Model_EsEsNarrowbandmodel = "es-ES_NarrowbandModel"
+	CreateJobOptions_Model_EsMxBroadbandmodel = "es-MX_BroadbandModel"
+	CreateJobOptions_Model_EsMxNarrowbandmodel = "es-MX_NarrowbandModel"
+	CreateJobOptions_Model_EsPeBroadbandmodel = "es-PE_BroadbandModel"
+	CreateJobOptions_Model_EsPeNarrowbandmodel = "es-PE_NarrowbandModel"
+	CreateJobOptions_Model_FrFrBroadbandmodel = "fr-FR_BroadbandModel"
+	CreateJobOptions_Model_FrFrNarrowbandmodel = "fr-FR_NarrowbandModel"
+	CreateJobOptions_Model_JaJpBroadbandmodel = "ja-JP_BroadbandModel"
+	CreateJobOptions_Model_JaJpNarrowbandmodel = "ja-JP_NarrowbandModel"
+	CreateJobOptions_Model_KoKrBroadbandmodel = "ko-KR_BroadbandModel"
+	CreateJobOptions_Model_KoKrNarrowbandmodel = "ko-KR_NarrowbandModel"
+	CreateJobOptions_Model_PtBrBroadbandmodel = "pt-BR_BroadbandModel"
+	CreateJobOptions_Model_PtBrNarrowbandmodel = "pt-BR_NarrowbandModel"
+	CreateJobOptions_Model_ZhCnBroadbandmodel = "zh-CN_BroadbandModel"
+	CreateJobOptions_Model_ZhCnNarrowbandmodel = "zh-CN_NarrowbandModel"
 )
 
 // Constants associated with the CreateJobOptions.Events property.
@@ -3917,32 +3945,10 @@ const (
 // If the job includes a callback URL, omit the parameter to subscribe to the default events: `recognitions.started`,
 // `recognitions.completed`, and `recognitions.failed`. If the job does not include a callback URL, omit the parameter.
 const (
-	CreateJobOptions_Events_RecognitionsCompleted            = "recognitions.completed"
+	CreateJobOptions_Events_RecognitionsCompleted = "recognitions.completed"
 	CreateJobOptions_Events_RecognitionsCompletedWithResults = "recognitions.completed_with_results"
-	CreateJobOptions_Events_RecognitionsFailed               = "recognitions.failed"
-	CreateJobOptions_Events_RecognitionsStarted              = "recognitions.started"
-)
-
-// Constants associated with the CreateJobOptions.ContentType property.
-// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-// (content types)** in the method description.
-const (
-	CreateJobOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
-	CreateJobOptions_ContentType_AudioAlaw              = "audio/alaw"
-	CreateJobOptions_ContentType_AudioBasic             = "audio/basic"
-	CreateJobOptions_ContentType_AudioFlac              = "audio/flac"
-	CreateJobOptions_ContentType_AudioG729              = "audio/g729"
-	CreateJobOptions_ContentType_AudioL16               = "audio/l16"
-	CreateJobOptions_ContentType_AudioMp3               = "audio/mp3"
-	CreateJobOptions_ContentType_AudioMpeg              = "audio/mpeg"
-	CreateJobOptions_ContentType_AudioMulaw             = "audio/mulaw"
-	CreateJobOptions_ContentType_AudioOgg               = "audio/ogg"
-	CreateJobOptions_ContentType_AudioOggCodecsOpus     = "audio/ogg;codecs=opus"
-	CreateJobOptions_ContentType_AudioOggCodecsVorbis   = "audio/ogg;codecs=vorbis"
-	CreateJobOptions_ContentType_AudioWav               = "audio/wav"
-	CreateJobOptions_ContentType_AudioWebm              = "audio/webm"
-	CreateJobOptions_ContentType_AudioWebmCodecsOpus    = "audio/webm;codecs=opus"
-	CreateJobOptions_ContentType_AudioWebmCodecsVorbis  = "audio/webm;codecs=vorbis"
+	CreateJobOptions_Events_RecognitionsFailed = "recognitions.failed"
+	CreateJobOptions_Events_RecognitionsStarted = "recognitions.started"
 )
 
 // NewCreateJobOptions : Instantiate CreateJobOptions
@@ -3955,6 +3961,12 @@ func (speechToText *SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser) *Cr
 // SetAudio : Allow user to set Audio
 func (options *CreateJobOptions) SetAudio(audio io.ReadCloser) *CreateJobOptions {
 	options.Audio = &audio
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *CreateJobOptions) SetContentType(contentType string) *CreateJobOptions {
+	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -4108,12 +4120,6 @@ func (options *CreateJobOptions) SetAudioMetrics(audioMetrics bool) *CreateJobOp
 	return options
 }
 
-// SetContentType : Allow user to set ContentType
-func (options *CreateJobOptions) SetContentType(contentType string) *CreateJobOptions {
-	options.ContentType = core.StringPtr(contentType)
-	return options
-}
-
 // SetHeaders : Allow user to set Headers
 func (options *CreateJobOptions) SetHeaders(param map[string]string) *CreateJobOptions {
 	options.Headers = param
@@ -4136,15 +4142,22 @@ type CreateLanguageModelOptions struct {
 	// customization](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-customization#languageSupport).
 	BaseModelName *string `json:"base_model_name" validate:"required"`
 
-	// The dialect of the specified language that is to be used with the custom language model. The parameter is meaningful
-	// only for Spanish models, for which the service creates a custom language model that is suited for speech in one of
-	// the following dialects:
-	// * `es-ES` for Castilian Spanish (the default)
-	// * `es-LA` for Latin American Spanish
-	// * `es-US` for North American (Mexican) Spanish
+	// The dialect of the specified language that is to be used with the custom language model. For most languages, the
+	// dialect matches the language of the base model by default. For example, `en-US` is used for either of the US English
+	// language models.
 	//
-	// A specified dialect must be valid for the base model. By default, the dialect matches the language of the base
-	// model; for example, `en-US` for either of the US English language models.
+	// For a Spanish language, the service creates a custom language model that is suited for speech in one of the
+	// following dialects:
+	// * `es-ES` for Castilian Spanish (`es-ES` models)
+	// * `es-LA` for Latin American Spanish (`es-AR`, `es-CL`, `es-CO`, and `es-PE` models)
+	// * `es-US` for Mexican (North American) Spanish (`es-MX` models)
+	//
+	// The parameter is meaningful only for Spanish models, for which you can always safely omit the parameter to have the
+	// service create the correct mapping.
+	//
+	// If you specify the `dialect` parameter for non-Spanish language models, its value must match the language of the
+	// base model. If you specify the `dialect` for Spanish language models, its value must match one of the defined
+	// mappings as indicated (`es-ES`, `es-LA`, or `es-MX`). All dialect values are case-insensitive.
 	Dialect *string `json:"dialect,omitempty"`
 
 	// A description of the new custom language model. Use a localized description that matches the language of the custom
@@ -4163,29 +4176,39 @@ type CreateLanguageModelOptions struct {
 // that the attribute `custom_language_model` is set to `true`. You can also refer to [Language support for
 // customization](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
-	CreateLanguageModelOptions_BaseModelName_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_DeDeBroadbandmodel = "de-DE_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_DeDeNarrowbandmodel = "de-DE_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EnGbBroadbandmodel = "en-GB_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EnGbNarrowbandmodel = "en-GB_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EnUsBroadbandmodel = "en-US_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EnUsNarrowbandmodel = "en-US_NarrowbandModel"
 	CreateLanguageModelOptions_BaseModelName_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsArBroadbandmodel = "es-AR_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsArNarrowbandmodel = "es-AR_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsClBroadbandmodel = "es-CL_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsClNarrowbandmodel = "es-CL_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsCoBroadbandmodel = "es-CO_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsCoNarrowbandmodel = "es-CO_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsEsBroadbandmodel = "es-ES_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsEsNarrowbandmodel = "es-ES_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsMxBroadbandmodel = "es-MX_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsMxNarrowbandmodel = "es-MX_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsPeBroadbandmodel = "es-PE_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_EsPeNarrowbandmodel = "es-PE_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_FrFrBroadbandmodel = "fr-FR_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_FrFrNarrowbandmodel = "fr-FR_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_JaJpBroadbandmodel = "ja-JP_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_JaJpNarrowbandmodel = "ja-JP_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_KoKrBroadbandmodel = "ko-KR_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_KoKrNarrowbandmodel = "ko-KR_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_PtBrBroadbandmodel = "pt-BR_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_PtBrNarrowbandmodel = "pt-BR_NarrowbandModel"
 )
 
 // NewCreateLanguageModelOptions : Instantiate CreateLanguageModelOptions
 func (speechToText *SpeechToTextV1) NewCreateLanguageModelOptions(name string, baseModelName string) *CreateLanguageModelOptions {
 	return &CreateLanguageModelOptions{
-		Name:          core.StringPtr(name),
+		Name: core.StringPtr(name),
 		BaseModelName: core.StringPtr(baseModelName),
 	}
 }
@@ -4296,7 +4319,7 @@ type DeleteAudioOptions struct {
 func (speechToText *SpeechToTextV1) NewDeleteAudioOptions(customizationID string, audioName string) *DeleteAudioOptions {
 	return &DeleteAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName:       core.StringPtr(audioName),
+		AudioName: core.StringPtr(audioName),
 	}
 }
 
@@ -4336,7 +4359,7 @@ type DeleteCorpusOptions struct {
 func (speechToText *SpeechToTextV1) NewDeleteCorpusOptions(customizationID string, corpusName string) *DeleteCorpusOptions {
 	return &DeleteCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName:      core.StringPtr(corpusName),
+		CorpusName: core.StringPtr(corpusName),
 	}
 }
 
@@ -4376,7 +4399,7 @@ type DeleteGrammarOptions struct {
 func (speechToText *SpeechToTextV1) NewDeleteGrammarOptions(customizationID string, grammarName string) *DeleteGrammarOptions {
 	return &DeleteGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName:     core.StringPtr(grammarName),
+		GrammarName: core.StringPtr(grammarName),
 	}
 }
 
@@ -4507,7 +4530,7 @@ type DeleteWordOptions struct {
 func (speechToText *SpeechToTextV1) NewDeleteWordOptions(customizationID string, wordName string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName:        core.StringPtr(wordName),
+		WordName: core.StringPtr(wordName),
 	}
 }
 
@@ -4577,7 +4600,7 @@ type GetAudioOptions struct {
 func (speechToText *SpeechToTextV1) NewGetAudioOptions(customizationID string, audioName string) *GetAudioOptions {
 	return &GetAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName:       core.StringPtr(audioName),
+		AudioName: core.StringPtr(audioName),
 	}
 }
 
@@ -4617,7 +4640,7 @@ type GetCorpusOptions struct {
 func (speechToText *SpeechToTextV1) NewGetCorpusOptions(customizationID string, corpusName string) *GetCorpusOptions {
 	return &GetCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName:      core.StringPtr(corpusName),
+		CorpusName: core.StringPtr(corpusName),
 	}
 }
 
@@ -4657,7 +4680,7 @@ type GetGrammarOptions struct {
 func (speechToText *SpeechToTextV1) NewGetGrammarOptions(customizationID string, grammarName string) *GetGrammarOptions {
 	return &GetGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName:     core.StringPtr(grammarName),
+		GrammarName: core.StringPtr(grammarName),
 	}
 }
 
@@ -4722,26 +4745,36 @@ type GetModelOptions struct {
 // Constants associated with the GetModelOptions.ModelID property.
 // The identifier of the model in the form of its name from the output of the **Get a model** method.
 const (
-	GetModelOptions_ModelID_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
-	GetModelOptions_ModelID_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	GetModelOptions_ModelID_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	GetModelOptions_ModelID_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	GetModelOptions_ModelID_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	GetModelOptions_ModelID_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	GetModelOptions_ModelID_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
+	GetModelOptions_ModelID_ArArBroadbandmodel = "ar-AR_BroadbandModel"
+	GetModelOptions_ModelID_DeDeBroadbandmodel = "de-DE_BroadbandModel"
+	GetModelOptions_ModelID_DeDeNarrowbandmodel = "de-DE_NarrowbandModel"
+	GetModelOptions_ModelID_EnGbBroadbandmodel = "en-GB_BroadbandModel"
+	GetModelOptions_ModelID_EnGbNarrowbandmodel = "en-GB_NarrowbandModel"
+	GetModelOptions_ModelID_EnUsBroadbandmodel = "en-US_BroadbandModel"
+	GetModelOptions_ModelID_EnUsNarrowbandmodel = "en-US_NarrowbandModel"
 	GetModelOptions_ModelID_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	GetModelOptions_ModelID_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	GetModelOptions_ModelID_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	GetModelOptions_ModelID_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	GetModelOptions_ModelID_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	GetModelOptions_ModelID_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	GetModelOptions_ModelID_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	GetModelOptions_ModelID_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	GetModelOptions_ModelID_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	GetModelOptions_ModelID_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	GetModelOptions_ModelID_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
-	GetModelOptions_ModelID_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
-	GetModelOptions_ModelID_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
+	GetModelOptions_ModelID_EsArBroadbandmodel = "es-AR_BroadbandModel"
+	GetModelOptions_ModelID_EsArNarrowbandmodel = "es-AR_NarrowbandModel"
+	GetModelOptions_ModelID_EsClBroadbandmodel = "es-CL_BroadbandModel"
+	GetModelOptions_ModelID_EsClNarrowbandmodel = "es-CL_NarrowbandModel"
+	GetModelOptions_ModelID_EsCoBroadbandmodel = "es-CO_BroadbandModel"
+	GetModelOptions_ModelID_EsCoNarrowbandmodel = "es-CO_NarrowbandModel"
+	GetModelOptions_ModelID_EsEsBroadbandmodel = "es-ES_BroadbandModel"
+	GetModelOptions_ModelID_EsEsNarrowbandmodel = "es-ES_NarrowbandModel"
+	GetModelOptions_ModelID_EsMxBroadbandmodel = "es-MX_BroadbandModel"
+	GetModelOptions_ModelID_EsMxNarrowbandmodel = "es-MX_NarrowbandModel"
+	GetModelOptions_ModelID_EsPeBroadbandmodel = "es-PE_BroadbandModel"
+	GetModelOptions_ModelID_EsPeNarrowbandmodel = "es-PE_NarrowbandModel"
+	GetModelOptions_ModelID_FrFrBroadbandmodel = "fr-FR_BroadbandModel"
+	GetModelOptions_ModelID_FrFrNarrowbandmodel = "fr-FR_NarrowbandModel"
+	GetModelOptions_ModelID_JaJpBroadbandmodel = "ja-JP_BroadbandModel"
+	GetModelOptions_ModelID_JaJpNarrowbandmodel = "ja-JP_NarrowbandModel"
+	GetModelOptions_ModelID_KoKrBroadbandmodel = "ko-KR_BroadbandModel"
+	GetModelOptions_ModelID_KoKrNarrowbandmodel = "ko-KR_NarrowbandModel"
+	GetModelOptions_ModelID_PtBrBroadbandmodel = "pt-BR_BroadbandModel"
+	GetModelOptions_ModelID_PtBrNarrowbandmodel = "pt-BR_NarrowbandModel"
+	GetModelOptions_ModelID_ZhCnBroadbandmodel = "zh-CN_BroadbandModel"
+	GetModelOptions_ModelID_ZhCnNarrowbandmodel = "zh-CN_NarrowbandModel"
 )
 
 // NewGetModelOptions : Instantiate GetModelOptions
@@ -4783,7 +4816,7 @@ type GetWordOptions struct {
 func (speechToText *SpeechToTextV1) NewGetWordOptions(customizationID string, wordName string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName:        core.StringPtr(wordName),
+		WordName: core.StringPtr(wordName),
 	}
 }
 
@@ -4837,9 +4870,9 @@ type Grammar struct {
 // * `undetermined`: The service encountered an error while processing the grammar. The `error` field describes the
 // failure.
 const (
-	Grammar_Status_Analyzed       = "analyzed"
+	Grammar_Status_Analyzed = "analyzed"
 	Grammar_Status_BeingProcessed = "being_processed"
-	Grammar_Status_Undetermined   = "undetermined"
+	Grammar_Status_Undetermined = "undetermined"
 )
 
 // Grammars : Information about the grammars from a custom language model.
@@ -4885,12 +4918,14 @@ type LanguageModel struct {
 	// The language identifier of the custom language model (for example, `en-US`).
 	Language *string `json:"language,omitempty"`
 
-	// The dialect of the language for the custom language model. By default, the dialect matches the language of the base
-	// model; for example, `en-US` for either of the US English language models. For Spanish models, the field indicates
-	// the dialect for which the model was created:
-	// * `es-ES` for Castilian Spanish (the default)
-	// * `es-LA` for Latin American Spanish
-	// * `es-US` for North American (Mexican) Spanish.
+	// The dialect of the language for the custom language model. For non-Spanish models, the field matches the language of
+	// the base model; for example, `en-US` for either of the US English language models. For Spanish models, the field
+	// indicates the dialect for which the model was created:
+	// * `es-ES` for Castilian Spanish (`es-ES` models)
+	// * `es-LA` for Latin American Spanish (`es-AR`, `es-CL`, `es-CO`, and `es-PE` models)
+	// * `es-US` for Mexican (North American) Spanish (`es-MX` models)
+	//
+	// Dialect values are case-insensitive.
 	Dialect *string `json:"dialect,omitempty"`
 
 	// A list of the available versions of the custom language model. Each element of the array indicates a version of the
@@ -4948,10 +4983,10 @@ type LanguageModel struct {
 // * `failed`: Training of the model failed.
 const (
 	LanguageModel_Status_Available = "available"
-	LanguageModel_Status_Failed    = "failed"
-	LanguageModel_Status_Pending   = "pending"
-	LanguageModel_Status_Ready     = "ready"
-	LanguageModel_Status_Training  = "training"
+	LanguageModel_Status_Failed = "failed"
+	LanguageModel_Status_Pending = "pending"
+	LanguageModel_Status_Ready = "ready"
+	LanguageModel_Status_Training = "training"
 	LanguageModel_Status_Upgrading = "upgrading"
 )
 
@@ -5162,10 +5197,10 @@ type ListWordsOptions struct {
 // * `corpora` shows only OOV that were extracted from corpora.
 // * `grammars` shows only OOV words that are recognized by grammars.
 const (
-	ListWordsOptions_WordType_All      = "all"
-	ListWordsOptions_WordType_Corpora  = "corpora"
+	ListWordsOptions_WordType_All = "all"
+	ListWordsOptions_WordType_Corpora = "corpora"
 	ListWordsOptions_WordType_Grammars = "grammars"
-	ListWordsOptions_WordType_User     = "user"
+	ListWordsOptions_WordType_User = "user"
 )
 
 // Constants associated with the ListWordsOptions.Sort property.
@@ -5176,7 +5211,7 @@ const (
 // ordered alphabetically. With the `curl` command, URL-encode the `+` symbol as `%2B`.
 const (
 	ListWordsOptions_Sort_Alphabetical = "alphabetical"
-	ListWordsOptions_Sort_Count        = "count"
+	ListWordsOptions_Sort_Count = "count"
 )
 
 // NewListWordsOptions : Instantiate ListWordsOptions
@@ -5317,10 +5352,10 @@ type RecognitionJob struct {
 // must retrieve the results by checking the individual job.
 // * `failed`: The job failed.
 const (
-	RecognitionJob_Status_Completed  = "completed"
-	RecognitionJob_Status_Failed     = "failed"
+	RecognitionJob_Status_Completed = "completed"
+	RecognitionJob_Status_Failed = "failed"
 	RecognitionJob_Status_Processing = "processing"
-	RecognitionJob_Status_Waiting    = "waiting"
+	RecognitionJob_Status_Waiting = "waiting"
 )
 
 // RecognitionJobs : Information about current asynchronous speech recognition jobs.
@@ -5336,6 +5371,10 @@ type RecognizeOptions struct {
 
 	// The audio to transcribe.
 	Audio *io.ReadCloser `json:"audio" validate:"required"`
+
+	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
+	// (content types)** in the method description.
+	ContentType *string `json:"Content-Type,omitempty"`
 
 	// The identifier of the model that is to be used for the recognition request. See [Languages and
 	// models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-models#models).
@@ -5441,9 +5480,9 @@ type RecognizeOptions struct {
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
 	// the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
 	//
-	// **Note:** Applies to US English, Japanese, and Spanish transcription only. To determine whether a language model
-	// supports speaker labels, you can also use the **Get a model** method and check that the attribute `speaker_labels`
-	// is set to `true`.
+	// **Note:** Applies to US English, Japanese, and Spanish (both broadband and narrowband models) and UK English
+	// (narrowband model) transcription only. To determine whether a language model supports speaker labels, you can also
+	// use the **Get a model** method and check that the attribute `speaker_labels` is set to `true`.
 	//
 	// See [Speaker labels](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
@@ -5477,60 +5516,66 @@ type RecognizeOptions struct {
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
 	AudioMetrics *bool `json:"audio_metrics,omitempty"`
 
-	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-	// (content types)** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
-
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the RecognizeOptions.Model property.
-// The identifier of the model that is to be used for the recognition request. See [Languages and
-// models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-models#models).
-const (
-	RecognizeOptions_Model_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
-	RecognizeOptions_Model_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	RecognizeOptions_Model_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	RecognizeOptions_Model_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	RecognizeOptions_Model_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	RecognizeOptions_Model_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	RecognizeOptions_Model_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
-	RecognizeOptions_Model_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	RecognizeOptions_Model_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	RecognizeOptions_Model_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	RecognizeOptions_Model_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	RecognizeOptions_Model_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	RecognizeOptions_Model_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	RecognizeOptions_Model_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	RecognizeOptions_Model_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	RecognizeOptions_Model_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	RecognizeOptions_Model_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	RecognizeOptions_Model_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
-	RecognizeOptions_Model_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
-	RecognizeOptions_Model_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
-)
 
 // Constants associated with the RecognizeOptions.ContentType property.
 // The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
 // (content types)** in the method description.
 const (
 	RecognizeOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
-	RecognizeOptions_ContentType_AudioAlaw              = "audio/alaw"
-	RecognizeOptions_ContentType_AudioBasic             = "audio/basic"
-	RecognizeOptions_ContentType_AudioFlac              = "audio/flac"
-	RecognizeOptions_ContentType_AudioG729              = "audio/g729"
-	RecognizeOptions_ContentType_AudioL16               = "audio/l16"
-	RecognizeOptions_ContentType_AudioMp3               = "audio/mp3"
-	RecognizeOptions_ContentType_AudioMpeg              = "audio/mpeg"
-	RecognizeOptions_ContentType_AudioMulaw             = "audio/mulaw"
-	RecognizeOptions_ContentType_AudioOgg               = "audio/ogg"
-	RecognizeOptions_ContentType_AudioOggCodecsOpus     = "audio/ogg;codecs=opus"
-	RecognizeOptions_ContentType_AudioOggCodecsVorbis   = "audio/ogg;codecs=vorbis"
-	RecognizeOptions_ContentType_AudioWav               = "audio/wav"
-	RecognizeOptions_ContentType_AudioWebm              = "audio/webm"
-	RecognizeOptions_ContentType_AudioWebmCodecsOpus    = "audio/webm;codecs=opus"
-	RecognizeOptions_ContentType_AudioWebmCodecsVorbis  = "audio/webm;codecs=vorbis"
+	RecognizeOptions_ContentType_AudioAlaw = "audio/alaw"
+	RecognizeOptions_ContentType_AudioBasic = "audio/basic"
+	RecognizeOptions_ContentType_AudioFlac = "audio/flac"
+	RecognizeOptions_ContentType_AudioG729 = "audio/g729"
+	RecognizeOptions_ContentType_AudioL16 = "audio/l16"
+	RecognizeOptions_ContentType_AudioMp3 = "audio/mp3"
+	RecognizeOptions_ContentType_AudioMpeg = "audio/mpeg"
+	RecognizeOptions_ContentType_AudioMulaw = "audio/mulaw"
+	RecognizeOptions_ContentType_AudioOgg = "audio/ogg"
+	RecognizeOptions_ContentType_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
+	RecognizeOptions_ContentType_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
+	RecognizeOptions_ContentType_AudioWav = "audio/wav"
+	RecognizeOptions_ContentType_AudioWebm = "audio/webm"
+	RecognizeOptions_ContentType_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
+	RecognizeOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+)
+
+// Constants associated with the RecognizeOptions.Model property.
+// The identifier of the model that is to be used for the recognition request. See [Languages and
+// models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-models#models).
+const (
+	RecognizeOptions_Model_ArArBroadbandmodel = "ar-AR_BroadbandModel"
+	RecognizeOptions_Model_DeDeBroadbandmodel = "de-DE_BroadbandModel"
+	RecognizeOptions_Model_DeDeNarrowbandmodel = "de-DE_NarrowbandModel"
+	RecognizeOptions_Model_EnGbBroadbandmodel = "en-GB_BroadbandModel"
+	RecognizeOptions_Model_EnGbNarrowbandmodel = "en-GB_NarrowbandModel"
+	RecognizeOptions_Model_EnUsBroadbandmodel = "en-US_BroadbandModel"
+	RecognizeOptions_Model_EnUsNarrowbandmodel = "en-US_NarrowbandModel"
+	RecognizeOptions_Model_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
+	RecognizeOptions_Model_EsArBroadbandmodel = "es-AR_BroadbandModel"
+	RecognizeOptions_Model_EsArNarrowbandmodel = "es-AR_NarrowbandModel"
+	RecognizeOptions_Model_EsClBroadbandmodel = "es-CL_BroadbandModel"
+	RecognizeOptions_Model_EsClNarrowbandmodel = "es-CL_NarrowbandModel"
+	RecognizeOptions_Model_EsCoBroadbandmodel = "es-CO_BroadbandModel"
+	RecognizeOptions_Model_EsCoNarrowbandmodel = "es-CO_NarrowbandModel"
+	RecognizeOptions_Model_EsEsBroadbandmodel = "es-ES_BroadbandModel"
+	RecognizeOptions_Model_EsEsNarrowbandmodel = "es-ES_NarrowbandModel"
+	RecognizeOptions_Model_EsMxBroadbandmodel = "es-MX_BroadbandModel"
+	RecognizeOptions_Model_EsMxNarrowbandmodel = "es-MX_NarrowbandModel"
+	RecognizeOptions_Model_EsPeBroadbandmodel = "es-PE_BroadbandModel"
+	RecognizeOptions_Model_EsPeNarrowbandmodel = "es-PE_NarrowbandModel"
+	RecognizeOptions_Model_FrFrBroadbandmodel = "fr-FR_BroadbandModel"
+	RecognizeOptions_Model_FrFrNarrowbandmodel = "fr-FR_NarrowbandModel"
+	RecognizeOptions_Model_JaJpBroadbandmodel = "ja-JP_BroadbandModel"
+	RecognizeOptions_Model_JaJpNarrowbandmodel = "ja-JP_NarrowbandModel"
+	RecognizeOptions_Model_KoKrBroadbandmodel = "ko-KR_BroadbandModel"
+	RecognizeOptions_Model_KoKrNarrowbandmodel = "ko-KR_NarrowbandModel"
+	RecognizeOptions_Model_PtBrBroadbandmodel = "pt-BR_BroadbandModel"
+	RecognizeOptions_Model_PtBrNarrowbandmodel = "pt-BR_NarrowbandModel"
+	RecognizeOptions_Model_ZhCnBroadbandmodel = "zh-CN_BroadbandModel"
+	RecognizeOptions_Model_ZhCnNarrowbandmodel = "zh-CN_NarrowbandModel"
 )
 
 // NewRecognizeOptions : Instantiate RecognizeOptions
@@ -5543,6 +5588,12 @@ func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser) *Re
 // SetAudio : Allow user to set Audio
 func (options *RecognizeOptions) SetAudio(audio io.ReadCloser) *RecognizeOptions {
 	options.Audio = &audio
+	return options
+}
+
+// SetContentType : Allow user to set ContentType
+func (options *RecognizeOptions) SetContentType(contentType string) *RecognizeOptions {
+	options.ContentType = core.StringPtr(contentType)
 	return options
 }
 
@@ -5660,12 +5711,6 @@ func (options *RecognizeOptions) SetAudioMetrics(audioMetrics bool) *RecognizeOp
 	return options
 }
 
-// SetContentType : Allow user to set ContentType
-func (options *RecognizeOptions) SetContentType(contentType string) *RecognizeOptions {
-	options.ContentType = core.StringPtr(contentType)
-	return options
-}
-
 // SetHeaders : Allow user to set Headers
 func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeOptions {
 	options.Headers = param
@@ -5733,7 +5778,7 @@ type RegisterStatus struct {
 // * `already created`: The URL was already white-listed.
 const (
 	RegisterStatus_Status_AlreadyCreated = "already created"
-	RegisterStatus_Status_Created        = "created"
+	RegisterStatus_Status_Created = "created"
 )
 
 // ResetAcousticModelOptions : The ResetAcousticModel options.
@@ -5817,7 +5862,7 @@ type SpeakerLabelsResult struct {
 	// An indication of whether the service might further change word and speaker-label results. A value of `true` means
 	// that the service guarantees not to send any further updates for the current or any preceding results; `false` means
 	// that the service might send further updates to the results.
-	FinalResults *bool `json:"final" validate:"required"`
+	Final *bool `json:"final" validate:"required"`
 }
 
 // SpeechModel : Information about an available language model.
@@ -5875,7 +5920,7 @@ type SpeechRecognitionResult struct {
 
 	// An indication of whether the transcription results are final. If `true`, the results for this utterance are not
 	// updated further; no additional results are sent for a `result_index` once its results are indicated as final.
-	FinalResults *bool `json:"final" validate:"required"`
+	Final *bool `json:"final" validate:"required"`
 
 	// An array of alternative transcripts. The `alternatives` array can include additional requested output such as word
 	// confidence or timestamps.
@@ -6023,7 +6068,7 @@ type TrainLanguageModelOptions struct {
 // * `user` trains the model only on new words that were added or modified by the user directly. The model is not
 // trained on new words extracted from corpora or grammars.
 const (
-	TrainLanguageModelOptions_WordTypeToAdd_All  = "all"
+	TrainLanguageModelOptions_WordTypeToAdd_All = "all"
 	TrainLanguageModelOptions_WordTypeToAdd_User = "user"
 )
 
@@ -6082,10 +6127,10 @@ type TrainingWarning struct {
 // Constants associated with the TrainingWarning.Code property.
 // An identifier for the type of invalid resources listed in the `description` field.
 const (
-	TrainingWarning_Code_InvalidAudioFiles   = "invalid_audio_files"
-	TrainingWarning_Code_InvalidCorpusFiles  = "invalid_corpus_files"
+	TrainingWarning_Code_InvalidAudioFiles = "invalid_audio_files"
+	TrainingWarning_Code_InvalidCorpusFiles = "invalid_corpus_files"
 	TrainingWarning_Code_InvalidGrammarFiles = "invalid_grammar_files"
-	TrainingWarning_Code_InvalidWords        = "invalid_words"
+	TrainingWarning_Code_InvalidWords = "invalid_words"
 )
 
 // UnregisterCallbackOptions : The UnregisterCallback options.

@@ -13,11 +13,14 @@ import (
 
 func main() {
 	// Instantiate the Watson Personality Insights service
+	authenticator := &core.IamAuthenticator{
+		ApiKey:     os.Getenv("YOUR API KEY"),
+	}
 	service, serviceErr := personalityinsightsv3.
 		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 			URL:       "YOUR SERVICE URL",
 			Version:   "2017-10-13",
-			IAMApiKey: "YOUR API KEY",
+			Authenticator: authenticator,
 		})
 
 	// Check successful instantiation

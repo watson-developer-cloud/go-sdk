@@ -40,8 +40,10 @@ func init() {
 			NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
 				URL:      os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_URL"),
 				Version:  "2018-03-16",
-				Username: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_USERNAME"),
-				Password: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD"),
+				Authenticator: &core.BasicAuthenticator{
+						Username: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_USERNAME"),
+						Password: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD"),
+                },
 			})
 
 		if serviceErr == nil {

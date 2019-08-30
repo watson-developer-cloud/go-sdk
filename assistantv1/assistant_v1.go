@@ -1,8 +1,5 @@
-// Package assistantv1 : Operations and models for the AssistantV1 service
-package assistantv1
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +14,11 @@ package assistantv1
  * limitations under the License.
  */
 
+// Package assistantv1 : Operations and models for the AssistantV1 service
+package assistantv1
+
 import (
 	"fmt"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
@@ -28,54 +27,46 @@ import (
 // AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
 // an integrated dialog editor to create conversation flows between your apps and your users.
 //
-// Version: V1
-// See: http://www.ibm.com/watson/developercloud/assistant.html
+// Version: 1.0
+// See: https://cloud.ibm.com/docs/services/assistant/
 type AssistantV1 struct {
 	Service *core.BaseService
 }
 
 // AssistantV1Options : Service options
 type AssistantV1Options struct {
-	Version            string
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	Version         string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewAssistantV1 : Instantiate AssistantV1
-func NewAssistantV1(options *AssistantV1Options) (*AssistantV1, error) {
+func NewAssistantV1(options *AssistantV1Options) (service *AssistantV1, err error) {
 	if options.URL == "" {
 		options.URL = "https://gateway.watsonplatform.net/assistant/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:            options.Version,
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "conversation", "Assistant")
-	if serviceErr != nil {
-		return nil, serviceErr
+		Version:         options.Version,
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &AssistantV1{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "conversation", "Assistant")
+	if err != nil {
+		return
+	}
+	
+	service = &AssistantV1{Service: baseService}
+
+	return
 }
 
 // Message : Get response to user input
@@ -136,8 +127,7 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	if messageOptions.Output != nil {
 		body["output"] = messageOptions.Output
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -187,9 +177,6 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 
 	if listWorkspacesOptions.PageLimit != nil {
 		builder.AddQuery("page_limit", fmt.Sprint(*listWorkspacesOptions.PageLimit))
-	}
-	if listWorkspacesOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listWorkspacesOptions.IncludeCount))
 	}
 	if listWorkspacesOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listWorkspacesOptions.Sort))
@@ -280,8 +267,7 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	if createWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = createWorkspaceOptions.Counterexamples
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -429,8 +415,7 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	if updateWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = updateWorkspaceOptions.Counterexamples
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -527,9 +512,6 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 	if listIntentsOptions.PageLimit != nil {
 		builder.AddQuery("page_limit", fmt.Sprint(*listIntentsOptions.PageLimit))
 	}
-	if listIntentsOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listIntentsOptions.IncludeCount))
-	}
 	if listIntentsOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listIntentsOptions.Sort))
 	}
@@ -603,8 +585,7 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 	if createIntentOptions.Examples != nil {
 		body["examples"] = createIntentOptions.Examples
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -727,8 +708,7 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	if updateIntentOptions.NewExamples != nil {
 		body["examples"] = updateIntentOptions.NewExamples
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -821,9 +801,6 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 	if listExamplesOptions.PageLimit != nil {
 		builder.AddQuery("page_limit", fmt.Sprint(*listExamplesOptions.PageLimit))
 	}
-	if listExamplesOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listExamplesOptions.IncludeCount))
-	}
 	if listExamplesOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listExamplesOptions.Sort))
 	}
@@ -894,8 +871,7 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 	if createExampleOptions.Mentions != nil {
 		body["mentions"] = createExampleOptions.Mentions
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1010,8 +986,7 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 	if updateExampleOptions.NewMentions != nil {
 		body["mentions"] = updateExampleOptions.NewMentions
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1104,9 +1079,6 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 	if listCounterexamplesOptions.PageLimit != nil {
 		builder.AddQuery("page_limit", fmt.Sprint(*listCounterexamplesOptions.PageLimit))
 	}
-	if listCounterexamplesOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listCounterexamplesOptions.IncludeCount))
-	}
 	if listCounterexamplesOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listCounterexamplesOptions.Sort))
 	}
@@ -1174,8 +1146,7 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 	if createCounterexampleOptions.Text != nil {
 		body["text"] = createCounterexampleOptions.Text
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1287,8 +1258,7 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 	if updateCounterexampleOptions.NewText != nil {
 		body["text"] = updateCounterexampleOptions.NewText
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1385,9 +1355,6 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 	if listEntitiesOptions.PageLimit != nil {
 		builder.AddQuery("page_limit", fmt.Sprint(*listEntitiesOptions.PageLimit))
 	}
-	if listEntitiesOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listEntitiesOptions.IncludeCount))
-	}
 	if listEntitiesOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listEntitiesOptions.Sort))
 	}
@@ -1467,8 +1434,7 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	if createEntityOptions.Values != nil {
 		body["values"] = createEntityOptions.Values
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1597,8 +1563,7 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 	if updateEntityOptions.NewValues != nil {
 		body["values"] = updateEntityOptions.NewValues
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1750,9 +1715,6 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 	if listValuesOptions.PageLimit != nil {
 		builder.AddQuery("page_limit", fmt.Sprint(*listValuesOptions.PageLimit))
 	}
-	if listValuesOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listValuesOptions.IncludeCount))
-	}
 	if listValuesOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listValuesOptions.Sort))
 	}
@@ -1823,8 +1785,8 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	if createValueOptions.Metadata != nil {
 		body["metadata"] = createValueOptions.Metadata
 	}
-	if createValueOptions.ValueType != nil {
-		body["type"] = createValueOptions.ValueType
+	if createValueOptions.Type != nil {
+		body["type"] = createValueOptions.Type
 	}
 	if createValueOptions.Synonyms != nil {
 		body["synonyms"] = createValueOptions.Synonyms
@@ -1832,8 +1794,7 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	if createValueOptions.Patterns != nil {
 		body["patterns"] = createValueOptions.Patterns
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1952,8 +1913,8 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	if updateValueOptions.NewMetadata != nil {
 		body["metadata"] = updateValueOptions.NewMetadata
 	}
-	if updateValueOptions.ValueType != nil {
-		body["type"] = updateValueOptions.ValueType
+	if updateValueOptions.NewType != nil {
+		body["type"] = updateValueOptions.NewType
 	}
 	if updateValueOptions.NewSynonyms != nil {
 		body["synonyms"] = updateValueOptions.NewSynonyms
@@ -1961,8 +1922,7 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	if updateValueOptions.NewPatterns != nil {
 		body["patterns"] = updateValueOptions.NewPatterns
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2055,9 +2015,6 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 	if listSynonymsOptions.PageLimit != nil {
 		builder.AddQuery("page_limit", fmt.Sprint(*listSynonymsOptions.PageLimit))
 	}
-	if listSynonymsOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listSynonymsOptions.IncludeCount))
-	}
 	if listSynonymsOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listSynonymsOptions.Sort))
 	}
@@ -2125,8 +2082,7 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 	if createSynonymOptions.Synonym != nil {
 		body["synonym"] = createSynonymOptions.Synonym
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2238,8 +2194,7 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 	if updateSynonymOptions.NewSynonym != nil {
 		body["synonym"] = updateSynonymOptions.NewSynonym
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2331,9 +2286,6 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 
 	if listDialogNodesOptions.PageLimit != nil {
 		builder.AddQuery("page_limit", fmt.Sprint(*listDialogNodesOptions.PageLimit))
-	}
-	if listDialogNodesOptions.IncludeCount != nil {
-		builder.AddQuery("include_count", fmt.Sprint(*listDialogNodesOptions.IncludeCount))
 	}
 	if listDialogNodesOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*listDialogNodesOptions.Sort))
@@ -2429,8 +2381,8 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	if createDialogNodeOptions.Title != nil {
 		body["title"] = createDialogNodeOptions.Title
 	}
-	if createDialogNodeOptions.NodeType != nil {
-		body["type"] = createDialogNodeOptions.NodeType
+	if createDialogNodeOptions.Type != nil {
+		body["type"] = createDialogNodeOptions.Type
 	}
 	if createDialogNodeOptions.EventName != nil {
 		body["event_name"] = createDialogNodeOptions.EventName
@@ -2453,8 +2405,7 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	if createDialogNodeOptions.UserLabel != nil {
 		body["user_label"] = createDialogNodeOptions.UserLabel
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2593,8 +2544,8 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	if updateDialogNodeOptions.NewTitle != nil {
 		body["title"] = updateDialogNodeOptions.NewTitle
 	}
-	if updateDialogNodeOptions.NodeType != nil {
-		body["type"] = updateDialogNodeOptions.NodeType
+	if updateDialogNodeOptions.NewType != nil {
+		body["type"] = updateDialogNodeOptions.NewType
 	}
 	if updateDialogNodeOptions.NewEventName != nil {
 		body["event_name"] = updateDialogNodeOptions.NewEventName
@@ -2617,8 +2568,7 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	if updateDialogNodeOptions.NewUserLabel != nil {
 		body["user_label"] = updateDialogNodeOptions.NewUserLabel
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2860,42 +2810,42 @@ type Context map[string]interface{}
 
 // SetConversationID : Allow user to set ConversationID
 func (this *Context) SetConversationID(ConversationID *string) {
-	(*this)["conversation_id"] = ConversationID
+   (*this)["conversation_id"] = ConversationID
 }
 
 // GetConversationID : Allow user to get ConversationID
 func (this *Context) GetConversationID() *string {
-	return (*this)["conversation_id"].(*string)
+   return (*this)["conversation_id"].(*string)
 }
 
 // SetSystem : Allow user to set System
 func (this *Context) SetSystem(System *SystemResponse) {
-	(*this)["system"] = System
+   (*this)["system"] = System
 }
 
 // GetSystem : Allow user to get System
 func (this *Context) GetSystem() *SystemResponse {
-	return (*this)["system"].(*SystemResponse)
+   return (*this)["system"].(*SystemResponse)
 }
 
 // SetMetadata : Allow user to set Metadata
 func (this *Context) SetMetadata(Metadata *MessageContextMetadata) {
-	(*this)["metadata"] = Metadata
+   (*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
 func (this *Context) GetMetadata() *MessageContextMetadata {
-	return (*this)["metadata"].(*MessageContextMetadata)
+   return (*this)["metadata"].(*MessageContextMetadata)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *Context) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
+   (*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *Context) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+   return (*this)[Key].(*interface{})
 }
 
 // Counterexample : Counterexample struct
@@ -2942,7 +2892,7 @@ type CreateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
 	return &CreateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -3005,7 +2955,7 @@ type CreateDialogNodeOptions struct {
 	Title *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
-	NodeType *string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// How an `event_handler` node is processed.
 	EventName *string `json:"event_name,omitempty"`
@@ -3032,60 +2982,60 @@ type CreateDialogNodeOptions struct {
 	Headers map[string]string
 }
 
-// Constants associated with the CreateDialogNodeOptions.NodeType property.
+// Constants associated with the CreateDialogNodeOptions.Type property.
 // How the dialog node is processed.
 const (
-	CreateDialogNodeOptions_NodeType_EventHandler      = "event_handler"
-	CreateDialogNodeOptions_NodeType_Folder            = "folder"
-	CreateDialogNodeOptions_NodeType_Frame             = "frame"
-	CreateDialogNodeOptions_NodeType_ResponseCondition = "response_condition"
-	CreateDialogNodeOptions_NodeType_Slot              = "slot"
-	CreateDialogNodeOptions_NodeType_Standard          = "standard"
+	CreateDialogNodeOptions_Type_EventHandler = "event_handler"
+	CreateDialogNodeOptions_Type_Folder = "folder"
+	CreateDialogNodeOptions_Type_Frame = "frame"
+	CreateDialogNodeOptions_Type_ResponseCondition = "response_condition"
+	CreateDialogNodeOptions_Type_Slot = "slot"
+	CreateDialogNodeOptions_Type_Standard = "standard"
 )
 
 // Constants associated with the CreateDialogNodeOptions.EventName property.
 // How an `event_handler` node is processed.
 const (
-	CreateDialogNodeOptions_EventName_DigressionReturnPrompt   = "digression_return_prompt"
-	CreateDialogNodeOptions_EventName_Filled                   = "filled"
-	CreateDialogNodeOptions_EventName_FilledMultiple           = "filled_multiple"
-	CreateDialogNodeOptions_EventName_Focus                    = "focus"
-	CreateDialogNodeOptions_EventName_Generic                  = "generic"
-	CreateDialogNodeOptions_EventName_Input                    = "input"
-	CreateDialogNodeOptions_EventName_Nomatch                  = "nomatch"
+	CreateDialogNodeOptions_EventName_DigressionReturnPrompt = "digression_return_prompt"
+	CreateDialogNodeOptions_EventName_Filled = "filled"
+	CreateDialogNodeOptions_EventName_FilledMultiple = "filled_multiple"
+	CreateDialogNodeOptions_EventName_Focus = "focus"
+	CreateDialogNodeOptions_EventName_Generic = "generic"
+	CreateDialogNodeOptions_EventName_Input = "input"
+	CreateDialogNodeOptions_EventName_Nomatch = "nomatch"
 	CreateDialogNodeOptions_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	CreateDialogNodeOptions_EventName_Validate                 = "validate"
+	CreateDialogNodeOptions_EventName_Validate = "validate"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	CreateDialogNodeOptions_DigressIn_DoesNotReturn = "does_not_return"
-	CreateDialogNodeOptions_DigressIn_NotAvailable  = "not_available"
-	CreateDialogNodeOptions_DigressIn_Returns       = "returns"
+	CreateDialogNodeOptions_DigressIn_NotAvailable = "not_available"
+	CreateDialogNodeOptions_DigressIn_Returns = "returns"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	CreateDialogNodeOptions_DigressOut_AllowAll            = "allow_all"
+	CreateDialogNodeOptions_DigressOut_AllowAll = "allow_all"
 	CreateDialogNodeOptions_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	CreateDialogNodeOptions_DigressOut_AllowReturning      = "allow_returning"
+	CreateDialogNodeOptions_DigressOut_AllowReturning = "allow_returning"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	CreateDialogNodeOptions_DigressOutSlots_AllowAll       = "allow_all"
+	CreateDialogNodeOptions_DigressOutSlots_AllowAll = "allow_all"
 	CreateDialogNodeOptions_DigressOutSlots_AllowReturning = "allow_returning"
-	CreateDialogNodeOptions_DigressOutSlots_NotAllowed     = "not_allowed"
+	CreateDialogNodeOptions_DigressOutSlots_NotAllowed = "not_allowed"
 )
 
 // NewCreateDialogNodeOptions : Instantiate CreateDialogNodeOptions
 func (assistant *AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
@@ -3155,9 +3105,9 @@ func (options *CreateDialogNodeOptions) SetTitle(title string) *CreateDialogNode
 	return options
 }
 
-// SetNodeType : Allow user to set NodeType
-func (options *CreateDialogNodeOptions) SetNodeType(nodeType string) *CreateDialogNodeOptions {
-	options.NodeType = core.StringPtr(nodeType)
+// SetType : Allow user to set Type
+func (options *CreateDialogNodeOptions) SetType(typeVar string) *CreateDialogNodeOptions {
+	options.Type = core.StringPtr(typeVar)
 	return options
 }
 
@@ -3269,7 +3219,7 @@ type CreateEntityOptions struct {
 func (assistant *AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
 	return &CreateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -3340,8 +3290,8 @@ type CreateExampleOptions struct {
 func (assistant *AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
 	return &CreateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -3421,7 +3371,7 @@ type CreateIntentOptions struct {
 func (assistant *AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
 	return &CreateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -3480,9 +3430,9 @@ type CreateSynonymOptions struct {
 func (assistant *AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
 	return &CreateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
@@ -3528,7 +3478,7 @@ type CreateValue struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Specifies the type of entity value.
-	ValueType *string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A synonym must conform to the following resrictions:
@@ -3548,11 +3498,11 @@ type CreateValue struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
-// Constants associated with the CreateValue.ValueType property.
+// Constants associated with the CreateValue.Type property.
 // Specifies the type of entity value.
 const (
-	CreateValue_ValueType_Patterns = "patterns"
-	CreateValue_ValueType_Synonyms = "synonyms"
+	CreateValue_Type_Patterns = "patterns"
+	CreateValue_Type_Synonyms = "synonyms"
 )
 
 // CreateValueOptions : The CreateValue options.
@@ -3573,7 +3523,7 @@ type CreateValueOptions struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Specifies the type of entity value.
-	ValueType *string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A synonym must conform to the following resrictions:
@@ -3590,19 +3540,19 @@ type CreateValueOptions struct {
 	Headers map[string]string
 }
 
-// Constants associated with the CreateValueOptions.ValueType property.
+// Constants associated with the CreateValueOptions.Type property.
 // Specifies the type of entity value.
 const (
-	CreateValueOptions_ValueType_Patterns = "patterns"
-	CreateValueOptions_ValueType_Synonyms = "synonyms"
+	CreateValueOptions_Type_Patterns = "patterns"
+	CreateValueOptions_Type_Synonyms = "synonyms"
 )
 
 // NewCreateValueOptions : Instantiate CreateValueOptions
 func (assistant *AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -3630,9 +3580,9 @@ func (options *CreateValueOptions) SetMetadata(metadata map[string]interface{}) 
 	return options
 }
 
-// SetValueType : Allow user to set ValueType
-func (options *CreateValueOptions) SetValueType(valueType string) *CreateValueOptions {
-	options.ValueType = core.StringPtr(valueType)
+// SetType : Allow user to set Type
+func (options *CreateValueOptions) SetType(typeVar string) *CreateValueOptions {
+	options.Type = core.StringPtr(typeVar)
 	return options
 }
 
@@ -3780,7 +3730,7 @@ type DeleteCounterexampleOptions struct {
 func (assistant *AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
 	return &DeleteCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -3819,7 +3769,7 @@ type DeleteDialogNodeOptions struct {
 func (assistant *AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
 	return &DeleteDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
@@ -3858,7 +3808,7 @@ type DeleteEntityOptions struct {
 func (assistant *AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
 	return &DeleteEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -3900,8 +3850,8 @@ type DeleteExampleOptions struct {
 func (assistant *AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
 	return &DeleteExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -3946,7 +3896,7 @@ type DeleteIntentOptions struct {
 func (assistant *AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
 	return &DeleteIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -3991,9 +3941,9 @@ type DeleteSynonymOptions struct {
 func (assistant *AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
 	return &DeleteSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
@@ -4076,8 +4026,8 @@ type DeleteValueOptions struct {
 func (assistant *AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
 	return &DeleteValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -4172,7 +4122,7 @@ type DialogNode struct {
 	Title *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
-	NodeType *string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// How an `event_handler` node is processed.
 	EventName *string `json:"event_name,omitempty"`
@@ -4205,53 +4155,53 @@ type DialogNode struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
-// Constants associated with the DialogNode.NodeType property.
+// Constants associated with the DialogNode.Type property.
 // How the dialog node is processed.
 const (
-	DialogNode_NodeType_EventHandler      = "event_handler"
-	DialogNode_NodeType_Folder            = "folder"
-	DialogNode_NodeType_Frame             = "frame"
-	DialogNode_NodeType_ResponseCondition = "response_condition"
-	DialogNode_NodeType_Slot              = "slot"
-	DialogNode_NodeType_Standard          = "standard"
+	DialogNode_Type_EventHandler = "event_handler"
+	DialogNode_Type_Folder = "folder"
+	DialogNode_Type_Frame = "frame"
+	DialogNode_Type_ResponseCondition = "response_condition"
+	DialogNode_Type_Slot = "slot"
+	DialogNode_Type_Standard = "standard"
 )
 
 // Constants associated with the DialogNode.EventName property.
 // How an `event_handler` node is processed.
 const (
-	DialogNode_EventName_DigressionReturnPrompt   = "digression_return_prompt"
-	DialogNode_EventName_Filled                   = "filled"
-	DialogNode_EventName_FilledMultiple           = "filled_multiple"
-	DialogNode_EventName_Focus                    = "focus"
-	DialogNode_EventName_Generic                  = "generic"
-	DialogNode_EventName_Input                    = "input"
-	DialogNode_EventName_Nomatch                  = "nomatch"
+	DialogNode_EventName_DigressionReturnPrompt = "digression_return_prompt"
+	DialogNode_EventName_Filled = "filled"
+	DialogNode_EventName_FilledMultiple = "filled_multiple"
+	DialogNode_EventName_Focus = "focus"
+	DialogNode_EventName_Generic = "generic"
+	DialogNode_EventName_Input = "input"
+	DialogNode_EventName_Nomatch = "nomatch"
 	DialogNode_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	DialogNode_EventName_Validate                 = "validate"
+	DialogNode_EventName_Validate = "validate"
 )
 
 // Constants associated with the DialogNode.DigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	DialogNode_DigressIn_DoesNotReturn = "does_not_return"
-	DialogNode_DigressIn_NotAvailable  = "not_available"
-	DialogNode_DigressIn_Returns       = "returns"
+	DialogNode_DigressIn_NotAvailable = "not_available"
+	DialogNode_DigressIn_Returns = "returns"
 )
 
 // Constants associated with the DialogNode.DigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	DialogNode_DigressOut_AllowAll            = "allow_all"
+	DialogNode_DigressOut_AllowAll = "allow_all"
 	DialogNode_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	DialogNode_DigressOut_AllowReturning      = "allow_returning"
+	DialogNode_DigressOut_AllowReturning = "allow_returning"
 )
 
 // Constants associated with the DialogNode.DigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	DialogNode_DigressOutSlots_AllowAll       = "allow_all"
+	DialogNode_DigressOutSlots_AllowAll = "allow_all"
 	DialogNode_DigressOutSlots_AllowReturning = "allow_returning"
-	DialogNode_DigressOutSlots_NotAllowed     = "not_allowed"
+	DialogNode_DigressOutSlots_NotAllowed = "not_allowed"
 )
 
 // DialogNodeAction : DialogNodeAction struct
@@ -4261,7 +4211,7 @@ type DialogNodeAction struct {
 	Name *string `json:"name" validate:"required"`
 
 	// The type of action to invoke.
-	ActionType *string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// A map of key/value pairs to be provided to the action.
 	Parameters map[string]interface{} `json:"parameters,omitempty"`
@@ -4273,13 +4223,13 @@ type DialogNodeAction struct {
 	Credentials *string `json:"credentials,omitempty"`
 }
 
-// Constants associated with the DialogNodeAction.ActionType property.
+// Constants associated with the DialogNodeAction.Type property.
 // The type of action to invoke.
 const (
-	DialogNodeAction_ActionType_Client        = "client"
-	DialogNodeAction_ActionType_CloudFunction = "cloud_function"
-	DialogNodeAction_ActionType_Server        = "server"
-	DialogNodeAction_ActionType_WebAction     = "web_action"
+	DialogNodeAction_Type_Client = "client"
+	DialogNodeAction_Type_CloudFunction = "cloud_function"
+	DialogNodeAction_Type_Server = "server"
+	DialogNodeAction_Type_WebAction = "web_action"
 )
 
 // DialogNodeCollection : An array of dialog nodes.
@@ -4313,8 +4263,7 @@ type DialogNodeNextStep struct {
 	//     - `reprompt`
 	//     - `skip_slot`
 	//     - `skip_all_slots`
-	//
-	// If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
+	//      If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
 	Behavior *string `json:"behavior" validate:"required"`
 
 	// The ID of the dialog node to process next. This parameter is required if **behavior**=`jump_to`.
@@ -4343,22 +4292,21 @@ type DialogNodeNextStep struct {
 //     - `reprompt`
 //     - `skip_slot`
 //     - `skip_all_slots`
-//
-// If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
+//      If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
 const (
-	DialogNodeNextStep_Behavior_GetUserInput  = "get_user_input"
-	DialogNodeNextStep_Behavior_JumpTo        = "jump_to"
-	DialogNodeNextStep_Behavior_Reprompt      = "reprompt"
-	DialogNodeNextStep_Behavior_SkipAllSlots  = "skip_all_slots"
-	DialogNodeNextStep_Behavior_SkipSlot      = "skip_slot"
+	DialogNodeNextStep_Behavior_GetUserInput = "get_user_input"
+	DialogNodeNextStep_Behavior_JumpTo = "jump_to"
+	DialogNodeNextStep_Behavior_Reprompt = "reprompt"
+	DialogNodeNextStep_Behavior_SkipAllSlots = "skip_all_slots"
+	DialogNodeNextStep_Behavior_SkipSlot = "skip_slot"
 	DialogNodeNextStep_Behavior_SkipUserInput = "skip_user_input"
 )
 
 // Constants associated with the DialogNodeNextStep.Selector property.
 // Which part of the dialog node to process next.
 const (
-	DialogNodeNextStep_Selector_Body      = "body"
-	DialogNodeNextStep_Selector_Client    = "client"
+	DialogNodeNextStep_Selector_Body = "body"
+	DialogNodeNextStep_Selector_Client = "client"
 	DialogNodeNextStep_Selector_Condition = "condition"
 	DialogNodeNextStep_Selector_UserInput = "user_input"
 )
@@ -4369,32 +4317,32 @@ type DialogNodeOutput map[string]interface{}
 
 // SetGeneric : Allow user to set Generic
 func (this *DialogNodeOutput) SetGeneric(Generic *[]DialogNodeOutputGeneric) {
-	(*this)["generic"] = Generic
+   (*this)["generic"] = Generic
 }
 
 // GetGeneric : Allow user to get Generic
 func (this *DialogNodeOutput) GetGeneric() *[]DialogNodeOutputGeneric {
-	return (*this)["generic"].(*[]DialogNodeOutputGeneric)
+   return (*this)["generic"].(*[]DialogNodeOutputGeneric)
 }
 
 // SetModifiers : Allow user to set Modifiers
 func (this *DialogNodeOutput) SetModifiers(Modifiers *DialogNodeOutputModifiers) {
-	(*this)["modifiers"] = Modifiers
+   (*this)["modifiers"] = Modifiers
 }
 
 // GetModifiers : Allow user to get Modifiers
 func (this *DialogNodeOutput) GetModifiers() *DialogNodeOutputModifiers {
-	return (*this)["modifiers"].(*DialogNodeOutputModifiers)
+   return (*this)["modifiers"].(*DialogNodeOutputModifiers)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *DialogNodeOutput) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
+   (*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *DialogNodeOutput) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+   return (*this)[Key].(*interface{})
 }
 
 // DialogNodeOutputGeneric : DialogNodeOutputGeneric struct
@@ -4402,6 +4350,9 @@ type DialogNodeOutputGeneric struct {
 
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
+	//
+	// **Note:** The **search_skill** response type is available only for Plus and Premium users, and is used only by the
+	// v2 runtime API.
 	ResponseType *string `json:"response_type" validate:"required"`
 
 	// A list of one or more objects defining text responses. Required when **response_type**=`text`.
@@ -4440,33 +4391,61 @@ type DialogNodeOutputGeneric struct {
 	// An optional message to be sent to the human agent who will be taking over the conversation. Valid only when
 	// **reponse_type**=`connect_to_agent`.
 	MessageToHumanAgent *string `json:"message_to_human_agent,omitempty"`
+
+	// The text of the search query. This can be either a natural-language query or a query that uses the Discovery query
+	// language syntax, depending on the value of the **query_type** property. For more information, see the [Discovery
+	// service documentation](https://cloud.ibm.com/docs/services/discovery/query-operators.html#query-operators). Required
+	// when **response_type**=`search_skill`.
+	Query *string `json:"query,omitempty"`
+
+	// The type of the search query. Required when **response_type**=`search_skill`.
+	QueryType *string `json:"query_type,omitempty"`
+
+	// An optional filter that narrows the set of documents to be searched. For more information, see the [Discovery
+	// service documentation]([Discovery service
+	// documentation](https://cloud.ibm.com/docs/services/discovery/query-parameters.html#filter).
+	Filter *string `json:"filter,omitempty"`
+
+	// The version of the Discovery service API to use for the query.
+	DiscoveryVersion *string `json:"discovery_version,omitempty"`
 }
 
 // Constants associated with the DialogNodeOutputGeneric.ResponseType property.
 // The type of response returned by the dialog node. The specified response type must be supported by the client
 // application or channel.
+//
+// **Note:** The **search_skill** response type is available only for Plus and Premium users, and is used only by the v2
+// runtime API.
 const (
 	DialogNodeOutputGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	DialogNodeOutputGeneric_ResponseType_Image          = "image"
-	DialogNodeOutputGeneric_ResponseType_Option         = "option"
-	DialogNodeOutputGeneric_ResponseType_Pause          = "pause"
-	DialogNodeOutputGeneric_ResponseType_Text           = "text"
+	DialogNodeOutputGeneric_ResponseType_Image = "image"
+	DialogNodeOutputGeneric_ResponseType_Option = "option"
+	DialogNodeOutputGeneric_ResponseType_Pause = "pause"
+	DialogNodeOutputGeneric_ResponseType_SearchSkill = "search_skill"
+	DialogNodeOutputGeneric_ResponseType_Text = "text"
 )
 
 // Constants associated with the DialogNodeOutputGeneric.SelectionPolicy property.
 // How a response is selected from the list, if more than one response is specified. Valid only when
 // **response_type**=`text`.
 const (
-	DialogNodeOutputGeneric_SelectionPolicy_Multiline  = "multiline"
-	DialogNodeOutputGeneric_SelectionPolicy_Random     = "random"
+	DialogNodeOutputGeneric_SelectionPolicy_Multiline = "multiline"
+	DialogNodeOutputGeneric_SelectionPolicy_Random = "random"
 	DialogNodeOutputGeneric_SelectionPolicy_Sequential = "sequential"
 )
 
 // Constants associated with the DialogNodeOutputGeneric.Preference property.
 // The preferred type of control to display, if supported by the channel. Valid only when **response_type**=`option`.
 const (
-	DialogNodeOutputGeneric_Preference_Button   = "button"
+	DialogNodeOutputGeneric_Preference_Button = "button"
 	DialogNodeOutputGeneric_Preference_Dropdown = "dropdown"
+)
+
+// Constants associated with the DialogNodeOutputGeneric.QueryType property.
+// The type of the search query. Required when **response_type**=`search_skill`.
+const (
+	DialogNodeOutputGeneric_QueryType_DiscoveryQueryLanguage = "discovery_query_language"
+	DialogNodeOutputGeneric_QueryType_NaturalLanguage = "natural_language"
 )
 
 // DialogNodeOutputModifiers : Options that modify how specified output is handled.
@@ -4511,7 +4490,7 @@ type DialogNodeOutputOptionsElementValue struct {
 // DialogNodeOutputTextValuesElement : DialogNodeOutputTextValuesElement struct
 type DialogNodeOutputTextValuesElement struct {
 
-	// The text of a response. This string can include newline characters (`\\n`), Markdown tagging, or other special
+	// The text of a response. This string can include newline characters (`\n`), Markdown tagging, or other special
 	// characters, if supported by the channel.
 	Text *string `json:"text,omitempty"`
 }
@@ -4529,14 +4508,89 @@ type DialogNodeVisitedDetails struct {
 	Conditions *string `json:"conditions,omitempty"`
 }
 
-// DialogRuntimeResponseGeneric : DialogRuntimeResponseGeneric struct
-type DialogRuntimeResponseGeneric struct {
+// DialogSuggestion : DialogSuggestion struct
+type DialogSuggestion struct {
+
+	// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of the
+	// corresponding dialog node.
+	Label *string `json:"label" validate:"required"`
+
+	// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
+	// selects the corresponding disambiguation option.
+	Value *DialogSuggestionValue `json:"value" validate:"required"`
+
+	// The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding
+	// option.
+	Output *DialogSuggestionOutput `json:"output,omitempty"`
+
+	// The ID of the dialog node that the **label** property is taken from. The **label** property is populated using the
+	// value of the dialog node's **user_label** property.
+	DialogNode *string `json:"dialog_node,omitempty"`
+}
+
+// DialogSuggestionOutput : The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding
+// option.
+type DialogSuggestionOutput map[string]interface{}
+
+// SetNodesVisited : Allow user to set NodesVisited
+func (this *DialogSuggestionOutput) SetNodesVisited(NodesVisited *[]string) {
+   (*this)["nodes_visited"] = NodesVisited
+}
+
+// GetNodesVisited : Allow user to get NodesVisited
+func (this *DialogSuggestionOutput) GetNodesVisited() *[]string {
+   return (*this)["nodes_visited"].(*[]string)
+}
+
+// SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
+func (this *DialogSuggestionOutput) SetNodesVisitedDetails(NodesVisitedDetails *[]DialogNodeVisitedDetails) {
+   (*this)["nodes_visited_details"] = NodesVisitedDetails
+}
+
+// GetNodesVisitedDetails : Allow user to get NodesVisitedDetails
+func (this *DialogSuggestionOutput) GetNodesVisitedDetails() *[]DialogNodeVisitedDetails {
+   return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
+}
+
+// SetText : Allow user to set Text
+func (this *DialogSuggestionOutput) SetText(Text *[]string) {
+   (*this)["text"] = Text
+}
+
+// GetText : Allow user to get Text
+func (this *DialogSuggestionOutput) GetText() *[]string {
+   return (*this)["text"].(*[]string)
+}
+
+// SetGeneric : Allow user to set Generic
+func (this *DialogSuggestionOutput) SetGeneric(Generic *[]DialogSuggestionResponseGeneric) {
+   (*this)["generic"] = Generic
+}
+
+// GetGeneric : Allow user to get Generic
+func (this *DialogSuggestionOutput) GetGeneric() *[]DialogSuggestionResponseGeneric {
+   return (*this)["generic"].(*[]DialogSuggestionResponseGeneric)
+}
+
+// SetProperty : Allow user to set arbitrary property
+func (this *DialogSuggestionOutput) SetProperty(Key string, Value *interface{}) {
+   (*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *DialogSuggestionOutput) GetProperty(Key string) *interface{} {
+   return (*this)[Key].(*interface{})
+}
+
+// DialogSuggestionResponseGeneric : DialogSuggestionResponseGeneric struct
+type DialogSuggestionResponseGeneric struct {
 
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
 	//
-	// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for
-	// Premium users.
+	// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Plus
+	// and Premium users. The **search_skill** response type is available only for Plus and Premium users, and is used only
+	// by the v2 runtime API.
 	ResponseType *string `json:"response_type" validate:"required"`
 
 	// The text of the response.
@@ -4572,55 +4626,30 @@ type DialogRuntimeResponseGeneric struct {
 	// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated using the
 	// value of the dialog node's **user_label** property.
 	DialogNode *string `json:"dialog_node,omitempty"`
-
-	// An array of objects describing the possible matching dialog nodes from which the user can choose.
-	//
-	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium
-	// users.
-	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 }
 
-// Constants associated with the DialogRuntimeResponseGeneric.ResponseType property.
+// Constants associated with the DialogSuggestionResponseGeneric.ResponseType property.
 // The type of response returned by the dialog node. The specified response type must be supported by the client
 // application or channel.
 //
-// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Premium
-// users.
+// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Plus
+// and Premium users. The **search_skill** response type is available only for Plus and Premium users, and is used only
+// by the v2 runtime API.
 const (
-	DialogRuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	DialogRuntimeResponseGeneric_ResponseType_Image          = "image"
-	DialogRuntimeResponseGeneric_ResponseType_Option         = "option"
-	DialogRuntimeResponseGeneric_ResponseType_Pause          = "pause"
-	DialogRuntimeResponseGeneric_ResponseType_Suggestion     = "suggestion"
-	DialogRuntimeResponseGeneric_ResponseType_Text           = "text"
+	DialogSuggestionResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
+	DialogSuggestionResponseGeneric_ResponseType_Image = "image"
+	DialogSuggestionResponseGeneric_ResponseType_Option = "option"
+	DialogSuggestionResponseGeneric_ResponseType_Pause = "pause"
+	DialogSuggestionResponseGeneric_ResponseType_SearchSkill = "search_skill"
+	DialogSuggestionResponseGeneric_ResponseType_Text = "text"
 )
 
-// Constants associated with the DialogRuntimeResponseGeneric.Preference property.
+// Constants associated with the DialogSuggestionResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	DialogRuntimeResponseGeneric_Preference_Button   = "button"
-	DialogRuntimeResponseGeneric_Preference_Dropdown = "dropdown"
+	DialogSuggestionResponseGeneric_Preference_Button = "button"
+	DialogSuggestionResponseGeneric_Preference_Dropdown = "dropdown"
 )
-
-// DialogSuggestion : DialogSuggestion struct
-type DialogSuggestion struct {
-
-	// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of the
-	// corresponding dialog node.
-	Label *string `json:"label" validate:"required"`
-
-	// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
-	// selects the corresponding disambiguation option.
-	Value *DialogSuggestionValue `json:"value" validate:"required"`
-
-	// The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding
-	// option.
-	Output map[string]interface{} `json:"output,omitempty"`
-
-	// The ID of the dialog node that the **label** property is taken from. The **label** property is populated using the
-	// value of the dialog node's **user_label** property.
-	DialogNode *string `json:"dialog_node,omitempty"`
-}
 
 // DialogSuggestionValue : An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
 // selects the corresponding disambiguation option.
@@ -4745,7 +4774,7 @@ type GetCounterexampleOptions struct {
 func (assistant *AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
 	return &GetCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -4793,7 +4822,7 @@ type GetDialogNodeOptions struct {
 func (assistant *AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
 	return &GetDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
@@ -4845,7 +4874,7 @@ type GetEntityOptions struct {
 func (assistant *AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
 	return &GetEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -4902,8 +4931,8 @@ type GetExampleOptions struct {
 func (assistant *AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
 	return &GetExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -4961,7 +4990,7 @@ type GetIntentOptions struct {
 func (assistant *AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
 	return &GetIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -5021,9 +5050,9 @@ type GetSynonymOptions struct {
 func (assistant *AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
 	return &GetSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
@@ -5090,8 +5119,8 @@ type GetValueOptions struct {
 func (assistant *AssistantV1) NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
 	return &GetValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -5296,9 +5325,6 @@ type ListCounterexamplesOptions struct {
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
-	// Whether to include information about the number of records returned.
-	IncludeCount *bool `json:"include_count,omitempty"`
-
 	// The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -5317,7 +5343,7 @@ type ListCounterexamplesOptions struct {
 // The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
 // minus sign (`-`).
 const (
-	ListCounterexamplesOptions_Sort_Text    = "text"
+	ListCounterexamplesOptions_Sort_Text = "text"
 	ListCounterexamplesOptions_Sort_Updated = "updated"
 )
 
@@ -5337,12 +5363,6 @@ func (options *ListCounterexamplesOptions) SetWorkspaceID(workspaceID string) *L
 // SetPageLimit : Allow user to set PageLimit
 func (options *ListCounterexamplesOptions) SetPageLimit(pageLimit int64) *ListCounterexamplesOptions {
 	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
-}
-
-// SetIncludeCount : Allow user to set IncludeCount
-func (options *ListCounterexamplesOptions) SetIncludeCount(includeCount bool) *ListCounterexamplesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
@@ -5379,9 +5399,6 @@ type ListDialogNodesOptions struct {
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
-	// Whether to include information about the number of records returned.
-	IncludeCount *bool `json:"include_count,omitempty"`
-
 	// The attribute by which returned dialog nodes will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -5401,7 +5418,7 @@ type ListDialogNodesOptions struct {
 // sign (`-`).
 const (
 	ListDialogNodesOptions_Sort_DialogNode = "dialog_node"
-	ListDialogNodesOptions_Sort_Updated    = "updated"
+	ListDialogNodesOptions_Sort_Updated = "updated"
 )
 
 // NewListDialogNodesOptions : Instantiate ListDialogNodesOptions
@@ -5420,12 +5437,6 @@ func (options *ListDialogNodesOptions) SetWorkspaceID(workspaceID string) *ListD
 // SetPageLimit : Allow user to set PageLimit
 func (options *ListDialogNodesOptions) SetPageLimit(pageLimit int64) *ListDialogNodesOptions {
 	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
-}
-
-// SetIncludeCount : Allow user to set IncludeCount
-func (options *ListDialogNodesOptions) SetIncludeCount(includeCount bool) *ListDialogNodesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
@@ -5466,9 +5477,6 @@ type ListEntitiesOptions struct {
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
-	// Whether to include information about the number of records returned.
-	IncludeCount *bool `json:"include_count,omitempty"`
-
 	// The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -5487,7 +5495,7 @@ type ListEntitiesOptions struct {
 // The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListEntitiesOptions_Sort_Entity  = "entity"
+	ListEntitiesOptions_Sort_Entity = "entity"
 	ListEntitiesOptions_Sort_Updated = "updated"
 )
 
@@ -5513,12 +5521,6 @@ func (options *ListEntitiesOptions) SetExport(export bool) *ListEntitiesOptions 
 // SetPageLimit : Allow user to set PageLimit
 func (options *ListEntitiesOptions) SetPageLimit(pageLimit int64) *ListEntitiesOptions {
 	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
-}
-
-// SetIncludeCount : Allow user to set IncludeCount
-func (options *ListEntitiesOptions) SetIncludeCount(includeCount bool) *ListEntitiesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
@@ -5558,9 +5560,6 @@ type ListExamplesOptions struct {
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
-	// Whether to include information about the number of records returned.
-	IncludeCount *bool `json:"include_count,omitempty"`
-
 	// The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -5579,7 +5578,7 @@ type ListExamplesOptions struct {
 // The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListExamplesOptions_Sort_Text    = "text"
+	ListExamplesOptions_Sort_Text = "text"
 	ListExamplesOptions_Sort_Updated = "updated"
 )
 
@@ -5587,7 +5586,7 @@ const (
 func (assistant *AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
 	return &ListExamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -5606,12 +5605,6 @@ func (options *ListExamplesOptions) SetIntent(intent string) *ListExamplesOption
 // SetPageLimit : Allow user to set PageLimit
 func (options *ListExamplesOptions) SetPageLimit(pageLimit int64) *ListExamplesOptions {
 	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
-}
-
-// SetIncludeCount : Allow user to set IncludeCount
-func (options *ListExamplesOptions) SetIncludeCount(includeCount bool) *ListExamplesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
@@ -5652,9 +5645,6 @@ type ListIntentsOptions struct {
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
-	// Whether to include information about the number of records returned.
-	IncludeCount *bool `json:"include_count,omitempty"`
-
 	// The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -5673,7 +5663,7 @@ type ListIntentsOptions struct {
 // The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus sign
 // (`-`).
 const (
-	ListIntentsOptions_Sort_Intent  = "intent"
+	ListIntentsOptions_Sort_Intent = "intent"
 	ListIntentsOptions_Sort_Updated = "updated"
 )
 
@@ -5699,12 +5689,6 @@ func (options *ListIntentsOptions) SetExport(export bool) *ListIntentsOptions {
 // SetPageLimit : Allow user to set PageLimit
 func (options *ListIntentsOptions) SetPageLimit(pageLimit int64) *ListIntentsOptions {
 	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
-}
-
-// SetIncludeCount : Allow user to set IncludeCount
-func (options *ListIntentsOptions) SetIncludeCount(includeCount bool) *ListIntentsOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
@@ -5823,7 +5807,7 @@ type ListMentionsOptions struct {
 func (assistant *AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
 	return &ListMentionsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -5872,9 +5856,6 @@ type ListSynonymsOptions struct {
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
-	// Whether to include information about the number of records returned.
-	IncludeCount *bool `json:"include_count,omitempty"`
-
 	// The attribute by which returned entity value synonyms will be sorted. To reverse the sort order, prefix the value
 	// with a minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -5901,8 +5882,8 @@ const (
 func (assistant *AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
 	return &ListSynonymsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -5927,12 +5908,6 @@ func (options *ListSynonymsOptions) SetValue(value string) *ListSynonymsOptions 
 // SetPageLimit : Allow user to set PageLimit
 func (options *ListSynonymsOptions) SetPageLimit(pageLimit int64) *ListSynonymsOptions {
 	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
-}
-
-// SetIncludeCount : Allow user to set IncludeCount
-func (options *ListSynonymsOptions) SetIncludeCount(includeCount bool) *ListSynonymsOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
@@ -5976,9 +5951,6 @@ type ListValuesOptions struct {
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
-	// Whether to include information about the number of records returned.
-	IncludeCount *bool `json:"include_count,omitempty"`
-
 	// The attribute by which returned entity values will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -5998,14 +5970,14 @@ type ListValuesOptions struct {
 // minus sign (`-`).
 const (
 	ListValuesOptions_Sort_Updated = "updated"
-	ListValuesOptions_Sort_Value   = "value"
+	ListValuesOptions_Sort_Value = "value"
 )
 
 // NewListValuesOptions : Instantiate ListValuesOptions
 func (assistant *AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
 	return &ListValuesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -6030,12 +6002,6 @@ func (options *ListValuesOptions) SetExport(export bool) *ListValuesOptions {
 // SetPageLimit : Allow user to set PageLimit
 func (options *ListValuesOptions) SetPageLimit(pageLimit int64) *ListValuesOptions {
 	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
-}
-
-// SetIncludeCount : Allow user to set IncludeCount
-func (options *ListValuesOptions) SetIncludeCount(includeCount bool) *ListValuesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
@@ -6069,9 +6035,6 @@ type ListWorkspacesOptions struct {
 	// The number of records to return in each page of results.
 	PageLimit *int64 `json:"page_limit,omitempty"`
 
-	// Whether to include information about the number of records returned.
-	IncludeCount *bool `json:"include_count,omitempty"`
-
 	// The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
 	Sort *string `json:"sort,omitempty"`
@@ -6090,7 +6053,7 @@ type ListWorkspacesOptions struct {
 // The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListWorkspacesOptions_Sort_Name    = "name"
+	ListWorkspacesOptions_Sort_Name = "name"
 	ListWorkspacesOptions_Sort_Updated = "updated"
 )
 
@@ -6102,12 +6065,6 @@ func (assistant *AssistantV1) NewListWorkspacesOptions() *ListWorkspacesOptions 
 // SetPageLimit : Allow user to set PageLimit
 func (options *ListWorkspacesOptions) SetPageLimit(pageLimit int64) *ListWorkspacesOptions {
 	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
-}
-
-// SetIncludeCount : Allow user to set IncludeCount
-func (options *ListWorkspacesOptions) SetIncludeCount(includeCount bool) *ListWorkspacesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
 	return options
 }
 
@@ -6171,44 +6128,21 @@ type LogCollection struct {
 }
 
 // LogMessage : Log message details.
-type LogMessage map[string]interface{}
+type LogMessage struct {
 
-// SetLevel : Allow user to set Level
-func (this *LogMessage) SetLevel(Level *string) {
-	(*this)["level"] = Level
-}
+	// The severity of the log message.
+	Level *string `json:"level" validate:"required"`
 
-// GetLevel : Allow user to get Level
-func (this *LogMessage) GetLevel() *string {
-	return (*this)["level"].(*string)
-}
-
-// SetMsg : Allow user to set Msg
-func (this *LogMessage) SetMsg(Msg *string) {
-	(*this)["msg"] = Msg
-}
-
-// GetMsg : Allow user to get Msg
-func (this *LogMessage) GetMsg() *string {
-	return (*this)["msg"].(*string)
-}
-
-// SetProperty : Allow user to set arbitrary property
-func (this *LogMessage) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
-}
-
-// GetProperty : Allow user to get arbitrary property
-func (this *LogMessage) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+	// The text of the log message.
+	Msg *string `json:"msg" validate:"required"`
 }
 
 // Constants associated with the LogMessage.Level property.
 // The severity of the log message.
 const (
 	LogMessage_Level_Error = "error"
-	LogMessage_Level_Info  = "info"
-	LogMessage_Level_Warn  = "warn"
+	LogMessage_Level_Info = "info"
+	LogMessage_Level_Warn = "warn"
 )
 
 // LogPagination : The pagination data for the returned objects.
@@ -6253,22 +6187,22 @@ type MessageInput map[string]interface{}
 
 // SetText : Allow user to set Text
 func (this *MessageInput) SetText(Text *string) {
-	(*this)["text"] = Text
+   (*this)["text"] = Text
 }
 
 // GetText : Allow user to get Text
 func (this *MessageInput) GetText() *string {
-	return (*this)["text"].(*string)
+   return (*this)["text"].(*string)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *MessageInput) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
+   (*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *MessageInput) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+   return (*this)[Key].(*interface{})
 }
 
 // MessageOptions : The Message options.
@@ -6425,64 +6359,64 @@ type MessageResponse struct {
 // log.
 type OutputData map[string]interface{}
 
-// SetLogMessages : Allow user to set LogMessages
-func (this *OutputData) SetLogMessages(LogMessages *[]LogMessage) {
-	(*this)["log_messages"] = LogMessages
-}
-
-// GetLogMessages : Allow user to get LogMessages
-func (this *OutputData) GetLogMessages() *[]LogMessage {
-	return (*this)["log_messages"].(*[]LogMessage)
-}
-
-// SetText : Allow user to set Text
-func (this *OutputData) SetText(Text *[]string) {
-	(*this)["text"] = Text
-}
-
-// GetText : Allow user to get Text
-func (this *OutputData) GetText() *[]string {
-	return (*this)["text"].(*[]string)
-}
-
-// SetGeneric : Allow user to set Generic
-func (this *OutputData) SetGeneric(Generic *[]DialogRuntimeResponseGeneric) {
-	(*this)["generic"] = Generic
-}
-
-// GetGeneric : Allow user to get Generic
-func (this *OutputData) GetGeneric() *[]DialogRuntimeResponseGeneric {
-	return (*this)["generic"].(*[]DialogRuntimeResponseGeneric)
-}
-
 // SetNodesVisited : Allow user to set NodesVisited
 func (this *OutputData) SetNodesVisited(NodesVisited *[]string) {
-	(*this)["nodes_visited"] = NodesVisited
+   (*this)["nodes_visited"] = NodesVisited
 }
 
 // GetNodesVisited : Allow user to get NodesVisited
 func (this *OutputData) GetNodesVisited() *[]string {
-	return (*this)["nodes_visited"].(*[]string)
+   return (*this)["nodes_visited"].(*[]string)
 }
 
 // SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
 func (this *OutputData) SetNodesVisitedDetails(NodesVisitedDetails *[]DialogNodeVisitedDetails) {
-	(*this)["nodes_visited_details"] = NodesVisitedDetails
+   (*this)["nodes_visited_details"] = NodesVisitedDetails
 }
 
 // GetNodesVisitedDetails : Allow user to get NodesVisitedDetails
 func (this *OutputData) GetNodesVisitedDetails() *[]DialogNodeVisitedDetails {
-	return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
+   return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
+}
+
+// SetLogMessages : Allow user to set LogMessages
+func (this *OutputData) SetLogMessages(LogMessages *[]LogMessage) {
+   (*this)["log_messages"] = LogMessages
+}
+
+// GetLogMessages : Allow user to get LogMessages
+func (this *OutputData) GetLogMessages() *[]LogMessage {
+   return (*this)["log_messages"].(*[]LogMessage)
+}
+
+// SetText : Allow user to set Text
+func (this *OutputData) SetText(Text *[]string) {
+   (*this)["text"] = Text
+}
+
+// GetText : Allow user to get Text
+func (this *OutputData) GetText() *[]string {
+   return (*this)["text"].(*[]string)
+}
+
+// SetGeneric : Allow user to set Generic
+func (this *OutputData) SetGeneric(Generic *[]RuntimeResponseGeneric) {
+   (*this)["generic"] = Generic
+}
+
+// GetGeneric : Allow user to get Generic
+func (this *OutputData) GetGeneric() *[]RuntimeResponseGeneric {
+   return (*this)["generic"].(*[]RuntimeResponseGeneric)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *OutputData) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
+   (*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *OutputData) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+   return (*this)[Key].(*interface{})
 }
 
 // Pagination : The pagination data for the returned objects.
@@ -6508,110 +6442,110 @@ type Pagination struct {
 }
 
 // RuntimeEntity : A term from the request that was identified as an entity.
-type RuntimeEntity map[string]interface{}
+type RuntimeEntity struct {
 
-// SetEntity : Allow user to set Entity
-func (this *RuntimeEntity) SetEntity(Entity *string) {
-	(*this)["entity"] = Entity
-}
+	// An entity detected in the input.
+	Entity *string `json:"entity" validate:"required"`
 
-// GetEntity : Allow user to get Entity
-func (this *RuntimeEntity) GetEntity() *string {
-	return (*this)["entity"].(*string)
-}
+	// An array of zero-based character offsets that indicate where the detected entity values begin and end in the input
+	// text.
+	Location []int64 `json:"location" validate:"required"`
 
-// SetLocation : Allow user to set Location
-func (this *RuntimeEntity) SetLocation(Location *[]int64) {
-	(*this)["location"] = Location
-}
+	// The entity value that was recognized in the user input.
+	Value *string `json:"value" validate:"required"`
 
-// GetLocation : Allow user to get Location
-func (this *RuntimeEntity) GetLocation() *[]int64 {
-	return (*this)["location"].(*[]int64)
-}
+	// A decimal percentage that represents Watson's confidence in the recognized entity.
+	Confidence *float64 `json:"confidence,omitempty"`
 
-// SetValue : Allow user to set Value
-func (this *RuntimeEntity) SetValue(Value *string) {
-	(*this)["value"] = Value
-}
+	// Any metadata for the entity.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-// GetValue : Allow user to get Value
-func (this *RuntimeEntity) GetValue() *string {
-	return (*this)["value"].(*string)
-}
-
-// SetConfidence : Allow user to set Confidence
-func (this *RuntimeEntity) SetConfidence(Confidence *float64) {
-	(*this)["confidence"] = Confidence
-}
-
-// GetConfidence : Allow user to get Confidence
-func (this *RuntimeEntity) GetConfidence() *float64 {
-	return (*this)["confidence"].(*float64)
-}
-
-// SetMetadata : Allow user to set Metadata
-func (this *RuntimeEntity) SetMetadata(Metadata *map[string]interface{}) {
-	(*this)["metadata"] = Metadata
-}
-
-// GetMetadata : Allow user to get Metadata
-func (this *RuntimeEntity) GetMetadata() *map[string]interface{} {
-	return (*this)["metadata"].(*map[string]interface{})
-}
-
-// SetGroups : Allow user to set Groups
-func (this *RuntimeEntity) SetGroups(Groups *[]CaptureGroup) {
-	(*this)["groups"] = Groups
-}
-
-// GetGroups : Allow user to get Groups
-func (this *RuntimeEntity) GetGroups() *[]CaptureGroup {
-	return (*this)["groups"].(*[]CaptureGroup)
-}
-
-// SetProperty : Allow user to set arbitrary property
-func (this *RuntimeEntity) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
-}
-
-// GetProperty : Allow user to get arbitrary property
-func (this *RuntimeEntity) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+	// The recognized capture groups for the entity, as defined by the entity pattern.
+	Groups []CaptureGroup `json:"groups,omitempty"`
 }
 
 // RuntimeIntent : An intent identified in the user input.
-type RuntimeIntent map[string]interface{}
+type RuntimeIntent struct {
 
-// SetIntent : Allow user to set Intent
-func (this *RuntimeIntent) SetIntent(Intent *string) {
-	(*this)["intent"] = Intent
+	// The name of the recognized intent.
+	Intent *string `json:"intent" validate:"required"`
+
+	// A decimal percentage that represents Watson's confidence in the intent.
+	Confidence *float64 `json:"confidence" validate:"required"`
 }
 
-// GetIntent : Allow user to get Intent
-func (this *RuntimeIntent) GetIntent() *string {
-	return (*this)["intent"].(*string)
+// RuntimeResponseGeneric : RuntimeResponseGeneric struct
+type RuntimeResponseGeneric struct {
+
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
+	//
+	// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Plus
+	// and Premium users.
+	ResponseType *string `json:"response_type" validate:"required"`
+
+	// The text of the response.
+	Text *string `json:"text,omitempty"`
+
+	// How long to pause, in milliseconds.
+	Time *int64 `json:"time,omitempty"`
+
+	// Whether to send a "user is typing" event during the pause.
+	Typing *bool `json:"typing,omitempty"`
+
+	// The URL of the image.
+	Source *string `json:"source,omitempty"`
+
+	// The title or introductory text to show before the response.
+	Title *string `json:"title,omitempty"`
+
+	// The description to show with the the response.
+	Description *string `json:"description,omitempty"`
+
+	// The preferred type of control to display.
+	Preference *string `json:"preference,omitempty"`
+
+	// An array of objects describing the options from which the user can choose.
+	Options []DialogNodeOutputOptionsElement `json:"options,omitempty"`
+
+	// A message to be sent to the human agent who will be taking over the conversation.
+	MessageToHumanAgent *string `json:"message_to_human_agent,omitempty"`
+
+	// A label identifying the topic of the conversation, derived from the **user_label** property of the relevant node.
+	Topic *string `json:"topic,omitempty"`
+
+	// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated using the
+	// value of the dialog node's **user_label** property.
+	DialogNode *string `json:"dialog_node,omitempty"`
+
+	// An array of objects describing the possible matching dialog nodes from which the user can choose.
+	//
+	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium
+	// users.
+	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 }
 
-// SetConfidence : Allow user to set Confidence
-func (this *RuntimeIntent) SetConfidence(Confidence *float64) {
-	(*this)["confidence"] = Confidence
-}
+// Constants associated with the RuntimeResponseGeneric.ResponseType property.
+// The type of response returned by the dialog node. The specified response type must be supported by the client
+// application or channel.
+//
+// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Plus
+// and Premium users.
+const (
+	RuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
+	RuntimeResponseGeneric_ResponseType_Image = "image"
+	RuntimeResponseGeneric_ResponseType_Option = "option"
+	RuntimeResponseGeneric_ResponseType_Pause = "pause"
+	RuntimeResponseGeneric_ResponseType_Suggestion = "suggestion"
+	RuntimeResponseGeneric_ResponseType_Text = "text"
+)
 
-// GetConfidence : Allow user to get Confidence
-func (this *RuntimeIntent) GetConfidence() *float64 {
-	return (*this)["confidence"].(*float64)
-}
-
-// SetProperty : Allow user to set arbitrary property
-func (this *RuntimeIntent) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
-}
-
-// GetProperty : Allow user to get arbitrary property
-func (this *RuntimeIntent) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
-}
+// Constants associated with the RuntimeResponseGeneric.Preference property.
+// The preferred type of control to display.
+const (
+	RuntimeResponseGeneric_Preference_Button = "button"
+	RuntimeResponseGeneric_Preference_Dropdown = "dropdown"
+)
 
 // Synonym : Synonym struct
 type Synonym struct {
@@ -6643,12 +6577,12 @@ type SystemResponse map[string]interface{}
 
 // SetProperty : Allow user to set arbitrary property
 func (this *SystemResponse) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
+   (*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *SystemResponse) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+   return (*this)[Key].(*interface{})
 }
 
 // UpdateCounterexampleOptions : The UpdateCounterexample options.
@@ -6673,7 +6607,7 @@ type UpdateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
 	return &UpdateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text:        core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -6745,7 +6679,7 @@ type UpdateDialogNodeOptions struct {
 	NewTitle *string `json:"new_title,omitempty"`
 
 	// How the dialog node is processed.
-	NodeType *string `json:"new_type,omitempty"`
+	NewType *string `json:"new_type,omitempty"`
 
 	// How an `event_handler` node is processed.
 	NewEventName *string `json:"new_event_name,omitempty"`
@@ -6772,60 +6706,60 @@ type UpdateDialogNodeOptions struct {
 	Headers map[string]string
 }
 
-// Constants associated with the UpdateDialogNodeOptions.NodeType property.
+// Constants associated with the UpdateDialogNodeOptions.NewType property.
 // How the dialog node is processed.
 const (
-	UpdateDialogNodeOptions_NodeType_EventHandler      = "event_handler"
-	UpdateDialogNodeOptions_NodeType_Folder            = "folder"
-	UpdateDialogNodeOptions_NodeType_Frame             = "frame"
-	UpdateDialogNodeOptions_NodeType_ResponseCondition = "response_condition"
-	UpdateDialogNodeOptions_NodeType_Slot              = "slot"
-	UpdateDialogNodeOptions_NodeType_Standard          = "standard"
+	UpdateDialogNodeOptions_NewType_EventHandler = "event_handler"
+	UpdateDialogNodeOptions_NewType_Folder = "folder"
+	UpdateDialogNodeOptions_NewType_Frame = "frame"
+	UpdateDialogNodeOptions_NewType_ResponseCondition = "response_condition"
+	UpdateDialogNodeOptions_NewType_Slot = "slot"
+	UpdateDialogNodeOptions_NewType_Standard = "standard"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewEventName property.
 // How an `event_handler` node is processed.
 const (
-	UpdateDialogNodeOptions_NewEventName_DigressionReturnPrompt   = "digression_return_prompt"
-	UpdateDialogNodeOptions_NewEventName_Filled                   = "filled"
-	UpdateDialogNodeOptions_NewEventName_FilledMultiple           = "filled_multiple"
-	UpdateDialogNodeOptions_NewEventName_Focus                    = "focus"
-	UpdateDialogNodeOptions_NewEventName_Generic                  = "generic"
-	UpdateDialogNodeOptions_NewEventName_Input                    = "input"
-	UpdateDialogNodeOptions_NewEventName_Nomatch                  = "nomatch"
+	UpdateDialogNodeOptions_NewEventName_DigressionReturnPrompt = "digression_return_prompt"
+	UpdateDialogNodeOptions_NewEventName_Filled = "filled"
+	UpdateDialogNodeOptions_NewEventName_FilledMultiple = "filled_multiple"
+	UpdateDialogNodeOptions_NewEventName_Focus = "focus"
+	UpdateDialogNodeOptions_NewEventName_Generic = "generic"
+	UpdateDialogNodeOptions_NewEventName_Input = "input"
+	UpdateDialogNodeOptions_NewEventName_Nomatch = "nomatch"
 	UpdateDialogNodeOptions_NewEventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	UpdateDialogNodeOptions_NewEventName_Validate                 = "validate"
+	UpdateDialogNodeOptions_NewEventName_Validate = "validate"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	UpdateDialogNodeOptions_NewDigressIn_DoesNotReturn = "does_not_return"
-	UpdateDialogNodeOptions_NewDigressIn_NotAvailable  = "not_available"
-	UpdateDialogNodeOptions_NewDigressIn_Returns       = "returns"
+	UpdateDialogNodeOptions_NewDigressIn_NotAvailable = "not_available"
+	UpdateDialogNodeOptions_NewDigressIn_Returns = "returns"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	UpdateDialogNodeOptions_NewDigressOut_AllowAll            = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOut_AllowAll = "allow_all"
 	UpdateDialogNodeOptions_NewDigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	UpdateDialogNodeOptions_NewDigressOut_AllowReturning      = "allow_returning"
+	UpdateDialogNodeOptions_NewDigressOut_AllowReturning = "allow_returning"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll       = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll = "allow_all"
 	UpdateDialogNodeOptions_NewDigressOutSlots_AllowReturning = "allow_returning"
-	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed     = "not_allowed"
+	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed = "not_allowed"
 )
 
 // NewUpdateDialogNodeOptions : Instantiate UpdateDialogNodeOptions
 func (assistant *AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode:  core.StringPtr(dialogNode),
+		DialogNode: core.StringPtr(dialogNode),
 	}
 }
 
@@ -6901,9 +6835,9 @@ func (options *UpdateDialogNodeOptions) SetNewTitle(newTitle string) *UpdateDial
 	return options
 }
 
-// SetNodeType : Allow user to set NodeType
-func (options *UpdateDialogNodeOptions) SetNodeType(nodeType string) *UpdateDialogNodeOptions {
-	options.NodeType = core.StringPtr(nodeType)
+// SetNewType : Allow user to set NewType
+func (options *UpdateDialogNodeOptions) SetNewType(newType string) *UpdateDialogNodeOptions {
+	options.NewType = core.StringPtr(newType)
 	return options
 }
 
@@ -6989,7 +6923,7 @@ type UpdateEntityOptions struct {
 func (assistant *AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
 	return &UpdateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
+		Entity: core.StringPtr(entity),
 	}
 }
 
@@ -7069,8 +7003,8 @@ type UpdateExampleOptions struct {
 func (assistant *AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
 	return &UpdateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
-		Text:        core.StringPtr(text),
+		Intent: core.StringPtr(intent),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -7138,7 +7072,7 @@ type UpdateIntentOptions struct {
 func (assistant *AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
 	return &UpdateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent:      core.StringPtr(intent),
+		Intent: core.StringPtr(intent),
 	}
 }
 
@@ -7206,9 +7140,9 @@ type UpdateSynonymOptions struct {
 func (assistant *AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
 	return &UpdateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
-		Synonym:     core.StringPtr(synonym),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
+		Synonym: core.StringPtr(synonym),
 	}
 }
 
@@ -7269,7 +7203,7 @@ type UpdateValueOptions struct {
 	NewMetadata map[string]interface{} `json:"new_metadata,omitempty"`
 
 	// Specifies the type of entity value.
-	ValueType *string `json:"new_type,omitempty"`
+	NewType *string `json:"new_type,omitempty"`
 
 	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A synonym must conform to the following resrictions:
@@ -7286,19 +7220,19 @@ type UpdateValueOptions struct {
 	Headers map[string]string
 }
 
-// Constants associated with the UpdateValueOptions.ValueType property.
+// Constants associated with the UpdateValueOptions.NewType property.
 // Specifies the type of entity value.
 const (
-	UpdateValueOptions_ValueType_Patterns = "patterns"
-	UpdateValueOptions_ValueType_Synonyms = "synonyms"
+	UpdateValueOptions_NewType_Patterns = "patterns"
+	UpdateValueOptions_NewType_Synonyms = "synonyms"
 )
 
 // NewUpdateValueOptions : Instantiate UpdateValueOptions
 func (assistant *AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity:      core.StringPtr(entity),
-		Value:       core.StringPtr(value),
+		Entity: core.StringPtr(entity),
+		Value: core.StringPtr(value),
 	}
 }
 
@@ -7332,9 +7266,9 @@ func (options *UpdateValueOptions) SetNewMetadata(newMetadata map[string]interfa
 	return options
 }
 
-// SetValueType : Allow user to set ValueType
-func (options *UpdateValueOptions) SetValueType(valueType string) *UpdateValueOptions {
-	options.ValueType = core.StringPtr(valueType)
+// SetNewType : Allow user to set NewType
+func (options *UpdateValueOptions) SetNewType(newType string) *UpdateValueOptions {
+	options.NewType = core.StringPtr(newType)
 	return options
 }
 
@@ -7503,7 +7437,7 @@ type Value struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Specifies the type of entity value.
-	ValueType *string `json:"type" validate:"required"`
+	Type *string `json:"type" validate:"required"`
 
 	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A synonym must conform to the following resrictions:
@@ -7523,11 +7457,11 @@ type Value struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
-// Constants associated with the Value.ValueType property.
+// Constants associated with the Value.Type property.
 // Specifies the type of entity value.
 const (
-	Value_ValueType_Patterns = "patterns"
-	Value_ValueType_Synonyms = "synonyms"
+	Value_Type_Patterns = "patterns"
+	Value_Type_Synonyms = "synonyms"
 )
 
 // ValueCollection : ValueCollection struct
@@ -7590,10 +7524,10 @@ type Workspace struct {
 // Constants associated with the Workspace.Status property.
 // The current status of the workspace.
 const (
-	Workspace_Status_Available   = "Available"
-	Workspace_Status_Failed      = "Failed"
+	Workspace_Status_Available = "Available"
+	Workspace_Status_Failed = "Failed"
 	Workspace_Status_NonExistent = "Non Existent"
-	Workspace_Status_Training    = "Training"
+	Workspace_Status_Training = "Training"
 	Workspace_Status_Unavailable = "Unavailable"
 )
 

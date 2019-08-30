@@ -21,7 +21,6 @@ var _ = Describe("CompareComplyV1", func() {
 		if testPDFErr != nil {
 			fmt.Println(testPDFErr)
 		}
-		filename := "exampleString"
 		Context("Successfully - Convert file to HTML", func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
@@ -44,12 +43,14 @@ var _ = Describe("CompareComplyV1", func() {
 			}))
 			It("Succeed to call ConvertToHTML", func() {
 				defer testServer.Close()
-
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "iamAPiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -58,7 +59,7 @@ var _ = Describe("CompareComplyV1", func() {
 				returnValue, returnValueErr := testService.ConvertToHTML(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
-				convertToHTMLOptions := testService.NewConvertToHTMLOptions(testPDF, filename)
+				convertToHTMLOptions := testService.NewConvertToHTMLOptions(testPDF)
 				returnValue, returnValueErr = testService.ConvertToHTML(convertToHTMLOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -101,11 +102,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call ClassifyElements", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -157,11 +161,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call ExtractTables", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -217,11 +224,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call CompareDocuments", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -269,11 +279,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call AddFeedback", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -372,11 +385,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call DeleteFeedback", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -426,11 +442,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call GetFeedback", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -478,11 +497,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call ListFeedback", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -544,11 +566,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call CreateBatch", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -598,11 +623,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call GetBatch", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -650,11 +678,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call GetBatches", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -705,11 +736,14 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call UpdateBatch", func() {
 				defer testServer.Close()
 
+				authenticator := &core.IamAuthenticator{
+					ApiKey:     "iamAPiKey",
+					URL:    testServer.URL,
+				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:       testServer.URL,
 					Version:   version,
-					IAMURL:    testServer.URL,
-					IAMApiKey: "IAMApiKey",
+					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())

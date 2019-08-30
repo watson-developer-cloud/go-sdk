@@ -10,11 +10,14 @@ import (
 
 func main() {
 	// Instantiate the Watson Tone Analyzer service
+		authenticator := &core.IamAuthenticator{
+        	ApiKey:     os.Getenv("YOUR API KEY"),
+    	}
 	service, serviceErr := toneanalyzerv3.
 		NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 			URL:       "YOUR SERVICE URL",
 			Version:   "2017-09-21",
-			IAMApiKey: "YOUR API KEY",
+			Authenticator: authenticator,
 		})
 
 	// Check successful instantiation
