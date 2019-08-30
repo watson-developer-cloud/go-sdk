@@ -1,7 +1,6 @@
 package speechtotextv1
 
 import (
-	"encoding/base64"
 	"fmt"
 	"io"
 
@@ -97,8 +96,6 @@ type RecognizeCallbackWrapper interface {
 
 // RecognizeUsingWebsocket: Recognize audio over websocket connection
 func (speechToText *SpeechToTextV1) RecognizeUsingWebsocket(recognizeWSOptions *RecognizeUsingWebsocketOptions, callback RecognizeCallbackWrapper) {
-	headers := http.Header{}
-
 	if err := core.ValidateNotNil(recognizeWSOptions, "recognizeOptions cannot be nil"); err != nil {
 		panic(err)
 	}
@@ -106,25 +103,19 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsocket(recognizeWSOptions *
 		panic(err)
 	}
 
-	if speechToText.Service.Options.IAMApiKey != "" || speechToText.Service.IAMTokenManager != nil || speechToText.Service.Options.IAMAccessToken != "" ||
-		speechToText.Service.ICP4DTokenManager != nil || speechToText.Service.Options.ICP4DAccessToken != "" {
-		if speechToText.Service.IAMTokenManager != nil {
-			token, err := speechToText.Service.IAMTokenManager.GetToken()
-			if err != nil {
-				panic(err)
-			}
-			headers.Set("Authorization", fmt.Sprintf("Bearer %s", token))
-		} else if speechToText.Service.ICP4DTokenManager != nil {
-			token, err := speechToText.Service.ICP4DTokenManager.GetToken()
-			if err != nil {
-				panic(err)
-			}
-			headers.Set("Authorization", fmt.Sprintf("Bearer %s", token))
-		}
-	} else {
-		auth := []byte(speechToText.Service.Options.Username + ":" + speechToText.Service.Options.Password)
-		headers.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString(auth)))
+	// Add authentication to the outbound request.
+	if speechToText.Service.Options.Authenticator == nil {
+		panic(fmt.Errorf("Authentication information was not properly configured."))
 	}
+
+	// Create a dummy request for authenticate
+	// Need to update design to let recognizeListener take in a request object
+	req, err := http.NewRequest("POST", speechToText.Service.Options.URL, nil)
+	err = speechToText.Service.Options.Authenticator.Authenticate(req)
+	if err != nil {
+		panic(err)
+	}
+	headers := req.Header
 
 	headers.Set("Content-Type", *recognizeWSOptions.ContentType)
 

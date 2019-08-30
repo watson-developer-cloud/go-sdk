@@ -42,8 +42,10 @@ func init() {
 		service, serviceErr = speechtotextv1.
 			NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
 				URL:      os.Getenv("SPEECH_TO_TEXT_URL"),
-				Username: os.Getenv("SPEECH_TO_TEXT_USERNAME"),
-				Password: os.Getenv("SPEECH_TO_TEXT_PASSWORD"),
+				Authenticator: &core.BasicAuthenticator{
+					Username: os.Getenv("SPEECH_TO_TEXT_USERNAME"),
+					Password: os.Getenv("SPEECH_TO_TEXT_PASSWORD"),
+				},
 			})
 
 		if serviceErr == nil {
