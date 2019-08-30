@@ -1,8 +1,5 @@
-// Package naturallanguageclassifierv1 : Operations and models for the NaturalLanguageClassifierV1 service
-package naturallanguageclassifierv1
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,64 +14,58 @@ package naturallanguageclassifierv1
  * limitations under the License.
  */
 
-import (
-	"os"
+// Package naturallanguageclassifierv1 : Operations and models for the NaturalLanguageClassifierV1 service
+package naturallanguageclassifierv1
 
+import (
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"os"
 )
 
 // NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to
 // return the top matching predefined classes for short text input. You create and train a classifier to connect
 // predefined classes to example texts so that the service can apply those classes to new inputs.
 //
-// Version: V1
-// See: http://www.ibm.com/watson/developercloud/natural-language-classifier.html
+// Version: 1.0
+// See: https://cloud.ibm.com/docs/services/natural-language-classifier/
 type NaturalLanguageClassifierV1 struct {
 	Service *core.BaseService
 }
 
 // NaturalLanguageClassifierV1Options : Service options
 type NaturalLanguageClassifierV1Options struct {
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewNaturalLanguageClassifierV1 : Instantiate NaturalLanguageClassifierV1
-func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options) (*NaturalLanguageClassifierV1, error) {
+func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options) (service *NaturalLanguageClassifierV1, err error) {
 	if options.URL == "" {
 		options.URL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "natural_language_classifier", "Natural Language Classifier")
-	if serviceErr != nil {
-		return nil, serviceErr
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &NaturalLanguageClassifierV1{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("natural_language_classifier")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "natural_language_classifier", "Natural Language Classifier")
+	if err != nil {
+		return
+	}
+	
+	service = &NaturalLanguageClassifierV1{Service: baseService}
+
+	return
 }
 
 // Classify : Classify a phrase
@@ -110,8 +101,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyO
 	if classifyOptions.Text != nil {
 		body["text"] = classifyOptions.Text
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -168,8 +158,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 	if classifyCollectionOptions.Collection != nil {
 		body["collection"] = classifyCollectionOptions.Collection
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -219,7 +208,7 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(c
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddFormData("training_metadata", "filename",
-		"application/json", createClassifierOptions.Metadata)
+		"application/json", createClassifierOptions.TrainingMetadata)
 	builder.AddFormData("training_data", "filename",
 		"text/csv", createClassifierOptions.TrainingData)
 
@@ -434,10 +423,10 @@ type Classifier struct {
 // Constants associated with the Classifier.Status property.
 // The state of the classifier.
 const (
-	Classifier_Status_Available   = "Available"
-	Classifier_Status_Failed      = "Failed"
+	Classifier_Status_Available = "Available"
+	Classifier_Status_Failed = "Failed"
 	Classifier_Status_NonExistent = "Non Existent"
-	Classifier_Status_Training    = "Training"
+	Classifier_Status_Training = "Training"
 	Classifier_Status_Unavailable = "Unavailable"
 )
 
@@ -465,7 +454,7 @@ type ClassifyCollectionOptions struct {
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyCollectionOptions(classifierID string, collection []ClassifyInput) *ClassifyCollectionOptions {
 	return &ClassifyCollectionOptions{
 		ClassifierID: core.StringPtr(classifierID),
-		Collection:   collection,
+		Collection: collection,
 	}
 }
 
@@ -511,7 +500,7 @@ type ClassifyOptions struct {
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyOptions(classifierID string, text string) *ClassifyOptions {
 	return &ClassifyOptions{
 		ClassifierID: core.StringPtr(classifierID),
-		Text:         core.StringPtr(text),
+		Text: core.StringPtr(text),
 	}
 }
 
@@ -554,7 +543,7 @@ type CreateClassifierOptions struct {
 	//
 	// Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`), Japanese
 	// (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).
-	Metadata *os.File `json:"training_metadata" validate:"required"`
+	TrainingMetadata *os.File `json:"training_metadata" validate:"required"`
 
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
@@ -566,16 +555,16 @@ type CreateClassifierOptions struct {
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(metadata *os.File, trainingData *os.File) *CreateClassifierOptions {
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(trainingMetadata *os.File, trainingData *os.File) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
-		Metadata:     metadata,
+		TrainingMetadata: trainingMetadata,
 		TrainingData: trainingData,
 	}
 }
 
-// SetMetadata : Allow user to set Metadata
-func (options *CreateClassifierOptions) SetMetadata(metadata *os.File) *CreateClassifierOptions {
-	options.Metadata = metadata
+// SetTrainingMetadata : Allow user to set TrainingMetadata
+func (options *CreateClassifierOptions) SetTrainingMetadata(trainingMetadata *os.File) *CreateClassifierOptions {
+	options.TrainingMetadata = trainingMetadata
 	return options
 }
 
