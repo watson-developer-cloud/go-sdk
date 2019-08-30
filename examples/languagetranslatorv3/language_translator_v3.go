@@ -101,7 +101,7 @@ func main() {
 	listModelsOptions := service.NewListModelsOptions().
 		SetSource("es").
 		SetTarget("en").
-		SetDefaultModels(true)
+		SetDefault(true)
 
 	// Call the languageTranslator ListModels method
 	response, responseErr = service.ListModels(listModelsOptions)

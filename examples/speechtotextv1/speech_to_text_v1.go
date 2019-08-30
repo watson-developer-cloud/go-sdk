@@ -14,7 +14,7 @@ func main() {
 		ApiKey:     os.Getenv("YOUR API KEY"),
 	}
 	service, serviceErr := speechtotextv1.
-		NewTextToSpeechV1(&speechtotextv1.SpeechToTextV1Options{
+		NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
 			URL:       "YOUR SERVICE URL",
 			Authenticator: authenticator,
 		})
