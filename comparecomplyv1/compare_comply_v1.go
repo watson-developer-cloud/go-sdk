@@ -1,6 +1,3 @@
-// Package comparecomplyv1 : Operations and models for the CompareComplyV1 service
-package comparecomplyv1
-
 /**
  * (C) Copyright IBM Corp. 2019.
  *
@@ -17,66 +14,60 @@ package comparecomplyv1
  * limitations under the License.
  */
 
+// Package comparecomplyv1 : Operations and models for the CompareComplyV1 service
+package comparecomplyv1
+
 import (
 	"fmt"
-	"os"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"os"
 )
 
 // CompareComplyV1 : IBM Watson&trade; Compare and Comply analyzes governing documents to provide details about critical
 // aspects of the documents.
 //
-// Version: V1
-// See: http://www.ibm.com/watson/developercloud/compare-comply.html
+// Version: 1.0
+// See: https://cloud.ibm.com/docs/services/compare-comply?topic=compare-comply-about
 type CompareComplyV1 struct {
 	Service *core.BaseService
 }
 
 // CompareComplyV1Options : Service options
 type CompareComplyV1Options struct {
-	Version            string
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	Version         string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewCompareComplyV1 : Instantiate CompareComplyV1
-func NewCompareComplyV1(options *CompareComplyV1Options) (*CompareComplyV1, error) {
+func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComplyV1, err error) {
 	if options.URL == "" {
 		options.URL = "https://gateway.watsonplatform.net/compare-comply/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:            options.Version,
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "compare-comply", "Compare Comply")
-	if serviceErr != nil {
-		return nil, serviceErr
+		Version:         options.Version,
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &CompareComplyV1{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("compare-comply")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "compare-comply", "Compare Comply")
+	if err != nil {
+		return
+	}
+	
+	service = &CompareComplyV1{Service: baseService}
+
+	return
 }
 
 // ConvertToHTML : Convert document to HTML
@@ -111,7 +102,7 @@ func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *Conver
 	}
 	builder.AddQuery("version", compareComply.Service.Options.Version)
 
-	builder.AddFormData("file", core.StringNilMapper(convertToHTMLOptions.Filename),
+	builder.AddFormData("file", "filename",
 		core.StringNilMapper(convertToHTMLOptions.FileContentType), convertToHTMLOptions.File)
 
 	request, err := builder.Build()
@@ -340,8 +331,7 @@ func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbac
 	if addFeedbackOptions.Comment != nil {
 		body["comment"] = addFeedbackOptions.Comment
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -854,15 +844,15 @@ type Attribute struct {
 // Constants associated with the Attribute.Type property.
 // The type of attribute.
 const (
-	Attribute_Type_Currency     = "Currency"
-	Attribute_Type_Datetime     = "DateTime"
-	Attribute_Type_Definedterm  = "DefinedTerm"
-	Attribute_Type_Duration     = "Duration"
-	Attribute_Type_Location     = "Location"
-	Attribute_Type_Number       = "Number"
+	Attribute_Type_Currency = "Currency"
+	Attribute_Type_Datetime = "DateTime"
+	Attribute_Type_Definedterm = "DefinedTerm"
+	Attribute_Type_Duration = "Duration"
+	Attribute_Type_Location = "Location"
+	Attribute_Type_Number = "Number"
 	Attribute_Type_Organization = "Organization"
-	Attribute_Type_Percentage   = "Percentage"
-	Attribute_Type_Person       = "Person"
+	Attribute_Type_Percentage = "Percentage"
+	Attribute_Type_Person = "Person"
 )
 
 // BatchStatus : The batch-request status.
@@ -907,8 +897,8 @@ type BatchStatus struct {
 // `tables`.
 const (
 	BatchStatus_Function_ElementClassification = "element_classification"
-	BatchStatus_Function_HTMLConversion        = "html_conversion"
-	BatchStatus_Function_Tables                = "tables"
+	BatchStatus_Function_HTMLConversion = "html_conversion"
+	BatchStatus_Function_Tables = "tables"
 )
 
 // Batches : The results of a successful **List Batches** request.
@@ -979,31 +969,31 @@ type Category struct {
 // Constants associated with the Category.Label property.
 // The category of the associated element.
 const (
-	Category_Label_Amendments           = "Amendments"
-	Category_Label_AssetUse             = "Asset Use"
-	Category_Label_Assignments          = "Assignments"
-	Category_Label_Audits               = "Audits"
-	Category_Label_BusinessContinuity   = "Business Continuity"
-	Category_Label_Communication        = "Communication"
-	Category_Label_Confidentiality      = "Confidentiality"
-	Category_Label_Deliverables         = "Deliverables"
-	Category_Label_Delivery             = "Delivery"
-	Category_Label_DisputeResolution    = "Dispute Resolution"
-	Category_Label_ForceMajeure         = "Force Majeure"
-	Category_Label_Indemnification      = "Indemnification"
-	Category_Label_Insurance            = "Insurance"
+	Category_Label_Amendments = "Amendments"
+	Category_Label_AssetUse = "Asset Use"
+	Category_Label_Assignments = "Assignments"
+	Category_Label_Audits = "Audits"
+	Category_Label_BusinessContinuity = "Business Continuity"
+	Category_Label_Communication = "Communication"
+	Category_Label_Confidentiality = "Confidentiality"
+	Category_Label_Deliverables = "Deliverables"
+	Category_Label_Delivery = "Delivery"
+	Category_Label_DisputeResolution = "Dispute Resolution"
+	Category_Label_ForceMajeure = "Force Majeure"
+	Category_Label_Indemnification = "Indemnification"
+	Category_Label_Insurance = "Insurance"
 	Category_Label_IntellectualProperty = "Intellectual Property"
-	Category_Label_Liability            = "Liability"
-	Category_Label_OrderOfPrecedence    = "Order of Precedence"
-	Category_Label_PaymentTermsBilling  = "Payment Terms & Billing"
-	Category_Label_PricingTaxes         = "Pricing & Taxes"
-	Category_Label_Privacy              = "Privacy"
-	Category_Label_Responsibilities     = "Responsibilities"
-	Category_Label_SafetyAndSecurity    = "Safety and Security"
-	Category_Label_ScopeOfWork          = "Scope of Work"
-	Category_Label_Subcontracts         = "Subcontracts"
-	Category_Label_TermTermination      = "Term & Termination"
-	Category_Label_Warranties           = "Warranties"
+	Category_Label_Liability = "Liability"
+	Category_Label_OrderOfPrecedence = "Order of Precedence"
+	Category_Label_PaymentTermsBilling = "Payment Terms & Billing"
+	Category_Label_PricingTaxes = "Pricing & Taxes"
+	Category_Label_Privacy = "Privacy"
+	Category_Label_Responsibilities = "Responsibilities"
+	Category_Label_SafetyAndSecurity = "Safety and Security"
+	Category_Label_ScopeOfWork = "Scope of Work"
+	Category_Label_Subcontracts = "Subcontracts"
+	Category_Label_TermTermination = "Term & Termination"
+	Category_Label_Warranties = "Warranties"
 )
 
 // CategoryComparison : Information defining an element's subject matter.
@@ -1016,31 +1006,31 @@ type CategoryComparison struct {
 // Constants associated with the CategoryComparison.Label property.
 // The category of the associated element.
 const (
-	CategoryComparison_Label_Amendments           = "Amendments"
-	CategoryComparison_Label_AssetUse             = "Asset Use"
-	CategoryComparison_Label_Assignments          = "Assignments"
-	CategoryComparison_Label_Audits               = "Audits"
-	CategoryComparison_Label_BusinessContinuity   = "Business Continuity"
-	CategoryComparison_Label_Communication        = "Communication"
-	CategoryComparison_Label_Confidentiality      = "Confidentiality"
-	CategoryComparison_Label_Deliverables         = "Deliverables"
-	CategoryComparison_Label_Delivery             = "Delivery"
-	CategoryComparison_Label_DisputeResolution    = "Dispute Resolution"
-	CategoryComparison_Label_ForceMajeure         = "Force Majeure"
-	CategoryComparison_Label_Indemnification      = "Indemnification"
-	CategoryComparison_Label_Insurance            = "Insurance"
+	CategoryComparison_Label_Amendments = "Amendments"
+	CategoryComparison_Label_AssetUse = "Asset Use"
+	CategoryComparison_Label_Assignments = "Assignments"
+	CategoryComparison_Label_Audits = "Audits"
+	CategoryComparison_Label_BusinessContinuity = "Business Continuity"
+	CategoryComparison_Label_Communication = "Communication"
+	CategoryComparison_Label_Confidentiality = "Confidentiality"
+	CategoryComparison_Label_Deliverables = "Deliverables"
+	CategoryComparison_Label_Delivery = "Delivery"
+	CategoryComparison_Label_DisputeResolution = "Dispute Resolution"
+	CategoryComparison_Label_ForceMajeure = "Force Majeure"
+	CategoryComparison_Label_Indemnification = "Indemnification"
+	CategoryComparison_Label_Insurance = "Insurance"
 	CategoryComparison_Label_IntellectualProperty = "Intellectual Property"
-	CategoryComparison_Label_Liability            = "Liability"
-	CategoryComparison_Label_OrderOfPrecedence    = "Order of Precedence"
-	CategoryComparison_Label_PaymentTermsBilling  = "Payment Terms & Billing"
-	CategoryComparison_Label_PricingTaxes         = "Pricing & Taxes"
-	CategoryComparison_Label_Privacy              = "Privacy"
-	CategoryComparison_Label_Responsibilities     = "Responsibilities"
-	CategoryComparison_Label_SafetyAndSecurity    = "Safety and Security"
-	CategoryComparison_Label_ScopeOfWork          = "Scope of Work"
-	CategoryComparison_Label_Subcontracts         = "Subcontracts"
-	CategoryComparison_Label_TermTermination      = "Term & Termination"
-	CategoryComparison_Label_Warranties           = "Warranties"
+	CategoryComparison_Label_Liability = "Liability"
+	CategoryComparison_Label_OrderOfPrecedence = "Order of Precedence"
+	CategoryComparison_Label_PaymentTermsBilling = "Payment Terms & Billing"
+	CategoryComparison_Label_PricingTaxes = "Pricing & Taxes"
+	CategoryComparison_Label_Privacy = "Privacy"
+	CategoryComparison_Label_Responsibilities = "Responsibilities"
+	CategoryComparison_Label_SafetyAndSecurity = "Safety and Security"
+	CategoryComparison_Label_ScopeOfWork = "Scope of Work"
+	CategoryComparison_Label_Subcontracts = "Subcontracts"
+	CategoryComparison_Label_TermTermination = "Term & Termination"
+	CategoryComparison_Label_Warranties = "Warranties"
 )
 
 // ClassifyElementsOptions : The ClassifyElements options.
@@ -1067,7 +1057,7 @@ type ClassifyElementsOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ClassifyElementsOptions_Model_Contracts = "contracts"
-	ClassifyElementsOptions_Model_Tables    = "tables"
+	ClassifyElementsOptions_Model_Tables = "tables"
 )
 
 // NewClassifyElementsOptions : Instantiate ClassifyElementsOptions
@@ -1214,7 +1204,7 @@ type CompareDocumentsOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	CompareDocumentsOptions_Model_Contracts = "contracts"
-	CompareDocumentsOptions_Model_Tables    = "tables"
+	CompareDocumentsOptions_Model_Tables = "tables"
 )
 
 // NewCompareDocumentsOptions : Instantiate CompareDocumentsOptions
@@ -1342,8 +1332,8 @@ type ContractAmts struct {
 // Constants associated with the ContractAmts.ConfidenceLevel property.
 // The confidence level in the identification of the contract amount.
 const (
-	ContractAmts_ConfidenceLevel_High   = "High"
-	ContractAmts_ConfidenceLevel_Low    = "Low"
+	ContractAmts_ConfidenceLevel_High = "High"
+	ContractAmts_ConfidenceLevel_Low = "Low"
 	ContractAmts_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1372,8 +1362,8 @@ type ContractCurrencies struct {
 // Constants associated with the ContractCurrencies.ConfidenceLevel property.
 // The confidence level in the identification of the contract currency.
 const (
-	ContractCurrencies_ConfidenceLevel_High   = "High"
-	ContractCurrencies_ConfidenceLevel_Low    = "Low"
+	ContractCurrencies_ConfidenceLevel_High = "High"
+	ContractCurrencies_ConfidenceLevel_Low = "Low"
 	ContractCurrencies_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1405,8 +1395,8 @@ type ContractTerms struct {
 // Constants associated with the ContractTerms.ConfidenceLevel property.
 // The confidence level in the identification of the contract term.
 const (
-	ContractTerms_ConfidenceLevel_High   = "High"
-	ContractTerms_ConfidenceLevel_Low    = "Low"
+	ContractTerms_ConfidenceLevel_High = "High"
+	ContractTerms_ConfidenceLevel_Low = "Low"
 	ContractTerms_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1430,8 +1420,8 @@ type ContractTypes struct {
 // Constants associated with the ContractTypes.ConfidenceLevel property.
 // The confidence level in the identification of the contract type.
 const (
-	ContractTypes_ConfidenceLevel_High   = "High"
-	ContractTypes_ConfidenceLevel_Low    = "Low"
+	ContractTypes_ConfidenceLevel_High = "High"
+	ContractTypes_ConfidenceLevel_Low = "Low"
 	ContractTypes_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1440,9 +1430,6 @@ type ConvertToHTMLOptions struct {
 
 	// The document to convert.
 	File *os.File `json:"file" validate:"required"`
-
-	// The filename for file.
-	Filename *string `json:"filename" validate:"required"`
 
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
@@ -1462,26 +1449,19 @@ type ConvertToHTMLOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ConvertToHTMLOptions_Model_Contracts = "contracts"
-	ConvertToHTMLOptions_Model_Tables    = "tables"
+	ConvertToHTMLOptions_Model_Tables = "tables"
 )
 
 // NewConvertToHTMLOptions : Instantiate ConvertToHTMLOptions
-func (compareComply *CompareComplyV1) NewConvertToHTMLOptions(file *os.File, filename string) *ConvertToHTMLOptions {
+func (compareComply *CompareComplyV1) NewConvertToHTMLOptions(file *os.File) *ConvertToHTMLOptions {
 	return &ConvertToHTMLOptions{
-		File:     file,
-		Filename: core.StringPtr(filename),
+		File: file,
 	}
 }
 
 // SetFile : Allow user to set File
 func (options *ConvertToHTMLOptions) SetFile(file *os.File) *ConvertToHTMLOptions {
 	options.File = file
-	return options
-}
-
-// SetFilename : Allow user to set Filename
-func (options *ConvertToHTMLOptions) SetFilename(filename string) *ConvertToHTMLOptions {
-	options.Filename = core.StringPtr(filename)
 	return options
 }
 
@@ -1544,8 +1524,8 @@ type CreateBatchOptions struct {
 // The Compare and Comply method to run across the submitted input documents.
 const (
 	CreateBatchOptions_Function_ElementClassification = "element_classification"
-	CreateBatchOptions_Function_HTMLConversion        = "html_conversion"
-	CreateBatchOptions_Function_Tables                = "tables"
+	CreateBatchOptions_Function_HTMLConversion = "html_conversion"
+	CreateBatchOptions_Function_Tables = "tables"
 )
 
 // Constants associated with the CreateBatchOptions.Model property.
@@ -1554,19 +1534,19 @@ const (
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	CreateBatchOptions_Model_Contracts = "contracts"
-	CreateBatchOptions_Model_Tables    = "tables"
+	CreateBatchOptions_Model_Tables = "tables"
 )
 
 // NewCreateBatchOptions : Instantiate CreateBatchOptions
 func (compareComply *CompareComplyV1) NewCreateBatchOptions(function string, inputCredentialsFile *os.File, inputBucketLocation string, inputBucketName string, outputCredentialsFile *os.File, outputBucketLocation string, outputBucketName string) *CreateBatchOptions {
 	return &CreateBatchOptions{
-		Function:              core.StringPtr(function),
-		InputCredentialsFile:  inputCredentialsFile,
-		InputBucketLocation:   core.StringPtr(inputBucketLocation),
-		InputBucketName:       core.StringPtr(inputBucketName),
+		Function: core.StringPtr(function),
+		InputCredentialsFile: inputCredentialsFile,
+		InputBucketLocation: core.StringPtr(inputBucketLocation),
+		InputBucketName: core.StringPtr(inputBucketName),
 		OutputCredentialsFile: outputCredentialsFile,
-		OutputBucketLocation:  core.StringPtr(outputBucketLocation),
-		OutputBucketName:      core.StringPtr(outputBucketName),
+		OutputBucketLocation: core.StringPtr(outputBucketLocation),
+		OutputBucketName: core.StringPtr(outputBucketName),
 	}
 }
 
@@ -1645,7 +1625,7 @@ type DeleteFeedbackOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	DeleteFeedbackOptions_Model_Contracts = "contracts"
-	DeleteFeedbackOptions_Model_Tables    = "tables"
+	DeleteFeedbackOptions_Model_Tables = "tables"
 )
 
 // NewDeleteFeedbackOptions : Instantiate DeleteFeedbackOptions
@@ -1757,8 +1737,8 @@ type EffectiveDates struct {
 // Constants associated with the EffectiveDates.ConfidenceLevel property.
 // The confidence level in the identification of the effective date.
 const (
-	EffectiveDates_ConfidenceLevel_High   = "High"
-	EffectiveDates_ConfidenceLevel_Low    = "Low"
+	EffectiveDates_ConfidenceLevel_High = "High"
+	EffectiveDates_ConfidenceLevel_Low = "Low"
 	EffectiveDates_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1840,7 +1820,7 @@ type ExtractTablesOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ExtractTablesOptions_Model_Contracts = "contracts"
-	ExtractTablesOptions_Model_Tables    = "tables"
+	ExtractTablesOptions_Model_Tables = "tables"
 )
 
 // NewExtractTablesOptions : Instantiate ExtractTablesOptions
@@ -2037,7 +2017,7 @@ type GetFeedbackOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	GetFeedbackOptions_Model_Contracts = "contracts"
-	GetFeedbackOptions_Model_Tables    = "tables"
+	GetFeedbackOptions_Model_Tables = "tables"
 )
 
 // NewGetFeedbackOptions : Instantiate GetFeedbackOptions
@@ -2396,9 +2376,9 @@ type OriginalLabelsOut struct {
 // A string identifying the type of modification the feedback entry in the `updated_labels` array. Possible values are
 // `added`, `not_changed`, and `removed`.
 const (
-	OriginalLabelsOut_Modification_Added      = "added"
+	OriginalLabelsOut_Modification_Added = "added"
 	OriginalLabelsOut_Modification_NotChanged = "not_changed"
-	OriginalLabelsOut_Modification_Removed    = "removed"
+	OriginalLabelsOut_Modification_Removed = "removed"
 )
 
 // Pagination : Pagination details, if required by the length of the output.
@@ -2485,8 +2465,8 @@ type PaymentTerms struct {
 // Constants associated with the PaymentTerms.ConfidenceLevel property.
 // The confidence level in the identification of the payment term.
 const (
-	PaymentTerms_ConfidenceLevel_High   = "High"
-	PaymentTerms_ConfidenceLevel_Low    = "Low"
+	PaymentTerms_ConfidenceLevel_High = "High"
+	PaymentTerms_ConfidenceLevel_Low = "Low"
 	PaymentTerms_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -2679,8 +2659,8 @@ type TerminationDates struct {
 // Constants associated with the TerminationDates.ConfidenceLevel property.
 // The confidence level in the identification of the termination date.
 const (
-	TerminationDates_ConfidenceLevel_High   = "High"
-	TerminationDates_ConfidenceLevel_Low    = "Low"
+	TerminationDates_ConfidenceLevel_High = "High"
+	TerminationDates_ConfidenceLevel_Low = "Low"
 	TerminationDates_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -2758,14 +2738,14 @@ const (
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	UpdateBatchOptions_Model_Contracts = "contracts"
-	UpdateBatchOptions_Model_Tables    = "tables"
+	UpdateBatchOptions_Model_Tables = "tables"
 )
 
 // NewUpdateBatchOptions : Instantiate UpdateBatchOptions
 func (compareComply *CompareComplyV1) NewUpdateBatchOptions(batchID string, action string) *UpdateBatchOptions {
 	return &UpdateBatchOptions{
 		BatchID: core.StringPtr(batchID),
-		Action:  core.StringPtr(action),
+		Action: core.StringPtr(action),
 	}
 }
 
@@ -2821,9 +2801,9 @@ type UpdatedLabelsOut struct {
 // The type of modification the feedback entry in the `updated_labels` array. Possible values are `added`,
 // `not_changed`, and `removed`.
 const (
-	UpdatedLabelsOut_Modification_Added      = "added"
+	UpdatedLabelsOut_Modification_Added = "added"
 	UpdatedLabelsOut_Modification_NotChanged = "not_changed"
-	UpdatedLabelsOut_Modification_Removed    = "removed"
+	UpdatedLabelsOut_Modification_Removed = "removed"
 )
 
 // Value : A value in a key-value pair.

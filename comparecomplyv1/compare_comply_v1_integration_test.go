@@ -37,11 +37,14 @@ func init() {
 	err := godotenv.Load("../.env")
 
 	if err == nil {
+		authenticator := &core.IamAuthenticator{
+        	ApiKey:     os.Getenv("COMPARE_COMPLY_IAMAPIKEY"),
+    	}
 		service, serviceErr = comparecomplyv1.
 			NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 				URL:       os.Getenv("COMPARE_COMPLY_URL"),
 				Version:   "2018-10-15",
-				IAMApiKey: os.Getenv("COMPARE_COMPLY_IAMAPIKEY"),
+				Authenticator: authenticator,
 			})
 
 		if serviceErr == nil {
@@ -71,7 +74,7 @@ func TestConvertToHTML(t *testing.T) {
 	response, responseErr := service.ConvertToHTML(
 		&comparecomplyv1.ConvertToHTMLOptions{
 			File:     testPDF,
-			Filename: core.StringPtr("contract_A.pdf"),
+			FileContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)
