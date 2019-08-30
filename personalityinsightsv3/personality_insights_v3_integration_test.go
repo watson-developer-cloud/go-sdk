@@ -42,8 +42,10 @@ func init() {
 			NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 				URL:      os.Getenv("PERSONALITY_INSIGHTS_URL"),
 				Version:  "2017-10-13",
-				Username: os.Getenv("PERSONALITY_INSIGHTS_USERNAME"),
-				Password: os.Getenv("PERSONALITY_INSIGHTS_PASSWORD"),
+				Authenticator: &core.BasicAuthenticator{
+						Username: os.Getenv("PERSONALITY_INSIGHTS_USERNAME"),
+						Password: os.Getenv("PERSONALITY_INSIGHTS_PASSWORD"),
+                },
 			})
 
 		if serviceErr == nil {

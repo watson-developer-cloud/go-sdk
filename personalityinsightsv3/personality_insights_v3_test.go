@@ -40,8 +40,10 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				testService, testServiceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:      testServer.URL,
 					Version:  version,
-					Username: username,
-					Password: password,
+					Authenticator: &core.BasicAuthenticator{
+						Username: username,
+						Password: password,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())
@@ -105,8 +107,10 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				testService, testServiceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:      testServer.URL,
 					Version:  version,
-					Username: username,
-					Password: password,
+					Authenticator: &core.BasicAuthenticator{
+						Username: username,
+						Password: password,
+					},
 				})
 				Expect(testServiceErr).To(BeNil())
 				Expect(testService).ToNot(BeNil())

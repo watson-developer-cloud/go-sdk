@@ -11,7 +11,7 @@ import (
 func main() {
 	// Instantiate the Watson Natural Language Classifier service
 	authenticator := &core.IamAuthenticator{
-		ApiKey:     os.Getenv("YOUR IAM API KEY"),
+		ApiKey:     os.Getenv("YOUR API KEY"),
 	}
 	service, serviceErr := nlc.NewNaturalLanguageClassifierV1(&nlc.NaturalLanguageClassifierV1Options{
 		URL:       "YOUR SERVICE URL",
