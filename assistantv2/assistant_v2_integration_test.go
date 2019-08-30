@@ -40,8 +40,10 @@ func init() {
 			NewAssistantV2(&assistantv2.AssistantV2Options{
 				URL:      os.Getenv("ASSISTANT_URL"),
 				Version:  "2017-04-21",
-				Username: os.Getenv("ASSISTANT_USERNAME"),
-				Password: os.Getenv("ASSISTANT_PASSWORD"),
+				Authenticator: &core.BasicAuthenticator{
+						Username: os.Getenv("ASSISTANT_USERNAME"),
+						Password: os.Getenv("ASSISTANT_PASSWORD"),
+                },
 			})
 
 		if serviceErr == nil {
