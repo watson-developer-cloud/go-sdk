@@ -10,11 +10,14 @@ import (
 
 func main() {
 	// Instantiate the Watson Language Translator service
+	authenticator := &core.IamAuthenticator{
+		ApiKey:     os.Getenv("YOUR IAM API KEY"),
+	}
 	service, serviceErr := languagetranslator.
 		NewLanguageTranslatorV3(&languagetranslator.LanguageTranslatorV3Options{
 			URL:       "YOUR SERVICE URL",
 			Version:   "2018-02-16",
-			IAMApiKey: "YOUR IAM API KEY",
+			Authenticator: authenticator,
 		})
 
 	// Check successful instantiation

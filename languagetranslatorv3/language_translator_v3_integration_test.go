@@ -40,8 +40,10 @@ func init() {
 			NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				URL:      os.Getenv("LANGUAGE_TRANSLATOR_URL"),
 				Version:  "2019-06-03",
-				Username: os.Getenv("LANGUAGE_TRANSLATOR_USERNAME"),
-				Password: os.Getenv("LANGUAGE_TRANSLATOR_PASSWORD"),
+				Authenticator: &core.BasicAuthenticator{
+						Username: os.Getenv("LANGUAGE_TRANSLATOR_USERNAME"),
+						Password: os.Getenv("LANGUAGE_TRANSLATOR_PASSWORD"),
+                },
 			})
 
 		if serviceErr == nil {
