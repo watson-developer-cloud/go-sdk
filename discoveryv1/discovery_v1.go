@@ -1,8 +1,5 @@
-// Package discoveryv1 : Operations and models for the DiscoveryV1 service
-package discoveryv1
-
 /**
- * Copyright 2018 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +14,16 @@ package discoveryv1
  * limitations under the License.
  */
 
+// Package discoveryv1 : Operations and models for the DiscoveryV1 service
+package discoveryv1
+
 import (
 	"fmt"
-	"os"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"os"
+	"strings"
 )
 
 // DiscoveryV1 : IBM Watson&trade; Discovery is a cognitive search and content analytics engine that you can add to
@@ -32,54 +31,46 @@ import (
 // structured and unstructured data with pre-enriched content, and use a simplified query language to eliminate the need
 // for manual filtering of results.
 //
-// Version: V1
-// See: http://www.ibm.com/watson/developercloud/discovery.html
+// Version: 1.0
+// See: https://console.bluemix.net/docs/services/discovery/
 type DiscoveryV1 struct {
 	Service *core.BaseService
 }
 
 // DiscoveryV1Options : Service options
 type DiscoveryV1Options struct {
-	Version            string
-	URL                string
-	Username           string
-	Password           string
-	IAMApiKey          string
-	IAMAccessToken     string
-	IAMURL             string
-	IAMClientId        string
-	IAMClientSecret    string
-	ICP4DAccessToken   string
-	ICP4DURL           string
-	AuthenticationType string
+	Version         string
+	URL             string
+	Authenticator   core.Authenticator
 }
 
 // NewDiscoveryV1 : Instantiate DiscoveryV1
-func NewDiscoveryV1(options *DiscoveryV1Options) (*DiscoveryV1, error) {
+func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err error) {
 	if options.URL == "" {
 		options.URL = "https://gateway.watsonplatform.net/discovery/api"
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:            options.Version,
-		URL:                options.URL,
-		Username:           options.Username,
-		Password:           options.Password,
-		IAMApiKey:          options.IAMApiKey,
-		IAMAccessToken:     options.IAMAccessToken,
-		IAMURL:             options.IAMURL,
-		IAMClientId:        options.IAMClientId,
-		IAMClientSecret:    options.IAMClientSecret,
-		ICP4DAccessToken:   options.ICP4DAccessToken,
-		ICP4DURL:           options.ICP4DURL,
-		AuthenticationType: options.AuthenticationType,
-	}
-	service, serviceErr := core.NewBaseService(serviceOptions, "discovery", "Discovery")
-	if serviceErr != nil {
-		return nil, serviceErr
+		Version:         options.Version,
+		URL:             options.URL,
+		Authenticator:   options.Authenticator,
 	}
 
-	return &DiscoveryV1{Service: service}, nil
+    if serviceOptions.Authenticator == nil {
+        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("discovery")
+        if err != nil {
+            return
+        }
+    }
+
+	baseService, err := core.NewBaseService(serviceOptions, "discovery", "Discovery")
+	if err != nil {
+		return
+	}
+	
+	service = &DiscoveryV1{Service: baseService}
+
+	return
 }
 
 // CreateEnvironment : Create an environment
@@ -124,8 +115,7 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 	if createEnvironmentOptions.Size != nil {
 		body["size"] = createEnvironmentOptions.Size
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -279,8 +269,7 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 	if updateEnvironmentOptions.Size != nil {
 		body["size"] = updateEnvironmentOptions.Size
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -451,8 +440,7 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 	if createConfigurationOptions.Source != nil {
 		body["source"] = createConfigurationOptions.Source
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -623,8 +611,7 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 	if updateConfigurationOptions.Source != nil {
 		body["source"] = updateConfigurationOptions.Source
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -806,8 +793,7 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 	if createCollectionOptions.Language != nil {
 		body["language"] = createCollectionOptions.Language
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -962,8 +948,7 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 	if updateCollectionOptions.ConfigurationID != nil {
 		body["configuration_id"] = updateCollectionOptions.ConfigurationID
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1125,8 +1110,7 @@ func (discovery *DiscoveryV1) GetListExpansionsResult(response *core.DetailedRes
 
 // CreateExpansions : Create or update expansion list
 // Create or replace the Expansion list for this collection. The maximum number of expanded terms per collection is
-// `500`.
-// The current expansion list is replaced with the uploaded content.
+// `500`. The current expansion list is replaced with the uploaded content.
 func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateExpansionsOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createExpansionsOptions, "createExpansionsOptions cannot be nil"); err != nil {
 		return nil, err
@@ -1158,8 +1142,7 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 	if createExpansionsOptions.Expansions != nil {
 		body["expansions"] = createExpansionsOptions.Expansions
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1297,8 +1280,7 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 	if createTokenizationDictionaryOptions.TokenizationRules != nil {
 		body["tokenization_rules"] = createTokenizationDictionaryOptions.TokenizationRules
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1750,8 +1732,8 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	if queryOptions.LoggingOptOut != nil {
-		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*queryOptions.LoggingOptOut))
+	if queryOptions.XWatsonLoggingOptOut != nil {
+		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*queryOptions.XWatsonLoggingOptOut))
 	}
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1774,8 +1756,8 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 	if queryOptions.Count != nil {
 		body["count"] = queryOptions.Count
 	}
-	if queryOptions.ReturnFields != nil {
-		body["return"] = queryOptions.ReturnFields
+	if queryOptions.Return != nil {
+		body["return"] = queryOptions.Return
 	}
 	if queryOptions.Offset != nil {
 		body["offset"] = queryOptions.Offset
@@ -1816,8 +1798,7 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 	if queryOptions.Bias != nil {
 		body["bias"] = queryOptions.Bias
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -1887,8 +1868,8 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 	if queryNoticesOptions.Count != nil {
 		builder.AddQuery("count", fmt.Sprint(*queryNoticesOptions.Count))
 	}
-	if queryNoticesOptions.ReturnFields != nil {
-		builder.AddQuery("return", strings.Join(queryNoticesOptions.ReturnFields, ","))
+	if queryNoticesOptions.Return != nil {
+		builder.AddQuery("return", strings.Join(queryNoticesOptions.Return, ","))
 	}
 	if queryNoticesOptions.Offset != nil {
 		builder.AddQuery("offset", fmt.Sprint(*queryNoticesOptions.Offset))
@@ -1968,8 +1949,8 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	if federatedQueryOptions.LoggingOptOut != nil {
-		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*federatedQueryOptions.LoggingOptOut))
+	if federatedQueryOptions.XWatsonLoggingOptOut != nil {
+		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*federatedQueryOptions.XWatsonLoggingOptOut))
 	}
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -1992,8 +1973,8 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	if federatedQueryOptions.Count != nil {
 		body["count"] = federatedQueryOptions.Count
 	}
-	if federatedQueryOptions.ReturnFields != nil {
-		body["return"] = federatedQueryOptions.ReturnFields
+	if federatedQueryOptions.Return != nil {
+		body["return"] = federatedQueryOptions.Return
 	}
 	if federatedQueryOptions.Offset != nil {
 		body["offset"] = federatedQueryOptions.Offset
@@ -2034,8 +2015,7 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	if federatedQueryOptions.Bias != nil {
 		body["bias"] = federatedQueryOptions.Bias
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2103,8 +2083,8 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	if federatedQueryNoticesOptions.Count != nil {
 		builder.AddQuery("count", fmt.Sprint(*federatedQueryNoticesOptions.Count))
 	}
-	if federatedQueryNoticesOptions.ReturnFields != nil {
-		builder.AddQuery("return", strings.Join(federatedQueryNoticesOptions.ReturnFields, ","))
+	if federatedQueryNoticesOptions.Return != nil {
+		builder.AddQuery("return", strings.Join(federatedQueryNoticesOptions.Return, ","))
 	}
 	if federatedQueryNoticesOptions.Offset != nil {
 		builder.AddQuery("offset", fmt.Sprint(*federatedQueryNoticesOptions.Offset))
@@ -2193,8 +2173,7 @@ func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesO
 	if queryEntitiesOptions.EvidenceCount != nil {
 		body["evidence_count"] = queryEntitiesOptions.EvidenceCount
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2265,8 +2244,7 @@ func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelatio
 	if queryRelationsOptions.EvidenceCount != nil {
 		body["evidence_count"] = queryRelationsOptions.EvidenceCount
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2373,8 +2351,7 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 	if addTrainingDataOptions.Examples != nil {
 		body["examples"] = addTrainingDataOptions.Examples
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2599,8 +2576,7 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 	if createTrainingExampleOptions.Relevance != nil {
 		body["relevance"] = createTrainingExampleOptions.Relevance
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2694,8 +2670,7 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 	if updateTrainingExampleOptions.Relevance != nil {
 		body["relevance"] = updateTrainingExampleOptions.Relevance
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2793,6 +2768,7 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 		builder.AddHeader(headerName, headerValue)
 	}
 
+
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 	builder.AddQuery("version", discovery.Service.Options.Version)
 
@@ -2807,7 +2783,7 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 
 // CreateEvent : Create event
 // The **Events** API can be used to create log entries that are associated with specific queries. For example, you can
-// record which documents in the results set were \"clicked\" by a user and when that click occured.
+// record which documents in the results set were "clicked" by a user and when that click occured.
 func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(createEventOptions, "createEventOptions cannot be nil"); err != nil {
 		return nil, err
@@ -2842,8 +2818,7 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 	if createEventOptions.Data != nil {
 		body["data"] = createEventOptions.Data
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -2979,9 +2954,9 @@ func (discovery *DiscoveryV1) GetGetMetricsQueryResult(response *core.DetailedRe
 }
 
 // GetMetricsQueryEvent : Number of queries with an event over time
-// Total number of queries using the **natural_language_query** parameter that have a corresponding \"click\" event over
-// a specified time window. This metric requires having integrated event tracking in your application using the
-// **Events** API.
+// Total number of queries using the **natural_language_query** parameter that have a corresponding "click" event over a
+// specified time window. This metric requires having integrated event tracking in your application using the **Events**
+// API.
 func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *GetMetricsQueryEventOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(getMetricsQueryEventOptions, "getMetricsQueryEventOptions"); err != nil {
 		return nil, err
@@ -3088,8 +3063,8 @@ func (discovery *DiscoveryV1) GetGetMetricsQueryNoResultsResult(response *core.D
 }
 
 // GetMetricsEventRate : Percentage of queries with an associated event
-// The percentage of queries using the **natural_language_query** parameter that have a corresponding \"click\" event
-// over a specified time window.  This metric requires having integrated event tracking in your application using the
+// The percentage of queries using the **natural_language_query** parameter that have a corresponding "click" event over
+// a specified time window.  This metric requires having integrated event tracking in your application using the
 // **Events** API.
 func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *GetMetricsEventRateOptions) (*core.DetailedResponse, error) {
 	if err := core.ValidateStruct(getMetricsEventRateOptions, "getMetricsEventRateOptions"); err != nil {
@@ -3143,7 +3118,7 @@ func (discovery *DiscoveryV1) GetGetMetricsEventRateResult(response *core.Detail
 }
 
 // GetMetricsQueryTokenEvent : Most frequent query tokens with an event
-// The most frequent query tokens parsed from the **natural_language_query** parameter and their corresponding \"click\"
+// The most frequent query tokens parsed from the **natural_language_query** parameter and their corresponding "click"
 // event rate within the recording period (queries and events are stored for 30 days). A query token is an individual
 // word or unigram within the query string.
 func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions) (*core.DetailedResponse, error) {
@@ -3281,8 +3256,7 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 	if createCredentialsOptions.Status != nil {
 		body["status"] = createCredentialsOptions.Status
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -3394,8 +3368,7 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 	if updateCredentialsOptions.Status != nil {
 		body["status"] = updateCredentialsOptions.Status
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -3542,8 +3515,7 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 	if createGatewayOptions.Name != nil {
 		body["name"] = createGatewayOptions.Name
 	}
-	_, err := builder.SetBodyContentJSON(body)
-	if err != nil {
+	if _, err := builder.SetBodyContentJSON(body); err != nil {
 		return nil, err
 	}
 
@@ -3677,8 +3649,7 @@ type AddDocumentOptions struct {
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected.
-	// Example:  ``` {
+	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
@@ -3692,7 +3663,7 @@ type AddDocumentOptions struct {
 func (discovery *DiscoveryV1) NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
 	return &AddDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -3764,7 +3735,7 @@ type AddTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
 	return &AddTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -3872,9 +3843,9 @@ type Collection struct {
 // Constants associated with the Collection.Status property.
 // The status of the collection.
 const (
-	Collection_Status_Active      = "active"
+	Collection_Status_Active = "active"
 	Collection_Status_Maintenance = "maintenance"
-	Collection_Status_Pending     = "pending"
+	Collection_Status_Pending = "pending"
 )
 
 // CollectionCrawlStatus : Object containing information about the crawl status of this collection.
@@ -3983,16 +3954,16 @@ type CreateCollectionOptions struct {
 // Constants associated with the CreateCollectionOptions.Language property.
 // The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
 const (
-	CreateCollectionOptions_Language_Ar   = "ar"
-	CreateCollectionOptions_Language_De   = "de"
-	CreateCollectionOptions_Language_En   = "en"
-	CreateCollectionOptions_Language_Es   = "es"
-	CreateCollectionOptions_Language_Fr   = "fr"
-	CreateCollectionOptions_Language_It   = "it"
-	CreateCollectionOptions_Language_Ja   = "ja"
-	CreateCollectionOptions_Language_Ko   = "ko"
-	CreateCollectionOptions_Language_Nl   = "nl"
-	CreateCollectionOptions_Language_Pt   = "pt"
+	CreateCollectionOptions_Language_Ar = "ar"
+	CreateCollectionOptions_Language_De = "de"
+	CreateCollectionOptions_Language_En = "en"
+	CreateCollectionOptions_Language_Es = "es"
+	CreateCollectionOptions_Language_Fr = "fr"
+	CreateCollectionOptions_Language_It = "it"
+	CreateCollectionOptions_Language_Ja = "ja"
+	CreateCollectionOptions_Language_Ko = "ko"
+	CreateCollectionOptions_Language_Nl = "nl"
+	CreateCollectionOptions_Language_Pt = "pt"
 	CreateCollectionOptions_Language_ZhCn = "zh-CN"
 )
 
@@ -4000,7 +3971,7 @@ const (
 func (discovery *DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
 	return &CreateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		Name:          core.StringPtr(name),
+		Name: core.StringPtr(name),
 	}
 }
 
@@ -4073,7 +4044,7 @@ type CreateConfigurationOptions struct {
 func (discovery *DiscoveryV1) NewCreateConfigurationOptions(environmentID string, name string) *CreateConfigurationOptions {
 	return &CreateConfigurationOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		Name:          core.StringPtr(name),
+		Name: core.StringPtr(name),
 	}
 }
 
@@ -4161,11 +4132,11 @@ type CreateCredentialsOptions struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	CreateCredentialsOptions_SourceType_Box                = "box"
+	CreateCredentialsOptions_SourceType_Box = "box"
 	CreateCredentialsOptions_SourceType_CloudObjectStorage = "cloud_object_storage"
-	CreateCredentialsOptions_SourceType_Salesforce         = "salesforce"
-	CreateCredentialsOptions_SourceType_Sharepoint         = "sharepoint"
-	CreateCredentialsOptions_SourceType_WebCrawl           = "web_crawl"
+	CreateCredentialsOptions_SourceType_Salesforce = "salesforce"
+	CreateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
+	CreateCredentialsOptions_SourceType_WebCrawl = "web_crawl"
 )
 
 // Constants associated with the CreateCredentialsOptions.Status property.
@@ -4174,7 +4145,7 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	CreateCredentialsOptions_Status_Connected = "connected"
-	CreateCredentialsOptions_Status_Invalid   = "invalid"
+	CreateCredentialsOptions_Status_Invalid = "invalid"
 )
 
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
@@ -4235,15 +4206,15 @@ type CreateEnvironmentOptions struct {
 // Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the default
 // is `S`.
 const (
-	CreateEnvironmentOptions_Size_L    = "L"
-	CreateEnvironmentOptions_Size_Lt   = "LT"
-	CreateEnvironmentOptions_Size_M    = "M"
-	CreateEnvironmentOptions_Size_Ml   = "ML"
-	CreateEnvironmentOptions_Size_Ms   = "MS"
-	CreateEnvironmentOptions_Size_S    = "S"
-	CreateEnvironmentOptions_Size_Xl   = "XL"
-	CreateEnvironmentOptions_Size_Xs   = "XS"
-	CreateEnvironmentOptions_Size_Xxl  = "XXL"
+	CreateEnvironmentOptions_Size_L = "L"
+	CreateEnvironmentOptions_Size_Lt = "LT"
+	CreateEnvironmentOptions_Size_M = "M"
+	CreateEnvironmentOptions_Size_Ml = "ML"
+	CreateEnvironmentOptions_Size_Ms = "MS"
+	CreateEnvironmentOptions_Size_S = "S"
+	CreateEnvironmentOptions_Size_Xl = "XL"
+	CreateEnvironmentOptions_Size_Xs = "XS"
+	CreateEnvironmentOptions_Size_Xxl = "XXL"
 	CreateEnvironmentOptions_Size_Xxxl = "XXXL"
 )
 
@@ -4371,8 +4342,8 @@ type CreateExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string, expansions []Expansion) *CreateExpansionsOptions {
 	return &CreateExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		Expansions:    expansions,
+		CollectionID: core.StringPtr(collectionID),
+		Expansions: expansions,
 	}
 }
 
@@ -4460,9 +4431,9 @@ type CreateStopwordListOptions struct {
 // NewCreateStopwordListOptions : Instantiate CreateStopwordListOptions
 func (discovery *DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectionID string, stopwordFile *os.File, stopwordFilename string) *CreateStopwordListOptions {
 	return &CreateStopwordListOptions{
-		EnvironmentID:    core.StringPtr(environmentID),
-		CollectionID:     core.StringPtr(collectionID),
-		StopwordFile:     stopwordFile,
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID: core.StringPtr(collectionID),
+		StopwordFile: stopwordFile,
 		StopwordFilename: core.StringPtr(stopwordFilename),
 	}
 }
@@ -4518,7 +4489,7 @@ type CreateTokenizationDictionaryOptions struct {
 func (discovery *DiscoveryV1) NewCreateTokenizationDictionaryOptions(environmentID string, collectionID string) *CreateTokenizationDictionaryOptions {
 	return &CreateTokenizationDictionaryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -4575,8 +4546,8 @@ type CreateTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
 	return &CreateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		QueryID:       core.StringPtr(queryID),
+		CollectionID: core.StringPtr(collectionID),
+		QueryID: core.StringPtr(queryID),
 	}
 }
 
@@ -4734,12 +4705,12 @@ type CredentialDetails struct {
 // -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`
 // -  "source_type": "cloud_object_storage"` - valid `credential_type`s: `aws4_hmac`.
 const (
-	CredentialDetails_CredentialType_Aws4Hmac         = "aws4_hmac"
-	CredentialDetails_CredentialType_Basic            = "basic"
-	CredentialDetails_CredentialType_Noauth           = "noauth"
-	CredentialDetails_CredentialType_NtlmV1           = "ntlm_v1"
-	CredentialDetails_CredentialType_Oauth2           = "oauth2"
-	CredentialDetails_CredentialType_Saml             = "saml"
+	CredentialDetails_CredentialType_Aws4Hmac = "aws4_hmac"
+	CredentialDetails_CredentialType_Basic = "basic"
+	CredentialDetails_CredentialType_Noauth = "noauth"
+	CredentialDetails_CredentialType_NtlmV1 = "ntlm_v1"
+	CredentialDetails_CredentialType_Oauth2 = "oauth2"
+	CredentialDetails_CredentialType_Saml = "saml"
 	CredentialDetails_CredentialType_UsernamePassword = "username_password"
 )
 
@@ -4782,11 +4753,11 @@ type Credentials struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	Credentials_SourceType_Box                = "box"
+	Credentials_SourceType_Box = "box"
 	Credentials_SourceType_CloudObjectStorage = "cloud_object_storage"
-	Credentials_SourceType_Salesforce         = "salesforce"
-	Credentials_SourceType_Sharepoint         = "sharepoint"
-	Credentials_SourceType_WebCrawl           = "web_crawl"
+	Credentials_SourceType_Salesforce = "salesforce"
+	Credentials_SourceType_Sharepoint = "sharepoint"
+	Credentials_SourceType_WebCrawl = "web_crawl"
 )
 
 // Constants associated with the Credentials.Status property.
@@ -4795,7 +4766,7 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	Credentials_Status_Connected = "connected"
-	Credentials_Status_Invalid   = "invalid"
+	Credentials_Status_Invalid = "invalid"
 )
 
 // CredentialsList : CredentialsList struct
@@ -4822,7 +4793,7 @@ type DeleteAllTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
 	return &DeleteAllTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -4861,7 +4832,7 @@ type DeleteCollectionOptions struct {
 func (discovery *DiscoveryV1) NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
 	return &DeleteCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -4915,7 +4886,7 @@ type DeleteConfigurationOptions struct {
 // NewDeleteConfigurationOptions : Instantiate DeleteConfigurationOptions
 func (discovery *DiscoveryV1) NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
 	return &DeleteConfigurationOptions{
-		EnvironmentID:   core.StringPtr(environmentID),
+		EnvironmentID: core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -4990,7 +4961,7 @@ type DeleteCredentialsOptions struct {
 func (discovery *DiscoveryV1) NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
 	return &DeleteCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID:  core.StringPtr(credentialID),
+		CredentialID: core.StringPtr(credentialID),
 	}
 }
 
@@ -5032,8 +5003,8 @@ type DeleteDocumentOptions struct {
 func (discovery *DiscoveryV1) NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
 	return &DeleteDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		DocumentID:    core.StringPtr(documentID),
+		CollectionID: core.StringPtr(collectionID),
+		DocumentID: core.StringPtr(documentID),
 	}
 }
 
@@ -5139,7 +5110,7 @@ type DeleteExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
 	return &DeleteExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -5178,7 +5149,7 @@ type DeleteGatewayOptions struct {
 func (discovery *DiscoveryV1) NewDeleteGatewayOptions(environmentID string, gatewayID string) *DeleteGatewayOptions {
 	return &DeleteGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		GatewayID:     core.StringPtr(gatewayID),
+		GatewayID: core.StringPtr(gatewayID),
 	}
 }
 
@@ -5217,7 +5188,7 @@ type DeleteStopwordListOptions struct {
 func (discovery *DiscoveryV1) NewDeleteStopwordListOptions(environmentID string, collectionID string) *DeleteStopwordListOptions {
 	return &DeleteStopwordListOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -5256,7 +5227,7 @@ type DeleteTokenizationDictionaryOptions struct {
 func (discovery *DiscoveryV1) NewDeleteTokenizationDictionaryOptions(environmentID string, collectionID string) *DeleteTokenizationDictionaryOptions {
 	return &DeleteTokenizationDictionaryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -5298,8 +5269,8 @@ type DeleteTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
 	return &DeleteTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		QueryID:       core.StringPtr(queryID),
+		CollectionID: core.StringPtr(collectionID),
+		QueryID: core.StringPtr(queryID),
 	}
 }
 
@@ -5350,9 +5321,9 @@ type DeleteTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
 	return &DeleteTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		QueryID:       core.StringPtr(queryID),
-		ExampleID:     core.StringPtr(exampleID),
+		CollectionID: core.StringPtr(collectionID),
+		QueryID: core.StringPtr(queryID),
+		ExampleID: core.StringPtr(exampleID),
 	}
 }
 
@@ -5443,7 +5414,7 @@ type DocumentAccepted struct {
 // Status of the document in the ingestion process. A status of `processing` is returned for documents that are ingested
 // with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
 const (
-	DocumentAccepted_Status_Pending    = "pending"
+	DocumentAccepted_Status_Pending = "pending"
 	DocumentAccepted_Status_Processing = "processing"
 )
 
@@ -5476,12 +5447,12 @@ type DocumentSnapshot struct {
 // Constants associated with the DocumentSnapshot.Step property.
 // The step in the document conversion process that the snapshot object represents.
 const (
-	DocumentSnapshot_Step_EnrichmentsOutput        = "enrichments_output"
-	DocumentSnapshot_Step_HTMLInput                = "html_input"
-	DocumentSnapshot_Step_HTMLOutput               = "html_output"
+	DocumentSnapshot_Step_EnrichmentsOutput = "enrichments_output"
+	DocumentSnapshot_Step_HTMLInput = "html_input"
+	DocumentSnapshot_Step_HTMLOutput = "html_output"
 	DocumentSnapshot_Step_JSONNormalizationsOutput = "json_normalizations_output"
-	DocumentSnapshot_Step_JSONOutput               = "json_output"
-	DocumentSnapshot_Step_NormalizationsOutput     = "normalizations_output"
+	DocumentSnapshot_Step_JSONOutput = "json_output"
+	DocumentSnapshot_Step_NormalizationsOutput = "normalizations_output"
 )
 
 // DocumentStatus : Status information about a submitted document.
@@ -5515,11 +5486,11 @@ type DocumentStatus struct {
 // Constants associated with the DocumentStatus.Status property.
 // Status of the document in the ingestion process.
 const (
-	DocumentStatus_Status_Available            = "available"
+	DocumentStatus_Status_Available = "available"
 	DocumentStatus_Status_AvailableWithNotices = "available with notices"
-	DocumentStatus_Status_Failed               = "failed"
-	DocumentStatus_Status_Pending              = "pending"
-	DocumentStatus_Status_Processing           = "processing"
+	DocumentStatus_Status_Failed = "failed"
+	DocumentStatus_Status_Pending = "pending"
+	DocumentStatus_Status_Processing = "processing"
 )
 
 // Constants associated with the DocumentStatus.FileType property.
@@ -5527,7 +5498,7 @@ const (
 const (
 	DocumentStatus_FileType_HTML = "html"
 	DocumentStatus_FileType_JSON = "json"
-	DocumentStatus_FileType_Pdf  = "pdf"
+	DocumentStatus_FileType_Pdf = "pdf"
 	DocumentStatus_FileType_Word = "word"
 )
 
@@ -5560,7 +5531,7 @@ type Enrichment struct {
 	// the `elements` enrichment the configuration specified and files ingested must meet all the criteria specified in
 	// [the
 	// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-element-classification#element-classification).
-	EnrichmentName *string `json:"enrichment" validate:"required"`
+	Enrichment *string `json:"enrichment" validate:"required"`
 
 	// If true, then most errors generated during the enrichment process will be treated as warnings and will not cause the
 	// document to fail processing.
@@ -5572,6 +5543,7 @@ type Enrichment struct {
 
 // EnrichmentOptions : Options which are specific to a particular enrichment.
 type EnrichmentOptions struct {
+
 	Features *NluEnrichmentFeatures `json:"features,omitempty"`
 
 	// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language detection
@@ -5645,24 +5617,24 @@ type Environment struct {
 // Current status of the environment. `resizing` is displayed when a request to increase the environment size has been
 // made, but is still in the process of being completed.
 const (
-	Environment_Status_Active      = "active"
+	Environment_Status_Active = "active"
 	Environment_Status_Maintenance = "maintenance"
-	Environment_Status_Pending     = "pending"
-	Environment_Status_Resizing    = "resizing"
+	Environment_Status_Pending = "pending"
+	Environment_Status_Resizing = "resizing"
 )
 
 // Constants associated with the Environment.Size property.
 // Current size of the environment.
 const (
-	Environment_Size_L    = "L"
-	Environment_Size_Lt   = "LT"
-	Environment_Size_M    = "M"
-	Environment_Size_Ml   = "ML"
-	Environment_Size_Ms   = "MS"
-	Environment_Size_S    = "S"
-	Environment_Size_Xl   = "XL"
-	Environment_Size_Xs   = "XS"
-	Environment_Size_Xxl  = "XXL"
+	Environment_Size_L = "L"
+	Environment_Size_Lt = "LT"
+	Environment_Size_M = "M"
+	Environment_Size_Ml = "ML"
+	Environment_Size_Ms = "MS"
+	Environment_Size_S = "S"
+	Environment_Size_Xl = "XL"
+	Environment_Size_Xs = "XS"
+	Environment_Size_Xxl = "XXL"
 	Environment_Size_Xxxl = "XXXL"
 )
 
@@ -5764,7 +5736,7 @@ type FederatedQueryNoticesOptions struct {
 	Count *int64 `json:"count,omitempty"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	ReturnFields []string `json:"return,omitempty"`
+	Return []string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
@@ -5854,9 +5826,9 @@ func (options *FederatedQueryNoticesOptions) SetCount(count int64) *FederatedQue
 	return options
 }
 
-// SetReturnFields : Allow user to set ReturnFields
-func (options *FederatedQueryNoticesOptions) SetReturnFields(returnFields []string) *FederatedQueryNoticesOptions {
-	options.ReturnFields = returnFields
+// SetReturn : Allow user to set Return
+func (options *FederatedQueryNoticesOptions) SetReturn(returnVar []string) *FederatedQueryNoticesOptions {
+	options.Return = returnVar
 	return options
 }
 
@@ -5937,7 +5909,7 @@ type FederatedQueryOptions struct {
 	Count *int64 `json:"count,omitempty"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	ReturnFields *string `json:"return,omitempty"`
+	Return *string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results.
@@ -5999,7 +5971,7 @@ type FederatedQueryOptions struct {
 	Bias *string `json:"bias,omitempty"`
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
-	LoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
+	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -6054,9 +6026,9 @@ func (options *FederatedQueryOptions) SetCount(count int64) *FederatedQueryOptio
 	return options
 }
 
-// SetReturnFields : Allow user to set ReturnFields
-func (options *FederatedQueryOptions) SetReturnFields(returnFields string) *FederatedQueryOptions {
-	options.ReturnFields = core.StringPtr(returnFields)
+// SetReturn : Allow user to set Return
+func (options *FederatedQueryOptions) SetReturn(returnVar string) *FederatedQueryOptions {
+	options.Return = core.StringPtr(returnVar)
 	return options
 }
 
@@ -6138,9 +6110,9 @@ func (options *FederatedQueryOptions) SetBias(bias string) *FederatedQueryOption
 	return options
 }
 
-// SetLoggingOptOut : Allow user to set LoggingOptOut
-func (options *FederatedQueryOptions) SetLoggingOptOut(loggingOptOut bool) *FederatedQueryOptions {
-	options.LoggingOptOut = core.BoolPtr(loggingOptOut)
+// SetXWatsonLoggingOptOut : Allow user to set XWatsonLoggingOptOut
+func (options *FederatedQueryOptions) SetXWatsonLoggingOptOut(xWatsonLoggingOptOut bool) *FederatedQueryOptions {
+	options.XWatsonLoggingOptOut = core.BoolPtr(xWatsonLoggingOptOut)
 	return options
 }
 
@@ -6154,26 +6126,26 @@ func (options *FederatedQueryOptions) SetHeaders(param map[string]string) *Feder
 type Field struct {
 
 	// The name of the field.
-	FieldName *string `json:"field,omitempty"`
+	Field *string `json:"field,omitempty"`
 
 	// The type of the field.
-	FieldType *string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 }
 
-// Constants associated with the Field.FieldType property.
+// Constants associated with the Field.Type property.
 // The type of the field.
 const (
-	Field_FieldType_Binary  = "binary"
-	Field_FieldType_Boolean = "boolean"
-	Field_FieldType_Byte    = "byte"
-	Field_FieldType_Date    = "date"
-	Field_FieldType_Double  = "double"
-	Field_FieldType_Float   = "float"
-	Field_FieldType_Integer = "integer"
-	Field_FieldType_Long    = "long"
-	Field_FieldType_Nested  = "nested"
-	Field_FieldType_Short   = "short"
-	Field_FieldType_String  = "string"
+	Field_Type_Binary = "binary"
+	Field_Type_Boolean = "boolean"
+	Field_Type_Byte = "byte"
+	Field_Type_Date = "date"
+	Field_Type_Double = "double"
+	Field_Type_Float = "float"
+	Field_Type_Integer = "integer"
+	Field_Type_Long = "long"
+	Field_Type_Nested = "nested"
+	Field_Type_Short = "short"
+	Field_Type_String = "string"
 )
 
 // Filter : Filter struct
@@ -6232,7 +6204,7 @@ type Gateway struct {
 // `idle` means this gateway is not currently in use.
 const (
 	Gateway_Status_Connected = "connected"
-	Gateway_Status_Idle      = "idle"
+	Gateway_Status_Idle = "idle"
 )
 
 // GatewayDelete : Gatway deletion confirmation.
@@ -6269,7 +6241,7 @@ type GetCollectionOptions struct {
 func (discovery *DiscoveryV1) NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
 	return &GetCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -6307,7 +6279,7 @@ type GetConfigurationOptions struct {
 // NewGetConfigurationOptions : Instantiate GetConfigurationOptions
 func (discovery *DiscoveryV1) NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
 	return &GetConfigurationOptions{
-		EnvironmentID:   core.StringPtr(environmentID),
+		EnvironmentID: core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -6347,7 +6319,7 @@ type GetCredentialsOptions struct {
 func (discovery *DiscoveryV1) NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
 	return &GetCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID:  core.StringPtr(credentialID),
+		CredentialID: core.StringPtr(credentialID),
 	}
 }
 
@@ -6389,8 +6361,8 @@ type GetDocumentStatusOptions struct {
 func (discovery *DiscoveryV1) NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
 	return &GetDocumentStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		DocumentID:    core.StringPtr(documentID),
+		CollectionID: core.StringPtr(collectionID),
+		DocumentID: core.StringPtr(documentID),
 	}
 }
 
@@ -6464,7 +6436,7 @@ type GetGatewayOptions struct {
 func (discovery *DiscoveryV1) NewGetGatewayOptions(environmentID string, gatewayID string) *GetGatewayOptions {
 	return &GetGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		GatewayID:     core.StringPtr(gatewayID),
+		GatewayID: core.StringPtr(gatewayID),
 	}
 }
 
@@ -6735,7 +6707,7 @@ type GetStopwordListStatusOptions struct {
 func (discovery *DiscoveryV1) NewGetStopwordListStatusOptions(environmentID string, collectionID string) *GetStopwordListStatusOptions {
 	return &GetStopwordListStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -6774,7 +6746,7 @@ type GetTokenizationDictionaryStatusOptions struct {
 func (discovery *DiscoveryV1) NewGetTokenizationDictionaryStatusOptions(environmentID string, collectionID string) *GetTokenizationDictionaryStatusOptions {
 	return &GetTokenizationDictionaryStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -6816,8 +6788,8 @@ type GetTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
 	return &GetTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		QueryID:       core.StringPtr(queryID),
+		CollectionID: core.StringPtr(collectionID),
+		QueryID: core.StringPtr(queryID),
 	}
 }
 
@@ -6868,9 +6840,9 @@ type GetTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
 	return &GetTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		QueryID:       core.StringPtr(queryID),
-		ExampleID:     core.StringPtr(exampleID),
+		CollectionID: core.StringPtr(collectionID),
+		QueryID: core.StringPtr(queryID),
+		ExampleID: core.StringPtr(exampleID),
 	}
 }
 
@@ -6904,6 +6876,16 @@ func (options *GetTrainingExampleOptions) SetHeaders(param map[string]string) *G
 	return options
 }
 
+// Histogram : Histogram struct
+type Histogram struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	// Interval of the aggregation. (For 'histogram' type).
+	Interval *int64 `json:"interval,omitempty"`
+}
+
 // HTMLSettings : A list of HTML conversion settings.
 type HTMLSettings struct {
 
@@ -6922,16 +6904,6 @@ type HTMLSettings struct {
 
 	// Array of HTML tag attributes to exclude.
 	ExcludeTagAttributes []string `json:"exclude_tag_attributes,omitempty"`
-}
-
-// Histogram : Histogram struct
-type Histogram struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	// Interval of the aggregation. (For 'histogram' type).
-	Interval *int64 `json:"interval,omitempty"`
 }
 
 // IndexCapacity : Details about the resource usage and capacity of the environment.
@@ -6964,7 +6936,7 @@ type ListCollectionFieldsOptions struct {
 func (discovery *DiscoveryV1) NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
 	return &ListCollectionFieldsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -7174,7 +7146,7 @@ type ListExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
 	return &ListExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -7281,7 +7253,7 @@ type ListTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
 	return &ListTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -7323,8 +7295,8 @@ type ListTrainingExamplesOptions struct {
 func (discovery *DiscoveryV1) NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
 	return &ListTrainingExamplesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		QueryID:       core.StringPtr(queryID),
+		CollectionID: core.StringPtr(collectionID),
+		QueryID: core.StringPtr(queryID),
 	}
 }
 
@@ -7572,12 +7544,12 @@ type NluEnrichmentCategories map[string]interface{}
 
 // SetProperty : Allow user to set arbitrary property
 func (this *NluEnrichmentCategories) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
+   (*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *NluEnrichmentCategories) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+   return (*this)[Key].(*interface{})
 }
 
 // NluEnrichmentConcepts : An object specifiying the concepts enrichment and related parameters.
@@ -7756,10 +7728,10 @@ type NormalizationOperation struct {
 // Typically, **remove_nulls** is invoked as the last normalization operation (if it is invoked at all, it can be
 // time-expensive).
 const (
-	NormalizationOperation_Operation_Copy        = "copy"
-	NormalizationOperation_Operation_Merge       = "merge"
-	NormalizationOperation_Operation_Move        = "move"
-	NormalizationOperation_Operation_Remove      = "remove"
+	NormalizationOperation_Operation_Copy = "copy"
+	NormalizationOperation_Operation_Merge = "merge"
+	NormalizationOperation_Operation_Move = "move"
+	NormalizationOperation_Operation_Remove = "remove"
 	NormalizationOperation_Operation_RemoveNulls = "remove_nulls"
 )
 
@@ -7800,17 +7772,19 @@ type Notice struct {
 // Constants associated with the Notice.Severity property.
 // Severity level of the notice.
 const (
-	Notice_Severity_Error   = "error"
+	Notice_Severity_Error = "error"
 	Notice_Severity_Warning = "warning"
 )
 
 // PdfHeadingDetection : PdfHeadingDetection struct
 type PdfHeadingDetection struct {
+
 	Fonts []FontSetting `json:"fonts,omitempty"`
 }
 
 // PdfSettings : A list of PDF conversion settings.
 type PdfSettings struct {
+
 	Heading *PdfHeadingDetection `json:"heading,omitempty"`
 }
 
@@ -7883,7 +7857,7 @@ type QueryEntitiesOptions struct {
 func (discovery *DiscoveryV1) NewQueryEntitiesOptions(environmentID string, collectionID string) *QueryEntitiesOptions {
 	return &QueryEntitiesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -8103,7 +8077,7 @@ type QueryNoticesOptions struct {
 	Count *int64 `json:"count,omitempty"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	ReturnFields []string `json:"return,omitempty"`
+	Return []string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
@@ -8157,7 +8131,7 @@ type QueryNoticesOptions struct {
 func (discovery *DiscoveryV1) NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
 	return &QueryNoticesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -8209,9 +8183,9 @@ func (options *QueryNoticesOptions) SetCount(count int64) *QueryNoticesOptions {
 	return options
 }
 
-// SetReturnFields : Allow user to set ReturnFields
-func (options *QueryNoticesOptions) SetReturnFields(returnFields []string) *QueryNoticesOptions {
-	options.ReturnFields = returnFields
+// SetReturn : Allow user to set Return
+func (options *QueryNoticesOptions) SetReturn(returnVar []string) *QueryNoticesOptions {
+	options.Return = returnVar
 	return options
 }
 
@@ -8305,112 +8279,112 @@ type QueryNoticesResult map[string]interface{}
 
 // SetID : Allow user to set ID
 func (this *QueryNoticesResult) SetID(ID *string) {
-	(*this)["id"] = ID
+   (*this)["id"] = ID
 }
 
 // GetID : Allow user to get ID
 func (this *QueryNoticesResult) GetID() *string {
-	return (*this)["id"].(*string)
+   return (*this)["id"].(*string)
 }
 
 // SetMetadata : Allow user to set Metadata
 func (this *QueryNoticesResult) SetMetadata(Metadata *map[string]interface{}) {
-	(*this)["metadata"] = Metadata
+   (*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
 func (this *QueryNoticesResult) GetMetadata() *map[string]interface{} {
-	return (*this)["metadata"].(*map[string]interface{})
+   return (*this)["metadata"].(*map[string]interface{})
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (this *QueryNoticesResult) SetCollectionID(CollectionID *string) {
-	(*this)["collection_id"] = CollectionID
+   (*this)["collection_id"] = CollectionID
 }
 
 // GetCollectionID : Allow user to get CollectionID
 func (this *QueryNoticesResult) GetCollectionID() *string {
-	return (*this)["collection_id"].(*string)
+   return (*this)["collection_id"].(*string)
 }
 
 // SetResultMetadata : Allow user to set ResultMetadata
 func (this *QueryNoticesResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) {
-	(*this)["result_metadata"] = ResultMetadata
+   (*this)["result_metadata"] = ResultMetadata
 }
 
 // GetResultMetadata : Allow user to get ResultMetadata
 func (this *QueryNoticesResult) GetResultMetadata() *QueryResultMetadata {
-	return (*this)["result_metadata"].(*QueryResultMetadata)
+   return (*this)["result_metadata"].(*QueryResultMetadata)
 }
 
 // SetTitle : Allow user to set Title
 func (this *QueryNoticesResult) SetTitle(Title *string) {
-	(*this)["title"] = Title
+   (*this)["title"] = Title
 }
 
 // GetTitle : Allow user to get Title
 func (this *QueryNoticesResult) GetTitle() *string {
-	return (*this)["title"].(*string)
+   return (*this)["title"].(*string)
 }
 
 // SetCode : Allow user to set Code
 func (this *QueryNoticesResult) SetCode(Code *int64) {
-	(*this)["code"] = Code
+   (*this)["code"] = Code
 }
 
 // GetCode : Allow user to get Code
 func (this *QueryNoticesResult) GetCode() *int64 {
-	return (*this)["code"].(*int64)
+   return (*this)["code"].(*int64)
 }
 
 // SetFilename : Allow user to set Filename
 func (this *QueryNoticesResult) SetFilename(Filename *string) {
-	(*this)["filename"] = Filename
+   (*this)["filename"] = Filename
 }
 
 // GetFilename : Allow user to get Filename
 func (this *QueryNoticesResult) GetFilename() *string {
-	return (*this)["filename"].(*string)
+   return (*this)["filename"].(*string)
 }
 
 // SetFileType : Allow user to set FileType
 func (this *QueryNoticesResult) SetFileType(FileType *string) {
-	(*this)["file_type"] = FileType
+   (*this)["file_type"] = FileType
 }
 
 // GetFileType : Allow user to get FileType
 func (this *QueryNoticesResult) GetFileType() *string {
-	return (*this)["file_type"].(*string)
+   return (*this)["file_type"].(*string)
 }
 
 // SetSha1 : Allow user to set Sha1
 func (this *QueryNoticesResult) SetSha1(Sha1 *string) {
-	(*this)["sha1"] = Sha1
+   (*this)["sha1"] = Sha1
 }
 
 // GetSha1 : Allow user to get Sha1
 func (this *QueryNoticesResult) GetSha1() *string {
-	return (*this)["sha1"].(*string)
+   return (*this)["sha1"].(*string)
 }
 
 // SetNotices : Allow user to set Notices
 func (this *QueryNoticesResult) SetNotices(Notices *[]Notice) {
-	(*this)["notices"] = Notices
+   (*this)["notices"] = Notices
 }
 
 // GetNotices : Allow user to get Notices
 func (this *QueryNoticesResult) GetNotices() *[]Notice {
-	return (*this)["notices"].(*[]Notice)
+   return (*this)["notices"].(*[]Notice)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *QueryNoticesResult) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
+   (*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *QueryNoticesResult) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+   return (*this)[Key].(*interface{})
 }
 
 // Constants associated with the QueryNoticesResult.FileType property.
@@ -8418,7 +8392,7 @@ func (this *QueryNoticesResult) GetProperty(Key string) *interface{} {
 const (
 	QueryNoticesResult_FileType_HTML = "html"
 	QueryNoticesResult_FileType_JSON = "json"
-	QueryNoticesResult_FileType_Pdf  = "pdf"
+	QueryNoticesResult_FileType_Pdf = "pdf"
 	QueryNoticesResult_FileType_Word = "word"
 )
 
@@ -8454,7 +8428,7 @@ type QueryOptions struct {
 	Count *int64 `json:"count,omitempty"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	ReturnFields *string `json:"return,omitempty"`
+	Return *string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results.
@@ -8516,7 +8490,7 @@ type QueryOptions struct {
 	Bias *string `json:"bias,omitempty"`
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
-	LoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
+	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -8526,7 +8500,7 @@ type QueryOptions struct {
 func (discovery *DiscoveryV1) NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
 	return &QueryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -8578,9 +8552,9 @@ func (options *QueryOptions) SetCount(count int64) *QueryOptions {
 	return options
 }
 
-// SetReturnFields : Allow user to set ReturnFields
-func (options *QueryOptions) SetReturnFields(returnFields string) *QueryOptions {
-	options.ReturnFields = core.StringPtr(returnFields)
+// SetReturn : Allow user to set Return
+func (options *QueryOptions) SetReturn(returnVar string) *QueryOptions {
+	options.Return = core.StringPtr(returnVar)
 	return options
 }
 
@@ -8662,9 +8636,9 @@ func (options *QueryOptions) SetBias(bias string) *QueryOptions {
 	return options
 }
 
-// SetLoggingOptOut : Allow user to set LoggingOptOut
-func (options *QueryOptions) SetLoggingOptOut(loggingOptOut bool) *QueryOptions {
-	options.LoggingOptOut = core.BoolPtr(loggingOptOut)
+// SetXWatsonLoggingOptOut : Allow user to set XWatsonLoggingOptOut
+func (options *QueryOptions) SetXWatsonLoggingOptOut(xWatsonLoggingOptOut bool) *QueryOptions {
+	options.XWatsonLoggingOptOut = core.BoolPtr(xWatsonLoggingOptOut)
 	return options
 }
 
@@ -8718,6 +8692,7 @@ type QueryRelationsEntity struct {
 
 // QueryRelationsFilter : QueryRelationsFilter struct
 type QueryRelationsFilter struct {
+
 	RelationTypes *QueryFilterType `json:"relation_types,omitempty"`
 
 	EntityTypes *QueryFilterType `json:"entity_types,omitempty"`
@@ -8766,14 +8741,14 @@ type QueryRelationsOptions struct {
 // parameter.
 const (
 	QueryRelationsOptions_Sort_Frequency = "frequency"
-	QueryRelationsOptions_Sort_Score     = "score"
+	QueryRelationsOptions_Sort_Score = "score"
 )
 
 // NewQueryRelationsOptions : Instantiate QueryRelationsOptions
 func (discovery *DiscoveryV1) NewQueryRelationsOptions(environmentID string, collectionID string) *QueryRelationsOptions {
 	return &QueryRelationsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -8887,62 +8862,62 @@ type QueryResult map[string]interface{}
 
 // SetID : Allow user to set ID
 func (this *QueryResult) SetID(ID *string) {
-	(*this)["id"] = ID
+   (*this)["id"] = ID
 }
 
 // GetID : Allow user to get ID
 func (this *QueryResult) GetID() *string {
-	return (*this)["id"].(*string)
+   return (*this)["id"].(*string)
 }
 
 // SetMetadata : Allow user to set Metadata
 func (this *QueryResult) SetMetadata(Metadata *map[string]interface{}) {
-	(*this)["metadata"] = Metadata
+   (*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
 func (this *QueryResult) GetMetadata() *map[string]interface{} {
-	return (*this)["metadata"].(*map[string]interface{})
+   return (*this)["metadata"].(*map[string]interface{})
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (this *QueryResult) SetCollectionID(CollectionID *string) {
-	(*this)["collection_id"] = CollectionID
+   (*this)["collection_id"] = CollectionID
 }
 
 // GetCollectionID : Allow user to get CollectionID
 func (this *QueryResult) GetCollectionID() *string {
-	return (*this)["collection_id"].(*string)
+   return (*this)["collection_id"].(*string)
 }
 
 // SetResultMetadata : Allow user to set ResultMetadata
 func (this *QueryResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) {
-	(*this)["result_metadata"] = ResultMetadata
+   (*this)["result_metadata"] = ResultMetadata
 }
 
 // GetResultMetadata : Allow user to get ResultMetadata
 func (this *QueryResult) GetResultMetadata() *QueryResultMetadata {
-	return (*this)["result_metadata"].(*QueryResultMetadata)
+   return (*this)["result_metadata"].(*QueryResultMetadata)
 }
 
 // SetTitle : Allow user to set Title
 func (this *QueryResult) SetTitle(Title *string) {
-	(*this)["title"] = Title
+   (*this)["title"] = Title
 }
 
 // GetTitle : Allow user to get Title
 func (this *QueryResult) GetTitle() *string {
-	return (*this)["title"].(*string)
+   return (*this)["title"].(*string)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *QueryResult) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
+   (*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *QueryResult) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+   return (*this)[Key].(*interface{})
 }
 
 // QueryResultMetadata : Metadata of a query result.
@@ -8982,8 +8957,8 @@ type RetrievalDetails struct {
 // the **document_retrieval_strategy** will be listed as `untrained`.
 const (
 	RetrievalDetails_DocumentRetrievalStrategy_ContinuousRelevancyTraining = "continuous_relevancy_training"
-	RetrievalDetails_DocumentRetrievalStrategy_RelevancyTraining           = "relevancy_training"
-	RetrievalDetails_DocumentRetrievalStrategy_Untrained                   = "untrained"
+	RetrievalDetails_DocumentRetrievalStrategy_RelevancyTraining = "relevancy_training"
+	RetrievalDetails_DocumentRetrievalStrategy_Untrained = "untrained"
 )
 
 // SduStatus : Object containing smart document understanding information for this collection.
@@ -9043,10 +9018,10 @@ type SearchStatus struct {
 // The current status of Continuous Relevancy Training for this environment.
 const (
 	SearchStatus_Status_InsufficentData = "INSUFFICENT_DATA"
-	SearchStatus_Status_NoData          = "NO_DATA"
-	SearchStatus_Status_NotApplicable   = "NOT_APPLICABLE"
-	SearchStatus_Status_Trained         = "TRAINED"
-	SearchStatus_Status_Training        = "TRAINING"
+	SearchStatus_Status_NoData = "NO_DATA"
+	SearchStatus_Status_NotApplicable = "NOT_APPLICABLE"
+	SearchStatus_Status_Trained = "TRAINED"
+	SearchStatus_Status_Training = "TRAINING"
 )
 
 // SegmentSettings : A list of Document Segmentation settings.
@@ -9101,11 +9076,11 @@ type Source struct {
 // -  `web_crawl` indicates the configuration is to perform a web page crawl.
 // -  `cloud_object_storage` indicates the configuration is to connect to a cloud object store.
 const (
-	Source_Type_Box                = "box"
+	Source_Type_Box = "box"
 	Source_Type_CloudObjectStorage = "cloud_object_storage"
-	Source_Type_Salesforce         = "salesforce"
-	Source_Type_Sharepoint         = "sharepoint"
-	Source_Type_WebCrawl           = "web_crawl"
+	Source_Type_Salesforce = "salesforce"
+	Source_Type_Sharepoint = "sharepoint"
+	Source_Type_WebCrawl = "web_crawl"
 )
 
 // SourceOptions : The **options** object defines which items to crawl from the source system.
@@ -9224,8 +9199,8 @@ type SourceOptionsWebCrawl struct {
 // means that up to ten URLs are fetched concurrently with a short delay between fetch calls.
 const (
 	SourceOptionsWebCrawl_CrawlSpeed_Aggressive = "aggressive"
-	SourceOptionsWebCrawl_CrawlSpeed_Gentle     = "gentle"
-	SourceOptionsWebCrawl_CrawlSpeed_Normal     = "normal"
+	SourceOptionsWebCrawl_CrawlSpeed_Gentle = "gentle"
+	SourceOptionsWebCrawl_CrawlSpeed_Normal = "normal"
 )
 
 // SourceSchedule : Object containing the schedule information for the source.
@@ -9258,11 +9233,11 @@ type SourceSchedule struct {
 // -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
 // -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
 const (
-	SourceSchedule_Frequency_Daily       = "daily"
+	SourceSchedule_Frequency_Daily = "daily"
 	SourceSchedule_Frequency_FiveMinutes = "five_minutes"
-	SourceSchedule_Frequency_Hourly      = "hourly"
-	SourceSchedule_Frequency_Monthly     = "monthly"
-	SourceSchedule_Frequency_Weekly      = "weekly"
+	SourceSchedule_Frequency_Hourly = "hourly"
+	SourceSchedule_Frequency_Monthly = "monthly"
+	SourceSchedule_Frequency_Weekly = "weekly"
 )
 
 // SourceStatus : Object containing source crawl status information.
@@ -9290,11 +9265,11 @@ type SourceStatus struct {
 // -  `queued` indicates that the crawl has been paused by the system and will automatically restart when possible.
 // -  `unknown` indicates that an unidentified error has occured in the service.
 const (
-	SourceStatus_Status_Complete      = "complete"
+	SourceStatus_Status_Complete = "complete"
 	SourceStatus_Status_NotConfigured = "not_configured"
-	SourceStatus_Status_Queued        = "queued"
-	SourceStatus_Status_Running       = "running"
-	SourceStatus_Status_Unknown       = "unknown"
+	SourceStatus_Status_Queued = "queued"
+	SourceStatus_Status_Running = "running"
+	SourceStatus_Status_Unknown = "unknown"
 )
 
 // Term : Term struct
@@ -9315,8 +9290,7 @@ type TestConfigurationInEnvironmentOptions struct {
 	// The configuration to use to process the document. If this part is provided, then the provided configuration is used
 	// to process the document. If the **configuration_id** is also provided (both are present at the same time), then
 	// request is rejected. The maximum supported configuration size is 1 MB. Configuration parts larger than 1 MB are
-	// rejected.
-	// See the `GET /configurations/{configuration_id}` operation for an example configuration.
+	// rejected. See the `GET /configurations/{configuration_id}` operation for an example configuration.
 	Configuration *string `json:"configuration,omitempty"`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
@@ -9330,8 +9304,7 @@ type TestConfigurationInEnvironmentOptions struct {
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected.
-	// Example:  ``` {
+	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
@@ -9353,12 +9326,12 @@ type TestConfigurationInEnvironmentOptions struct {
 // Specify to only run the input document through the given step instead of running the input document through the
 // entire ingestion workflow. Valid values are `convert`, `enrich`, and `normalize`.
 const (
-	TestConfigurationInEnvironmentOptions_Step_EnrichmentsOutput        = "enrichments_output"
-	TestConfigurationInEnvironmentOptions_Step_HTMLInput                = "html_input"
-	TestConfigurationInEnvironmentOptions_Step_HTMLOutput               = "html_output"
+	TestConfigurationInEnvironmentOptions_Step_EnrichmentsOutput = "enrichments_output"
+	TestConfigurationInEnvironmentOptions_Step_HTMLInput = "html_input"
+	TestConfigurationInEnvironmentOptions_Step_HTMLOutput = "html_output"
 	TestConfigurationInEnvironmentOptions_Step_JSONNormalizationsOutput = "json_normalizations_output"
-	TestConfigurationInEnvironmentOptions_Step_JSONOutput               = "json_output"
-	TestConfigurationInEnvironmentOptions_Step_NormalizationsOutput     = "normalizations_output"
+	TestConfigurationInEnvironmentOptions_Step_JSONOutput = "json_output"
+	TestConfigurationInEnvironmentOptions_Step_NormalizationsOutput = "normalizations_output"
 )
 
 // NewTestConfigurationInEnvironmentOptions : Instantiate TestConfigurationInEnvironmentOptions
@@ -9489,9 +9462,9 @@ type TokenDictStatusResponse struct {
 // Constants associated with the TokenDictStatusResponse.Status property.
 // Current wordlist status for the specified collection.
 const (
-	TokenDictStatusResponse_Status_Active   = "active"
+	TokenDictStatusResponse_Status_Active = "active"
 	TokenDictStatusResponse_Status_NotFound = "not found"
-	TokenDictStatusResponse_Status_Pending  = "pending"
+	TokenDictStatusResponse_Status_Pending = "pending"
 )
 
 // TopHits : TopHits struct
@@ -9619,7 +9592,7 @@ type UpdateCollectionOptions struct {
 func (discovery *DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string) *UpdateCollectionOptions {
 	return &UpdateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
+		CollectionID: core.StringPtr(collectionID),
 	}
 }
 
@@ -9694,9 +9667,9 @@ type UpdateConfigurationOptions struct {
 // NewUpdateConfigurationOptions : Instantiate UpdateConfigurationOptions
 func (discovery *DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string, name string) *UpdateConfigurationOptions {
 	return &UpdateConfigurationOptions{
-		EnvironmentID:   core.StringPtr(environmentID),
+		EnvironmentID: core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
-		Name:            core.StringPtr(name),
+		Name: core.StringPtr(name),
 	}
 }
 
@@ -9793,11 +9766,11 @@ type UpdateCredentialsOptions struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	UpdateCredentialsOptions_SourceType_Box                = "box"
+	UpdateCredentialsOptions_SourceType_Box = "box"
 	UpdateCredentialsOptions_SourceType_CloudObjectStorage = "cloud_object_storage"
-	UpdateCredentialsOptions_SourceType_Salesforce         = "salesforce"
-	UpdateCredentialsOptions_SourceType_Sharepoint         = "sharepoint"
-	UpdateCredentialsOptions_SourceType_WebCrawl           = "web_crawl"
+	UpdateCredentialsOptions_SourceType_Salesforce = "salesforce"
+	UpdateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
+	UpdateCredentialsOptions_SourceType_WebCrawl = "web_crawl"
 )
 
 // Constants associated with the UpdateCredentialsOptions.Status property.
@@ -9806,14 +9779,14 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	UpdateCredentialsOptions_Status_Connected = "connected"
-	UpdateCredentialsOptions_Status_Invalid   = "invalid"
+	UpdateCredentialsOptions_Status_Invalid = "invalid"
 )
 
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
 func (discovery *DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
 	return &UpdateCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID:  core.StringPtr(credentialID),
+		CredentialID: core.StringPtr(credentialID),
 	}
 }
 
@@ -9876,8 +9849,7 @@ type UpdateDocumentOptions struct {
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected.
-	// Example:  ``` {
+	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
@@ -9891,8 +9863,8 @@ type UpdateDocumentOptions struct {
 func (discovery *DiscoveryV1) NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
 	return &UpdateDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		DocumentID:    core.StringPtr(documentID),
+		CollectionID: core.StringPtr(collectionID),
+		DocumentID: core.StringPtr(documentID),
 	}
 }
 
@@ -9968,13 +9940,13 @@ type UpdateEnvironmentOptions struct {
 // Size that the environment should be increased to. Environment size cannot be modified when using a Lite plan.
 // Environment size can only increased and not decreased.
 const (
-	UpdateEnvironmentOptions_Size_L    = "L"
-	UpdateEnvironmentOptions_Size_M    = "M"
-	UpdateEnvironmentOptions_Size_Ml   = "ML"
-	UpdateEnvironmentOptions_Size_Ms   = "MS"
-	UpdateEnvironmentOptions_Size_S    = "S"
-	UpdateEnvironmentOptions_Size_Xl   = "XL"
-	UpdateEnvironmentOptions_Size_Xxl  = "XXL"
+	UpdateEnvironmentOptions_Size_L = "L"
+	UpdateEnvironmentOptions_Size_M = "M"
+	UpdateEnvironmentOptions_Size_Ml = "ML"
+	UpdateEnvironmentOptions_Size_Ms = "MS"
+	UpdateEnvironmentOptions_Size_S = "S"
+	UpdateEnvironmentOptions_Size_Xl = "XL"
+	UpdateEnvironmentOptions_Size_Xxl = "XXL"
 	UpdateEnvironmentOptions_Size_Xxxl = "XXXL"
 )
 
@@ -10044,9 +10016,9 @@ type UpdateTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
 	return &UpdateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID:  core.StringPtr(collectionID),
-		QueryID:       core.StringPtr(queryID),
-		ExampleID:     core.StringPtr(exampleID),
+		CollectionID: core.StringPtr(collectionID),
+		QueryID: core.StringPtr(queryID),
+		ExampleID: core.StringPtr(exampleID),
 	}
 }
 
@@ -10094,6 +10066,7 @@ func (options *UpdateTrainingExampleOptions) SetHeaders(param map[string]string)
 
 // WordHeadingDetection : WordHeadingDetection struct
 type WordHeadingDetection struct {
+
 	Fonts []FontSetting `json:"fonts,omitempty"`
 
 	Styles []WordStyle `json:"styles,omitempty"`
@@ -10101,6 +10074,7 @@ type WordHeadingDetection struct {
 
 // WordSettings : A list of Word conversion settings.
 type WordSettings struct {
+
 	Heading *WordHeadingDetection `json:"heading,omitempty"`
 }
 
