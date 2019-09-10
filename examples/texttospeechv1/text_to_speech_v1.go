@@ -99,7 +99,7 @@ func (cb myCallBack) OnAudioStream(b []byte) {
 	if err != nil {
 		panic(err)
 	}
-	_, err := cb.f.Write(bytes)
+	_, err = cb.f.Write(bytes)
 	if err != nil {
 		panic(err)
 	}
