@@ -39,11 +39,11 @@ func init() {
 	if err == nil {
 		service, serviceErr = texttospeechv1.
 			NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL:      os.Getenv("TEXT_TO_SPEECH_URL"),
+				URL:	os.Getenv("TEXT_TO_SPEECH_URL"),
 				Authenticator: &core.BasicAuthenticator{
-						Username: os.Getenv("TEXT_TO_SPEECH_USERNAME"),
-						Password: os.Getenv("TEXT_TO_SPEECH_PASSWORD"),
-                },
+					Username:	os.Getenv("TEXT_TO_SPEECH_USERNAME"),
+					Password:	os.Getenv("TEXT_TO_SPEECH_PASSWORD"),
+				},
 			})
 
 		if serviceErr == nil {
@@ -100,6 +100,54 @@ func TestSynthesize(t *testing.T) {
 	synthesize := service.GetSynthesizeResult(response)
 	assert.NotNil(t, synthesize)
 	synthesize.Close()
+}
+
+
+type myCallBack struct {
+	T *testing.T
+}
+
+func (cb myCallBack) OnOpen() {}
+
+func (cb myCallBack) OnClose() {}
+
+func (cb myCallBack) OnAudioStream(b []byte) {}
+
+func (cb myCallBack) OnError(err error) {
+	cb.T.Fail()
+}
+
+func (cb myCallBack) OnTimingInformation(timings texttospeechv1.Timings) {
+	assert.NotNil(cb.T, timings)
+}
+
+func (cb myCallBack) OnMarks(marks texttospeechv1.Marks) {
+	assert.NotNil(cb.T, marks)
+}
+
+func (cb myCallBack) OnContentType(contentType string) {
+	assert.NotNil(cb.T, contentType)
+	assert.Equal(cb.T, contentType, "audio/mpeg")
+}
+
+func (cb myCallBack) OnData(resp *core.DetailedResponse) {
+	result := resp.GetResult().([]byte)
+	assert.NotNil(cb.T, result)
+}
+
+func TestSynthesizeUsingWebsocket(t *testing.T) {
+	shouldSkipTest(t)
+
+	callback := myCallBack{T: t}
+	synthesizeUsingWebsocketOptions := service.
+	NewSynthesizeUsingWebsocketOptions("This is a <mark name=\"SIMPLE\"/>simple <mark name=\"EXAMPLE\"/> example.", callback)
+
+	synthesizeUsingWebsocketOptions.
+		SetAccept("audio/mp3").
+		SetVoice("en-US_AllisonVoice")
+	synthesizeUsingWebsocketOptions.SetTimings([]string{"words"})
+	err := service.SynthesizeUsingWebsocket(synthesizeUsingWebsocketOptions)
+	assert.Nil(t, err)
 }
 
 func TestPronunciation(t *testing.T) {
