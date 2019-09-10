@@ -19,10 +19,9 @@ package texttospeechv1
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
-
-	"fmt"
 
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/gorilla/websocket"
@@ -35,6 +34,10 @@ const (
 type SynthesizeListener struct {
 	IsClosed chan bool
 	Callback SynthesizeCallbackWrapper
+}
+
+func decode(b []byte, target interface{}) {
+	json.NewDecoder(bytes.NewReader(b)).Decode(&target)
 }
 
 /*
@@ -83,7 +86,7 @@ func (listener SynthesizeListener) OnData(conn *websocket.Conn) {
 	for {
 		messageType, result, err := conn.ReadMessage()
 
-		// The service will close the connection. We need to decipher 
+		// The service will close the connection. We need to decipher
 		// if the error is a normal close signal
 		if err != nil {
 			listener.IsClosed <- true
@@ -103,21 +106,28 @@ func (listener SynthesizeListener) OnData(conn *websocket.Conn) {
 				listener.IsClosed <- true
 				break
 			}
-			
+
 			if _, ok := r["binary_streams"]; ok {
-				// TODO: callback on content type
-			} else {
+				audioContentTypeWrapper := new(AudioContentTypeWrapper)
+				decode(result, audioContentTypeWrapper)
+				listener.Callback.OnContentType(audioContentTypeWrapper.BinaryStreams[0].ContentType)
+			} else if _, ok := r["words"]; ok {
 				timings := new(Timings)
-				json.NewDecoder(bytes.NewReader(result)).Decode(&timings)
+				decode(result, timings)
 				listener.Callback.OnTimingInformation(*timings)
+			} else if _, ok := r["marks"]; ok {
+				marks := new(Marks)
+				decode(result, marks)
+				listener.Callback.OnMarks(*marks)
 			}
 		} else if messageType == websocket.BinaryMessage {
-			detailResp := core.DetailedResponse{}
-			r := bytes.NewReader(result)
-			detailResp.Result = r
-			detailResp.StatusCode = SUCCESS
-			listener.Callback.OnData(&detailResp)
+			listener.Callback.OnAudioStream(result)
 		}
+
+		detailResponse := core.DetailedResponse{}
+		detailResponse.Result = result
+		detailResponse.StatusCode = SUCCESS
+		listener.Callback.OnData(&detailResponse)
 	}
 }
 
