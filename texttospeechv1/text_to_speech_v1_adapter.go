@@ -24,16 +24,36 @@ import (
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
+// Timings : An array of words and their start and end times in seconds from the beginning of the synthesized audio.
+type Timings struct {
+	Words [][]interface{} `json:"words,omitempty"`
+}
+
+// Timings : An array of mark times
+type Marks struct {
+	Marks [][]interface{} `json:"marks"`
+}
+
+// AudioContentTypeWrapper : The service sends this message to confirm the audio format
+type AudioContentTypeWrapper struct {
+	BinaryStreams []struct {
+		ContentType string `json:"content_type"`
+	} `json:"binary_streams"`
+}
+
+// SynthesizeCallbackWrapper : callback for synthesize using websocket
 type SynthesizeCallbackWrapper interface {
 	OnOpen()
 	OnError(error)
-	// OnContentType(contentType)
-	OnTimingInformation(timings Timings)
-	// OnAudioStream(audioStream)
+	OnContentType(string)
+	OnTimingInformation(Timings)
+	OnMarks(Marks)
+	OnAudioStream([]byte)
 	OnData(*core.DetailedResponse)
 	OnClose()
 }
 
+// SynthesizeOptions : The SynthesizeUsingWebsocket options
 type SynthesizeUsingWebsocketOptions struct {
 	SynthesizeOptions
 
@@ -46,10 +66,6 @@ type SynthesizeUsingWebsocketOptions struct {
 	// more information, see [Obtaining word timings](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-timing#timing).
 	// Not supported for Japanese input text.
 	Timings []string `json:"action,omitempty"`
-}
-
-type Timings struct {
-	Words interface{} `json:"words,omitempty"`
 }
 
 // NewSynthesizeUsingWebsocketOptions: Instantiate SynthesizeOptions to enable websocket support
