@@ -40,17 +40,13 @@ func decode(b []byte, target interface{}) {
 	json.NewDecoder(bytes.NewReader(b)).Decode(&target)
 }
 
-/*
-	OnError: Callback when error encountered
-*/
+// OnError: Callback when error encountered
 func (listener SynthesizeListener) OnError(err error) {
 	listener.Callback.OnError(err)
 }
 
-/*
-   SendText: Sends the text message
-   Note: The service handles one request per connection
-*/
+// SendText: Sends the text message
+// Note: The service handles one request per connection
 func (listener SynthesizeListener) SendText(conn *websocket.Conn, req *http.Request) {
 	listener.OnOpen(conn)
 
@@ -64,24 +60,18 @@ func (listener SynthesizeListener) SendText(conn *websocket.Conn, req *http.Requ
 	}
 }
 
-/*
-	OnOpen: Sends start message to server when connection created
-*/
+// OnOpen: Sends start message to server when connection created
 func (listener SynthesizeListener) OnOpen(conn *websocket.Conn) {
 	listener.Callback.OnOpen()
 }
 
-/*
-	OnClose: Callback when websocket connection is closed
-*/
+// OnClose: Callback when websocket connection is closed
 func (listener SynthesizeListener) OnClose() {
 	<-listener.IsClosed
 	listener.Callback.OnClose()
 }
 
-/*
-	OnData: Callback when websocket connection receives data
-*/
+// OnData: Callback when websocket connection receives data
 func (listener SynthesizeListener) OnData(conn *websocket.Conn) {
 	for {
 		messageType, result, err := conn.ReadMessage()
