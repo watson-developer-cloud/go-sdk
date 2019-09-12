@@ -19,6 +19,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 * [Use](#use)
 * [Configuring the HTTP Client](#configuring-the-http-client)
 * [Disable SSL certificate verification](#disable-ssl-certificate-verification)
+* [Set Service URL](#set-service-url)
 * [IBM Cloud Pak for Data(ICP4D)](#ibm-cloud-pak-for-data(icp4d))
 * [Examples](#examples)
 * [Tests](#tests)
@@ -282,6 +283,19 @@ func main() {
 
   discoveryService.Service.DisableSSLVerification()
 }
+```
+
+## Set Service URL
+To set the service URL,
+
+```go
+service.SetServiceURL("my new url")
+```
+
+Or can set it from external sources. For example, environment variables:
+
+```bash
+export <service name>_url="my new url"
 ```
 
 ## Cloud Pak for Data(CP4D)
