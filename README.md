@@ -295,7 +295,7 @@ service.SetServiceURL("my new url")
 Or can set it from external sources. For example, environment variables:
 
 ```bash
-export <service name>_url="my new url"
+export <YOUR SERVICE NAMEs>_URL="my new url"
 ```
 
 ## Cloud Pak for Data(CP4D)
