@@ -38,8 +38,8 @@ func init() {
 	if err == nil {
 		service, serviceErr = visualrecognitionv3.
 			NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:       os.Getenv("VISUAL_RECOGNITION_URL"),
-				Version:   "2018-03-19",
+				URL:     os.Getenv("VISUAL_RECOGNITION_URL"),
+				Version: "2018-03-19",
 				Authenticator: &core.IamAuthenticator{
 					ApiKey: os.Getenv("VISUAL_RECOGNITION_APIKEY"),
 				},
@@ -82,20 +82,20 @@ func TestClassify(t *testing.T) {
 	assert.NotNil(t, classify)
 
 	// Detect faces
-	faceFile, faceFileErr := os.Open(pwd + "/../resources/kitty.jpg")
-	assert.Nil(t, faceFileErr)
-	defer faceFile.Close()
+	// faceFile, faceFileErr := os.Open(pwd + "/../resources/kitty.jpg")
+	// assert.Nil(t, faceFileErr)
+	// defer faceFile.Close()
 
-	response, responseErr = service.DetectFaces(
-		&visualrecognitionv3.DetectFacesOptions{
-			ImagesFile: faceFile,
-			URL:        core.StringPtr("https://www.ibm.com/ibm/ginni/images/ginni_bio_780x981_v4_03162016.jpg"),
-		},
-	)
-	assert.Nil(t, responseErr)
+	// response, responseErr = service.DetectFaces(
+	// 	&visualrecognitionv3.DetectFacesOptions{
+	// 		ImagesFile: faceFile,
+	// 		URL:        core.StringPtr("https://www.ibm.com/ibm/ginni/images/ginni_bio_780x981_v4_03162016.jpg"),
+	// 	},
+	// )
+	// assert.Nil(t, responseErr)
 
-	faces := service.GetDetectFacesResult(response)
-	assert.NotNil(t, faces)
+	// faces := service.GetDetectFacesResult(response)
+	// assert.NotNil(t, faces)
 }
 
 func TestClassifiers(t *testing.T) {
