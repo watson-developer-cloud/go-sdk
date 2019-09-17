@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:9534ba03bc6069f23db44af1a8042a0c804de6d70d88e99fe983f00a6008d920"
+  digest = "1:daacd20c90fa775bc019b108d0d7341a33a9a7e2e3382882506786f278b12272"
   name = "github.com/IBM/go-sdk-core"
   packages = ["core"]
   pruneopts = "UT"
-  revision = "8d1e78cf47c48b6d7c9a5010b88d3ed967a7c711"
-  version = "v0.4.2"
+  revision = "ab3c72b0e45d13aff8a11cd336ed007888b055c3"
+  version = "v0.5.0"
 
 [[projects]]
   digest = "1:320e7ead93de9fd2b0e59b50fd92a4d50c1f8ab455d96bc2eb083267453a9709"
@@ -16,14 +16,6 @@
   pruneopts = "UT"
   revision = "ccb8e960c48f04d6935e72476ae4a51028f9e22f"
   version = "v9"
-
-[[projects]]
-  digest = "1:d689318918dac8435731a16f090349f48f3758a3dbe5f967e913185bf264abaf"
-  name = "github.com/cloudfoundry-community/go-cfenv"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "f920e9562d5f951cbf11785728f67258c38a10d0"
-  version = "v1.17.0"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -210,28 +202,6 @@
   version = "v1.2.2"
 
 [[projects]]
-  digest = "1:5ce592009bae58e2c1d6ad554123df7986db31212e7a5cfcf52e857894479aa2"
-  name = "github.com/watson-developer-cloud/go-sdk"
-  packages = [
-    "assistantv1",
-    "assistantv2",
-    "common",
-    "comparecomplyv1",
-    "discoveryv1",
-    "languagetranslatorv3",
-    "naturallanguageclassifierv1",
-    "naturallanguageunderstandingv1",
-    "personalityinsightsv3",
-    "speechtotextv1",
-    "texttospeechv1",
-    "toneanalyzerv3",
-    "visualrecognitionv3",
-  ]
-  pruneopts = "UT"
-  revision = "c04fabb62ced8905d2ee066d08757d2c6ff7c4d1"
-  version = "v0.11.0"
-
-[[projects]]
   branch = "master"
   digest = "1:5193d913046443e59093d66a97a40c51f4a5ea4ceba60f3b3ecf89694de5d16f"
   name = "golang.org/x/net"
@@ -313,26 +283,12 @@
   analyzer-version = 1
   input-imports = [
     "github.com/IBM/go-sdk-core/core",
-    "github.com/cloudfoundry-community/go-cfenv",
     "github.com/go-openapi/strfmt",
     "github.com/gorilla/websocket",
     "github.com/joho/godotenv",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/stretchr/testify/assert",
-    "github.com/watson-developer-cloud/go-sdk/assistantv1",
-    "github.com/watson-developer-cloud/go-sdk/assistantv2",
-    "github.com/watson-developer-cloud/go-sdk/common",
-    "github.com/watson-developer-cloud/go-sdk/comparecomplyv1",
-    "github.com/watson-developer-cloud/go-sdk/discoveryv1",
-    "github.com/watson-developer-cloud/go-sdk/languagetranslatorv3",
-    "github.com/watson-developer-cloud/go-sdk/naturallanguageclassifierv1",
-    "github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1",
-    "github.com/watson-developer-cloud/go-sdk/personalityinsightsv3",
-    "github.com/watson-developer-cloud/go-sdk/speechtotextv1",
-    "github.com/watson-developer-cloud/go-sdk/texttospeechv1",
-    "github.com/watson-developer-cloud/go-sdk/toneanalyzerv3",
-    "github.com/watson-developer-cloud/go-sdk/visualrecognitionv3",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
