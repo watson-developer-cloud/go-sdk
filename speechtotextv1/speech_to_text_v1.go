@@ -50,16 +50,18 @@ type SpeechToTextV1 struct {
 	Service *core.BaseService
 }
 
+const defaultServiceURL = "https://stream.watsonplatform.net/speech-to-text/api"
+
 // SpeechToTextV1Options : Service options
 type SpeechToTextV1Options struct {
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
 }
 
 // NewSpeechToTextV1 : Instantiate SpeechToTextV1
 func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1, err error) {
 	if options.URL == "" {
-		options.URL = "https://stream.watsonplatform.net/speech-to-text/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
@@ -67,19 +69,21 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1,
 		Authenticator:   options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("speech_to_text")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("speech_to_text")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "speech_to_text", "Speech to Text")
 	if err != nil {
 		return
 	}
-	
-	service = &SpeechToTextV1{Service: baseService}
+
+	service = &SpeechToTextV1{
+		Service: baseService,
+	}
 
 	return
 }
@@ -90,16 +94,20 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1,
 //
 // **See also:** [Languages and
 // models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-models#models).
-func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOptions) (result *SpeechModels, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listModelsOptions, "listModelsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/models"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -114,21 +122,21 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(SpeechModels))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(SpeechModels))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*SpeechModels)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListModelsResult : Retrieve result of ListModels operation
-func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedResponse) *SpeechModels {
-	result, ok := response.Result.(*SpeechModels)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetModel : Get a model
 // Gets information for a single specified language model that is available for use with the service. The information
@@ -136,19 +144,24 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 //
 // **See also:** [Languages and
 // models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-models#models).
-func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getModelOptions, "getModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (result *SpeechModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getModelOptions, "getModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getModelOptions, "getModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getModelOptions, "getModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/models"}
 	pathParameters := []string{*getModelOptions.ModelID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -163,21 +176,21 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(SpeechModel))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(SpeechModel))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*SpeechModel)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetModelResult : Retrieve result of GetModel operation
-func (speechToText *SpeechToTextV1) GetGetModelResult(response *core.DetailedResponse) *SpeechModel {
-	result, ok := response.Result.(*SpeechModel)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // Recognize : Recognize audio
 // Sends audio and returns transcription results for a recognition request. You can pass a maximum of 100 MB and a
@@ -252,19 +265,24 @@ func (speechToText *SpeechToTextV1) GetGetModelResult(response *core.DetailedRes
 //
 // **See also:** [Making a multipart HTTP
 // request](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-http#HTTP-multi).
-func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(recognizeOptions, "recognizeOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions) (result *SpeechRecognitionResults, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(recognizeOptions, "recognizeOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(recognizeOptions, "recognizeOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(recognizeOptions, "recognizeOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/recognize"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range recognizeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -338,27 +356,28 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 		builder.AddQuery("audio_metrics", fmt.Sprint(*recognizeOptions.AudioMetrics))
 	}
 
-	if _, err := builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(SpeechRecognitionResults))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(SpeechRecognitionResults))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*SpeechRecognitionResults)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetRecognizeResult : Retrieve result of Recognize operation
-func (speechToText *SpeechToTextV1) GetRecognizeResult(response *core.DetailedResponse) *SpeechRecognitionResults {
-	result, ok := response.Result.(*SpeechRecognitionResults)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // RegisterCallback : Register a callback
 // Registers a callback URL with the service for use with subsequent asynchronous recognition requests. The service
@@ -388,19 +407,24 @@ func (speechToText *SpeechToTextV1) GetRecognizeResult(response *core.DetailedRe
 //
 // **See also:** [Registering a callback
 // URL](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-async#register).
-func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *RegisterCallbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(registerCallbackOptions, "registerCallbackOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *RegisterCallbackOptions) (result *RegisterStatus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(registerCallbackOptions, "registerCallbackOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(registerCallbackOptions, "registerCallbackOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(registerCallbackOptions, "registerCallbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/register_callback"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range registerCallbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -420,21 +444,21 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(RegisterStatus))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(RegisterStatus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*RegisterStatus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetRegisterCallbackResult : Retrieve result of RegisterCallback operation
-func (speechToText *SpeechToTextV1) GetRegisterCallbackResult(response *core.DetailedResponse) *RegisterStatus {
-	result, ok := response.Result.(*RegisterStatus)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // UnregisterCallback : Unregister a callback
 // Unregisters a callback URL that was previously white-listed with a **Register a callback** request for use with the
@@ -442,19 +466,24 @@ func (speechToText *SpeechToTextV1) GetRegisterCallbackResult(response *core.Det
 //
 // **See also:** [Unregistering a callback
 // URL](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-async#unregister).
-func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions *UnregisterCallbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(unregisterCallbackOptions, "unregisterCallbackOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions *UnregisterCallbackOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(unregisterCallbackOptions, "unregisterCallbackOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(unregisterCallbackOptions, "unregisterCallbackOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(unregisterCallbackOptions, "unregisterCallbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/unregister_callback"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range unregisterCallbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -470,12 +499,14 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // CreateJob : Create a job
 // Creates a job for a new asynchronous recognition request. The job is owned by the instance of the service whose
@@ -557,19 +588,24 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 //
 //  **See also:** [Audio
 // formats](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-audio-formats#audio-formats).
-func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createJobOptions, "createJobOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions) (result *RecognitionJob, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createJobOptions, "createJobOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createJobOptions, "createJobOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createJobOptions, "createJobOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/recognitions"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -661,27 +697,28 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 		builder.AddQuery("audio_metrics", fmt.Sprint(*createJobOptions.AudioMetrics))
 	}
 
-	if _, err := builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(RecognitionJob))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(RecognitionJob))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*RecognitionJob)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateJobResult : Retrieve result of CreateJob operation
-func (speechToText *SpeechToTextV1) GetCreateJobResult(response *core.DetailedResponse) *RecognitionJob {
-	result, ok := response.Result.(*RecognitionJob)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CheckJobs : Check jobs
 // Returns the ID and status of the latest 100 outstanding jobs associated with the credentials with which it is called.
@@ -692,16 +729,20 @@ func (speechToText *SpeechToTextV1) GetCreateJobResult(response *core.DetailedRe
 //
 // **See also:** [Checking the status of the latest
 // jobs](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-async#jobs).
-func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(checkJobsOptions, "checkJobsOptions"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions) (result *RecognitionJobs, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(checkJobsOptions, "checkJobsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/recognitions"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range checkJobsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -716,21 +757,21 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(RecognitionJobs))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(RecognitionJobs))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*RecognitionJobs)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCheckJobsResult : Retrieve result of CheckJobs operation
-func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedResponse) *RecognitionJobs {
-	result, ok := response.Result.(*RecognitionJobs)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CheckJob : Check a job
 // Returns information about the specified job. The response always includes the status of the job and its creation and
@@ -744,19 +785,24 @@ func (speechToText *SpeechToTextV1) GetCheckJobsResult(response *core.DetailedRe
 //
 // **See also:** [Checking the status and retrieving the results of a
 // job](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-async#job).
-func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(checkJobOptions, "checkJobOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (result *RecognitionJob, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(checkJobOptions, "checkJobOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(checkJobOptions, "checkJobOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(checkJobOptions, "checkJobOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/recognitions"}
 	pathParameters := []string{*checkJobOptions.ID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range checkJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -771,21 +817,21 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(RecognitionJob))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(RecognitionJob))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*RecognitionJob)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCheckJobResult : Retrieve result of CheckJob operation
-func (speechToText *SpeechToTextV1) GetCheckJobResult(response *core.DetailedResponse) *RecognitionJob {
-	result, ok := response.Result.(*RecognitionJob)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteJob : Delete a job
 // Deletes the specified job. You cannot delete a job that the service is actively processing. Once you delete a job,
@@ -794,19 +840,24 @@ func (speechToText *SpeechToTextV1) GetCheckJobResult(response *core.DetailedRes
 //
 // **See also:** [Deleting a
 // job](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-async#delete-async).
-func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteJobOptions, "deleteJobOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteJobOptions, "deleteJobOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteJobOptions, "deleteJobOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteJobOptions, "deleteJobOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/recognitions"}
 	pathParameters := []string{*deleteJobOptions.ID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteJobOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -820,12 +871,14 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // CreateLanguageModel : Create a custom language model
 // Creates a new custom language model for a specified base model. The custom language model can be used only with the
@@ -834,19 +887,24 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 //
 // **See also:** [Create a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-languageCreate#createModel-language).
-func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptions *CreateLanguageModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createLanguageModelOptions, "createLanguageModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptions *CreateLanguageModelOptions) (result *LanguageModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createLanguageModelOptions, "createLanguageModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createLanguageModelOptions, "createLanguageModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createLanguageModelOptions, "createLanguageModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -873,27 +931,28 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 	if createLanguageModelOptions.Description != nil {
 		body["description"] = createLanguageModelOptions.Description
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(LanguageModel))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(LanguageModel))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*LanguageModel)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateLanguageModelResult : Retrieve result of CreateLanguageModel operation
-func (speechToText *SpeechToTextV1) GetCreateLanguageModelResult(response *core.DetailedResponse) *LanguageModel {
-	result, ok := response.Result.(*LanguageModel)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListLanguageModels : List custom language models
 // Lists information about all custom language models that are owned by an instance of the service. Use the `language`
@@ -903,16 +962,20 @@ func (speechToText *SpeechToTextV1) GetCreateLanguageModelResult(response *core.
 //
 // **See also:** [Listing custom language
 // models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageLanguageModels#listModels-language).
-func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions *ListLanguageModelsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listLanguageModelsOptions, "listLanguageModelsOptions"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions *ListLanguageModelsOptions) (result *LanguageModels, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listLanguageModelsOptions, "listLanguageModelsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listLanguageModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -931,21 +994,21 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(LanguageModels))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(LanguageModels))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*LanguageModels)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListLanguageModelsResult : Retrieve result of ListLanguageModels operation
-func (speechToText *SpeechToTextV1) GetListLanguageModelsResult(response *core.DetailedResponse) *LanguageModels {
-	result, ok := response.Result.(*LanguageModels)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetLanguageModel : Get a custom language model
 // Gets information about a specified custom language model. You must use credentials for the instance of the service
@@ -953,19 +1016,24 @@ func (speechToText *SpeechToTextV1) GetListLanguageModelsResult(response *core.D
 //
 // **See also:** [Listing custom language
 // models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageLanguageModels#listModels-language).
-func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *GetLanguageModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getLanguageModelOptions, "getLanguageModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *GetLanguageModelOptions) (result *LanguageModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getLanguageModelOptions, "getLanguageModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getLanguageModelOptions, "getLanguageModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getLanguageModelOptions, "getLanguageModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{*getLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -980,21 +1048,21 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(LanguageModel))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(LanguageModel))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*LanguageModel)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetLanguageModelResult : Retrieve result of GetLanguageModel operation
-func (speechToText *SpeechToTextV1) GetGetLanguageModelResult(response *core.DetailedResponse) *LanguageModel {
-	result, ok := response.Result.(*LanguageModel)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteLanguageModel : Delete a custom language model
 // Deletes an existing custom language model. The custom model cannot be deleted if another request, such as adding a
@@ -1003,19 +1071,24 @@ func (speechToText *SpeechToTextV1) GetGetLanguageModelResult(response *core.Det
 //
 // **See also:** [Deleting a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageLanguageModels#deleteModel-language).
-func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptions *DeleteLanguageModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteLanguageModelOptions, "deleteLanguageModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptions *DeleteLanguageModelOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteLanguageModelOptions, "deleteLanguageModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteLanguageModelOptions, "deleteLanguageModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteLanguageModelOptions, "deleteLanguageModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{*deleteLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1030,12 +1103,14 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // TrainLanguageModel : Train a custom language model
 // Initiates the training of a custom language model with new resources such as corpora, grammars, and custom words.
@@ -1067,19 +1142,24 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 // invalid sounds-like pronunciation). You can correct the invalid resources or set the `strict` parameter to `false` to
 // exclude the invalid resources from the training. The model must contain at least one valid resource for training to
 // succeed.
-func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions *TrainLanguageModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(trainLanguageModelOptions, "trainLanguageModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions *TrainLanguageModelOptions) (result *TrainingResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(trainLanguageModelOptions, "trainLanguageModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(trainLanguageModelOptions, "trainLanguageModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(trainLanguageModelOptions, "trainLanguageModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "train"}
 	pathParameters := []string{*trainLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range trainLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1101,21 +1181,21 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(TrainingResponse))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(TrainingResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetTrainLanguageModelResult : Retrieve result of TrainLanguageModel operation
-func (speechToText *SpeechToTextV1) GetTrainLanguageModelResult(response *core.DetailedResponse) *TrainingResponse {
-	result, ok := response.Result.(*TrainingResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ResetLanguageModel : Reset a custom language model
 // Resets a custom language model by removing all corpora, grammars, and words from the model. Resetting a custom
@@ -1125,19 +1205,24 @@ func (speechToText *SpeechToTextV1) GetTrainLanguageModelResult(response *core.D
 //
 // **See also:** [Resetting a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageLanguageModels#resetModel-language).
-func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions *ResetLanguageModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(resetLanguageModelOptions, "resetLanguageModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions *ResetLanguageModelOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(resetLanguageModelOptions, "resetLanguageModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(resetLanguageModelOptions, "resetLanguageModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(resetLanguageModelOptions, "resetLanguageModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "reset"}
 	pathParameters := []string{*resetLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range resetLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1152,12 +1237,14 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // UpgradeLanguageModel : Upgrade a custom language model
 // Initiates the upgrade of a custom language model to the latest version of its base language model. The upgrade method
@@ -1174,19 +1261,24 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 //
 // **See also:** [Upgrading a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-customUpgrade#upgradeLanguage).
-func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOptions *UpgradeLanguageModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(upgradeLanguageModelOptions, "upgradeLanguageModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOptions *UpgradeLanguageModelOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(upgradeLanguageModelOptions, "upgradeLanguageModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(upgradeLanguageModelOptions, "upgradeLanguageModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(upgradeLanguageModelOptions, "upgradeLanguageModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "upgrade_model"}
 	pathParameters := []string{*upgradeLanguageModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range upgradeLanguageModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1201,12 +1293,14 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // ListCorpora : List corpora
 // Lists information about all corpora from a custom language model. The information includes the total number of words
@@ -1215,19 +1309,24 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 //
 // **See also:** [Listing corpora for a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageCorpora#listCorpora).
-func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listCorporaOptions, "listCorporaOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaOptions) (result *Corpora, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listCorporaOptions, "listCorporaOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listCorporaOptions, "listCorporaOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listCorporaOptions, "listCorporaOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "corpora"}
 	pathParameters := []string{*listCorporaOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listCorporaOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1242,21 +1341,21 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(Corpora))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(Corpora))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Corpora)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListCorporaResult : Retrieve result of ListCorpora operation
-func (speechToText *SpeechToTextV1) GetListCorporaResult(response *core.DetailedResponse) *Corpora {
-	result, ok := response.Result.(*Corpora)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AddCorpus : Add a corpus
 // Adds a single corpus text file of new training data to a custom language model. Use multiple requests to submit
@@ -1295,19 +1394,24 @@ func (speechToText *SpeechToTextV1) GetListCorporaResult(response *core.Detailed
 // corpora](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-corporaWords#workingCorpora)
 // * [Add a corpus to the custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-languageCreate#addCorpus).
-func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addCorpusOptions, "addCorpusOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addCorpusOptions, "addCorpusOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addCorpusOptions, "addCorpusOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addCorpusOptions, "addCorpusOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "corpora"}
 	pathParameters := []string{*addCorpusOptions.CustomizationID, *addCorpusOptions.CorpusName}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1329,12 +1433,14 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // GetCorpus : Get a corpus
 // Gets information about a corpus from a custom language model. The information includes the total number of words and
@@ -1343,19 +1449,24 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 //
 // **See also:** [Listing corpora for a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageCorpora#listCorpora).
-func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getCorpusOptions, "getCorpusOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions) (result *Corpus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getCorpusOptions, "getCorpusOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getCorpusOptions, "getCorpusOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getCorpusOptions, "getCorpusOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "corpora"}
 	pathParameters := []string{*getCorpusOptions.CustomizationID, *getCorpusOptions.CorpusName}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1370,21 +1481,21 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(Corpus))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(Corpus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Corpus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetCorpusResult : Retrieve result of GetCorpus operation
-func (speechToText *SpeechToTextV1) GetGetCorpusResult(response *core.DetailedResponse) *Corpus {
-	result, ok := response.Result.(*Corpus)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteCorpus : Delete a corpus
 // Deletes an existing corpus from a custom language model. The service removes any out-of-vocabulary (OOV) words that
@@ -1395,19 +1506,24 @@ func (speechToText *SpeechToTextV1) GetGetCorpusResult(response *core.DetailedRe
 //
 // **See also:** [Deleting a corpus from a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageCorpora#deleteCorpus).
-func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorpusOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteCorpusOptions, "deleteCorpusOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorpusOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteCorpusOptions, "deleteCorpusOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteCorpusOptions, "deleteCorpusOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteCorpusOptions, "deleteCorpusOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "corpora"}
 	pathParameters := []string{*deleteCorpusOptions.CustomizationID, *deleteCorpusOptions.CorpusName}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteCorpusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1422,12 +1538,14 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // ListWords : List custom words
 // Lists information about custom words from a custom language model. You can list all words from the custom model's
@@ -1438,19 +1556,24 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 //
 // **See also:** [Listing words from a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageWords#listWords).
-func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions) (result *Words, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listWordsOptions, "listWordsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listWordsOptions, "listWordsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*listWordsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1472,21 +1595,21 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(Words))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(Words))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Words)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListWordsResult : Retrieve result of ListWords operation
-func (speechToText *SpeechToTextV1) GetListWordsResult(response *core.DetailedResponse) *Words {
-	result, ok := response.Result.(*Words)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AddWords : Add custom words
 // Adds one or more custom words to a custom language model. The service populates the words resource for a custom model
@@ -1532,19 +1655,24 @@ func (speechToText *SpeechToTextV1) GetListWordsResult(response *core.DetailedRe
 // words](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-corporaWords#workingWords)
 // * [Add words to the custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-languageCreate#addWords).
-func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addWordsOptions, "addWordsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addWordsOptions, "addWordsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*addWordsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1562,18 +1690,21 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 	if addWordsOptions.Words != nil {
 		body["words"] = addWordsOptions.Words
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // AddWord : Add a custom word
 // Adds a custom word to a custom language model. The service populates the words resource for a custom model with
@@ -1605,19 +1736,24 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 // words](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-corporaWords#workingWords)
 // * [Add words to the custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-languageCreate#addWords).
-func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addWordOptions, "addWordOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addWordOptions, "addWordOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*addWordOptions.CustomizationID, *addWordOptions.WordName}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1641,18 +1777,21 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 	if addWordOptions.DisplayAs != nil {
 		body["display_as"] = addWordOptions.DisplayAs
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // GetWord : Get a custom word
 // Gets information about a custom word from a custom language model. You must use credentials for the instance of the
@@ -1660,19 +1799,24 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 //
 // **See also:** [Listing words from a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageWords#listWords).
-func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (result *Word, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getWordOptions, "getWordOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getWordOptions, "getWordOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*getWordOptions.CustomizationID, *getWordOptions.WordName}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1687,21 +1831,21 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (*co
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(Word))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(Word))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Word)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetWordResult : Retrieve result of GetWord operation
-func (speechToText *SpeechToTextV1) GetGetWordResult(response *core.DetailedResponse) *Word {
-	result, ok := response.Result.(*Word)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteWord : Delete a custom word
 // Deletes a custom word from a custom language model. You can remove any word that you added to the custom model's
@@ -1712,19 +1856,24 @@ func (speechToText *SpeechToTextV1) GetGetWordResult(response *core.DetailedResp
 //
 // **See also:** [Deleting a word from a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageWords#deleteWord).
-func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteWordOptions, "deleteWordOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteWordOptions, "deleteWordOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*deleteWordOptions.CustomizationID, *deleteWordOptions.WordName}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1739,12 +1888,14 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // ListGrammars : List grammars
 // Lists information about all grammars from a custom language model. The information includes the total number of
@@ -1753,19 +1904,24 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 //
 // **See also:** [Listing grammars from a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageGrammars#listGrammars).
-func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGrammarsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listGrammarsOptions, "listGrammarsOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGrammarsOptions) (result *Grammars, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listGrammarsOptions, "listGrammarsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listGrammarsOptions, "listGrammarsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listGrammarsOptions, "listGrammarsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "grammars"}
 	pathParameters := []string{*listGrammarsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listGrammarsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1780,21 +1936,21 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(Grammars))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(Grammars))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Grammars)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListGrammarsResult : Retrieve result of ListGrammars operation
-func (speechToText *SpeechToTextV1) GetListGrammarsResult(response *core.DetailedResponse) *Grammars {
-	result, ok := response.Result.(*Grammars)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AddGrammar : Add a grammar
 // Adds a single grammar file to a custom language model. Submit a plain text file in UTF-8 format that defines the
@@ -1828,19 +1984,24 @@ func (speechToText *SpeechToTextV1) GetListGrammarsResult(response *core.Detaile
 // grammars](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-grammarUnderstand#grammarUnderstand)
 // * [Add a grammar to the custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-grammarAdd#addGrammar).
-func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addGrammarOptions, "addGrammarOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addGrammarOptions, "addGrammarOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addGrammarOptions, "addGrammarOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addGrammarOptions, "addGrammarOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "grammars"}
 	pathParameters := []string{*addGrammarOptions.CustomizationID, *addGrammarOptions.GrammarName}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addGrammarOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1860,18 +2021,21 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 		builder.AddQuery("allow_overwrite", fmt.Sprint(*addGrammarOptions.AllowOverwrite))
 	}
 
-	if _, err := builder.SetBodyContent(core.StringNilMapper(addGrammarOptions.ContentType), nil, nil, addGrammarOptions.GrammarFile); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContent(core.StringNilMapper(addGrammarOptions.ContentType), nil, nil, addGrammarOptions.GrammarFile)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // GetGrammar : Get a grammar
 // Gets information about a grammar from a custom language model. The information includes the total number of
@@ -1880,19 +2044,24 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 //
 // **See also:** [Listing grammars from a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageGrammars#listGrammars).
-func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getGrammarOptions, "getGrammarOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOptions) (result *Grammar, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getGrammarOptions, "getGrammarOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getGrammarOptions, "getGrammarOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getGrammarOptions, "getGrammarOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "grammars"}
 	pathParameters := []string{*getGrammarOptions.CustomizationID, *getGrammarOptions.GrammarName}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getGrammarOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1907,21 +2076,21 @@ func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOpti
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(Grammar))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(Grammar))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Grammar)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetGrammarResult : Retrieve result of GetGrammar operation
-func (speechToText *SpeechToTextV1) GetGetGrammarResult(response *core.DetailedResponse) *Grammar {
-	result, ok := response.Result.(*Grammar)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteGrammar : Delete a grammar
 // Deletes an existing grammar from a custom language model. The service removes any out-of-vocabulary (OOV) words
@@ -1932,19 +2101,24 @@ func (speechToText *SpeechToTextV1) GetGetGrammarResult(response *core.DetailedR
 //
 // **See also:** [Deleting a grammar from a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageGrammars#deleteGrammar).
-func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGrammarOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteGrammarOptions, "deleteGrammarOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGrammarOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteGrammarOptions, "deleteGrammarOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteGrammarOptions, "deleteGrammarOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteGrammarOptions, "deleteGrammarOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "grammars"}
 	pathParameters := []string{*deleteGrammarOptions.CustomizationID, *deleteGrammarOptions.GrammarName}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteGrammarOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1959,12 +2133,14 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // CreateAcousticModel : Create a custom acoustic model
 // Creates a new custom acoustic model for a specified base model. The custom acoustic model can be used only with the
@@ -1973,19 +2149,24 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 //
 // **See also:** [Create a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-acoustic#createModel-acoustic).
-func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptions *CreateAcousticModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createAcousticModelOptions, "createAcousticModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptions *CreateAcousticModelOptions) (result *AcousticModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createAcousticModelOptions, "createAcousticModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createAcousticModelOptions, "createAcousticModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createAcousticModelOptions, "createAcousticModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2009,27 +2190,28 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 	if createAcousticModelOptions.Description != nil {
 		body["description"] = createAcousticModelOptions.Description
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(AcousticModel))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(AcousticModel))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*AcousticModel)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateAcousticModelResult : Retrieve result of CreateAcousticModel operation
-func (speechToText *SpeechToTextV1) GetCreateAcousticModelResult(response *core.DetailedResponse) *AcousticModel {
-	result, ok := response.Result.(*AcousticModel)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListAcousticModels : List custom acoustic models
 // Lists information about all custom acoustic models that are owned by an instance of the service. Use the `language`
@@ -2039,16 +2221,20 @@ func (speechToText *SpeechToTextV1) GetCreateAcousticModelResult(response *core.
 //
 // **See also:** [Listing custom acoustic
 // models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageAcousticModels#listModels-acoustic).
-func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions *ListAcousticModelsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listAcousticModelsOptions, "listAcousticModelsOptions"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions *ListAcousticModelsOptions) (result *AcousticModels, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listAcousticModelsOptions, "listAcousticModelsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listAcousticModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2067,21 +2253,21 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(AcousticModels))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(AcousticModels))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*AcousticModels)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListAcousticModelsResult : Retrieve result of ListAcousticModels operation
-func (speechToText *SpeechToTextV1) GetListAcousticModelsResult(response *core.DetailedResponse) *AcousticModels {
-	result, ok := response.Result.(*AcousticModels)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetAcousticModel : Get a custom acoustic model
 // Gets information about a specified custom acoustic model. You must use credentials for the instance of the service
@@ -2089,19 +2275,24 @@ func (speechToText *SpeechToTextV1) GetListAcousticModelsResult(response *core.D
 //
 // **See also:** [Listing custom acoustic
 // models](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageAcousticModels#listModels-acoustic).
-func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *GetAcousticModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getAcousticModelOptions, "getAcousticModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *GetAcousticModelOptions) (result *AcousticModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getAcousticModelOptions, "getAcousticModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getAcousticModelOptions, "getAcousticModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getAcousticModelOptions, "getAcousticModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations"}
 	pathParameters := []string{*getAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2116,21 +2307,21 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(AcousticModel))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(AcousticModel))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*AcousticModel)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetAcousticModelResult : Retrieve result of GetAcousticModel operation
-func (speechToText *SpeechToTextV1) GetGetAcousticModelResult(response *core.DetailedResponse) *AcousticModel {
-	result, ok := response.Result.(*AcousticModel)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteAcousticModel : Delete a custom acoustic model
 // Deletes an existing custom acoustic model. The custom model cannot be deleted if another request, such as adding an
@@ -2139,19 +2330,24 @@ func (speechToText *SpeechToTextV1) GetGetAcousticModelResult(response *core.Det
 //
 // **See also:** [Deleting a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageAcousticModels#deleteModel-acoustic).
-func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptions *DeleteAcousticModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteAcousticModelOptions, "deleteAcousticModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptions *DeleteAcousticModelOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteAcousticModelOptions, "deleteAcousticModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteAcousticModelOptions, "deleteAcousticModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteAcousticModelOptions, "deleteAcousticModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations"}
 	pathParameters := []string{*deleteAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2166,12 +2362,14 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // TrainAcousticModel : Train a custom acoustic model
 // Initiates the training of a custom acoustic model with new or changed audio resources. After adding or deleting audio
@@ -2214,19 +2412,24 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // * The custom model contains one or more invalid audio resources. You can correct the invalid audio resources or set
 // the `strict` parameter to `false` to exclude the invalid resources from the training. The model must contain at least
 // one valid resource for training to succeed.
-func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions *TrainAcousticModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(trainAcousticModelOptions, "trainAcousticModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions *TrainAcousticModelOptions) (result *TrainingResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(trainAcousticModelOptions, "trainAcousticModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(trainAcousticModelOptions, "trainAcousticModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(trainAcousticModelOptions, "trainAcousticModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations", "train"}
 	pathParameters := []string{*trainAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range trainAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2245,21 +2448,21 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(TrainingResponse))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(TrainingResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetTrainAcousticModelResult : Retrieve result of TrainAcousticModel operation
-func (speechToText *SpeechToTextV1) GetTrainAcousticModelResult(response *core.DetailedResponse) *TrainingResponse {
-	result, ok := response.Result.(*TrainingResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ResetAcousticModel : Reset a custom acoustic model
 // Resets a custom acoustic model by removing all audio resources from the model. Resetting a custom acoustic model
@@ -2271,19 +2474,24 @@ func (speechToText *SpeechToTextV1) GetTrainAcousticModelResult(response *core.D
 //
 // **See also:** [Resetting a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageAcousticModels#resetModel-acoustic).
-func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions *ResetAcousticModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(resetAcousticModelOptions, "resetAcousticModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions *ResetAcousticModelOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(resetAcousticModelOptions, "resetAcousticModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(resetAcousticModelOptions, "resetAcousticModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(resetAcousticModelOptions, "resetAcousticModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations", "reset"}
 	pathParameters := []string{*resetAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range resetAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2298,12 +2506,14 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // UpgradeAcousticModel : Upgrade a custom acoustic model
 // Initiates the upgrade of a custom acoustic model to the latest version of its base language model. The upgrade method
@@ -2327,19 +2537,24 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 //
 // **See also:** [Upgrading a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-customUpgrade#upgradeAcoustic).
-func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOptions *UpgradeAcousticModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(upgradeAcousticModelOptions, "upgradeAcousticModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOptions *UpgradeAcousticModelOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(upgradeAcousticModelOptions, "upgradeAcousticModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(upgradeAcousticModelOptions, "upgradeAcousticModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(upgradeAcousticModelOptions, "upgradeAcousticModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations", "upgrade_model"}
 	pathParameters := []string{*upgradeAcousticModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range upgradeAcousticModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2361,12 +2576,14 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // ListAudio : List audio resources
 // Lists information about all audio resources from a custom acoustic model. The information includes the name of the
@@ -2377,19 +2594,24 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 //
 // **See also:** [Listing audio resources for a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageAudio#listAudio).
-func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listAudioOptions, "listAudioOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions) (result *AudioResources, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listAudioOptions, "listAudioOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listAudioOptions, "listAudioOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listAudioOptions, "listAudioOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations", "audio"}
 	pathParameters := []string{*listAudioOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2404,21 +2626,21 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(AudioResources))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(AudioResources))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*AudioResources)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListAudioResult : Retrieve result of ListAudio operation
-func (speechToText *SpeechToTextV1) GetListAudioResult(response *core.DetailedResponse) *AudioResources {
-	result, ok := response.Result.(*AudioResources)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AddAudio : Add an audio resource
 // Adds an audio resource to a custom acoustic model. Add audio content that reflects the acoustic characteristics of
@@ -2505,19 +2727,24 @@ func (speechToText *SpeechToTextV1) GetListAudioResult(response *core.DetailedRe
 //
 //  The name of an audio file that is contained in an archive-type resource can include a maximum of 128 characters.
 // This includes the file extension and all elements of the name (for example, slashes).
-func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addAudioOptions, "addAudioOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addAudioOptions, "addAudioOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addAudioOptions, "addAudioOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addAudioOptions, "addAudioOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations", "audio"}
 	pathParameters := []string{*addAudioOptions.CustomizationID, *addAudioOptions.AudioName}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2540,18 +2767,21 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 		builder.AddQuery("allow_overwrite", fmt.Sprint(*addAudioOptions.AllowOverwrite))
 	}
 
-	if _, err := builder.SetBodyContent(core.StringNilMapper(addAudioOptions.ContentType), nil, nil, addAudioOptions.AudioResource); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContent(core.StringNilMapper(addAudioOptions.ContentType), nil, nil, addAudioOptions.AudioResource)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // GetAudio : Get an audio resource
 // Gets information about an audio resource from a custom acoustic model. The method returns an `AudioListing` object
@@ -2572,19 +2802,24 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 //
 // **See also:** [Listing audio resources for a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageAudio#listAudio).
-func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getAudioOptions, "getAudioOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (result *AudioListing, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getAudioOptions, "getAudioOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getAudioOptions, "getAudioOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getAudioOptions, "getAudioOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations", "audio"}
 	pathParameters := []string{*getAudioOptions.CustomizationID, *getAudioOptions.AudioName}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2599,21 +2834,21 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, new(AudioListing))
-	return response, err
+	response, err = speechToText.Service.Request(request, new(AudioListing))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*AudioListing)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetAudioResult : Retrieve result of GetAudio operation
-func (speechToText *SpeechToTextV1) GetGetAudioResult(response *core.DetailedResponse) *AudioListing {
-	result, ok := response.Result.(*AudioListing)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteAudio : Delete an audio resource
 // Deletes an existing audio resource from a custom acoustic model. Deleting an archive-type audio resource removes the
@@ -2626,19 +2861,24 @@ func (speechToText *SpeechToTextV1) GetGetAudioResult(response *core.DetailedRes
 //
 // **See also:** [Deleting an audio resource from a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-manageAudio#deleteAudio).
-func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteAudioOptions, "deleteAudioOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteAudioOptions, "deleteAudioOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteAudioOptions, "deleteAudioOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteAudioOptions, "deleteAudioOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/acoustic_customizations", "audio"}
 	pathParameters := []string{*deleteAudioOptions.CustomizationID, *deleteAudioOptions.AudioName}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteAudioOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2653,12 +2893,14 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // DeleteUserData : Delete labeled data
 // Deletes all data that is associated with a specified customer ID. The method deletes all data for the customer ID,
@@ -2670,19 +2912,24 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 //
 // **See also:** [Information
 // security](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-information-security#information-security).
-func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/user_data"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2698,12 +2945,14 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := speechToText.Service.Request(request, nil)
-	return response, err
+	response, err = speechToText.Service.Request(request, nil)
+
+	return
 }
+
 
 // AcousticModel : Information about an existing custom acoustic model.
 type AcousticModel struct {
@@ -2841,32 +3090,6 @@ type AddAudioOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the AddAudioOptions.ContentType property.
-// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
-// audio-type resources** in the method description.
-//
-// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
-// archive-type resources** in the method description.
-const (
-	AddAudioOptions_ContentType_ApplicationGzip = "application/gzip"
-	AddAudioOptions_ContentType_ApplicationZip = "application/zip"
-	AddAudioOptions_ContentType_AudioAlaw = "audio/alaw"
-	AddAudioOptions_ContentType_AudioBasic = "audio/basic"
-	AddAudioOptions_ContentType_AudioFlac = "audio/flac"
-	AddAudioOptions_ContentType_AudioG729 = "audio/g729"
-	AddAudioOptions_ContentType_AudioL16 = "audio/l16"
-	AddAudioOptions_ContentType_AudioMp3 = "audio/mp3"
-	AddAudioOptions_ContentType_AudioMpeg = "audio/mpeg"
-	AddAudioOptions_ContentType_AudioMulaw = "audio/mulaw"
-	AddAudioOptions_ContentType_AudioOgg = "audio/ogg"
-	AddAudioOptions_ContentType_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
-	AddAudioOptions_ContentType_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
-	AddAudioOptions_ContentType_AudioWav = "audio/wav"
-	AddAudioOptions_ContentType_AudioWebm = "audio/webm"
-	AddAudioOptions_ContentType_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
-	AddAudioOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
-)
 
 // Constants associated with the AddAudioOptions.ContainedContentType property.
 // **For an archive-type resource,** specify the format of the audio files that are contained in the archive file if
@@ -3069,16 +3292,6 @@ type AddGrammarOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the AddGrammarOptions.ContentType property.
-// The format (MIME type) of the grammar file:
-// * `application/srgs` for Augmented Backus-Naur Form (ABNF), which uses a plain-text representation that is similar to
-// traditional BNF grammars.
-// * `application/srgs+xml` for XML Form, which uses XML elements to represent the grammar.
-const (
-	AddGrammarOptions_ContentType_ApplicationSrgs = "application/srgs"
-	AddGrammarOptions_ContentType_ApplicationSrgsXml = "application/srgs+xml"
-)
 
 // NewAddGrammarOptions : Instantiate AddGrammarOptions
 func (speechToText *SpeechToTextV1) NewAddGrammarOptions(customizationID string, grammarName string, grammarFile io.ReadCloser, contentType string) *AddGrammarOptions {
@@ -3869,28 +4082,6 @@ type CreateJobOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the CreateJobOptions.ContentType property.
-// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-// (content types)** in the method description.
-const (
-	CreateJobOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
-	CreateJobOptions_ContentType_AudioAlaw = "audio/alaw"
-	CreateJobOptions_ContentType_AudioBasic = "audio/basic"
-	CreateJobOptions_ContentType_AudioFlac = "audio/flac"
-	CreateJobOptions_ContentType_AudioG729 = "audio/g729"
-	CreateJobOptions_ContentType_AudioL16 = "audio/l16"
-	CreateJobOptions_ContentType_AudioMp3 = "audio/mp3"
-	CreateJobOptions_ContentType_AudioMpeg = "audio/mpeg"
-	CreateJobOptions_ContentType_AudioMulaw = "audio/mulaw"
-	CreateJobOptions_ContentType_AudioOgg = "audio/ogg"
-	CreateJobOptions_ContentType_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
-	CreateJobOptions_ContentType_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
-	CreateJobOptions_ContentType_AudioWav = "audio/wav"
-	CreateJobOptions_ContentType_AudioWebm = "audio/webm"
-	CreateJobOptions_ContentType_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
-	CreateJobOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
-)
 
 // Constants associated with the CreateJobOptions.Model property.
 // The identifier of the model that is to be used for the recognition request. See [Languages and
@@ -5519,28 +5710,6 @@ type RecognizeOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the RecognizeOptions.ContentType property.
-// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
-// (content types)** in the method description.
-const (
-	RecognizeOptions_ContentType_ApplicationOctetStream = "application/octet-stream"
-	RecognizeOptions_ContentType_AudioAlaw = "audio/alaw"
-	RecognizeOptions_ContentType_AudioBasic = "audio/basic"
-	RecognizeOptions_ContentType_AudioFlac = "audio/flac"
-	RecognizeOptions_ContentType_AudioG729 = "audio/g729"
-	RecognizeOptions_ContentType_AudioL16 = "audio/l16"
-	RecognizeOptions_ContentType_AudioMp3 = "audio/mp3"
-	RecognizeOptions_ContentType_AudioMpeg = "audio/mpeg"
-	RecognizeOptions_ContentType_AudioMulaw = "audio/mulaw"
-	RecognizeOptions_ContentType_AudioOgg = "audio/ogg"
-	RecognizeOptions_ContentType_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
-	RecognizeOptions_ContentType_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
-	RecognizeOptions_ContentType_AudioWav = "audio/wav"
-	RecognizeOptions_ContentType_AudioWebm = "audio/webm"
-	RecognizeOptions_ContentType_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
-	RecognizeOptions_ContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
-)
 
 // Constants associated with the RecognizeOptions.Model property.
 // The identifier of the model that is to be used for the recognition request. See [Languages and
