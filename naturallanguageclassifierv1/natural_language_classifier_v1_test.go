@@ -122,8 +122,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 	Describe(`CreateClassifier(createClassifierOptions *CreateClassifierOptions)`, func() {
 		createClassifierPath := "/v1/classifiers"
 		bearerToken := "0ui9876453"
-		trainingMetadata := new(os.File)
-		trainingData := new(os.File)
 		Context(`Successfully - Create classifier`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
@@ -135,7 +133,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
 				fmt.Fprintf(res, `{"url": "fake URL", "classifier_id": "fake ClassifierID"}`)
-				res.WriteHeader(200)
 			}))
 			It(`Succeed to call CreateClassifier`, func() {
 				defer testServer.Close()
@@ -155,7 +152,16 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				createClassifierOptions := testService.NewCreateClassifierOptions(trainingMetadata, trainingData)
+				pwd, _ := os.Getwd()
+				metadata, metadataErr := os.Open(pwd + "/../resources/weather_training_metadata.json")
+				if metadataErr != nil {
+					fmt.Println(metadataErr)
+				}
+				data, dataErr := os.Open(pwd + "/../resources/weather_training_data.csv")
+				if dataErr != nil {
+					fmt.Println(dataErr)
+				}
+				createClassifierOptions := testService.NewCreateClassifierOptions(metadata, data)
 				result, response, operationErr = testService.CreateClassifier(createClassifierOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -221,7 +227,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
 				fmt.Fprintf(res, `{"url": "fake URL", "classifier_id": "fake ClassifierID"}`)
-				res.WriteHeader(200)
 			}))
 			It(`Succeed to call GetClassifier`, func() {
 				defer testServer.Close()
