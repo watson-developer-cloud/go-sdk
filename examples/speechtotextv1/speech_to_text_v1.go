@@ -37,19 +37,15 @@ func main() {
 	// Create a new RecognizeOptions for ContentType "audio/mp3"
 	recognizeOptions := service.
 		NewRecognizeOptions(audio).
-		SetContentType(speechtotextv1.RecognizeOptions_ContentType_AudioMp3)
+		SetContentType("audio/mp3")
 
 	// Call the speechToText Recognize method
-	response, responseErr := service.Recognize(recognizeOptions)
+	recognizeResult, _, responseErr := service.Recognize(recognizeOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast recognize.Result to the specific dataType returned by Recognize
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	recognizeResult := service.GetRecognizeResult(response)
 
 	// Check successful casting
 	if recognizeResult != nil {

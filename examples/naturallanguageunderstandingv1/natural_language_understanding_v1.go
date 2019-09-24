@@ -43,7 +43,7 @@ func main() {
 		SetHTML(string(file))
 
 	// Call the naturalLanguageUnderstanding Analyze method
-	response, responseErr := service.Analyze(analyzeOptions)
+	analyzeResult, response, responseErr := service.Analyze(analyzeOptions)
 
 	// Check successful call
 	if responseErr != nil {
@@ -52,10 +52,6 @@ func main() {
 
 	// Print the entire detailed response
 	fmt.Println(response)
-
-	// Cast analyze.Result to the specific dataType returned by Analyze
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	analyzeResult := service.GetAnalyzeResult(response)
 
 	// Check successful casting
 	if analyzeResult != nil {
