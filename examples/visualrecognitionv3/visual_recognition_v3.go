@@ -70,7 +70,7 @@ func main() {
 		AddPositiveExamples("cars", carsFile)
 	createClassifierOptions.NegativeExamples = trucksFile
 
-	createResult, response, responseErr := service.CreateClassifier(createClassifierOptions)
+	createResult, _, responseErr := service.CreateClassifier(createClassifierOptions)
 	if responseErr != nil {
 		panic(responseErr)
 	}
@@ -88,7 +88,7 @@ func main() {
 	classifyOptions = service.NewClassifyOptions()
 	classifyOptions.ImagesFile = imageFile
 
-	classifyResult, response, responseErr = service.Classify(classifyOptions)
+	classifyResult, _, responseErr = service.Classify(classifyOptions)
 	if responseErr != nil {
 		panic(responseErr)
 	}

@@ -61,7 +61,7 @@ func main() {
 	toneOptions := service.NewToneOptions().
 		SetBody("I am very happy. It is a good day").
 		SetContentType("text/plain")
-	toneResult, response, responseErr := service.Tone(toneOptions)
+	toneResult, _, responseErr := service.Tone(toneOptions)
 
 	if responseErr != nil {
 		panic(responseErr)
@@ -79,7 +79,7 @@ func main() {
 		NewToneOptions().
 		SetToneInput(toneInput).
 		SetContentType("application/json")
-	toneResult, response, responseErr = service.Tone(toneOptions)
+	toneResult, _, responseErr = service.Tone(toneOptions)
 
 	if responseErr != nil {
 		panic(responseErr)
@@ -98,7 +98,7 @@ func main() {
 	toneOptions = service.NewToneOptions().
 		SetBody(string(htmlByte)).
 		SetContentType("text/html")
-	toneResult, response, responseErr = service.Tone(toneOptions)
+	toneResult, _, responseErr = service.Tone(toneOptions)
 
 	if responseErr != nil {
 		panic(responseErr)
