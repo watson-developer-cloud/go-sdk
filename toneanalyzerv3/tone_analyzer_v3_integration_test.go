@@ -65,17 +65,15 @@ func TestTone(t *testing.T) {
 	shouldSkipTest(t)
 
 	text := "Team, I know that times are tough! Product sales have been disappointing for the past three quarters. We have a competitive product, but we need to do a better job of selling it!"
-	response, responseErr := service.Tone(
+	tone, _, responseErr := service.Tone(
 		&toneanalyzerv3.ToneOptions{
 			ToneInput: &toneanalyzerv3.ToneInput{
 				Text: &text,
 			},
-			ContentType: core.StringPtr(toneanalyzerv3.ToneOptions_ContentType_ApplicationJSON),
+			ContentType: core.StringPtr("application/json"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	tone := service.GetToneResult(response)
 	assert.NotNil(t, tone)
 }
 
@@ -102,9 +100,7 @@ func TestToneChat(t *testing.T) {
 	}
 
 	options := service.NewToneChatOptions(utterances)
-	response, responseErr := service.ToneChat(options)
+	toneChat, _, responseErr := service.ToneChat(options)
 	assert.Nil(t, responseErr)
-
-	toneChat := service.GetToneChatResult(response)
 	assert.NotNil(t, toneChat)
 }

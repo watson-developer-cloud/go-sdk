@@ -28,7 +28,7 @@ func main() {
 
 	assistantID := "<YOUR ASSISTANT ID>"
 	// Call the assistant CreateSession method
-	response, responseErr := service.
+	createSessionResult, _, responseErr := service.
 		CreateSession(&assistantv2.CreateSessionOptions{
 			AssistantID: core.StringPtr(assistantID),
 		})
@@ -36,16 +36,12 @@ func main() {
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast response.Result to the specific dataType
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	createSessionResult := service.GetCreateSessionResult(response)
 	sessionID := createSessionResult.SessionID
 
 	// 	/* MESSAGE */
 
 	// Call the assistant Message method
-	response, responseErr = service.
+	_, response, responseErr := service.
 		Message(&assistantv2.MessageOptions{
 			AssistantID: core.StringPtr(assistantID),
 			SessionID:   sessionID,
@@ -71,7 +67,7 @@ func main() {
 	// 	/* DELETE SESSION */
 
 	// Call the assistant DeleteSession method
-	response, responseErr = service.
+	_, responseErr = service.
 		DeleteSession(&assistantv2.DeleteSessionOptions{
 			AssistantID: core.StringPtr(assistantID),
 			SessionID:   sessionID,

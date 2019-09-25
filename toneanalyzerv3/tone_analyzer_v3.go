@@ -37,40 +37,45 @@ import (
 // See: https://cloud.ibm.com/docs/services/tone-analyzer/
 type ToneAnalyzerV3 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/tone-analyzer/api"
 
 // ToneAnalyzerV3Options : Service options
 type ToneAnalyzerV3Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewToneAnalyzerV3 : Instantiate ToneAnalyzerV3
 func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (service *ToneAnalyzerV3, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/tone-analyzer/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
 		URL:             options.URL,
 		Authenticator:   options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("tone_analyzer")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("tone_analyzer")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "tone_analyzer", "Tone Analyzer")
 	if err != nil {
 		return
 	}
-	
-	service = &ToneAnalyzerV3{Service: baseService}
+
+	service = &ToneAnalyzerV3{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
 }
@@ -92,19 +97,24 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (service *ToneAnalyzerV3,
 //
 // **See also:** [Using the general-purpose
 // endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utgpe#utgpe).
-func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(toneOptions, "toneOptions cannot be nil"); err != nil {
-		return nil, err
+func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *ToneAnalysis, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(toneOptions, "toneOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(toneOptions, "toneOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(toneOptions, "toneOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v3/tone"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(toneAnalyzer.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(toneAnalyzer.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range toneOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -132,29 +142,30 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (*core.Detail
 	if toneOptions.Tones != nil {
 		builder.AddQuery("tones", strings.Join(toneOptions.Tones, ","))
 	}
-	builder.AddQuery("version", toneAnalyzer.Service.Options.Version)
+	builder.AddQuery("version", toneAnalyzer.Version)
 
-	if _, err := builder.SetBodyContent(core.StringNilMapper(toneOptions.ContentType), toneOptions.ToneInput, nil, toneOptions.Body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContent(core.StringNilMapper(toneOptions.ContentType), toneOptions.ToneInput, nil, toneOptions.Body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := toneAnalyzer.Service.Request(request, new(ToneAnalysis))
-	return response, err
+	response, err = toneAnalyzer.Service.Request(request, new(ToneAnalysis))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ToneAnalysis)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetToneResult : Retrieve result of Tone operation
-func (toneAnalyzer *ToneAnalyzerV3) GetToneResult(response *core.DetailedResponse) *ToneAnalysis {
-	result, ok := response.Result.(*ToneAnalysis)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ToneChat : Analyze customer-engagement tone
 // Use the customer-engagement endpoint to analyze the tone of customer service and customer support conversations. For
@@ -168,19 +179,24 @@ func (toneAnalyzer *ToneAnalyzerV3) GetToneResult(response *core.DetailedRespons
 //
 // **See also:** [Using the customer-engagement
 // endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utco#utco).
-func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(toneChatOptions, "toneChatOptions cannot be nil"); err != nil {
-		return nil, err
+func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (result *UtteranceAnalyses, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(toneChatOptions, "toneChatOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(toneChatOptions, "toneChatOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(toneChatOptions, "toneChatOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v3/tone_chat"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(toneAnalyzer.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(toneAnalyzer.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range toneChatOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -199,33 +215,34 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 	if toneChatOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*toneChatOptions.AcceptLanguage))
 	}
-	builder.AddQuery("version", toneAnalyzer.Service.Options.Version)
+	builder.AddQuery("version", toneAnalyzer.Version)
 
 	body := make(map[string]interface{})
 	if toneChatOptions.Utterances != nil {
 		body["utterances"] = toneChatOptions.Utterances
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := toneAnalyzer.Service.Request(request, new(UtteranceAnalyses))
-	return response, err
+	response, err = toneAnalyzer.Service.Request(request, new(UtteranceAnalyses))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*UtteranceAnalyses)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetToneChatResult : Retrieve result of ToneChat operation
-func (toneAnalyzer *ToneAnalyzerV3) GetToneChatResult(response *core.DetailedResponse) *UtteranceAnalyses {
-	result, ok := response.Result.(*UtteranceAnalyses)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DocumentAnalysis : The results of the analysis for the full input content.
 type DocumentAnalysis struct {
@@ -463,15 +480,6 @@ type ToneOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the ToneOptions.ContentType property.
-// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
-// 'text/plain;charset=utf-8'.
-const (
-	ToneOptions_ContentType_ApplicationJSON = "application/json"
-	ToneOptions_ContentType_TextHTML = "text/html"
-	ToneOptions_ContentType_TextPlain = "text/plain"
-)
 
 // Constants associated with the ToneOptions.Tone property.
 const (

@@ -33,16 +33,12 @@ func main() {
 		SetVoice("en-GB_KateVoice")
 
 	// Call the textToSpeech Synthesize method
-	response, responseErr := service.Synthesize(synthesizeOptions)
+	synthesizeResult, _, responseErr := service.Synthesize(synthesizeOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast synthesize.Result to the specific dataType returned by Synthesize
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	synthesizeResult := service.GetSynthesizeResult(response)
 
 	// Check successful casting
 	if synthesizeResult != nil {

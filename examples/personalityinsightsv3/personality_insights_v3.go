@@ -43,22 +43,18 @@ func main() {
 	// Create a new ProfileOptions for ContentType "text/plain"
 	profileOptions := service.
 		NewProfileOptions().
-		SetContentType(personalityinsightsv3.ProfileOptions_ContentType_TextPlain)
+		SetContentType("text/plain")
 	profileOptions.SetBody(string(file))
 	profileOptions.ContentLanguage = core.StringPtr("en")
 	profileOptions.AcceptLanguage = core.StringPtr("en")
 
 	// Call the personality insights Profile method
-	response, responseErr := service.Profile(profileOptions)
+	profResult, _, responseErr := service.Profile(profileOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast prof.Result to the specific dataType returned by Profile
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	profResult := service.GetProfileResult(response)
 
 	// Check successful casting
 	if profResult != nil {
@@ -82,15 +78,12 @@ func main() {
 	profileOptions.Content = content
 
 	// Call the personality insights Profile method now with JSON Content
-	response, responseErr = service.Profile(profileOptions)
+	profResult, _, responseErr = service.Profile(profileOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast result again
-	profResult = service.GetProfileResult(response)
 
 	// Check successful casting
 	if profResult != nil {
@@ -112,15 +105,12 @@ func main() {
 	profileOptions.SetBody(string(file))
 
 	// Call the personality insights ProfileAsCsv method
-	response, responseErr = service.ProfileAsCsv(profileOptions)
+	profCsvResult, _, responseErr := service.ProfileAsCsv(profileOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast result
-	profCsvResult := service.GetProfileAsCsvResult(response)
 
 	// Check successful casting
 	if profCsvResult != nil {

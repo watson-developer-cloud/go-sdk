@@ -69,7 +69,7 @@ func TestClassify(t *testing.T) {
 	assert.Nil(t, imageFileErr)
 	defer imageFile.Close()
 
-	response, responseErr := service.Classify(
+	classify, _, responseErr := service.Classify(
 		&visualrecognitionv3.ClassifyOptions{
 			ImagesFile:    imageFile,
 			Threshold:     core.Float32Ptr(0.6),
@@ -77,25 +77,7 @@ func TestClassify(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	classify := service.GetClassifyResult(response)
 	assert.NotNil(t, classify)
-
-	// Detect faces
-	// faceFile, faceFileErr := os.Open(pwd + "/../resources/kitty.jpg")
-	// assert.Nil(t, faceFileErr)
-	// defer faceFile.Close()
-
-	// response, responseErr = service.DetectFaces(
-	// 	&visualrecognitionv3.DetectFacesOptions{
-	// 		ImagesFile: faceFile,
-	// 		URL:        core.StringPtr("https://www.ibm.com/ibm/ginni/images/ginni_bio_780x981_v4_03162016.jpg"),
-	// 	},
-	// )
-	// assert.Nil(t, responseErr)
-
-	// faces := service.GetDetectFacesResult(response)
-	// assert.NotNil(t, faces)
 }
 
 func TestClassifiers(t *testing.T) {
@@ -115,7 +97,7 @@ func TestClassifiers(t *testing.T) {
 	positiveExamples := make(map[string]*os.File)
 	positiveExamples["cars"] = carsFile
 
-	response, responseErr := service.CreateClassifier(
+	createClassifier, _, responseErr := service.CreateClassifier(
 		&visualrecognitionv3.CreateClassifierOptions{
 			Name:             core.StringPtr("Cars vs trucks"),
 			PositiveExamples: positiveExamples,
@@ -123,34 +105,28 @@ func TestClassifiers(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	createClassifier := service.GetCreateClassifierResult(response)
 	assert.NotNil(t, createClassifier)
 
 	// List classifiers
-	response, responseErr = service.ListClassifiers(
+	listClassifiers, _, responseErr := service.ListClassifiers(
 		&visualrecognitionv3.ListClassifiersOptions{
 			Verbose: core.BoolPtr(true),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	listClassifiers := service.GetListClassifiersResult(response)
 	assert.NotNil(t, listClassifiers)
 
 	// Get classifier
-	response, responseErr = service.GetClassifier(
+	getClassifier, _, responseErr := service.GetClassifier(
 		&visualrecognitionv3.GetClassifierOptions{
 			ClassifierID: createClassifier.ClassifierID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	getClassifier := service.GetGetClassifierResult(response)
 	assert.NotNil(t, getClassifier)
 
 	// Delete classifier
-	response, responseErr = service.DeleteClassifier(
+	_, responseErr = service.DeleteClassifier(
 		&visualrecognitionv3.DeleteClassifierOptions{
 			ClassifierID: createClassifier.ClassifierID,
 		},

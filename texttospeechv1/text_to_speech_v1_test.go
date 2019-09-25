@@ -49,11 +49,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				GetVoiceOptions := testService.NewGetVoiceOptions(Voice)
-				returnValue, returnValueErr := testService.GetVoice(GetVoiceOptions)
+				result, returnValue, returnValueErr := testService.GetVoice(GetVoiceOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetVoiceResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -72,7 +70,7 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `["gender":"female"]`)
+				fmt.Fprintf(res, `{"voices": [{"url":"xxx", "gender":"female", "name":"yyy", "language":"xxx","description":"xxx","customizable":true,"supported_features":{"custom_pronunciation": true, "voice_transformation": true}}]}`)
 			}))
 			It("Succeed to call ListVoices", func() {
 				defer testServer.Close()
@@ -89,11 +87,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				ListVoicesOptions := testService.NewListVoicesOptions()
-				returnValue, returnValueErr := testService.ListVoices(ListVoicesOptions)
+				result, returnValue, returnValueErr := testService.ListVoices(ListVoicesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListVoicesResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -140,12 +136,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				SynthesizeOptions := testService.NewSynthesizeOptions(Text)
-				returnValue, returnValueErr := testService.Synthesize(SynthesizeOptions)
+				result, returnValue, returnValueErr := testService.Synthesize(SynthesizeOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetSynthesizeResult(returnValue)
-				Expect(result).ToNot(BeNil())
 				result.Close()
 			})
 		})
@@ -182,11 +175,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				GetPronunciationOptions := testService.NewGetPronunciationOptions(Text)
-				returnValue, returnValueErr := testService.GetPronunciation(GetPronunciationOptions)
+				result, returnValue, returnValueErr := testService.GetPronunciation(GetPronunciationOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetPronunciationResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -223,11 +214,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				CreateVoiceModelOptions := testService.NewCreateVoiceModelOptions(Name)
-				returnValue, returnValueErr := testService.CreateVoiceModel(CreateVoiceModelOptions)
+				result, returnValue, returnValueErr := testService.CreateVoiceModel(CreateVoiceModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetCreateVoiceModelResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -304,11 +293,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				GetVoiceModelOptions := testService.NewGetVoiceModelOptions(CustomizationID)
-				returnValue, returnValueErr := testService.GetVoiceModel(GetVoiceModelOptions)
+				result, returnValue, returnValueErr := testService.GetVoiceModel(GetVoiceModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetVoiceModelResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -327,7 +314,7 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `[]`)
+				fmt.Fprintf(res, `{"customizations": []}`)
 			}))
 			It("Succeed to call ListVoiceModels", func() {
 				defer testServer.Close()
@@ -344,11 +331,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				ListVoiceModelsOptions := testService.NewListVoiceModelsOptions()
-				returnValue, returnValueErr := testService.ListVoiceModels(ListVoiceModelsOptions)
+				result, returnValue, returnValueErr := testService.ListVoiceModels(ListVoiceModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListVoiceModelsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -550,11 +535,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				GetWordOptions := testService.NewGetWordOptions(CustomizationID, Word)
-				returnValue, returnValueErr := testService.GetWord(GetWordOptions)
+				result, returnValue, returnValueErr := testService.GetWord(GetWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetWordResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -575,7 +558,7 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `[]`)
+				fmt.Fprintf(res, `{"words":[]}`)
 			}))
 			It("Succeed to call ListWords", func() {
 				defer testServer.Close()
@@ -592,11 +575,9 @@ var _ = Describe("TextToSpeechV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				ListWordsOptions := testService.NewListWordsOptions(CustomizationID)
-				returnValue, returnValueErr := testService.ListWords(ListWordsOptions)
+				result, returnValue, returnValueErr := testService.ListWords(ListWordsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListWordsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})

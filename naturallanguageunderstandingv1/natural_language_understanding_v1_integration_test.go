@@ -66,7 +66,7 @@ func TestAnalyze(t *testing.T) {
 	text := `IBM is an American multinational technology company
 					 headquartered in Armonk, New York, United States
 					with operations in over 170 countries.`
-	response, responseErr := service.Analyze(
+	analyze, _, responseErr := service.Analyze(
 		&naturallanguageunderstandingv1.AnalyzeOptions{
 			Text: &text,
 			Features: &naturallanguageunderstandingv1.Features{
@@ -80,8 +80,6 @@ func TestAnalyze(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	analyze := service.GetAnalyzeResult(response)
 	assert.NotNil(t, analyze)
 }
 
@@ -89,11 +87,9 @@ func TestListModels(t *testing.T) {
 	shouldSkipTest(t)
 
 	// list models
-	response, responseErr := service.ListModels(
+	listModels, _, responseErr := service.ListModels(
 		&naturallanguageunderstandingv1.ListModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	listModels := service.GetListModelsResult(response)
 	assert.NotNil(t, listModels)
 }

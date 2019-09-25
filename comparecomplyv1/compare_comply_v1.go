@@ -32,59 +32,69 @@ import (
 // See: https://cloud.ibm.com/docs/services/compare-comply?topic=compare-comply-about
 type CompareComplyV1 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/compare-comply/api"
 
 // CompareComplyV1Options : Service options
 type CompareComplyV1Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewCompareComplyV1 : Instantiate CompareComplyV1
 func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComplyV1, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/compare-comply/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
 		URL:             options.URL,
 		Authenticator:   options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("compare-comply")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("compare-comply")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "compare-comply", "Compare Comply")
 	if err != nil {
 		return
 	}
-	
-	service = &CompareComplyV1{Service: baseService}
+
+	service = &CompareComplyV1{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
 }
 
 // ConvertToHTML : Convert document to HTML
 // Converts a document to HTML.
-func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *ConvertToHTMLOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(convertToHTMLOptions, "convertToHTMLOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *ConvertToHTMLOptions) (result *HTMLReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(convertToHTMLOptions, "convertToHTMLOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(convertToHTMLOptions, "convertToHTMLOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(convertToHTMLOptions, "convertToHTMLOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/html_conversion"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range convertToHTMLOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -100,44 +110,49 @@ func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *Conver
 	if convertToHTMLOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*convertToHTMLOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("file", "filename",
 		core.StringNilMapper(convertToHTMLOptions.FileContentType), convertToHTMLOptions.File)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(HTMLReturn))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(HTMLReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*HTMLReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetConvertToHTMLResult : Retrieve result of ConvertToHTML operation
-func (compareComply *CompareComplyV1) GetConvertToHTMLResult(response *core.DetailedResponse) *HTMLReturn {
-	result, ok := response.Result.(*HTMLReturn)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ClassifyElements : Classify the elements of a document
 // Analyzes the structural and semantic elements of a document.
-func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *ClassifyElementsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(classifyElementsOptions, "classifyElementsOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *ClassifyElementsOptions) (result *ClassifyReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(classifyElementsOptions, "classifyElementsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(classifyElementsOptions, "classifyElementsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(classifyElementsOptions, "classifyElementsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/element_classification"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range classifyElementsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -153,44 +168,49 @@ func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *
 	if classifyElementsOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*classifyElementsOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("file", "filename",
 		core.StringNilMapper(classifyElementsOptions.FileContentType), classifyElementsOptions.File)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(ClassifyReturn))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(ClassifyReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ClassifyReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetClassifyElementsResult : Retrieve result of ClassifyElements operation
-func (compareComply *CompareComplyV1) GetClassifyElementsResult(response *core.DetailedResponse) *ClassifyReturn {
-	result, ok := response.Result.(*ClassifyReturn)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ExtractTables : Extract a document's tables
 // Analyzes the tables in a document.
-func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *ExtractTablesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(extractTablesOptions, "extractTablesOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *ExtractTablesOptions) (result *TableReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(extractTablesOptions, "extractTablesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(extractTablesOptions, "extractTablesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(extractTablesOptions, "extractTablesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/tables"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range extractTablesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -206,44 +226,49 @@ func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *Extrac
 	if extractTablesOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*extractTablesOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("file", "filename",
 		core.StringNilMapper(extractTablesOptions.FileContentType), extractTablesOptions.File)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(TableReturn))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(TableReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TableReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetExtractTablesResult : Retrieve result of ExtractTables operation
-func (compareComply *CompareComplyV1) GetExtractTablesResult(response *core.DetailedResponse) *TableReturn {
-	result, ok := response.Result.(*TableReturn)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CompareDocuments : Compare two documents
 // Compares two input documents. Documents must be in the same format.
-func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *CompareDocumentsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(compareDocumentsOptions, "compareDocumentsOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *CompareDocumentsOptions) (result *CompareReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(compareDocumentsOptions, "compareDocumentsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(compareDocumentsOptions, "compareDocumentsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(compareDocumentsOptions, "compareDocumentsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/comparison"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range compareDocumentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -265,7 +290,7 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 	if compareDocumentsOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*compareDocumentsOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("file_1", "filename",
 		core.StringNilMapper(compareDocumentsOptions.File1ContentType), compareDocumentsOptions.File1)
@@ -274,39 +299,44 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(CompareReturn))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(CompareReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*CompareReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCompareDocumentsResult : Retrieve result of CompareDocuments operation
-func (compareComply *CompareComplyV1) GetCompareDocumentsResult(response *core.DetailedResponse) *CompareReturn {
-	result, ok := response.Result.(*CompareReturn)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AddFeedback : Add feedback
 // Adds feedback in the form of _labels_ from a subject-matter expert (SME) to a governing document.
 // **Important:** Feedback is not immediately incorporated into the training model, nor is it guaranteed to be
 // incorporated at a later date. Instead, submitted feedback is used to suggest future updates to the training model.
-func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addFeedbackOptions, "addFeedbackOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbackOptions) (result *FeedbackReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addFeedbackOptions, "addFeedbackOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addFeedbackOptions, "addFeedbackOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addFeedbackOptions, "addFeedbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/feedback"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -319,7 +349,7 @@ func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbac
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	body := make(map[string]interface{})
 	if addFeedbackOptions.FeedbackData != nil {
@@ -331,40 +361,45 @@ func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbac
 	if addFeedbackOptions.Comment != nil {
 		body["comment"] = addFeedbackOptions.Comment
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(FeedbackReturn))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(FeedbackReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*FeedbackReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetAddFeedbackResult : Retrieve result of AddFeedback operation
-func (compareComply *CompareComplyV1) GetAddFeedbackResult(response *core.DetailedResponse) *FeedbackReturn {
-	result, ok := response.Result.(*FeedbackReturn)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListFeedback : List the feedback in a document
 // Lists the feedback in a document.
-func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listFeedbackOptions, "listFeedbackOptions"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeedbackOptions) (result *FeedbackList, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listFeedbackOptions, "listFeedbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/feedback"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -425,41 +460,46 @@ func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeed
 	if listFeedbackOptions.IncludeTotal != nil {
 		builder.AddQuery("include_total", fmt.Sprint(*listFeedbackOptions.IncludeTotal))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(FeedbackList))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(FeedbackList))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*FeedbackList)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListFeedbackResult : Retrieve result of ListFeedback operation
-func (compareComply *CompareComplyV1) GetListFeedbackResult(response *core.DetailedResponse) *FeedbackList {
-	result, ok := response.Result.(*FeedbackList)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetFeedback : Get a specified feedback entry
 // Gets a feedback entry with a specified `feedback_id`.
-func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getFeedbackOptions, "getFeedbackOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbackOptions) (result *GetFeedback, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getFeedbackOptions, "getFeedbackOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getFeedbackOptions, "getFeedbackOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getFeedbackOptions, "getFeedbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/feedback"}
 	pathParameters := []string{*getFeedbackOptions.FeedbackID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -475,41 +515,46 @@ func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbac
 	if getFeedbackOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*getFeedbackOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(GetFeedback))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(GetFeedback))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*GetFeedback)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetFeedbackResult : Retrieve result of GetFeedback operation
-func (compareComply *CompareComplyV1) GetGetFeedbackResult(response *core.DetailedResponse) *GetFeedback {
-	result, ok := response.Result.(*GetFeedback)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteFeedback : Delete a specified feedback entry
 // Deletes a feedback entry with a specified `feedback_id`.
-func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *DeleteFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteFeedbackOptions, "deleteFeedbackOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *DeleteFeedbackOptions) (result *FeedbackDeleted, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteFeedbackOptions, "deleteFeedbackOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteFeedbackOptions, "deleteFeedbackOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteFeedbackOptions, "deleteFeedbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/feedback"}
 	pathParameters := []string{*deleteFeedbackOptions.FeedbackID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -525,25 +570,25 @@ func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *Dele
 	if deleteFeedbackOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*deleteFeedbackOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(FeedbackDeleted))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(FeedbackDeleted))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*FeedbackDeleted)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetDeleteFeedbackResult : Retrieve result of DeleteFeedback operation
-func (compareComply *CompareComplyV1) GetDeleteFeedbackResult(response *core.DetailedResponse) *FeedbackDeleted {
-	result, ok := response.Result.(*FeedbackDeleted)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateBatch : Submit a batch-processing request
 // Run Compare and Comply methods over a collection of input documents.
@@ -552,19 +597,24 @@ func (compareComply *CompareComplyV1) GetDeleteFeedbackResult(response *core.Det
 // service](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-about#about-ibm-cloud-object-storage).
 // The use of IBM Cloud Object Storage with Compare and Comply is discussed at [Using batch
 // processing](https://cloud.ibm.com/docs/services/compare-comply?topic=compare-comply-batching#before-you-batch).
-func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatchOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createBatchOptions, "createBatchOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatchOptions) (result *BatchStatus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createBatchOptions, "createBatchOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createBatchOptions, "createBatchOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createBatchOptions, "createBatchOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/batches"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -581,7 +631,7 @@ func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatc
 	if createBatchOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*createBatchOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("input_credentials_file", "filename",
 		"application/json", createBatchOptions.InputCredentialsFile)
@@ -594,34 +644,38 @@ func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatc
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(BatchStatus))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(BatchStatus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*BatchStatus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateBatchResult : Retrieve result of CreateBatch operation
-func (compareComply *CompareComplyV1) GetCreateBatchResult(response *core.DetailedResponse) *BatchStatus {
-	result, ok := response.Result.(*BatchStatus)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListBatches : List submitted batch-processing jobs
 // Lists batch-processing jobs submitted by users.
-func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatchesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listBatchesOptions, "listBatchesOptions"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatchesOptions) (result *Batches, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listBatchesOptions, "listBatchesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/batches"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listBatchesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -633,41 +687,46 @@ func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatche
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(Batches))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(Batches))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Batches)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListBatchesResult : Retrieve result of ListBatches operation
-func (compareComply *CompareComplyV1) GetListBatchesResult(response *core.DetailedResponse) *Batches {
-	result, ok := response.Result.(*Batches)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetBatch : Get information about a specific batch-processing job
 // Gets information about a batch-processing job with a specified ID.
-func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getBatchOptions, "getBatchOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions) (result *BatchStatus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getBatchOptions, "getBatchOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getBatchOptions, "getBatchOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getBatchOptions, "getBatchOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/batches"}
 	pathParameters := []string{*getBatchOptions.BatchID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -679,42 +738,47 @@ func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions)
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(BatchStatus))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(BatchStatus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*BatchStatus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetBatchResult : Retrieve result of GetBatch operation
-func (compareComply *CompareComplyV1) GetGetBatchResult(response *core.DetailedResponse) *BatchStatus {
-	result, ok := response.Result.(*BatchStatus)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // UpdateBatch : Update a pending or active batch-processing job
 // Updates a pending or active batch-processing job. You can rescan the input bucket to check for new documents or
 // cancel a job.
-func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatchOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateBatchOptions, "updateBatchOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatchOptions) (result *BatchStatus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateBatchOptions, "updateBatchOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateBatchOptions, "updateBatchOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateBatchOptions, "updateBatchOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/batches"}
 	pathParameters := []string{*updateBatchOptions.BatchID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -731,25 +795,25 @@ func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatc
 	if updateBatchOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*updateBatchOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(BatchStatus))
-	return response, err
+	response, err = compareComply.Service.Request(request, new(BatchStatus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*BatchStatus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetUpdateBatchResult : Retrieve result of UpdateBatch operation
-func (compareComply *CompareComplyV1) GetUpdateBatchResult(response *core.DetailedResponse) *BatchStatus {
-	result, ok := response.Result.(*BatchStatus)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AddFeedbackOptions : The AddFeedback options.
 type AddFeedbackOptions struct {

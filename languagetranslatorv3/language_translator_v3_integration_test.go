@@ -65,12 +65,10 @@ func TestModels(t *testing.T) {
 	shouldSkipTest(t)
 
 	// List models
-	response, responseErr := service.ListModels(
+	listModels, _, responseErr := service.ListModels(
 		&languagetranslatorv3.ListModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	listModels := service.GetListModelsResult(response)
 	assert.NotNil(t, listModels)
 
 	// Create model
@@ -78,7 +76,7 @@ func TestModels(t *testing.T) {
 	glossary, glossaryErr := os.Open(pwd + "/../resources/glossary.tmx")
 	assert.Nil(t, glossaryErr)
 
-	response, responseErr = service.CreateModel(
+	createModel, _, responseErr := service.CreateModel(
 		&languagetranslatorv3.CreateModelOptions{
 			BaseModelID:    core.StringPtr("en-es"),
 			Name:           core.StringPtr("custom-en-es"),
@@ -86,23 +84,19 @@ func TestModels(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	createModel := service.GetCreateModelResult(response)
 	assert.NotNil(t, createModel)
 
 	// Get model
-	response, responseErr = service.GetModel(
+	getModel, _, responseErr := service.GetModel(
 		&languagetranslatorv3.GetModelOptions{
 			ModelID: createModel.ModelID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	getModel := service.GetGetModelResult(response)
 	assert.NotNil(t, getModel)
 
 	// Delete model
-	response, responseErr = service.DeleteModel(
+	_, _, responseErr = service.DeleteModel(
 		&languagetranslatorv3.DeleteModelOptions{
 			ModelID: createModel.ModelID,
 		},
@@ -113,41 +107,35 @@ func TestModels(t *testing.T) {
 func TestTranslate(t *testing.T) {
 	shouldSkipTest(t)
 
-	response, responseErr := service.Translate(
+	translate, _, responseErr := service.Translate(
 		&languagetranslatorv3.TranslateOptions{
 			Text:    []string{"Hello"},
 			ModelID: core.StringPtr("en-es"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	translate := service.GetTranslateResult(response)
 	assert.NotNil(t, translate)
 }
 
 func TestIdentifiableLanguage(t *testing.T) {
 	shouldSkipTest(t)
 
-	response, responseErr := service.ListIdentifiableLanguages(
+	identifiableLanguage, _, responseErr := service.ListIdentifiableLanguages(
 		&languagetranslatorv3.ListIdentifiableLanguagesOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	identifiableLanguage := service.GetListIdentifiableLanguagesResult(response)
 	assert.NotNil(t, identifiableLanguage)
 }
 
 func TestIdentify(t *testing.T) {
 	shouldSkipTest(t)
 
-	response, responseErr := service.Identify(
+	identify, _, responseErr := service.Identify(
 		&languagetranslatorv3.IdentifyOptions{
 			Text: core.StringPtr("Language translator translates text from one language to another"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	identify := service.GetIdentifyResult(response)
 	assert.NotNil(t, identify)
 }
 
@@ -155,12 +143,10 @@ func TestDocumentTranslation(t *testing.T) {
 	shouldSkipTest(t)
 
 	// List documents
-	response, responseErr := service.ListDocuments(
+	listDocuments, _, responseErr := service.ListDocuments(
 		&languagetranslatorv3.ListDocumentsOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	listDocuments := service.GetListDocumentsResult(response)
 	assert.NotNil(t, listDocuments)
 
 	// translate document
@@ -168,7 +154,7 @@ func TestDocumentTranslation(t *testing.T) {
 	document, documentErr := os.Open(pwd + "/../resources/hello_world.txt")
 	assert.Nil(t, documentErr)
 
-	response, responseErr = service.TranslateDocument(
+	translateDocument, _, responseErr := service.TranslateDocument(
 		&languagetranslatorv3.TranslateDocumentOptions{
 			File:            document,
 			Filename:        core.StringPtr("hello_world"),
@@ -177,23 +163,19 @@ func TestDocumentTranslation(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	translateDocument := service.GetTranslateDocumentResult(response)
 	assert.NotNil(t, translateDocument)
 
 	// Document status
-	response, responseErr = service.GetDocumentStatus(
+	documentStatus, _, responseErr := service.GetDocumentStatus(
 		&languagetranslatorv3.GetDocumentStatusOptions{
 			DocumentID: translateDocument.DocumentID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	documentStatus := service.GetGetDocumentStatusResult(response)
 	assert.NotNil(t, documentStatus)
 
 	// Delete document
-	response, responseErr = service.DeleteDocument(
+	_, responseErr = service.DeleteDocument(
 		&languagetranslatorv3.DeleteDocumentOptions{
 			DocumentID: translateDocument.DocumentID,
 		},

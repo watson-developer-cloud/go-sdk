@@ -37,7 +37,7 @@ func main() {
 		SetModelID("en-es")
 
 	// Call the languageTranslator Translate method
-	response, responseErr := service.Translate(translateOptions)
+	translateResult, response, responseErr := service.Translate(translateOptions)
 
 	// Check successful call
 	if responseErr != nil {
@@ -45,10 +45,6 @@ func main() {
 	}
 
 	fmt.Println(response)
-
-	// Cast translate.Result to the specific dataType returned by Translate
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	translateResult := service.GetTranslateResult(response)
 
 	// Check successful casting
 	if translateResult != nil {
@@ -60,15 +56,12 @@ func main() {
 	listIdentifiableLanguagesOptions := service.NewListIdentifiableLanguagesOptions()
 
 	// Call the languageTranslator ListIdentifiableLanguages method
-	response, responseErr = service.ListIdentifiableLanguages(listIdentifiableLanguagesOptions)
+	listLanguageResult, response, responseErr := service.ListIdentifiableLanguages(listIdentifiableLanguagesOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast result
-	listLanguageResult := service.GetListIdentifiableLanguagesResult(response)
 
 	// Check successful casting
 	if listLanguageResult != nil {
@@ -81,15 +74,12 @@ func main() {
 	identifyOptions := service.NewIdentifyOptions(textToIdentify)
 
 	// Call the languageTranslator Identify method
-	response, responseErr = service.Identify(identifyOptions)
+	identifyResult, response, responseErr := service.Identify(identifyOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast result
-	identifyResult := service.GetIdentifyResult(response)
 
 	// Check successful casting
 	if identifyResult != nil {
@@ -104,15 +94,12 @@ func main() {
 		SetDefault(true)
 
 	// Call the languageTranslator ListModels method
-	response, responseErr = service.ListModels(listModelsOptions)
+	listModelResult, response, responseErr := service.ListModels(listModelsOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast result
-	listModelResult := service.GetListModelsResult(response)
 
 	// Check successful casting
 	if listModelResult != nil {
@@ -134,15 +121,12 @@ func main() {
 		SetForcedGlossary(glossary)
 
 	// Call the languageTranslator CreateModel method
-	response, responseErr = service.CreateModel(createModelOptions)
+	createModelResult, response, responseErr := service.CreateModel(createModelOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast result
-	createModelResult := service.GetCreateModelResult(response)
 
 	// Check successful casting
 	if createModelResult != nil {
@@ -153,15 +137,12 @@ func main() {
 
 	// Call the languageTranslator GetModel method
 	getModelOptions := service.NewGetModelOptions(*createModelResult.ModelID)
-	response, getModelErr := service.GetModel(getModelOptions)
+	getModelResult, response, getModelErr := service.GetModel(getModelOptions)
 
 	// Check successful call
 	if getModelErr != nil {
 		panic(getModelErr)
 	}
-
-	// Cast result
-	getModelResult := service.GetGetModelResult(response)
 
 	// Check successful casting
 	if getModelResult != nil {
@@ -172,15 +153,12 @@ func main() {
 
 	// Call the languageTranslator DeleteModel method
 	deleteModelOptions := service.NewDeleteModelOptions(*getModelResult.ModelID)
-	response, responseErr = service.DeleteModel(deleteModelOptions)
+	deleteModelResult, response, responseErr := service.DeleteModel(deleteModelOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast result
-	deleteModelResult := service.GetDeleteModelResult(response)
 
 	// Check successful casting
 	if deleteModelResult != nil {

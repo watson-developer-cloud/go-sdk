@@ -35,40 +35,45 @@ import (
 // See: https://console.bluemix.net/docs/services/discovery/
 type DiscoveryV1 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/discovery/api"
 
 // DiscoveryV1Options : Service options
 type DiscoveryV1Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewDiscoveryV1 : Instantiate DiscoveryV1
 func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/discovery/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
 		URL:             options.URL,
 		Authenticator:   options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("discovery")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("discovery")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "discovery", "Discovery")
 	if err != nil {
 		return
 	}
-	
-	service = &DiscoveryV1{Service: baseService}
+
+	service = &DiscoveryV1{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
 }
@@ -78,19 +83,24 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err erro
 //
 // **Note**: You can create only one environment for private data per service instance. An attempt to create another
 // environment results in an error.
-func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *CreateEnvironmentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createEnvironmentOptions, "createEnvironmentOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *CreateEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createEnvironmentOptions, "createEnvironmentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createEnvironmentOptions, "createEnvironmentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createEnvironmentOptions, "createEnvironmentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -103,7 +113,7 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createEnvironmentOptions.Name != nil {
@@ -115,40 +125,45 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 	if createEnvironmentOptions.Size != nil {
 		body["size"] = createEnvironmentOptions.Size
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Environment))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Environment))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Environment)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateEnvironmentResult : Retrieve result of CreateEnvironment operation
-func (discovery *DiscoveryV1) GetCreateEnvironmentResult(response *core.DetailedResponse) *Environment {
-	result, ok := response.Result.(*Environment)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListEnvironments : List environments
 // List existing environments for the service instance.
-func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvironmentsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listEnvironmentsOptions, "listEnvironmentsOptions"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvironmentsOptions) (result *ListEnvironmentsResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listEnvironmentsOptions, "listEnvironmentsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listEnvironmentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -164,40 +179,45 @@ func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvi
 	if listEnvironmentsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listEnvironmentsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(ListEnvironmentsResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(ListEnvironmentsResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ListEnvironmentsResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListEnvironmentsResult : Retrieve result of ListEnvironments operation
-func (discovery *DiscoveryV1) GetListEnvironmentsResult(response *core.DetailedResponse) *ListEnvironmentsResponse {
-	result, ok := response.Result.(*ListEnvironmentsResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetEnvironment : Get environment info
-func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironmentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getEnvironmentOptions, "getEnvironmentOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getEnvironmentOptions, "getEnvironmentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getEnvironmentOptions, "getEnvironmentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getEnvironmentOptions, "getEnvironmentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments"}
 	pathParameters := []string{*getEnvironmentOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -209,42 +229,47 @@ func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironme
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Environment))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Environment))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Environment)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetEnvironmentResult : Retrieve result of GetEnvironment operation
-func (discovery *DiscoveryV1) GetGetEnvironmentResult(response *core.DetailedResponse) *Environment {
-	result, ok := response.Result.(*Environment)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // UpdateEnvironment : Update an environment
 // Updates an environment. The environment's **name** and  **description** parameters can be changed. You must specify a
 // **name** for the environment.
-func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *UpdateEnvironmentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateEnvironmentOptions, "updateEnvironmentOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *UpdateEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateEnvironmentOptions, "updateEnvironmentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateEnvironmentOptions, "updateEnvironmentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateEnvironmentOptions, "updateEnvironmentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments"}
 	pathParameters := []string{*updateEnvironmentOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -257,7 +282,7 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if updateEnvironmentOptions.Name != nil {
@@ -269,42 +294,48 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 	if updateEnvironmentOptions.Size != nil {
 		body["size"] = updateEnvironmentOptions.Size
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Environment))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Environment))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Environment)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetUpdateEnvironmentResult : Retrieve result of UpdateEnvironment operation
-func (discovery *DiscoveryV1) GetUpdateEnvironmentResult(response *core.DetailedResponse) *Environment {
-	result, ok := response.Result.(*Environment)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteEnvironment : Delete environment
-func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *DeleteEnvironmentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteEnvironmentOptions, "deleteEnvironmentOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *DeleteEnvironmentOptions) (result *DeleteEnvironmentResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteEnvironmentOptions, "deleteEnvironmentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteEnvironmentOptions, "deleteEnvironmentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteEnvironmentOptions, "deleteEnvironmentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments"}
 	pathParameters := []string{*deleteEnvironmentOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteEnvironmentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -316,41 +347,46 @@ func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *Delete
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(DeleteEnvironmentResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(DeleteEnvironmentResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DeleteEnvironmentResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetDeleteEnvironmentResult : Retrieve result of DeleteEnvironment operation
-func (discovery *DiscoveryV1) GetDeleteEnvironmentResult(response *core.DetailedResponse) *DeleteEnvironmentResponse {
-	result, ok := response.Result.(*DeleteEnvironmentResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListFields : List fields across collections
 // Gets a list of the unique fields (and their types) stored in the indexes of the specified collections.
-func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listFieldsOptions, "listFieldsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (result *ListCollectionFieldsResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listFieldsOptions, "listFieldsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listFieldsOptions, "listFieldsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listFieldsOptions, "listFieldsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "fields"}
 	pathParameters := []string{*listFieldsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listFieldsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -364,25 +400,25 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("collection_ids", strings.Join(listFieldsOptions.CollectionIds, ","))
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(ListCollectionFieldsResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(ListCollectionFieldsResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ListCollectionFieldsResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListFieldsResult : Retrieve result of ListFields operation
-func (discovery *DiscoveryV1) GetListFieldsResult(response *core.DetailedResponse) *ListCollectionFieldsResponse {
-	result, ok := response.Result.(*ListCollectionFieldsResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateConfiguration : Add configuration
 // Creates a new configuration.
@@ -394,19 +430,24 @@ func (discovery *DiscoveryV1) GetListFieldsResult(response *core.DetailedRespons
 // The configuration can contain unrecognized JSON fields. Any such fields are ignored and do not generate an error.
 // This makes it easier to use newer configuration files with older versions of the API and the service. It also makes
 // it possible for the tooling to add additional metadata and information to the configuration.
-func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *CreateConfigurationOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createConfigurationOptions, "createConfigurationOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *CreateConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createConfigurationOptions, "createConfigurationOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createConfigurationOptions, "createConfigurationOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createConfigurationOptions, "createConfigurationOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "configurations"}
 	pathParameters := []string{*createConfigurationOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -419,7 +460,7 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createConfigurationOptions.Name != nil {
@@ -440,43 +481,49 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 	if createConfigurationOptions.Source != nil {
 		body["source"] = createConfigurationOptions.Source
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Configuration))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Configuration))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Configuration)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateConfigurationResult : Retrieve result of CreateConfiguration operation
-func (discovery *DiscoveryV1) GetCreateConfigurationResult(response *core.DetailedResponse) *Configuration {
-	result, ok := response.Result.(*Configuration)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListConfigurations : List configurations
 // Lists existing configurations for the service instance.
-func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *ListConfigurationsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listConfigurationsOptions, "listConfigurationsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *ListConfigurationsOptions) (result *ListConfigurationsResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listConfigurationsOptions, "listConfigurationsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listConfigurationsOptions, "listConfigurationsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listConfigurationsOptions, "listConfigurationsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "configurations"}
 	pathParameters := []string{*listConfigurationsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listConfigurationsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -492,40 +539,45 @@ func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *List
 	if listConfigurationsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listConfigurationsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(ListConfigurationsResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(ListConfigurationsResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ListConfigurationsResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListConfigurationsResult : Retrieve result of ListConfigurations operation
-func (discovery *DiscoveryV1) GetListConfigurationsResult(response *core.DetailedResponse) *ListConfigurationsResponse {
-	result, ok := response.Result.(*ListConfigurationsResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetConfiguration : Get configuration details
-func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfigurationOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getConfigurationOptions, "getConfigurationOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getConfigurationOptions, "getConfigurationOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getConfigurationOptions, "getConfigurationOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getConfigurationOptions, "getConfigurationOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "configurations"}
 	pathParameters := []string{*getConfigurationOptions.EnvironmentID, *getConfigurationOptions.ConfigurationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -537,25 +589,25 @@ func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfi
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Configuration))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Configuration))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Configuration)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetConfigurationResult : Retrieve result of GetConfiguration operation
-func (discovery *DiscoveryV1) GetGetConfigurationResult(response *core.DetailedResponse) *Configuration {
-	result, ok := response.Result.(*Configuration)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // UpdateConfiguration : Update a configuration
 // Replaces an existing configuration.
@@ -565,19 +617,24 @@ func (discovery *DiscoveryV1) GetGetConfigurationResult(response *core.DetailedR
 // three properties.
 //   * Documents are processed with a snapshot of the configuration as it was at the time the document was submitted to
 // be ingested. This means that already submitted documents will not see any updates made to the configuration.
-func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *UpdateConfigurationOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateConfigurationOptions, "updateConfigurationOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *UpdateConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateConfigurationOptions, "updateConfigurationOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateConfigurationOptions, "updateConfigurationOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateConfigurationOptions, "updateConfigurationOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "configurations"}
 	pathParameters := []string{*updateConfigurationOptions.EnvironmentID, *updateConfigurationOptions.ConfigurationID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -590,7 +647,7 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if updateConfigurationOptions.Name != nil {
@@ -611,46 +668,52 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 	if updateConfigurationOptions.Source != nil {
 		body["source"] = updateConfigurationOptions.Source
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Configuration))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Configuration))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Configuration)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetUpdateConfigurationResult : Retrieve result of UpdateConfiguration operation
-func (discovery *DiscoveryV1) GetUpdateConfigurationResult(response *core.DetailedResponse) *Configuration {
-	result, ok := response.Result.(*Configuration)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteConfiguration : Delete a configuration
 // The deletion is performed unconditionally. A configuration deletion request succeeds even if the configuration is
 // referenced by a collection or document ingestion. However, documents that have already been submitted for processing
 // continue to use the deleted configuration. Documents are always processed with a snapshot of the configuration as it
 // existed at the time the document was submitted.
-func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *DeleteConfigurationOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteConfigurationOptions, "deleteConfigurationOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *DeleteConfigurationOptions) (result *DeleteConfigurationResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteConfigurationOptions, "deleteConfigurationOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteConfigurationOptions, "deleteConfigurationOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteConfigurationOptions, "deleteConfigurationOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "configurations"}
 	pathParameters := []string{*deleteConfigurationOptions.EnvironmentID, *deleteConfigurationOptions.ConfigurationID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteConfigurationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -662,110 +725,45 @@ func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *De
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(DeleteConfigurationResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(DeleteConfigurationResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DeleteConfigurationResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetDeleteConfigurationResult : Retrieve result of DeleteConfiguration operation
-func (discovery *DiscoveryV1) GetDeleteConfigurationResult(response *core.DetailedResponse) *DeleteConfigurationResponse {
-	result, ok := response.Result.(*DeleteConfigurationResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// TestConfigurationInEnvironment : Test configuration
-// **Deprecated** This method is no longer supported and is scheduled to be removed from service on July 31st 2019.
-//
-//  Runs a sample document through the default or your configuration and returns diagnostic information designed to help
-// you understand how the document was processed. The document is not added to the index.
-func (discovery *DiscoveryV1) TestConfigurationInEnvironment(testConfigurationInEnvironmentOptions *TestConfigurationInEnvironmentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(testConfigurationInEnvironmentOptions, "testConfigurationInEnvironmentOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(testConfigurationInEnvironmentOptions, "testConfigurationInEnvironmentOptions"); err != nil {
-		return nil, err
-	}
-	if (testConfigurationInEnvironmentOptions.Configuration == nil) && (testConfigurationInEnvironmentOptions.File == nil) && (testConfigurationInEnvironmentOptions.Metadata == nil) {
-		return nil, fmt.Errorf("At least one of configuration, file, or metadata must be supplied")
-	}
-
-	pathSegments := []string{"v1/environments", "preview"}
-	pathParameters := []string{*testConfigurationInEnvironmentOptions.EnvironmentID}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range testConfigurationInEnvironmentOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "TestConfigurationInEnvironment")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-
-	if testConfigurationInEnvironmentOptions.Step != nil {
-		builder.AddQuery("step", fmt.Sprint(*testConfigurationInEnvironmentOptions.Step))
-	}
-	if testConfigurationInEnvironmentOptions.ConfigurationID != nil {
-		builder.AddQuery("configuration_id", fmt.Sprint(*testConfigurationInEnvironmentOptions.ConfigurationID))
-	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
-
-	if testConfigurationInEnvironmentOptions.Configuration != nil {
-		builder.AddFormData("configuration", "", "", fmt.Sprint(*testConfigurationInEnvironmentOptions.Configuration))
-	}
-	if testConfigurationInEnvironmentOptions.File != nil {
-		builder.AddFormData("file", core.StringNilMapper(testConfigurationInEnvironmentOptions.Filename),
-			core.StringNilMapper(testConfigurationInEnvironmentOptions.FileContentType), testConfigurationInEnvironmentOptions.File)
-	}
-	if testConfigurationInEnvironmentOptions.Metadata != nil {
-		builder.AddFormData("metadata", "", "", fmt.Sprint(*testConfigurationInEnvironmentOptions.Metadata))
-	}
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := discovery.Service.Request(request, new(TestDocument))
-	return response, err
-}
-
-// GetTestConfigurationInEnvironmentResult : Retrieve result of TestConfigurationInEnvironment operation
-func (discovery *DiscoveryV1) GetTestConfigurationInEnvironmentResult(response *core.DetailedResponse) *TestDocument {
-	result, ok := response.Result.(*TestDocument)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateCollection : Create a collection
-func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCollectionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createCollectionOptions, "createCollectionOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createCollectionOptions, "createCollectionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createCollectionOptions, "createCollectionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createCollectionOptions, "createCollectionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections"}
 	pathParameters := []string{*createCollectionOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -778,7 +776,7 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createCollectionOptions.Name != nil {
@@ -793,43 +791,49 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 	if createCollectionOptions.Language != nil {
 		body["language"] = createCollectionOptions.Language
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Collection))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Collection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Collection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateCollectionResult : Retrieve result of CreateCollection operation
-func (discovery *DiscoveryV1) GetCreateCollectionResult(response *core.DetailedResponse) *Collection {
-	result, ok := response.Result.(*Collection)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListCollections : List collections
 // Lists existing collections for the service instance.
-func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollectionsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listCollectionsOptions, "listCollectionsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollectionsOptions) (result *ListCollectionsResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listCollectionsOptions, "listCollectionsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listCollectionsOptions, "listCollectionsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listCollectionsOptions, "listCollectionsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections"}
 	pathParameters := []string{*listCollectionsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listCollectionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -845,40 +849,45 @@ func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollec
 	if listCollectionsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listCollectionsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(ListCollectionsResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(ListCollectionsResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ListCollectionsResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListCollectionsResult : Retrieve result of ListCollections operation
-func (discovery *DiscoveryV1) GetListCollectionsResult(response *core.DetailedResponse) *ListCollectionsResponse {
-	result, ok := response.Result.(*ListCollectionsResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetCollection : Get collection details
-func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getCollectionOptions, "getCollectionOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getCollectionOptions, "getCollectionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getCollectionOptions, "getCollectionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getCollectionOptions, "getCollectionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections"}
 	pathParameters := []string{*getCollectionOptions.EnvironmentID, *getCollectionOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -890,40 +899,45 @@ func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionO
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Collection))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Collection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Collection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetCollectionResult : Retrieve result of GetCollection operation
-func (discovery *DiscoveryV1) GetGetCollectionResult(response *core.DetailedResponse) *Collection {
-	result, ok := response.Result.(*Collection)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // UpdateCollection : Update a collection
-func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCollectionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateCollectionOptions, "updateCollectionOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateCollectionOptions, "updateCollectionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateCollectionOptions, "updateCollectionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateCollectionOptions, "updateCollectionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections"}
 	pathParameters := []string{*updateCollectionOptions.EnvironmentID, *updateCollectionOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -936,7 +950,7 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if updateCollectionOptions.Name != nil {
@@ -948,42 +962,48 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 	if updateCollectionOptions.ConfigurationID != nil {
 		body["configuration_id"] = updateCollectionOptions.ConfigurationID
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Collection))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Collection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Collection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetUpdateCollectionResult : Retrieve result of UpdateCollection operation
-func (discovery *DiscoveryV1) GetUpdateCollectionResult(response *core.DetailedResponse) *Collection {
-	result, ok := response.Result.(*Collection)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteCollection : Delete a collection
-func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteCollectionOptions, "deleteCollectionOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions) (result *DeleteCollectionResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteCollectionOptions, "deleteCollectionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteCollectionOptions, "deleteCollectionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteCollectionOptions, "deleteCollectionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections"}
 	pathParameters := []string{*deleteCollectionOptions.EnvironmentID, *deleteCollectionOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -995,41 +1015,46 @@ func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCo
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(DeleteCollectionResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(DeleteCollectionResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DeleteCollectionResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetDeleteCollectionResult : Retrieve result of DeleteCollection operation
-func (discovery *DiscoveryV1) GetDeleteCollectionResult(response *core.DetailedResponse) *DeleteCollectionResponse {
-	result, ok := response.Result.(*DeleteCollectionResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListCollectionFields : List collection fields
 // Gets a list of the unique fields (and their types) stored in the index.
-func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *ListCollectionFieldsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listCollectionFieldsOptions, "listCollectionFieldsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *ListCollectionFieldsOptions) (result *ListCollectionFieldsResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listCollectionFieldsOptions, "listCollectionFieldsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listCollectionFieldsOptions, "listCollectionFieldsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listCollectionFieldsOptions, "listCollectionFieldsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "fields"}
 	pathParameters := []string{*listCollectionFieldsOptions.EnvironmentID, *listCollectionFieldsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listCollectionFieldsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1041,42 +1066,47 @@ func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(ListCollectionFieldsResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(ListCollectionFieldsResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ListCollectionFieldsResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListCollectionFieldsResult : Retrieve result of ListCollectionFields operation
-func (discovery *DiscoveryV1) GetListCollectionFieldsResult(response *core.DetailedResponse) *ListCollectionFieldsResponse {
-	result, ok := response.Result.(*ListCollectionFieldsResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListExpansions : Get the expansion list
 // Returns the current expansion list for the specified collection. If an expansion list is not specified, an object
 // with empty expansion arrays is returned.
-func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansionsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listExpansionsOptions, "listExpansionsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansionsOptions) (result *Expansions, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listExpansionsOptions, "listExpansionsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listExpansionsOptions, "listExpansionsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listExpansionsOptions, "listExpansionsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "expansions"}
 	pathParameters := []string{*listExpansionsOptions.EnvironmentID, *listExpansionsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1088,42 +1118,47 @@ func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansio
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Expansions))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Expansions))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Expansions)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListExpansionsResult : Retrieve result of ListExpansions operation
-func (discovery *DiscoveryV1) GetListExpansionsResult(response *core.DetailedResponse) *Expansions {
-	result, ok := response.Result.(*Expansions)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateExpansions : Create or update expansion list
 // Create or replace the Expansion list for this collection. The maximum number of expanded terms per collection is
 // `500`. The current expansion list is replaced with the uploaded content.
-func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateExpansionsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createExpansionsOptions, "createExpansionsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateExpansionsOptions) (result *Expansions, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createExpansionsOptions, "createExpansionsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createExpansionsOptions, "createExpansionsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createExpansionsOptions, "createExpansionsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "expansions"}
 	pathParameters := []string{*createExpansionsOptions.EnvironmentID, *createExpansionsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1136,50 +1171,56 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createExpansionsOptions.Expansions != nil {
 		body["expansions"] = createExpansionsOptions.Expansions
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Expansions))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Expansions))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Expansions)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateExpansionsResult : Retrieve result of CreateExpansions operation
-func (discovery *DiscoveryV1) GetCreateExpansionsResult(response *core.DetailedResponse) *Expansions {
-	result, ok := response.Result.(*Expansions)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteExpansions : Delete the expansion list
 // Remove the expansion information for this collection. The expansion list must be deleted to disable query expansion
 // for a collection.
-func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteExpansionsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteExpansionsOptions, "deleteExpansionsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteExpansionsOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteExpansionsOptions, "deleteExpansionsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteExpansionsOptions, "deleteExpansionsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteExpansionsOptions, "deleteExpansionsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "expansions"}
 	pathParameters := []string{*deleteExpansionsOptions.EnvironmentID, *deleteExpansionsOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteExpansionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1190,32 +1231,39 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, nil)
-	return response, err
+	response, err = discovery.Service.Request(request, nil)
+
+	return
 }
+
 
 // GetTokenizationDictionaryStatus : Get tokenization dictionary status
 // Returns the current status of the tokenization dictionary for the specified collection.
-func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getTokenizationDictionaryStatusOptions, "getTokenizationDictionaryStatusOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getTokenizationDictionaryStatusOptions, "getTokenizationDictionaryStatusOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getTokenizationDictionaryStatusOptions, "getTokenizationDictionaryStatusOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getTokenizationDictionaryStatusOptions, "getTokenizationDictionaryStatusOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
 	pathParameters := []string{*getTokenizationDictionaryStatusOptions.EnvironmentID, *getTokenizationDictionaryStatusOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getTokenizationDictionaryStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1227,41 +1275,46 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDic
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TokenDictStatusResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TokenDictStatusResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TokenDictStatusResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetTokenizationDictionaryStatusResult : Retrieve result of GetTokenizationDictionaryStatus operation
-func (discovery *DiscoveryV1) GetGetTokenizationDictionaryStatusResult(response *core.DetailedResponse) *TokenDictStatusResponse {
-	result, ok := response.Result.(*TokenDictStatusResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateTokenizationDictionary : Create tokenization dictionary
 // Upload a custom tokenization dictionary to use with the specified collection.
-func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createTokenizationDictionaryOptions, "createTokenizationDictionaryOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createTokenizationDictionaryOptions, "createTokenizationDictionaryOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createTokenizationDictionaryOptions, "createTokenizationDictionaryOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createTokenizationDictionaryOptions, "createTokenizationDictionaryOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
 	pathParameters := []string{*createTokenizationDictionaryOptions.EnvironmentID, *createTokenizationDictionaryOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createTokenizationDictionaryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1274,49 +1327,55 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createTokenizationDictionaryOptions.TokenizationRules != nil {
 		body["tokenization_rules"] = createTokenizationDictionaryOptions.TokenizationRules
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TokenDictStatusResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TokenDictStatusResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TokenDictStatusResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateTokenizationDictionaryResult : Retrieve result of CreateTokenizationDictionary operation
-func (discovery *DiscoveryV1) GetCreateTokenizationDictionaryResult(response *core.DetailedResponse) *TokenDictStatusResponse {
-	result, ok := response.Result.(*TokenDictStatusResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteTokenizationDictionary : Delete tokenization dictionary
 // Delete the tokenization dictionary from the collection.
-func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDictionaryOptions *DeleteTokenizationDictionaryOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteTokenizationDictionaryOptions, "deleteTokenizationDictionaryOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDictionaryOptions *DeleteTokenizationDictionaryOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteTokenizationDictionaryOptions, "deleteTokenizationDictionaryOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteTokenizationDictionaryOptions, "deleteTokenizationDictionaryOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteTokenizationDictionaryOptions, "deleteTokenizationDictionaryOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
 	pathParameters := []string{*deleteTokenizationDictionaryOptions.EnvironmentID, *deleteTokenizationDictionaryOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteTokenizationDictionaryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1327,32 +1386,39 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDic
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, nil)
-	return response, err
+	response, err = discovery.Service.Request(request, nil)
+
+	return
 }
+
 
 // GetStopwordListStatus : Get stopword list status
 // Returns the current status of the stopword list for the specified collection.
-func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions *GetStopwordListStatusOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getStopwordListStatusOptions, "getStopwordListStatusOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions *GetStopwordListStatusOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getStopwordListStatusOptions, "getStopwordListStatusOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getStopwordListStatusOptions, "getStopwordListStatusOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getStopwordListStatusOptions, "getStopwordListStatusOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
 	pathParameters := []string{*getStopwordListStatusOptions.EnvironmentID, *getStopwordListStatusOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getStopwordListStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1364,41 +1430,46 @@ func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TokenDictStatusResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TokenDictStatusResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TokenDictStatusResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetStopwordListStatusResult : Retrieve result of GetStopwordListStatus operation
-func (discovery *DiscoveryV1) GetGetStopwordListStatusResult(response *core.DetailedResponse) *TokenDictStatusResponse {
-	result, ok := response.Result.(*TokenDictStatusResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateStopwordList : Create stopword list
 // Upload a custom stopword list to use with the specified collection.
-func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *CreateStopwordListOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createStopwordListOptions, "createStopwordListOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *CreateStopwordListOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createStopwordListOptions, "createStopwordListOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createStopwordListOptions, "createStopwordListOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createStopwordListOptions, "createStopwordListOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
 	pathParameters := []string{*createStopwordListOptions.EnvironmentID, *createStopwordListOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createStopwordListOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1410,45 +1481,50 @@ func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *Crea
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	builder.AddFormData("stopword_file", core.StringNilMapper(createStopwordListOptions.StopwordFilename),
 		"application/octet-stream", createStopwordListOptions.StopwordFile)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TokenDictStatusResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TokenDictStatusResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TokenDictStatusResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateStopwordListResult : Retrieve result of CreateStopwordList operation
-func (discovery *DiscoveryV1) GetCreateStopwordListResult(response *core.DetailedResponse) *TokenDictStatusResponse {
-	result, ok := response.Result.(*TokenDictStatusResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteStopwordList : Delete a custom stopword list
 // Delete a custom stopword list from the collection. After a custom stopword list is deleted, the default list is used
 // for the collection.
-func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *DeleteStopwordListOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteStopwordListOptions, "deleteStopwordListOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *DeleteStopwordListOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteStopwordListOptions, "deleteStopwordListOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteStopwordListOptions, "deleteStopwordListOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteStopwordListOptions, "deleteStopwordListOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
 	pathParameters := []string{*deleteStopwordListOptions.EnvironmentID, *deleteStopwordListOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteStopwordListOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1459,16 +1535,18 @@ func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *Dele
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, nil)
-	return response, err
+	response, err = discovery.Service.Request(request, nil)
+
+	return
 }
+
 
 // AddDocument : Add a document
 // Add a document to a collection with optional metadata.
@@ -1493,22 +1571,28 @@ func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *Dele
 //
 //  **Note:** Documents can be added with a specific **document_id** by using the
 // **_/v1/environments/{environment_id}/collections/{collection_id}/documents** method.
-func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addDocumentOptions, "addDocumentOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addDocumentOptions, "addDocumentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addDocumentOptions, "addDocumentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addDocumentOptions, "addDocumentOptions")
+	if err != nil {
+		return
 	}
 	if (addDocumentOptions.File == nil) && (addDocumentOptions.Metadata == nil) {
-		return nil, fmt.Errorf("At least one of file or metadata must be supplied")
+		err = fmt.Errorf("At least one of file or metadata must be supplied")
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "documents"}
 	pathParameters := []string{*addDocumentOptions.EnvironmentID, *addDocumentOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1520,7 +1604,7 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	if addDocumentOptions.File != nil {
 		builder.AddFormData("file", core.StringNilMapper(addDocumentOptions.Filename),
@@ -1532,39 +1616,44 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(DocumentAccepted))
-	return response, err
+	response, err = discovery.Service.Request(request, new(DocumentAccepted))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DocumentAccepted)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetAddDocumentResult : Retrieve result of AddDocument operation
-func (discovery *DiscoveryV1) GetAddDocumentResult(response *core.DetailedResponse) *DocumentAccepted {
-	result, ok := response.Result.(*DocumentAccepted)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetDocumentStatus : Get document details
 // Fetch status details about a submitted document. **Note:** this operation does not return the document itself.
 // Instead, it returns only the document's processing status and any notices (warnings or errors) that were generated
 // when the document was ingested. Use the query API to retrieve the actual document content.
-func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getDocumentStatusOptions, "getDocumentStatusOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) (result *DocumentStatus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getDocumentStatusOptions, "getDocumentStatusOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getDocumentStatusOptions, "getDocumentStatusOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getDocumentStatusOptions, "getDocumentStatusOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "documents"}
 	pathParameters := []string{*getDocumentStatusOptions.EnvironmentID, *getDocumentStatusOptions.CollectionID, *getDocumentStatusOptions.DocumentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getDocumentStatusOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1576,25 +1665,25 @@ func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDoc
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(DocumentStatus))
-	return response, err
+	response, err = discovery.Service.Request(request, new(DocumentStatus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DocumentStatus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetDocumentStatusResult : Retrieve result of GetDocumentStatus operation
-func (discovery *DiscoveryV1) GetGetDocumentStatusResult(response *core.DetailedResponse) *DocumentStatus {
-	result, ok := response.Result.(*DocumentStatus)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // UpdateDocument : Update a document
 // Replace an existing document or add a document with a specified **document_id**. Starts ingesting a document with
@@ -1602,22 +1691,28 @@ func (discovery *DiscoveryV1) GetGetDocumentStatusResult(response *core.Detailed
 //
 // **Note:** When uploading a new document with this method it automatically replaces any document stored with the same
 // **document_id** if it exists.
-func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateDocumentOptions, "updateDocumentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateDocumentOptions, "updateDocumentOptions")
+	if err != nil {
+		return
 	}
 	if (updateDocumentOptions.File == nil) && (updateDocumentOptions.Metadata == nil) {
-		return nil, fmt.Errorf("At least one of file or metadata must be supplied")
+		err = fmt.Errorf("At least one of file or metadata must be supplied")
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "documents"}
 	pathParameters := []string{*updateDocumentOptions.EnvironmentID, *updateDocumentOptions.CollectionID, *updateDocumentOptions.DocumentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1629,7 +1724,7 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	if updateDocumentOptions.File != nil {
 		builder.AddFormData("file", core.StringNilMapper(updateDocumentOptions.Filename),
@@ -1641,38 +1736,43 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(DocumentAccepted))
-	return response, err
+	response, err = discovery.Service.Request(request, new(DocumentAccepted))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DocumentAccepted)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetUpdateDocumentResult : Retrieve result of UpdateDocument operation
-func (discovery *DiscoveryV1) GetUpdateDocumentResult(response *core.DetailedResponse) *DocumentAccepted {
-	result, ok := response.Result.(*DocumentAccepted)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteDocument : Delete a document
 // If the given document ID is invalid, or if the document is not found, then the a success response is returned (HTTP
 // status code `200`) with the status set to 'deleted'.
-func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (result *DeleteDocumentResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteDocumentOptions, "deleteDocumentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteDocumentOptions, "deleteDocumentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "documents"}
 	pathParameters := []string{*deleteDocumentOptions.EnvironmentID, *deleteDocumentOptions.CollectionID, *deleteDocumentOptions.DocumentID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteDocumentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1684,42 +1784,47 @@ func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocume
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(DeleteDocumentResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(DeleteDocumentResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DeleteDocumentResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetDeleteDocumentResult : Retrieve result of DeleteDocument operation
-func (discovery *DiscoveryV1) GetDeleteDocumentResult(response *core.DetailedResponse) *DeleteDocumentResponse {
-	result, ok := response.Result.(*DeleteDocumentResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // Query : Query a collection
 // By using this method, you can construct long queries. For details, see the [Discovery
 // documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
-func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(queryOptions, "queryOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (result *QueryResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(queryOptions, "queryOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(queryOptions, "queryOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(queryOptions, "queryOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "query"}
 	pathParameters := []string{*queryOptions.EnvironmentID, *queryOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range queryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1735,7 +1840,7 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 	if queryOptions.XWatsonLoggingOptOut != nil {
 		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*queryOptions.XWatsonLoggingOptOut))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if queryOptions.Filter != nil {
@@ -1783,9 +1888,6 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 	if queryOptions.DeduplicateField != nil {
 		body["deduplicate.field"] = queryOptions.DeduplicateField
 	}
-	if queryOptions.CollectionIds != nil {
-		body["collection_ids"] = queryOptions.CollectionIds
-	}
 	if queryOptions.Similar != nil {
 		body["similar"] = queryOptions.Similar
 	}
@@ -1798,46 +1900,52 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (*core.DetailedR
 	if queryOptions.Bias != nil {
 		body["bias"] = queryOptions.Bias
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(QueryResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(QueryResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*QueryResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetQueryResult : Retrieve result of Query operation
-func (discovery *DiscoveryV1) GetQueryResult(response *core.DetailedResponse) *QueryResponse {
-	result, ok := response.Result.(*QueryResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // QueryNotices : Query system notices
 // Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated when
 // ingesting documents and performing relevance training. See the [Discovery
 // documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts) for more
 // details on the query language.
-func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(queryNoticesOptions, "queryNoticesOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOptions) (result *QueryNoticesResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(queryNoticesOptions, "queryNoticesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(queryNoticesOptions, "queryNoticesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(queryNoticesOptions, "queryNoticesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "notices"}
 	pathParameters := []string{*queryNoticesOptions.EnvironmentID, *queryNoticesOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range queryNoticesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1901,42 +2009,47 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 	if queryNoticesOptions.SimilarFields != nil {
 		builder.AddQuery("similar.fields", strings.Join(queryNoticesOptions.SimilarFields, ","))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(QueryNoticesResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(QueryNoticesResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*QueryNoticesResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetQueryNoticesResult : Retrieve result of QueryNotices operation
-func (discovery *DiscoveryV1) GetQueryNoticesResult(response *core.DetailedResponse) *QueryNoticesResponse {
-	result, ok := response.Result.(*QueryNoticesResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // FederatedQuery : Query multiple collections
 // By using this method, you can construct long queries that search multiple collection. For details, see the [Discovery
 // documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
-func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQueryOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(federatedQueryOptions, "federatedQueryOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQueryOptions) (result *QueryResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(federatedQueryOptions, "federatedQueryOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(federatedQueryOptions, "federatedQueryOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(federatedQueryOptions, "federatedQueryOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "query"}
 	pathParameters := []string{*federatedQueryOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range federatedQueryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1952,7 +2065,7 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	if federatedQueryOptions.XWatsonLoggingOptOut != nil {
 		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*federatedQueryOptions.XWatsonLoggingOptOut))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if federatedQueryOptions.Filter != nil {
@@ -2000,9 +2113,6 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	if federatedQueryOptions.DeduplicateField != nil {
 		body["deduplicate.field"] = federatedQueryOptions.DeduplicateField
 	}
-	if federatedQueryOptions.CollectionIds != nil {
-		body["collection_ids"] = federatedQueryOptions.CollectionIds
-	}
 	if federatedQueryOptions.Similar != nil {
 		body["similar"] = federatedQueryOptions.Similar
 	}
@@ -2015,46 +2125,55 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	if federatedQueryOptions.Bias != nil {
 		body["bias"] = federatedQueryOptions.Bias
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	if federatedQueryOptions.CollectionIds != nil {
+		body["collection_ids"] = federatedQueryOptions.CollectionIds
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(QueryResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(QueryResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*QueryResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetFederatedQueryResult : Retrieve result of FederatedQuery operation
-func (discovery *DiscoveryV1) GetFederatedQueryResult(response *core.DetailedResponse) *QueryResponse {
-	result, ok := response.Result.(*QueryResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // FederatedQueryNotices : Query multiple collection system notices
 // Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated when
 // ingesting documents and performing relevance training. See the [Discovery
 // documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts) for more
 // details on the query language.
-func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions *FederatedQueryNoticesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(federatedQueryNoticesOptions, "federatedQueryNoticesOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions *FederatedQueryNoticesOptions) (result *QueryNoticesResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(federatedQueryNoticesOptions, "federatedQueryNoticesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(federatedQueryNoticesOptions, "federatedQueryNoticesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(federatedQueryNoticesOptions, "federatedQueryNoticesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "notices"}
 	pathParameters := []string{*federatedQueryNoticesOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range federatedQueryNoticesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2107,180 +2226,46 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	if federatedQueryNoticesOptions.SimilarFields != nil {
 		builder.AddQuery("similar.fields", strings.Join(federatedQueryNoticesOptions.SimilarFields, ","))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(QueryNoticesResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(QueryNoticesResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*QueryNoticesResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetFederatedQueryNoticesResult : Retrieve result of FederatedQueryNotices operation
-func (discovery *DiscoveryV1) GetFederatedQueryNoticesResult(response *core.DetailedResponse) *QueryNoticesResponse {
-	result, ok := response.Result.(*QueryNoticesResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// QueryEntities : Knowledge Graph entity query
-// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg) for more
-// details.
-func (discovery *DiscoveryV1) QueryEntities(queryEntitiesOptions *QueryEntitiesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(queryEntitiesOptions, "queryEntitiesOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(queryEntitiesOptions, "queryEntitiesOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/environments", "collections", "query_entities"}
-	pathParameters := []string{*queryEntitiesOptions.EnvironmentID, *queryEntitiesOptions.CollectionID}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range queryEntitiesOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "QueryEntities")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
-
-	body := make(map[string]interface{})
-	if queryEntitiesOptions.Feature != nil {
-		body["feature"] = queryEntitiesOptions.Feature
-	}
-	if queryEntitiesOptions.Entity != nil {
-		body["entity"] = queryEntitiesOptions.Entity
-	}
-	if queryEntitiesOptions.Context != nil {
-		body["context"] = queryEntitiesOptions.Context
-	}
-	if queryEntitiesOptions.Count != nil {
-		body["count"] = queryEntitiesOptions.Count
-	}
-	if queryEntitiesOptions.EvidenceCount != nil {
-		body["evidence_count"] = queryEntitiesOptions.EvidenceCount
-	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
-	}
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := discovery.Service.Request(request, new(QueryEntitiesResponse))
-	return response, err
-}
-
-// GetQueryEntitiesResult : Retrieve result of QueryEntities operation
-func (discovery *DiscoveryV1) GetQueryEntitiesResult(response *core.DetailedResponse) *QueryEntitiesResponse {
-	result, ok := response.Result.(*QueryEntitiesResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
-
-// QueryRelations : Knowledge Graph relationship query
-// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg) for more
-// details.
-func (discovery *DiscoveryV1) QueryRelations(queryRelationsOptions *QueryRelationsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(queryRelationsOptions, "queryRelationsOptions cannot be nil"); err != nil {
-		return nil, err
-	}
-	if err := core.ValidateStruct(queryRelationsOptions, "queryRelationsOptions"); err != nil {
-		return nil, err
-	}
-
-	pathSegments := []string{"v1/environments", "collections", "query_relations"}
-	pathParameters := []string{*queryRelationsOptions.EnvironmentID, *queryRelationsOptions.CollectionID}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
-
-	for headerName, headerValue := range queryRelationsOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "QueryRelations")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
-
-	body := make(map[string]interface{})
-	if queryRelationsOptions.Entities != nil {
-		body["entities"] = queryRelationsOptions.Entities
-	}
-	if queryRelationsOptions.Context != nil {
-		body["context"] = queryRelationsOptions.Context
-	}
-	if queryRelationsOptions.Sort != nil {
-		body["sort"] = queryRelationsOptions.Sort
-	}
-	if queryRelationsOptions.Filter != nil {
-		body["filter"] = queryRelationsOptions.Filter
-	}
-	if queryRelationsOptions.Count != nil {
-		body["count"] = queryRelationsOptions.Count
-	}
-	if queryRelationsOptions.EvidenceCount != nil {
-		body["evidence_count"] = queryRelationsOptions.EvidenceCount
-	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
-	}
-
-	request, err := builder.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := discovery.Service.Request(request, new(QueryRelationsResponse))
-	return response, err
-}
-
-// GetQueryRelationsResult : Retrieve result of QueryRelations operation
-func (discovery *DiscoveryV1) GetQueryRelationsResult(response *core.DetailedResponse) *QueryRelationsResponse {
-	result, ok := response.Result.(*QueryRelationsResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListTrainingData : List training data
 // Lists the training data for the specified collection.
-func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listTrainingDataOptions, "listTrainingDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions) (result *TrainingDataSet, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listTrainingDataOptions, "listTrainingDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listTrainingDataOptions, "listTrainingDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listTrainingDataOptions, "listTrainingDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data"}
 	pathParameters := []string{*listTrainingDataOptions.EnvironmentID, *listTrainingDataOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2292,41 +2277,46 @@ func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrai
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TrainingDataSet))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TrainingDataSet))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingDataSet)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListTrainingDataResult : Retrieve result of ListTrainingData operation
-func (discovery *DiscoveryV1) GetListTrainingDataResult(response *core.DetailedResponse) *TrainingDataSet {
-	result, ok := response.Result.(*TrainingDataSet)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AddTrainingData : Add query to training data
 // Adds a query to the training data for this collection. The query can contain a filter and natural language query.
-func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainingDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addTrainingDataOptions, "addTrainingDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainingDataOptions) (result *TrainingQuery, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addTrainingDataOptions, "addTrainingDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addTrainingDataOptions, "addTrainingDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addTrainingDataOptions, "addTrainingDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data"}
 	pathParameters := []string{*addTrainingDataOptions.EnvironmentID, *addTrainingDataOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2339,7 +2329,7 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if addTrainingDataOptions.NaturalLanguageQuery != nil {
@@ -2351,43 +2341,49 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 	if addTrainingDataOptions.Examples != nil {
 		body["examples"] = addTrainingDataOptions.Examples
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TrainingQuery))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TrainingQuery))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingQuery)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetAddTrainingDataResult : Retrieve result of AddTrainingData operation
-func (discovery *DiscoveryV1) GetAddTrainingDataResult(response *core.DetailedResponse) *TrainingQuery {
-	result, ok := response.Result.(*TrainingQuery)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteAllTrainingData : Delete all training data
 // Deletes all training data from a collection.
-func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions *DeleteAllTrainingDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteAllTrainingDataOptions, "deleteAllTrainingDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions *DeleteAllTrainingDataOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteAllTrainingDataOptions, "deleteAllTrainingDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteAllTrainingDataOptions, "deleteAllTrainingDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteAllTrainingDataOptions, "deleteAllTrainingDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data"}
 	pathParameters := []string{*deleteAllTrainingDataOptions.EnvironmentID, *deleteAllTrainingDataOptions.CollectionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteAllTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2398,32 +2394,39 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, nil)
-	return response, err
+	response, err = discovery.Service.Request(request, nil)
+
+	return
 }
+
 
 // GetTrainingData : Get details about a query
 // Gets details for a specific training data query, including the query string and all examples.
-func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainingDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getTrainingDataOptions, "getTrainingDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainingDataOptions) (result *TrainingQuery, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getTrainingDataOptions, "getTrainingDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getTrainingDataOptions, "getTrainingDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getTrainingDataOptions, "getTrainingDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data"}
 	pathParameters := []string{*getTrainingDataOptions.EnvironmentID, *getTrainingDataOptions.CollectionID, *getTrainingDataOptions.QueryID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2435,41 +2438,46 @@ func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainin
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TrainingQuery))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TrainingQuery))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingQuery)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetTrainingDataResult : Retrieve result of GetTrainingData operation
-func (discovery *DiscoveryV1) GetGetTrainingDataResult(response *core.DetailedResponse) *TrainingQuery {
-	result, ok := response.Result.(*TrainingQuery)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteTrainingData : Delete a training data query
 // Removes the training data query and all associated examples from the training data set.
-func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *DeleteTrainingDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteTrainingDataOptions, "deleteTrainingDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *DeleteTrainingDataOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteTrainingDataOptions, "deleteTrainingDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteTrainingDataOptions, "deleteTrainingDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteTrainingDataOptions, "deleteTrainingDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data"}
 	pathParameters := []string{*deleteTrainingDataOptions.EnvironmentID, *deleteTrainingDataOptions.CollectionID, *deleteTrainingDataOptions.QueryID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteTrainingDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2480,32 +2488,39 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, nil)
-	return response, err
+	response, err = discovery.Service.Request(request, nil)
+
+	return
 }
+
 
 // ListTrainingExamples : List examples for a training data query
 // List all examples for this training data query.
-func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *ListTrainingExamplesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listTrainingExamplesOptions, "listTrainingExamplesOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *ListTrainingExamplesOptions) (result *TrainingExampleList, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listTrainingExamplesOptions, "listTrainingExamplesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listTrainingExamplesOptions, "listTrainingExamplesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listTrainingExamplesOptions, "listTrainingExamplesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
 	pathParameters := []string{*listTrainingExamplesOptions.EnvironmentID, *listTrainingExamplesOptions.CollectionID, *listTrainingExamplesOptions.QueryID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listTrainingExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2517,41 +2532,46 @@ func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TrainingExampleList))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TrainingExampleList))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingExampleList)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListTrainingExamplesResult : Retrieve result of ListTrainingExamples operation
-func (discovery *DiscoveryV1) GetListTrainingExamplesResult(response *core.DetailedResponse) *TrainingExampleList {
-	result, ok := response.Result.(*TrainingExampleList)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateTrainingExample : Add example to training data query
 // Adds a example to this training data query.
-func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions *CreateTrainingExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createTrainingExampleOptions, "createTrainingExampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions *CreateTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createTrainingExampleOptions, "createTrainingExampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createTrainingExampleOptions, "createTrainingExampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createTrainingExampleOptions, "createTrainingExampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
 	pathParameters := []string{*createTrainingExampleOptions.EnvironmentID, *createTrainingExampleOptions.CollectionID, *createTrainingExampleOptions.QueryID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2564,7 +2584,7 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createTrainingExampleOptions.DocumentID != nil {
@@ -2576,43 +2596,49 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 	if createTrainingExampleOptions.Relevance != nil {
 		body["relevance"] = createTrainingExampleOptions.Relevance
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TrainingExample))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TrainingExample))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingExample)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateTrainingExampleResult : Retrieve result of CreateTrainingExample operation
-func (discovery *DiscoveryV1) GetCreateTrainingExampleResult(response *core.DetailedResponse) *TrainingExample {
-	result, ok := response.Result.(*TrainingExample)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteTrainingExample : Delete example for training data query
 // Deletes the example document with the given ID from the training data query.
-func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions *DeleteTrainingExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteTrainingExampleOptions, "deleteTrainingExampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions *DeleteTrainingExampleOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteTrainingExampleOptions, "deleteTrainingExampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteTrainingExampleOptions, "deleteTrainingExampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteTrainingExampleOptions, "deleteTrainingExampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
 	pathParameters := []string{*deleteTrainingExampleOptions.EnvironmentID, *deleteTrainingExampleOptions.CollectionID, *deleteTrainingExampleOptions.QueryID, *deleteTrainingExampleOptions.ExampleID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2623,32 +2649,39 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, nil)
-	return response, err
+	response, err = discovery.Service.Request(request, nil)
+
+	return
 }
+
 
 // UpdateTrainingExample : Change label or cross reference for example
 // Changes the label or cross reference query for this training data example.
-func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions *UpdateTrainingExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateTrainingExampleOptions, "updateTrainingExampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions *UpdateTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateTrainingExampleOptions, "updateTrainingExampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateTrainingExampleOptions, "updateTrainingExampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateTrainingExampleOptions, "updateTrainingExampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
 	pathParameters := []string{*updateTrainingExampleOptions.EnvironmentID, *updateTrainingExampleOptions.CollectionID, *updateTrainingExampleOptions.QueryID, *updateTrainingExampleOptions.ExampleID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2661,7 +2694,7 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if updateTrainingExampleOptions.CrossReference != nil {
@@ -2670,43 +2703,49 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 	if updateTrainingExampleOptions.Relevance != nil {
 		body["relevance"] = updateTrainingExampleOptions.Relevance
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TrainingExample))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TrainingExample))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingExample)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetUpdateTrainingExampleResult : Retrieve result of UpdateTrainingExample operation
-func (discovery *DiscoveryV1) GetUpdateTrainingExampleResult(response *core.DetailedResponse) *TrainingExample {
-	result, ok := response.Result.(*TrainingExample)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetTrainingExample : Get details for training data example
 // Gets the details for this training example.
-func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetTrainingExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getTrainingExampleOptions, "getTrainingExampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getTrainingExampleOptions, "getTrainingExampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getTrainingExampleOptions, "getTrainingExampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getTrainingExampleOptions, "getTrainingExampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
 	pathParameters := []string{*getTrainingExampleOptions.EnvironmentID, *getTrainingExampleOptions.CollectionID, *getTrainingExampleOptions.QueryID, *getTrainingExampleOptions.ExampleID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getTrainingExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2718,25 +2757,25 @@ func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetT
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(TrainingExample))
-	return response, err
+	response, err = discovery.Service.Request(request, new(TrainingExample))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingExample)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetTrainingExampleResult : Retrieve result of GetTrainingExample operation
-func (discovery *DiscoveryV1) GetGetTrainingExampleResult(response *core.DetailedResponse) *TrainingExample {
-	result, ok := response.Result.(*TrainingExample)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteUserData : Delete labeled data
 // Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
@@ -2745,19 +2784,24 @@ func (discovery *DiscoveryV1) GetGetTrainingExampleResult(response *core.Detaile
 // You associate a customer ID with data by passing the **X-Watson-Metadata** header with a request that passes data.
 // For more information about personal data and customer IDs, see [Information
 // security](https://cloud.ibm.com/docs/services/discovery?topic=discovery-information-security#information-security).
-func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/user_data"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2770,33 +2814,40 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, nil)
-	return response, err
+	response, err = discovery.Service.Request(request, nil)
+
+	return
 }
+
 
 // CreateEvent : Create event
 // The **Events** API can be used to create log entries that are associated with specific queries. For example, you can
 // record which documents in the results set were "clicked" by a user and when that click occured.
-func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createEventOptions, "createEventOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions) (result *CreateEventResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createEventOptions, "createEventOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createEventOptions, "createEventOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createEventOptions, "createEventOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/events"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2809,7 +2860,7 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createEventOptions.Type != nil {
@@ -2818,41 +2869,46 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 	if createEventOptions.Data != nil {
 		body["data"] = createEventOptions.Data
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(CreateEventResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(CreateEventResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*CreateEventResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateEventResult : Retrieve result of CreateEvent operation
-func (discovery *DiscoveryV1) GetCreateEventResult(response *core.DetailedResponse) *CreateEventResponse {
-	result, ok := response.Result.(*CreateEventResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // QueryLog : Search the query and event log
 // Searches the query and event log to find query sessions that match the specified criteria. Searching the **logs**
 // endpoint uses the standard Discovery query syntax for the parameters that are supported.
-func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(queryLogOptions, "queryLogOptions"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (result *LogQueryResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(queryLogOptions, "queryLogOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/logs"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range queryLogOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2880,38 +2936,42 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (*core.
 	if queryLogOptions.Sort != nil {
 		builder.AddQuery("sort", strings.Join(queryLogOptions.Sort, ","))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(LogQueryResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(LogQueryResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*LogQueryResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetQueryLogResult : Retrieve result of QueryLog operation
-func (discovery *DiscoveryV1) GetQueryLogResult(response *core.DetailedResponse) *LogQueryResponse {
-	result, ok := response.Result.(*LogQueryResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetMetricsQuery : Number of queries over time
 // Total number of queries using the **natural_language_query** parameter over a specific time window.
-func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetricsQueryOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(getMetricsQueryOptions, "getMetricsQueryOptions"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetricsQueryOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(getMetricsQueryOptions, "getMetricsQueryOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/metrics/number_of_queries"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getMetricsQueryOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2933,40 +2993,44 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 	if getMetricsQueryOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(MetricResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(MetricResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MetricResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetMetricsQueryResult : Retrieve result of GetMetricsQuery operation
-func (discovery *DiscoveryV1) GetGetMetricsQueryResult(response *core.DetailedResponse) *MetricResponse {
-	result, ok := response.Result.(*MetricResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetMetricsQueryEvent : Number of queries with an event over time
 // Total number of queries using the **natural_language_query** parameter that have a corresponding "click" event over a
 // specified time window. This metric requires having integrated event tracking in your application using the **Events**
 // API.
-func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *GetMetricsQueryEventOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(getMetricsQueryEventOptions, "getMetricsQueryEventOptions"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *GetMetricsQueryEventOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(getMetricsQueryEventOptions, "getMetricsQueryEventOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/metrics/number_of_queries_with_event"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getMetricsQueryEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2988,39 +3052,43 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 	if getMetricsQueryEventOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryEventOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(MetricResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(MetricResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MetricResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetMetricsQueryEventResult : Retrieve result of GetMetricsQueryEvent operation
-func (discovery *DiscoveryV1) GetGetMetricsQueryEventResult(response *core.DetailedResponse) *MetricResponse {
-	result, ok := response.Result.(*MetricResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetMetricsQueryNoResults : Number of queries with no search results over time
 // Total number of queries using the **natural_language_query** parameter that have no results returned over a specified
 // time window.
-func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsOptions *GetMetricsQueryNoResultsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(getMetricsQueryNoResultsOptions, "getMetricsQueryNoResultsOptions"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsOptions *GetMetricsQueryNoResultsOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(getMetricsQueryNoResultsOptions, "getMetricsQueryNoResultsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/metrics/number_of_queries_with_no_search_results"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getMetricsQueryNoResultsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3042,40 +3110,44 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 	if getMetricsQueryNoResultsOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryNoResultsOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(MetricResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(MetricResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MetricResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetMetricsQueryNoResultsResult : Retrieve result of GetMetricsQueryNoResults operation
-func (discovery *DiscoveryV1) GetGetMetricsQueryNoResultsResult(response *core.DetailedResponse) *MetricResponse {
-	result, ok := response.Result.(*MetricResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetMetricsEventRate : Percentage of queries with an associated event
 // The percentage of queries using the **natural_language_query** parameter that have a corresponding "click" event over
 // a specified time window.  This metric requires having integrated event tracking in your application using the
 // **Events** API.
-func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *GetMetricsEventRateOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(getMetricsEventRateOptions, "getMetricsEventRateOptions"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *GetMetricsEventRateOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(getMetricsEventRateOptions, "getMetricsEventRateOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/metrics/event_rate"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getMetricsEventRateOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3097,40 +3169,44 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 	if getMetricsEventRateOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsEventRateOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(MetricResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(MetricResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MetricResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetMetricsEventRateResult : Retrieve result of GetMetricsEventRate operation
-func (discovery *DiscoveryV1) GetGetMetricsEventRateResult(response *core.DetailedResponse) *MetricResponse {
-	result, ok := response.Result.(*MetricResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetMetricsQueryTokenEvent : Most frequent query tokens with an event
 // The most frequent query tokens parsed from the **natural_language_query** parameter and their corresponding "click"
 // event rate within the recording period (queries and events are stored for 30 days). A query token is an individual
 // word or unigram within the query string.
-func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(getMetricsQueryTokenEventOptions, "getMetricsQueryTokenEventOptions"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions) (result *MetricTokenResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(getMetricsQueryTokenEventOptions, "getMetricsQueryTokenEventOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/metrics/top_query_tokens_with_event_rate"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getMetricsQueryTokenEventOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3146,43 +3222,48 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEven
 	if getMetricsQueryTokenEventOptions.Count != nil {
 		builder.AddQuery("count", fmt.Sprint(*getMetricsQueryTokenEventOptions.Count))
 	}
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(MetricTokenResponse))
-	return response, err
+	response, err = discovery.Service.Request(request, new(MetricTokenResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MetricTokenResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetMetricsQueryTokenEventResult : Retrieve result of GetMetricsQueryTokenEvent operation
-func (discovery *DiscoveryV1) GetGetMetricsQueryTokenEventResult(response *core.DetailedResponse) *MetricTokenResponse {
-	result, ok := response.Result.(*MetricTokenResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListCredentials : List credentials
 // List all the source credentials that have been created for this service instance.
 //
 //  **Note:**  All credentials are sent over an encrypted connection and encrypted at rest.
-func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCredentialsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listCredentialsOptions, "listCredentialsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCredentialsOptions) (result *CredentialsList, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listCredentialsOptions, "listCredentialsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listCredentialsOptions, "listCredentialsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listCredentialsOptions, "listCredentialsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "credentials"}
 	pathParameters := []string{*listCredentialsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3194,44 +3275,49 @@ func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCreden
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(CredentialsList))
-	return response, err
+	response, err = discovery.Service.Request(request, new(CredentialsList))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*CredentialsList)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListCredentialsResult : Retrieve result of ListCredentials operation
-func (discovery *DiscoveryV1) GetListCredentialsResult(response *core.DetailedResponse) *CredentialsList {
-	result, ok := response.Result.(*CredentialsList)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateCredentials : Create credentials
 // Creates a set of credentials to connect to a remote source. Created credentials are used in a configuration to
 // associate a collection with the remote source.
 //
 // **Note:** All credentials are sent over an encrypted connection and encrypted at rest.
-func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *CreateCredentialsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createCredentialsOptions, "createCredentialsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *CreateCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createCredentialsOptions, "createCredentialsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createCredentialsOptions, "createCredentialsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createCredentialsOptions, "createCredentialsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "credentials"}
 	pathParameters := []string{*createCredentialsOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3244,7 +3330,7 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createCredentialsOptions.SourceType != nil {
@@ -3256,46 +3342,52 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 	if createCredentialsOptions.Status != nil {
 		body["status"] = createCredentialsOptions.Status
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Credentials))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Credentials))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Credentials)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateCredentialsResult : Retrieve result of CreateCredentials operation
-func (discovery *DiscoveryV1) GetCreateCredentialsResult(response *core.DetailedResponse) *Credentials {
-	result, ok := response.Result.(*Credentials)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetCredentials : View Credentials
 // Returns details about the specified credentials.
 //
 //  **Note:** Secure credential information such as a password or SSH key is never returned and must be obtained from
 // the source system.
-func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentialsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getCredentialsOptions, "getCredentialsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getCredentialsOptions, "getCredentialsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getCredentialsOptions, "getCredentialsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getCredentialsOptions, "getCredentialsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "credentials"}
 	pathParameters := []string{*getCredentialsOptions.EnvironmentID, *getCredentialsOptions.CredentialID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3307,43 +3399,48 @@ func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentia
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Credentials))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Credentials))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Credentials)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetCredentialsResult : Retrieve result of GetCredentials operation
-func (discovery *DiscoveryV1) GetGetCredentialsResult(response *core.DetailedResponse) *Credentials {
-	result, ok := response.Result.(*Credentials)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // UpdateCredentials : Update credentials
 // Updates an existing set of source credentials.
 //
 // **Note:** All credentials are sent over an encrypted connection and encrypted at rest.
-func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *UpdateCredentialsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateCredentialsOptions, "updateCredentialsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *UpdateCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateCredentialsOptions, "updateCredentialsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateCredentialsOptions, "updateCredentialsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateCredentialsOptions, "updateCredentialsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "credentials"}
 	pathParameters := []string{*updateCredentialsOptions.EnvironmentID, *updateCredentialsOptions.CredentialID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3356,7 +3453,7 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if updateCredentialsOptions.SourceType != nil {
@@ -3368,43 +3465,49 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 	if updateCredentialsOptions.Status != nil {
 		body["status"] = updateCredentialsOptions.Status
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Credentials))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Credentials))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Credentials)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetUpdateCredentialsResult : Retrieve result of UpdateCredentials operation
-func (discovery *DiscoveryV1) GetUpdateCredentialsResult(response *core.DetailedResponse) *Credentials {
-	result, ok := response.Result.(*Credentials)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteCredentials : Delete credentials
 // Deletes a set of stored credentials from your Discovery instance.
-func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *DeleteCredentialsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteCredentialsOptions, "deleteCredentialsOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *DeleteCredentialsOptions) (result *DeleteCredentials, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteCredentialsOptions, "deleteCredentialsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteCredentialsOptions, "deleteCredentialsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteCredentialsOptions, "deleteCredentialsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "credentials"}
 	pathParameters := []string{*deleteCredentialsOptions.EnvironmentID, *deleteCredentialsOptions.CredentialID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteCredentialsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3416,41 +3519,46 @@ func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *Delete
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(DeleteCredentials))
-	return response, err
+	response, err = discovery.Service.Request(request, new(DeleteCredentials))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DeleteCredentials)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetDeleteCredentialsResult : Retrieve result of DeleteCredentials operation
-func (discovery *DiscoveryV1) GetDeleteCredentialsResult(response *core.DetailedResponse) *DeleteCredentials {
-	result, ok := response.Result.(*DeleteCredentials)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListGateways : List Gateways
 // List the currently configured gateways.
-func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listGatewaysOptions, "listGatewaysOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOptions) (result *GatewayList, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listGatewaysOptions, "listGatewaysOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listGatewaysOptions, "listGatewaysOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listGatewaysOptions, "listGatewaysOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "gateways"}
 	pathParameters := []string{*listGatewaysOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listGatewaysOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3462,41 +3570,46 @@ func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOpti
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(GatewayList))
-	return response, err
+	response, err = discovery.Service.Request(request, new(GatewayList))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*GatewayList)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListGatewaysResult : Retrieve result of ListGateways operation
-func (discovery *DiscoveryV1) GetListGatewaysResult(response *core.DetailedResponse) *GatewayList {
-	result, ok := response.Result.(*GatewayList)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CreateGateway : Create Gateway
 // Create a gateway configuration to use with a remotely installed gateway.
-func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createGatewayOptions, "createGatewayOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayOptions) (result *Gateway, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createGatewayOptions, "createGatewayOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createGatewayOptions, "createGatewayOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createGatewayOptions, "createGatewayOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "gateways"}
 	pathParameters := []string{*createGatewayOptions.EnvironmentID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3509,49 +3622,55 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
 	if createGatewayOptions.Name != nil {
 		body["name"] = createGatewayOptions.Name
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Gateway))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Gateway))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Gateway)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateGatewayResult : Retrieve result of CreateGateway operation
-func (discovery *DiscoveryV1) GetCreateGatewayResult(response *core.DetailedResponse) *Gateway {
-	result, ok := response.Result.(*Gateway)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // GetGateway : List Gateway Details
 // List information about the specified gateway.
-func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getGatewayOptions, "getGatewayOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (result *Gateway, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getGatewayOptions, "getGatewayOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getGatewayOptions, "getGatewayOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getGatewayOptions, "getGatewayOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "gateways"}
 	pathParameters := []string{*getGatewayOptions.EnvironmentID, *getGatewayOptions.GatewayID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3563,41 +3682,46 @@ func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(Gateway))
-	return response, err
+	response, err = discovery.Service.Request(request, new(Gateway))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Gateway)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetGetGatewayResult : Retrieve result of GetGateway operation
-func (discovery *DiscoveryV1) GetGetGatewayResult(response *core.DetailedResponse) *Gateway {
-	result, ok := response.Result.(*Gateway)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteGateway : Delete Gateway
 // Delete the specified gateway configuration.
-func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteGatewayOptions, "deleteGatewayOptions cannot be nil"); err != nil {
-		return nil, err
+func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayOptions) (result *GatewayDelete, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteGatewayOptions, "deleteGatewayOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteGatewayOptions, "deleteGatewayOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteGatewayOptions, "deleteGatewayOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/environments", "gateways"}
 	pathParameters := []string{*deleteGatewayOptions.EnvironmentID, *deleteGatewayOptions.GatewayID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteGatewayOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -3609,25 +3733,25 @@ func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayO
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Service.Options.Version)
+	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := discovery.Service.Request(request, new(GatewayDelete))
-	return response, err
+	response, err = discovery.Service.Request(request, new(GatewayDelete))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*GatewayDelete)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetDeleteGatewayResult : Retrieve result of DeleteGateway operation
-func (discovery *DiscoveryV1) GetDeleteGatewayResult(response *core.DetailedResponse) *GatewayDelete {
-	result, ok := response.Result.(*GatewayDelete)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AddDocumentOptions : The AddDocument options.
 type AddDocumentOptions struct {
@@ -3775,7 +3899,7 @@ func (options *AddTrainingDataOptions) SetHeaders(param map[string]string) *AddT
 	return options
 }
 
-// AggregationResult : AggregationResult struct
+// AggregationResult : Aggregation results for the specified query.
 type AggregationResult struct {
 
 	// Key that matched the aggregation type.
@@ -3826,11 +3950,13 @@ type Collection struct {
 	// `es` (Spanish).
 	Language *string `json:"language,omitempty"`
 
+	// Object containing collection document count information.
 	DocumentCounts *DocumentCounts `json:"document_counts,omitempty"`
 
 	// Summary of the disk usage statistics for this collection.
 	DiskUsage *CollectionDiskUsage `json:"disk_usage,omitempty"`
 
+	// Training status details.
 	TrainingStatus *TrainingStatus `json:"training_status,omitempty"`
 
 	// Object containing information about the crawl status of this collection.
@@ -4769,7 +4895,7 @@ const (
 	Credentials_Status_Invalid = "invalid"
 )
 
-// CredentialsList : CredentialsList struct
+// CredentialsList : Object containing array of credential definitions.
 type CredentialsList struct {
 
 	// An array of credential definitions that were created for this instance.
@@ -4854,7 +4980,7 @@ func (options *DeleteCollectionOptions) SetHeaders(param map[string]string) *Del
 	return options
 }
 
-// DeleteCollectionResponse : DeleteCollectionResponse struct
+// DeleteCollectionResponse : Response object returned when deleting a colleciton.
 type DeleteCollectionResponse struct {
 
 	// The unique identifier of the collection that is being deleted.
@@ -4909,7 +5035,7 @@ func (options *DeleteConfigurationOptions) SetHeaders(param map[string]string) *
 	return options
 }
 
-// DeleteConfigurationResponse : DeleteConfigurationResponse struct
+// DeleteConfigurationResponse : Information returned when a configuration is deleted.
 type DeleteConfigurationResponse struct {
 
 	// The unique identifier for the configuration.
@@ -5032,7 +5158,7 @@ func (options *DeleteDocumentOptions) SetHeaders(param map[string]string) *Delet
 	return options
 }
 
-// DeleteDocumentResponse : DeleteDocumentResponse struct
+// DeleteDocumentResponse : Information returned when a document is deleted.
 type DeleteDocumentResponse struct {
 
 	// The unique identifier of the document.
@@ -5077,7 +5203,7 @@ func (options *DeleteEnvironmentOptions) SetHeaders(param map[string]string) *De
 	return options
 }
 
-// DeleteEnvironmentResponse : DeleteEnvironmentResponse struct
+// DeleteEnvironmentResponse : Response object returned when deleting an environment.
 type DeleteEnvironmentResponse struct {
 
 	// The unique identifier for the environment.
@@ -5396,7 +5522,7 @@ type DiskUsage struct {
 	MaximumAllowedBytes *int64 `json:"maximum_allowed_bytes,omitempty"`
 }
 
-// DocumentAccepted : DocumentAccepted struct
+// DocumentAccepted : Information returned after an uploaded document is accepted.
 type DocumentAccepted struct {
 
 	// The unique identifier of the ingested document.
@@ -5418,7 +5544,7 @@ const (
 	DocumentAccepted_Status_Processing = "processing"
 )
 
-// DocumentCounts : DocumentCounts struct
+// DocumentCounts : Object containing collection document count information.
 type DocumentCounts struct {
 
 	// The total number of available documents in the collection.
@@ -5433,27 +5559,6 @@ type DocumentCounts struct {
 	// The number of documents that have been uploaded to the collection, but have not yet started processing.
 	Pending *int64 `json:"pending,omitempty"`
 }
-
-// DocumentSnapshot : DocumentSnapshot struct
-type DocumentSnapshot struct {
-
-	// The step in the document conversion process that the snapshot object represents.
-	Step *string `json:"step,omitempty"`
-
-	// Snapshot of the conversion.
-	Snapshot map[string]interface{} `json:"snapshot,omitempty"`
-}
-
-// Constants associated with the DocumentSnapshot.Step property.
-// The step in the document conversion process that the snapshot object represents.
-const (
-	DocumentSnapshot_Step_EnrichmentsOutput = "enrichments_output"
-	DocumentSnapshot_Step_HTMLInput = "html_input"
-	DocumentSnapshot_Step_HTMLOutput = "html_output"
-	DocumentSnapshot_Step_JSONNormalizationsOutput = "json_normalizations_output"
-	DocumentSnapshot_Step_JSONOutput = "json_output"
-	DocumentSnapshot_Step_NormalizationsOutput = "normalizations_output"
-)
 
 // DocumentStatus : Status information about a submitted document.
 type DocumentStatus struct {
@@ -5502,7 +5607,8 @@ const (
 	DocumentStatus_FileType_Word = "word"
 )
 
-// Enrichment : Enrichment struct
+// Enrichment : Enrichment step to perform on the document. Each enrichment is performed on the specified field in the order that
+// they are listed in the configuration.
 type Enrichment struct {
 
 	// Describes what the enrichment step does.
@@ -5544,6 +5650,7 @@ type Enrichment struct {
 // EnrichmentOptions : Options which are specific to a particular enrichment.
 type EnrichmentOptions struct {
 
+	// Object containing Natural Language Understanding features to be used.
 	Features *NluEnrichmentFeatures `json:"features,omitempty"`
 
 	// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language detection
@@ -5945,10 +6052,6 @@ type FederatedQueryOptions struct {
 	// functionality.
 	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
-	// A comma-separated list of collection IDs to be queried against. Required when querying multiple collections, invalid
-	// when performing a single collection query.
-	CollectionIds *string `json:"collection_ids,omitempty"`
-
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
 	Similar *bool `json:"similar,omitempty"`
@@ -5969,6 +6072,9 @@ type FederatedQueryOptions struct {
 	// current date. When a **number** type field is specified, returned results are biased towards higher field values.
 	// This parameter cannot be used in the same query as the **sort** parameter.
 	Bias *string `json:"bias,omitempty"`
+
+	// A comma-separated list of collection IDs to be queried against.
+	CollectionIds *string `json:"collection_ids,omitempty"`
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
 	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
@@ -6080,12 +6186,6 @@ func (options *FederatedQueryOptions) SetDeduplicateField(deduplicateField strin
 	return options
 }
 
-// SetCollectionIds : Allow user to set CollectionIds
-func (options *FederatedQueryOptions) SetCollectionIds(collectionIds string) *FederatedQueryOptions {
-	options.CollectionIds = core.StringPtr(collectionIds)
-	return options
-}
-
 // SetSimilar : Allow user to set Similar
 func (options *FederatedQueryOptions) SetSimilar(similar bool) *FederatedQueryOptions {
 	options.Similar = core.BoolPtr(similar)
@@ -6110,6 +6210,12 @@ func (options *FederatedQueryOptions) SetBias(bias string) *FederatedQueryOption
 	return options
 }
 
+// SetCollectionIds : Allow user to set CollectionIds
+func (options *FederatedQueryOptions) SetCollectionIds(collectionIds string) *FederatedQueryOptions {
+	options.CollectionIds = core.StringPtr(collectionIds)
+	return options
+}
+
 // SetXWatsonLoggingOptOut : Allow user to set XWatsonLoggingOptOut
 func (options *FederatedQueryOptions) SetXWatsonLoggingOptOut(xWatsonLoggingOptOut bool) *FederatedQueryOptions {
 	options.XWatsonLoggingOptOut = core.BoolPtr(xWatsonLoggingOptOut)
@@ -6122,7 +6228,7 @@ func (options *FederatedQueryOptions) SetHeaders(param map[string]string) *Feder
 	return options
 }
 
-// Field : Field struct
+// Field : Object containing field details.
 type Field struct {
 
 	// The name of the field.
@@ -6155,7 +6261,7 @@ type Filter struct {
 	Match *string `json:"match,omitempty"`
 }
 
-// FontSetting : FontSetting struct
+// FontSetting : Font matching configuration.
 type FontSetting struct {
 
 	// The HTML heading level that any content with the matching font is converted to.
@@ -6895,8 +7001,10 @@ type HTMLSettings struct {
 	// Array of HTML tags which are excluded but still retain content.
 	ExcludeTagsKeepContent []string `json:"exclude_tags_keep_content,omitempty"`
 
+	// Object containing an array of XPaths.
 	KeepContent *XPathPatterns `json:"keep_content,omitempty"`
 
+	// Object containing an array of XPaths.
 	ExcludeContent *XPathPatterns `json:"exclude_content,omitempty"`
 
 	// An array of HTML tag attributes to keep in the converted document.
@@ -7014,7 +7122,7 @@ func (options *ListCollectionsOptions) SetHeaders(param map[string]string) *List
 	return options
 }
 
-// ListCollectionsResponse : ListCollectionsResponse struct
+// ListCollectionsResponse : Response object containing an array of collection details.
 type ListCollectionsResponse struct {
 
 	// An array containing information about each collection in the environment.
@@ -7059,10 +7167,10 @@ func (options *ListConfigurationsOptions) SetHeaders(param map[string]string) *L
 	return options
 }
 
-// ListConfigurationsResponse : ListConfigurationsResponse struct
+// ListConfigurationsResponse : Object containing an array of available configurations.
 type ListConfigurationsResponse struct {
 
-	// An array of Configurations that are available for the service instance.
+	// An array of configurations that are available for the service instance.
 	Configurations []Configuration `json:"configurations,omitempty"`
 }
 
@@ -7122,7 +7230,7 @@ func (options *ListEnvironmentsOptions) SetHeaders(param map[string]string) *Lis
 	return options
 }
 
-// ListEnvironmentsResponse : ListEnvironmentsResponse struct
+// ListEnvironmentsResponse : Response object containing an array of configured environments.
 type ListEnvironmentsResponse struct {
 
 	// An array of [environments] that are available for the service instance.
@@ -7591,12 +7699,12 @@ type NluEnrichmentEntities struct {
 	// `false`.
 	SentenceLocations *bool `json:"sentence_locations,omitempty"`
 
-	// The enrichement model to use with entity extraction. May be a custom model provided by Watson Knowledge Studio, the
-	// public model for use with Knowledge Graph `en-news`, or the default public model `alchemy`.
+	// The enrichement model to use with entity extraction. May be a custom model provided by Watson Knowledge Studio, or
+	// the default public model `alchemy`.
 	Model *string `json:"model,omitempty"`
 }
 
-// NluEnrichmentFeatures : NluEnrichmentFeatures struct
+// NluEnrichmentFeatures : Object containing Natural Language Understanding features to be used.
 type NluEnrichmentFeatures struct {
 
 	// An object specifying the Keyword enrichment and related parameters.
@@ -7641,8 +7749,7 @@ type NluEnrichmentKeywords struct {
 type NluEnrichmentRelations struct {
 
 	// *For use with `natural_language_understanding` enrichments only.* The enrichement model to use with relationship
-	// extraction. May be a custom model provided by Watson Knowledge Studio, the public model for use with Knowledge Graph
-	// `en-news`, the default is`en-news`.
+	// extraction. May be a custom model provided by Watson Knowledge Studio, the default public model is`en-news`.
 	Model *string `json:"model,omitempty"`
 }
 
@@ -7669,7 +7776,7 @@ type NluEnrichmentSentiment struct {
 	Targets []string `json:"targets,omitempty"`
 }
 
-// NormalizationOperation : NormalizationOperation struct
+// NormalizationOperation : Object containing normalization operations.
 type NormalizationOperation struct {
 
 	// Identifies what type of operation to perform.
@@ -7776,15 +7883,17 @@ const (
 	Notice_Severity_Warning = "warning"
 )
 
-// PdfHeadingDetection : PdfHeadingDetection struct
+// PdfHeadingDetection : Object containing heading detection conversion settings for PDF documents.
 type PdfHeadingDetection struct {
 
+	// Array of font matching configurations.
 	Fonts []FontSetting `json:"fonts,omitempty"`
 }
 
 // PdfSettings : A list of PDF conversion settings.
 type PdfSettings struct {
 
+	// Object containing heading detection conversion settings for PDF documents.
 	Heading *PdfHeadingDetection `json:"heading,omitempty"`
 }
 
@@ -7802,176 +7911,6 @@ type QueryAggregation struct {
 
 	// Aggregations returned by Discovery.
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
-}
-
-// QueryEntitiesContext : Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted
-// to query the city of London in England your query would look for `London` with the context of `England`.
-type QueryEntitiesContext struct {
-
-	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted
-	// to query the city of London in England your query would look for `London` with the context of `England`.
-	Text *string `json:"text,omitempty"`
-}
-
-// QueryEntitiesEntity : A text string that appears within the entity text field.
-type QueryEntitiesEntity struct {
-
-	// Entity text content.
-	Text *string `json:"text,omitempty"`
-
-	// The type of the specified entity.
-	Type *string `json:"type,omitempty"`
-}
-
-// QueryEntitiesOptions : The QueryEntities options.
-type QueryEntitiesOptions struct {
-
-	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
-
-	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
-
-	// The entity query feature to perform. Supported features are `disambiguate` and `similar_entities`.
-	Feature *string `json:"feature,omitempty"`
-
-	// A text string that appears within the entity text field.
-	Entity *QueryEntitiesEntity `json:"entity,omitempty"`
-
-	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted
-	// to query the city of London in England your query would look for `London` with the context of `England`.
-	Context *QueryEntitiesContext `json:"context,omitempty"`
-
-	// The number of results to return. The default is `10`. The maximum is `1000`.
-	Count *int64 `json:"count,omitempty"`
-
-	// The number of evidence items to return for each result. The default is `0`. The maximum number of evidence items per
-	// query is 10,000.
-	EvidenceCount *int64 `json:"evidence_count,omitempty"`
-
-	// Allows users to set headers to be GDPR compliant
-	Headers map[string]string
-}
-
-// NewQueryEntitiesOptions : Instantiate QueryEntitiesOptions
-func (discovery *DiscoveryV1) NewQueryEntitiesOptions(environmentID string, collectionID string) *QueryEntitiesOptions {
-	return &QueryEntitiesOptions{
-		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-	}
-}
-
-// SetEnvironmentID : Allow user to set EnvironmentID
-func (options *QueryEntitiesOptions) SetEnvironmentID(environmentID string) *QueryEntitiesOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
-}
-
-// SetCollectionID : Allow user to set CollectionID
-func (options *QueryEntitiesOptions) SetCollectionID(collectionID string) *QueryEntitiesOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
-}
-
-// SetFeature : Allow user to set Feature
-func (options *QueryEntitiesOptions) SetFeature(feature string) *QueryEntitiesOptions {
-	options.Feature = core.StringPtr(feature)
-	return options
-}
-
-// SetEntity : Allow user to set Entity
-func (options *QueryEntitiesOptions) SetEntity(entity *QueryEntitiesEntity) *QueryEntitiesOptions {
-	options.Entity = entity
-	return options
-}
-
-// SetContext : Allow user to set Context
-func (options *QueryEntitiesOptions) SetContext(context *QueryEntitiesContext) *QueryEntitiesOptions {
-	options.Context = context
-	return options
-}
-
-// SetCount : Allow user to set Count
-func (options *QueryEntitiesOptions) SetCount(count int64) *QueryEntitiesOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
-}
-
-// SetEvidenceCount : Allow user to set EvidenceCount
-func (options *QueryEntitiesOptions) SetEvidenceCount(evidenceCount int64) *QueryEntitiesOptions {
-	options.EvidenceCount = core.Int64Ptr(evidenceCount)
-	return options
-}
-
-// SetHeaders : Allow user to set Headers
-func (options *QueryEntitiesOptions) SetHeaders(param map[string]string) *QueryEntitiesOptions {
-	options.Headers = param
-	return options
-}
-
-// QueryEntitiesResponse : An object that contains an array of entities resulting from the query.
-type QueryEntitiesResponse struct {
-
-	// Array of entities that results from the query.
-	Entities []QueryEntitiesResponseItem `json:"entities,omitempty"`
-}
-
-// QueryEntitiesResponseItem : Object containing Entity query response information.
-type QueryEntitiesResponseItem struct {
-
-	// Entity text content.
-	Text *string `json:"text,omitempty"`
-
-	// The type of the result entity.
-	Type *string `json:"type,omitempty"`
-
-	// List of different evidentiary items to support the result.
-	Evidence []QueryEvidence `json:"evidence,omitempty"`
-}
-
-// QueryEvidence : Description of evidence location supporting Knoweldge Graph query result.
-type QueryEvidence struct {
-
-	// The docuemnt ID (as indexed in Discovery) of the evidence location.
-	DocumentID *string `json:"document_id,omitempty"`
-
-	// The field of the document where the supporting evidence was identified.
-	Field *string `json:"field,omitempty"`
-
-	// The start location of the evidence in the identified field. This value is inclusive.
-	StartOffset *int64 `json:"start_offset,omitempty"`
-
-	// The end location of the evidence in the identified field. This value is inclusive.
-	EndOffset *int64 `json:"end_offset,omitempty"`
-
-	// An array of entity objects that show evidence of the result.
-	Entities []QueryEvidenceEntity `json:"entities,omitempty"`
-}
-
-// QueryEvidenceEntity : Entity description and location within evidence field.
-type QueryEvidenceEntity struct {
-
-	// The entity type for this entity. Possible types vary based on model used.
-	Type *string `json:"type,omitempty"`
-
-	// The original text of this entity as found in the evidence field.
-	Text *string `json:"text,omitempty"`
-
-	// The start location of the entity text in the identified field. This value is inclusive.
-	StartOffset *int64 `json:"start_offset,omitempty"`
-
-	// The end location of the entity text in the identified field. This value is exclusive.
-	EndOffset *int64 `json:"end_offset,omitempty"`
-}
-
-// QueryFilterType : QueryFilterType struct
-type QueryFilterType struct {
-
-	// A comma-separated list of types to exclude.
-	Exclude []string `json:"exclude,omitempty"`
-
-	// A comma-separated list of types to include. All other types are excluded.
-	Include []string `json:"include,omitempty"`
 }
 
 // QueryLogOptions : The QueryLog options.
@@ -8255,7 +8194,7 @@ func (options *QueryNoticesOptions) SetHeaders(param map[string]string) *QueryNo
 	return options
 }
 
-// QueryNoticesResponse : QueryNoticesResponse struct
+// QueryNoticesResponse : Object containing notice query results.
 type QueryNoticesResponse struct {
 
 	// The number of matching results.
@@ -8274,7 +8213,7 @@ type QueryNoticesResponse struct {
 	DuplicatesRemoved *int64 `json:"duplicates_removed,omitempty"`
 }
 
-// QueryNoticesResult : QueryNoticesResult struct
+// QueryNoticesResult : Query result object.
 type QueryNoticesResult map[string]interface{}
 
 // SetID : Allow user to set ID
@@ -8464,10 +8403,6 @@ type QueryOptions struct {
 	// functionality.
 	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
-	// A comma-separated list of collection IDs to be queried against. Required when querying multiple collections, invalid
-	// when performing a single collection query.
-	CollectionIds *string `json:"collection_ids,omitempty"`
-
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
 	Similar *bool `json:"similar,omitempty"`
@@ -8606,12 +8541,6 @@ func (options *QueryOptions) SetDeduplicateField(deduplicateField string) *Query
 	return options
 }
 
-// SetCollectionIds : Allow user to set CollectionIds
-func (options *QueryOptions) SetCollectionIds(collectionIds string) *QueryOptions {
-	options.CollectionIds = core.StringPtr(collectionIds)
-	return options
-}
-
 // SetSimilar : Allow user to set Similar
 func (options *QueryOptions) SetSimilar(similar bool) *QueryOptions {
 	options.Similar = core.BoolPtr(similar)
@@ -8648,7 +8577,7 @@ func (options *QueryOptions) SetHeaders(param map[string]string) *QueryOptions {
 	return options
 }
 
-// QueryPassages : QueryPassages struct
+// QueryPassages : A passage query result.
 type QueryPassages struct {
 
 	// The unique identifier of the document from which the passage has been extracted.
@@ -8668,165 +8597,6 @@ type QueryPassages struct {
 
 	// The label of the field from which the passage has been extracted.
 	Field *string `json:"field,omitempty"`
-}
-
-// QueryRelationsArgument : QueryRelationsArgument struct
-type QueryRelationsArgument struct {
-
-	// Array of query entities.
-	Entities []QueryEntitiesEntity `json:"entities,omitempty"`
-}
-
-// QueryRelationsEntity : QueryRelationsEntity struct
-type QueryRelationsEntity struct {
-
-	// Entity text content.
-	Text *string `json:"text,omitempty"`
-
-	// The type of the specified entity.
-	Type *string `json:"type,omitempty"`
-
-	// If false, implicit querying is performed. The default is `false`.
-	Exact *bool `json:"exact,omitempty"`
-}
-
-// QueryRelationsFilter : QueryRelationsFilter struct
-type QueryRelationsFilter struct {
-
-	RelationTypes *QueryFilterType `json:"relation_types,omitempty"`
-
-	EntityTypes *QueryFilterType `json:"entity_types,omitempty"`
-
-	// A comma-separated list of document IDs to include in the query.
-	DocumentIds []string `json:"document_ids,omitempty"`
-}
-
-// QueryRelationsOptions : The QueryRelations options.
-type QueryRelationsOptions struct {
-
-	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
-
-	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
-
-	// An array of entities to find relationships for.
-	Entities []QueryRelationsEntity `json:"entities,omitempty"`
-
-	// Entity text to provide context for the queried entity and rank based on that association. For example, if you wanted
-	// to query the city of London in England your query would look for `London` with the context of `England`.
-	Context *QueryEntitiesContext `json:"context,omitempty"`
-
-	// The sorting method for the relationships, can be `score` or `frequency`. `frequency` is the number of unique times
-	// each entity is identified. The default is `score`. This parameter cannot be used in the same query as the **bias**
-	// parameter.
-	Sort *string `json:"sort,omitempty"`
-
-	Filter *QueryRelationsFilter `json:"filter,omitempty"`
-
-	// The number of results to return. The default is `10`. The maximum is `1000`.
-	Count *int64 `json:"count,omitempty"`
-
-	// The number of evidence items to return for each result. The default is `0`. The maximum number of evidence items per
-	// query is 10,000.
-	EvidenceCount *int64 `json:"evidence_count,omitempty"`
-
-	// Allows users to set headers to be GDPR compliant
-	Headers map[string]string
-}
-
-// Constants associated with the QueryRelationsOptions.Sort property.
-// The sorting method for the relationships, can be `score` or `frequency`. `frequency` is the number of unique times
-// each entity is identified. The default is `score`. This parameter cannot be used in the same query as the **bias**
-// parameter.
-const (
-	QueryRelationsOptions_Sort_Frequency = "frequency"
-	QueryRelationsOptions_Sort_Score = "score"
-)
-
-// NewQueryRelationsOptions : Instantiate QueryRelationsOptions
-func (discovery *DiscoveryV1) NewQueryRelationsOptions(environmentID string, collectionID string) *QueryRelationsOptions {
-	return &QueryRelationsOptions{
-		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-	}
-}
-
-// SetEnvironmentID : Allow user to set EnvironmentID
-func (options *QueryRelationsOptions) SetEnvironmentID(environmentID string) *QueryRelationsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
-}
-
-// SetCollectionID : Allow user to set CollectionID
-func (options *QueryRelationsOptions) SetCollectionID(collectionID string) *QueryRelationsOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
-}
-
-// SetEntities : Allow user to set Entities
-func (options *QueryRelationsOptions) SetEntities(entities []QueryRelationsEntity) *QueryRelationsOptions {
-	options.Entities = entities
-	return options
-}
-
-// SetContext : Allow user to set Context
-func (options *QueryRelationsOptions) SetContext(context *QueryEntitiesContext) *QueryRelationsOptions {
-	options.Context = context
-	return options
-}
-
-// SetSort : Allow user to set Sort
-func (options *QueryRelationsOptions) SetSort(sort string) *QueryRelationsOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
-}
-
-// SetFilter : Allow user to set Filter
-func (options *QueryRelationsOptions) SetFilter(filter *QueryRelationsFilter) *QueryRelationsOptions {
-	options.Filter = filter
-	return options
-}
-
-// SetCount : Allow user to set Count
-func (options *QueryRelationsOptions) SetCount(count int64) *QueryRelationsOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
-}
-
-// SetEvidenceCount : Allow user to set EvidenceCount
-func (options *QueryRelationsOptions) SetEvidenceCount(evidenceCount int64) *QueryRelationsOptions {
-	options.EvidenceCount = core.Int64Ptr(evidenceCount)
-	return options
-}
-
-// SetHeaders : Allow user to set Headers
-func (options *QueryRelationsOptions) SetHeaders(param map[string]string) *QueryRelationsOptions {
-	options.Headers = param
-	return options
-}
-
-// QueryRelationsRelationship : QueryRelationsRelationship struct
-type QueryRelationsRelationship struct {
-
-	// The identified relationship type.
-	Type *string `json:"type,omitempty"`
-
-	// The number of times the relationship is mentioned.
-	Frequency *int64 `json:"frequency,omitempty"`
-
-	// Information about the relationship.
-	Arguments []QueryRelationsArgument `json:"arguments,omitempty"`
-
-	// List of different evidentiary items to support the result.
-	Evidence []QueryEvidence `json:"evidence,omitempty"`
-}
-
-// QueryRelationsResponse : QueryRelationsResponse struct
-type QueryRelationsResponse struct {
-
-	// Array of relationships for the relations query.
-	Relations []QueryRelationsRelationship `json:"relations,omitempty"`
 }
 
 // QueryResponse : A response containing the documents and aggregations for the query.
@@ -8857,7 +8627,7 @@ type QueryResponse struct {
 	RetrievalDetails *RetrievalDetails `json:"retrieval_details,omitempty"`
 }
 
-// QueryResult : QueryResult struct
+// QueryResult : Query result object.
 type QueryResult map[string]interface{}
 
 // SetID : Allow user to set ID
@@ -9278,144 +9048,8 @@ type Term struct {
 	// The field where the aggregation is located in the document.
 	Field *string `json:"field,omitempty"`
 
+	// The number of terms identified.
 	Count *int64 `json:"count,omitempty"`
-}
-
-// TestConfigurationInEnvironmentOptions : The TestConfigurationInEnvironment options.
-type TestConfigurationInEnvironmentOptions struct {
-
-	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
-
-	// The configuration to use to process the document. If this part is provided, then the provided configuration is used
-	// to process the document. If the **configuration_id** is also provided (both are present at the same time), then
-	// request is rejected. The maximum supported configuration size is 1 MB. Configuration parts larger than 1 MB are
-	// rejected. See the `GET /configurations/{configuration_id}` operation for an example configuration.
-	Configuration *string `json:"configuration,omitempty"`
-
-	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
-	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
-	// supported size are rejected.
-	File *os.File `json:"file,omitempty"`
-
-	// The filename for file.
-	Filename *string `json:"filename,omitempty"`
-
-	// The content type of file.
-	FileContentType *string `json:"file_content_type,omitempty"`
-
-	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
-	//   "Creator": "Johnny Appleseed",
-	//   "Subject": "Apples"
-	// } ```.
-	Metadata *string `json:"metadata,omitempty"`
-
-	// Specify to only run the input document through the given step instead of running the input document through the
-	// entire ingestion workflow. Valid values are `convert`, `enrich`, and `normalize`.
-	Step *string `json:"step,omitempty"`
-
-	// The ID of the configuration to use to process the document. If the **configuration** form part is also provided
-	// (both are present at the same time), then the request will be rejected.
-	ConfigurationID *string `json:"configuration_id,omitempty"`
-
-	// Allows users to set headers to be GDPR compliant
-	Headers map[string]string
-}
-
-// Constants associated with the TestConfigurationInEnvironmentOptions.Step property.
-// Specify to only run the input document through the given step instead of running the input document through the
-// entire ingestion workflow. Valid values are `convert`, `enrich`, and `normalize`.
-const (
-	TestConfigurationInEnvironmentOptions_Step_EnrichmentsOutput = "enrichments_output"
-	TestConfigurationInEnvironmentOptions_Step_HTMLInput = "html_input"
-	TestConfigurationInEnvironmentOptions_Step_HTMLOutput = "html_output"
-	TestConfigurationInEnvironmentOptions_Step_JSONNormalizationsOutput = "json_normalizations_output"
-	TestConfigurationInEnvironmentOptions_Step_JSONOutput = "json_output"
-	TestConfigurationInEnvironmentOptions_Step_NormalizationsOutput = "normalizations_output"
-)
-
-// NewTestConfigurationInEnvironmentOptions : Instantiate TestConfigurationInEnvironmentOptions
-func (discovery *DiscoveryV1) NewTestConfigurationInEnvironmentOptions(environmentID string) *TestConfigurationInEnvironmentOptions {
-	return &TestConfigurationInEnvironmentOptions{
-		EnvironmentID: core.StringPtr(environmentID),
-	}
-}
-
-// SetEnvironmentID : Allow user to set EnvironmentID
-func (options *TestConfigurationInEnvironmentOptions) SetEnvironmentID(environmentID string) *TestConfigurationInEnvironmentOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
-}
-
-// SetConfiguration : Allow user to set Configuration
-func (options *TestConfigurationInEnvironmentOptions) SetConfiguration(configuration string) *TestConfigurationInEnvironmentOptions {
-	options.Configuration = core.StringPtr(configuration)
-	return options
-}
-
-// SetFile : Allow user to set File
-func (options *TestConfigurationInEnvironmentOptions) SetFile(file *os.File) *TestConfigurationInEnvironmentOptions {
-	options.File = file
-	return options
-}
-
-// SetFilename : Allow user to set Filename
-func (options *TestConfigurationInEnvironmentOptions) SetFilename(filename string) *TestConfigurationInEnvironmentOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
-}
-
-// SetFileContentType : Allow user to set FileContentType
-func (options *TestConfigurationInEnvironmentOptions) SetFileContentType(fileContentType string) *TestConfigurationInEnvironmentOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
-}
-
-// SetMetadata : Allow user to set Metadata
-func (options *TestConfigurationInEnvironmentOptions) SetMetadata(metadata string) *TestConfigurationInEnvironmentOptions {
-	options.Metadata = core.StringPtr(metadata)
-	return options
-}
-
-// SetStep : Allow user to set Step
-func (options *TestConfigurationInEnvironmentOptions) SetStep(step string) *TestConfigurationInEnvironmentOptions {
-	options.Step = core.StringPtr(step)
-	return options
-}
-
-// SetConfigurationID : Allow user to set ConfigurationID
-func (options *TestConfigurationInEnvironmentOptions) SetConfigurationID(configurationID string) *TestConfigurationInEnvironmentOptions {
-	options.ConfigurationID = core.StringPtr(configurationID)
-	return options
-}
-
-// SetHeaders : Allow user to set Headers
-func (options *TestConfigurationInEnvironmentOptions) SetHeaders(param map[string]string) *TestConfigurationInEnvironmentOptions {
-	options.Headers = param
-	return options
-}
-
-// TestDocument : TestDocument struct
-type TestDocument struct {
-
-	// The unique identifier for the configuration.
-	ConfigurationID *string `json:"configuration_id,omitempty"`
-
-	// Status of the preview operation.
-	Status *string `json:"status,omitempty"`
-
-	// The number of 10-kB chunks of field data that were enriched. This can be used to estimate the cost of running a real
-	// ingestion.
-	EnrichedFieldUnits *int64 `json:"enriched_field_units,omitempty"`
-
-	// Format of the test document.
-	OriginalMediaType *string `json:"original_media_type,omitempty"`
-
-	// An array of objects that describe each step in the preview process.
-	Snapshots []DocumentSnapshot `json:"snapshots,omitempty"`
-
-	// An array of notice messages about the preview operation.
-	Notices []Notice `json:"notices,omitempty"`
 }
 
 // Timeslice : Timeslice struct
@@ -9476,7 +9110,7 @@ type TopHits struct {
 	Hits *TopHitsResults `json:"hits,omitempty"`
 }
 
-// TopHitsResults : TopHitsResults struct
+// TopHitsResults : Top hit information for this query.
 type TopHitsResults struct {
 
 	// Number of matching results.
@@ -9486,7 +9120,7 @@ type TopHitsResults struct {
 	Hits []QueryResult `json:"hits,omitempty"`
 }
 
-// TrainingDataSet : TrainingDataSet struct
+// TrainingDataSet : Training information for a specific collection.
 type TrainingDataSet struct {
 
 	// The environment id associated with this training data set.
@@ -9499,7 +9133,7 @@ type TrainingDataSet struct {
 	Queries []TrainingQuery `json:"queries,omitempty"`
 }
 
-// TrainingExample : TrainingExample struct
+// TrainingExample : Training example details.
 type TrainingExample struct {
 
 	// The document ID associated with this training example.
@@ -9512,14 +9146,14 @@ type TrainingExample struct {
 	Relevance *int64 `json:"relevance,omitempty"`
 }
 
-// TrainingExampleList : TrainingExampleList struct
+// TrainingExampleList : Object containing an array of training examples.
 type TrainingExampleList struct {
 
 	// Array of training examples.
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
-// TrainingQuery : TrainingQuery struct
+// TrainingQuery : Training query details.
 type TrainingQuery struct {
 
 	// The query ID associated with the training query.
@@ -9535,7 +9169,7 @@ type TrainingQuery struct {
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
-// TrainingStatus : TrainingStatus struct
+// TrainingStatus : Training status details.
 type TrainingStatus struct {
 
 	// The total number of training examples uploaded to this collection.
@@ -10064,21 +9698,24 @@ func (options *UpdateTrainingExampleOptions) SetHeaders(param map[string]string)
 	return options
 }
 
-// WordHeadingDetection : WordHeadingDetection struct
+// WordHeadingDetection : Object containing heading detection conversion settings for Microsoft Word documents.
 type WordHeadingDetection struct {
 
+	// Array of font matching configurations.
 	Fonts []FontSetting `json:"fonts,omitempty"`
 
+	// Array of Microsoft Word styles to convert.
 	Styles []WordStyle `json:"styles,omitempty"`
 }
 
 // WordSettings : A list of Word conversion settings.
 type WordSettings struct {
 
+	// Object containing heading detection conversion settings for Microsoft Word documents.
 	Heading *WordHeadingDetection `json:"heading,omitempty"`
 }
 
-// WordStyle : WordStyle struct
+// WordStyle : Microsoft Word styles to convert into a specified HTML head level.
 type WordStyle struct {
 
 	// HTML head level that content matching this style is tagged with.
@@ -10088,7 +9725,7 @@ type WordStyle struct {
 	Names []string `json:"names,omitempty"`
 }
 
-// XPathPatterns : XPathPatterns struct
+// XPathPatterns : Object containing an array of XPaths.
 type XPathPatterns struct {
 
 	// An array to XPaths.

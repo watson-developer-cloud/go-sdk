@@ -74,16 +74,14 @@ func TestProfile(t *testing.T) {
 	content := new(personalityinsightsv3.Content)
 	json.Unmarshal(file, content)
 
-	response, responseErr := service.Profile(
+	profile, _, responseErr := service.Profile(
 		&personalityinsightsv3.ProfileOptions{
 			Content:                content,
-			ContentType:            core.StringPtr(personalityinsightsv3.ProfileOptions_ContentType_ApplicationJSON),
+			ContentType:            core.StringPtr("application/json"),
 			RawScores:              core.BoolPtr(true),
 			ConsumptionPreferences: core.BoolPtr(true),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	profile := service.GetProfileResult(response)
 	assert.NotNil(t, profile)
 }

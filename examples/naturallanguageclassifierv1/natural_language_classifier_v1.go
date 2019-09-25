@@ -40,16 +40,12 @@ func main() {
 	createClassifierOptions := service.NewCreateClassifierOptions(metadata, data)
 
 	// Call the natural language classifier CreateClassifier method
-	response, responseErr := service.CreateClassifier(createClassifierOptions)
+	createResult, _, responseErr := service.CreateClassifier(createClassifierOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast create.Result to the specific dataType returned by CreateClassifier
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	createResult := service.GetCreateClassifierResult(response)
 
 	// Check successful casting
 	if createResult != nil {
@@ -62,15 +58,12 @@ func main() {
 		classifyOptions := service.NewClassifyOptions(*createResult.ClassifierID, "How hot will it be tomorrow?")
 
 		// Call the natural language classifier Classify method
-		response, responseErr := service.Classify(classifyOptions)
+		classifyResult, _, responseErr := service.Classify(classifyOptions)
 
 		// Check successful call
 		if responseErr != nil {
 			panic(responseErr)
 		}
-
-		// Cast result
-		classifyResult := service.GetClassifyResult(response)
 
 		// Check successful casting
 		if classifyResult != nil {
