@@ -65,18 +65,17 @@ func TestSession(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Create session
-	response, responseErr := service.CreateSession(
+	createSession, _, responseErr := service.CreateSession(
 		&assistantv2.CreateSessionOptions{
 			AssistantID: core.StringPtr(os.Getenv("ASSISTANT_ID")),
 		},
 	)
 	assert.Nil(t, responseErr)
 
-	createSession := service.GetCreateSessionResult(response)
 	assert.NotNil(t, createSession)
 
 	// Message
-	response, responseErr = service.Message(
+	message, _, responseErr := service.Message(
 		&assistantv2.MessageOptions{
 			AssistantID: core.StringPtr(os.Getenv("ASSISTANT_ID")),
 			SessionID:   createSession.SessionID,
@@ -101,11 +100,10 @@ func TestSession(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	message := service.GetMessageResult(response)
 	assert.NotNil(t, message)
 
 	// Delete session
-	response, responseErr = service.DeleteSession(
+	_, responseErr = service.DeleteSession(
 		&assistantv2.DeleteSessionOptions{
 			AssistantID: core.StringPtr(os.Getenv("ASSISTANT_ID")),
 			SessionID:   createSession.SessionID,

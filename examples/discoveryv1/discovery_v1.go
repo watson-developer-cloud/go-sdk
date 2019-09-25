@@ -30,7 +30,7 @@ func main() {
 	listEnvironmentsOptions := service.NewListEnvironmentsOptions()
 
 	// Call the discovery ListEnvironments method
-	response, responseErr := service.ListEnvironments(listEnvironmentsOptions)
+	listEnvironmentResult, response, responseErr := service.ListEnvironments(listEnvironmentsOptions)
 
 	// Check successful call
 	if responseErr != nil {
@@ -39,10 +39,6 @@ func main() {
 	}
 
 	fmt.Println(response)
-
-	// Cast listEnvironment.Result to the specific dataType returned by ListEnvironments
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	listEnvironmentResult := service.GetListEnvironmentsResult(response)
 
 	// Check successful casting
 	if listEnvironmentResult != nil {
@@ -66,7 +62,7 @@ func main() {
 		SetFile(file).
 		SetMetadata("{\"Creator\": \"Johnny Appleseed\", \"Subject\": \"Apples\" }")
 
-	response, responseErr = service.AddDocument(addDocumentOptions)
+	_, response, responseErr = service.AddDocument(addDocumentOptions)
 
 	if responseErr != nil {
 		panic(responseErr)
@@ -82,7 +78,7 @@ func main() {
 		SetFilter("extracted_metadata.sha1::9181d244*").
 		SetReturn("extracted_metadata.sha1")
 
-	response, responseErr = service.Query(queryOptions)
+	_, response, responseErr = service.Query(queryOptions)
 	if responseErr != nil {
 		panic(responseErr)
 	}

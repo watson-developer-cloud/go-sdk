@@ -174,9 +174,9 @@ if serviceErr != nil {
 listEnvironmentsOptions := service.NewListEnvironmentsOptions()
 
 // Call the discovery ListEnvironments method
-response, responseErr := service.ListEnvironments(listEnvironmentsOptions)
+listEnvironmentResult, response, responseErr := service.ListEnvironments(listEnvironmentsOptions)
 // Or you can directly pass in the model options
-// response, responseErr := service.ListEnvironments(&discoveryv1.ListEnvironmentsOptions{})
+// listEnvironmentResult, response, responseErr := service.ListEnvironments(&discoveryv1.ListEnvironmentsOptions{})
 
 // Check successful call
 if responseErr != nil {
@@ -192,10 +192,7 @@ response.GetHeaders()
 // Get the API response
 response.GetResult()
 
-// Cast response to the specific dataType returned by ListEnvironments
-// NOTE: most methods have a corresponding Get<methodName>Result() function
-listEnvironmentResult := service.GetListEnvironmentsResult(response)
-
+// Directly access the result
 if listEnvironmentResult != nil {
   fmt.Println(listEnvironmentResult.Environments[0])
   }

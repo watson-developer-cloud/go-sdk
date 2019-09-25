@@ -71,15 +71,13 @@ func TestConvertToHTML(t *testing.T) {
 		fmt.Println(testPDFErr)
 	}
 
-	response, responseErr := service.ConvertToHTML(
+	html, _, responseErr := service.ConvertToHTML(
 		&comparecomplyv1.ConvertToHTMLOptions{
 			File:     testPDF,
 			FileContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	html := service.GetConvertToHTMLResult(response)
 	assert.NotNil(t, html)
 }
 
@@ -92,15 +90,13 @@ func TestClassifyElements(t *testing.T) {
 		fmt.Println(testPDFErr)
 	}
 
-	response, responseErr := service.ClassifyElements(
+	classifyElements, _, responseErr := service.ClassifyElements(
 		&comparecomplyv1.ClassifyElementsOptions{
 			File:            testPDF,
 			FileContentType: core.StringPtr("application/pdf"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	classifyElements := service.GetClassifyElementsResult(response)
 	assert.NotNil(t, classifyElements)
 }
 
@@ -113,15 +109,13 @@ func TestExtractTables(t *testing.T) {
 		fmt.Println(fileErr)
 	}
 
-	response, responseErr := service.ExtractTables(
+	extractTables, _, responseErr := service.ExtractTables(
 		&comparecomplyv1.ExtractTablesOptions{
 			File:            file,
 			FileContentType: core.StringPtr("image/png"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	extractTables := service.GetExtractTablesResult(response)
 	assert.NotNil(t, extractTables)
 }
 
@@ -139,7 +133,7 @@ func TestCompareDocuments(t *testing.T) {
 		fmt.Println(file2Err)
 	}
 
-	response, responseErr := service.CompareDocuments(
+	compareDocuments, _, responseErr := service.CompareDocuments(
 		&comparecomplyv1.CompareDocumentsOptions{
 			File1:            file1,
 			File2:            file2,
@@ -148,8 +142,6 @@ func TestCompareDocuments(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	compareDocuments := service.GetCompareDocumentsResult(response)
 	assert.NotNil(t, compareDocuments)
 }
 
@@ -158,7 +150,7 @@ func TestFeedback(t *testing.T) {
 
 	// Add feedback
 	t.Skip()
-	response, responseErr := service.AddFeedback(
+	addFeedback, _, responseErr := service.AddFeedback(
 		&comparecomplyv1.AddFeedbackOptions{
 			UserID:  core.StringPtr("wonder woman"),
 			Comment: core.StringPtr("test comment"),
@@ -215,39 +207,22 @@ func TestFeedback(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	addFeedback := service.GetAddFeedbackResult(response)
 	assert.NotNil(t, addFeedback)
 
-	// Get feedback
-	// response, responseErr = service.GetFeedback(
-	// 	&comparecomplyv1.GetFeedbackOptions{
-	// 		FeedbackID: addFeedback.FeedbackID,
-	// 	},
-	// )
-	// assert.Nil(t, responseErr)
-
-	// getFeedback := service.GetGetFeedbackResult(response)
-	// assert.NotNil(t, getFeedback)
-
 	// List feedback
-	response, responseErr = service.ListFeedback(
+	listFeedback, _, responseErr := service.ListFeedback(
 		&comparecomplyv1.ListFeedbackOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	listFeedback := service.GetListFeedbackResult(response)
 	assert.NotNil(t, listFeedback)
 
 	// Delete feedback
-	response, responseErr = service.DeleteFeedback(
+	deleteFeedback, _, responseErr := service.DeleteFeedback(
 		&comparecomplyv1.DeleteFeedbackOptions{
 			FeedbackID: addFeedback.FeedbackID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	deleteFeedback := service.GetDeleteFeedbackResult(response)
 	assert.NotNil(t, deleteFeedback)
 }
 
@@ -255,12 +230,10 @@ func TestBatch(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Get batches
-	response, responseErr := service.ListBatches(
+	listBatches, _, responseErr := service.ListBatches(
 		&comparecomplyv1.ListBatchesOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	listBatches := service.GetListBatchesResult(response)
 	assert.NotNil(t, listBatches)
 
 	t.Skip()
@@ -276,7 +249,7 @@ func TestBatch(t *testing.T) {
 		fmt.Println(outputCredentialsFileErr)
 	}
 
-	response, responseErr = service.CreateBatch(
+	createBatch, _, responseErr := service.CreateBatch(
 		&comparecomplyv1.CreateBatchOptions{
 			Function:              core.StringPtr("html_conversion"),
 			InputCredentialsFile:  inputCredentialsFile,
@@ -288,30 +261,24 @@ func TestBatch(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	createBatch := service.GetCreateBatchResult(response)
 	assert.NotNil(t, createBatch)
 
 	// Get batch
-	response, responseErr = service.GetBatch(
+	getBatch, _, responseErr := service.GetBatch(
 		&comparecomplyv1.GetBatchOptions{
 			BatchID: createBatch.BatchID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	getBatch := service.GetGetBatchResult(response)
 	assert.NotNil(t, getBatch)
 
 	// Update batch
-	response, responseErr = service.UpdateBatch(
+	updateBatch, _, responseErr := service.UpdateBatch(
 		&comparecomplyv1.UpdateBatchOptions{
 			BatchID: createBatch.BatchID,
 			Action:  core.StringPtr("rescan"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	updateBatch := service.GetUpdateBatchResult(response)
 	assert.NotNil(t, updateBatch)
 }

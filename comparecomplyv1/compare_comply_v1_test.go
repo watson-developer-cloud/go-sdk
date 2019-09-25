@@ -1,3 +1,19 @@
+/**
+ * (C) Copyright IBM Corp. 2019.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package comparecomplyv1_test
 
 import (
@@ -56,15 +72,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ConvertToHTML(nil)
+				_, returnValue, returnValueErr := testService.ConvertToHTML(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				convertToHTMLOptions := testService.NewConvertToHTMLOptions(testPDF)
-				returnValue, returnValueErr = testService.ConvertToHTML(convertToHTMLOptions)
+				result, returnValue, returnValueErr := testService.ConvertToHTML(convertToHTMLOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetConvertToHTMLResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -115,15 +130,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ClassifyElements(nil)
+				_, returnValue, returnValueErr := testService.ClassifyElements(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				classifyElementsOptions := testService.NewClassifyElementsOptions(testPDF)
-				returnValue, returnValueErr = testService.ClassifyElements(classifyElementsOptions)
+				result, returnValue, returnValueErr := testService.ClassifyElements(classifyElementsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetClassifyElementsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -174,15 +188,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ExtractTables(nil)
+				_, returnValue, returnValueErr := testService.ExtractTables(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				extractTablesOptions := testService.NewExtractTablesOptions(testPDF)
-				returnValue, returnValueErr = testService.ExtractTables(extractTablesOptions)
+				result, returnValue, returnValueErr := testService.ExtractTables(extractTablesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetExtractTablesResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -237,15 +250,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.CompareDocuments(nil)
+				_, returnValue, returnValueErr := testService.CompareDocuments(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				compareDocumentsOptions := testService.NewCompareDocumentsOptions(file1, file2)
-				returnValue, returnValueErr = testService.CompareDocuments(compareDocumentsOptions)
+				result, returnValue, returnValueErr := testService.CompareDocuments(compareDocumentsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetCompareDocumentsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -292,7 +304,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.AddFeedback(nil)
+				_, returnValue, returnValueErr := testService.AddFeedback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				addFeedbackOptions := testService.NewAddFeedbackOptions(&comparecomplyv1.FeedbackDataInput{
@@ -345,11 +357,10 @@ var _ = Describe("CompareComplyV1", func() {
 						},
 					},
 				})
-				returnValue, returnValueErr = testService.AddFeedback(addFeedbackOptions)
+				result, returnValue, returnValueErr := testService.AddFeedback(addFeedbackOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetAddFeedbackResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -379,7 +390,7 @@ var _ = Describe("CompareComplyV1", func() {
 					Expect(req.Header["Authorization"]).ToNot(BeNil())
 					Expect(req.Header["Authorization"][0]).To(Equal("Bearer oAeisG8yqPY7sFR_x66Z15"))
 					res.Header().Set("Content-type", "application/json")
-					fmt.Fprintf(res, `{"status":"deleted"}`)
+					fmt.Fprintf(res, `{"status":200}`)
 				}
 			}))
 			It("Succeed to call DeleteFeedback", func() {
@@ -398,15 +409,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteFeedback(nil)
+				_, returnValue, returnValueErr := testService.DeleteFeedback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteFeedbackOptions := testService.NewDeleteFeedbackOptions(feedbackID)
-				returnValue, returnValueErr = testService.DeleteFeedback(deleteFeedbackOptions)
+				result, returnValue, returnValueErr := testService.DeleteFeedback(deleteFeedbackOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetDeleteFeedbackResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -455,15 +465,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetFeedback(nil)
+				_, returnValue, returnValueErr := testService.GetFeedback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getFeedbackOptions := testService.NewGetFeedbackOptions(feedbackID)
-				returnValue, returnValueErr = testService.GetFeedback(getFeedbackOptions)
+				result, returnValue, returnValueErr := testService.GetFeedback(getFeedbackOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetGetFeedbackResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -510,15 +519,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListFeedback(nil)
+				_, returnValue, returnValueErr := testService.ListFeedback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listFeedbackOptions := testService.NewListFeedbackOptions()
-				returnValue, returnValueErr = testService.ListFeedback(listFeedbackOptions)
+				result, returnValue, returnValueErr := testService.ListFeedback(listFeedbackOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetListFeedbackResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -579,15 +587,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.CreateBatch(nil)
+				_, returnValue, returnValueErr := testService.CreateBatch(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				createBatchOptions := testService.NewCreateBatchOptions(function, inputCredentialsFile, inputBucketLocation, inputBucketName, outputCredentialsFile, outputBucketLocation, outputBucketName)
-				returnValue, returnValueErr = testService.CreateBatch(createBatchOptions)
+				result, returnValue, returnValueErr := testService.CreateBatch(createBatchOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetCreateBatchResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -636,15 +643,13 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetBatch(nil)
+				_, returnValue, returnValueErr := testService.GetBatch(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getBatchOptions := testService.NewGetBatchOptions(batchID)
-				returnValue, returnValueErr = testService.GetBatch(getBatchOptions)
+				result, returnValue, returnValueErr := testService.GetBatch(getBatchOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetBatchResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -691,15 +696,14 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListBatches(nil)
+				_, returnValue, returnValueErr := testService.ListBatches(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listBatchesOptions := testService.NewListBatchesOptions()
-				returnValue, returnValueErr = testService.ListBatches(listBatchesOptions)
+				result, returnValue, returnValueErr := testService.ListBatches(listBatchesOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 
-				result := testService.GetListBatchesResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -749,15 +753,13 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.UpdateBatch(nil)
+				_, returnValue, returnValueErr := testService.UpdateBatch(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				updateBatchOptions := testService.NewUpdateBatchOptions(batchID, action)
-				returnValue, returnValueErr = testService.UpdateBatch(updateBatchOptions)
+				result, returnValue, returnValueErr := testService.UpdateBatch(updateBatchOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetUpdateBatchResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})

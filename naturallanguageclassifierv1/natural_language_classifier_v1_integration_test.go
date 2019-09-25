@@ -19,7 +19,6 @@ package naturallanguageclassifierv1_test
  */
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"testing"
@@ -73,35 +72,29 @@ func TestClassifier(t *testing.T) {
 	trainingData, trainingDataErr := os.Open(pwd + "/../resources/weather_training_data.csv")
 	assert.Nil(t, trainingDataErr)
 
-	response, responseErr := service.CreateClassifier(
+	createClassifier, _, responseErr := service.CreateClassifier(
 		&naturallanguageclassifierv1.CreateClassifierOptions{
 			TrainingData: trainingData,
 			TrainingMetadata:     metadata,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	createClassifier := service.GetCreateClassifierResult(response)
 	assert.NotNil(t, createClassifier)
 
 	// List classifier
-	response, responseErr = service.ListClassifiers(
+	listClassifer, _, responseErr := service.ListClassifiers(
 		&naturallanguageclassifierv1.ListClassifiersOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	listClassifer := service.GetListClassifiersResult(response)
 	assert.NotNil(t, listClassifer)
 
 	// Get classifier
-	response, responseErr = service.GetClassifier(
+	getClassifer, _, responseErr := service.GetClassifier(
 		&naturallanguageclassifierv1.GetClassifierOptions{
 			ClassifierID: createClassifier.ClassifierID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	getClassifer := service.GetGetClassifierResult(response)
 	assert.NotNil(t, getClassifer)
 
 	classifier = createClassifier
@@ -114,16 +107,13 @@ func TestClassify(t *testing.T) {
 	if *classifier.Status != "Available" {
 		t.Skip("Skip test classify")
 	}
-	response, responseErr := service.Classify(
+	classify, _, responseErr := service.Classify(
 		&naturallanguageclassifierv1.ClassifyOptions{
 			ClassifierID: classifier.ClassifierID,
 			Text:         core.StringPtr("How hot will it be today?"),
 		},
 	)
 	assert.Nil(t, responseErr)
-	fmt.Println(response)
-
-	classify := service.GetClassifyResult(response)
 	assert.NotNil(t, classify)
 }
 
@@ -134,7 +124,7 @@ func TestClassifyCollection(t *testing.T) {
 		t.Skip("Skip test classify collection.")
 	}
 	// classify collection
-	response, responseErr := service.ClassifyCollection(
+	classifyCollection, _, responseErr := service.ClassifyCollection(
 		&naturallanguageclassifierv1.ClassifyCollectionOptions{
 			ClassifierID: classifier.ClassifierID,
 			Collection: []naturallanguageclassifierv1.ClassifyInput{
@@ -148,8 +138,6 @@ func TestClassifyCollection(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	classifyCollection := service.GetClassifyCollectionResult(response)
 	assert.NotNil(t, classifyCollection)
 }
 

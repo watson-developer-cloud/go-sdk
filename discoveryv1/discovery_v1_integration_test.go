@@ -69,17 +69,16 @@ func TestEnvironment(t *testing.T) {
 	shouldSkipTest(t)
 
 	// List environment
-	response, responseErr := service.ListEnvironments(
+	listEnvironments, _, responseErr := service.ListEnvironments(
 		&discoveryv1.ListEnvironmentsOptions{},
 	)
 	assert.Nil(t, responseErr)
 
-	listEnvironments := service.GetListEnvironmentsResult(response)
 	assert.NotNil(t, listEnvironments)
 
 	t.Skip("Skip rest of environment API tests")
 	// Create environment
-	response, responseErr = service.CreateEnvironment(
+	createEnvironment, _, responseErr := service.CreateEnvironment(
 		&discoveryv1.CreateEnvironmentOptions{
 			Name:        core.StringPtr("test environment for SDKS DO NOT DELETE"),
 			Description: core.StringPtr("My environment"),
@@ -88,7 +87,6 @@ func TestEnvironment(t *testing.T) {
 
 	assert.Nil(t, responseErr)
 
-	createEnvironment := service.GetCreateEnvironmentResult(response)
 	assert.NotNil(t, createEnvironment)
 
 	var newsEnvironmentId *string
@@ -98,7 +96,7 @@ func TestEnvironment(t *testing.T) {
 		}
 	}
 	if newsEnvironmentId != nil {
-		response, responseErr = service.ListCollections(
+		_, _, responseErr = service.ListCollections(
 			&discoveryv1.ListCollectionsOptions{
 				EnvironmentID: newsEnvironmentId,
 			},
@@ -107,18 +105,17 @@ func TestEnvironment(t *testing.T) {
 	}
 
 	// Get environment
-	response, responseErr = service.GetEnvironment(
+	getEnvironment, _, responseErr := service.GetEnvironment(
 		&discoveryv1.GetEnvironmentOptions{
 			EnvironmentID: createEnvironment.EnvironmentID,
 		},
 	)
 	assert.Nil(t, responseErr)
 
-	getEnvironment := service.GetGetEnvironmentResult(response)
 	assert.NotNil(t, getEnvironment)
 
 	// Update environment
-	response, responseErr = service.UpdateEnvironment(
+	updateEnvironment, _, responseErr := service.UpdateEnvironment(
 		&discoveryv1.UpdateEnvironmentOptions{
 			EnvironmentID: createEnvironment.EnvironmentID,
 			Name:          core.StringPtr("Updated name"),
@@ -127,7 +124,6 @@ func TestEnvironment(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	updateEnvironment := service.GetUpdateEnvironmentResult(response)
 	assert.NotNil(t, updateEnvironment)
 }
 
@@ -135,7 +131,7 @@ func TestConfiguration(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Create Configuraion
-	response, responseErr := service.CreateConfiguration(
+	createConfiguration, _, responseErr := service.CreateConfiguration(
 		&discoveryv1.CreateConfigurationOptions{
 			EnvironmentID: environmentID,
 			Name:          core.StringPtr("Test configuration for GO"),
@@ -143,39 +139,20 @@ func TestConfiguration(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	createConfiguration := service.GetCreateConfigurationResult(response)
 	assert.NotNil(t, createConfiguration)
 
 	// List Configuraion
-	response, responseErr = service.ListConfigurations(
+	listConfiguration, _, responseErr := service.ListConfigurations(
 		&discoveryv1.ListConfigurationsOptions{
 			EnvironmentID: environmentID,
 		},
 	)
 	assert.Nil(t, responseErr)
 
-	listConfiguration := service.GetListConfigurationsResult(response)
 	assert.NotNil(t, listConfiguration)
 
-	// Test configuration
-	pwd, _ := os.Getwd()
-	file, fileErr := os.Open(pwd + "/../resources/simple.html")
-	assert.Nil(t, fileErr)
-
-	response, responseErr = service.TestConfigurationInEnvironment(
-		&discoveryv1.TestConfigurationInEnvironmentOptions{
-			EnvironmentID:   environmentID,
-			ConfigurationID: createConfiguration.ConfigurationID,
-			File:            file,
-		},
-	)
-	assert.Nil(t, responseErr)
-
-	testConfiguration := service.GetTestConfigurationInEnvironmentResult(response)
-	assert.NotNil(t, testConfiguration)
-
 	// Get configuration
-	response, responseErr = service.GetConfiguration(
+	getConfiguration, _, responseErr := service.GetConfiguration(
 		&discoveryv1.GetConfigurationOptions{
 			EnvironmentID:   environmentID,
 			ConfigurationID: createConfiguration.ConfigurationID,
@@ -183,11 +160,10 @@ func TestConfiguration(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	getConfiguration := service.GetGetConfigurationResult(response)
 	assert.NotNil(t, getConfiguration)
 
 	// Update configuration
-	response, responseErr = service.UpdateConfiguration(
+	updateConfiguration, _, responseErr := service.UpdateConfiguration(
 		&discoveryv1.UpdateConfigurationOptions{
 			EnvironmentID:   environmentID,
 			ConfigurationID: createConfiguration.ConfigurationID,
@@ -196,7 +172,6 @@ func TestConfiguration(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	updateConfiguration := service.GetUpdateConfigurationResult(response)
 	assert.NotNil(t, updateConfiguration)
 
 	configurationID = createConfiguration.ConfigurationID
@@ -206,7 +181,7 @@ func TestCollection(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Create collection
-	response, responseErr := service.CreateCollection(
+	createCollection, _, responseErr := service.CreateCollection(
 		&discoveryv1.CreateCollectionOptions{
 			EnvironmentID:   environmentID,
 			ConfigurationID: configurationID,
@@ -215,22 +190,20 @@ func TestCollection(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	createCollection := service.GetCreateCollectionResult(response)
 	assert.NotNil(t, createCollection)
 
 	// List collection
-	response, responseErr = service.ListCollections(
+	listCollection, _, responseErr := service.ListCollections(
 		&discoveryv1.ListCollectionsOptions{
 			EnvironmentID: environmentID,
 		},
 	)
 	assert.Nil(t, responseErr)
 
-	listCollection := service.GetListCollectionsResult(response)
 	assert.NotNil(t, listCollection)
 
 	// Get collection
-	response, responseErr = service.GetCollection(
+	getCollection, _, responseErr := service.GetCollection(
 		&discoveryv1.GetCollectionOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  createCollection.CollectionID,
@@ -238,11 +211,10 @@ func TestCollection(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	getCollection := service.GetGetCollectionResult(response)
 	assert.NotNil(t, getCollection)
 
 	// Update collection
-	response, responseErr = service.UpdateCollection(
+	updateCollection, _, responseErr := service.UpdateCollection(
 		&discoveryv1.UpdateCollectionOptions{
 			EnvironmentID:   environmentID,
 			CollectionID:    createCollection.CollectionID,
@@ -253,11 +225,10 @@ func TestCollection(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	updateCollection := service.GetUpdateCollectionResult(response)
 	assert.NotNil(t, updateCollection)
 
 	// List collection fields
-	response, responseErr = service.ListCollectionFields(
+	listCollectionFields, _, responseErr := service.ListCollectionFields(
 		&discoveryv1.ListCollectionFieldsOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  createCollection.CollectionID,
@@ -265,11 +236,10 @@ func TestCollection(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	listCollectionFields := service.GetListCollectionFieldsResult(response)
 	assert.NotNil(t, listCollectionFields)
 
 	// List fields
-	response, responseErr = service.ListFields(
+	listFields, _, responseErr := service.ListFields(
 		&discoveryv1.ListFieldsOptions{
 			EnvironmentID: environmentID,
 			CollectionIds: []string{*createCollection.CollectionID},
@@ -277,7 +247,6 @@ func TestCollection(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	listFields := service.GetListFieldsResult(response)
 	assert.NotNil(t, listFields)
 
 	collectionID = createCollection.CollectionID
@@ -291,7 +260,7 @@ func TestDocument(t *testing.T) {
 	file, fileErr := os.Open(pwd + "/../resources/example.html")
 	assert.Nil(t, fileErr)
 
-	response, responseErr := service.AddDocument(
+	addDocument, _, responseErr := service.AddDocument(
 		&discoveryv1.AddDocumentOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  collectionID,
@@ -300,11 +269,10 @@ func TestDocument(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	addDocument := service.GetAddDocumentResult(response)
 	assert.NotNil(t, addDocument)
 
 	// Get document
-	response, responseErr = service.GetDocumentStatus(
+	getDocument, _, responseErr := service.GetDocumentStatus(
 		&discoveryv1.GetDocumentStatusOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  collectionID,
@@ -313,14 +281,13 @@ func TestDocument(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	getDocument := service.GetGetDocumentStatusResult(response)
 	assert.NotNil(t, getDocument)
 
 	// Update document
 	fileInfo, fileInfoErr := os.Open(pwd + "/../resources/example.html")
 	assert.Nil(t, fileInfoErr)
 
-	response, responseErr = service.UpdateDocument(
+	updateDocument, _, responseErr := service.UpdateDocument(
 		&discoveryv1.UpdateDocumentOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  collectionID,
@@ -330,11 +297,10 @@ func TestDocument(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	updateDocument := service.GetUpdateDocumentResult(response)
 	assert.NotNil(t, updateDocument)
 
 	// Delete document
-	response, responseErr = service.DeleteDocument(
+	_, _, responseErr = service.DeleteDocument(
 		&discoveryv1.DeleteDocumentOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  collectionID,
@@ -348,7 +314,7 @@ func TestQuery(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Query
-	response, responseErr := service.Query(
+	query, _, responseErr := service.Query(
 		&discoveryv1.QueryOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  collectionID,
@@ -358,7 +324,6 @@ func TestQuery(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	query := service.GetQueryResult(response)
 	assert.NotNil(t, query)
 }
 
@@ -367,7 +332,7 @@ func TestTokenizationDictionary(t *testing.T) {
 
 	t.Skip("Disable temporarily")
 	// Create collection in Japanese as create tokenization dictionary is only supported in JA
-	response, responseErr := service.CreateCollection(
+	testCollection, _, responseErr := service.CreateCollection(
 		&discoveryv1.CreateCollectionOptions{
 			EnvironmentID: environmentID,
 			Name:          core.StringPtr("Test Tokenization Dictionary For Golang"),
@@ -376,11 +341,10 @@ func TestTokenizationDictionary(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	testCollection := service.GetCreateCollectionResult(response)
 	assert.NotNil(t, testCollection)
 
 	// create tokenization dictionary
-	response, responseErr = service.CreateTokenizationDictionary(
+	createTokenizationDictionary, _, responseErr := service.CreateTokenizationDictionary(
 		&discoveryv1.CreateTokenizationDictionaryOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  testCollection.CollectionID,
@@ -395,22 +359,20 @@ func TestTokenizationDictionary(t *testing.T) {
 		},
 	)
 
-	createTokenizationDictionary := service.GetCreateTokenizationDictionaryResult(response)
 	assert.NotNil(t, createTokenizationDictionary)
 
 	// get tokenization dictionary status
-	response, responseErr = service.GetTokenizationDictionaryStatus(
+	getTokenizationDictionaryStatus, _, responseErr := service.GetTokenizationDictionaryStatus(
 		&discoveryv1.GetTokenizationDictionaryStatusOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  testCollection.CollectionID,
 		},
 	)
 
-	getTokenizationDictionaryStatus := service.GetGetTokenizationDictionaryStatusResult(response)
 	assert.NotNil(t, getTokenizationDictionaryStatus)
 
 	// delete tokenization dictionary
-	response, responseErr = service.DeleteTokenizationDictionary(
+	_, responseErr = service.DeleteTokenizationDictionary(
 		&discoveryv1.DeleteTokenizationDictionaryOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  testCollection.CollectionID,
@@ -427,7 +389,7 @@ func TestStopwordOperations(t *testing.T) {
 	file, fileErr := os.Open(pwd + "/../resources/stopwords.txt")
 	assert.Nil(t, fileErr)
 
-	response, responseErr := service.CreateStopwordList(
+	stopwordsListStatus, _, responseErr := service.CreateStopwordList(
 		&discoveryv1.CreateStopwordListOptions{
 			EnvironmentID:    environmentID,
 			CollectionID:     collectionID,
@@ -437,7 +399,6 @@ func TestStopwordOperations(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	stopwordsListStatus := service.GetCreateStopwordListResult(response)
 	assert.NotNil(t, stopwordsListStatus)
 
 	// Delete stopword list
@@ -454,7 +415,7 @@ func TestGatewayConfiguration(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Create gateway
-	response, responseErr := service.CreateGateway(
+	createGateway, _, responseErr := service.CreateGateway(
 		&discoveryv1.CreateGatewayOptions{
 			EnvironmentID: environmentID,
 			Name:          core.StringPtr("test-gateway-configuration-go"),
@@ -462,11 +423,10 @@ func TestGatewayConfiguration(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	createGateway := service.GetCreateGatewayResult(response)
 	assert.NotNil(t, createGateway)
 
 	// Get gateway
-	response, responseErr = service.GetGateway(
+	getGateway, _, responseErr := service.GetGateway(
 		&discoveryv1.GetGatewayOptions{
 			EnvironmentID: environmentID,
 			GatewayID:     createGateway.GatewayID,
@@ -474,22 +434,20 @@ func TestGatewayConfiguration(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	getGateway := service.GetGetGatewayResult(response)
 	assert.NotNil(t, getGateway)
 
 	// List gateways
-	response, responseErr = service.ListGateways(
+	listGateways, _, responseErr := service.ListGateways(
 		&discoveryv1.ListGatewaysOptions{
 			EnvironmentID: environmentID,
 		},
 	)
 	assert.Nil(t, responseErr)
 
-	listGateways := service.GetListGatewaysResult(response)
 	assert.NotNil(t, listGateways)
 
 	// Delete gateway
-	response, responseErr = service.DeleteGateway(
+	deleteGateway, _, responseErr := service.DeleteGateway(
 		&discoveryv1.DeleteGatewayOptions{
 			EnvironmentID: environmentID,
 			GatewayID:     getGateway.GatewayID,
@@ -497,7 +455,6 @@ func TestGatewayConfiguration(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 
-	deleteGateway := service.GetDeleteGatewayResult(response)
 	assert.NotNil(t, deleteGateway)
 }
 
@@ -505,14 +462,13 @@ func TestDeleteOperations(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Delete all collections
-	response, responseErr := service.ListCollections(
+	listCollection, _, responseErr := service.ListCollections(
 		&discoveryv1.ListCollectionsOptions{
 			EnvironmentID: environmentID,
 		},
 	)
 	assert.Nil(t, responseErr)
 
-	listCollection := service.GetListCollectionsResult(response)
 	assert.NotNil(t, listCollection)
 
 	for _, collection := range listCollection.Collections {
@@ -527,14 +483,13 @@ func TestDeleteOperations(t *testing.T) {
 	}
 
 	// Delete all configurations
-	response, responseErr = service.ListConfigurations(
+	listConfigurations, _, responseErr := service.ListConfigurations(
 		&discoveryv1.ListConfigurationsOptions{
 			EnvironmentID: environmentID,
 		},
 	)
 	assert.Nil(t, responseErr)
 
-	listConfigurations := service.GetListConfigurationsResult(response)
 	assert.NotNil(t, listConfigurations)
 
 	for _, configuration := range listConfigurations.Configurations {

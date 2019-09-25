@@ -18,6 +18,7 @@
 package naturallanguageunderstandingv1
 
 import (
+	"fmt"
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
@@ -36,40 +37,45 @@ import (
 // See: https://cloud.ibm.com/docs/services/natural-language-understanding/
 type NaturalLanguageUnderstandingV1 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
 
 // NaturalLanguageUnderstandingV1Options : Service options
 type NaturalLanguageUnderstandingV1Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewNaturalLanguageUnderstandingV1 : Instantiate NaturalLanguageUnderstandingV1
 func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Options) (service *NaturalLanguageUnderstandingV1, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
 		URL:             options.URL,
 		Authenticator:   options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("natural-language-understanding")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("natural-language-understanding")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "natural-language-understanding", "Natural Language Understanding")
 	if err != nil {
 		return
 	}
-	
-	service = &NaturalLanguageUnderstandingV1{Service: baseService}
+
+	service = &NaturalLanguageUnderstandingV1{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
 }
@@ -86,19 +92,24 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 // - Semantic roles
 // - Sentiment
 // - Syntax (Experimental).
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(analyzeOptions *AnalyzeOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(analyzeOptions, "analyzeOptions cannot be nil"); err != nil {
-		return nil, err
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(analyzeOptions *AnalyzeOptions) (result *AnalysisResults, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(analyzeOptions, "analyzeOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(analyzeOptions, "analyzeOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(analyzeOptions, "analyzeOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/analyze"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range analyzeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -111,7 +122,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
+	builder.AddQuery("version", naturalLanguageUnderstanding.Version)
 
 	body := make(map[string]interface{})
 	if analyzeOptions.Features != nil {
@@ -144,42 +155,47 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 	if analyzeOptions.LimitTextCharacters != nil {
 		body["limit_text_characters"] = analyzeOptions.LimitTextCharacters
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageUnderstanding.Service.Request(request, new(AnalysisResults))
-	return response, err
+	response, err = naturalLanguageUnderstanding.Service.Request(request, new(AnalysisResults))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*AnalysisResults)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetAnalyzeResult : Retrieve result of Analyze operation
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetAnalyzeResult(response *core.DetailedResponse) *AnalysisResults {
-	result, ok := response.Result.(*AnalysisResults)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ListModels : List models
 // Lists Watson Knowledge Studio [custom entities and relations
 // models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
 // that are deployed to your Natural Language Understanding service.
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(listModelsOptions *ListModelsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listModelsOptions, "listModelsOptions"); err != nil {
-		return nil, err
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(listModelsOptions *ListModelsOptions) (result *ListModelsResults, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listModelsOptions, "listModelsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/models"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -191,41 +207,46 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(l
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
+	builder.AddQuery("version", naturalLanguageUnderstanding.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageUnderstanding.Service.Request(request, new(ListModelsResults))
-	return response, err
+	response, err = naturalLanguageUnderstanding.Service.Request(request, new(ListModelsResults))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ListModelsResults)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetListModelsResult : Retrieve result of ListModels operation
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetListModelsResult(response *core.DetailedResponse) *ListModelsResults {
-	result, ok := response.Result.(*ListModelsResults)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteModel : Delete model
 // Deletes a custom model.
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(deleteModelOptions *DeleteModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteModelOptions, "deleteModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(deleteModelOptions *DeleteModelOptions) (result *DeleteModelResults, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteModelOptions, "deleteModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteModelOptions, "deleteModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteModelOptions, "deleteModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/models"}
 	pathParameters := []string{*deleteModelOptions.ModelID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageUnderstanding.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -237,25 +258,25 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", naturalLanguageUnderstanding.Service.Options.Version)
+	builder.AddQuery("version", naturalLanguageUnderstanding.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageUnderstanding.Service.Request(request, new(DeleteModelResults))
-	return response, err
+	response, err = naturalLanguageUnderstanding.Service.Request(request, new(DeleteModelResults))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DeleteModelResults)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetDeleteModelResult : Retrieve result of DeleteModel operation
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetDeleteModelResult(response *core.DetailedResponse) *DeleteModelResults {
-	result, ok := response.Result.(*DeleteModelResults)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // AnalysisResults : Results of the analysis, organized by feature.
 type AnalysisResults struct {

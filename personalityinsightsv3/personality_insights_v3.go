@@ -46,40 +46,45 @@ import (
 // See: https://cloud.ibm.com/docs/services/personality-insights/
 type PersonalityInsightsV3 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
 
 // PersonalityInsightsV3Options : Service options
 type PersonalityInsightsV3Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewPersonalityInsightsV3 : Instantiate PersonalityInsightsV3
 func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *PersonalityInsightsV3, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/personality-insights/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
 		URL:             options.URL,
 		Authenticator:   options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("personality_insights")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("personality_insights")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "personality_insights", "Personality Insights")
 	if err != nil {
 		return
 	}
-	
-	service = &PersonalityInsightsV3{Service: baseService}
+
+	service = &PersonalityInsightsV3{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
 }
@@ -120,19 +125,24 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *P
 // profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-output#output)
 // * [Understanding a CSV
 // profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-outputCSV#outputCSV).
-func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
-		return nil, err
+func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (result *Profile, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(profileOptions, "profileOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(profileOptions, "profileOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(profileOptions, "profileOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v3/profile"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(personalityInsights.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(personalityInsights.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range profileOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -163,29 +173,30 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 	if profileOptions.ConsumptionPreferences != nil {
 		builder.AddQuery("consumption_preferences", fmt.Sprint(*profileOptions.ConsumptionPreferences))
 	}
-	builder.AddQuery("version", personalityInsights.Service.Options.Version)
+	builder.AddQuery("version", personalityInsights.Version)
 
-	if _, err := builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := personalityInsights.Service.Request(request, new(Profile))
-	return response, err
+	response, err = personalityInsights.Service.Request(request, new(Profile))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Profile)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetProfileResult : Retrieve result of Profile operation
-func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *core.DetailedResponse) *Profile {
-	result, ok := response.Result.(*Profile)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // ProfileAsCsv : Get profile as csv
 // Generates a personality profile for the author of the input text. The service accepts a maximum of 20 MB of input
@@ -223,19 +234,24 @@ func (personalityInsights *PersonalityInsightsV3) GetProfileResult(response *cor
 // profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-output#output)
 // * [Understanding a CSV
 // profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-outputCSV#outputCSV).
-func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(profileOptions, "profileOptions cannot be nil"); err != nil {
-		return nil, err
+func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(profileOptions, "profileOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(profileOptions, "profileOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(profileOptions, "profileOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v3/profile"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(personalityInsights.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(personalityInsights.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range profileOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -266,29 +282,30 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 	if profileOptions.ConsumptionPreferences != nil {
 		builder.AddQuery("consumption_preferences", fmt.Sprint(*profileOptions.ConsumptionPreferences))
 	}
-	builder.AddQuery("version", personalityInsights.Service.Options.Version)
+	builder.AddQuery("version", personalityInsights.Version)
 
-	if _, err := builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := personalityInsights.Service.Request(request, new(io.ReadCloser))
-	return response, err
+	response, err = personalityInsights.Service.Request(request, new(io.ReadCloser))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(io.ReadCloser)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetProfileAsCsvResult : Retrieve result of ProfileAsCsv operation
-func (personalityInsights *PersonalityInsightsV3) GetProfileAsCsvResult(response *core.DetailedResponse) io.ReadCloser {
-	result, ok := response.Result.(io.ReadCloser)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // Behavior : The temporal behavior for the input content.
 type Behavior struct {
@@ -510,14 +527,6 @@ type ProfileOptions struct {
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
-
-// Constants associated with the ProfileOptions.ContentType property.
-// The type of the input. For more information, see **Content types** in the method description.
-const (
-	ProfileOptions_ContentType_ApplicationJSON = "application/json"
-	ProfileOptions_ContentType_TextHTML = "text/html"
-	ProfileOptions_ContentType_TextPlain = "text/plain"
-)
 
 // Constants associated with the ProfileOptions.ContentLanguage property.
 // The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are

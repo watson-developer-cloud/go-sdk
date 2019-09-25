@@ -18,6 +18,7 @@
 package assistantv2
 
 import (
+	"fmt"
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
@@ -29,40 +30,45 @@ import (
 // See: https://cloud.ibm.com/docs/services/assistant/
 type AssistantV2 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
 
 // AssistantV2Options : Service options
 type AssistantV2Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewAssistantV2 : Instantiate AssistantV2
 func NewAssistantV2(options *AssistantV2Options) (service *AssistantV2, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/assistant/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
 		URL:             options.URL,
 		Authenticator:   options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "conversation", "Assistant")
 	if err != nil {
 		return
 	}
-	
-	service = &AssistantV2{Service: baseService}
+
+	service = &AssistantV2{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
 }
@@ -70,19 +76,24 @@ func NewAssistantV2(options *AssistantV2Options) (service *AssistantV2, err erro
 // CreateSession : Create a session
 // Create a new session. A session is used to send user input to a skill and receive responses. It also maintains the
 // state of the conversation.
-func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createSessionOptions, "createSessionOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionOptions) (result *SessionResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createSessionOptions, "createSessionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createSessionOptions, "createSessionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createSessionOptions, "createSessionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v2/assistants", "sessions"}
 	pathParameters := []string{*createSessionOptions.AssistantID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createSessionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -94,41 +105,46 @@ func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionO
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(SessionResponse))
-	return response, err
+	response, err = assistant.Service.Request(request, new(SessionResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*SessionResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetCreateSessionResult : Retrieve result of CreateSession operation
-func (assistant *AssistantV2) GetCreateSessionResult(response *core.DetailedResponse) *SessionResponse {
-	result, ok := response.Result.(*SessionResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // DeleteSession : Delete session
 // Deletes a session explicitly before it times out.
-func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteSessionOptions, "deleteSessionOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteSessionOptions, "deleteSessionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteSessionOptions, "deleteSessionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteSessionOptions, "deleteSessionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v2/assistants", "sessions"}
 	pathParameters := []string{*deleteSessionOptions.AssistantID, *deleteSessionOptions.SessionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteSessionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -140,34 +156,41 @@ func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionO
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
+
 
 // Message : Send user input to assistant
 // Send user input to an assistant and receive a response.
 //
 // There is no rate limit for this operation.
-func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(messageOptions, "messageOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (result *MessageResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(messageOptions, "messageOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(messageOptions, "messageOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(messageOptions, "messageOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v2/assistants", "sessions", "message"}
 	pathParameters := []string{*messageOptions.AssistantID, *messageOptions.SessionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range messageOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -180,7 +203,7 @@ func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (*core.Det
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if messageOptions.Input != nil {
@@ -189,27 +212,28 @@ func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (*core.Det
 	if messageOptions.Context != nil {
 		body["context"] = messageOptions.Context
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(MessageResponse))
-	return response, err
+	response, err = assistant.Service.Request(request, new(MessageResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MessageResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
 }
 
-// GetMessageResult : Retrieve result of Message operation
-func (assistant *AssistantV2) GetMessageResult(response *core.DetailedResponse) *MessageResponse {
-	result, ok := response.Result.(*MessageResponse)
-	if ok {
-		return result
-	}
-	return nil
-}
 
 // CaptureGroup : CaptureGroup struct
 type CaptureGroup struct {
