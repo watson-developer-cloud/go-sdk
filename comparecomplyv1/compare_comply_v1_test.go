@@ -379,7 +379,7 @@ var _ = Describe("CompareComplyV1", func() {
 					Expect(req.Header["Authorization"]).ToNot(BeNil())
 					Expect(req.Header["Authorization"][0]).To(Equal("Bearer oAeisG8yqPY7sFR_x66Z15"))
 					res.Header().Set("Content-type", "application/json")
-					fmt.Fprintf(res, `{"status":"deleted"}`)
+					fmt.Fprintf(res, `{"status": 200}`)
 				}
 			}))
 			It("Succeed to call DeleteFeedback", func() {

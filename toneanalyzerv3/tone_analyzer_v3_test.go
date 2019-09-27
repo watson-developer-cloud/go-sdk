@@ -29,7 +29,7 @@ var _ = Describe("ToneAnalyzerV3", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"document_tone":"subtle"}`)
+				fmt.Fprintf(res, `{"document_tone": {}}`)
 			}))
 			It("Succeed to call Tone", func() {
 				defer testServer.Close()
