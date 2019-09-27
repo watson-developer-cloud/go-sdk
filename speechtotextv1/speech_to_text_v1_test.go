@@ -74,7 +74,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `[{"name":"xxx"}]`)
+				fmt.Fprintf(res, `{"models":[]}`)
 			}))
 			It("Succeed to call ListModels", func() {
 				defer testServer.Close()
@@ -211,7 +211,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `[]`)
+				fmt.Fprintf(res, `{"recognitions":[]}`)
 			}))
 			It("Succeed to call CheckJobs", func() {
 				defer testServer.Close()
@@ -563,7 +563,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `[]`)
+				fmt.Fprintf(res, `{"customizations":[]}`)
 			}))
 			It("Succeed to call ListLanguageModels", func() {
 				defer testServer.Close()
@@ -826,7 +826,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"name":"xxx", "total_words: 22"}`)
+				fmt.Fprintf(res, `{"name":"xxx", "total_words": 22, "out_of_vocabulary_words": 0, "status":"analyzed"}`)
 			}))
 			It("Succeed to call GetCorpus", func() {
 				defer testServer.Close()
@@ -871,7 +871,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `[]`)
+				fmt.Fprintf(res, `{"corpora":[]}`)
 			}))
 			It("Succeed to call ListCorpora", func() {
 				defer testServer.Close()
@@ -1091,7 +1091,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `[]`)
+				fmt.Fprintf(res, `{"words":[]}`)
 			}))
 			It("Succeed to call ListWords", func() {
 				defer testServer.Close()
@@ -1265,7 +1265,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `[]`)
+				fmt.Fprintf(res, `{"customizations":[]}`)
 			}))
 			It("Succeed to call ListAcousticModels", func() {
 				defer testServer.Close()
@@ -1801,7 +1801,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `["grammars": {"name":"xxx"}]`)
+				fmt.Fprintf(res, `{"grammars": []}`)
 			}))
 			It("Succeed to call ListGrammars", func() {
 				defer testServer.Close()

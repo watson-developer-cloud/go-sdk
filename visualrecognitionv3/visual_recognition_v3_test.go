@@ -32,7 +32,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 					Expect(req.Header["Authorization"]).ToNot(BeNil())
 					Expect(req.Header["Authorization"][0]).To(Equal("Bearer xxxxx"))
 					res.Header().Set("Content-type", "application/json")
-					fmt.Fprintf(res, `{"custom_classes":"2"}`)
+					fmt.Fprintf(res, `{"custom_classes":2}`)
 				}
 			}))
 			It("Succeed to call Classify", func() {
@@ -260,7 +260,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 					Expect(req.Header["Authorization"]).ToNot(BeNil())
 					Expect(req.Header["Authorization"][0]).To(Equal("Bearer xxxxx"))
 					res.Header().Set("Content-type", "application/json")
-					fmt.Fprintf(res, `[]`)
+					fmt.Fprintf(res, `{"classifiers":[]}`)
 				}
 			}))
 			It("Succeed to call ListClassifiers", func() {
