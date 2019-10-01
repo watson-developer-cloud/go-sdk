@@ -128,8 +128,12 @@ func (visualRecognition *VisualRecognitionV4) Analyze(analyzeOptions *AnalyzeOpt
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Version)
 
-	builder.AddFormData("collection_ids", "", "", fmt.Sprint(*analyzeOptions.CollectionIds))
-	builder.AddFormData("features", "", "", fmt.Sprint(*analyzeOptions.Features))
+	for _, item := range analyzeOptions.CollectionIds {
+		builder.AddFormData("collection_ids", "", "", fmt.Sprint(item))
+	}
+	for _, item := range analyzeOptions.Features {
+		builder.AddFormData("features", "", "", fmt.Sprint(item))
+	}
 	if analyzeOptions.ImagesFile != nil {
 		for _, item := range analyzeOptions.ImagesFile {
 			builder.AddFormData("images_file", core.StringNilMapper(item.Filename), core.StringNilMapper(item.ContentType), item.Data)
@@ -146,7 +150,6 @@ func (visualRecognition *VisualRecognitionV4) Analyze(analyzeOptions *AnalyzeOpt
 
 	request, err := builder.Build()
 	if err != nil {
-		fmt.Println("yes a problem")
 		return
 	}
 
@@ -207,9 +210,6 @@ func (visualRecognition *VisualRecognitionV4) CreateCollection(createCollectionO
 	}
 	if createCollectionOptions.Description != nil {
 		body["description"] = createCollectionOptions.Description
-	}
-	if createCollectionOptions.TrainingStatus != nil {
-		body["training_status"] = createCollectionOptions.TrainingStatus
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -372,9 +372,6 @@ func (visualRecognition *VisualRecognitionV4) UpdateCollection(updateCollectionO
 	}
 	if updateCollectionOptions.Description != nil {
 		body["description"] = updateCollectionOptions.Description
-	}
-	if updateCollectionOptions.TrainingStatus != nil {
-		body["training_status"] = updateCollectionOptions.TrainingStatus
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -888,7 +885,7 @@ type AddImageTrainingDataOptions struct {
 	ImageID *string `json:"image_id" validate:"required"`
 
 	// Training data for specific objects.
-	Objects []BaseObject `json:"objects,omitempty"`
+	Objects []TrainingDataObject `json:"objects,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -915,7 +912,7 @@ func (options *AddImageTrainingDataOptions) SetImageID(imageID string) *AddImage
 }
 
 // SetObjects : Allow user to set Objects
-func (options *AddImageTrainingDataOptions) SetObjects(objects []BaseObject) *AddImageTrainingDataOptions {
+func (options *AddImageTrainingDataOptions) SetObjects(objects []TrainingDataObject) *AddImageTrainingDataOptions {
 	options.Objects = objects
 	return options
 }
@@ -932,25 +929,21 @@ type AddImagesOptions struct {
 	// The identifier of the collection.
 	CollectionID *string `json:"collection_id" validate:"required"`
 
-	// An image file (.jpg or .png) or .zip file with images.
-	// - You can provide multiple separate image files by including this form field multiple times.
-	// - Limit each image file to 10 MB.
-	// - Include a maximum of 100 images in a request.
+	// An array of image files (.jpg or .png) or .zip files with images.
+	// - Include a maximum of 20 images in a request.
 	// - Limit the .zip file to 100 MB.
-	// -Minimum width and height is 30 pixels, but the service tends to perform better with images that are at least 300 x
-	// 300 pixels. Maximum is 5400 pixels for either height or width.
+	// - Limit each image file to 10 MB.
 	//
 	// You can also include an image with the **image_url** parameter.
 	ImagesFile []FileWithMetadata `json:"images_file,omitempty"`
 
-	// The URL of an image (.jpg or .png).
-	// - You can provide multiple separate image URLs by including this form field multiple times. Include a maximum of 20
-	// images in a request.
+	// The array of URLs of image files (.jpg or .png).
+	// - Include a maximum of 20 images in a request.
 	// - Limit each image file to 10 MB.
 	// - Minimum width and height is 30 pixels, but the service tends to perform better with images that are at least 300 x
 	// 300 pixels. Maximum is 5400 pixels for either height or width.
 	//
-	// You can also include images with the **images_url** parameter.
+	// You can also include images with the **images_file** parameter.
 	ImageURL []string `json:"image_url,omitempty"`
 
 	// Training data for a single image. Include training data only if you add one image with the request.
@@ -1003,29 +996,27 @@ func (options *AddImagesOptions) SetHeaders(param map[string]string) *AddImagesO
 // AnalyzeOptions : The Analyze options.
 type AnalyzeOptions struct {
 
-	// The IDs of the collections to analyze. Separate multiple values with commas.
-	CollectionIds *string `json:"collection_ids" validate:"required"`
+	// The IDs of the collections to analyze.
+	CollectionIds []string `json:"collection_ids" validate:"required"`
 
-	// The features to analyze. Separate multiple values with commas.
-	Features *string `json:"features" validate:"required"`
+	// The features to analyze.
+	Features []string `json:"features" validate:"required"`
 
-	// An image file (.jpg or .png) or .zip file with images.
+	// An array of image files (.jpg or .png) or .zip files with images.
 	// - Include a maximum of 20 images in a request.
 	// - Limit the .zip file to 100 MB.
-	// - You can provide multiple separate image files by including this form field multiple times.
 	// - Limit each image file to 10 MB.
 	//
 	// You can also include an image with the **image_url** parameter.
 	ImagesFile []FileWithMetadata `json:"images_file,omitempty"`
 
-	// The URL of an image (.jpg or .png).
-	// - You can provide multiple separate image URLs by including this form field multiple times. Include a maximum of 20
-	// images in a request.
+	// An array of URLs of image files (.jpg or .png).
+	// - Include a maximum of 20 images in a request.
 	// - Limit each image file to 10 MB.
 	// - Minimum width and height is 30 pixels, but the service tends to perform better with images that are at least 300 x
 	// 300 pixels. Maximum is 5400 pixels for either height or width.
 	//
-	// You can also include images with the **images_url** parameter.
+	// You can also include images with the **images_file** parameter.
 	ImageURL []string `json:"image_url,omitempty"`
 
 	// The minimum score a feature must have to be returned.
@@ -1036,28 +1027,27 @@ type AnalyzeOptions struct {
 }
 
 // Constants associated with the AnalyzeOptions.Features property.
-// The features to analyze. Separate multiple values with commas.
 const (
 	AnalyzeOptions_Features_Objects = "objects"
 )
 
 // NewAnalyzeOptions : Instantiate AnalyzeOptions
-func (visualRecognition *VisualRecognitionV4) NewAnalyzeOptions(collectionIds string, features string) *AnalyzeOptions {
+func (visualRecognition *VisualRecognitionV4) NewAnalyzeOptions(collectionIds []string, features []string) *AnalyzeOptions {
 	return &AnalyzeOptions{
-		CollectionIds: core.StringPtr(collectionIds),
-		Features:      core.StringPtr(features),
+		CollectionIds: collectionIds,
+		Features:      features,
 	}
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
-func (options *AnalyzeOptions) SetCollectionIds(collectionIds string) *AnalyzeOptions {
-	options.CollectionIds = core.StringPtr(collectionIds)
+func (options *AnalyzeOptions) SetCollectionIds(collectionIds []string) *AnalyzeOptions {
+	options.CollectionIds = collectionIds
 	return options
 }
 
 // SetFeatures : Allow user to set Features
-func (options *AnalyzeOptions) SetFeatures(features string) *AnalyzeOptions {
-	options.Features = core.StringPtr(features)
+func (options *AnalyzeOptions) SetFeatures(features []string) *AnalyzeOptions {
+	options.Features = features
 	return options
 }
 
@@ -1092,77 +1082,10 @@ type AnalyzeResponse struct {
 	Images []Image `json:"images" validate:"required"`
 
 	// Information about what might cause less than optimal output.
-	Warnings []BaseError `json:"warnings,omitempty"`
+	Warnings []Warning `json:"warnings,omitempty"`
 
 	// A unique identifier of the request. Included only when an error or warning is returned.
 	Trace *string `json:"trace,omitempty"`
-}
-
-// BaseCollection : Base details about a collection.
-type BaseCollection struct {
-
-	// The identifier of the collection.
-	CollectionID *string `json:"collection_id,omitempty"`
-
-	// The name of the collection. The name can contain alphanumeric, underscore, hyphen, and dot characters. It cannot
-	// begin with the reserved prefix `sys-`.
-	Name *string `json:"name,omitempty"`
-
-	// The description of the collection.
-	Description *string `json:"description,omitempty"`
-
-	// Date and time in Coordinated Universal Time (UTC) that the collection was created.
-	Created *strfmt.DateTime `json:"created,omitempty"`
-
-	// Date and time in Coordinated Universal Time (UTC) that the collection was most recently updated.
-	Updated *strfmt.DateTime `json:"updated,omitempty"`
-
-	// Number of images in the collection.
-	ImageCount *int64 `json:"image_count,omitempty"`
-
-	// Training status information for the collection.
-	TrainingStatus *BaseCollectionTrainingStatus `json:"training_status,omitempty"`
-}
-
-// BaseCollectionTrainingStatus : Training status information for the collection.
-type BaseCollectionTrainingStatus struct {
-
-	// Training status for the objects in the collection.
-	Objects *ObjectTrainingStatus `json:"objects" validate:"required"`
-}
-
-// BaseError : Details about a problem.
-type BaseError struct {
-
-	// Identifier of the problem.
-	Code *string `json:"code" validate:"required"`
-
-	// An explanation of the problem with possible solutions.
-	Message *string `json:"message" validate:"required"`
-
-	// A URL for more information about the solution.
-	MoreInfo *string `json:"more_info,omitempty"`
-}
-
-// Constants associated with the BaseError.Code property.
-// Identifier of the problem.
-const (
-	BaseError_Code_InvalidField  = "invalid_field"
-	BaseError_Code_InvalidHeader = "invalid_header"
-	BaseError_Code_InvalidMethod = "invalid_method"
-	BaseError_Code_MissingField  = "missing_field"
-	BaseError_Code_ServerError   = "server_error"
-)
-
-// BaseObject : Details about an object and its location.
-type BaseObject struct {
-
-	// The name of the object. The name can contain alphanumeric, underscore, hyphen, space, and dot characters. It cannot
-	// begin with the reserved prefix `sys-`.
-	Object *string `json:"object,omitempty"`
-
-	// Defines the location of the bounding box around the object.
-	Location *Location `json:"location,omitempty"`
 }
 
 // Collection : Details about a collection.
@@ -1174,7 +1097,7 @@ type Collection struct {
 	// The name of the collection.
 	Name *string `json:"name" validate:"required"`
 
-	// The descripion of the collection.
+	// The description of the collection.
 	Description *string `json:"description" validate:"required"`
 
 	// Date and time in Coordinated Universal Time (UTC) that the collection was created.
@@ -1187,7 +1110,7 @@ type Collection struct {
 	ImageCount *int64 `json:"image_count" validate:"required"`
 
 	// Training status information for the collection.
-	TrainingStatus *BaseCollectionTrainingStatus `json:"training_status" validate:"required"`
+	TrainingStatus *TrainingStatus `json:"training_status" validate:"required"`
 }
 
 // CollectionObjects : The objects in a collection that are detected in an image.
@@ -1204,7 +1127,7 @@ type CollectionObjects struct {
 type CollectionsList struct {
 
 	// The collections in this service instance.
-	Collections []BaseCollection `json:"collections" validate:"required"`
+	Collections []Collection `json:"collections" validate:"required"`
 }
 
 // CreateCollectionOptions : The CreateCollection options.
@@ -1216,9 +1139,6 @@ type CreateCollectionOptions struct {
 
 	// The description of the collection.
 	Description *string `json:"description,omitempty"`
-
-	// Training status information for the collection.
-	TrainingStatus *BaseCollectionTrainingStatus `json:"training_status,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -1238,12 +1158,6 @@ func (options *CreateCollectionOptions) SetName(name string) *CreateCollectionOp
 // SetDescription : Allow user to set Description
 func (options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
 	options.Description = core.StringPtr(description)
-	return options
-}
-
-// SetTrainingStatus : Allow user to set TrainingStatus
-func (options *CreateCollectionOptions) SetTrainingStatus(trainingStatus *BaseCollectionTrainingStatus) *CreateCollectionOptions {
-	options.TrainingStatus = trainingStatus
 	return options
 }
 
@@ -1369,7 +1283,7 @@ type Error struct {
 	// A URL for more information about the solution.
 	MoreInfo *string `json:"more_info,omitempty"`
 
-	// Details about the specfic area of the problem.
+	// Details about the specific area of the problem.
 	Target *ErrorTarget `json:"target,omitempty"`
 }
 
@@ -1383,7 +1297,7 @@ const (
 	Error_Code_ServerError   = "server_error"
 )
 
-// ErrorTarget : Details about the specfic area of the problem.
+// ErrorTarget : Details about the specific area of the problem.
 type ErrorTarget struct {
 
 	// The parameter or property that is the focus of the problem.
@@ -1584,7 +1498,7 @@ type ImageDetailsList struct {
 	Images []ImageDetails `json:"images,omitempty"`
 
 	// Information about what might cause less than optimal output.
-	Warnings []BaseError `json:"warnings,omitempty"`
+	Warnings []Warning `json:"warnings,omitempty"`
 
 	// A unique identifier of the request. Included only when an error or warning is returned.
 	Trace *string `json:"trace,omitempty"`
@@ -1786,6 +1700,13 @@ type TrainingDataObjects struct {
 	Objects []TrainingDataObject `json:"objects" validate:"required"`
 }
 
+// TrainingStatus : Training status information for the collection.
+type TrainingStatus struct {
+
+	// Training status for the objects in the collection.
+	Objects *ObjectTrainingStatus `json:"objects" validate:"required"`
+}
+
 // UpdateCollectionOptions : The UpdateCollection options.
 type UpdateCollectionOptions struct {
 
@@ -1798,9 +1719,6 @@ type UpdateCollectionOptions struct {
 
 	// The description of the collection.
 	Description *string `json:"description,omitempty"`
-
-	// Training status information for the collection.
-	TrainingStatus *BaseCollectionTrainingStatus `json:"training_status,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -1831,14 +1749,31 @@ func (options *UpdateCollectionOptions) SetDescription(description string) *Upda
 	return options
 }
 
-// SetTrainingStatus : Allow user to set TrainingStatus
-func (options *UpdateCollectionOptions) SetTrainingStatus(trainingStatus *BaseCollectionTrainingStatus) *UpdateCollectionOptions {
-	options.TrainingStatus = trainingStatus
-	return options
-}
-
 // SetHeaders : Allow user to set Headers
 func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *UpdateCollectionOptions {
 	options.Headers = param
 	return options
 }
+
+// Warning : Details about a problem.
+type Warning struct {
+
+	// Identifier of the problem.
+	Code *string `json:"code" validate:"required"`
+
+	// An explanation of the problem with possible solutions.
+	Message *string `json:"message" validate:"required"`
+
+	// A URL for more information about the solution.
+	MoreInfo *string `json:"more_info,omitempty"`
+}
+
+// Constants associated with the Warning.Code property.
+// Identifier of the problem.
+const (
+	Warning_Code_InvalidField  = "invalid_field"
+	Warning_Code_InvalidHeader = "invalid_header"
+	Warning_Code_InvalidMethod = "invalid_method"
+	Warning_Code_MissingField  = "missing_field"
+	Warning_Code_ServerError   = "server_error"
+)
