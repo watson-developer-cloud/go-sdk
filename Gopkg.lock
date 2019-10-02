@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:3cff6a852333a1d5544330b0c1a7dba49e74ab0bb667b1c89643d91e08f09b1b"
+  digest = "1:77a7a47f18737d76928bbbc84ada74b92ea45383cdf8ae9f1c89a05640efcfcf"
   name = "github.com/IBM/go-sdk-core"
   packages = ["core"]
   pruneopts = "UT"
-  revision = "5aeb6b37fba0e7c49e995c6977763c41f637db88"
-  version = "v0.9.0"
+  revision = "3bf64c646a6a0b53c20a032600b219ec6df57d58"
+  version = "v1.0.0rc1"
 
 [[projects]]
   digest = "1:320e7ead93de9fd2b0e59b50fd92a4d50c1f8ab455d96bc2eb083267453a9709"

@@ -26,7 +26,7 @@
 
 [[constraint]]
   name = "github.com/IBM/go-sdk-core"
-  version = "=0.9.0"
+  version = "v1.0.0rc1"
 
 [[constraint]]
   name = "github.com/cloudfoundry-community/go-cfenv"
