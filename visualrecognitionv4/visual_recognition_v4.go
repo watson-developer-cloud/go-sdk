@@ -20,6 +20,7 @@ package visualrecognitionv4
 import (
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
@@ -128,11 +129,11 @@ func (visualRecognition *VisualRecognitionV4) Analyze(analyzeOptions *AnalyzeOpt
 	builder.AddHeader("Accept", "application/json")
 	builder.AddQuery("version", visualRecognition.Version)
 
-	for _, item := range analyzeOptions.CollectionIds {
-		builder.AddFormData("collection_ids", "", "", fmt.Sprint(item))
+	if analyzeOptions.CollectionIds != nil {
+		builder.AddFormData("collection_ids", "", "", strings.Join(analyzeOptions.CollectionIds, ","))
 	}
-	for _, item := range analyzeOptions.Features {
-		builder.AddFormData("features", "", "", fmt.Sprint(item))
+	if analyzeOptions.Features != nil {
+		builder.AddFormData("features", "", "", strings.Join(analyzeOptions.Features, ","))
 	}
 	if analyzeOptions.ImagesFile != nil {
 		for _, item := range analyzeOptions.ImagesFile {
