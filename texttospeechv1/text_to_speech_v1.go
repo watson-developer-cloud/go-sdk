@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // TextToSpeechV1 : The IBM&reg; Text to Speech service provides APIs that use IBM's speech-synthesis capabilities to
@@ -82,6 +81,16 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (service *TextToSpeechV1,
 	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (textToSpeech *TextToSpeechV1) SetServiceURL(url string) error {
+	return textToSpeech.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (textToSpeech *TextToSpeechV1) DisableSSLVerification() {
+	textToSpeech.Service.DisableSSLVerification()
 }
 
 // ListVoices : List voices
@@ -209,54 +218,33 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 //  The service can return audio in the following formats (MIME types).
 // * Where indicated, you can optionally specify the sampling rate (`rate`) of the audio. You must specify a sampling
 // rate for the `audio/l16` and `audio/mulaw` formats. A specified sampling rate must lie in the range of 8 kHz to 192
-// kHz.
+// kHz. Some formats restrict the sampling rate to certain values, as noted.
 // * For the `audio/l16` format, you can optionally specify the endianness (`endianness`) of the audio:
 // `endianness=big-endian` or `endianness=little-endian`.
 //
 // Use the `Accept` header or the `accept` parameter to specify the requested format of the response audio. If you omit
 // an audio format altogether, the service returns the audio in Ogg format with the Opus codec
 // (`audio/ogg;codecs=opus`). The service always returns single-channel audio.
-// * `audio/basic`
-//
-//   The service returns audio with a sampling rate of 8000 Hz.
-// * `audio/flac`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/l16`
-//
-//   You must specify the `rate` of the audio. You can optionally specify the `endianness` of the audio. The default
-// endianness is `little-endian`.
-// * `audio/mp3`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/mpeg`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/mulaw`
-//
-//   You must specify the `rate` of the audio.
-// * `audio/ogg`
-//
-//   The service returns the audio in the `vorbis` codec. You can optionally specify the `rate` of the audio. The
-// default sampling rate is 22,050 Hz.
-// * `audio/ogg;codecs=opus`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/ogg;codecs=vorbis`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/wav`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/webm`
-//
-//   The service returns the audio in the `opus` codec. The service returns audio with a sampling rate of 48,000 Hz.
-// * `audio/webm;codecs=opus`
-//
-//   The service returns audio with a sampling rate of 48,000 Hz.
-// * `audio/webm;codecs=vorbis`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/basic` - The service returns audio with a sampling rate of 8000 Hz.
+// * `audio/flac` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/l16` - You must specify the `rate` of the audio. You can optionally specify the `endianness` of the audio.
+// The default endianness is `little-endian`.
+// * `audio/mp3` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/mpeg` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/mulaw` - You must specify the `rate` of the audio.
+// * `audio/ogg` - The service returns the audio in the `vorbis` codec. You can optionally specify the `rate` of the
+// audio. The default sampling rate is 22,050 Hz.
+// * `audio/ogg;codecs=opus` - You can optionally specify the `rate` of the audio. Only the following values are valid
+// sampling rates: `48000`, `24000`, `16000`, `12000`, or `8000`. If you specify a value other than one of these, the
+// service returns an error. The default sampling rate is 48,000 Hz.
+// * `audio/ogg;codecs=vorbis` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050
+// Hz.
+// * `audio/wav` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/webm` - The service returns the audio in the `opus` codec. The service returns audio with a sampling rate of
+// 48,000 Hz.
+// * `audio/webm;codecs=opus` - The service returns audio with a sampling rate of 48,000 Hz.
+// * `audio/webm;codecs=vorbis` - You can optionally specify the `rate` of the audio. The default sampling rate is
+// 22,050 Hz.
 //
 // For more information about specifying an audio format, including additional details about some of the formats, see
 // [Audio formats](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
