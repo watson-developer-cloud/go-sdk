@@ -23,8 +23,6 @@ import (
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
-	"os"
-	"strings"
 )
 
 // VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
@@ -78,6 +76,16 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (service *Visua
 	return
 }
 
+// SetServiceURL sets the service URL
+func (visualRecognition *VisualRecognitionV3) SetServiceURL(url string) error {
+	return visualRecognition.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (visualRecognition *VisualRecognitionV3) DisableSSLVerification() {
+	visualRecognition.Service.DisableSSLVerification()
+}
+
 // Classify : Classify images
 // Classify images with built-in or custom classifiers.
 func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *ClassifyOptions) (result *ClassifiedImages, response *core.DetailedResponse, err error) {
@@ -129,10 +137,14 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		builder.AddFormData("threshold", "", "", fmt.Sprint(*classifyOptions.Threshold))
 	}
 	if classifyOptions.Owners != nil {
-		builder.AddFormData("owners", "", "", strings.Join(classifyOptions.Owners, ","))
+		for _, item := range classifyOptions.Owners {
+			builder.AddFormData("owners", "", "", fmt.Sprint(item))
+		}
 	}
 	if classifyOptions.ClassifierIds != nil {
-		builder.AddFormData("classifier_ids", "", "", strings.Join(classifyOptions.ClassifierIds, ","))
+		for _, item := range classifyOptions.ClassifierIds {
+			builder.AddFormData("classifier_ids", "", "", fmt.Sprint(item))
+		}
 	}
 
 	request, err := builder.Build()
@@ -689,7 +701,7 @@ type ClassifyOptions struct {
 	// characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters.
 	//
 	// You can also include an image with the **url** parameter.
-	ImagesFile *os.File `json:"images_file,omitempty"`
+	ImagesFile io.ReadCloser `json:"images_file,omitempty"`
 
 	// The filename for imagesFile.
 	ImagesFilename *string `json:"images_filename,omitempty"`
@@ -754,7 +766,7 @@ func (visualRecognition *VisualRecognitionV3) NewClassifyOptions() *ClassifyOpti
 }
 
 // SetImagesFile : Allow user to set ImagesFile
-func (options *ClassifyOptions) SetImagesFile(imagesFile *os.File) *ClassifyOptions {
+func (options *ClassifyOptions) SetImagesFile(imagesFile io.ReadCloser) *ClassifyOptions {
 	options.ImagesFile = imagesFile
 	return options
 }
@@ -823,13 +835,13 @@ type CreateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	PositiveExamples map[string]*os.File `json:"positive_examples" validate:"required"`
+	PositiveExamples map[string]io.ReadCloser `json:"positive_examples" validate:"required"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
 	//
 	// Encode special characters in the file name in UTF-8.
-	NegativeExamples *os.File `json:"negative_examples,omitempty"`
+	NegativeExamples io.ReadCloser `json:"negative_examples,omitempty"`
 
 	// The filename for negativeExamples.
 	NegativeExamplesFilename *string `json:"negative_examples_filename,omitempty"`
@@ -852,16 +864,16 @@ func (options *CreateClassifierOptions) SetName(name string) *CreateClassifierOp
 }
 
 // AddPositiveExamples : Allow user to add a new entry to the PositiveExamples map
-func (options *CreateClassifierOptions) AddPositiveExamples(classname string, positiveExamples *os.File) *CreateClassifierOptions {
+func (options *CreateClassifierOptions) AddPositiveExamples(classname string, positiveExamples io.ReadCloser) *CreateClassifierOptions {
 	if options.PositiveExamples == nil {
-		options.PositiveExamples = make(map[string]*os.File)
+		options.PositiveExamples = make(map[string]io.ReadCloser)
 	}
 	options.PositiveExamples[classname] = positiveExamples
 	return options
 }
 
 // SetNegativeExamples : Allow user to set NegativeExamples
-func (options *CreateClassifierOptions) SetNegativeExamples(negativeExamples *os.File) *CreateClassifierOptions {
+func (options *CreateClassifierOptions) SetNegativeExamples(negativeExamples io.ReadCloser) *CreateClassifierOptions {
 	options.NegativeExamples = negativeExamples
 	return options
 }
@@ -1051,13 +1063,13 @@ type UpdateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	PositiveExamples map[string]*os.File `json:"positive_examples,omitempty"`
+	PositiveExamples map[string]io.ReadCloser `json:"positive_examples,omitempty"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
 	//
 	// Encode special characters in the file name in UTF-8.
-	NegativeExamples *os.File `json:"negative_examples,omitempty"`
+	NegativeExamples io.ReadCloser `json:"negative_examples,omitempty"`
 
 	// The filename for negativeExamples.
 	NegativeExamplesFilename *string `json:"negative_examples_filename,omitempty"`
@@ -1080,16 +1092,16 @@ func (options *UpdateClassifierOptions) SetClassifierID(classifierID string) *Up
 }
 
 // AddPositiveExamples : Allow user to add a new entry to the PositiveExamples map
-func (options *UpdateClassifierOptions) AddPositiveExamples(classname string, positiveExamples *os.File) *UpdateClassifierOptions {
+func (options *UpdateClassifierOptions) AddPositiveExamples(classname string, positiveExamples io.ReadCloser) *UpdateClassifierOptions {
 	if options.PositiveExamples == nil {
-		options.PositiveExamples = make(map[string]*os.File)
+		options.PositiveExamples = make(map[string]io.ReadCloser)
 	}
 	options.PositiveExamples[classname] = positiveExamples
 	return options
 }
 
 // SetNegativeExamples : Allow user to set NegativeExamples
-func (options *UpdateClassifierOptions) SetNegativeExamples(negativeExamples *os.File) *UpdateClassifierOptions {
+func (options *UpdateClassifierOptions) SetNegativeExamples(negativeExamples io.ReadCloser) *UpdateClassifierOptions {
 	options.NegativeExamples = negativeExamples
 	return options
 }
