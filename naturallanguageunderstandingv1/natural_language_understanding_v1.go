@@ -80,6 +80,16 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 	return
 }
 
+// SetServiceURL sets the service URL
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) SetServiceURL(url string) error {
+	return naturalLanguageUnderstanding.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DisableSSLVerification() {
+	naturalLanguageUnderstanding.Service.DisableSSLVerification()
+}
+
 // Analyze : Analyze text
 // Analyzes text, HTML, or a public webpage for the following features:
 // - Categories
