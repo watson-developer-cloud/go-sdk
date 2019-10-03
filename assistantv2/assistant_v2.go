@@ -26,6 +26,9 @@ import (
 // AssistantV2 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
 // an integrated dialog editor to create conversation flows between your apps and your users.
 //
+// The Assistant v2 API provides runtime methods your client application can use to send user input to an assistant and
+// receive a response.
+//
 // Version: 2.0
 // See: https://cloud.ibm.com/docs/services/assistant/
 type AssistantV2 struct {
@@ -71,6 +74,16 @@ func NewAssistantV2(options *AssistantV2Options) (service *AssistantV2, err erro
 	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (assistant *AssistantV2) SetServiceURL(url string) error {
+	return assistant.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (assistant *AssistantV2) DisableSSLVerification() {
+	assistant.Service.DisableSSLVerification()
 }
 
 // CreateSession : Create a session
