@@ -22,7 +22,7 @@ import (
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"os"
+	"io"
 )
 
 // NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to
@@ -71,6 +71,16 @@ func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options)
 	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) SetServiceURL(url string) error {
+	return naturalLanguageClassifier.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DisableSSLVerification() {
+	naturalLanguageClassifier.Service.DisableSSLVerification()
 }
 
 // Classify : Classify a phrase
@@ -581,19 +591,19 @@ type CreateClassifierOptions struct {
 	//
 	// Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`), Japanese
 	// (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).
-	TrainingMetadata *os.File `json:"training_metadata" validate:"required"`
+	TrainingMetadata io.ReadCloser `json:"training_metadata" validate:"required"`
 
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
 	// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier?topic=natural-language-classifier-using-your-data).
-	TrainingData *os.File `json:"training_data" validate:"required"`
+	TrainingData io.ReadCloser `json:"training_data" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(trainingMetadata *os.File, trainingData *os.File) *CreateClassifierOptions {
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(trainingMetadata io.ReadCloser, trainingData io.ReadCloser) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
 		TrainingMetadata: trainingMetadata,
 		TrainingData: trainingData,
@@ -601,13 +611,13 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifie
 }
 
 // SetTrainingMetadata : Allow user to set TrainingMetadata
-func (options *CreateClassifierOptions) SetTrainingMetadata(trainingMetadata *os.File) *CreateClassifierOptions {
+func (options *CreateClassifierOptions) SetTrainingMetadata(trainingMetadata io.ReadCloser) *CreateClassifierOptions {
 	options.TrainingMetadata = trainingMetadata
 	return options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *CreateClassifierOptions) SetTrainingData(trainingData *os.File) *CreateClassifierOptions {
+func (options *CreateClassifierOptions) SetTrainingData(trainingData io.ReadCloser) *CreateClassifierOptions {
 	options.TrainingData = trainingData
 	return options
 }
