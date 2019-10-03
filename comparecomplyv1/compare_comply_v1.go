@@ -22,7 +22,7 @@ import (
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"os"
+	"io"
 )
 
 // CompareComplyV1 : IBM Watson&trade; Compare and Comply analyzes governing documents to provide details about critical
@@ -73,6 +73,16 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComply
 	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (compareComply *CompareComplyV1) SetServiceURL(url string) error {
+	return compareComply.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (compareComply *CompareComplyV1) DisableSSLVerification() {
+	compareComply.Service.DisableSSLVerification()
 }
 
 // ConvertToHTML : Convert document to HTML
@@ -1101,7 +1111,7 @@ const (
 type ClassifyElementsOptions struct {
 
 	// The document to classify.
-	File *os.File `json:"file" validate:"required"`
+	File io.ReadCloser `json:"file" validate:"required"`
 
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
@@ -1125,14 +1135,14 @@ const (
 )
 
 // NewClassifyElementsOptions : Instantiate ClassifyElementsOptions
-func (compareComply *CompareComplyV1) NewClassifyElementsOptions(file *os.File) *ClassifyElementsOptions {
+func (compareComply *CompareComplyV1) NewClassifyElementsOptions(file io.ReadCloser) *ClassifyElementsOptions {
 	return &ClassifyElementsOptions{
 		File: file,
 	}
 }
 
 // SetFile : Allow user to set File
-func (options *ClassifyElementsOptions) SetFile(file *os.File) *ClassifyElementsOptions {
+func (options *ClassifyElementsOptions) SetFile(file io.ReadCloser) *ClassifyElementsOptions {
 	options.File = file
 	return options
 }
@@ -1236,10 +1246,10 @@ type ColumnHeaders struct {
 type CompareDocumentsOptions struct {
 
 	// The first document to compare.
-	File1 *os.File `json:"file_1" validate:"required"`
+	File1 io.ReadCloser `json:"file_1" validate:"required"`
 
 	// The second document to compare.
-	File2 *os.File `json:"file_2" validate:"required"`
+	File2 io.ReadCloser `json:"file_2" validate:"required"`
 
 	// The content type of file1.
 	File1ContentType *string `json:"file_1_content_type,omitempty"`
@@ -1272,7 +1282,7 @@ const (
 )
 
 // NewCompareDocumentsOptions : Instantiate CompareDocumentsOptions
-func (compareComply *CompareComplyV1) NewCompareDocumentsOptions(file1 *os.File, file2 *os.File) *CompareDocumentsOptions {
+func (compareComply *CompareComplyV1) NewCompareDocumentsOptions(file1 io.ReadCloser, file2 io.ReadCloser) *CompareDocumentsOptions {
 	return &CompareDocumentsOptions{
 		File1: file1,
 		File2: file2,
@@ -1280,13 +1290,13 @@ func (compareComply *CompareComplyV1) NewCompareDocumentsOptions(file1 *os.File,
 }
 
 // SetFile1 : Allow user to set File1
-func (options *CompareDocumentsOptions) SetFile1(file1 *os.File) *CompareDocumentsOptions {
+func (options *CompareDocumentsOptions) SetFile1(file1 io.ReadCloser) *CompareDocumentsOptions {
 	options.File1 = file1
 	return options
 }
 
 // SetFile2 : Allow user to set File2
-func (options *CompareDocumentsOptions) SetFile2(file2 *os.File) *CompareDocumentsOptions {
+func (options *CompareDocumentsOptions) SetFile2(file2 io.ReadCloser) *CompareDocumentsOptions {
 	options.File2 = file2
 	return options
 }
@@ -1493,7 +1503,7 @@ const (
 type ConvertToHTMLOptions struct {
 
 	// The document to convert.
-	File *os.File `json:"file" validate:"required"`
+	File io.ReadCloser `json:"file" validate:"required"`
 
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
@@ -1517,14 +1527,14 @@ const (
 )
 
 // NewConvertToHTMLOptions : Instantiate ConvertToHTMLOptions
-func (compareComply *CompareComplyV1) NewConvertToHTMLOptions(file *os.File) *ConvertToHTMLOptions {
+func (compareComply *CompareComplyV1) NewConvertToHTMLOptions(file io.ReadCloser) *ConvertToHTMLOptions {
 	return &ConvertToHTMLOptions{
 		File: file,
 	}
 }
 
 // SetFile : Allow user to set File
-func (options *ConvertToHTMLOptions) SetFile(file *os.File) *ConvertToHTMLOptions {
+func (options *ConvertToHTMLOptions) SetFile(file io.ReadCloser) *ConvertToHTMLOptions {
 	options.File = file
 	return options
 }
@@ -1555,7 +1565,7 @@ type CreateBatchOptions struct {
 
 	// A JSON file containing the input Cloud Object Storage credentials. At a minimum, the credentials must enable `READ`
 	// permissions on the bucket defined by the `input_bucket_name` parameter.
-	InputCredentialsFile *os.File `json:"input_credentials_file" validate:"required"`
+	InputCredentialsFile io.ReadCloser `json:"input_credentials_file" validate:"required"`
 
 	// The geographical location of the Cloud Object Storage input bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
@@ -1566,7 +1576,7 @@ type CreateBatchOptions struct {
 
 	// A JSON file that lists the Cloud Object Storage output credentials. At a minimum, the credentials must enable `READ`
 	// and `WRITE` permissions on the bucket defined by the `output_bucket_name` parameter.
-	OutputCredentialsFile *os.File `json:"output_credentials_file" validate:"required"`
+	OutputCredentialsFile io.ReadCloser `json:"output_credentials_file" validate:"required"`
 
 	// The geographical location of the Cloud Object Storage output bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
@@ -1602,7 +1612,7 @@ const (
 )
 
 // NewCreateBatchOptions : Instantiate CreateBatchOptions
-func (compareComply *CompareComplyV1) NewCreateBatchOptions(function string, inputCredentialsFile *os.File, inputBucketLocation string, inputBucketName string, outputCredentialsFile *os.File, outputBucketLocation string, outputBucketName string) *CreateBatchOptions {
+func (compareComply *CompareComplyV1) NewCreateBatchOptions(function string, inputCredentialsFile io.ReadCloser, inputBucketLocation string, inputBucketName string, outputCredentialsFile io.ReadCloser, outputBucketLocation string, outputBucketName string) *CreateBatchOptions {
 	return &CreateBatchOptions{
 		Function: core.StringPtr(function),
 		InputCredentialsFile: inputCredentialsFile,
@@ -1621,7 +1631,7 @@ func (options *CreateBatchOptions) SetFunction(function string) *CreateBatchOpti
 }
 
 // SetInputCredentialsFile : Allow user to set InputCredentialsFile
-func (options *CreateBatchOptions) SetInputCredentialsFile(inputCredentialsFile *os.File) *CreateBatchOptions {
+func (options *CreateBatchOptions) SetInputCredentialsFile(inputCredentialsFile io.ReadCloser) *CreateBatchOptions {
 	options.InputCredentialsFile = inputCredentialsFile
 	return options
 }
@@ -1639,7 +1649,7 @@ func (options *CreateBatchOptions) SetInputBucketName(inputBucketName string) *C
 }
 
 // SetOutputCredentialsFile : Allow user to set OutputCredentialsFile
-func (options *CreateBatchOptions) SetOutputCredentialsFile(outputCredentialsFile *os.File) *CreateBatchOptions {
+func (options *CreateBatchOptions) SetOutputCredentialsFile(outputCredentialsFile io.ReadCloser) *CreateBatchOptions {
 	options.OutputCredentialsFile = outputCredentialsFile
 	return options
 }
@@ -1864,7 +1874,7 @@ type ElementPair struct {
 type ExtractTablesOptions struct {
 
 	// The document on which to run table extraction.
-	File *os.File `json:"file" validate:"required"`
+	File io.ReadCloser `json:"file" validate:"required"`
 
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
@@ -1888,14 +1898,14 @@ const (
 )
 
 // NewExtractTablesOptions : Instantiate ExtractTablesOptions
-func (compareComply *CompareComplyV1) NewExtractTablesOptions(file *os.File) *ExtractTablesOptions {
+func (compareComply *CompareComplyV1) NewExtractTablesOptions(file io.ReadCloser) *ExtractTablesOptions {
 	return &ExtractTablesOptions{
 		File: file,
 	}
 }
 
 // SetFile : Allow user to set File
-func (options *ExtractTablesOptions) SetFile(file *os.File) *ExtractTablesOptions {
+func (options *ExtractTablesOptions) SetFile(file io.ReadCloser) *ExtractTablesOptions {
 	options.File = file
 	return options
 }
