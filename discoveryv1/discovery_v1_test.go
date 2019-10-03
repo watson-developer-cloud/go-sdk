@@ -18,14 +18,15 @@ package discoveryv1_test
 
 import (
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	"github.com/watson-developer-cloud/go-sdk/discoveryv1"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
+
+	"github.com/IBM/go-sdk-core/core"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/discoveryv1"
 )
 
 var _ = Describe(`DiscoveryV1`, func() {
@@ -52,7 +53,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -97,7 +98,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -144,7 +145,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -191,7 +192,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -238,7 +239,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -286,7 +287,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -334,7 +335,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -381,7 +382,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -430,7 +431,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -480,7 +481,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -529,7 +530,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -577,7 +578,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -624,7 +625,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -673,7 +674,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -722,7 +723,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -771,7 +772,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -820,7 +821,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -869,7 +870,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -919,7 +920,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -966,7 +967,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1013,7 +1014,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1062,7 +1063,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1109,7 +1110,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1156,7 +1157,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1211,7 +1212,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1258,7 +1259,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1305,7 +1306,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1357,7 +1358,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1408,7 +1409,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1460,7 +1461,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1509,7 +1510,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1558,7 +1559,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1605,7 +1606,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1653,7 +1654,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1702,7 +1703,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1751,7 +1752,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1798,7 +1799,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1847,7 +1848,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1896,7 +1897,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1945,7 +1946,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1996,7 +1997,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2047,7 +2048,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2098,7 +2099,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2151,7 +2152,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2197,7 +2198,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2242,7 +2243,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2287,7 +2288,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2332,7 +2333,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2377,7 +2378,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2422,7 +2423,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2467,7 +2468,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2512,7 +2513,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2559,7 +2560,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2606,7 +2607,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2655,7 +2656,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2704,7 +2705,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2753,7 +2754,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2800,7 +2801,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2847,7 +2848,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2896,7 +2897,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2945,7 +2946,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2962,6 +2963,55 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				deleteGatewayOptions := testService.NewDeleteGatewayOptions(environmentID, gatewayID)
 				result, response, operationErr = testService.DeleteGateway(deleteGatewayOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`GetAutocompletion(getAutocompletionOptions *GetAutocompletionOptions)`, func() {
+		getAutocompletionPath := "/v1/environments/{environment_id}/collections/{collection_id}/autocompletion"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		environmentID := "exampleString"
+		collectionID := "exampleString"
+		getAutocompletionPath = strings.Replace(getAutocompletionPath, "{environment_id}", environmentID, 1)
+		getAutocompletionPath = strings.Replace(getAutocompletionPath, "{collection_id}", collectionID, 1)
+		Context(`Successfully - Get Autocomplete Suggestions`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getAutocompletionPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{}`)
+				res.WriteHeader(200)
+			}))
+			It(`Succeed to call GetAutocompletion`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetAutocompletion(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getAutocompletionOptions := testService.NewGetAutocompletionOptions(environmentID, collectionID)
+				result, response, operationErr = testService.GetAutocompletion(getAutocompletionOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())

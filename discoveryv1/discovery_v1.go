@@ -22,7 +22,7 @@ import (
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"os"
+	"io"
 	"strings"
 )
 
@@ -76,6 +76,16 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err erro
 	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (discovery *DiscoveryV1) SetServiceURL(url string) error {
+	return discovery.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (discovery *DiscoveryV1) DisableSSLVerification() {
+	discovery.Service.DisableSSLVerification()
 }
 
 // CreateEnvironment : Create an environment
@@ -1900,6 +1910,9 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (result *QueryRe
 	if queryOptions.Bias != nil {
 		body["bias"] = queryOptions.Bias
 	}
+	if queryOptions.SpellingSuggestions != nil {
+		body["spelling_suggestions"] = queryOptions.SpellingSuggestions
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -2237,6 +2250,68 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	if err == nil {
 		var ok bool
 		result, ok = response.Result.(*QueryNoticesResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+
+// GetAutocompletion : Get Autocomplete Suggestions
+// Returns completion query suggestions for the specified prefix.  /n/n **Important:** this method is only valid when
+// using the Cloud Pak version of Discovery.
+func (discovery *DiscoveryV1) GetAutocompletion(getAutocompletionOptions *GetAutocompletionOptions) (result *Completions, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getAutocompletionOptions, "getAutocompletionOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getAutocompletionOptions, "getAutocompletionOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v1/environments", "collections", "autocompletion"}
+	pathParameters := []string{*getAutocompletionOptions.EnvironmentID, *getAutocompletionOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getAutocompletionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V1", "GetAutocompletion")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getAutocompletionOptions.Field != nil {
+		builder.AddQuery("field", fmt.Sprint(*getAutocompletionOptions.Field))
+	}
+	if getAutocompletionOptions.Prefix != nil {
+		builder.AddQuery("prefix", fmt.Sprint(*getAutocompletionOptions.Prefix))
+	}
+	if getAutocompletionOptions.Count != nil {
+		builder.AddQuery("count", fmt.Sprint(*getAutocompletionOptions.Count))
+	}
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(Completions))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Completions)
 		if !ok {
 			err = fmt.Errorf("An error occurred while processing the operation response.")
 		}
@@ -3765,7 +3840,7 @@ type AddDocumentOptions struct {
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
 	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
 	// supported size are rejected.
-	File *os.File `json:"file,omitempty"`
+	File io.ReadCloser `json:"file,omitempty"`
 
 	// The filename for file.
 	Filename *string `json:"filename,omitempty"`
@@ -3804,7 +3879,7 @@ func (options *AddDocumentOptions) SetCollectionID(collectionID string) *AddDocu
 }
 
 // SetFile : Allow user to set File
-func (options *AddDocumentOptions) SetFile(file *os.File) *AddDocumentOptions {
+func (options *AddDocumentOptions) SetFile(file io.ReadCloser) *AddDocumentOptions {
 	options.File = file
 	return options
 }
@@ -3996,6 +4071,13 @@ type CollectionUsage struct {
 
 	// Total number of collections allowed in the environment.
 	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
+}
+
+// Completions : An object containing an array of autocompletion suggestions.
+type Completions struct {
+
+	// Array of autcomplete suggestion based on the provided prefix.
+	Completions []string `json:"completions,omitempty"`
 }
 
 // Configuration : A custom configuration for the environment.
@@ -4545,7 +4627,7 @@ type CreateStopwordListOptions struct {
 	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The content of the stopword list to ingest.
-	StopwordFile *os.File `json:"stopword_file" validate:"required"`
+	StopwordFile io.ReadCloser `json:"stopword_file" validate:"required"`
 
 	// The filename for stopwordFile.
 	StopwordFilename *string `json:"stopword_filename" validate:"required"`
@@ -4555,7 +4637,7 @@ type CreateStopwordListOptions struct {
 }
 
 // NewCreateStopwordListOptions : Instantiate CreateStopwordListOptions
-func (discovery *DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectionID string, stopwordFile *os.File, stopwordFilename string) *CreateStopwordListOptions {
+func (discovery *DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectionID string, stopwordFile io.ReadCloser, stopwordFilename string) *CreateStopwordListOptions {
 	return &CreateStopwordListOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID: core.StringPtr(collectionID),
@@ -4577,7 +4659,7 @@ func (options *CreateStopwordListOptions) SetCollectionID(collectionID string) *
 }
 
 // SetStopwordFile : Allow user to set StopwordFile
-func (options *CreateStopwordListOptions) SetStopwordFile(stopwordFile *os.File) *CreateStopwordListOptions {
+func (options *CreateStopwordListOptions) SetStopwordFile(stopwordFile io.ReadCloser) *CreateStopwordListOptions {
 	options.StopwordFile = stopwordFile
 	return options
 }
@@ -6328,6 +6410,73 @@ type GatewayList struct {
 
 	// Array of configured gateway connections.
 	Gateways []Gateway `json:"gateways,omitempty"`
+}
+
+// GetAutocompletionOptions : The GetAutocompletion options.
+type GetAutocompletionOptions struct {
+
+	// The ID of the environment.
+	EnvironmentID *string `json:"environment_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// The field in the result documents that autocompletion suggestions are identified from.
+	Field *string `json:"field,omitempty"`
+
+	// The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete to `Hot`, `Housing`, or `How
+	// do I upgrade`. Possible completions are.
+	Prefix *string `json:"prefix,omitempty"`
+
+	// The number of autocompletion suggestions to return.
+	Count *int64 `json:"count,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetAutocompletionOptions : Instantiate GetAutocompletionOptions
+func (discovery *DiscoveryV1) NewGetAutocompletionOptions(environmentID string, collectionID string) *GetAutocompletionOptions {
+	return &GetAutocompletionOptions{
+		EnvironmentID: core.StringPtr(environmentID),
+		CollectionID: core.StringPtr(collectionID),
+	}
+}
+
+// SetEnvironmentID : Allow user to set EnvironmentID
+func (options *GetAutocompletionOptions) SetEnvironmentID(environmentID string) *GetAutocompletionOptions {
+	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetAutocompletionOptions) SetCollectionID(collectionID string) *GetAutocompletionOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetField : Allow user to set Field
+func (options *GetAutocompletionOptions) SetField(field string) *GetAutocompletionOptions {
+	options.Field = core.StringPtr(field)
+	return options
+}
+
+// SetPrefix : Allow user to set Prefix
+func (options *GetAutocompletionOptions) SetPrefix(prefix string) *GetAutocompletionOptions {
+	options.Prefix = core.StringPtr(prefix)
+	return options
+}
+
+// SetCount : Allow user to set Count
+func (options *GetAutocompletionOptions) SetCount(count int64) *GetAutocompletionOptions {
+	options.Count = core.Int64Ptr(count)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetAutocompletionOptions) SetHeaders(param map[string]string) *GetAutocompletionOptions {
+	options.Headers = param
+	return options
 }
 
 // GetCollectionOptions : The GetCollection options.
@@ -8424,6 +8573,12 @@ type QueryOptions struct {
 	// This parameter cannot be used in the same query as the **sort** parameter.
 	Bias *string `json:"bias,omitempty"`
 
+	// When `true` and the **natural_language_query** parameter is used, the **natural_languge_query** parameter is spell
+	// checked. The most likely correction is retunred in the **suggested_query** field of the response (if one exists).
+	//
+	// **Important:** this parameter is only valid when using the Cloud Pak version of Discovery.
+	SpellingSuggestions *bool `json:"spelling_suggestions,omitempty"`
+
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
 	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
@@ -8562,6 +8717,12 @@ func (options *QueryOptions) SetSimilarFields(similarFields string) *QueryOption
 // SetBias : Allow user to set Bias
 func (options *QueryOptions) SetBias(bias string) *QueryOptions {
 	options.Bias = core.StringPtr(bias)
+	return options
+}
+
+// SetSpellingSuggestions : Allow user to set SpellingSuggestions
+func (options *QueryOptions) SetSpellingSuggestions(spellingSuggestions bool) *QueryOptions {
+	options.SpellingSuggestions = core.BoolPtr(spellingSuggestions)
 	return options
 }
 
@@ -9475,7 +9636,7 @@ type UpdateDocumentOptions struct {
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
 	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
 	// supported size are rejected.
-	File *os.File `json:"file,omitempty"`
+	File io.ReadCloser `json:"file,omitempty"`
 
 	// The filename for file.
 	Filename *string `json:"filename,omitempty"`
@@ -9521,7 +9682,7 @@ func (options *UpdateDocumentOptions) SetDocumentID(documentID string) *UpdateDo
 }
 
 // SetFile : Allow user to set File
-func (options *UpdateDocumentOptions) SetFile(file *os.File) *UpdateDocumentOptions {
+func (options *UpdateDocumentOptions) SetFile(file io.ReadCloser) *UpdateDocumentOptions {
 	options.File = file
 	return options
 }
