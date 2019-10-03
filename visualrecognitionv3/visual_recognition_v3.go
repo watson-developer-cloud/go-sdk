@@ -137,14 +137,10 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		builder.AddFormData("threshold", "", "", fmt.Sprint(*classifyOptions.Threshold))
 	}
 	if classifyOptions.Owners != nil {
-		for _, item := range classifyOptions.Owners {
-			builder.AddFormData("owners", "", "", fmt.Sprint(item))
-		}
+		builder.AddFormData("owners", "", "", strings.Join(classifyOptions.Owners, ","))
 	}
 	if classifyOptions.ClassifierIds != nil {
-		for _, item := range classifyOptions.ClassifierIds {
-			builder.AddFormData("classifier_ids", "", "", fmt.Sprint(item))
-		}
+		builder.AddFormData("classifier_ids", "", "", strings.Join(classifyOptions.ClassifierIds, ","))
 	}
 
 	request, err := builder.Build()
