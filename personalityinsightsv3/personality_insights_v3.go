@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights
@@ -87,6 +86,16 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *P
 	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (personalityInsights *PersonalityInsightsV3) SetServiceURL(url string) error {
+	return personalityInsights.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (personalityInsights *PersonalityInsightsV3) DisableSSLVerification() {
+	personalityInsights.Service.DisableSSLVerification()
 }
 
 // Profile : Get profile
