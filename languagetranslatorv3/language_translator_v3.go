@@ -23,7 +23,6 @@ import (
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
-	"os"
 )
 
 // LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The
@@ -76,6 +75,16 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (service *Lan
 	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (languageTranslator *LanguageTranslatorV3) SetServiceURL(url string) error {
+	return languageTranslator.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (languageTranslator *LanguageTranslatorV3) DisableSSLVerification() {
+	languageTranslator.Service.DisableSSLVerification()
 }
 
 // Translate : Translate
@@ -766,12 +775,12 @@ type CreateModelOptions struct {
 	// A TMX file with your customizations. The customizations in the file completely overwrite the domain translaton data,
 	// including high frequency or high confidence phrase translations. You can upload only one glossary with a file size
 	// less than 10 MB per call. A forced glossary should contain single words or short phrases.
-	ForcedGlossary *os.File `json:"forced_glossary,omitempty"`
+	ForcedGlossary io.ReadCloser `json:"forced_glossary,omitempty"`
 
 	// A TMX file with parallel sentences for source and target language. You can upload multiple parallel_corpus files in
 	// one request. All uploaded parallel_corpus files combined, your parallel corpus must contain at least 5,000 parallel
 	// sentences to train successfully.
-	ParallelCorpus *os.File `json:"parallel_corpus,omitempty"`
+	ParallelCorpus io.ReadCloser `json:"parallel_corpus,omitempty"`
 
 	// An optional model name that you can use to identify the model. Valid characters are letters, numbers, dashes,
 	// underscores, spaces and apostrophes. The maximum length is 32 characters.
@@ -795,13 +804,13 @@ func (options *CreateModelOptions) SetBaseModelID(baseModelID string) *CreateMod
 }
 
 // SetForcedGlossary : Allow user to set ForcedGlossary
-func (options *CreateModelOptions) SetForcedGlossary(forcedGlossary *os.File) *CreateModelOptions {
+func (options *CreateModelOptions) SetForcedGlossary(forcedGlossary io.ReadCloser) *CreateModelOptions {
 	options.ForcedGlossary = forcedGlossary
 	return options
 }
 
 // SetParallelCorpus : Allow user to set ParallelCorpus
-func (options *CreateModelOptions) SetParallelCorpus(parallelCorpus *os.File) *CreateModelOptions {
+func (options *CreateModelOptions) SetParallelCorpus(parallelCorpus io.ReadCloser) *CreateModelOptions {
 	options.ParallelCorpus = parallelCorpus
 	return options
 }
@@ -1194,7 +1203,7 @@ type TranslateDocumentOptions struct {
 	// types](https://cloud.ibm.com/docs/services/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
 	//
 	// Maximum file size: **20 MB**.
-	File *os.File `json:"file" validate:"required"`
+	File io.ReadCloser `json:"file" validate:"required"`
 
 	// The filename for file.
 	Filename *string `json:"filename" validate:"required"`
@@ -1219,7 +1228,7 @@ type TranslateDocumentOptions struct {
 }
 
 // NewTranslateDocumentOptions : Instantiate TranslateDocumentOptions
-func (languageTranslator *LanguageTranslatorV3) NewTranslateDocumentOptions(file *os.File, filename string) *TranslateDocumentOptions {
+func (languageTranslator *LanguageTranslatorV3) NewTranslateDocumentOptions(file io.ReadCloser, filename string) *TranslateDocumentOptions {
 	return &TranslateDocumentOptions{
 		File: file,
 		Filename: core.StringPtr(filename),
@@ -1227,7 +1236,7 @@ func (languageTranslator *LanguageTranslatorV3) NewTranslateDocumentOptions(file
 }
 
 // SetFile : Allow user to set File
-func (options *TranslateDocumentOptions) SetFile(file *os.File) *TranslateDocumentOptions {
+func (options *TranslateDocumentOptions) SetFile(file io.ReadCloser) *TranslateDocumentOptions {
 	options.File = file
 	return options
 }
