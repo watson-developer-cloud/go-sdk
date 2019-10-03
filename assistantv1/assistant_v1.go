@@ -27,6 +27,8 @@ import (
 // AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
 // an integrated dialog editor to create conversation flows between your apps and your users.
 //
+// The Assistant v1 API provides authoring methods your application can use to create or update a workspace.
+//
 // Version: 1.0
 // See: https://cloud.ibm.com/docs/services/assistant/
 type AssistantV1 struct {
@@ -74,12 +76,22 @@ func NewAssistantV1(options *AssistantV1Options) (service *AssistantV1, err erro
 	return
 }
 
+// SetServiceURL sets the service URL
+func (assistant *AssistantV1) SetServiceURL(url string) error {
+	return assistant.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (assistant *AssistantV1) DisableSSLVerification() {
+	assistant.Service.DisableSSLVerification()
+}
+
 // Message : Get response to user input
 // Send user input to a workspace and receive a response.
 //
-// **Note:** For most applications, there are significant advantages to using the v2 runtime API instead. These
-// advantages include ease of deployment, automatic state management, versioning, and search capabilities. For more
-// information, see the [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-api-overview).
+// **Important:** This method has been superseded by the new v2 runtime API. The v2 API offers significant advantages,
+// including ease of deployment, automatic state management, versioning, and search capabilities. For more information,
+// see the [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-api-overview).
 //
 // There is no rate limit for this operation.
 func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (result *MessageResponse, response *core.DetailedResponse, err error) {
