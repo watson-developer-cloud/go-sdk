@@ -41,7 +41,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = speechtotextv1.
 			NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				URL:      os.Getenv("SPEECH_TO_TEXT_URL"),
+				URL: os.Getenv("SPEECH_TO_TEXT_URL"),
 				Authenticator: &core.BasicAuthenticator{
 					Username: os.Getenv("SPEECH_TO_TEXT_USERNAME"),
 					Password: os.Getenv("SPEECH_TO_TEXT_PASSWORD"),
@@ -94,7 +94,7 @@ func TestRecognize(t *testing.T) {
 
 		recognize, _, responseErr := service.Recognize(
 			&speechtotextv1.RecognizeOptions{
-				Audio:                     &audio,
+				Audio:                     audio,
 				ContentType:               core.StringPtr("audio/mp3"),
 				Timestamps:                core.BoolPtr(true),
 				WordAlternativesThreshold: core.Float32Ptr(0.9),
@@ -346,7 +346,7 @@ func TestAudio(t *testing.T) {
 		&speechtotextv1.AddAudioOptions{
 			CustomizationID: languageModel.CustomizationID,
 			AudioName:       core.StringPtr("audio1"),
-			AudioResource:   &audioFile,
+			AudioResource:   audioFile,
 			ContentType:     core.StringPtr("audio/wav"),
 		},
 	)

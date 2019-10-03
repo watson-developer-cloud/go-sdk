@@ -19,6 +19,7 @@ package visualrecognitionv3_test
  */
 
 import (
+	"io"
 	"net/http"
 	"os"
 	"testing"
@@ -94,7 +95,7 @@ func TestClassifiers(t *testing.T) {
 	assert.Nil(t, trucksFileErr)
 	defer trucksFile.Close()
 
-	positiveExamples := make(map[string]*os.File)
+	positiveExamples := make(map[string]io.ReadCloser)
 	positiveExamples["cars"] = carsFile
 
 	createClassifier, _, responseErr := service.CreateClassifier(
