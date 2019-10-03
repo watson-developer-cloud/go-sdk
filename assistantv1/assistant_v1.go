@@ -19,6 +19,7 @@ package assistantv1
 
 import (
 	"fmt"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
@@ -52,8 +53,8 @@ func NewAssistantV1(options *AssistantV1Options) (service *AssistantV1, err erro
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -171,7 +172,6 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (result *M
 	return
 }
 
-
 // ListWorkspaces : List workspaces
 // List the workspaces associated with a Watson Assistant service instance.
 //
@@ -232,7 +232,6 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 
 	return
 }
-
 
 // CreateWorkspace : Create workspace
 // Create a workspace based on component objects. You must provide workspace components defining the content of the new
@@ -320,7 +319,6 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	return
 }
 
-
 // GetWorkspace : Get information about a workspace
 // Get information about a workspace, optionally including all workspace content.
 //
@@ -383,7 +381,6 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 
 	return
 }
-
 
 // UpdateWorkspace : Update workspace
 // Update an existing workspace with new or modified data. You must provide component objects defining the content of
@@ -479,7 +476,6 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	return
 }
 
-
 // DeleteWorkspace : Delete workspace
 // Delete a workspace from the service instance.
 //
@@ -524,7 +520,6 @@ func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWork
 
 	return
 }
-
 
 // ListIntents : List intents
 // List the intents for a workspace.
@@ -594,7 +589,6 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 
 	return
 }
-
 
 // CreateIntent : Create intent
 // Create a new intent.
@@ -667,7 +661,6 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 	return
 }
 
-
 // GetIntent : Get intent
 // Get information about an intent, optionally including all intent content.
 //
@@ -727,7 +720,6 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (res
 
 	return
 }
-
 
 // UpdateIntent : Update intent
 // Update an existing intent with new or modified data. You must provide component objects defining the content of the
@@ -801,7 +793,6 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	return
 }
 
-
 // DeleteIntent : Delete intent
 // Delete an intent from a workspace.
 //
@@ -846,7 +837,6 @@ func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOpti
 
 	return
 }
-
 
 // ListExamples : List user input examples
 // List the user input examples for an intent, optionally including contextual entity mentions.
@@ -912,7 +902,6 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 
 	return
 }
-
 
 // CreateExample : Create user input example
 // Add a new user input example to an intent.
@@ -982,7 +971,6 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 	return
 }
 
-
 // GetExample : Get user input example
 // Get information about a user input example.
 //
@@ -1038,7 +1026,6 @@ func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (
 
 	return
 }
-
 
 // UpdateExample : Update user input example
 // Update the text of a user input example.
@@ -1108,7 +1095,6 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 	return
 }
 
-
 // DeleteExample : Delete user input example
 // Delete a user input example from an intent.
 //
@@ -1153,7 +1139,6 @@ func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleO
 
 	return
 }
-
 
 // ListCounterexamples : List counterexamples
 // List the counterexamples for a workspace. Counterexamples are examples that have been marked as irrelevant input.
@@ -1220,7 +1205,6 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 	return
 }
 
-
 // CreateCounterexample : Create counterexample
 // Add a new counterexample to a workspace. Counterexamples are examples that have been marked as irrelevant input.
 //
@@ -1286,7 +1270,6 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 	return
 }
 
-
 // GetCounterexample : Get counterexample
 // Get information about a counterexample. Counterexamples are examples that have been marked as irrelevant input.
 //
@@ -1342,7 +1325,6 @@ func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCou
 
 	return
 }
-
 
 // UpdateCounterexample : Update counterexample
 // Update the text of a counterexample. Counterexamples are examples that have been marked as irrelevant input.
@@ -1409,7 +1391,6 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 	return
 }
 
-
 // DeleteCounterexample : Delete counterexample
 // Delete a counterexample from a workspace. Counterexamples are examples that have been marked as irrelevant input.
 //
@@ -1454,7 +1435,6 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 
 	return
 }
-
 
 // ListEntities : List entities
 // List the entities for a workspace.
@@ -1524,7 +1504,6 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 
 	return
 }
-
 
 // CreateEntity : Create entity
 // Create a new entity, or enable a system entity.
@@ -1603,7 +1582,6 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	return
 }
 
-
 // GetEntity : Get entity
 // Get information about an entity, optionally including all entity content.
 //
@@ -1663,7 +1641,6 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (res
 
 	return
 }
-
 
 // UpdateEntity : Update entity
 // Update an existing entity with new or modified data. You must provide component objects defining the content of the
@@ -1743,7 +1720,6 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 	return
 }
 
-
 // DeleteEntity : Delete entity
 // Delete an entity from a workspace, or disable a system entity.
 //
@@ -1788,7 +1764,6 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 
 	return
 }
-
 
 // ListMentions : List entity mentions
 // List mentions for a contextual entity. An entity mention is an occurrence of a contextual entity in the context of an
@@ -1849,7 +1824,6 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 
 	return
 }
-
 
 // ListValues : List entity values
 // List the values for an entity.
@@ -1918,7 +1892,6 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 
 	return
 }
-
 
 // CreateValue : Create entity value
 // Create a new value for an entity.
@@ -1997,7 +1970,6 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	return
 }
 
-
 // GetValue : Get entity value
 // Get information about an entity value.
 //
@@ -2056,7 +2028,6 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (result
 
 	return
 }
-
 
 // UpdateValue : Update entity value
 // Update an existing entity value with new or modified data. You must provide component objects defining the content of
@@ -2136,7 +2107,6 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	return
 }
 
-
 // DeleteValue : Delete entity value
 // Delete a value from an entity.
 //
@@ -2181,7 +2151,6 @@ func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions
 
 	return
 }
-
 
 // ListSynonyms : List entity value synonyms
 // List the synonyms for an entity value.
@@ -2248,7 +2217,6 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 	return
 }
 
-
 // CreateSynonym : Create entity value synonym
 // Add a new synonym to an entity value.
 //
@@ -2314,7 +2282,6 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 	return
 }
 
-
 // GetSynonym : Get entity value synonym
 // Get information about a synonym of an entity value.
 //
@@ -2370,7 +2337,6 @@ func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (
 
 	return
 }
-
 
 // UpdateSynonym : Update entity value synonym
 // Update an existing entity value synonym with new text.
@@ -2437,7 +2403,6 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 	return
 }
 
-
 // DeleteSynonym : Delete entity value synonym
 // Delete a synonym from an entity value.
 //
@@ -2482,7 +2447,6 @@ func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymO
 
 	return
 }
-
 
 // ListDialogNodes : List dialog nodes
 // List the dialog nodes for a workspace.
@@ -2548,7 +2512,6 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 
 	return
 }
-
 
 // CreateDialogNode : Create dialog node
 // Create a new dialog node.
@@ -2666,7 +2629,6 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	return
 }
 
-
 // GetDialogNode : Get dialog node
 // Get information about a dialog node.
 //
@@ -2722,7 +2684,6 @@ func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeO
 
 	return
 }
-
 
 // UpdateDialogNode : Update dialog node
 // Update an existing dialog node with new or modified data.
@@ -2840,7 +2801,6 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	return
 }
 
-
 // DeleteDialogNode : Delete dialog node
 // Delete a dialog node from a workspace.
 //
@@ -2885,7 +2845,6 @@ func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDi
 
 	return
 }
-
 
 // ListLogs : List log events in a workspace
 // List the events from the log of a specific workspace.
@@ -2953,7 +2912,6 @@ func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (result
 	return
 }
 
-
 // ListAllLogs : List log events in all workspaces
 // List the events from the logs of all workspaces in the service instance.
 //
@@ -3018,7 +2976,6 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 	return
 }
 
-
 // DeleteUserData : Delete labeled data
 // Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
 // customer ID.
@@ -3069,7 +3026,6 @@ func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	return
 }
 
-
 // CaptureGroup : A recognized capture group for a pattern-based entity.
 type CaptureGroup struct {
 
@@ -3085,42 +3041,42 @@ type Context map[string]interface{}
 
 // SetConversationID : Allow user to set ConversationID
 func (this *Context) SetConversationID(ConversationID *string) {
-   (*this)["conversation_id"] = ConversationID
+	(*this)["conversation_id"] = ConversationID
 }
 
 // GetConversationID : Allow user to get ConversationID
 func (this *Context) GetConversationID() *string {
-   return (*this)["conversation_id"].(*string)
+	return (*this)["conversation_id"].(*string)
 }
 
 // SetSystem : Allow user to set System
 func (this *Context) SetSystem(System *SystemResponse) {
-   (*this)["system"] = System
+	(*this)["system"] = System
 }
 
 // GetSystem : Allow user to get System
 func (this *Context) GetSystem() *SystemResponse {
-   return (*this)["system"].(*SystemResponse)
+	return (*this)["system"].(*SystemResponse)
 }
 
 // SetMetadata : Allow user to set Metadata
 func (this *Context) SetMetadata(Metadata *MessageContextMetadata) {
-   (*this)["metadata"] = Metadata
+	(*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
 func (this *Context) GetMetadata() *MessageContextMetadata {
-   return (*this)["metadata"].(*MessageContextMetadata)
+	return (*this)["metadata"].(*MessageContextMetadata)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *Context) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *Context) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // Counterexample : Counterexample struct
@@ -3167,7 +3123,7 @@ type CreateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
 	return &CreateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3260,57 +3216,57 @@ type CreateDialogNodeOptions struct {
 // Constants associated with the CreateDialogNodeOptions.Type property.
 // How the dialog node is processed.
 const (
-	CreateDialogNodeOptions_Type_EventHandler = "event_handler"
-	CreateDialogNodeOptions_Type_Folder = "folder"
-	CreateDialogNodeOptions_Type_Frame = "frame"
+	CreateDialogNodeOptions_Type_EventHandler      = "event_handler"
+	CreateDialogNodeOptions_Type_Folder            = "folder"
+	CreateDialogNodeOptions_Type_Frame             = "frame"
 	CreateDialogNodeOptions_Type_ResponseCondition = "response_condition"
-	CreateDialogNodeOptions_Type_Slot = "slot"
-	CreateDialogNodeOptions_Type_Standard = "standard"
+	CreateDialogNodeOptions_Type_Slot              = "slot"
+	CreateDialogNodeOptions_Type_Standard          = "standard"
 )
 
 // Constants associated with the CreateDialogNodeOptions.EventName property.
 // How an `event_handler` node is processed.
 const (
-	CreateDialogNodeOptions_EventName_DigressionReturnPrompt = "digression_return_prompt"
-	CreateDialogNodeOptions_EventName_Filled = "filled"
-	CreateDialogNodeOptions_EventName_FilledMultiple = "filled_multiple"
-	CreateDialogNodeOptions_EventName_Focus = "focus"
-	CreateDialogNodeOptions_EventName_Generic = "generic"
-	CreateDialogNodeOptions_EventName_Input = "input"
-	CreateDialogNodeOptions_EventName_Nomatch = "nomatch"
+	CreateDialogNodeOptions_EventName_DigressionReturnPrompt   = "digression_return_prompt"
+	CreateDialogNodeOptions_EventName_Filled                   = "filled"
+	CreateDialogNodeOptions_EventName_FilledMultiple           = "filled_multiple"
+	CreateDialogNodeOptions_EventName_Focus                    = "focus"
+	CreateDialogNodeOptions_EventName_Generic                  = "generic"
+	CreateDialogNodeOptions_EventName_Input                    = "input"
+	CreateDialogNodeOptions_EventName_Nomatch                  = "nomatch"
 	CreateDialogNodeOptions_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	CreateDialogNodeOptions_EventName_Validate = "validate"
+	CreateDialogNodeOptions_EventName_Validate                 = "validate"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	CreateDialogNodeOptions_DigressIn_DoesNotReturn = "does_not_return"
-	CreateDialogNodeOptions_DigressIn_NotAvailable = "not_available"
-	CreateDialogNodeOptions_DigressIn_Returns = "returns"
+	CreateDialogNodeOptions_DigressIn_NotAvailable  = "not_available"
+	CreateDialogNodeOptions_DigressIn_Returns       = "returns"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	CreateDialogNodeOptions_DigressOut_AllowAll = "allow_all"
+	CreateDialogNodeOptions_DigressOut_AllowAll            = "allow_all"
 	CreateDialogNodeOptions_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	CreateDialogNodeOptions_DigressOut_AllowReturning = "allow_returning"
+	CreateDialogNodeOptions_DigressOut_AllowReturning      = "allow_returning"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	CreateDialogNodeOptions_DigressOutSlots_AllowAll = "allow_all"
+	CreateDialogNodeOptions_DigressOutSlots_AllowAll       = "allow_all"
 	CreateDialogNodeOptions_DigressOutSlots_AllowReturning = "allow_returning"
-	CreateDialogNodeOptions_DigressOutSlots_NotAllowed = "not_allowed"
+	CreateDialogNodeOptions_DigressOutSlots_NotAllowed     = "not_allowed"
 )
 
 // NewCreateDialogNodeOptions : Instantiate CreateDialogNodeOptions
 func (assistant *AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -3494,7 +3450,7 @@ type CreateEntityOptions struct {
 func (assistant *AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
 	return &CreateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -3565,8 +3521,8 @@ type CreateExampleOptions struct {
 func (assistant *AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
 	return &CreateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3646,7 +3602,7 @@ type CreateIntentOptions struct {
 func (assistant *AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
 	return &CreateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -3705,9 +3661,9 @@ type CreateSynonymOptions struct {
 func (assistant *AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
 	return &CreateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -3826,8 +3782,8 @@ const (
 func (assistant *AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -4005,7 +3961,7 @@ type DeleteCounterexampleOptions struct {
 func (assistant *AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
 	return &DeleteCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4044,7 +4000,7 @@ type DeleteDialogNodeOptions struct {
 func (assistant *AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
 	return &DeleteDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -4083,7 +4039,7 @@ type DeleteEntityOptions struct {
 func (assistant *AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
 	return &DeleteEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -4125,8 +4081,8 @@ type DeleteExampleOptions struct {
 func (assistant *AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
 	return &DeleteExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4171,7 +4127,7 @@ type DeleteIntentOptions struct {
 func (assistant *AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
 	return &DeleteIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -4216,9 +4172,9 @@ type DeleteSynonymOptions struct {
 func (assistant *AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
 	return &DeleteSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -4301,8 +4257,8 @@ type DeleteValueOptions struct {
 func (assistant *AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
 	return &DeleteValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -4433,50 +4389,50 @@ type DialogNode struct {
 // Constants associated with the DialogNode.Type property.
 // How the dialog node is processed.
 const (
-	DialogNode_Type_EventHandler = "event_handler"
-	DialogNode_Type_Folder = "folder"
-	DialogNode_Type_Frame = "frame"
+	DialogNode_Type_EventHandler      = "event_handler"
+	DialogNode_Type_Folder            = "folder"
+	DialogNode_Type_Frame             = "frame"
 	DialogNode_Type_ResponseCondition = "response_condition"
-	DialogNode_Type_Slot = "slot"
-	DialogNode_Type_Standard = "standard"
+	DialogNode_Type_Slot              = "slot"
+	DialogNode_Type_Standard          = "standard"
 )
 
 // Constants associated with the DialogNode.EventName property.
 // How an `event_handler` node is processed.
 const (
-	DialogNode_EventName_DigressionReturnPrompt = "digression_return_prompt"
-	DialogNode_EventName_Filled = "filled"
-	DialogNode_EventName_FilledMultiple = "filled_multiple"
-	DialogNode_EventName_Focus = "focus"
-	DialogNode_EventName_Generic = "generic"
-	DialogNode_EventName_Input = "input"
-	DialogNode_EventName_Nomatch = "nomatch"
+	DialogNode_EventName_DigressionReturnPrompt   = "digression_return_prompt"
+	DialogNode_EventName_Filled                   = "filled"
+	DialogNode_EventName_FilledMultiple           = "filled_multiple"
+	DialogNode_EventName_Focus                    = "focus"
+	DialogNode_EventName_Generic                  = "generic"
+	DialogNode_EventName_Input                    = "input"
+	DialogNode_EventName_Nomatch                  = "nomatch"
 	DialogNode_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	DialogNode_EventName_Validate = "validate"
+	DialogNode_EventName_Validate                 = "validate"
 )
 
 // Constants associated with the DialogNode.DigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	DialogNode_DigressIn_DoesNotReturn = "does_not_return"
-	DialogNode_DigressIn_NotAvailable = "not_available"
-	DialogNode_DigressIn_Returns = "returns"
+	DialogNode_DigressIn_NotAvailable  = "not_available"
+	DialogNode_DigressIn_Returns       = "returns"
 )
 
 // Constants associated with the DialogNode.DigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	DialogNode_DigressOut_AllowAll = "allow_all"
+	DialogNode_DigressOut_AllowAll            = "allow_all"
 	DialogNode_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	DialogNode_DigressOut_AllowReturning = "allow_returning"
+	DialogNode_DigressOut_AllowReturning      = "allow_returning"
 )
 
 // Constants associated with the DialogNode.DigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	DialogNode_DigressOutSlots_AllowAll = "allow_all"
+	DialogNode_DigressOutSlots_AllowAll       = "allow_all"
 	DialogNode_DigressOutSlots_AllowReturning = "allow_returning"
-	DialogNode_DigressOutSlots_NotAllowed = "not_allowed"
+	DialogNode_DigressOutSlots_NotAllowed     = "not_allowed"
 )
 
 // DialogNodeAction : DialogNodeAction struct
@@ -4501,10 +4457,10 @@ type DialogNodeAction struct {
 // Constants associated with the DialogNodeAction.Type property.
 // The type of action to invoke.
 const (
-	DialogNodeAction_Type_Client = "client"
+	DialogNodeAction_Type_Client        = "client"
 	DialogNodeAction_Type_CloudFunction = "cloud_function"
-	DialogNodeAction_Type_Server = "server"
-	DialogNodeAction_Type_WebAction = "web_action"
+	DialogNodeAction_Type_Server        = "server"
+	DialogNodeAction_Type_WebAction     = "web_action"
 )
 
 // DialogNodeCollection : An array of dialog nodes.
@@ -4569,19 +4525,19 @@ type DialogNodeNextStep struct {
 //     - `skip_all_slots`
 //      If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
 const (
-	DialogNodeNextStep_Behavior_GetUserInput = "get_user_input"
-	DialogNodeNextStep_Behavior_JumpTo = "jump_to"
-	DialogNodeNextStep_Behavior_Reprompt = "reprompt"
-	DialogNodeNextStep_Behavior_SkipAllSlots = "skip_all_slots"
-	DialogNodeNextStep_Behavior_SkipSlot = "skip_slot"
+	DialogNodeNextStep_Behavior_GetUserInput  = "get_user_input"
+	DialogNodeNextStep_Behavior_JumpTo        = "jump_to"
+	DialogNodeNextStep_Behavior_Reprompt      = "reprompt"
+	DialogNodeNextStep_Behavior_SkipAllSlots  = "skip_all_slots"
+	DialogNodeNextStep_Behavior_SkipSlot      = "skip_slot"
 	DialogNodeNextStep_Behavior_SkipUserInput = "skip_user_input"
 )
 
 // Constants associated with the DialogNodeNextStep.Selector property.
 // Which part of the dialog node to process next.
 const (
-	DialogNodeNextStep_Selector_Body = "body"
-	DialogNodeNextStep_Selector_Client = "client"
+	DialogNodeNextStep_Selector_Body      = "body"
+	DialogNodeNextStep_Selector_Client    = "client"
 	DialogNodeNextStep_Selector_Condition = "condition"
 	DialogNodeNextStep_Selector_UserInput = "user_input"
 )
@@ -4592,32 +4548,32 @@ type DialogNodeOutput map[string]interface{}
 
 // SetGeneric : Allow user to set Generic
 func (this *DialogNodeOutput) SetGeneric(Generic *[]DialogNodeOutputGeneric) {
-   (*this)["generic"] = Generic
+	(*this)["generic"] = Generic
 }
 
 // GetGeneric : Allow user to get Generic
 func (this *DialogNodeOutput) GetGeneric() *[]DialogNodeOutputGeneric {
-   return (*this)["generic"].(*[]DialogNodeOutputGeneric)
+	return (*this)["generic"].(*[]DialogNodeOutputGeneric)
 }
 
 // SetModifiers : Allow user to set Modifiers
 func (this *DialogNodeOutput) SetModifiers(Modifiers *DialogNodeOutputModifiers) {
-   (*this)["modifiers"] = Modifiers
+	(*this)["modifiers"] = Modifiers
 }
 
 // GetModifiers : Allow user to get Modifiers
 func (this *DialogNodeOutput) GetModifiers() *DialogNodeOutputModifiers {
-   return (*this)["modifiers"].(*DialogNodeOutputModifiers)
+	return (*this)["modifiers"].(*DialogNodeOutputModifiers)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *DialogNodeOutput) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *DialogNodeOutput) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // DialogNodeOutputGeneric : DialogNodeOutputGeneric struct
@@ -4693,26 +4649,26 @@ type DialogNodeOutputGeneric struct {
 // runtime API.
 const (
 	DialogNodeOutputGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	DialogNodeOutputGeneric_ResponseType_Image = "image"
-	DialogNodeOutputGeneric_ResponseType_Option = "option"
-	DialogNodeOutputGeneric_ResponseType_Pause = "pause"
-	DialogNodeOutputGeneric_ResponseType_SearchSkill = "search_skill"
-	DialogNodeOutputGeneric_ResponseType_Text = "text"
+	DialogNodeOutputGeneric_ResponseType_Image          = "image"
+	DialogNodeOutputGeneric_ResponseType_Option         = "option"
+	DialogNodeOutputGeneric_ResponseType_Pause          = "pause"
+	DialogNodeOutputGeneric_ResponseType_SearchSkill    = "search_skill"
+	DialogNodeOutputGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the DialogNodeOutputGeneric.SelectionPolicy property.
 // How a response is selected from the list, if more than one response is specified. Valid only when
 // **response_type**=`text`.
 const (
-	DialogNodeOutputGeneric_SelectionPolicy_Multiline = "multiline"
-	DialogNodeOutputGeneric_SelectionPolicy_Random = "random"
+	DialogNodeOutputGeneric_SelectionPolicy_Multiline  = "multiline"
+	DialogNodeOutputGeneric_SelectionPolicy_Random     = "random"
 	DialogNodeOutputGeneric_SelectionPolicy_Sequential = "sequential"
 )
 
 // Constants associated with the DialogNodeOutputGeneric.Preference property.
 // The preferred type of control to display, if supported by the channel. Valid only when **response_type**=`option`.
 const (
-	DialogNodeOutputGeneric_Preference_Button = "button"
+	DialogNodeOutputGeneric_Preference_Button   = "button"
 	DialogNodeOutputGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -4720,7 +4676,7 @@ const (
 // The type of the search query. Required when **response_type**=`search_skill`.
 const (
 	DialogNodeOutputGeneric_QueryType_DiscoveryQueryLanguage = "discovery_query_language"
-	DialogNodeOutputGeneric_QueryType_NaturalLanguage = "natural_language"
+	DialogNodeOutputGeneric_QueryType_NaturalLanguage        = "natural_language"
 )
 
 // DialogNodeOutputModifiers : Options that modify how specified output is handled.
@@ -4809,52 +4765,52 @@ type DialogSuggestionOutput map[string]interface{}
 
 // SetNodesVisited : Allow user to set NodesVisited
 func (this *DialogSuggestionOutput) SetNodesVisited(NodesVisited *[]string) {
-   (*this)["nodes_visited"] = NodesVisited
+	(*this)["nodes_visited"] = NodesVisited
 }
 
 // GetNodesVisited : Allow user to get NodesVisited
 func (this *DialogSuggestionOutput) GetNodesVisited() *[]string {
-   return (*this)["nodes_visited"].(*[]string)
+	return (*this)["nodes_visited"].(*[]string)
 }
 
 // SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
 func (this *DialogSuggestionOutput) SetNodesVisitedDetails(NodesVisitedDetails *[]DialogNodeVisitedDetails) {
-   (*this)["nodes_visited_details"] = NodesVisitedDetails
+	(*this)["nodes_visited_details"] = NodesVisitedDetails
 }
 
 // GetNodesVisitedDetails : Allow user to get NodesVisitedDetails
 func (this *DialogSuggestionOutput) GetNodesVisitedDetails() *[]DialogNodeVisitedDetails {
-   return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
+	return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
 }
 
 // SetText : Allow user to set Text
 func (this *DialogSuggestionOutput) SetText(Text *[]string) {
-   (*this)["text"] = Text
+	(*this)["text"] = Text
 }
 
 // GetText : Allow user to get Text
 func (this *DialogSuggestionOutput) GetText() *[]string {
-   return (*this)["text"].(*[]string)
+	return (*this)["text"].(*[]string)
 }
 
 // SetGeneric : Allow user to set Generic
 func (this *DialogSuggestionOutput) SetGeneric(Generic *[]DialogSuggestionResponseGeneric) {
-   (*this)["generic"] = Generic
+	(*this)["generic"] = Generic
 }
 
 // GetGeneric : Allow user to get Generic
 func (this *DialogSuggestionOutput) GetGeneric() *[]DialogSuggestionResponseGeneric {
-   return (*this)["generic"].(*[]DialogSuggestionResponseGeneric)
+	return (*this)["generic"].(*[]DialogSuggestionResponseGeneric)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *DialogSuggestionOutput) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *DialogSuggestionOutput) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // DialogSuggestionResponseGeneric : DialogSuggestionResponseGeneric struct
@@ -4912,17 +4868,17 @@ type DialogSuggestionResponseGeneric struct {
 // by the v2 runtime API.
 const (
 	DialogSuggestionResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	DialogSuggestionResponseGeneric_ResponseType_Image = "image"
-	DialogSuggestionResponseGeneric_ResponseType_Option = "option"
-	DialogSuggestionResponseGeneric_ResponseType_Pause = "pause"
-	DialogSuggestionResponseGeneric_ResponseType_SearchSkill = "search_skill"
-	DialogSuggestionResponseGeneric_ResponseType_Text = "text"
+	DialogSuggestionResponseGeneric_ResponseType_Image          = "image"
+	DialogSuggestionResponseGeneric_ResponseType_Option         = "option"
+	DialogSuggestionResponseGeneric_ResponseType_Pause          = "pause"
+	DialogSuggestionResponseGeneric_ResponseType_SearchSkill    = "search_skill"
+	DialogSuggestionResponseGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the DialogSuggestionResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	DialogSuggestionResponseGeneric_Preference_Button = "button"
+	DialogSuggestionResponseGeneric_Preference_Button   = "button"
 	DialogSuggestionResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -5049,7 +5005,7 @@ type GetCounterexampleOptions struct {
 func (assistant *AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
 	return &GetCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -5097,7 +5053,7 @@ type GetDialogNodeOptions struct {
 func (assistant *AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
 	return &GetDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -5149,7 +5105,7 @@ type GetEntityOptions struct {
 func (assistant *AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
 	return &GetEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -5206,8 +5162,8 @@ type GetExampleOptions struct {
 func (assistant *AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
 	return &GetExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -5265,7 +5221,7 @@ type GetIntentOptions struct {
 func (assistant *AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
 	return &GetIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -5325,9 +5281,9 @@ type GetSynonymOptions struct {
 func (assistant *AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
 	return &GetSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -5394,8 +5350,8 @@ type GetValueOptions struct {
 func (assistant *AssistantV1) NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
 	return &GetValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -5618,7 +5574,7 @@ type ListCounterexamplesOptions struct {
 // The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
 // minus sign (`-`).
 const (
-	ListCounterexamplesOptions_Sort_Text = "text"
+	ListCounterexamplesOptions_Sort_Text    = "text"
 	ListCounterexamplesOptions_Sort_Updated = "updated"
 )
 
@@ -5693,7 +5649,7 @@ type ListDialogNodesOptions struct {
 // sign (`-`).
 const (
 	ListDialogNodesOptions_Sort_DialogNode = "dialog_node"
-	ListDialogNodesOptions_Sort_Updated = "updated"
+	ListDialogNodesOptions_Sort_Updated    = "updated"
 )
 
 // NewListDialogNodesOptions : Instantiate ListDialogNodesOptions
@@ -5770,7 +5726,7 @@ type ListEntitiesOptions struct {
 // The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListEntitiesOptions_Sort_Entity = "entity"
+	ListEntitiesOptions_Sort_Entity  = "entity"
 	ListEntitiesOptions_Sort_Updated = "updated"
 )
 
@@ -5853,7 +5809,7 @@ type ListExamplesOptions struct {
 // The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListExamplesOptions_Sort_Text = "text"
+	ListExamplesOptions_Sort_Text    = "text"
 	ListExamplesOptions_Sort_Updated = "updated"
 )
 
@@ -5861,7 +5817,7 @@ const (
 func (assistant *AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
 	return &ListExamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -5938,7 +5894,7 @@ type ListIntentsOptions struct {
 // The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus sign
 // (`-`).
 const (
-	ListIntentsOptions_Sort_Intent = "intent"
+	ListIntentsOptions_Sort_Intent  = "intent"
 	ListIntentsOptions_Sort_Updated = "updated"
 )
 
@@ -6082,7 +6038,7 @@ type ListMentionsOptions struct {
 func (assistant *AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
 	return &ListMentionsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -6157,8 +6113,8 @@ const (
 func (assistant *AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
 	return &ListSynonymsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -6245,14 +6201,14 @@ type ListValuesOptions struct {
 // minus sign (`-`).
 const (
 	ListValuesOptions_Sort_Updated = "updated"
-	ListValuesOptions_Sort_Value = "value"
+	ListValuesOptions_Sort_Value   = "value"
 )
 
 // NewListValuesOptions : Instantiate ListValuesOptions
 func (assistant *AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
 	return &ListValuesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -6328,7 +6284,7 @@ type ListWorkspacesOptions struct {
 // The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListWorkspacesOptions_Sort_Name = "name"
+	ListWorkspacesOptions_Sort_Name    = "name"
 	ListWorkspacesOptions_Sort_Updated = "updated"
 )
 
@@ -6416,8 +6372,8 @@ type LogMessage struct {
 // The severity of the log message.
 const (
 	LogMessage_Level_Error = "error"
-	LogMessage_Level_Info = "info"
-	LogMessage_Level_Warn = "warn"
+	LogMessage_Level_Info  = "info"
+	LogMessage_Level_Warn  = "warn"
 )
 
 // LogPagination : The pagination data for the returned objects.
@@ -6462,22 +6418,22 @@ type MessageInput map[string]interface{}
 
 // SetText : Allow user to set Text
 func (this *MessageInput) SetText(Text *string) {
-   (*this)["text"] = Text
+	(*this)["text"] = Text
 }
 
 // GetText : Allow user to get Text
 func (this *MessageInput) GetText() *string {
-   return (*this)["text"].(*string)
+	return (*this)["text"].(*string)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *MessageInput) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *MessageInput) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // MessageOptions : The Message options.
@@ -6636,62 +6592,62 @@ type OutputData map[string]interface{}
 
 // SetNodesVisited : Allow user to set NodesVisited
 func (this *OutputData) SetNodesVisited(NodesVisited *[]string) {
-   (*this)["nodes_visited"] = NodesVisited
+	(*this)["nodes_visited"] = NodesVisited
 }
 
 // GetNodesVisited : Allow user to get NodesVisited
 func (this *OutputData) GetNodesVisited() *[]string {
-   return (*this)["nodes_visited"].(*[]string)
+	return (*this)["nodes_visited"].(*[]string)
 }
 
 // SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
 func (this *OutputData) SetNodesVisitedDetails(NodesVisitedDetails *[]DialogNodeVisitedDetails) {
-   (*this)["nodes_visited_details"] = NodesVisitedDetails
+	(*this)["nodes_visited_details"] = NodesVisitedDetails
 }
 
 // GetNodesVisitedDetails : Allow user to get NodesVisitedDetails
 func (this *OutputData) GetNodesVisitedDetails() *[]DialogNodeVisitedDetails {
-   return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
+	return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
 }
 
 // SetLogMessages : Allow user to set LogMessages
 func (this *OutputData) SetLogMessages(LogMessages *[]LogMessage) {
-   (*this)["log_messages"] = LogMessages
+	(*this)["log_messages"] = LogMessages
 }
 
 // GetLogMessages : Allow user to get LogMessages
 func (this *OutputData) GetLogMessages() *[]LogMessage {
-   return (*this)["log_messages"].(*[]LogMessage)
+	return (*this)["log_messages"].(*[]LogMessage)
 }
 
 // SetText : Allow user to set Text
 func (this *OutputData) SetText(Text *[]string) {
-   (*this)["text"] = Text
+	(*this)["text"] = Text
 }
 
 // GetText : Allow user to get Text
 func (this *OutputData) GetText() *[]string {
-   return (*this)["text"].(*[]string)
+	return (*this)["text"].(*[]string)
 }
 
 // SetGeneric : Allow user to set Generic
 func (this *OutputData) SetGeneric(Generic *[]RuntimeResponseGeneric) {
-   (*this)["generic"] = Generic
+	(*this)["generic"] = Generic
 }
 
 // GetGeneric : Allow user to get Generic
 func (this *OutputData) GetGeneric() *[]RuntimeResponseGeneric {
-   return (*this)["generic"].(*[]RuntimeResponseGeneric)
+	return (*this)["generic"].(*[]RuntimeResponseGeneric)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *OutputData) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *OutputData) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // Pagination : The pagination data for the returned objects.
@@ -6808,17 +6764,17 @@ type RuntimeResponseGeneric struct {
 // and Premium users.
 const (
 	RuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	RuntimeResponseGeneric_ResponseType_Image = "image"
-	RuntimeResponseGeneric_ResponseType_Option = "option"
-	RuntimeResponseGeneric_ResponseType_Pause = "pause"
-	RuntimeResponseGeneric_ResponseType_Suggestion = "suggestion"
-	RuntimeResponseGeneric_ResponseType_Text = "text"
+	RuntimeResponseGeneric_ResponseType_Image          = "image"
+	RuntimeResponseGeneric_ResponseType_Option         = "option"
+	RuntimeResponseGeneric_ResponseType_Pause          = "pause"
+	RuntimeResponseGeneric_ResponseType_Suggestion     = "suggestion"
+	RuntimeResponseGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the RuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	RuntimeResponseGeneric_Preference_Button = "button"
+	RuntimeResponseGeneric_Preference_Button   = "button"
 	RuntimeResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -6852,12 +6808,12 @@ type SystemResponse map[string]interface{}
 
 // SetProperty : Allow user to set arbitrary property
 func (this *SystemResponse) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *SystemResponse) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // UpdateCounterexampleOptions : The UpdateCounterexample options.
@@ -6882,7 +6838,7 @@ type UpdateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
 	return &UpdateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -6984,57 +6940,57 @@ type UpdateDialogNodeOptions struct {
 // Constants associated with the UpdateDialogNodeOptions.NewType property.
 // How the dialog node is processed.
 const (
-	UpdateDialogNodeOptions_NewType_EventHandler = "event_handler"
-	UpdateDialogNodeOptions_NewType_Folder = "folder"
-	UpdateDialogNodeOptions_NewType_Frame = "frame"
+	UpdateDialogNodeOptions_NewType_EventHandler      = "event_handler"
+	UpdateDialogNodeOptions_NewType_Folder            = "folder"
+	UpdateDialogNodeOptions_NewType_Frame             = "frame"
 	UpdateDialogNodeOptions_NewType_ResponseCondition = "response_condition"
-	UpdateDialogNodeOptions_NewType_Slot = "slot"
-	UpdateDialogNodeOptions_NewType_Standard = "standard"
+	UpdateDialogNodeOptions_NewType_Slot              = "slot"
+	UpdateDialogNodeOptions_NewType_Standard          = "standard"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewEventName property.
 // How an `event_handler` node is processed.
 const (
-	UpdateDialogNodeOptions_NewEventName_DigressionReturnPrompt = "digression_return_prompt"
-	UpdateDialogNodeOptions_NewEventName_Filled = "filled"
-	UpdateDialogNodeOptions_NewEventName_FilledMultiple = "filled_multiple"
-	UpdateDialogNodeOptions_NewEventName_Focus = "focus"
-	UpdateDialogNodeOptions_NewEventName_Generic = "generic"
-	UpdateDialogNodeOptions_NewEventName_Input = "input"
-	UpdateDialogNodeOptions_NewEventName_Nomatch = "nomatch"
+	UpdateDialogNodeOptions_NewEventName_DigressionReturnPrompt   = "digression_return_prompt"
+	UpdateDialogNodeOptions_NewEventName_Filled                   = "filled"
+	UpdateDialogNodeOptions_NewEventName_FilledMultiple           = "filled_multiple"
+	UpdateDialogNodeOptions_NewEventName_Focus                    = "focus"
+	UpdateDialogNodeOptions_NewEventName_Generic                  = "generic"
+	UpdateDialogNodeOptions_NewEventName_Input                    = "input"
+	UpdateDialogNodeOptions_NewEventName_Nomatch                  = "nomatch"
 	UpdateDialogNodeOptions_NewEventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	UpdateDialogNodeOptions_NewEventName_Validate = "validate"
+	UpdateDialogNodeOptions_NewEventName_Validate                 = "validate"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	UpdateDialogNodeOptions_NewDigressIn_DoesNotReturn = "does_not_return"
-	UpdateDialogNodeOptions_NewDigressIn_NotAvailable = "not_available"
-	UpdateDialogNodeOptions_NewDigressIn_Returns = "returns"
+	UpdateDialogNodeOptions_NewDigressIn_NotAvailable  = "not_available"
+	UpdateDialogNodeOptions_NewDigressIn_Returns       = "returns"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	UpdateDialogNodeOptions_NewDigressOut_AllowAll = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOut_AllowAll            = "allow_all"
 	UpdateDialogNodeOptions_NewDigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	UpdateDialogNodeOptions_NewDigressOut_AllowReturning = "allow_returning"
+	UpdateDialogNodeOptions_NewDigressOut_AllowReturning      = "allow_returning"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll       = "allow_all"
 	UpdateDialogNodeOptions_NewDigressOutSlots_AllowReturning = "allow_returning"
-	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed = "not_allowed"
+	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed     = "not_allowed"
 )
 
 // NewUpdateDialogNodeOptions : Instantiate UpdateDialogNodeOptions
 func (assistant *AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -7198,7 +7154,7 @@ type UpdateEntityOptions struct {
 func (assistant *AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
 	return &UpdateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -7278,8 +7234,8 @@ type UpdateExampleOptions struct {
 func (assistant *AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
 	return &UpdateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -7347,7 +7303,7 @@ type UpdateIntentOptions struct {
 func (assistant *AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
 	return &UpdateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -7415,9 +7371,9 @@ type UpdateSynonymOptions struct {
 func (assistant *AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
 	return &UpdateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -7506,8 +7462,8 @@ const (
 func (assistant *AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -7799,10 +7755,10 @@ type Workspace struct {
 // Constants associated with the Workspace.Status property.
 // The current status of the workspace.
 const (
-	Workspace_Status_Available = "Available"
-	Workspace_Status_Failed = "Failed"
+	Workspace_Status_Available   = "Available"
+	Workspace_Status_Failed      = "Failed"
 	Workspace_Status_NonExistent = "Non Existent"
-	Workspace_Status_Training = "Training"
+	Workspace_Status_Training    = "Training"
 	Workspace_Status_Unavailable = "Unavailable"
 )
 

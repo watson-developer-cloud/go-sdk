@@ -19,6 +19,8 @@ package texttospeechv1
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
@@ -60,8 +62,8 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (service *TextToSpeechV1,
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -142,7 +144,6 @@ func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOpti
 	return
 }
 
-
 // GetVoice : Get a voice
 // Gets information about the specified voice. The information includes the name, language, gender, and other details
 // about the voice. Specify a customization ID to obtain information for a custom voice model that is defined for the
@@ -200,7 +201,6 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 
 	return
 }
-
 
 // Synthesize : Synthesize audio
 // Synthesizes text to audio that is spoken in the specified voice. The service bases its understanding of the language
@@ -322,7 +322,6 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 	return
 }
 
-
 // GetPronunciation : Get pronunciation
 // Gets the phonetic pronunciation for the specified word. You can request the pronunciation for a specific format. You
 // can also request the pronunciation for a specific voice to see the default translation for the language of that voice
@@ -389,7 +388,6 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 
 	return
 }
-
 
 // CreateVoiceModel : Create a custom model
 // Creates a new empty custom voice model. You must specify a name for the new custom model. You can optionally specify
@@ -463,7 +461,6 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *Cr
 	return
 }
 
-
 // ListVoiceModels : List custom models
 // Lists metadata such as the name and description for all custom voice models that are owned by an instance of the
 // service. Specify a language to list the voice models for that language only. To see the words in addition to the
@@ -520,7 +517,6 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *List
 
 	return
 }
-
 
 // UpdateVoiceModel : Update a custom model
 // Updates information for the specified custom voice model. You can update metadata such as the name and description of
@@ -603,7 +599,6 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 	return
 }
 
-
 // GetVoiceModel : Get a custom model
 // Gets all information about a specified custom voice model. In addition to metadata such as the name and description
 // of the voice model, the output includes the words and their translations as defined in the model. To see just the
@@ -660,7 +655,6 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoice
 	return
 }
 
-
 // DeleteVoiceModel : Delete a custom model
 // Deletes the specified custom voice model. You must use credentials for the instance of the service that owns a model
 // to delete it.
@@ -697,7 +691,6 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 		builder.AddHeader(headerName, headerValue)
 	}
 
-
 	request, err := builder.Build()
 	if err != nil {
 		return
@@ -707,7 +700,6 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 
 	return
 }
-
 
 // AddWords : Add custom words
 // Adds one or more words and their translations to the specified custom voice model. Adding a new translation for a
@@ -784,7 +776,6 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 	return
 }
 
-
 // ListWords : List custom words
 // Lists all of the words and their translations for the specified custom voice model. The output shows the translations
 // as they are defined in the model. You must use credentials for the instance of the service that owns a model to list
@@ -840,7 +831,6 @@ func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions
 
 	return
 }
-
 
 // AddWord : Add a custom word
 // Adds a single word and its translation to the specified custom voice model. Adding a new translation for a word that
@@ -918,7 +908,6 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (res
 	return
 }
 
-
 // GetWord : Get a custom word
 // Gets the translation for a single word from the specified custom model. The output shows the translation as it is
 // defined in the model. You must use credentials for the instance of the service that owns a model to list its words.
@@ -974,7 +963,6 @@ func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (res
 	return
 }
 
-
 // DeleteWord : Delete a custom word
 // Deletes a single word from the specified custom voice model. You must use credentials for the instance of the service
 // that owns a model to delete its words.
@@ -1011,7 +999,6 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 		builder.AddHeader(headerName, headerValue)
 	}
 
-
 	request, err := builder.Build()
 	if err != nil {
 		return
@@ -1021,7 +1008,6 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 
 	return
 }
-
 
 // DeleteUserData : Delete labeled data
 // Deletes all data that is associated with a specified customer ID. The method deletes all data for the customer ID,
@@ -1061,7 +1047,6 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 		builder.AddHeader(headerName, headerValue)
 	}
 
-
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 
 	request, err := builder.Build()
@@ -1073,7 +1058,6 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 
 	return
 }
-
 
 // AddWordOptions : The AddWord options.
 type AddWordOptions struct {
@@ -1129,8 +1113,8 @@ const (
 func (textToSpeech *TextToSpeechV1) NewAddWordOptions(customizationID string, word string, translation string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
-		Translation: core.StringPtr(translation),
+		Word:            core.StringPtr(word),
+		Translation:     core.StringPtr(translation),
 	}
 }
 
@@ -1187,7 +1171,7 @@ type AddWordsOptions struct {
 func (textToSpeech *TextToSpeechV1) NewAddWordsOptions(customizationID string, words []Word) *AddWordsOptions {
 	return &AddWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Words: words,
+		Words:           words,
 	}
 }
 
@@ -1348,7 +1332,7 @@ type DeleteWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewDeleteWordOptions(customizationID string, word string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1399,34 +1383,34 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
-	GetPronunciationOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
-	GetPronunciationOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
-	GetPronunciationOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
-	GetPronunciationOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
-	GetPronunciationOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
-	GetPronunciationOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
-	GetPronunciationOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
-	GetPronunciationOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
-	GetPronunciationOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
-	GetPronunciationOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
-	GetPronunciationOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
-	GetPronunciationOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
-	GetPronunciationOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
-	GetPronunciationOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
-	GetPronunciationOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
-	GetPronunciationOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
-	GetPronunciationOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
-	GetPronunciationOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
-	GetPronunciationOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
-	GetPronunciationOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
-	GetPronunciationOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
-	GetPronunciationOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
+	GetPronunciationOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
+	GetPronunciationOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	GetPronunciationOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
+	GetPronunciationOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
+	GetPronunciationOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	GetPronunciationOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
+	GetPronunciationOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	GetPronunciationOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
+	GetPronunciationOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	GetPronunciationOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
+	GetPronunciationOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
+	GetPronunciationOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	GetPronunciationOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
+	GetPronunciationOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	GetPronunciationOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
+	GetPronunciationOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	GetPronunciationOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
+	GetPronunciationOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
+	GetPronunciationOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	GetPronunciationOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	GetPronunciationOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	GetPronunciationOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
-	GetPronunciationOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
-	GetPronunciationOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
-	GetPronunciationOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
+	GetPronunciationOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	GetPronunciationOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
+	GetPronunciationOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
+	GetPronunciationOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
@@ -1522,34 +1506,34 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
-	GetVoiceOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
-	GetVoiceOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
-	GetVoiceOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
-	GetVoiceOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
-	GetVoiceOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
-	GetVoiceOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
-	GetVoiceOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
-	GetVoiceOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
-	GetVoiceOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
-	GetVoiceOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
-	GetVoiceOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
-	GetVoiceOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
-	GetVoiceOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
-	GetVoiceOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
-	GetVoiceOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
-	GetVoiceOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
-	GetVoiceOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
-	GetVoiceOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
-	GetVoiceOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
-	GetVoiceOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
-	GetVoiceOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
-	GetVoiceOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
+	GetVoiceOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
+	GetVoiceOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	GetVoiceOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
+	GetVoiceOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
+	GetVoiceOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	GetVoiceOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
+	GetVoiceOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	GetVoiceOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
+	GetVoiceOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	GetVoiceOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
+	GetVoiceOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
+	GetVoiceOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	GetVoiceOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
+	GetVoiceOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	GetVoiceOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
+	GetVoiceOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	GetVoiceOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
+	GetVoiceOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
+	GetVoiceOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	GetVoiceOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	GetVoiceOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	GetVoiceOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
-	GetVoiceOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
-	GetVoiceOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
-	GetVoiceOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
+	GetVoiceOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	GetVoiceOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
+	GetVoiceOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
+	GetVoiceOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
@@ -1595,7 +1579,7 @@ type GetWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewGetWordOptions(customizationID string, word string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1755,34 +1739,34 @@ type SynthesizeOptions struct {
 // Constants associated with the SynthesizeOptions.Voice property.
 // The voice to use for synthesis.
 const (
-	SynthesizeOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
-	SynthesizeOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
-	SynthesizeOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
-	SynthesizeOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
-	SynthesizeOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
-	SynthesizeOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
-	SynthesizeOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
-	SynthesizeOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
-	SynthesizeOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
-	SynthesizeOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
-	SynthesizeOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
-	SynthesizeOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
-	SynthesizeOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
-	SynthesizeOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
-	SynthesizeOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
-	SynthesizeOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
-	SynthesizeOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
-	SynthesizeOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
-	SynthesizeOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
-	SynthesizeOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
-	SynthesizeOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
-	SynthesizeOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
+	SynthesizeOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
+	SynthesizeOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	SynthesizeOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
+	SynthesizeOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
+	SynthesizeOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	SynthesizeOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
+	SynthesizeOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	SynthesizeOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
+	SynthesizeOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	SynthesizeOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
+	SynthesizeOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
+	SynthesizeOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	SynthesizeOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
+	SynthesizeOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	SynthesizeOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
+	SynthesizeOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	SynthesizeOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
+	SynthesizeOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
+	SynthesizeOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	SynthesizeOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	SynthesizeOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	SynthesizeOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
-	SynthesizeOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
-	SynthesizeOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
-	SynthesizeOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
+	SynthesizeOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	SynthesizeOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
+	SynthesizeOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
+	SynthesizeOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
 // NewSynthesizeOptions : Instantiate SynthesizeOptions

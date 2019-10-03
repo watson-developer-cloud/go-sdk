@@ -19,6 +19,7 @@ package naturallanguageunderstandingv1
 
 import (
 	"fmt"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
@@ -56,8 +57,8 @@ func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Op
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -187,7 +188,6 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 	return
 }
 
-
 // ListModels : List models
 // Lists Watson Knowledge Studio [custom entities and relations
 // models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
@@ -235,7 +235,6 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(l
 
 	return
 }
-
 
 // DeleteModel : Delete model
 // Deletes a custom model.
@@ -286,7 +285,6 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModel(
 
 	return
 }
-
 
 // AnalysisResults : Results of the analysis, organized by feature.
 type AnalysisResults struct {
@@ -1113,7 +1111,6 @@ type SyntaxOptionsTokens struct {
 
 // SyntaxResult : Tokens and sentences returned from syntax analysis.
 type SyntaxResult struct {
-
 	Tokens []TokenResult `json:"tokens,omitempty"`
 
 	Sentences []SentenceResult `json:"sentences,omitempty"`
@@ -1160,21 +1157,21 @@ type TokenResult struct {
 // The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
 // tags](https://universaldependencies.org/u/pos/).
 const (
-	TokenResult_PartOfSpeech_Adj = "ADJ"
-	TokenResult_PartOfSpeech_Adp = "ADP"
-	TokenResult_PartOfSpeech_Adv = "ADV"
-	TokenResult_PartOfSpeech_Aux = "AUX"
+	TokenResult_PartOfSpeech_Adj   = "ADJ"
+	TokenResult_PartOfSpeech_Adp   = "ADP"
+	TokenResult_PartOfSpeech_Adv   = "ADV"
+	TokenResult_PartOfSpeech_Aux   = "AUX"
 	TokenResult_PartOfSpeech_Cconj = "CCONJ"
-	TokenResult_PartOfSpeech_Det = "DET"
-	TokenResult_PartOfSpeech_Intj = "INTJ"
-	TokenResult_PartOfSpeech_Noun = "NOUN"
-	TokenResult_PartOfSpeech_Num = "NUM"
-	TokenResult_PartOfSpeech_Part = "PART"
-	TokenResult_PartOfSpeech_Pron = "PRON"
+	TokenResult_PartOfSpeech_Det   = "DET"
+	TokenResult_PartOfSpeech_Intj  = "INTJ"
+	TokenResult_PartOfSpeech_Noun  = "NOUN"
+	TokenResult_PartOfSpeech_Num   = "NUM"
+	TokenResult_PartOfSpeech_Part  = "PART"
+	TokenResult_PartOfSpeech_Pron  = "PRON"
 	TokenResult_PartOfSpeech_Propn = "PROPN"
 	TokenResult_PartOfSpeech_Punct = "PUNCT"
 	TokenResult_PartOfSpeech_Sconj = "SCONJ"
-	TokenResult_PartOfSpeech_Sym = "SYM"
-	TokenResult_PartOfSpeech_Verb = "VERB"
-	TokenResult_PartOfSpeech_X = "X"
+	TokenResult_PartOfSpeech_Sym   = "SYM"
+	TokenResult_PartOfSpeech_Verb  = "VERB"
+	TokenResult_PartOfSpeech_X     = "X"
 )

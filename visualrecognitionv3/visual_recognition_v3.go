@@ -19,10 +19,12 @@ package visualrecognitionv3
 
 import (
 	"fmt"
+	"io"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
@@ -52,8 +54,8 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (service *Visua
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -160,7 +162,6 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 	return
 }
 
-
 // CreateClassifier : Create a classifier
 // Train a new multi-faceted classifier on the uploaded image data. Create your custom classifier with positive or
 // negative example training images. Include at least two sets of examples, either two positive example files or one
@@ -232,7 +233,6 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	return
 }
 
-
 // ListClassifiers : Retrieve a list of classifiers
 func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (result *Classifiers, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions")
@@ -281,7 +281,6 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 
 	return
 }
-
 
 // GetClassifier : Retrieve classifier details
 // Retrieve information about a custom classifier.
@@ -332,7 +331,6 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 
 	return
 }
-
 
 // UpdateClassifier : Update a classifier
 // Update a custom classifier by adding new positive or negative classes or by adding new images to existing classes.
@@ -412,7 +410,6 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	return
 }
 
-
 // DeleteClassifier : Delete a classifier
 func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil")
@@ -454,7 +451,6 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 
 	return
 }
-
 
 // GetCoreMlModel : Retrieve a Core ML model of a classifier
 // Download a Core ML model file (.mlmodel) of a custom classifier that returns <tt>"core_ml_enabled": true</tt> in the
@@ -507,7 +503,6 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 	return
 }
 
-
 // DeleteUserData : Delete labeled data
 // Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
 // customer ID.
@@ -557,7 +552,6 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 
 	return
 }
-
 
 // Class : A category within a classifier.
 type Class struct {
@@ -663,10 +657,10 @@ type Classifier struct {
 // Constants associated with the Classifier.Status property.
 // Training status of classifier.
 const (
-	Classifier_Status_Failed = "failed"
-	Classifier_Status_Ready = "ready"
+	Classifier_Status_Failed     = "failed"
+	Classifier_Status_Ready      = "ready"
 	Classifier_Status_Retraining = "retraining"
-	Classifier_Status_Training = "training"
+	Classifier_Status_Training   = "training"
 )
 
 // ClassifierResult : Classifier and score combination.
@@ -743,14 +737,14 @@ type ClassifyOptions struct {
 // Constants associated with the ClassifyOptions.AcceptLanguage property.
 // The desired language of parts of the response. See the response for details.
 const (
-	ClassifyOptions_AcceptLanguage_Ar = "ar"
-	ClassifyOptions_AcceptLanguage_De = "de"
-	ClassifyOptions_AcceptLanguage_En = "en"
-	ClassifyOptions_AcceptLanguage_Es = "es"
-	ClassifyOptions_AcceptLanguage_Fr = "fr"
-	ClassifyOptions_AcceptLanguage_It = "it"
-	ClassifyOptions_AcceptLanguage_Ja = "ja"
-	ClassifyOptions_AcceptLanguage_Ko = "ko"
+	ClassifyOptions_AcceptLanguage_Ar   = "ar"
+	ClassifyOptions_AcceptLanguage_De   = "de"
+	ClassifyOptions_AcceptLanguage_En   = "en"
+	ClassifyOptions_AcceptLanguage_Es   = "es"
+	ClassifyOptions_AcceptLanguage_Fr   = "fr"
+	ClassifyOptions_AcceptLanguage_It   = "it"
+	ClassifyOptions_AcceptLanguage_Ja   = "ja"
+	ClassifyOptions_AcceptLanguage_Ko   = "ko"
 	ClassifyOptions_AcceptLanguage_PtBr = "pt-br"
 	ClassifyOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ClassifyOptions_AcceptLanguage_ZhTw = "zh-tw"

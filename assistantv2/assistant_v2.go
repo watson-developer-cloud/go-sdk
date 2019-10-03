@@ -19,6 +19,7 @@ package assistantv2
 
 import (
 	"fmt"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
@@ -52,8 +53,8 @@ func NewAssistantV2(options *AssistantV2Options) (service *AssistantV2, err erro
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -137,7 +138,6 @@ func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionO
 	return
 }
 
-
 // DeleteSession : Delete session
 // Deletes a session explicitly before it times out.
 func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionOptions) (response *core.DetailedResponse, err error) {
@@ -180,7 +180,6 @@ func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionO
 
 	return
 }
-
 
 // Message : Send user input to assistant
 // Send user input to an assistant and receive a response.
@@ -247,7 +246,6 @@ func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (result *M
 	return
 }
 
-
 // CaptureGroup : CaptureGroup struct
 type CaptureGroup struct {
 
@@ -312,7 +310,7 @@ type DeleteSessionOptions struct {
 func (assistant *AssistantV2) NewDeleteSessionOptions(assistantID string, sessionID string) *DeleteSessionOptions {
 	return &DeleteSessionOptions{
 		AssistantID: core.StringPtr(assistantID),
-		SessionID: core.StringPtr(sessionID),
+		SessionID:   core.StringPtr(sessionID),
 	}
 }
 
@@ -348,8 +346,8 @@ type DialogLogMessage struct {
 // The severity of the log message.
 const (
 	DialogLogMessage_Level_Error = "error"
-	DialogLogMessage_Level_Info = "info"
-	DialogLogMessage_Level_Warn = "warn"
+	DialogLogMessage_Level_Info  = "info"
+	DialogLogMessage_Level_Warn  = "warn"
 )
 
 // DialogNodeAction : DialogNodeAction struct
@@ -374,10 +372,10 @@ type DialogNodeAction struct {
 // Constants associated with the DialogNodeAction.Type property.
 // The type of action to invoke.
 const (
-	DialogNodeAction_Type_Client = "client"
+	DialogNodeAction_Type_Client        = "client"
 	DialogNodeAction_Type_CloudFunction = "cloud-function"
-	DialogNodeAction_Type_Server = "server"
-	DialogNodeAction_Type_WebAction = "web-action"
+	DialogNodeAction_Type_Server        = "server"
+	DialogNodeAction_Type_WebAction     = "web-action"
 )
 
 // DialogNodeOutputOptionsElement : DialogNodeOutputOptionsElement struct
@@ -487,12 +485,12 @@ type MessageContextSkills map[string]interface{}
 
 // SetProperty : Allow user to set arbitrary property
 func (this *MessageContextSkills) SetProperty(Key string, Value *MessageContextSkill) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *MessageContextSkills) GetProperty(Key string) *MessageContextSkill {
-   return (*this)[Key].(*MessageContextSkill)
+	return (*this)[Key].(*MessageContextSkill)
 }
 
 // MessageInput : An input object that includes the input text.
@@ -572,7 +570,7 @@ type MessageOptions struct {
 func (assistant *AssistantV2) NewMessageOptions(assistantID string, sessionID string) *MessageOptions {
 	return &MessageOptions{
 		AssistantID: core.StringPtr(assistantID),
-		SessionID: core.StringPtr(sessionID),
+		SessionID:   core.StringPtr(sessionID),
 	}
 }
 
@@ -653,7 +651,7 @@ type MessageOutputDebug struct {
 // completed by itself or got interrupted.
 const (
 	MessageOutputDebug_BranchExitedReason_Completed = "completed"
-	MessageOutputDebug_BranchExitedReason_Fallback = "fallback"
+	MessageOutputDebug_BranchExitedReason_Fallback  = "fallback"
 )
 
 // MessageResponse : A response from the Watson Assistant service.
@@ -763,18 +761,18 @@ type RuntimeResponseGeneric struct {
 // users.
 const (
 	RuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	RuntimeResponseGeneric_ResponseType_Image = "image"
-	RuntimeResponseGeneric_ResponseType_Option = "option"
-	RuntimeResponseGeneric_ResponseType_Pause = "pause"
-	RuntimeResponseGeneric_ResponseType_Search = "search"
-	RuntimeResponseGeneric_ResponseType_Suggestion = "suggestion"
-	RuntimeResponseGeneric_ResponseType_Text = "text"
+	RuntimeResponseGeneric_ResponseType_Image          = "image"
+	RuntimeResponseGeneric_ResponseType_Option         = "option"
+	RuntimeResponseGeneric_ResponseType_Pause          = "pause"
+	RuntimeResponseGeneric_ResponseType_Search         = "search"
+	RuntimeResponseGeneric_ResponseType_Suggestion     = "suggestion"
+	RuntimeResponseGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the RuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	RuntimeResponseGeneric_Preference_Button = "button"
+	RuntimeResponseGeneric_Preference_Button   = "button"
 	RuntimeResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -810,42 +808,42 @@ type SearchResultHighlight map[string]interface{}
 
 // SetBody : Allow user to set Body
 func (this *SearchResultHighlight) SetBody(Body *[]string) {
-   (*this)["body"] = Body
+	(*this)["body"] = Body
 }
 
 // GetBody : Allow user to get Body
 func (this *SearchResultHighlight) GetBody() *[]string {
-   return (*this)["body"].(*[]string)
+	return (*this)["body"].(*[]string)
 }
 
 // SetTitle : Allow user to set Title
 func (this *SearchResultHighlight) SetTitle(Title *[]string) {
-   (*this)["title"] = Title
+	(*this)["title"] = Title
 }
 
 // GetTitle : Allow user to get Title
 func (this *SearchResultHighlight) GetTitle() *[]string {
-   return (*this)["title"].(*[]string)
+	return (*this)["title"].(*[]string)
 }
 
 // SetURL : Allow user to set URL
 func (this *SearchResultHighlight) SetURL(URL *[]string) {
-   (*this)["url"] = URL
+	(*this)["url"] = URL
 }
 
 // GetURL : Allow user to get URL
 func (this *SearchResultHighlight) GetURL() *[]string {
-   return (*this)["url"].(*[]string)
+	return (*this)["url"].(*[]string)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *SearchResultHighlight) SetProperty(Key string, Value *[]string) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *SearchResultHighlight) GetProperty(Key string) *[]string {
-   return (*this)[Key].(*[]string)
+	return (*this)[Key].(*[]string)
 }
 
 // SearchResultMetadata : An object containing search result metadata from the Discovery service.

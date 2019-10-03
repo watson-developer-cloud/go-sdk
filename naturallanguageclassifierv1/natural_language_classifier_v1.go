@@ -19,10 +19,11 @@ package naturallanguageclassifierv1
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to
@@ -50,8 +51,8 @@ func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options)
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -143,7 +144,6 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyO
 	return
 }
 
-
 // ClassifyCollection : Classify multiple phrases
 // Returns label information for multiple phrases. The status must be `Available` before you can use the classifier to
 // classify text.
@@ -206,7 +206,6 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 	return
 }
 
-
 // CreateClassifier : Create classifier
 // Sends data to create and train a classifier and returns information about the new classifier.
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(createClassifierOptions *CreateClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
@@ -261,7 +260,6 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(c
 	return
 }
 
-
 // ListClassifiers : List classifiers
 // Returns an empty array if no classifiers are available.
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (result *ClassifierList, response *core.DetailedResponse, err error) {
@@ -306,7 +304,6 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(li
 
 	return
 }
-
 
 // GetClassifier : Get information about a classifier
 // Returns status and other information about a classifier.
@@ -357,7 +354,6 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getC
 	return
 }
 
-
 // DeleteClassifier : Delete classifier
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil")
@@ -398,7 +394,6 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(d
 
 	return
 }
-
 
 // Classification : Response from the classifier for a phrase.
 type Classification struct {
@@ -471,10 +466,10 @@ type Classifier struct {
 // Constants associated with the Classifier.Status property.
 // The state of the classifier.
 const (
-	Classifier_Status_Available = "Available"
-	Classifier_Status_Failed = "Failed"
+	Classifier_Status_Available   = "Available"
+	Classifier_Status_Failed      = "Failed"
 	Classifier_Status_NonExistent = "Non Existent"
-	Classifier_Status_Training = "Training"
+	Classifier_Status_Training    = "Training"
 	Classifier_Status_Unavailable = "Unavailable"
 )
 
@@ -502,7 +497,7 @@ type ClassifyCollectionOptions struct {
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyCollectionOptions(classifierID string, collection []ClassifyInput) *ClassifyCollectionOptions {
 	return &ClassifyCollectionOptions{
 		ClassifierID: core.StringPtr(classifierID),
-		Collection: collection,
+		Collection:   collection,
 	}
 }
 
@@ -548,7 +543,7 @@ type ClassifyOptions struct {
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyOptions(classifierID string, text string) *ClassifyOptions {
 	return &ClassifyOptions{
 		ClassifierID: core.StringPtr(classifierID),
-		Text: core.StringPtr(text),
+		Text:         core.StringPtr(text),
 	}
 }
 
@@ -606,7 +601,7 @@ type CreateClassifierOptions struct {
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(trainingMetadata io.ReadCloser, trainingData io.ReadCloser) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
 		TrainingMetadata: trainingMetadata,
-		TrainingData: trainingData,
+		TrainingData:     trainingData,
 	}
 }
 

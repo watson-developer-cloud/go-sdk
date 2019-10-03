@@ -19,6 +19,8 @@ package personalityinsightsv3
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
@@ -64,8 +66,8 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *P
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -206,7 +208,6 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 	return
 }
 
-
 // ProfileAsCsv : Get profile as csv
 // Generates a personality profile for the author of the input text. The service accepts a maximum of 20 MB of input
 // content, but it requires much less text to produce an accurate profile. The service can analyze text in Arabic,
@@ -315,7 +316,6 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 	return
 }
 
-
 // Behavior : The temporal behavior for the input content.
 type Behavior struct {
 
@@ -420,7 +420,7 @@ type ContentItem struct {
 // The MIME type of the content. The default is plain text. The tags are stripped from HTML content before it is
 // analyzed; plain text is processed as submitted.
 const (
-	ContentItem_Contenttype_TextHTML = "text/html"
+	ContentItem_Contenttype_TextHTML  = "text/html"
 	ContentItem_Contenttype_TextPlain = "text/plain"
 )
 
@@ -560,14 +560,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input and
 // response content.
 const (
-	ProfileOptions_AcceptLanguage_Ar = "ar"
-	ProfileOptions_AcceptLanguage_De = "de"
-	ProfileOptions_AcceptLanguage_En = "en"
-	ProfileOptions_AcceptLanguage_Es = "es"
-	ProfileOptions_AcceptLanguage_Fr = "fr"
-	ProfileOptions_AcceptLanguage_It = "it"
-	ProfileOptions_AcceptLanguage_Ja = "ja"
-	ProfileOptions_AcceptLanguage_Ko = "ko"
+	ProfileOptions_AcceptLanguage_Ar   = "ar"
+	ProfileOptions_AcceptLanguage_De   = "de"
+	ProfileOptions_AcceptLanguage_En   = "en"
+	ProfileOptions_AcceptLanguage_Es   = "es"
+	ProfileOptions_AcceptLanguage_Fr   = "fr"
+	ProfileOptions_AcceptLanguage_It   = "it"
+	ProfileOptions_AcceptLanguage_Ja   = "ja"
+	ProfileOptions_AcceptLanguage_Ko   = "ko"
 	ProfileOptions_AcceptLanguage_PtBr = "pt-br"
 	ProfileOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ProfileOptions_AcceptLanguage_ZhTw = "zh-tw"
@@ -679,9 +679,9 @@ type Trait struct {
 // The category of the characteristic: `personality` for Big Five personality characteristics, `needs` for Needs, and
 // `values` for Values.
 const (
-	Trait_Category_Needs = "needs"
+	Trait_Category_Needs       = "needs"
 	Trait_Category_Personality = "personality"
-	Trait_Category_Values = "values"
+	Trait_Category_Values      = "values"
 )
 
 // Warning : A warning message that is associated with the input content.
@@ -708,7 +708,7 @@ type Warning struct {
 // The identifier of the warning message.
 const (
 	Warning_WarningID_ContentTruncated = "CONTENT_TRUNCATED"
-	Warning_WarningID_JSONAsText = "JSON_AS_TEXT"
-	Warning_WarningID_PartialTextUsed = "PARTIAL_TEXT_USED"
+	Warning_WarningID_JSONAsText       = "JSON_AS_TEXT"
+	Warning_WarningID_PartialTextUsed  = "PARTIAL_TEXT_USED"
 	Warning_WarningID_WordCountMessage = "WORD_COUNT_MESSAGE"
 )

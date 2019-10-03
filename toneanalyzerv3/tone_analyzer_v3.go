@@ -19,9 +19,10 @@ package toneanalyzerv3
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"strings"
 )
 
 // ToneAnalyzerV3 : The IBM Watson&trade; Tone Analyzer service uses linguistic analysis to detect emotional and
@@ -56,8 +57,8 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (service *ToneAnalyzerV3,
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -176,7 +177,6 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *Tone
 	return
 }
 
-
 // ToneChat : Analyze customer-engagement tone
 // Use the customer-engagement endpoint to analyze the tone of customer service and customer support conversations. For
 // each utterance of a conversation, the method reports the most prevalent subset of the following seven tones: sad,
@@ -252,7 +252,6 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 
 	return
 }
-
 
 // DocumentAnalysis : The results of the analysis for the full input content.
 type DocumentAnalysis struct {
@@ -368,14 +367,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneChatOptions_AcceptLanguage_Ar = "ar"
-	ToneChatOptions_AcceptLanguage_De = "de"
-	ToneChatOptions_AcceptLanguage_En = "en"
-	ToneChatOptions_AcceptLanguage_Es = "es"
-	ToneChatOptions_AcceptLanguage_Fr = "fr"
-	ToneChatOptions_AcceptLanguage_It = "it"
-	ToneChatOptions_AcceptLanguage_Ja = "ja"
-	ToneChatOptions_AcceptLanguage_Ko = "ko"
+	ToneChatOptions_AcceptLanguage_Ar   = "ar"
+	ToneChatOptions_AcceptLanguage_De   = "de"
+	ToneChatOptions_AcceptLanguage_En   = "en"
+	ToneChatOptions_AcceptLanguage_Es   = "es"
+	ToneChatOptions_AcceptLanguage_Fr   = "fr"
+	ToneChatOptions_AcceptLanguage_It   = "it"
+	ToneChatOptions_AcceptLanguage_Ja   = "ja"
+	ToneChatOptions_AcceptLanguage_Ko   = "ko"
 	ToneChatOptions_AcceptLanguage_PtBr = "pt-br"
 	ToneChatOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ToneChatOptions_AcceptLanguage_ZhTw = "zh-tw"
@@ -431,12 +430,12 @@ type ToneChatScore struct {
 // The unique, non-localized identifier of the tone for the results. The service returns results only for tones whose
 // scores meet a minimum threshold of 0.5.
 const (
-	ToneChatScore_ToneID_Excited = "excited"
-	ToneChatScore_ToneID_Frustrated = "frustrated"
-	ToneChatScore_ToneID_Impolite = "impolite"
-	ToneChatScore_ToneID_Polite = "polite"
-	ToneChatScore_ToneID_Sad = "sad"
-	ToneChatScore_ToneID_Satisfied = "satisfied"
+	ToneChatScore_ToneID_Excited     = "excited"
+	ToneChatScore_ToneID_Frustrated  = "frustrated"
+	ToneChatScore_ToneID_Impolite    = "impolite"
+	ToneChatScore_ToneID_Polite      = "polite"
+	ToneChatScore_ToneID_Sad         = "sad"
+	ToneChatScore_ToneID_Satisfied   = "satisfied"
 	ToneChatScore_ToneID_Sympathetic = "sympathetic"
 )
 
@@ -493,9 +492,9 @@ type ToneOptions struct {
 
 // Constants associated with the ToneOptions.Tone property.
 const (
-	ToneOptions_Tone_Emotion = "emotion"
+	ToneOptions_Tone_Emotion  = "emotion"
 	ToneOptions_Tone_Language = "language"
-	ToneOptions_Tone_Social = "social"
+	ToneOptions_Tone_Social   = "social"
 )
 
 // Constants associated with the ToneOptions.ContentLanguage property.
@@ -515,14 +514,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneOptions_AcceptLanguage_Ar = "ar"
-	ToneOptions_AcceptLanguage_De = "de"
-	ToneOptions_AcceptLanguage_En = "en"
-	ToneOptions_AcceptLanguage_Es = "es"
-	ToneOptions_AcceptLanguage_Fr = "fr"
-	ToneOptions_AcceptLanguage_It = "it"
-	ToneOptions_AcceptLanguage_Ja = "ja"
-	ToneOptions_AcceptLanguage_Ko = "ko"
+	ToneOptions_AcceptLanguage_Ar   = "ar"
+	ToneOptions_AcceptLanguage_De   = "de"
+	ToneOptions_AcceptLanguage_En   = "en"
+	ToneOptions_AcceptLanguage_Es   = "es"
+	ToneOptions_AcceptLanguage_Fr   = "fr"
+	ToneOptions_AcceptLanguage_It   = "it"
+	ToneOptions_AcceptLanguage_Ja   = "ja"
+	ToneOptions_AcceptLanguage_Ko   = "ko"
 	ToneOptions_AcceptLanguage_PtBr = "pt-br"
 	ToneOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ToneOptions_AcceptLanguage_ZhTw = "zh-tw"

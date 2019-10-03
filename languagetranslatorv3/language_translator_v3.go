@@ -19,10 +19,11 @@ package languagetranslatorv3
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The
@@ -53,8 +54,8 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (service *Lan
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -156,7 +157,6 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 	return
 }
 
-
 // ListIdentifiableLanguages : List identifiable languages
 // Lists the languages that the service can identify. Returns the language code (for example, `en` for English or `es`
 // for Spanish) and name of each language.
@@ -203,7 +203,6 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listId
 
 	return
 }
-
 
 // Identify : Identify language
 // Identifies the language of the input text.
@@ -261,7 +260,6 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 	return
 }
 
-
 // ListModels : List models
 // Lists available translation models.
 func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *ListModelsOptions) (result *TranslationModels, response *core.DetailedResponse, err error) {
@@ -317,7 +315,6 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 
 	return
 }
-
 
 // CreateModel : Create model
 // Uploads Translation Memory eXchange (TMX) files to customize a translation model.
@@ -398,7 +395,6 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 	return
 }
 
-
 // DeleteModel : Delete model
 // Deletes a custom translation model.
 func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *DeleteModelOptions) (result *DeleteModelResult, response *core.DetailedResponse, err error) {
@@ -448,7 +444,6 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 
 	return
 }
-
 
 // GetModel : Get model details
 // Gets information about a translation model, including training status for custom models. Use this API call to poll
@@ -501,7 +496,6 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetMod
 	return
 }
 
-
 // ListDocuments : List documents
 // Lists documents that have been submitted for translation.
 func (languageTranslator *LanguageTranslatorV3) ListDocuments(listDocumentsOptions *ListDocumentsOptions) (result *DocumentList, response *core.DetailedResponse, err error) {
@@ -547,7 +541,6 @@ func (languageTranslator *LanguageTranslatorV3) ListDocuments(listDocumentsOptio
 
 	return
 }
-
 
 // TranslateDocument : Translate document
 // Submit a document for translation. You can submit the document contents in the `file` parameter, or you can reference
@@ -615,7 +608,6 @@ func (languageTranslator *LanguageTranslatorV3) TranslateDocument(translateDocum
 	return
 }
 
-
 // GetDocumentStatus : Get document status
 // Gets the translation status of a document.
 func (languageTranslator *LanguageTranslatorV3) GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) (result *DocumentStatus, response *core.DetailedResponse, err error) {
@@ -666,7 +658,6 @@ func (languageTranslator *LanguageTranslatorV3) GetDocumentStatus(getDocumentSta
 	return
 }
 
-
 // DeleteDocument : Delete document
 // Deletes a document.
 func (languageTranslator *LanguageTranslatorV3) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (response *core.DetailedResponse, err error) {
@@ -708,7 +699,6 @@ func (languageTranslator *LanguageTranslatorV3) DeleteDocument(deleteDocumentOpt
 
 	return
 }
-
 
 // GetTranslatedDocument : Get translated document
 // Gets the translated document associated with the given document ID.
@@ -762,7 +752,6 @@ func (languageTranslator *LanguageTranslatorV3) GetTranslatedDocument(getTransla
 
 	return
 }
-
 
 // CreateModelOptions : The CreateModel options.
 type CreateModelOptions struct {
@@ -940,8 +929,8 @@ type DocumentStatus struct {
 // Constants associated with the DocumentStatus.Status property.
 // The status of the translation job associated with a submitted document.
 const (
-	DocumentStatus_Status_Available = "available"
-	DocumentStatus_Status_Failed = "failed"
+	DocumentStatus_Status_Available  = "available"
+	DocumentStatus_Status_Failed     = "failed"
 	DocumentStatus_Status_Processing = "processing"
 )
 
@@ -1230,7 +1219,7 @@ type TranslateDocumentOptions struct {
 // NewTranslateDocumentOptions : Instantiate TranslateDocumentOptions
 func (languageTranslator *LanguageTranslatorV3) NewTranslateDocumentOptions(file io.ReadCloser, filename string) *TranslateDocumentOptions {
 	return &TranslateDocumentOptions{
-		File: file,
+		File:     file,
 		Filename: core.StringPtr(filename),
 	}
 }
@@ -1387,16 +1376,16 @@ type TranslationModel struct {
 // Constants associated with the TranslationModel.Status property.
 // Availability of a model.
 const (
-	TranslationModel_Status_Available = "available"
-	TranslationModel_Status_Deleted = "deleted"
+	TranslationModel_Status_Available   = "available"
+	TranslationModel_Status_Deleted     = "deleted"
 	TranslationModel_Status_Dispatching = "dispatching"
-	TranslationModel_Status_Error = "error"
-	TranslationModel_Status_Publishing = "publishing"
-	TranslationModel_Status_Queued = "queued"
-	TranslationModel_Status_Trained = "trained"
-	TranslationModel_Status_Training = "training"
-	TranslationModel_Status_Uploaded = "uploaded"
-	TranslationModel_Status_Uploading = "uploading"
+	TranslationModel_Status_Error       = "error"
+	TranslationModel_Status_Publishing  = "publishing"
+	TranslationModel_Status_Queued      = "queued"
+	TranslationModel_Status_Trained     = "trained"
+	TranslationModel_Status_Training    = "training"
+	TranslationModel_Status_Uploaded    = "uploaded"
+	TranslationModel_Status_Uploading   = "uploading"
 )
 
 // TranslationModels : The response type for listing existing translation models.

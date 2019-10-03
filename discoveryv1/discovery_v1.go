@@ -54,8 +54,8 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err erro
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
@@ -157,7 +157,6 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 	return
 }
 
-
 // ListEnvironments : List environments
 // List existing environments for the service instance.
 func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvironmentsOptions) (result *ListEnvironmentsResponse, response *core.DetailedResponse, err error) {
@@ -208,7 +207,6 @@ func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvi
 	return
 }
 
-
 // GetEnvironment : Get environment info
 func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getEnvironmentOptions, "getEnvironmentOptions cannot be nil")
@@ -257,7 +255,6 @@ func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironme
 
 	return
 }
-
 
 // UpdateEnvironment : Update an environment
 // Updates an environment. The environment's **name** and  **description** parameters can be changed. You must specify a
@@ -326,7 +323,6 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 	return
 }
 
-
 // DeleteEnvironment : Delete environment
 func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *DeleteEnvironmentOptions) (result *DeleteEnvironmentResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteEnvironmentOptions, "deleteEnvironmentOptions cannot be nil")
@@ -375,7 +371,6 @@ func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *Delete
 
 	return
 }
-
 
 // ListFields : List fields across collections
 // Gets a list of the unique fields (and their types) stored in the indexes of the specified collections.
@@ -428,7 +423,6 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 
 	return
 }
-
 
 // CreateConfiguration : Add configuration
 // Creates a new configuration.
@@ -513,7 +507,6 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 	return
 }
 
-
 // ListConfigurations : List configurations
 // Lists existing configurations for the service instance.
 func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *ListConfigurationsOptions) (result *ListConfigurationsResponse, response *core.DetailedResponse, err error) {
@@ -568,7 +561,6 @@ func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *List
 	return
 }
 
-
 // GetConfiguration : Get configuration details
 func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getConfigurationOptions, "getConfigurationOptions cannot be nil")
@@ -617,7 +609,6 @@ func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfi
 
 	return
 }
-
 
 // UpdateConfiguration : Update a configuration
 // Replaces an existing configuration.
@@ -700,7 +691,6 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 	return
 }
 
-
 // DeleteConfiguration : Delete a configuration
 // The deletion is performed unconditionally. A configuration deletion request succeeds even if the configuration is
 // referenced by a collection or document ingestion. However, documents that have already been submitted for processing
@@ -753,7 +743,6 @@ func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *De
 
 	return
 }
-
 
 // CreateCollection : Create a collection
 func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
@@ -823,7 +812,6 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 	return
 }
 
-
 // ListCollections : List collections
 // Lists existing collections for the service instance.
 func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollectionsOptions) (result *ListCollectionsResponse, response *core.DetailedResponse, err error) {
@@ -878,7 +866,6 @@ func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollec
 	return
 }
 
-
 // GetCollection : Get collection details
 func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getCollectionOptions, "getCollectionOptions cannot be nil")
@@ -927,7 +914,6 @@ func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionO
 
 	return
 }
-
 
 // UpdateCollection : Update a collection
 func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
@@ -994,7 +980,6 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 	return
 }
 
-
 // DeleteCollection : Delete a collection
 func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions) (result *DeleteCollectionResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteCollectionOptions, "deleteCollectionOptions cannot be nil")
@@ -1043,7 +1028,6 @@ func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCo
 
 	return
 }
-
 
 // ListCollectionFields : List collection fields
 // Gets a list of the unique fields (and their types) stored in the index.
@@ -1095,7 +1079,6 @@ func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *
 	return
 }
 
-
 // ListExpansions : Get the expansion list
 // Returns the current expansion list for the specified collection. If an expansion list is not specified, an object
 // with empty expansion arrays is returned.
@@ -1146,7 +1129,6 @@ func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansio
 
 	return
 }
-
 
 // CreateExpansions : Create or update expansion list
 // Create or replace the Expansion list for this collection. The maximum number of expanded terms per collection is
@@ -1209,7 +1191,6 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 	return
 }
 
-
 // DeleteExpansions : Delete the expansion list
 // Remove the expansion information for this collection. The expansion list must be deleted to disable query expansion
 // for a collection.
@@ -1252,7 +1233,6 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 
 	return
 }
-
 
 // GetTokenizationDictionaryStatus : Get tokenization dictionary status
 // Returns the current status of the tokenization dictionary for the specified collection.
@@ -1303,7 +1283,6 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDic
 
 	return
 }
-
 
 // CreateTokenizationDictionary : Create tokenization dictionary
 // Upload a custom tokenization dictionary to use with the specified collection.
@@ -1365,7 +1344,6 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 	return
 }
 
-
 // DeleteTokenizationDictionary : Delete tokenization dictionary
 // Delete the tokenization dictionary from the collection.
 func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDictionaryOptions *DeleteTokenizationDictionaryOptions) (response *core.DetailedResponse, err error) {
@@ -1407,7 +1385,6 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDic
 
 	return
 }
-
 
 // GetStopwordListStatus : Get stopword list status
 // Returns the current status of the stopword list for the specified collection.
@@ -1458,7 +1435,6 @@ func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions
 
 	return
 }
-
 
 // CreateStopwordList : Create stopword list
 // Upload a custom stopword list to use with the specified collection.
@@ -1513,7 +1489,6 @@ func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *Crea
 	return
 }
 
-
 // DeleteStopwordList : Delete a custom stopword list
 // Delete a custom stopword list from the collection. After a custom stopword list is deleted, the default list is used
 // for the collection.
@@ -1556,7 +1531,6 @@ func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *Dele
 
 	return
 }
-
 
 // AddDocument : Add a document
 // Add a document to a collection with optional metadata.
@@ -1641,7 +1615,6 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 	return
 }
 
-
 // GetDocumentStatus : Get document details
 // Fetch status details about a submitted document. **Note:** this operation does not return the document itself.
 // Instead, it returns only the document's processing status and any notices (warnings or errors) that were generated
@@ -1693,7 +1666,6 @@ func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDoc
 
 	return
 }
-
 
 // UpdateDocument : Update a document
 // Replace an existing document or add a document with a specified **document_id**. Starts ingesting a document with
@@ -1761,7 +1733,6 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 	return
 }
 
-
 // DeleteDocument : Delete a document
 // If the given document ID is invalid, or if the document is not found, then the a success response is returned (HTTP
 // status code `200`) with the status set to 'deleted'.
@@ -1812,7 +1783,6 @@ func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocume
 
 	return
 }
-
 
 // Query : Query a collection
 // By using this method, you can construct long queries. For details, see the [Discovery
@@ -1935,7 +1905,6 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (result *QueryRe
 	return
 }
 
-
 // QueryNotices : Query system notices
 // Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated when
 // ingesting documents and performing relevance training. See the [Discovery
@@ -2040,7 +2009,6 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 
 	return
 }
-
 
 // FederatedQuery : Query multiple collections
 // By using this method, you can construct long queries that search multiple collection. For details, see the [Discovery
@@ -2163,7 +2131,6 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	return
 }
 
-
 // FederatedQueryNotices : Query multiple collection system notices
 // Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated when
 // ingesting documents and performing relevance training. See the [Discovery
@@ -2258,7 +2225,6 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	return
 }
 
-
 // GetAutocompletion : Get Autocomplete Suggestions
 // Returns completion query suggestions for the specified prefix.  /n/n **Important:** this method is only valid when
 // using the Cloud Pak version of Discovery.
@@ -2320,7 +2286,6 @@ func (discovery *DiscoveryV1) GetAutocompletion(getAutocompletionOptions *GetAut
 	return
 }
 
-
 // ListTrainingData : List training data
 // Lists the training data for the specified collection.
 func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions) (result *TrainingDataSet, response *core.DetailedResponse, err error) {
@@ -2370,7 +2335,6 @@ func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrai
 
 	return
 }
-
 
 // AddTrainingData : Add query to training data
 // Adds a query to the training data for this collection. The query can contain a filter and natural language query.
@@ -2438,7 +2402,6 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 	return
 }
 
-
 // DeleteAllTrainingData : Delete all training data
 // Deletes all training data from a collection.
 func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions *DeleteAllTrainingDataOptions) (response *core.DetailedResponse, err error) {
@@ -2480,7 +2443,6 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 
 	return
 }
-
 
 // GetTrainingData : Get details about a query
 // Gets details for a specific training data query, including the query string and all examples.
@@ -2532,7 +2494,6 @@ func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainin
 	return
 }
 
-
 // DeleteTrainingData : Delete a training data query
 // Removes the training data query and all associated examples from the training data set.
 func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *DeleteTrainingDataOptions) (response *core.DetailedResponse, err error) {
@@ -2574,7 +2535,6 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 
 	return
 }
-
 
 // ListTrainingExamples : List examples for a training data query
 // List all examples for this training data query.
@@ -2625,7 +2585,6 @@ func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *
 
 	return
 }
-
 
 // CreateTrainingExample : Add example to training data query
 // Adds a example to this training data query.
@@ -2693,7 +2652,6 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 	return
 }
 
-
 // DeleteTrainingExample : Delete example for training data query
 // Deletes the example document with the given ID from the training data query.
 func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions *DeleteTrainingExampleOptions) (response *core.DetailedResponse, err error) {
@@ -2735,7 +2693,6 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 
 	return
 }
-
 
 // UpdateTrainingExample : Change label or cross reference for example
 // Changes the label or cross reference query for this training data example.
@@ -2800,7 +2757,6 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 	return
 }
 
-
 // GetTrainingExample : Get details for training data example
 // Gets the details for this training example.
 func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
@@ -2851,7 +2807,6 @@ func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetT
 	return
 }
 
-
 // DeleteUserData : Delete labeled data
 // Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
 // customer ID.
@@ -2887,7 +2842,6 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 		builder.AddHeader(headerName, headerValue)
 	}
 
-
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 	builder.AddQuery("version", discovery.Version)
 
@@ -2900,7 +2854,6 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 
 	return
 }
-
 
 // CreateEvent : Create event
 // The **Events** API can be used to create log entries that are associated with specific queries. For example, you can
@@ -2966,7 +2919,6 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 	return
 }
 
-
 // QueryLog : Search the query and event log
 // Searches the query and event log to find query sessions that match the specified criteria. Searching the **logs**
 // endpoint uses the standard Discovery query syntax for the parameters that are supported.
@@ -3030,7 +2982,6 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (result
 	return
 }
 
-
 // GetMetricsQuery : Number of queries over time
 // Total number of queries using the **natural_language_query** parameter over a specific time window.
 func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetricsQueryOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
@@ -3086,7 +3037,6 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 
 	return
 }
-
 
 // GetMetricsQueryEvent : Number of queries with an event over time
 // Total number of queries using the **natural_language_query** parameter that have a corresponding "click" event over a
@@ -3146,7 +3096,6 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 	return
 }
 
-
 // GetMetricsQueryNoResults : Number of queries with no search results over time
 // Total number of queries using the **natural_language_query** parameter that have no results returned over a specified
 // time window.
@@ -3203,7 +3152,6 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 
 	return
 }
-
 
 // GetMetricsEventRate : Percentage of queries with an associated event
 // The percentage of queries using the **natural_language_query** parameter that have a corresponding "click" event over
@@ -3263,7 +3211,6 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 	return
 }
 
-
 // GetMetricsQueryTokenEvent : Most frequent query tokens with an event
 // The most frequent query tokens parsed from the **natural_language_query** parameter and their corresponding "click"
 // event rate within the recording period (queries and events are stored for 30 days). A query token is an individual
@@ -3316,7 +3263,6 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEven
 	return
 }
 
-
 // ListCredentials : List credentials
 // List all the source credentials that have been created for this service instance.
 //
@@ -3368,7 +3314,6 @@ func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCreden
 
 	return
 }
-
 
 // CreateCredentials : Create credentials
 // Creates a set of credentials to connect to a remote source. Created credentials are used in a configuration to
@@ -3439,7 +3384,6 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 	return
 }
 
-
 // GetCredentials : View Credentials
 // Returns details about the specified credentials.
 //
@@ -3492,7 +3436,6 @@ func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentia
 
 	return
 }
-
 
 // UpdateCredentials : Update credentials
 // Updates an existing set of source credentials.
@@ -3562,7 +3505,6 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 	return
 }
 
-
 // DeleteCredentials : Delete credentials
 // Deletes a set of stored credentials from your Discovery instance.
 func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *DeleteCredentialsOptions) (result *DeleteCredentials, response *core.DetailedResponse, err error) {
@@ -3613,7 +3555,6 @@ func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *Delete
 	return
 }
 
-
 // ListGateways : List Gateways
 // List the currently configured gateways.
 func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOptions) (result *GatewayList, response *core.DetailedResponse, err error) {
@@ -3663,7 +3604,6 @@ func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOpti
 
 	return
 }
-
 
 // CreateGateway : Create Gateway
 // Create a gateway configuration to use with a remotely installed gateway.
@@ -3725,7 +3665,6 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 	return
 }
 
-
 // GetGateway : List Gateway Details
 // List information about the specified gateway.
 func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (result *Gateway, response *core.DetailedResponse, err error) {
@@ -3775,7 +3714,6 @@ func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (
 
 	return
 }
-
 
 // DeleteGateway : Delete Gateway
 // Delete the specified gateway configuration.
@@ -3827,7 +3765,6 @@ func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayO
 	return
 }
 
-
 // AddDocumentOptions : The AddDocument options.
 type AddDocumentOptions struct {
 
@@ -3862,7 +3799,7 @@ type AddDocumentOptions struct {
 func (discovery *DiscoveryV1) NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
 	return &AddDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -3934,7 +3871,7 @@ type AddTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
 	return &AddTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -4044,9 +3981,9 @@ type Collection struct {
 // Constants associated with the Collection.Status property.
 // The status of the collection.
 const (
-	Collection_Status_Active = "active"
+	Collection_Status_Active      = "active"
 	Collection_Status_Maintenance = "maintenance"
-	Collection_Status_Pending = "pending"
+	Collection_Status_Pending     = "pending"
 )
 
 // CollectionCrawlStatus : Object containing information about the crawl status of this collection.
@@ -4162,16 +4099,16 @@ type CreateCollectionOptions struct {
 // Constants associated with the CreateCollectionOptions.Language property.
 // The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
 const (
-	CreateCollectionOptions_Language_Ar = "ar"
-	CreateCollectionOptions_Language_De = "de"
-	CreateCollectionOptions_Language_En = "en"
-	CreateCollectionOptions_Language_Es = "es"
-	CreateCollectionOptions_Language_Fr = "fr"
-	CreateCollectionOptions_Language_It = "it"
-	CreateCollectionOptions_Language_Ja = "ja"
-	CreateCollectionOptions_Language_Ko = "ko"
-	CreateCollectionOptions_Language_Nl = "nl"
-	CreateCollectionOptions_Language_Pt = "pt"
+	CreateCollectionOptions_Language_Ar   = "ar"
+	CreateCollectionOptions_Language_De   = "de"
+	CreateCollectionOptions_Language_En   = "en"
+	CreateCollectionOptions_Language_Es   = "es"
+	CreateCollectionOptions_Language_Fr   = "fr"
+	CreateCollectionOptions_Language_It   = "it"
+	CreateCollectionOptions_Language_Ja   = "ja"
+	CreateCollectionOptions_Language_Ko   = "ko"
+	CreateCollectionOptions_Language_Nl   = "nl"
+	CreateCollectionOptions_Language_Pt   = "pt"
 	CreateCollectionOptions_Language_ZhCn = "zh-CN"
 )
 
@@ -4179,7 +4116,7 @@ const (
 func (discovery *DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
 	return &CreateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		Name: core.StringPtr(name),
+		Name:          core.StringPtr(name),
 	}
 }
 
@@ -4252,7 +4189,7 @@ type CreateConfigurationOptions struct {
 func (discovery *DiscoveryV1) NewCreateConfigurationOptions(environmentID string, name string) *CreateConfigurationOptions {
 	return &CreateConfigurationOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		Name: core.StringPtr(name),
+		Name:          core.StringPtr(name),
 	}
 }
 
@@ -4340,11 +4277,11 @@ type CreateCredentialsOptions struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	CreateCredentialsOptions_SourceType_Box = "box"
+	CreateCredentialsOptions_SourceType_Box                = "box"
 	CreateCredentialsOptions_SourceType_CloudObjectStorage = "cloud_object_storage"
-	CreateCredentialsOptions_SourceType_Salesforce = "salesforce"
-	CreateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
-	CreateCredentialsOptions_SourceType_WebCrawl = "web_crawl"
+	CreateCredentialsOptions_SourceType_Salesforce         = "salesforce"
+	CreateCredentialsOptions_SourceType_Sharepoint         = "sharepoint"
+	CreateCredentialsOptions_SourceType_WebCrawl           = "web_crawl"
 )
 
 // Constants associated with the CreateCredentialsOptions.Status property.
@@ -4353,7 +4290,7 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	CreateCredentialsOptions_Status_Connected = "connected"
-	CreateCredentialsOptions_Status_Invalid = "invalid"
+	CreateCredentialsOptions_Status_Invalid   = "invalid"
 )
 
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
@@ -4414,15 +4351,15 @@ type CreateEnvironmentOptions struct {
 // Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the default
 // is `S`.
 const (
-	CreateEnvironmentOptions_Size_L = "L"
-	CreateEnvironmentOptions_Size_Lt = "LT"
-	CreateEnvironmentOptions_Size_M = "M"
-	CreateEnvironmentOptions_Size_Ml = "ML"
-	CreateEnvironmentOptions_Size_Ms = "MS"
-	CreateEnvironmentOptions_Size_S = "S"
-	CreateEnvironmentOptions_Size_Xl = "XL"
-	CreateEnvironmentOptions_Size_Xs = "XS"
-	CreateEnvironmentOptions_Size_Xxl = "XXL"
+	CreateEnvironmentOptions_Size_L    = "L"
+	CreateEnvironmentOptions_Size_Lt   = "LT"
+	CreateEnvironmentOptions_Size_M    = "M"
+	CreateEnvironmentOptions_Size_Ml   = "ML"
+	CreateEnvironmentOptions_Size_Ms   = "MS"
+	CreateEnvironmentOptions_Size_S    = "S"
+	CreateEnvironmentOptions_Size_Xl   = "XL"
+	CreateEnvironmentOptions_Size_Xs   = "XS"
+	CreateEnvironmentOptions_Size_Xxl  = "XXL"
 	CreateEnvironmentOptions_Size_Xxxl = "XXXL"
 )
 
@@ -4550,8 +4487,8 @@ type CreateExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string, expansions []Expansion) *CreateExpansionsOptions {
 	return &CreateExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		Expansions: expansions,
+		CollectionID:  core.StringPtr(collectionID),
+		Expansions:    expansions,
 	}
 }
 
@@ -4639,9 +4576,9 @@ type CreateStopwordListOptions struct {
 // NewCreateStopwordListOptions : Instantiate CreateStopwordListOptions
 func (discovery *DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectionID string, stopwordFile io.ReadCloser, stopwordFilename string) *CreateStopwordListOptions {
 	return &CreateStopwordListOptions{
-		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		StopwordFile: stopwordFile,
+		EnvironmentID:    core.StringPtr(environmentID),
+		CollectionID:     core.StringPtr(collectionID),
+		StopwordFile:     stopwordFile,
 		StopwordFilename: core.StringPtr(stopwordFilename),
 	}
 }
@@ -4697,7 +4634,7 @@ type CreateTokenizationDictionaryOptions struct {
 func (discovery *DiscoveryV1) NewCreateTokenizationDictionaryOptions(environmentID string, collectionID string) *CreateTokenizationDictionaryOptions {
 	return &CreateTokenizationDictionaryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -4754,8 +4691,8 @@ type CreateTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
 	return &CreateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -4913,12 +4850,12 @@ type CredentialDetails struct {
 // -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`
 // -  "source_type": "cloud_object_storage"` - valid `credential_type`s: `aws4_hmac`.
 const (
-	CredentialDetails_CredentialType_Aws4Hmac = "aws4_hmac"
-	CredentialDetails_CredentialType_Basic = "basic"
-	CredentialDetails_CredentialType_Noauth = "noauth"
-	CredentialDetails_CredentialType_NtlmV1 = "ntlm_v1"
-	CredentialDetails_CredentialType_Oauth2 = "oauth2"
-	CredentialDetails_CredentialType_Saml = "saml"
+	CredentialDetails_CredentialType_Aws4Hmac         = "aws4_hmac"
+	CredentialDetails_CredentialType_Basic            = "basic"
+	CredentialDetails_CredentialType_Noauth           = "noauth"
+	CredentialDetails_CredentialType_NtlmV1           = "ntlm_v1"
+	CredentialDetails_CredentialType_Oauth2           = "oauth2"
+	CredentialDetails_CredentialType_Saml             = "saml"
 	CredentialDetails_CredentialType_UsernamePassword = "username_password"
 )
 
@@ -4961,11 +4898,11 @@ type Credentials struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	Credentials_SourceType_Box = "box"
+	Credentials_SourceType_Box                = "box"
 	Credentials_SourceType_CloudObjectStorage = "cloud_object_storage"
-	Credentials_SourceType_Salesforce = "salesforce"
-	Credentials_SourceType_Sharepoint = "sharepoint"
-	Credentials_SourceType_WebCrawl = "web_crawl"
+	Credentials_SourceType_Salesforce         = "salesforce"
+	Credentials_SourceType_Sharepoint         = "sharepoint"
+	Credentials_SourceType_WebCrawl           = "web_crawl"
 )
 
 // Constants associated with the Credentials.Status property.
@@ -4974,7 +4911,7 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	Credentials_Status_Connected = "connected"
-	Credentials_Status_Invalid = "invalid"
+	Credentials_Status_Invalid   = "invalid"
 )
 
 // CredentialsList : Object containing array of credential definitions.
@@ -5001,7 +4938,7 @@ type DeleteAllTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
 	return &DeleteAllTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5040,7 +4977,7 @@ type DeleteCollectionOptions struct {
 func (discovery *DiscoveryV1) NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
 	return &DeleteCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5094,7 +5031,7 @@ type DeleteConfigurationOptions struct {
 // NewDeleteConfigurationOptions : Instantiate DeleteConfigurationOptions
 func (discovery *DiscoveryV1) NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
 	return &DeleteConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -5169,7 +5106,7 @@ type DeleteCredentialsOptions struct {
 func (discovery *DiscoveryV1) NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
 	return &DeleteCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -5211,8 +5148,8 @@ type DeleteDocumentOptions struct {
 func (discovery *DiscoveryV1) NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
 	return &DeleteDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -5318,7 +5255,7 @@ type DeleteExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
 	return &DeleteExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5357,7 +5294,7 @@ type DeleteGatewayOptions struct {
 func (discovery *DiscoveryV1) NewDeleteGatewayOptions(environmentID string, gatewayID string) *DeleteGatewayOptions {
 	return &DeleteGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		GatewayID: core.StringPtr(gatewayID),
+		GatewayID:     core.StringPtr(gatewayID),
 	}
 }
 
@@ -5396,7 +5333,7 @@ type DeleteStopwordListOptions struct {
 func (discovery *DiscoveryV1) NewDeleteStopwordListOptions(environmentID string, collectionID string) *DeleteStopwordListOptions {
 	return &DeleteStopwordListOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5435,7 +5372,7 @@ type DeleteTokenizationDictionaryOptions struct {
 func (discovery *DiscoveryV1) NewDeleteTokenizationDictionaryOptions(environmentID string, collectionID string) *DeleteTokenizationDictionaryOptions {
 	return &DeleteTokenizationDictionaryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5477,8 +5414,8 @@ type DeleteTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
 	return &DeleteTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -5529,9 +5466,9 @@ type DeleteTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
 	return &DeleteTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
@@ -5622,7 +5559,7 @@ type DocumentAccepted struct {
 // Status of the document in the ingestion process. A status of `processing` is returned for documents that are ingested
 // with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
 const (
-	DocumentAccepted_Status_Pending = "pending"
+	DocumentAccepted_Status_Pending    = "pending"
 	DocumentAccepted_Status_Processing = "processing"
 )
 
@@ -5673,11 +5610,11 @@ type DocumentStatus struct {
 // Constants associated with the DocumentStatus.Status property.
 // Status of the document in the ingestion process.
 const (
-	DocumentStatus_Status_Available = "available"
+	DocumentStatus_Status_Available            = "available"
 	DocumentStatus_Status_AvailableWithNotices = "available with notices"
-	DocumentStatus_Status_Failed = "failed"
-	DocumentStatus_Status_Pending = "pending"
-	DocumentStatus_Status_Processing = "processing"
+	DocumentStatus_Status_Failed               = "failed"
+	DocumentStatus_Status_Pending              = "pending"
+	DocumentStatus_Status_Processing           = "processing"
 )
 
 // Constants associated with the DocumentStatus.FileType property.
@@ -5685,7 +5622,7 @@ const (
 const (
 	DocumentStatus_FileType_HTML = "html"
 	DocumentStatus_FileType_JSON = "json"
-	DocumentStatus_FileType_Pdf = "pdf"
+	DocumentStatus_FileType_Pdf  = "pdf"
 	DocumentStatus_FileType_Word = "word"
 )
 
@@ -5806,24 +5743,24 @@ type Environment struct {
 // Current status of the environment. `resizing` is displayed when a request to increase the environment size has been
 // made, but is still in the process of being completed.
 const (
-	Environment_Status_Active = "active"
+	Environment_Status_Active      = "active"
 	Environment_Status_Maintenance = "maintenance"
-	Environment_Status_Pending = "pending"
-	Environment_Status_Resizing = "resizing"
+	Environment_Status_Pending     = "pending"
+	Environment_Status_Resizing    = "resizing"
 )
 
 // Constants associated with the Environment.Size property.
 // Current size of the environment.
 const (
-	Environment_Size_L = "L"
-	Environment_Size_Lt = "LT"
-	Environment_Size_M = "M"
-	Environment_Size_Ml = "ML"
-	Environment_Size_Ms = "MS"
-	Environment_Size_S = "S"
-	Environment_Size_Xl = "XL"
-	Environment_Size_Xs = "XS"
-	Environment_Size_Xxl = "XXL"
+	Environment_Size_L    = "L"
+	Environment_Size_Lt   = "LT"
+	Environment_Size_M    = "M"
+	Environment_Size_Ml   = "ML"
+	Environment_Size_Ms   = "MS"
+	Environment_Size_S    = "S"
+	Environment_Size_Xl   = "XL"
+	Environment_Size_Xs   = "XS"
+	Environment_Size_Xxl  = "XXL"
 	Environment_Size_Xxxl = "XXXL"
 )
 
@@ -6323,17 +6260,17 @@ type Field struct {
 // Constants associated with the Field.Type property.
 // The type of the field.
 const (
-	Field_Type_Binary = "binary"
+	Field_Type_Binary  = "binary"
 	Field_Type_Boolean = "boolean"
-	Field_Type_Byte = "byte"
-	Field_Type_Date = "date"
-	Field_Type_Double = "double"
-	Field_Type_Float = "float"
+	Field_Type_Byte    = "byte"
+	Field_Type_Date    = "date"
+	Field_Type_Double  = "double"
+	Field_Type_Float   = "float"
 	Field_Type_Integer = "integer"
-	Field_Type_Long = "long"
-	Field_Type_Nested = "nested"
-	Field_Type_Short = "short"
-	Field_Type_String = "string"
+	Field_Type_Long    = "long"
+	Field_Type_Nested  = "nested"
+	Field_Type_Short   = "short"
+	Field_Type_String  = "string"
 )
 
 // Filter : Filter struct
@@ -6392,7 +6329,7 @@ type Gateway struct {
 // `idle` means this gateway is not currently in use.
 const (
 	Gateway_Status_Connected = "connected"
-	Gateway_Status_Idle = "idle"
+	Gateway_Status_Idle      = "idle"
 )
 
 // GatewayDelete : Gatway deletion confirmation.
@@ -6439,7 +6376,7 @@ type GetAutocompletionOptions struct {
 func (discovery *DiscoveryV1) NewGetAutocompletionOptions(environmentID string, collectionID string) *GetAutocompletionOptions {
 	return &GetAutocompletionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6496,7 +6433,7 @@ type GetCollectionOptions struct {
 func (discovery *DiscoveryV1) NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
 	return &GetCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6534,7 +6471,7 @@ type GetConfigurationOptions struct {
 // NewGetConfigurationOptions : Instantiate GetConfigurationOptions
 func (discovery *DiscoveryV1) NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
 	return &GetConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -6574,7 +6511,7 @@ type GetCredentialsOptions struct {
 func (discovery *DiscoveryV1) NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
 	return &GetCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -6616,8 +6553,8 @@ type GetDocumentStatusOptions struct {
 func (discovery *DiscoveryV1) NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
 	return &GetDocumentStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -6691,7 +6628,7 @@ type GetGatewayOptions struct {
 func (discovery *DiscoveryV1) NewGetGatewayOptions(environmentID string, gatewayID string) *GetGatewayOptions {
 	return &GetGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		GatewayID: core.StringPtr(gatewayID),
+		GatewayID:     core.StringPtr(gatewayID),
 	}
 }
 
@@ -6962,7 +6899,7 @@ type GetStopwordListStatusOptions struct {
 func (discovery *DiscoveryV1) NewGetStopwordListStatusOptions(environmentID string, collectionID string) *GetStopwordListStatusOptions {
 	return &GetStopwordListStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -7001,7 +6938,7 @@ type GetTokenizationDictionaryStatusOptions struct {
 func (discovery *DiscoveryV1) NewGetTokenizationDictionaryStatusOptions(environmentID string, collectionID string) *GetTokenizationDictionaryStatusOptions {
 	return &GetTokenizationDictionaryStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -7043,8 +6980,8 @@ type GetTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
 	return &GetTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -7095,9 +7032,9 @@ type GetTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
 	return &GetTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
@@ -7193,7 +7130,7 @@ type ListCollectionFieldsOptions struct {
 func (discovery *DiscoveryV1) NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
 	return &ListCollectionFieldsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -7403,7 +7340,7 @@ type ListExpansionsOptions struct {
 func (discovery *DiscoveryV1) NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
 	return &ListExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -7510,7 +7447,7 @@ type ListTrainingDataOptions struct {
 func (discovery *DiscoveryV1) NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
 	return &ListTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -7552,8 +7489,8 @@ type ListTrainingExamplesOptions struct {
 func (discovery *DiscoveryV1) NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
 	return &ListTrainingExamplesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -7801,12 +7738,12 @@ type NluEnrichmentCategories map[string]interface{}
 
 // SetProperty : Allow user to set arbitrary property
 func (this *NluEnrichmentCategories) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *NluEnrichmentCategories) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // NluEnrichmentConcepts : An object specifiying the concepts enrichment and related parameters.
@@ -7984,10 +7921,10 @@ type NormalizationOperation struct {
 // Typically, **remove_nulls** is invoked as the last normalization operation (if it is invoked at all, it can be
 // time-expensive).
 const (
-	NormalizationOperation_Operation_Copy = "copy"
-	NormalizationOperation_Operation_Merge = "merge"
-	NormalizationOperation_Operation_Move = "move"
-	NormalizationOperation_Operation_Remove = "remove"
+	NormalizationOperation_Operation_Copy        = "copy"
+	NormalizationOperation_Operation_Merge       = "merge"
+	NormalizationOperation_Operation_Move        = "move"
+	NormalizationOperation_Operation_Remove      = "remove"
 	NormalizationOperation_Operation_RemoveNulls = "remove_nulls"
 )
 
@@ -8028,7 +7965,7 @@ type Notice struct {
 // Constants associated with the Notice.Severity property.
 // Severity level of the notice.
 const (
-	Notice_Severity_Error = "error"
+	Notice_Severity_Error   = "error"
 	Notice_Severity_Warning = "warning"
 )
 
@@ -8219,7 +8156,7 @@ type QueryNoticesOptions struct {
 func (discovery *DiscoveryV1) NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
 	return &QueryNoticesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -8367,112 +8304,112 @@ type QueryNoticesResult map[string]interface{}
 
 // SetID : Allow user to set ID
 func (this *QueryNoticesResult) SetID(ID *string) {
-   (*this)["id"] = ID
+	(*this)["id"] = ID
 }
 
 // GetID : Allow user to get ID
 func (this *QueryNoticesResult) GetID() *string {
-   return (*this)["id"].(*string)
+	return (*this)["id"].(*string)
 }
 
 // SetMetadata : Allow user to set Metadata
 func (this *QueryNoticesResult) SetMetadata(Metadata *map[string]interface{}) {
-   (*this)["metadata"] = Metadata
+	(*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
 func (this *QueryNoticesResult) GetMetadata() *map[string]interface{} {
-   return (*this)["metadata"].(*map[string]interface{})
+	return (*this)["metadata"].(*map[string]interface{})
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (this *QueryNoticesResult) SetCollectionID(CollectionID *string) {
-   (*this)["collection_id"] = CollectionID
+	(*this)["collection_id"] = CollectionID
 }
 
 // GetCollectionID : Allow user to get CollectionID
 func (this *QueryNoticesResult) GetCollectionID() *string {
-   return (*this)["collection_id"].(*string)
+	return (*this)["collection_id"].(*string)
 }
 
 // SetResultMetadata : Allow user to set ResultMetadata
 func (this *QueryNoticesResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) {
-   (*this)["result_metadata"] = ResultMetadata
+	(*this)["result_metadata"] = ResultMetadata
 }
 
 // GetResultMetadata : Allow user to get ResultMetadata
 func (this *QueryNoticesResult) GetResultMetadata() *QueryResultMetadata {
-   return (*this)["result_metadata"].(*QueryResultMetadata)
+	return (*this)["result_metadata"].(*QueryResultMetadata)
 }
 
 // SetTitle : Allow user to set Title
 func (this *QueryNoticesResult) SetTitle(Title *string) {
-   (*this)["title"] = Title
+	(*this)["title"] = Title
 }
 
 // GetTitle : Allow user to get Title
 func (this *QueryNoticesResult) GetTitle() *string {
-   return (*this)["title"].(*string)
+	return (*this)["title"].(*string)
 }
 
 // SetCode : Allow user to set Code
 func (this *QueryNoticesResult) SetCode(Code *int64) {
-   (*this)["code"] = Code
+	(*this)["code"] = Code
 }
 
 // GetCode : Allow user to get Code
 func (this *QueryNoticesResult) GetCode() *int64 {
-   return (*this)["code"].(*int64)
+	return (*this)["code"].(*int64)
 }
 
 // SetFilename : Allow user to set Filename
 func (this *QueryNoticesResult) SetFilename(Filename *string) {
-   (*this)["filename"] = Filename
+	(*this)["filename"] = Filename
 }
 
 // GetFilename : Allow user to get Filename
 func (this *QueryNoticesResult) GetFilename() *string {
-   return (*this)["filename"].(*string)
+	return (*this)["filename"].(*string)
 }
 
 // SetFileType : Allow user to set FileType
 func (this *QueryNoticesResult) SetFileType(FileType *string) {
-   (*this)["file_type"] = FileType
+	(*this)["file_type"] = FileType
 }
 
 // GetFileType : Allow user to get FileType
 func (this *QueryNoticesResult) GetFileType() *string {
-   return (*this)["file_type"].(*string)
+	return (*this)["file_type"].(*string)
 }
 
 // SetSha1 : Allow user to set Sha1
 func (this *QueryNoticesResult) SetSha1(Sha1 *string) {
-   (*this)["sha1"] = Sha1
+	(*this)["sha1"] = Sha1
 }
 
 // GetSha1 : Allow user to get Sha1
 func (this *QueryNoticesResult) GetSha1() *string {
-   return (*this)["sha1"].(*string)
+	return (*this)["sha1"].(*string)
 }
 
 // SetNotices : Allow user to set Notices
 func (this *QueryNoticesResult) SetNotices(Notices *[]Notice) {
-   (*this)["notices"] = Notices
+	(*this)["notices"] = Notices
 }
 
 // GetNotices : Allow user to get Notices
 func (this *QueryNoticesResult) GetNotices() *[]Notice {
-   return (*this)["notices"].(*[]Notice)
+	return (*this)["notices"].(*[]Notice)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *QueryNoticesResult) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *QueryNoticesResult) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // Constants associated with the QueryNoticesResult.FileType property.
@@ -8480,7 +8417,7 @@ func (this *QueryNoticesResult) GetProperty(Key string) *interface{} {
 const (
 	QueryNoticesResult_FileType_HTML = "html"
 	QueryNoticesResult_FileType_JSON = "json"
-	QueryNoticesResult_FileType_Pdf = "pdf"
+	QueryNoticesResult_FileType_Pdf  = "pdf"
 	QueryNoticesResult_FileType_Word = "word"
 )
 
@@ -8590,7 +8527,7 @@ type QueryOptions struct {
 func (discovery *DiscoveryV1) NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
 	return &QueryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -8793,62 +8730,62 @@ type QueryResult map[string]interface{}
 
 // SetID : Allow user to set ID
 func (this *QueryResult) SetID(ID *string) {
-   (*this)["id"] = ID
+	(*this)["id"] = ID
 }
 
 // GetID : Allow user to get ID
 func (this *QueryResult) GetID() *string {
-   return (*this)["id"].(*string)
+	return (*this)["id"].(*string)
 }
 
 // SetMetadata : Allow user to set Metadata
 func (this *QueryResult) SetMetadata(Metadata *map[string]interface{}) {
-   (*this)["metadata"] = Metadata
+	(*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
 func (this *QueryResult) GetMetadata() *map[string]interface{} {
-   return (*this)["metadata"].(*map[string]interface{})
+	return (*this)["metadata"].(*map[string]interface{})
 }
 
 // SetCollectionID : Allow user to set CollectionID
 func (this *QueryResult) SetCollectionID(CollectionID *string) {
-   (*this)["collection_id"] = CollectionID
+	(*this)["collection_id"] = CollectionID
 }
 
 // GetCollectionID : Allow user to get CollectionID
 func (this *QueryResult) GetCollectionID() *string {
-   return (*this)["collection_id"].(*string)
+	return (*this)["collection_id"].(*string)
 }
 
 // SetResultMetadata : Allow user to set ResultMetadata
 func (this *QueryResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) {
-   (*this)["result_metadata"] = ResultMetadata
+	(*this)["result_metadata"] = ResultMetadata
 }
 
 // GetResultMetadata : Allow user to get ResultMetadata
 func (this *QueryResult) GetResultMetadata() *QueryResultMetadata {
-   return (*this)["result_metadata"].(*QueryResultMetadata)
+	return (*this)["result_metadata"].(*QueryResultMetadata)
 }
 
 // SetTitle : Allow user to set Title
 func (this *QueryResult) SetTitle(Title *string) {
-   (*this)["title"] = Title
+	(*this)["title"] = Title
 }
 
 // GetTitle : Allow user to get Title
 func (this *QueryResult) GetTitle() *string {
-   return (*this)["title"].(*string)
+	return (*this)["title"].(*string)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *QueryResult) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *QueryResult) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // QueryResultMetadata : Metadata of a query result.
@@ -8888,8 +8825,8 @@ type RetrievalDetails struct {
 // the **document_retrieval_strategy** will be listed as `untrained`.
 const (
 	RetrievalDetails_DocumentRetrievalStrategy_ContinuousRelevancyTraining = "continuous_relevancy_training"
-	RetrievalDetails_DocumentRetrievalStrategy_RelevancyTraining = "relevancy_training"
-	RetrievalDetails_DocumentRetrievalStrategy_Untrained = "untrained"
+	RetrievalDetails_DocumentRetrievalStrategy_RelevancyTraining           = "relevancy_training"
+	RetrievalDetails_DocumentRetrievalStrategy_Untrained                   = "untrained"
 )
 
 // SduStatus : Object containing smart document understanding information for this collection.
@@ -8949,10 +8886,10 @@ type SearchStatus struct {
 // The current status of Continuous Relevancy Training for this environment.
 const (
 	SearchStatus_Status_InsufficentData = "INSUFFICENT_DATA"
-	SearchStatus_Status_NoData = "NO_DATA"
-	SearchStatus_Status_NotApplicable = "NOT_APPLICABLE"
-	SearchStatus_Status_Trained = "TRAINED"
-	SearchStatus_Status_Training = "TRAINING"
+	SearchStatus_Status_NoData          = "NO_DATA"
+	SearchStatus_Status_NotApplicable   = "NOT_APPLICABLE"
+	SearchStatus_Status_Trained         = "TRAINED"
+	SearchStatus_Status_Training        = "TRAINING"
 )
 
 // SegmentSettings : A list of Document Segmentation settings.
@@ -9007,11 +8944,11 @@ type Source struct {
 // -  `web_crawl` indicates the configuration is to perform a web page crawl.
 // -  `cloud_object_storage` indicates the configuration is to connect to a cloud object store.
 const (
-	Source_Type_Box = "box"
+	Source_Type_Box                = "box"
 	Source_Type_CloudObjectStorage = "cloud_object_storage"
-	Source_Type_Salesforce = "salesforce"
-	Source_Type_Sharepoint = "sharepoint"
-	Source_Type_WebCrawl = "web_crawl"
+	Source_Type_Salesforce         = "salesforce"
+	Source_Type_Sharepoint         = "sharepoint"
+	Source_Type_WebCrawl           = "web_crawl"
 )
 
 // SourceOptions : The **options** object defines which items to crawl from the source system.
@@ -9130,8 +9067,8 @@ type SourceOptionsWebCrawl struct {
 // means that up to ten URLs are fetched concurrently with a short delay between fetch calls.
 const (
 	SourceOptionsWebCrawl_CrawlSpeed_Aggressive = "aggressive"
-	SourceOptionsWebCrawl_CrawlSpeed_Gentle = "gentle"
-	SourceOptionsWebCrawl_CrawlSpeed_Normal = "normal"
+	SourceOptionsWebCrawl_CrawlSpeed_Gentle     = "gentle"
+	SourceOptionsWebCrawl_CrawlSpeed_Normal     = "normal"
 )
 
 // SourceSchedule : Object containing the schedule information for the source.
@@ -9164,11 +9101,11 @@ type SourceSchedule struct {
 // -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
 // -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
 const (
-	SourceSchedule_Frequency_Daily = "daily"
+	SourceSchedule_Frequency_Daily       = "daily"
 	SourceSchedule_Frequency_FiveMinutes = "five_minutes"
-	SourceSchedule_Frequency_Hourly = "hourly"
-	SourceSchedule_Frequency_Monthly = "monthly"
-	SourceSchedule_Frequency_Weekly = "weekly"
+	SourceSchedule_Frequency_Hourly      = "hourly"
+	SourceSchedule_Frequency_Monthly     = "monthly"
+	SourceSchedule_Frequency_Weekly      = "weekly"
 )
 
 // SourceStatus : Object containing source crawl status information.
@@ -9196,11 +9133,11 @@ type SourceStatus struct {
 // -  `queued` indicates that the crawl has been paused by the system and will automatically restart when possible.
 // -  `unknown` indicates that an unidentified error has occured in the service.
 const (
-	SourceStatus_Status_Complete = "complete"
+	SourceStatus_Status_Complete      = "complete"
 	SourceStatus_Status_NotConfigured = "not_configured"
-	SourceStatus_Status_Queued = "queued"
-	SourceStatus_Status_Running = "running"
-	SourceStatus_Status_Unknown = "unknown"
+	SourceStatus_Status_Queued        = "queued"
+	SourceStatus_Status_Running       = "running"
+	SourceStatus_Status_Unknown       = "unknown"
 )
 
 // Term : Term struct
@@ -9257,9 +9194,9 @@ type TokenDictStatusResponse struct {
 // Constants associated with the TokenDictStatusResponse.Status property.
 // Current wordlist status for the specified collection.
 const (
-	TokenDictStatusResponse_Status_Active = "active"
+	TokenDictStatusResponse_Status_Active   = "active"
 	TokenDictStatusResponse_Status_NotFound = "not found"
-	TokenDictStatusResponse_Status_Pending = "pending"
+	TokenDictStatusResponse_Status_Pending  = "pending"
 )
 
 // TopHits : TopHits struct
@@ -9387,7 +9324,7 @@ type UpdateCollectionOptions struct {
 func (discovery *DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string) *UpdateCollectionOptions {
 	return &UpdateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -9462,9 +9399,9 @@ type UpdateConfigurationOptions struct {
 // NewUpdateConfigurationOptions : Instantiate UpdateConfigurationOptions
 func (discovery *DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string, name string) *UpdateConfigurationOptions {
 	return &UpdateConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
-		Name: core.StringPtr(name),
+		Name:            core.StringPtr(name),
 	}
 }
 
@@ -9561,11 +9498,11 @@ type UpdateCredentialsOptions struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	UpdateCredentialsOptions_SourceType_Box = "box"
+	UpdateCredentialsOptions_SourceType_Box                = "box"
 	UpdateCredentialsOptions_SourceType_CloudObjectStorage = "cloud_object_storage"
-	UpdateCredentialsOptions_SourceType_Salesforce = "salesforce"
-	UpdateCredentialsOptions_SourceType_Sharepoint = "sharepoint"
-	UpdateCredentialsOptions_SourceType_WebCrawl = "web_crawl"
+	UpdateCredentialsOptions_SourceType_Salesforce         = "salesforce"
+	UpdateCredentialsOptions_SourceType_Sharepoint         = "sharepoint"
+	UpdateCredentialsOptions_SourceType_WebCrawl           = "web_crawl"
 )
 
 // Constants associated with the UpdateCredentialsOptions.Status property.
@@ -9574,14 +9511,14 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	UpdateCredentialsOptions_Status_Connected = "connected"
-	UpdateCredentialsOptions_Status_Invalid = "invalid"
+	UpdateCredentialsOptions_Status_Invalid   = "invalid"
 )
 
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
 func (discovery *DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
 	return &UpdateCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -9658,8 +9595,8 @@ type UpdateDocumentOptions struct {
 func (discovery *DiscoveryV1) NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
 	return &UpdateDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -9735,13 +9672,13 @@ type UpdateEnvironmentOptions struct {
 // Size that the environment should be increased to. Environment size cannot be modified when using a Lite plan.
 // Environment size can only increased and not decreased.
 const (
-	UpdateEnvironmentOptions_Size_L = "L"
-	UpdateEnvironmentOptions_Size_M = "M"
-	UpdateEnvironmentOptions_Size_Ml = "ML"
-	UpdateEnvironmentOptions_Size_Ms = "MS"
-	UpdateEnvironmentOptions_Size_S = "S"
-	UpdateEnvironmentOptions_Size_Xl = "XL"
-	UpdateEnvironmentOptions_Size_Xxl = "XXL"
+	UpdateEnvironmentOptions_Size_L    = "L"
+	UpdateEnvironmentOptions_Size_M    = "M"
+	UpdateEnvironmentOptions_Size_Ml   = "ML"
+	UpdateEnvironmentOptions_Size_Ms   = "MS"
+	UpdateEnvironmentOptions_Size_S    = "S"
+	UpdateEnvironmentOptions_Size_Xl   = "XL"
+	UpdateEnvironmentOptions_Size_Xxl  = "XXL"
 	UpdateEnvironmentOptions_Size_Xxxl = "XXXL"
 )
 
@@ -9811,9 +9748,9 @@ type UpdateTrainingExampleOptions struct {
 func (discovery *DiscoveryV1) NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
 	return &UpdateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
