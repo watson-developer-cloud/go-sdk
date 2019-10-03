@@ -87,7 +87,7 @@ func (visualRecognition *VisualRecognitionV4) SetServiceURL(url string) error {
 	return visualRecognition.Service.SetServiceURL(url)
 }
 
-// DisableSSLVerification skips SSL verification
+// DisableSSLVerification bypasses verification of the server's SSL certificate
 func (visualRecognition *VisualRecognitionV4) DisableSSLVerification() {
 	visualRecognition.Service.DisableSSLVerification()
 }
@@ -1698,7 +1698,7 @@ type TrainingDataObject struct {
 type TrainingDataObjects struct {
 
 	// Training data for specific objects.
-	Objects []TrainingDataObject `json:"objects" validate:"required"`
+	Objects []TrainingDataObject `json:"objects,omitempty"`
 }
 
 // TrainingStatus : Training status information for the collection.
