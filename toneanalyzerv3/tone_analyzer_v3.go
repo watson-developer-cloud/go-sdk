@@ -80,6 +80,16 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (service *ToneAnalyzerV3,
 	return
 }
 
+// SetServiceURL sets the service URL
+func (toneAnalyzer *ToneAnalyzerV3) SetServiceURL(url string) error {
+	return toneAnalyzer.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (toneAnalyzer *ToneAnalyzerV3) DisableSSLVerification() {
+	toneAnalyzer.Service.DisableSSLVerification()
+}
+
 // Tone : Analyze general tone
 // Use the general-purpose endpoint to analyze the tone of your input content. The service analyzes the content for
 // emotional and language tones. The method always analyzes the tone of the full document; by default, it also analyzes
