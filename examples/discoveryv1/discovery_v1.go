@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
 	"os"
+
+	"github.com/IBM/go-sdk-core/core"
 
 	discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
 )
@@ -11,11 +12,11 @@ import (
 func main() {
 	// Instantiate the Watson Discovery service
 	authenticator := &core.IamAuthenticator{
-		ApiKey:     os.Getenv("YOUR IAM API KEY"),
+		ApiKey: os.Getenv("YOUR IAM API KEY"),
 	}
 	service, serviceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
-		URL:       "YOUR SERVICE URL",
-		Version:   "2018-03-05",
+		URL:           "YOUR SERVICE URL",
+		Version:       "2018-03-05",
 		Authenticator: authenticator,
 	})
 	// Check successful instantiation

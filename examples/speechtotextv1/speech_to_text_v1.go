@@ -3,19 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
-	"os"
 )
 
 func main() {
 	// Instantiate the Watson Speech To Text service
 	authenticator := &core.IamAuthenticator{
-		ApiKey:     os.Getenv("YOUR API KEY"),
+		ApiKey: os.Getenv("YOUR API KEY"),
 	}
 	service, serviceErr := speechtotextv1.
 		NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			URL:       "YOUR SERVICE URL",
+			URL:           "YOUR SERVICE URL",
 			Authenticator: authenticator,
 		})
 

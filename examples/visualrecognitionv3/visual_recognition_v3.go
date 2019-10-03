@@ -11,8 +11,8 @@ func main() {
 	// Instantiate the Watson Visual Recognition service
 	service, serviceErr := visualrecognitionv3.
 		NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-			URL:       "YOUR SERVICE URL",
-			Version:   "2018-03-19",
+			URL:     "YOUR SERVICE URL",
+			Version: "2018-03-19",
 			Authenticator: &core.IamAuthenticator{
 				ApiKey: "YOUR API KEY",
 			},
