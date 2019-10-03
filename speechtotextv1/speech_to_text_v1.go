@@ -22,7 +22,6 @@ import (
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
-	"os"
 	"strings"
 )
 
@@ -86,6 +85,16 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1,
 	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (speechToText *SpeechToTextV1) SetServiceURL(url string) error {
+	return speechToText.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (speechToText *SpeechToTextV1) DisableSSLVerification() {
+	speechToText.Service.DisableSSLVerification()
 }
 
 // ListModels : List models
@@ -3059,7 +3068,7 @@ type AddAudioOptions struct {
 	// The audio resource that is to be added to the custom acoustic model, an individual audio file or an archive file.
 	//
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
-	AudioResource *io.ReadCloser `json:"audio_resource" validate:"required"`
+	AudioResource io.ReadCloser `json:"audio_resource" validate:"required"`
 
 	// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
 	// audio-type resources** in the method description.
@@ -3127,7 +3136,7 @@ func (speechToText *SpeechToTextV1) NewAddAudioOptions(customizationID string, a
 	return &AddAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
 		AudioName: core.StringPtr(audioName),
-		AudioResource: &audioResource,
+		AudioResource: audioResource,
 	}
 }
 
@@ -3145,7 +3154,7 @@ func (options *AddAudioOptions) SetAudioName(audioName string) *AddAudioOptions 
 
 // SetAudioResource : Allow user to set AudioResource
 func (options *AddAudioOptions) SetAudioResource(audioResource io.ReadCloser) *AddAudioOptions {
-	options.AudioResource = &audioResource
+	options.AudioResource = audioResource
 	return options
 }
 
@@ -3201,7 +3210,7 @@ type AddCorpusOptions struct {
 	// encoding](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-corporaWords#charEncoding).
 	//
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
-	CorpusFile *os.File `json:"corpus_file" validate:"required"`
+	CorpusFile io.ReadCloser `json:"corpus_file" validate:"required"`
 
 	// If `true`, the specified corpus overwrites an existing corpus with the same name. If `false`, the request fails if a
 	// corpus with the same name already exists. The parameter has no effect if a corpus with the same name does not
@@ -3213,7 +3222,7 @@ type AddCorpusOptions struct {
 }
 
 // NewAddCorpusOptions : Instantiate AddCorpusOptions
-func (speechToText *SpeechToTextV1) NewAddCorpusOptions(customizationID string, corpusName string, corpusFile *os.File) *AddCorpusOptions {
+func (speechToText *SpeechToTextV1) NewAddCorpusOptions(customizationID string, corpusName string, corpusFile io.ReadCloser) *AddCorpusOptions {
 	return &AddCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
 		CorpusName: core.StringPtr(corpusName),
@@ -3234,7 +3243,7 @@ func (options *AddCorpusOptions) SetCorpusName(corpusName string) *AddCorpusOpti
 }
 
 // SetCorpusFile : Allow user to set CorpusFile
-func (options *AddCorpusOptions) SetCorpusFile(corpusFile *os.File) *AddCorpusOptions {
+func (options *AddCorpusOptions) SetCorpusFile(corpusFile io.ReadCloser) *AddCorpusOptions {
 	options.CorpusFile = corpusFile
 	return options
 }
@@ -3276,7 +3285,7 @@ type AddGrammarOptions struct {
 	// unexpected results in decoding. The service ignores an encoding that is specified in the header of the grammar.
 	//
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
-	GrammarFile *io.ReadCloser `json:"grammar_file" validate:"required"`
+	GrammarFile io.ReadCloser `json:"grammar_file" validate:"required"`
 
 	// The format (MIME type) of the grammar file:
 	// * `application/srgs` for Augmented Backus-Naur Form (ABNF), which uses a plain-text representation that is similar
@@ -3298,7 +3307,7 @@ func (speechToText *SpeechToTextV1) NewAddGrammarOptions(customizationID string,
 	return &AddGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
 		GrammarName: core.StringPtr(grammarName),
-		GrammarFile: &grammarFile,
+		GrammarFile: grammarFile,
 		ContentType: core.StringPtr(contentType),
 	}
 }
@@ -3317,7 +3326,7 @@ func (options *AddGrammarOptions) SetGrammarName(grammarName string) *AddGrammar
 
 // SetGrammarFile : Allow user to set GrammarFile
 func (options *AddGrammarOptions) SetGrammarFile(grammarFile io.ReadCloser) *AddGrammarOptions {
-	options.GrammarFile = &grammarFile
+	options.GrammarFile = grammarFile
 	return options
 }
 
@@ -3881,7 +3890,7 @@ func (options *CreateAcousticModelOptions) SetHeaders(param map[string]string) *
 type CreateJobOptions struct {
 
 	// The audio to transcribe.
-	Audio *io.ReadCloser `json:"audio" validate:"required"`
+	Audio io.ReadCloser `json:"audio" validate:"required"`
 
 	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
 	// (content types)** in the method description.
@@ -4145,13 +4154,13 @@ const (
 // NewCreateJobOptions : Instantiate CreateJobOptions
 func (speechToText *SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser) *CreateJobOptions {
 	return &CreateJobOptions{
-		Audio: &audio,
+		Audio: audio,
 	}
 }
 
 // SetAudio : Allow user to set Audio
 func (options *CreateJobOptions) SetAudio(audio io.ReadCloser) *CreateJobOptions {
-	options.Audio = &audio
+	options.Audio = audio
 	return options
 }
 
@@ -5561,7 +5570,7 @@ type RecognitionJobs struct {
 type RecognizeOptions struct {
 
 	// The audio to transcribe.
-	Audio *io.ReadCloser `json:"audio" validate:"required"`
+	Audio io.ReadCloser `json:"audio" validate:"required"`
 
 	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
 	// (content types)** in the method description.
@@ -5750,13 +5759,13 @@ const (
 // NewRecognizeOptions : Instantiate RecognizeOptions
 func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser) *RecognizeOptions {
 	return &RecognizeOptions{
-		Audio: &audio,
+		Audio: audio,
 	}
 }
 
 // SetAudio : Allow user to set Audio
 func (options *RecognizeOptions) SetAudio(audio io.ReadCloser) *RecognizeOptions {
-	options.Audio = &audio
+	options.Audio = audio
 	return options
 }
 
@@ -6076,12 +6085,12 @@ type SpeechRecognitionAlternative struct {
 	// Time alignments for each word from the transcript as a list of lists. Each inner list consists of three elements:
 	// the word followed by its start and end time in seconds, for example: `[["hello",0.0,1.2],["world",1.2,2.5]]`.
 	// Timestamps are returned only for the best alternative.
-	Timestamps []interface{} `json:"timestamps,omitempty"`
+	Timestamps []string `json:"timestamps,omitempty"`
 
 	// A confidence score for each word of the transcript as a list of lists. Each inner list consists of two elements: the
 	// word and its confidence score in the range of 0.0 to 1.0, for example: `[["hello",0.95],["world",0.866]]`.
 	// Confidence scores are returned only for the best alternative and only with results marked as final.
-	WordConfidence []interface{} `json:"word_confidence,omitempty"`
+	WordConfidence []string `json:"word_confidence,omitempty"`
 }
 
 // SpeechRecognitionResult : Component results for a speech recognition request.
