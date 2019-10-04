@@ -18,14 +18,15 @@ package comparecomplyv1_test
 
 import (
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	"github.com/watson-developer-cloud/go-sdk/comparecomplyv1"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
+
+	"github.com/IBM/go-sdk-core/core"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/comparecomplyv1"
 )
 
 var _ = Describe("CompareComplyV1", func() {
@@ -60,12 +61,12 @@ var _ = Describe("CompareComplyV1", func() {
 			It("Succeed to call ConvertToHTML", func() {
 				defer testServer.Close()
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -118,12 +119,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -176,12 +177,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -238,12 +239,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -292,12 +293,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -397,12 +398,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -453,12 +454,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -507,12 +508,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -575,12 +576,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -631,12 +632,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -684,12 +685,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -741,12 +742,12 @@ var _ = Describe("CompareComplyV1", func() {
 				defer testServer.Close()
 
 				authenticator := &core.IamAuthenticator{
-					ApiKey:     "iamAPiKey",
+					ApiKey: "iamAPiKey",
 					URL:    testServer.URL,
 				}
 				testService, testServiceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL:       testServer.URL,
-					Version:   version,
+					URL:           testServer.URL,
+					Version:       version,
 					Authenticator: authenticator,
 				})
 				Expect(testServiceErr).To(BeNil())

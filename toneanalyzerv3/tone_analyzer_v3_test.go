@@ -18,12 +18,13 @@ package toneanalyzerv3_test
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+
 	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
-	"net/http"
-	"net/http/httptest"
 )
 
 var _ = Describe(`ToneAnalyzerV3`, func() {
@@ -49,7 +50,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -95,7 +96,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
