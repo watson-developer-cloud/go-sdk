@@ -205,7 +205,6 @@ result, response, responseErr := service.MethodCall(&servicev1.MethodCallOptions
 #### Speech to Text V1
 * `FinalResults` was renamed to `Final` in the SpeakerLabelsResult model
 * `FinalResults` was renamed to `Final` in the SpeechRecognitionResult model
-* `customization_id` no longer a param in `recognize_using_websocket()` method
 
 #### Visual Recognition V3
 * `DetectFaces()` method was removed
