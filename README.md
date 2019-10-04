@@ -19,6 +19,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 * [Use](#use)
 * [Configuring the HTTP Client](#configuring-the-http-client)
 * [Disable SSL certificate verification](#disable-ssl-certificate-verification)
+* [Set Service URL](#set-service-url)
 * [IBM Cloud Pak for Data(ICP4D)](#ibm-cloud-pak-for-data(icp4d))
 * [Examples](#examples)
 * [Tests](#tests)
@@ -36,8 +37,10 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 Get SDK package:
 ```bash
-go get -u github.com/watson-developer-cloud/go-sdk/...
+go get -u github.com/watson-developer-cloud/go-sdk@v0.12.0
 ```
+
+Note: For the latest tag release, look into [examples][examples] folder for basic and advanced examples.
 
 ## Running in IBM Cloud
 
@@ -279,6 +282,19 @@ func main() {
 
   discoveryService.Service.DisableSSLVerification()
 }
+```
+
+## Set Service URL
+To set the service URL,
+
+```go
+service.SetServiceURL("my new url")
+```
+
+Or can set it from external sources. For example, environment variables:
+
+```bash
+export <YOUR SERVICE NAMEs>_URL="my new url"
 ```
 
 ## Cloud Pak for Data(CP4D)
