@@ -51,56 +51,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				ClassifyOptions := testService.NewClassifyOptions().SetURL("https://test.com")
-				returnValue, returnValueErr := testService.Classify(ClassifyOptions)
+				result, returnValue, returnValueErr := testService.Classify(ClassifyOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetClassifyResult(returnValue)
-				Expect(result).ToNot(BeNil())
-			})
-		})
-	})
-	Describe("DetectFaces(detectFacesOptions *DetectFacesOptions)", func() {
-		DetectFacesPath := "/v3/detect_faces"
-		version := "exampleString"
-		Context("Successfully - Detect faces in images", func() {
-			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-				defer GinkgoRecover()
-
-				if req.URL.String() != "/v3/detect_faces?version=exampleString" {
-					res.WriteHeader(200)
-					fmt.Fprintf(res, `{"access_token":"xxxxx"}`)
-				} else {
-					Expect(req.URL.String()).To(Equal(DetectFacesPath + "?version=" + version))
-					Expect(req.URL.Path).To(Equal(DetectFacesPath))
-					Expect(req.Method).To(Equal("POST"))
-					Expect(req.Header["Authorization"]).ToNot(BeNil())
-					Expect(req.Header["Authorization"][0]).To(Equal("Bearer xxxxx"))
-					res.Header().Set("Content-type", "application/json")
-					fmt.Fprintf(res, `{"images":[]}`)
-				}
-			}))
-			It("Succeed to call DetectFaces", func() {
-				defer testServer.Close()
-
-				testService, testServiceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL:       testServer.URL,
-					Version:   version,
-					Authenticator: &core.IamAuthenticator{
-						ApiKey: "xxxx",
-						URL: testServer.URL,
-					},
-				})
-				Expect(testServiceErr).To(BeNil())
-				Expect(testService).ToNot(BeNil())
-
-				DetectFacesOptions := testService.NewDetectFacesOptions().
-					SetURL("https://test.com")
-				returnValue, returnValueErr := testService.DetectFaces(DetectFacesOptions)
-				Expect(returnValueErr).To(BeNil())
-				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetDetectFacesResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -146,11 +99,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				CreateClassifierOptions := testService.
 					NewCreateClassifierOptions("cars vs trucks").
 					AddPositiveExamples("cars", cars)
-				returnValue, returnValueErr := testService.CreateClassifier(CreateClassifierOptions)
+				result, returnValue, returnValueErr := testService.CreateClassifier(CreateClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetCreateClassifierResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -234,11 +185,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				GetClassifierOptions := testService.NewGetClassifierOptions(ClassifierID)
-				returnValue, returnValueErr := testService.GetClassifier(GetClassifierOptions)
+				result, returnValue, returnValueErr := testService.GetClassifier(GetClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetClassifierResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -278,11 +227,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				ListClassifiersOptions := testService.NewListClassifiersOptions()
-				returnValue, returnValueErr := testService.ListClassifiers(ListClassifiersOptions)
+				result, returnValue, returnValueErr := testService.ListClassifiers(ListClassifiersOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListClassifiersResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -330,11 +277,9 @@ var _ = Describe("VisualRecognitionV3", func() {
 
 				UpdateClassifierOptions := testService.NewUpdateClassifierOptions(ClassifierID)
 				UpdateClassifierOptions.NegativeExamples = trucks
-				returnValue, returnValueErr := testService.UpdateClassifier(UpdateClassifierOptions)
+				result, returnValue, returnValueErr := testService.UpdateClassifier(UpdateClassifierOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetUpdateClassifierResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -388,7 +333,7 @@ var _ = Describe("VisualRecognitionV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				GetCoreMlModelOptions := testService.NewGetCoreMlModelOptions(ClassifierID)
-				returnValue, returnValueErr := testService.GetCoreMlModel(GetCoreMlModelOptions)
+				_, returnValue, returnValueErr := testService.GetCoreMlModel(GetCoreMlModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})

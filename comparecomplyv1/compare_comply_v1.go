@@ -19,10 +19,11 @@ package comparecomplyv1
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"os"
 )
 
 // CompareComplyV1 : IBM Watson&trade; Compare and Comply analyzes governing documents to provide details about critical
@@ -32,59 +33,79 @@ import (
 // See: https://cloud.ibm.com/docs/services/compare-comply?topic=compare-comply-about
 type CompareComplyV1 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/compare-comply/api"
 
 // CompareComplyV1Options : Service options
 type CompareComplyV1Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewCompareComplyV1 : Instantiate CompareComplyV1
 func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComplyV1, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/compare-comply/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("compare-comply")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("compare-comply")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "compare-comply", "Compare Comply")
 	if err != nil {
 		return
 	}
-	
-	service = &CompareComplyV1{Service: baseService}
+
+	service = &CompareComplyV1{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
 }
 
+// SetServiceURL sets the service URL
+func (compareComply *CompareComplyV1) SetServiceURL(url string) error {
+	return compareComply.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (compareComply *CompareComplyV1) DisableSSLVerification() {
+	compareComply.Service.DisableSSLVerification()
+}
+
 // ConvertToHTML : Convert document to HTML
 // Converts a document to HTML.
-func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *ConvertToHTMLOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(convertToHTMLOptions, "convertToHTMLOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *ConvertToHTMLOptions) (result *HTMLReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(convertToHTMLOptions, "convertToHTMLOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(convertToHTMLOptions, "convertToHTMLOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(convertToHTMLOptions, "convertToHTMLOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/html_conversion"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range convertToHTMLOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -100,44 +121,48 @@ func (compareComply *CompareComplyV1) ConvertToHTML(convertToHTMLOptions *Conver
 	if convertToHTMLOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*convertToHTMLOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("file", "filename",
 		core.StringNilMapper(convertToHTMLOptions.FileContentType), convertToHTMLOptions.File)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(HTMLReturn))
-	return response, err
-}
-
-// GetConvertToHTMLResult : Retrieve result of ConvertToHTML operation
-func (compareComply *CompareComplyV1) GetConvertToHTMLResult(response *core.DetailedResponse) *HTMLReturn {
-	result, ok := response.Result.(*HTMLReturn)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(HTMLReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*HTMLReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ClassifyElements : Classify the elements of a document
 // Analyzes the structural and semantic elements of a document.
-func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *ClassifyElementsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(classifyElementsOptions, "classifyElementsOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *ClassifyElementsOptions) (result *ClassifyReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(classifyElementsOptions, "classifyElementsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(classifyElementsOptions, "classifyElementsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(classifyElementsOptions, "classifyElementsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/element_classification"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range classifyElementsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -153,44 +178,48 @@ func (compareComply *CompareComplyV1) ClassifyElements(classifyElementsOptions *
 	if classifyElementsOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*classifyElementsOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("file", "filename",
 		core.StringNilMapper(classifyElementsOptions.FileContentType), classifyElementsOptions.File)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(ClassifyReturn))
-	return response, err
-}
-
-// GetClassifyElementsResult : Retrieve result of ClassifyElements operation
-func (compareComply *CompareComplyV1) GetClassifyElementsResult(response *core.DetailedResponse) *ClassifyReturn {
-	result, ok := response.Result.(*ClassifyReturn)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(ClassifyReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ClassifyReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ExtractTables : Extract a document's tables
 // Analyzes the tables in a document.
-func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *ExtractTablesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(extractTablesOptions, "extractTablesOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *ExtractTablesOptions) (result *TableReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(extractTablesOptions, "extractTablesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(extractTablesOptions, "extractTablesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(extractTablesOptions, "extractTablesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/tables"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range extractTablesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -206,44 +235,48 @@ func (compareComply *CompareComplyV1) ExtractTables(extractTablesOptions *Extrac
 	if extractTablesOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*extractTablesOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("file", "filename",
 		core.StringNilMapper(extractTablesOptions.FileContentType), extractTablesOptions.File)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(TableReturn))
-	return response, err
-}
-
-// GetExtractTablesResult : Retrieve result of ExtractTables operation
-func (compareComply *CompareComplyV1) GetExtractTablesResult(response *core.DetailedResponse) *TableReturn {
-	result, ok := response.Result.(*TableReturn)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(TableReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TableReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CompareDocuments : Compare two documents
 // Compares two input documents. Documents must be in the same format.
-func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *CompareDocumentsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(compareDocumentsOptions, "compareDocumentsOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *CompareDocumentsOptions) (result *CompareReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(compareDocumentsOptions, "compareDocumentsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(compareDocumentsOptions, "compareDocumentsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(compareDocumentsOptions, "compareDocumentsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/comparison"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range compareDocumentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -265,7 +298,7 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 	if compareDocumentsOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*compareDocumentsOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("file_1", "filename",
 		core.StringNilMapper(compareDocumentsOptions.File1ContentType), compareDocumentsOptions.File1)
@@ -274,39 +307,43 @@ func (compareComply *CompareComplyV1) CompareDocuments(compareDocumentsOptions *
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(CompareReturn))
-	return response, err
-}
-
-// GetCompareDocumentsResult : Retrieve result of CompareDocuments operation
-func (compareComply *CompareComplyV1) GetCompareDocumentsResult(response *core.DetailedResponse) *CompareReturn {
-	result, ok := response.Result.(*CompareReturn)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(CompareReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*CompareReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // AddFeedback : Add feedback
 // Adds feedback in the form of _labels_ from a subject-matter expert (SME) to a governing document.
 // **Important:** Feedback is not immediately incorporated into the training model, nor is it guaranteed to be
 // incorporated at a later date. Instead, submitted feedback is used to suggest future updates to the training model.
-func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addFeedbackOptions, "addFeedbackOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbackOptions) (result *FeedbackReturn, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addFeedbackOptions, "addFeedbackOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addFeedbackOptions, "addFeedbackOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addFeedbackOptions, "addFeedbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/feedback"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -319,7 +356,7 @@ func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbac
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	body := make(map[string]interface{})
 	if addFeedbackOptions.FeedbackData != nil {
@@ -331,40 +368,44 @@ func (compareComply *CompareComplyV1) AddFeedback(addFeedbackOptions *AddFeedbac
 	if addFeedbackOptions.Comment != nil {
 		body["comment"] = addFeedbackOptions.Comment
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(FeedbackReturn))
-	return response, err
-}
-
-// GetAddFeedbackResult : Retrieve result of AddFeedback operation
-func (compareComply *CompareComplyV1) GetAddFeedbackResult(response *core.DetailedResponse) *FeedbackReturn {
-	result, ok := response.Result.(*FeedbackReturn)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(FeedbackReturn))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*FeedbackReturn)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ListFeedback : List the feedback in a document
 // Lists the feedback in a document.
-func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listFeedbackOptions, "listFeedbackOptions"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeedbackOptions) (result *FeedbackList, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listFeedbackOptions, "listFeedbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/feedback"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -425,41 +466,45 @@ func (compareComply *CompareComplyV1) ListFeedback(listFeedbackOptions *ListFeed
 	if listFeedbackOptions.IncludeTotal != nil {
 		builder.AddQuery("include_total", fmt.Sprint(*listFeedbackOptions.IncludeTotal))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(FeedbackList))
-	return response, err
-}
-
-// GetListFeedbackResult : Retrieve result of ListFeedback operation
-func (compareComply *CompareComplyV1) GetListFeedbackResult(response *core.DetailedResponse) *FeedbackList {
-	result, ok := response.Result.(*FeedbackList)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(FeedbackList))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*FeedbackList)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetFeedback : Get a specified feedback entry
 // Gets a feedback entry with a specified `feedback_id`.
-func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getFeedbackOptions, "getFeedbackOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbackOptions) (result *GetFeedback, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getFeedbackOptions, "getFeedbackOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getFeedbackOptions, "getFeedbackOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getFeedbackOptions, "getFeedbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/feedback"}
 	pathParameters := []string{*getFeedbackOptions.FeedbackID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -475,41 +520,45 @@ func (compareComply *CompareComplyV1) GetFeedback(getFeedbackOptions *GetFeedbac
 	if getFeedbackOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*getFeedbackOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(GetFeedback))
-	return response, err
-}
-
-// GetGetFeedbackResult : Retrieve result of GetFeedback operation
-func (compareComply *CompareComplyV1) GetGetFeedbackResult(response *core.DetailedResponse) *GetFeedback {
-	result, ok := response.Result.(*GetFeedback)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(GetFeedback))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*GetFeedback)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteFeedback : Delete a specified feedback entry
 // Deletes a feedback entry with a specified `feedback_id`.
-func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *DeleteFeedbackOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteFeedbackOptions, "deleteFeedbackOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *DeleteFeedbackOptions) (result *FeedbackDeleted, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteFeedbackOptions, "deleteFeedbackOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteFeedbackOptions, "deleteFeedbackOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteFeedbackOptions, "deleteFeedbackOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/feedback"}
 	pathParameters := []string{*deleteFeedbackOptions.FeedbackID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteFeedbackOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -525,24 +574,23 @@ func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *Dele
 	if deleteFeedbackOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*deleteFeedbackOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(FeedbackDeleted))
-	return response, err
-}
-
-// GetDeleteFeedbackResult : Retrieve result of DeleteFeedback operation
-func (compareComply *CompareComplyV1) GetDeleteFeedbackResult(response *core.DetailedResponse) *FeedbackDeleted {
-	result, ok := response.Result.(*FeedbackDeleted)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(FeedbackDeleted))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*FeedbackDeleted)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateBatch : Submit a batch-processing request
@@ -552,19 +600,24 @@ func (compareComply *CompareComplyV1) GetDeleteFeedbackResult(response *core.Det
 // service](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-about#about-ibm-cloud-object-storage).
 // The use of IBM Cloud Object Storage with Compare and Comply is discussed at [Using batch
 // processing](https://cloud.ibm.com/docs/services/compare-comply?topic=compare-comply-batching#before-you-batch).
-func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatchOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createBatchOptions, "createBatchOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatchOptions) (result *BatchStatus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createBatchOptions, "createBatchOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createBatchOptions, "createBatchOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createBatchOptions, "createBatchOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/batches"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -581,7 +634,7 @@ func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatc
 	if createBatchOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*createBatchOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	builder.AddFormData("input_credentials_file", "filename",
 		"application/json", createBatchOptions.InputCredentialsFile)
@@ -594,34 +647,37 @@ func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatc
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(BatchStatus))
-	return response, err
-}
-
-// GetCreateBatchResult : Retrieve result of CreateBatch operation
-func (compareComply *CompareComplyV1) GetCreateBatchResult(response *core.DetailedResponse) *BatchStatus {
-	result, ok := response.Result.(*BatchStatus)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(BatchStatus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*BatchStatus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ListBatches : List submitted batch-processing jobs
 // Lists batch-processing jobs submitted by users.
-func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatchesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listBatchesOptions, "listBatchesOptions"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatchesOptions) (result *Batches, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listBatchesOptions, "listBatchesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/batches"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listBatchesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -633,41 +689,45 @@ func (compareComply *CompareComplyV1) ListBatches(listBatchesOptions *ListBatche
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(Batches))
-	return response, err
-}
-
-// GetListBatchesResult : Retrieve result of ListBatches operation
-func (compareComply *CompareComplyV1) GetListBatchesResult(response *core.DetailedResponse) *Batches {
-	result, ok := response.Result.(*Batches)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(Batches))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Batches)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetBatch : Get information about a specific batch-processing job
 // Gets information about a batch-processing job with a specified ID.
-func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getBatchOptions, "getBatchOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions) (result *BatchStatus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getBatchOptions, "getBatchOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getBatchOptions, "getBatchOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getBatchOptions, "getBatchOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/batches"}
 	pathParameters := []string{*getBatchOptions.BatchID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -679,42 +739,46 @@ func (compareComply *CompareComplyV1) GetBatch(getBatchOptions *GetBatchOptions)
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(BatchStatus))
-	return response, err
-}
-
-// GetGetBatchResult : Retrieve result of GetBatch operation
-func (compareComply *CompareComplyV1) GetGetBatchResult(response *core.DetailedResponse) *BatchStatus {
-	result, ok := response.Result.(*BatchStatus)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(BatchStatus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*BatchStatus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateBatch : Update a pending or active batch-processing job
 // Updates a pending or active batch-processing job. You can rescan the input bucket to check for new documents or
 // cancel a job.
-func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatchOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateBatchOptions, "updateBatchOptions cannot be nil"); err != nil {
-		return nil, err
+func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatchOptions) (result *BatchStatus, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateBatchOptions, "updateBatchOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateBatchOptions, "updateBatchOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateBatchOptions, "updateBatchOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/batches"}
 	pathParameters := []string{*updateBatchOptions.BatchID}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(compareComply.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateBatchOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -731,24 +795,23 @@ func (compareComply *CompareComplyV1) UpdateBatch(updateBatchOptions *UpdateBatc
 	if updateBatchOptions.Model != nil {
 		builder.AddQuery("model", fmt.Sprint(*updateBatchOptions.Model))
 	}
-	builder.AddQuery("version", compareComply.Service.Options.Version)
+	builder.AddQuery("version", compareComply.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := compareComply.Service.Request(request, new(BatchStatus))
-	return response, err
-}
-
-// GetUpdateBatchResult : Retrieve result of UpdateBatch operation
-func (compareComply *CompareComplyV1) GetUpdateBatchResult(response *core.DetailedResponse) *BatchStatus {
-	result, ok := response.Result.(*BatchStatus)
-	if ok {
-		return result
+	response, err = compareComply.Service.Request(request, new(BatchStatus))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*BatchStatus)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // AddFeedbackOptions : The AddFeedback options.
@@ -844,15 +907,15 @@ type Attribute struct {
 // Constants associated with the Attribute.Type property.
 // The type of attribute.
 const (
-	Attribute_Type_Currency = "Currency"
-	Attribute_Type_Datetime = "DateTime"
-	Attribute_Type_Definedterm = "DefinedTerm"
-	Attribute_Type_Duration = "Duration"
-	Attribute_Type_Location = "Location"
-	Attribute_Type_Number = "Number"
+	Attribute_Type_Currency     = "Currency"
+	Attribute_Type_Datetime     = "DateTime"
+	Attribute_Type_Definedterm  = "DefinedTerm"
+	Attribute_Type_Duration     = "Duration"
+	Attribute_Type_Location     = "Location"
+	Attribute_Type_Number       = "Number"
 	Attribute_Type_Organization = "Organization"
-	Attribute_Type_Percentage = "Percentage"
-	Attribute_Type_Person = "Person"
+	Attribute_Type_Percentage   = "Percentage"
+	Attribute_Type_Person       = "Person"
 )
 
 // BatchStatus : The batch-request status.
@@ -897,8 +960,8 @@ type BatchStatus struct {
 // `tables`.
 const (
 	BatchStatus_Function_ElementClassification = "element_classification"
-	BatchStatus_Function_HTMLConversion = "html_conversion"
-	BatchStatus_Function_Tables = "tables"
+	BatchStatus_Function_HTMLConversion        = "html_conversion"
+	BatchStatus_Function_Tables                = "tables"
 )
 
 // Batches : The results of a successful **List Batches** request.
@@ -969,31 +1032,31 @@ type Category struct {
 // Constants associated with the Category.Label property.
 // The category of the associated element.
 const (
-	Category_Label_Amendments = "Amendments"
-	Category_Label_AssetUse = "Asset Use"
-	Category_Label_Assignments = "Assignments"
-	Category_Label_Audits = "Audits"
-	Category_Label_BusinessContinuity = "Business Continuity"
-	Category_Label_Communication = "Communication"
-	Category_Label_Confidentiality = "Confidentiality"
-	Category_Label_Deliverables = "Deliverables"
-	Category_Label_Delivery = "Delivery"
-	Category_Label_DisputeResolution = "Dispute Resolution"
-	Category_Label_ForceMajeure = "Force Majeure"
-	Category_Label_Indemnification = "Indemnification"
-	Category_Label_Insurance = "Insurance"
+	Category_Label_Amendments           = "Amendments"
+	Category_Label_AssetUse             = "Asset Use"
+	Category_Label_Assignments          = "Assignments"
+	Category_Label_Audits               = "Audits"
+	Category_Label_BusinessContinuity   = "Business Continuity"
+	Category_Label_Communication        = "Communication"
+	Category_Label_Confidentiality      = "Confidentiality"
+	Category_Label_Deliverables         = "Deliverables"
+	Category_Label_Delivery             = "Delivery"
+	Category_Label_DisputeResolution    = "Dispute Resolution"
+	Category_Label_ForceMajeure         = "Force Majeure"
+	Category_Label_Indemnification      = "Indemnification"
+	Category_Label_Insurance            = "Insurance"
 	Category_Label_IntellectualProperty = "Intellectual Property"
-	Category_Label_Liability = "Liability"
-	Category_Label_OrderOfPrecedence = "Order of Precedence"
-	Category_Label_PaymentTermsBilling = "Payment Terms & Billing"
-	Category_Label_PricingTaxes = "Pricing & Taxes"
-	Category_Label_Privacy = "Privacy"
-	Category_Label_Responsibilities = "Responsibilities"
-	Category_Label_SafetyAndSecurity = "Safety and Security"
-	Category_Label_ScopeOfWork = "Scope of Work"
-	Category_Label_Subcontracts = "Subcontracts"
-	Category_Label_TermTermination = "Term & Termination"
-	Category_Label_Warranties = "Warranties"
+	Category_Label_Liability            = "Liability"
+	Category_Label_OrderOfPrecedence    = "Order of Precedence"
+	Category_Label_PaymentTermsBilling  = "Payment Terms & Billing"
+	Category_Label_PricingTaxes         = "Pricing & Taxes"
+	Category_Label_Privacy              = "Privacy"
+	Category_Label_Responsibilities     = "Responsibilities"
+	Category_Label_SafetyAndSecurity    = "Safety and Security"
+	Category_Label_ScopeOfWork          = "Scope of Work"
+	Category_Label_Subcontracts         = "Subcontracts"
+	Category_Label_TermTermination      = "Term & Termination"
+	Category_Label_Warranties           = "Warranties"
 )
 
 // CategoryComparison : Information defining an element's subject matter.
@@ -1006,38 +1069,38 @@ type CategoryComparison struct {
 // Constants associated with the CategoryComparison.Label property.
 // The category of the associated element.
 const (
-	CategoryComparison_Label_Amendments = "Amendments"
-	CategoryComparison_Label_AssetUse = "Asset Use"
-	CategoryComparison_Label_Assignments = "Assignments"
-	CategoryComparison_Label_Audits = "Audits"
-	CategoryComparison_Label_BusinessContinuity = "Business Continuity"
-	CategoryComparison_Label_Communication = "Communication"
-	CategoryComparison_Label_Confidentiality = "Confidentiality"
-	CategoryComparison_Label_Deliverables = "Deliverables"
-	CategoryComparison_Label_Delivery = "Delivery"
-	CategoryComparison_Label_DisputeResolution = "Dispute Resolution"
-	CategoryComparison_Label_ForceMajeure = "Force Majeure"
-	CategoryComparison_Label_Indemnification = "Indemnification"
-	CategoryComparison_Label_Insurance = "Insurance"
+	CategoryComparison_Label_Amendments           = "Amendments"
+	CategoryComparison_Label_AssetUse             = "Asset Use"
+	CategoryComparison_Label_Assignments          = "Assignments"
+	CategoryComparison_Label_Audits               = "Audits"
+	CategoryComparison_Label_BusinessContinuity   = "Business Continuity"
+	CategoryComparison_Label_Communication        = "Communication"
+	CategoryComparison_Label_Confidentiality      = "Confidentiality"
+	CategoryComparison_Label_Deliverables         = "Deliverables"
+	CategoryComparison_Label_Delivery             = "Delivery"
+	CategoryComparison_Label_DisputeResolution    = "Dispute Resolution"
+	CategoryComparison_Label_ForceMajeure         = "Force Majeure"
+	CategoryComparison_Label_Indemnification      = "Indemnification"
+	CategoryComparison_Label_Insurance            = "Insurance"
 	CategoryComparison_Label_IntellectualProperty = "Intellectual Property"
-	CategoryComparison_Label_Liability = "Liability"
-	CategoryComparison_Label_OrderOfPrecedence = "Order of Precedence"
-	CategoryComparison_Label_PaymentTermsBilling = "Payment Terms & Billing"
-	CategoryComparison_Label_PricingTaxes = "Pricing & Taxes"
-	CategoryComparison_Label_Privacy = "Privacy"
-	CategoryComparison_Label_Responsibilities = "Responsibilities"
-	CategoryComparison_Label_SafetyAndSecurity = "Safety and Security"
-	CategoryComparison_Label_ScopeOfWork = "Scope of Work"
-	CategoryComparison_Label_Subcontracts = "Subcontracts"
-	CategoryComparison_Label_TermTermination = "Term & Termination"
-	CategoryComparison_Label_Warranties = "Warranties"
+	CategoryComparison_Label_Liability            = "Liability"
+	CategoryComparison_Label_OrderOfPrecedence    = "Order of Precedence"
+	CategoryComparison_Label_PaymentTermsBilling  = "Payment Terms & Billing"
+	CategoryComparison_Label_PricingTaxes         = "Pricing & Taxes"
+	CategoryComparison_Label_Privacy              = "Privacy"
+	CategoryComparison_Label_Responsibilities     = "Responsibilities"
+	CategoryComparison_Label_SafetyAndSecurity    = "Safety and Security"
+	CategoryComparison_Label_ScopeOfWork          = "Scope of Work"
+	CategoryComparison_Label_Subcontracts         = "Subcontracts"
+	CategoryComparison_Label_TermTermination      = "Term & Termination"
+	CategoryComparison_Label_Warranties           = "Warranties"
 )
 
 // ClassifyElementsOptions : The ClassifyElements options.
 type ClassifyElementsOptions struct {
 
 	// The document to classify.
-	File *os.File `json:"file" validate:"required"`
+	File io.ReadCloser `json:"file" validate:"required"`
 
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
@@ -1057,18 +1120,18 @@ type ClassifyElementsOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ClassifyElementsOptions_Model_Contracts = "contracts"
-	ClassifyElementsOptions_Model_Tables = "tables"
+	ClassifyElementsOptions_Model_Tables    = "tables"
 )
 
 // NewClassifyElementsOptions : Instantiate ClassifyElementsOptions
-func (compareComply *CompareComplyV1) NewClassifyElementsOptions(file *os.File) *ClassifyElementsOptions {
+func (compareComply *CompareComplyV1) NewClassifyElementsOptions(file io.ReadCloser) *ClassifyElementsOptions {
 	return &ClassifyElementsOptions{
 		File: file,
 	}
 }
 
 // SetFile : Allow user to set File
-func (options *ClassifyElementsOptions) SetFile(file *os.File) *ClassifyElementsOptions {
+func (options *ClassifyElementsOptions) SetFile(file io.ReadCloser) *ClassifyElementsOptions {
 	options.File = file
 	return options
 }
@@ -1172,10 +1235,10 @@ type ColumnHeaders struct {
 type CompareDocumentsOptions struct {
 
 	// The first document to compare.
-	File1 *os.File `json:"file_1" validate:"required"`
+	File1 io.ReadCloser `json:"file_1" validate:"required"`
 
 	// The second document to compare.
-	File2 *os.File `json:"file_2" validate:"required"`
+	File2 io.ReadCloser `json:"file_2" validate:"required"`
 
 	// The content type of file1.
 	File1ContentType *string `json:"file_1_content_type,omitempty"`
@@ -1204,11 +1267,11 @@ type CompareDocumentsOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	CompareDocumentsOptions_Model_Contracts = "contracts"
-	CompareDocumentsOptions_Model_Tables = "tables"
+	CompareDocumentsOptions_Model_Tables    = "tables"
 )
 
 // NewCompareDocumentsOptions : Instantiate CompareDocumentsOptions
-func (compareComply *CompareComplyV1) NewCompareDocumentsOptions(file1 *os.File, file2 *os.File) *CompareDocumentsOptions {
+func (compareComply *CompareComplyV1) NewCompareDocumentsOptions(file1 io.ReadCloser, file2 io.ReadCloser) *CompareDocumentsOptions {
 	return &CompareDocumentsOptions{
 		File1: file1,
 		File2: file2,
@@ -1216,13 +1279,13 @@ func (compareComply *CompareComplyV1) NewCompareDocumentsOptions(file1 *os.File,
 }
 
 // SetFile1 : Allow user to set File1
-func (options *CompareDocumentsOptions) SetFile1(file1 *os.File) *CompareDocumentsOptions {
+func (options *CompareDocumentsOptions) SetFile1(file1 io.ReadCloser) *CompareDocumentsOptions {
 	options.File1 = file1
 	return options
 }
 
 // SetFile2 : Allow user to set File2
-func (options *CompareDocumentsOptions) SetFile2(file2 *os.File) *CompareDocumentsOptions {
+func (options *CompareDocumentsOptions) SetFile2(file2 io.ReadCloser) *CompareDocumentsOptions {
 	options.File2 = file2
 	return options
 }
@@ -1332,8 +1395,8 @@ type ContractAmts struct {
 // Constants associated with the ContractAmts.ConfidenceLevel property.
 // The confidence level in the identification of the contract amount.
 const (
-	ContractAmts_ConfidenceLevel_High = "High"
-	ContractAmts_ConfidenceLevel_Low = "Low"
+	ContractAmts_ConfidenceLevel_High   = "High"
+	ContractAmts_ConfidenceLevel_Low    = "Low"
 	ContractAmts_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1362,8 +1425,8 @@ type ContractCurrencies struct {
 // Constants associated with the ContractCurrencies.ConfidenceLevel property.
 // The confidence level in the identification of the contract currency.
 const (
-	ContractCurrencies_ConfidenceLevel_High = "High"
-	ContractCurrencies_ConfidenceLevel_Low = "Low"
+	ContractCurrencies_ConfidenceLevel_High   = "High"
+	ContractCurrencies_ConfidenceLevel_Low    = "Low"
 	ContractCurrencies_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1395,8 +1458,8 @@ type ContractTerms struct {
 // Constants associated with the ContractTerms.ConfidenceLevel property.
 // The confidence level in the identification of the contract term.
 const (
-	ContractTerms_ConfidenceLevel_High = "High"
-	ContractTerms_ConfidenceLevel_Low = "Low"
+	ContractTerms_ConfidenceLevel_High   = "High"
+	ContractTerms_ConfidenceLevel_Low    = "Low"
 	ContractTerms_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1420,8 +1483,8 @@ type ContractTypes struct {
 // Constants associated with the ContractTypes.ConfidenceLevel property.
 // The confidence level in the identification of the contract type.
 const (
-	ContractTypes_ConfidenceLevel_High = "High"
-	ContractTypes_ConfidenceLevel_Low = "Low"
+	ContractTypes_ConfidenceLevel_High   = "High"
+	ContractTypes_ConfidenceLevel_Low    = "Low"
 	ContractTypes_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1429,7 +1492,7 @@ const (
 type ConvertToHTMLOptions struct {
 
 	// The document to convert.
-	File *os.File `json:"file" validate:"required"`
+	File io.ReadCloser `json:"file" validate:"required"`
 
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
@@ -1449,18 +1512,18 @@ type ConvertToHTMLOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ConvertToHTMLOptions_Model_Contracts = "contracts"
-	ConvertToHTMLOptions_Model_Tables = "tables"
+	ConvertToHTMLOptions_Model_Tables    = "tables"
 )
 
 // NewConvertToHTMLOptions : Instantiate ConvertToHTMLOptions
-func (compareComply *CompareComplyV1) NewConvertToHTMLOptions(file *os.File) *ConvertToHTMLOptions {
+func (compareComply *CompareComplyV1) NewConvertToHTMLOptions(file io.ReadCloser) *ConvertToHTMLOptions {
 	return &ConvertToHTMLOptions{
 		File: file,
 	}
 }
 
 // SetFile : Allow user to set File
-func (options *ConvertToHTMLOptions) SetFile(file *os.File) *ConvertToHTMLOptions {
+func (options *ConvertToHTMLOptions) SetFile(file io.ReadCloser) *ConvertToHTMLOptions {
 	options.File = file
 	return options
 }
@@ -1491,7 +1554,7 @@ type CreateBatchOptions struct {
 
 	// A JSON file containing the input Cloud Object Storage credentials. At a minimum, the credentials must enable `READ`
 	// permissions on the bucket defined by the `input_bucket_name` parameter.
-	InputCredentialsFile *os.File `json:"input_credentials_file" validate:"required"`
+	InputCredentialsFile io.ReadCloser `json:"input_credentials_file" validate:"required"`
 
 	// The geographical location of the Cloud Object Storage input bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
@@ -1502,7 +1565,7 @@ type CreateBatchOptions struct {
 
 	// A JSON file that lists the Cloud Object Storage output credentials. At a minimum, the credentials must enable `READ`
 	// and `WRITE` permissions on the bucket defined by the `output_bucket_name` parameter.
-	OutputCredentialsFile *os.File `json:"output_credentials_file" validate:"required"`
+	OutputCredentialsFile io.ReadCloser `json:"output_credentials_file" validate:"required"`
 
 	// The geographical location of the Cloud Object Storage output bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
@@ -1524,8 +1587,8 @@ type CreateBatchOptions struct {
 // The Compare and Comply method to run across the submitted input documents.
 const (
 	CreateBatchOptions_Function_ElementClassification = "element_classification"
-	CreateBatchOptions_Function_HTMLConversion = "html_conversion"
-	CreateBatchOptions_Function_Tables = "tables"
+	CreateBatchOptions_Function_HTMLConversion        = "html_conversion"
+	CreateBatchOptions_Function_Tables                = "tables"
 )
 
 // Constants associated with the CreateBatchOptions.Model property.
@@ -1534,19 +1597,19 @@ const (
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	CreateBatchOptions_Model_Contracts = "contracts"
-	CreateBatchOptions_Model_Tables = "tables"
+	CreateBatchOptions_Model_Tables    = "tables"
 )
 
 // NewCreateBatchOptions : Instantiate CreateBatchOptions
-func (compareComply *CompareComplyV1) NewCreateBatchOptions(function string, inputCredentialsFile *os.File, inputBucketLocation string, inputBucketName string, outputCredentialsFile *os.File, outputBucketLocation string, outputBucketName string) *CreateBatchOptions {
+func (compareComply *CompareComplyV1) NewCreateBatchOptions(function string, inputCredentialsFile io.ReadCloser, inputBucketLocation string, inputBucketName string, outputCredentialsFile io.ReadCloser, outputBucketLocation string, outputBucketName string) *CreateBatchOptions {
 	return &CreateBatchOptions{
-		Function: core.StringPtr(function),
-		InputCredentialsFile: inputCredentialsFile,
-		InputBucketLocation: core.StringPtr(inputBucketLocation),
-		InputBucketName: core.StringPtr(inputBucketName),
+		Function:              core.StringPtr(function),
+		InputCredentialsFile:  inputCredentialsFile,
+		InputBucketLocation:   core.StringPtr(inputBucketLocation),
+		InputBucketName:       core.StringPtr(inputBucketName),
 		OutputCredentialsFile: outputCredentialsFile,
-		OutputBucketLocation: core.StringPtr(outputBucketLocation),
-		OutputBucketName: core.StringPtr(outputBucketName),
+		OutputBucketLocation:  core.StringPtr(outputBucketLocation),
+		OutputBucketName:      core.StringPtr(outputBucketName),
 	}
 }
 
@@ -1557,7 +1620,7 @@ func (options *CreateBatchOptions) SetFunction(function string) *CreateBatchOpti
 }
 
 // SetInputCredentialsFile : Allow user to set InputCredentialsFile
-func (options *CreateBatchOptions) SetInputCredentialsFile(inputCredentialsFile *os.File) *CreateBatchOptions {
+func (options *CreateBatchOptions) SetInputCredentialsFile(inputCredentialsFile io.ReadCloser) *CreateBatchOptions {
 	options.InputCredentialsFile = inputCredentialsFile
 	return options
 }
@@ -1575,7 +1638,7 @@ func (options *CreateBatchOptions) SetInputBucketName(inputBucketName string) *C
 }
 
 // SetOutputCredentialsFile : Allow user to set OutputCredentialsFile
-func (options *CreateBatchOptions) SetOutputCredentialsFile(outputCredentialsFile *os.File) *CreateBatchOptions {
+func (options *CreateBatchOptions) SetOutputCredentialsFile(outputCredentialsFile io.ReadCloser) *CreateBatchOptions {
 	options.OutputCredentialsFile = outputCredentialsFile
 	return options
 }
@@ -1625,7 +1688,7 @@ type DeleteFeedbackOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	DeleteFeedbackOptions_Model_Contracts = "contracts"
-	DeleteFeedbackOptions_Model_Tables = "tables"
+	DeleteFeedbackOptions_Model_Tables    = "tables"
 )
 
 // NewDeleteFeedbackOptions : Instantiate DeleteFeedbackOptions
@@ -1737,8 +1800,8 @@ type EffectiveDates struct {
 // Constants associated with the EffectiveDates.ConfidenceLevel property.
 // The confidence level in the identification of the effective date.
 const (
-	EffectiveDates_ConfidenceLevel_High = "High"
-	EffectiveDates_ConfidenceLevel_Low = "Low"
+	EffectiveDates_ConfidenceLevel_High   = "High"
+	EffectiveDates_ConfidenceLevel_Low    = "Low"
 	EffectiveDates_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -1800,7 +1863,7 @@ type ElementPair struct {
 type ExtractTablesOptions struct {
 
 	// The document on which to run table extraction.
-	File *os.File `json:"file" validate:"required"`
+	File io.ReadCloser `json:"file" validate:"required"`
 
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
@@ -1820,18 +1883,18 @@ type ExtractTablesOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ExtractTablesOptions_Model_Contracts = "contracts"
-	ExtractTablesOptions_Model_Tables = "tables"
+	ExtractTablesOptions_Model_Tables    = "tables"
 )
 
 // NewExtractTablesOptions : Instantiate ExtractTablesOptions
-func (compareComply *CompareComplyV1) NewExtractTablesOptions(file *os.File) *ExtractTablesOptions {
+func (compareComply *CompareComplyV1) NewExtractTablesOptions(file io.ReadCloser) *ExtractTablesOptions {
 	return &ExtractTablesOptions{
 		File: file,
 	}
 }
 
 // SetFile : Allow user to set File
-func (options *ExtractTablesOptions) SetFile(file *os.File) *ExtractTablesOptions {
+func (options *ExtractTablesOptions) SetFile(file io.ReadCloser) *ExtractTablesOptions {
 	options.File = file
 	return options
 }
@@ -2017,7 +2080,7 @@ type GetFeedbackOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	GetFeedbackOptions_Model_Contracts = "contracts"
-	GetFeedbackOptions_Model_Tables = "tables"
+	GetFeedbackOptions_Model_Tables    = "tables"
 )
 
 // NewGetFeedbackOptions : Instantiate GetFeedbackOptions
@@ -2376,9 +2439,9 @@ type OriginalLabelsOut struct {
 // A string identifying the type of modification the feedback entry in the `updated_labels` array. Possible values are
 // `added`, `not_changed`, and `removed`.
 const (
-	OriginalLabelsOut_Modification_Added = "added"
+	OriginalLabelsOut_Modification_Added      = "added"
 	OriginalLabelsOut_Modification_NotChanged = "not_changed"
-	OriginalLabelsOut_Modification_Removed = "removed"
+	OriginalLabelsOut_Modification_Removed    = "removed"
 )
 
 // Pagination : Pagination details, if required by the length of the output.
@@ -2465,8 +2528,8 @@ type PaymentTerms struct {
 // Constants associated with the PaymentTerms.ConfidenceLevel property.
 // The confidence level in the identification of the payment term.
 const (
-	PaymentTerms_ConfidenceLevel_High = "High"
-	PaymentTerms_ConfidenceLevel_Low = "Low"
+	PaymentTerms_ConfidenceLevel_High   = "High"
+	PaymentTerms_ConfidenceLevel_Low    = "Low"
 	PaymentTerms_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -2659,8 +2722,8 @@ type TerminationDates struct {
 // Constants associated with the TerminationDates.ConfidenceLevel property.
 // The confidence level in the identification of the termination date.
 const (
-	TerminationDates_ConfidenceLevel_High = "High"
-	TerminationDates_ConfidenceLevel_Low = "Low"
+	TerminationDates_ConfidenceLevel_High   = "High"
+	TerminationDates_ConfidenceLevel_Low    = "Low"
 	TerminationDates_ConfidenceLevel_Medium = "Medium"
 )
 
@@ -2738,14 +2801,14 @@ const (
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	UpdateBatchOptions_Model_Contracts = "contracts"
-	UpdateBatchOptions_Model_Tables = "tables"
+	UpdateBatchOptions_Model_Tables    = "tables"
 )
 
 // NewUpdateBatchOptions : Instantiate UpdateBatchOptions
 func (compareComply *CompareComplyV1) NewUpdateBatchOptions(batchID string, action string) *UpdateBatchOptions {
 	return &UpdateBatchOptions{
 		BatchID: core.StringPtr(batchID),
-		Action: core.StringPtr(action),
+		Action:  core.StringPtr(action),
 	}
 }
 
@@ -2801,9 +2864,9 @@ type UpdatedLabelsOut struct {
 // The type of modification the feedback entry in the `updated_labels` array. Possible values are `added`,
 // `not_changed`, and `removed`.
 const (
-	UpdatedLabelsOut_Modification_Added = "added"
+	UpdatedLabelsOut_Modification_Added      = "added"
 	UpdatedLabelsOut_Modification_NotChanged = "not_changed"
-	UpdatedLabelsOut_Modification_Removed = "removed"
+	UpdatedLabelsOut_Modification_Removed    = "removed"
 )
 
 // Value : A value in a key-value pair.

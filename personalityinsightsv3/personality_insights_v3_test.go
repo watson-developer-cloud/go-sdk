@@ -49,7 +49,7 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.Profile(nil)
+				_, returnValue, returnValueErr := testService.Profile(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				// First test with invalid (incomplete) input
@@ -57,8 +57,8 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				profileOptions := testService.
 					NewProfileOptions().
 					SetContent(content).
-					SetContentType(personalityinsightsv3.ProfileOptions_ContentType_TextPlain)
-				returnValue, returnValueErr = testService.Profile(profileOptions)
+					SetContentType("text/plain")
+				_, returnValue, returnValueErr = testService.Profile(profileOptions)
 				Expect(returnValueErr).ToNot(BeNil())
 				Expect(returnValue).To(BeNil())
 
@@ -70,12 +70,10 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				profileOptions = testService.
 					NewProfileOptions().
 					SetContent(content).
-					SetContentType(personalityinsightsv3.ProfileOptions_ContentType_ApplicationJSON)
-				returnValue, returnValueErr = testService.Profile(profileOptions)
+					SetContentType("application/json")
+				result, returnValue, returnValueErr := testService.Profile(profileOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetProfileResult(returnValue)
 				Expect(result).ToNot(BeNil())
 				Expect(result).To(Equal(createProfileResult()))
 			})
@@ -116,18 +114,16 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ProfileAsCsv(nil)
+				_, returnValue, returnValueErr := testService.ProfileAsCsv(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				profileAsCsvOptions := testService.
 					NewProfileOptions().
 					SetBody("html").
-					SetContentType(personalityinsightsv3.ProfileOptions_ContentType_TextHTML)
-				returnValue, returnValueErr = testService.ProfileAsCsv(profileAsCsvOptions)
+					SetContentType("text/html")
+				result, returnValue, returnValueErr := testService.ProfileAsCsv(profileAsCsvOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetProfileAsCsvResult(returnValue)
 				Expect(result).ToNot(BeNil())
 				result.Close()
 			})

@@ -10,13 +10,13 @@ import (
 
 func main() {
 	// Instantiate the Watson Tone Analyzer service
-		authenticator := &core.IamAuthenticator{
-        	ApiKey:     os.Getenv("YOUR API KEY"),
-    	}
+	authenticator := &core.IamAuthenticator{
+		ApiKey: os.Getenv("YOUR API KEY"),
+	}
 	service, serviceErr := toneanalyzerv3.
 		NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-			URL:       "YOUR SERVICE URL",
-			Version:   "2017-09-21",
+			URL:           "YOUR SERVICE URL",
+			Version:       "2017-09-21",
 			Authenticator: authenticator,
 		})
 
@@ -43,16 +43,12 @@ func main() {
 		SetContentLanguage("en")
 
 	// Call the toneAnalyzer ToneChat method
-	response, responseErr := service.ToneChat(toneChatOptions)
+	toneChatResult, _, responseErr := service.ToneChat(toneChatOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast toneChat.Result to the specific dataType returned by ToneChat
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	toneChatResult := service.GetToneChatResult(response)
 
 	// Check successful casting
 	if toneChatResult != nil {
@@ -64,16 +60,12 @@ func main() {
 	// Call the toneAnalyzer Tone method
 	toneOptions := service.NewToneOptions().
 		SetBody("I am very happy. It is a good day").
-		SetContentType(toneanalyzerv3.ToneOptions_ContentType_TextPlain)
-	response, responseErr = service.Tone(toneOptions)
+		SetContentType("text/plain")
+	toneResult, _, responseErr := service.Tone(toneOptions)
 
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast tone.Result to the specific dataType returned by Tone
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	toneResult := service.GetToneResult(response)
 
 	if toneResult != nil {
 		core.PrettyPrint(toneResult, "Tone using plain text")
@@ -86,16 +78,12 @@ func main() {
 	toneOptions = service.
 		NewToneOptions().
 		SetToneInput(toneInput).
-		SetContentType(toneanalyzerv3.ToneOptions_ContentType_ApplicationJSON)
-	response, responseErr = service.Tone(toneOptions)
+		SetContentType("application/json")
+	toneResult, _, responseErr = service.Tone(toneOptions)
 
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast tone.Result to the specific dataType returned by Tone
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	toneResult = service.GetToneResult(response)
 
 	if toneResult != nil {
 		core.PrettyPrint(toneResult, "Tone using toneInput")
@@ -109,16 +97,12 @@ func main() {
 	}
 	toneOptions = service.NewToneOptions().
 		SetBody(string(htmlByte)).
-		SetContentType(toneanalyzerv3.ToneOptions_ContentType_TextHTML)
-	response, responseErr = service.Tone(toneOptions)
+		SetContentType("text/html")
+	toneResult, _, responseErr = service.Tone(toneOptions)
 
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast tone.Result to the specific dataType returned by Tone
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	toneResult = service.GetToneResult(response)
 
 	if toneResult != nil {
 		core.PrettyPrint(toneResult, "Tone using toneInput")

@@ -41,7 +41,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = speechtotextv1.
 			NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				URL:      os.Getenv("SPEECH_TO_TEXT_URL"),
+				URL: os.Getenv("SPEECH_TO_TEXT_URL"),
 				Authenticator: &core.BasicAuthenticator{
 					Username: os.Getenv("SPEECH_TO_TEXT_USERNAME"),
 					Password: os.Getenv("SPEECH_TO_TEXT_PASSWORD"),
@@ -65,23 +65,19 @@ func TestModel(t *testing.T) {
 	shouldSkipTest(t)
 
 	// List models
-	response, responseErr := service.ListModels(
+	listModels, _, responseErr := service.ListModels(
 		&speechtotextv1.ListModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	listModels := service.GetListModelsResult(response)
 	assert.NotNil(t, listModels)
 
 	//Get model
-	response, responseErr = service.GetModel(
+	getModel, _, responseErr := service.GetModel(
 		&speechtotextv1.GetModelOptions{
 			ModelID: core.StringPtr("en-US_BroadbandModel"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	getModel := service.GetGetModelResult(response)
 	assert.NotNil(t, getModel)
 }
 
@@ -96,10 +92,10 @@ func TestRecognize(t *testing.T) {
 		audio, audioErr = os.Open(pwd + "/../resources/" + fileName)
 		assert.Nil(t, audioErr)
 
-		response, responseErr := service.Recognize(
+		recognize, _, responseErr := service.Recognize(
 			&speechtotextv1.RecognizeOptions{
-				Audio:                     &audio,
-				ContentType:               core.StringPtr(speechtotextv1.RecognizeOptions_ContentType_AudioMp3),
+				Audio:                     audio,
+				ContentType:               core.StringPtr("audio/mp3"),
 				Timestamps:                core.BoolPtr(true),
 				WordAlternativesThreshold: core.Float32Ptr(0.9),
 				Keywords:                  []string{"colorado", "tornado", "tornadoes"},
@@ -107,7 +103,6 @@ func TestRecognize(t *testing.T) {
 			},
 		)
 		assert.Nil(t, responseErr)
-		recognize := service.GetRecognizeResult(response)
 		assert.NotNil(t, recognize)
 	}
 }
@@ -116,12 +111,10 @@ func TestJobs(t *testing.T) {
 	shouldSkipTest(t)
 
 	t.Skip("Skipping time consuming test")
-	response, responseErr := service.CheckJobs(
+	checkJobs, _, responseErr := service.CheckJobs(
 		&speechtotextv1.CheckJobsOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	checkJobs := service.GetCheckJobsResult(response)
 	assert.NotNil(t, checkJobs)
 }
 
@@ -129,7 +122,7 @@ func TestLanguageModel(t *testing.T) {
 	shouldSkipTest(t)
 
 	// create language model
-	response, responseErr := service.CreateLanguageModel(
+	createLanguageModel, _, responseErr := service.CreateLanguageModel(
 		&speechtotextv1.CreateLanguageModelOptions{
 			Name:          core.StringPtr("First example language model for GO"),
 			BaseModelName: core.StringPtr(speechtotextv1.CreateLanguageModelOptions_BaseModelName_EnUsBroadbandmodel),
@@ -137,26 +130,22 @@ func TestLanguageModel(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-	createLanguageModel := service.GetCreateLanguageModelResult(response)
 	assert.NotNil(t, createLanguageModel)
 
 	// List language model
-	response, responseErr = service.ListLanguageModels(
+	listLanguageModel, _, responseErr := service.ListLanguageModels(
 		&speechtotextv1.ListLanguageModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
-
-	listLanguageModel := service.GetListLanguageModelsResult(response)
 	assert.NotNil(t, listLanguageModel)
 
 	// Get language model
-	response, responseErr = service.GetLanguageModel(
+	getLanguageModel, _, responseErr := service.GetLanguageModel(
 		&speechtotextv1.GetLanguageModelOptions{
 			CustomizationID: createLanguageModel.CustomizationID,
 		},
 	)
 	assert.Nil(t, responseErr)
-	getLanguageModel := service.GetGetLanguageModelResult(response)
 	assert.NotNil(t, getLanguageModel)
 
 	// store in global variable
@@ -167,14 +156,12 @@ func TestCorpora(t *testing.T) {
 	shouldSkipTest(t)
 
 	// List corpora
-	response, responseErr := service.ListCorpora(
+	listCorpora, _, responseErr := service.ListCorpora(
 		&speechtotextv1.ListCorporaOptions{
 			CustomizationID: languageModel.CustomizationID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	listCorpora := service.GetListCorporaResult(response)
 	assert.NotNil(t, listCorpora)
 
 	// Add corpora
@@ -187,7 +174,7 @@ func TestCorpora(t *testing.T) {
 	if corpusFileErr != nil {
 		panic(corpusFileErr)
 	}
-	response, responseErr = service.AddCorpus(
+	_, responseErr = service.AddCorpus(
 		&speechtotextv1.AddCorpusOptions{
 			CustomizationID: languageModel.CustomizationID,
 			CorpusName:      core.StringPtr("corpus for GO"),
@@ -197,19 +184,17 @@ func TestCorpora(t *testing.T) {
 	assert.Nil(t, responseErr)
 
 	// Get corpus
-	response, responseErr = service.GetCorpus(
+	getLanguageModel, _, responseErr := service.GetCorpus(
 		&speechtotextv1.GetCorpusOptions{
 			CustomizationID: languageModel.CustomizationID,
 			CorpusName:      core.StringPtr("corpus for GO"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	getLanguageModel := service.GetGetCorpusResult(response)
 	assert.NotNil(t, getLanguageModel)
 
 	// Delete corpus
-	response, responseErr = service.DeleteCorpus(
+	_, responseErr = service.DeleteCorpus(
 		&speechtotextv1.DeleteCorpusOptions{
 			CustomizationID: languageModel.CustomizationID,
 			CorpusName:      core.StringPtr("corpus for GO"),
@@ -222,14 +207,12 @@ func TestWords(t *testing.T) {
 	shouldSkipTest(t)
 
 	// List words
-	response, responseErr := service.ListWords(
+	listWords, _, responseErr := service.ListWords(
 		&speechtotextv1.ListWordsOptions{
 			CustomizationID: languageModel.CustomizationID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	listWords := service.GetListWordsResult(response)
 	assert.NotNil(t, listWords)
 
 	if *languageModel.Status != "Available" {
@@ -237,7 +220,7 @@ func TestWords(t *testing.T) {
 	}
 
 	// Add words
-	response, responseErr = service.AddWords(
+	_, responseErr = service.AddWords(
 		&speechtotextv1.AddWordsOptions{
 			CustomizationID: languageModel.CustomizationID,
 			Words: []speechtotextv1.CustomWord{
@@ -256,7 +239,7 @@ func TestWords(t *testing.T) {
 	assert.Nil(t, responseErr)
 
 	// Add word
-	response, responseErr = service.AddWord(
+	_, responseErr = service.AddWord(
 		&speechtotextv1.AddWordOptions{
 			CustomizationID: languageModel.CustomizationID,
 			WordName:        core.StringPtr("NCAA"),
@@ -267,19 +250,17 @@ func TestWords(t *testing.T) {
 	assert.Nil(t, responseErr)
 
 	// Get word
-	response, responseErr = service.GetWord(
+	getWord, _, responseErr := service.GetWord(
 		&speechtotextv1.GetWordOptions{
 			CustomizationID: languageModel.CustomizationID,
 			WordName:        core.StringPtr("NCAA"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	getWord := service.GetGetWordResult(response)
 	assert.NotNil(t, getWord)
 
 	// Delete word
-	response, responseErr = service.DeleteWord(
+	_, responseErr = service.DeleteWord(
 		&speechtotextv1.DeleteWordOptions{
 			CustomizationID: languageModel.CustomizationID,
 			WordName:        core.StringPtr("NCAA"),
@@ -292,7 +273,7 @@ func TestAcousticModel(t *testing.T) {
 	shouldSkipTest(t)
 
 	// create acoustic model
-	response, responseErr := service.CreateAcousticModel(
+	createAcousticModel, _, responseErr := service.CreateAcousticModel(
 		&speechtotextv1.CreateAcousticModelOptions{
 			Name:          core.StringPtr("First example acoustic model for GO"),
 			BaseModelName: core.StringPtr(speechtotextv1.CreateAcousticModelOptions_BaseModelName_EnUsBroadbandmodel),
@@ -300,34 +281,28 @@ func TestAcousticModel(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	createAcousticModel := service.GetCreateAcousticModelResult(response)
 	assert.NotNil(t, createAcousticModel)
 
 	// List acoustic model
-	response, responseErr = service.ListAcousticModels(
+	listAcousticModel, _, responseErr := service.ListAcousticModels(
 		&speechtotextv1.ListAcousticModelsOptions{
 			Language: core.StringPtr("en-US"),
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	listAcousticModel := service.GetListAcousticModelsResult(response)
 	assert.NotNil(t, listAcousticModel)
 
 	// Get acoustic model
-	response, responseErr = service.GetAcousticModel(
+	getAcousticModel, _, responseErr := service.GetAcousticModel(
 		&speechtotextv1.GetAcousticModelOptions{
 			CustomizationID: createAcousticModel.CustomizationID,
 		},
 	)
 	assert.Nil(t, responseErr)
-
-	getAcousticModel := service.GetGetAcousticModelResult(response)
 	assert.NotNil(t, getAcousticModel)
 
 	// Delete acoustic model
-	response, responseErr = service.DeleteAcousticModel(
+	_, responseErr = service.DeleteAcousticModel(
 		&speechtotextv1.DeleteAcousticModelOptions{
 			CustomizationID: createAcousticModel.CustomizationID,
 		},
@@ -335,7 +310,7 @@ func TestAcousticModel(t *testing.T) {
 	assert.Nil(t, responseErr)
 
 	t.Skip("Skip upgrade acoustic model")
-	response, responseErr = service.UpgradeAcousticModel(
+	_, responseErr = service.UpgradeAcousticModel(
 		&speechtotextv1.UpgradeAcousticModelOptions{
 			CustomizationID: createAcousticModel.CustomizationID,
 		},
@@ -351,13 +326,11 @@ func TestAudio(t *testing.T) {
 	}
 
 	// List audio
-	response, responseErr := service.ListAudio(
+	listAudio, _, responseErr := service.ListAudio(
 		&speechtotextv1.ListAudioOptions{
 			CustomizationID: languageModel.CustomizationID,
 		},
 	)
-
-	listAudio := service.GetListAudioResult(response)
 	assert.NotNil(t, listAudio)
 
 	// Add audio
@@ -369,29 +342,27 @@ func TestAudio(t *testing.T) {
 	if audioFileErr != nil {
 		panic(audioFileErr)
 	}
-	response, responseErr = service.AddAudio(
+	_, responseErr = service.AddAudio(
 		&speechtotextv1.AddAudioOptions{
 			CustomizationID: languageModel.CustomizationID,
 			AudioName:       core.StringPtr("audio1"),
-			AudioResource:   &audioFile,
-			ContentType:     core.StringPtr(speechtotextv1.AddAudioOptions_ContentType_AudioWav),
+			AudioResource:   audioFile,
+			ContentType:     core.StringPtr("audio/wav"),
 		},
 	)
 	assert.Nil(t, responseErr)
 
 	// Get audio
-	response, responseErr = service.GetAudio(
+	getAudio, _, responseErr := service.GetAudio(
 		&speechtotextv1.GetAudioOptions{
 			CustomizationID: languageModel.CustomizationID,
 			AudioName:       core.StringPtr("audio1"),
 		},
 	)
-
-	getAudio := service.GetGetAudioResult(response)
 	assert.NotNil(t, getAudio)
 
 	// Delete audio
-	response, responseErr = service.DeleteAudio(
+	_, responseErr = service.DeleteAudio(
 		&speechtotextv1.DeleteAudioOptions{
 			CustomizationID: languageModel.CustomizationID,
 			AudioName:       core.StringPtr("audio1"),

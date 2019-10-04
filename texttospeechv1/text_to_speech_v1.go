@@ -19,9 +19,10 @@ package texttospeechv1
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // TextToSpeechV1 : The IBM&reg; Text to Speech service provides APIs that use IBM's speech-synthesis capabilities to
@@ -46,38 +47,52 @@ type TextToSpeechV1 struct {
 	Service *core.BaseService
 }
 
+const defaultServiceURL = "https://stream.watsonplatform.net/text-to-speech/api"
+
 // TextToSpeechV1Options : Service options
 type TextToSpeechV1Options struct {
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
 }
 
 // NewTextToSpeechV1 : Instantiate TextToSpeechV1
 func NewTextToSpeechV1(options *TextToSpeechV1Options) (service *TextToSpeechV1, err error) {
 	if options.URL == "" {
-		options.URL = "https://stream.watsonplatform.net/text-to-speech/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("text_to_speech")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("text_to_speech")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "text_to_speech", "Text to Speech")
 	if err != nil {
 		return
 	}
-	
-	service = &TextToSpeechV1{Service: baseService}
+
+	service = &TextToSpeechV1{
+		Service: baseService,
+	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (textToSpeech *TextToSpeechV1) SetServiceURL(url string) error {
+	return textToSpeech.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (textToSpeech *TextToSpeechV1) DisableSSLVerification() {
+	textToSpeech.Service.DisableSSLVerification()
 }
 
 // ListVoices : List voices
@@ -86,16 +101,20 @@ func NewTextToSpeechV1(options *TextToSpeechV1Options) (service *TextToSpeechV1,
 //
 // **See also:** [Listing all available
 // voices](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoices).
-func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listVoicesOptions, "listVoicesOptions"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (result *Voices, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listVoicesOptions, "listVoicesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/voices"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listVoicesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -110,20 +129,19 @@ func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOpti
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(Voices))
-	return response, err
-}
-
-// GetListVoicesResult : Retrieve result of ListVoices operation
-func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedResponse) *Voices {
-	result, ok := response.Result.(*Voices)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(Voices))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Voices)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetVoice : Get a voice
@@ -133,19 +151,24 @@ func (textToSpeech *TextToSpeechV1) GetListVoicesResult(response *core.DetailedR
 //
 // **See also:** [Listing a specific
 // voice](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoice).
-func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getVoiceOptions, "getVoiceOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (result *Voice, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getVoiceOptions, "getVoiceOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getVoiceOptions, "getVoiceOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getVoiceOptions, "getVoiceOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/voices"}
 	pathParameters := []string{*getVoiceOptions.Voice}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getVoiceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -164,20 +187,19 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(Voice))
-	return response, err
-}
-
-// GetGetVoiceResult : Retrieve result of GetVoice operation
-func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedResponse) *Voice {
-	result, ok := response.Result.(*Voice)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(Voice))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Voice)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // Synthesize : Synthesize audio
@@ -196,54 +218,33 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedRes
 //  The service can return audio in the following formats (MIME types).
 // * Where indicated, you can optionally specify the sampling rate (`rate`) of the audio. You must specify a sampling
 // rate for the `audio/l16` and `audio/mulaw` formats. A specified sampling rate must lie in the range of 8 kHz to 192
-// kHz.
+// kHz. Some formats restrict the sampling rate to certain values, as noted.
 // * For the `audio/l16` format, you can optionally specify the endianness (`endianness`) of the audio:
 // `endianness=big-endian` or `endianness=little-endian`.
 //
 // Use the `Accept` header or the `accept` parameter to specify the requested format of the response audio. If you omit
 // an audio format altogether, the service returns the audio in Ogg format with the Opus codec
 // (`audio/ogg;codecs=opus`). The service always returns single-channel audio.
-// * `audio/basic`
-//
-//   The service returns audio with a sampling rate of 8000 Hz.
-// * `audio/flac`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/l16`
-//
-//   You must specify the `rate` of the audio. You can optionally specify the `endianness` of the audio. The default
-// endianness is `little-endian`.
-// * `audio/mp3`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/mpeg`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/mulaw`
-//
-//   You must specify the `rate` of the audio.
-// * `audio/ogg`
-//
-//   The service returns the audio in the `vorbis` codec. You can optionally specify the `rate` of the audio. The
-// default sampling rate is 22,050 Hz.
-// * `audio/ogg;codecs=opus`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/ogg;codecs=vorbis`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/wav`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-// * `audio/webm`
-//
-//   The service returns the audio in the `opus` codec. The service returns audio with a sampling rate of 48,000 Hz.
-// * `audio/webm;codecs=opus`
-//
-//   The service returns audio with a sampling rate of 48,000 Hz.
-// * `audio/webm;codecs=vorbis`
-//
-//   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/basic` - The service returns audio with a sampling rate of 8000 Hz.
+// * `audio/flac` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/l16` - You must specify the `rate` of the audio. You can optionally specify the `endianness` of the audio.
+// The default endianness is `little-endian`.
+// * `audio/mp3` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/mpeg` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/mulaw` - You must specify the `rate` of the audio.
+// * `audio/ogg` - The service returns the audio in the `vorbis` codec. You can optionally specify the `rate` of the
+// audio. The default sampling rate is 22,050 Hz.
+// * `audio/ogg;codecs=opus` - You can optionally specify the `rate` of the audio. Only the following values are valid
+// sampling rates: `48000`, `24000`, `16000`, `12000`, or `8000`. If you specify a value other than one of these, the
+// service returns an error. The default sampling rate is 48,000 Hz.
+// * `audio/ogg;codecs=vorbis` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050
+// Hz.
+// * `audio/wav` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+// * `audio/webm` - The service returns the audio in the `opus` codec. The service returns audio with a sampling rate of
+// 48,000 Hz.
+// * `audio/webm;codecs=opus` - The service returns audio with a sampling rate of 48,000 Hz.
+// * `audio/webm;codecs=vorbis` - You can optionally specify the `rate` of the audio. The default sampling rate is
+// 22,050 Hz.
 //
 // For more information about specifying an audio format, including additional details about some of the formats, see
 // [Audio formats](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
@@ -254,19 +255,24 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceResult(response *core.DetailedRes
 // messages about the invalid parameters. The warning includes a descriptive message and a list of invalid argument
 // strings. For example, a message such as `"Unknown arguments:"` or `"Unknown url query arguments:"` followed by a list
 // of the form `"{invalid_arg_1}, {invalid_arg_2}."` The request succeeds despite the warnings.
-func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(synthesizeOptions, "synthesizeOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(synthesizeOptions, "synthesizeOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(synthesizeOptions, "synthesizeOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(synthesizeOptions, "synthesizeOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/synthesize"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range synthesizeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -294,26 +300,26 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 	if synthesizeOptions.Text != nil {
 		body["text"] = synthesizeOptions.Text
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(io.ReadCloser))
-	return response, err
-}
-
-// GetSynthesizeResult : Retrieve result of Synthesize operation
-func (textToSpeech *TextToSpeechV1) GetSynthesizeResult(response *core.DetailedResponse) io.ReadCloser {
-	result, ok := response.Result.(io.ReadCloser)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(io.ReadCloser))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(io.ReadCloser)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetPronunciation : Get pronunciation
@@ -325,19 +331,24 @@ func (textToSpeech *TextToSpeechV1) GetSynthesizeResult(response *core.DetailedR
 //
 // **See also:** [Querying a word from a
 // language](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
-func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getPronunciationOptions, "getPronunciationOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (result *Pronunciation, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getPronunciationOptions, "getPronunciationOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getPronunciationOptions, "getPronunciationOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getPronunciationOptions, "getPronunciationOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/pronunciation"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getPronunciationOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -363,20 +374,19 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(Pronunciation))
-	return response, err
-}
-
-// GetGetPronunciationResult : Retrieve result of GetPronunciation operation
-func (textToSpeech *TextToSpeechV1) GetGetPronunciationResult(response *core.DetailedResponse) *Pronunciation {
-	result, ok := response.Result.(*Pronunciation)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(Pronunciation))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Pronunciation)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateVoiceModel : Create a custom model
@@ -388,19 +398,24 @@ func (textToSpeech *TextToSpeechV1) GetGetPronunciationResult(response *core.Det
 //
 // **See also:** [Creating a custom
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
-func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createVoiceModelOptions, "createVoiceModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions) (result *VoiceModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createVoiceModelOptions, "createVoiceModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createVoiceModelOptions, "createVoiceModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createVoiceModelOptions, "createVoiceModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -424,26 +439,26 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *Cr
 	if createVoiceModelOptions.Description != nil {
 		body["description"] = createVoiceModelOptions.Description
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(VoiceModel))
-	return response, err
-}
-
-// GetCreateVoiceModelResult : Retrieve result of CreateVoiceModel operation
-func (textToSpeech *TextToSpeechV1) GetCreateVoiceModelResult(response *core.DetailedResponse) *VoiceModel {
-	result, ok := response.Result.(*VoiceModel)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(VoiceModel))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*VoiceModel)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ListVoiceModels : List custom models
@@ -456,16 +471,20 @@ func (textToSpeech *TextToSpeechV1) GetCreateVoiceModelResult(response *core.Det
 //
 // **See also:** [Querying all custom
 // models](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
-func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listVoiceModelsOptions, "listVoiceModelsOptions"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions) (result *VoiceModels, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listVoiceModelsOptions, "listVoiceModelsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listVoiceModelsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -484,20 +503,19 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *List
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(VoiceModels))
-	return response, err
-}
-
-// GetListVoiceModelsResult : Retrieve result of ListVoiceModels operation
-func (textToSpeech *TextToSpeechV1) GetListVoiceModelsResult(response *core.DetailedResponse) *VoiceModels {
-	result, ok := response.Result.(*VoiceModels)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(VoiceModels))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*VoiceModels)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateVoiceModel : Update a custom model
@@ -525,19 +543,24 @@ func (textToSpeech *TextToSpeechV1) GetListVoiceModelsResult(response *core.Deta
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
 // * [Understanding
 // customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
-func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateVoiceModelOptions, "updateVoiceModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateVoiceModelOptions, "updateVoiceModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateVoiceModelOptions, "updateVoiceModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateVoiceModelOptions, "updateVoiceModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{*updateVoiceModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -561,17 +584,19 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 	if updateVoiceModelOptions.Words != nil {
 		body["words"] = updateVoiceModelOptions.Words
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, nil)
-	return response, err
+	response, err = textToSpeech.Service.Request(request, nil)
+
+	return
 }
 
 // GetVoiceModel : Get a custom model
@@ -583,19 +608,24 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 //
 // **See also:** [Querying a custom
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
-func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (result *VoiceModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getVoiceModelOptions, "getVoiceModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getVoiceModelOptions, "getVoiceModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{*getVoiceModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -610,20 +640,19 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoice
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(VoiceModel))
-	return response, err
-}
-
-// GetGetVoiceModelResult : Retrieve result of GetVoiceModel operation
-func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.DetailedResponse) *VoiceModel {
-	result, ok := response.Result.(*VoiceModel)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(VoiceModel))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*VoiceModel)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteVoiceModel : Delete a custom model
@@ -634,19 +663,24 @@ func (textToSpeech *TextToSpeechV1) GetGetVoiceModelResult(response *core.Detail
 //
 // **See also:** [Deleting a custom
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsDelete).
-func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteVoiceModelOptions, "deleteVoiceModelOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteVoiceModelOptions, "deleteVoiceModelOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations"}
 	pathParameters := []string{*deleteVoiceModelOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteVoiceModelOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -657,14 +691,14 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 		builder.AddHeader(headerName, headerValue)
 	}
 
-
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, nil)
-	return response, err
+	response, err = textToSpeech.Service.Request(request, nil)
+
+	return
 }
 
 // AddWords : Add custom words
@@ -692,19 +726,24 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
 // * [Understanding
 // customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
-func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addWordsOptions, "addWordsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addWordsOptions, "addWordsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*addWordsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -722,17 +761,19 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 	if addWordsOptions.Words != nil {
 		body["words"] = addWordsOptions.Words
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, nil)
-	return response, err
+	response, err = textToSpeech.Service.Request(request, nil)
+
+	return
 }
 
 // ListWords : List custom words
@@ -744,19 +785,24 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 //
 // **See also:** [Querying all words from a custom
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryModel).
-func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions) (result *Words, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listWordsOptions, "listWordsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listWordsOptions, "listWordsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*listWordsOptions.CustomizationID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listWordsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -771,20 +817,19 @@ func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(Words))
-	return response, err
-}
-
-// GetListWordsResult : Retrieve result of ListWords operation
-func (textToSpeech *TextToSpeechV1) GetListWordsResult(response *core.DetailedResponse) *Words {
-	result, ok := response.Result.(*Words)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(Words))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Words)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // AddWord : Add a custom word
@@ -811,19 +856,24 @@ func (textToSpeech *TextToSpeechV1) GetListWordsResult(response *core.DetailedRe
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
 // * [Understanding
 // customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
-func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(addWordOptions, "addWordOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(addWordOptions, "addWordOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*addWordOptions.CustomizationID, *addWordOptions.Word}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range addWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -843,17 +893,19 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 	if addWordOptions.PartOfSpeech != nil {
 		body["part_of_speech"] = addWordOptions.PartOfSpeech
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, nil)
-	return response, err
+	response, err = textToSpeech.Service.Request(request, nil)
+
+	return
 }
 
 // GetWord : Get a custom word
@@ -864,19 +916,24 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (*co
 //
 // **See also:** [Querying a single word from a custom
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordQueryModel).
-func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (result *Translation, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getWordOptions, "getWordOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getWordOptions, "getWordOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*getWordOptions.CustomizationID, *getWordOptions.Word}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -891,20 +948,19 @@ func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (*co
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, new(Translation))
-	return response, err
-}
-
-// GetGetWordResult : Retrieve result of GetWord operation
-func (textToSpeech *TextToSpeechV1) GetGetWordResult(response *core.DetailedResponse) *Translation {
-	result, ok := response.Result.(*Translation)
-	if ok {
-		return result
+	response, err = textToSpeech.Service.Request(request, new(Translation))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Translation)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteWord : Delete a custom word
@@ -915,19 +971,24 @@ func (textToSpeech *TextToSpeechV1) GetGetWordResult(response *core.DetailedResp
 //
 // **See also:** [Deleting a word from a custom
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordDelete).
-func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteWordOptions, "deleteWordOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteWordOptions, "deleteWordOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/customizations", "words"}
 	pathParameters := []string{*deleteWordOptions.CustomizationID, *deleteWordOptions.Word}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteWordOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -938,14 +999,14 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 		builder.AddHeader(headerName, headerValue)
 	}
 
-
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, nil)
-	return response, err
+	response, err = textToSpeech.Service.Request(request, nil)
+
+	return
 }
 
 // DeleteUserData : Delete labeled data
@@ -958,19 +1019,24 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 //
 // **See also:** [Information
 // security](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-information-security#information-security).
-func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/user_data"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(textToSpeech.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -981,16 +1047,16 @@ func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *Delete
 		builder.AddHeader(headerName, headerValue)
 	}
 
-
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := textToSpeech.Service.Request(request, nil)
-	return response, err
+	response, err = textToSpeech.Service.Request(request, nil)
+
+	return
 }
 
 // AddWordOptions : The AddWord options.
@@ -1047,8 +1113,8 @@ const (
 func (textToSpeech *TextToSpeechV1) NewAddWordOptions(customizationID string, word string, translation string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
-		Translation: core.StringPtr(translation),
+		Word:            core.StringPtr(word),
+		Translation:     core.StringPtr(translation),
 	}
 }
 
@@ -1105,7 +1171,7 @@ type AddWordsOptions struct {
 func (textToSpeech *TextToSpeechV1) NewAddWordsOptions(customizationID string, words []Word) *AddWordsOptions {
 	return &AddWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Words: words,
+		Words:           words,
 	}
 }
 
@@ -1266,7 +1332,7 @@ type DeleteWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewDeleteWordOptions(customizationID string, word string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1317,34 +1383,34 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
-	GetPronunciationOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
-	GetPronunciationOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
-	GetPronunciationOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
-	GetPronunciationOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
-	GetPronunciationOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
-	GetPronunciationOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
-	GetPronunciationOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
-	GetPronunciationOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
-	GetPronunciationOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
-	GetPronunciationOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
-	GetPronunciationOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
-	GetPronunciationOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
-	GetPronunciationOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
-	GetPronunciationOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
-	GetPronunciationOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
-	GetPronunciationOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
-	GetPronunciationOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
-	GetPronunciationOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
-	GetPronunciationOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
-	GetPronunciationOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
-	GetPronunciationOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
-	GetPronunciationOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
+	GetPronunciationOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
+	GetPronunciationOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	GetPronunciationOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
+	GetPronunciationOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
+	GetPronunciationOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	GetPronunciationOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
+	GetPronunciationOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	GetPronunciationOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
+	GetPronunciationOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	GetPronunciationOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
+	GetPronunciationOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
+	GetPronunciationOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	GetPronunciationOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
+	GetPronunciationOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	GetPronunciationOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
+	GetPronunciationOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	GetPronunciationOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
+	GetPronunciationOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
+	GetPronunciationOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	GetPronunciationOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	GetPronunciationOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	GetPronunciationOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
-	GetPronunciationOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
-	GetPronunciationOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
-	GetPronunciationOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
+	GetPronunciationOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	GetPronunciationOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
+	GetPronunciationOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
+	GetPronunciationOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
@@ -1440,34 +1506,34 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
-	GetVoiceOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
-	GetVoiceOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
-	GetVoiceOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
-	GetVoiceOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
-	GetVoiceOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
-	GetVoiceOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
-	GetVoiceOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
-	GetVoiceOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
-	GetVoiceOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
-	GetVoiceOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
-	GetVoiceOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
-	GetVoiceOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
-	GetVoiceOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
-	GetVoiceOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
-	GetVoiceOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
-	GetVoiceOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
-	GetVoiceOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
-	GetVoiceOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
-	GetVoiceOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
-	GetVoiceOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
-	GetVoiceOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
-	GetVoiceOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
+	GetVoiceOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
+	GetVoiceOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	GetVoiceOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
+	GetVoiceOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
+	GetVoiceOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	GetVoiceOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
+	GetVoiceOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	GetVoiceOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
+	GetVoiceOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	GetVoiceOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
+	GetVoiceOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
+	GetVoiceOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	GetVoiceOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
+	GetVoiceOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	GetVoiceOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
+	GetVoiceOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	GetVoiceOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
+	GetVoiceOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
+	GetVoiceOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	GetVoiceOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	GetVoiceOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	GetVoiceOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
-	GetVoiceOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
-	GetVoiceOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
-	GetVoiceOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
+	GetVoiceOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	GetVoiceOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
+	GetVoiceOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
+	GetVoiceOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
@@ -1513,7 +1579,7 @@ type GetWordOptions struct {
 func (textToSpeech *TextToSpeechV1) NewGetWordOptions(customizationID string, word string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1670,57 +1736,37 @@ type SynthesizeOptions struct {
 	Headers map[string]string
 }
 
-// Constants associated with the SynthesizeOptions.Accept property.
-// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
-// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
-// method description.
-const (
-	SynthesizeOptions_Accept_AudioBasic = "audio/basic"
-	SynthesizeOptions_Accept_AudioFlac = "audio/flac"
-	SynthesizeOptions_Accept_AudioL16 = "audio/l16"
-	SynthesizeOptions_Accept_AudioMp3 = "audio/mp3"
-	SynthesizeOptions_Accept_AudioMpeg = "audio/mpeg"
-	SynthesizeOptions_Accept_AudioMulaw = "audio/mulaw"
-	SynthesizeOptions_Accept_AudioOgg = "audio/ogg"
-	SynthesizeOptions_Accept_AudioOggCodecsOpus = "audio/ogg;codecs=opus"
-	SynthesizeOptions_Accept_AudioOggCodecsVorbis = "audio/ogg;codecs=vorbis"
-	SynthesizeOptions_Accept_AudioWav = "audio/wav"
-	SynthesizeOptions_Accept_AudioWebm = "audio/webm"
-	SynthesizeOptions_Accept_AudioWebmCodecsOpus = "audio/webm;codecs=opus"
-	SynthesizeOptions_Accept_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
-)
-
 // Constants associated with the SynthesizeOptions.Voice property.
 // The voice to use for synthesis.
 const (
-	SynthesizeOptions_Voice_DeDeBirgitv3voice = "de-DE_BirgitV3Voice"
-	SynthesizeOptions_Voice_DeDeBirgitvoice = "de-DE_BirgitVoice"
-	SynthesizeOptions_Voice_DeDeDieterv3voice = "de-DE_DieterV3Voice"
-	SynthesizeOptions_Voice_DeDeDietervoice = "de-DE_DieterVoice"
-	SynthesizeOptions_Voice_EnGbKatev3voice = "en-GB_KateV3Voice"
-	SynthesizeOptions_Voice_EnGbKatevoice = "en-GB_KateVoice"
-	SynthesizeOptions_Voice_EnUsAllisonv3voice = "en-US_AllisonV3Voice"
-	SynthesizeOptions_Voice_EnUsAllisonvoice = "en-US_AllisonVoice"
-	SynthesizeOptions_Voice_EnUsLisav3voice = "en-US_LisaV3Voice"
-	SynthesizeOptions_Voice_EnUsLisavoice = "en-US_LisaVoice"
-	SynthesizeOptions_Voice_EnUsMichaelv3voice = "en-US_MichaelV3Voice"
-	SynthesizeOptions_Voice_EnUsMichaelvoice = "en-US_MichaelVoice"
-	SynthesizeOptions_Voice_EsEsEnriquev3voice = "es-ES_EnriqueV3Voice"
-	SynthesizeOptions_Voice_EsEsEnriquevoice = "es-ES_EnriqueVoice"
-	SynthesizeOptions_Voice_EsEsLaurav3voice = "es-ES_LauraV3Voice"
-	SynthesizeOptions_Voice_EsEsLauravoice = "es-ES_LauraVoice"
-	SynthesizeOptions_Voice_EsLaSofiav3voice = "es-LA_SofiaV3Voice"
-	SynthesizeOptions_Voice_EsLaSofiavoice = "es-LA_SofiaVoice"
-	SynthesizeOptions_Voice_EsUsSofiav3voice = "es-US_SofiaV3Voice"
-	SynthesizeOptions_Voice_EsUsSofiavoice = "es-US_SofiaVoice"
-	SynthesizeOptions_Voice_FrFrReneev3voice = "fr-FR_ReneeV3Voice"
-	SynthesizeOptions_Voice_FrFrReneevoice = "fr-FR_ReneeVoice"
+	SynthesizeOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
+	SynthesizeOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
+	SynthesizeOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
+	SynthesizeOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
+	SynthesizeOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
+	SynthesizeOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
+	SynthesizeOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	SynthesizeOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
+	SynthesizeOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
+	SynthesizeOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
+	SynthesizeOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
+	SynthesizeOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
+	SynthesizeOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
+	SynthesizeOptions_Voice_EsEsLauravoice       = "es-ES_LauraVoice"
+	SynthesizeOptions_Voice_EsLaSofiav3voice     = "es-LA_SofiaV3Voice"
+	SynthesizeOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
+	SynthesizeOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
+	SynthesizeOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
+	SynthesizeOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	SynthesizeOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
-	SynthesizeOptions_Voice_ItItFrancescavoice = "it-IT_FrancescaVoice"
-	SynthesizeOptions_Voice_JaJpEmiv3voice = "ja-JP_EmiV3Voice"
-	SynthesizeOptions_Voice_JaJpEmivoice = "ja-JP_EmiVoice"
-	SynthesizeOptions_Voice_PtBrIsabelav3voice = "pt-BR_IsabelaV3Voice"
-	SynthesizeOptions_Voice_PtBrIsabelavoice = "pt-BR_IsabelaVoice"
+	SynthesizeOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
+	SynthesizeOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
+	SynthesizeOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
+	SynthesizeOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
 )
 
 // NewSynthesizeOptions : Instantiate SynthesizeOptions

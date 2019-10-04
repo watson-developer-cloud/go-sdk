@@ -18,6 +18,8 @@
 package assistantv2
 
 import (
+	"fmt"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
@@ -25,64 +27,87 @@ import (
 // AssistantV2 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
 // an integrated dialog editor to create conversation flows between your apps and your users.
 //
+// The Assistant v2 API provides runtime methods your client application can use to send user input to an assistant and
+// receive a response.
+//
 // Version: 2.0
 // See: https://cloud.ibm.com/docs/services/assistant/
 type AssistantV2 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
 
 // AssistantV2Options : Service options
 type AssistantV2Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewAssistantV2 : Instantiate AssistantV2
 func NewAssistantV2(options *AssistantV2Options) (service *AssistantV2, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/assistant/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "conversation", "Assistant")
 	if err != nil {
 		return
 	}
-	
-	service = &AssistantV2{Service: baseService}
+
+	service = &AssistantV2{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (assistant *AssistantV2) SetServiceURL(url string) error {
+	return assistant.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (assistant *AssistantV2) DisableSSLVerification() {
+	assistant.Service.DisableSSLVerification()
 }
 
 // CreateSession : Create a session
 // Create a new session. A session is used to send user input to a skill and receive responses. It also maintains the
 // state of the conversation.
-func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createSessionOptions, "createSessionOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionOptions) (result *SessionResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createSessionOptions, "createSessionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createSessionOptions, "createSessionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createSessionOptions, "createSessionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v2/assistants", "sessions"}
 	pathParameters := []string{*createSessionOptions.AssistantID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createSessionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -94,41 +119,45 @@ func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionO
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(SessionResponse))
-	return response, err
-}
-
-// GetCreateSessionResult : Retrieve result of CreateSession operation
-func (assistant *AssistantV2) GetCreateSessionResult(response *core.DetailedResponse) *SessionResponse {
-	result, ok := response.Result.(*SessionResponse)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(SessionResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*SessionResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteSession : Delete session
 // Deletes a session explicitly before it times out.
-func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteSessionOptions, "deleteSessionOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteSessionOptions, "deleteSessionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteSessionOptions, "deleteSessionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteSessionOptions, "deleteSessionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v2/assistants", "sessions"}
 	pathParameters := []string{*deleteSessionOptions.AssistantID, *deleteSessionOptions.SessionID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteSessionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -140,34 +169,40 @@ func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionO
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // Message : Send user input to assistant
 // Send user input to an assistant and receive a response.
 //
 // There is no rate limit for this operation.
-func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(messageOptions, "messageOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (result *MessageResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(messageOptions, "messageOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(messageOptions, "messageOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(messageOptions, "messageOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v2/assistants", "sessions", "message"}
 	pathParameters := []string{*messageOptions.AssistantID, *messageOptions.SessionID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range messageOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -180,7 +215,7 @@ func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (*core.Det
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if messageOptions.Input != nil {
@@ -189,26 +224,26 @@ func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (*core.Det
 	if messageOptions.Context != nil {
 		body["context"] = messageOptions.Context
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(MessageResponse))
-	return response, err
-}
-
-// GetMessageResult : Retrieve result of Message operation
-func (assistant *AssistantV2) GetMessageResult(response *core.DetailedResponse) *MessageResponse {
-	result, ok := response.Result.(*MessageResponse)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(MessageResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MessageResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CaptureGroup : CaptureGroup struct
@@ -275,7 +310,7 @@ type DeleteSessionOptions struct {
 func (assistant *AssistantV2) NewDeleteSessionOptions(assistantID string, sessionID string) *DeleteSessionOptions {
 	return &DeleteSessionOptions{
 		AssistantID: core.StringPtr(assistantID),
-		SessionID: core.StringPtr(sessionID),
+		SessionID:   core.StringPtr(sessionID),
 	}
 }
 
@@ -311,8 +346,8 @@ type DialogLogMessage struct {
 // The severity of the log message.
 const (
 	DialogLogMessage_Level_Error = "error"
-	DialogLogMessage_Level_Info = "info"
-	DialogLogMessage_Level_Warn = "warn"
+	DialogLogMessage_Level_Info  = "info"
+	DialogLogMessage_Level_Warn  = "warn"
 )
 
 // DialogNodeAction : DialogNodeAction struct
@@ -337,10 +372,10 @@ type DialogNodeAction struct {
 // Constants associated with the DialogNodeAction.Type property.
 // The type of action to invoke.
 const (
-	DialogNodeAction_Type_Client = "client"
+	DialogNodeAction_Type_Client        = "client"
 	DialogNodeAction_Type_CloudFunction = "cloud-function"
-	DialogNodeAction_Type_Server = "server"
-	DialogNodeAction_Type_WebAction = "web-action"
+	DialogNodeAction_Type_Server        = "server"
+	DialogNodeAction_Type_WebAction     = "web-action"
 )
 
 // DialogNodeOutputOptionsElement : DialogNodeOutputOptionsElement struct
@@ -450,12 +485,12 @@ type MessageContextSkills map[string]interface{}
 
 // SetProperty : Allow user to set arbitrary property
 func (this *MessageContextSkills) SetProperty(Key string, Value *MessageContextSkill) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *MessageContextSkills) GetProperty(Key string) *MessageContextSkill {
-   return (*this)[Key].(*MessageContextSkill)
+	return (*this)[Key].(*MessageContextSkill)
 }
 
 // MessageInput : An input object that includes the input text.
@@ -535,7 +570,7 @@ type MessageOptions struct {
 func (assistant *AssistantV2) NewMessageOptions(assistantID string, sessionID string) *MessageOptions {
 	return &MessageOptions{
 		AssistantID: core.StringPtr(assistantID),
-		SessionID: core.StringPtr(sessionID),
+		SessionID:   core.StringPtr(sessionID),
 	}
 }
 
@@ -616,7 +651,7 @@ type MessageOutputDebug struct {
 // completed by itself or got interrupted.
 const (
 	MessageOutputDebug_BranchExitedReason_Completed = "completed"
-	MessageOutputDebug_BranchExitedReason_Fallback = "fallback"
+	MessageOutputDebug_BranchExitedReason_Fallback  = "fallback"
 )
 
 // MessageResponse : A response from the Watson Assistant service.
@@ -726,18 +761,18 @@ type RuntimeResponseGeneric struct {
 // users.
 const (
 	RuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	RuntimeResponseGeneric_ResponseType_Image = "image"
-	RuntimeResponseGeneric_ResponseType_Option = "option"
-	RuntimeResponseGeneric_ResponseType_Pause = "pause"
-	RuntimeResponseGeneric_ResponseType_Search = "search"
-	RuntimeResponseGeneric_ResponseType_Suggestion = "suggestion"
-	RuntimeResponseGeneric_ResponseType_Text = "text"
+	RuntimeResponseGeneric_ResponseType_Image          = "image"
+	RuntimeResponseGeneric_ResponseType_Option         = "option"
+	RuntimeResponseGeneric_ResponseType_Pause          = "pause"
+	RuntimeResponseGeneric_ResponseType_Search         = "search"
+	RuntimeResponseGeneric_ResponseType_Suggestion     = "suggestion"
+	RuntimeResponseGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the RuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	RuntimeResponseGeneric_Preference_Button = "button"
+	RuntimeResponseGeneric_Preference_Button   = "button"
 	RuntimeResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -773,42 +808,42 @@ type SearchResultHighlight map[string]interface{}
 
 // SetBody : Allow user to set Body
 func (this *SearchResultHighlight) SetBody(Body *[]string) {
-   (*this)["body"] = Body
+	(*this)["body"] = Body
 }
 
 // GetBody : Allow user to get Body
 func (this *SearchResultHighlight) GetBody() *[]string {
-   return (*this)["body"].(*[]string)
+	return (*this)["body"].(*[]string)
 }
 
 // SetTitle : Allow user to set Title
 func (this *SearchResultHighlight) SetTitle(Title *[]string) {
-   (*this)["title"] = Title
+	(*this)["title"] = Title
 }
 
 // GetTitle : Allow user to get Title
 func (this *SearchResultHighlight) GetTitle() *[]string {
-   return (*this)["title"].(*[]string)
+	return (*this)["title"].(*[]string)
 }
 
 // SetURL : Allow user to set URL
 func (this *SearchResultHighlight) SetURL(URL *[]string) {
-   (*this)["url"] = URL
+	(*this)["url"] = URL
 }
 
 // GetURL : Allow user to get URL
 func (this *SearchResultHighlight) GetURL() *[]string {
-   return (*this)["url"].(*[]string)
+	return (*this)["url"].(*[]string)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *SearchResultHighlight) SetProperty(Key string, Value *[]string) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *SearchResultHighlight) GetProperty(Key string) *[]string {
-   return (*this)[Key].(*[]string)
+	return (*this)[Key].(*[]string)
 }
 
 // SearchResultMetadata : An object containing search result metadata from the Discovery service.

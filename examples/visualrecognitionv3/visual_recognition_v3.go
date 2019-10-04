@@ -11,8 +11,8 @@ func main() {
 	// Instantiate the Watson Visual Recognition service
 	service, serviceErr := visualrecognitionv3.
 		NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-			URL:       "YOUR SERVICE URL",
-			Version:   "2018-03-19",
+			URL:     "YOUR SERVICE URL",
+			Version: "2018-03-19",
 			Authenticator: &core.IamAuthenticator{
 				ApiKey: "YOUR API KEY",
 			},
@@ -41,16 +41,12 @@ func main() {
 	classifyOptions.ClassifierIds = []string{"default", "food", "explicit"}
 
 	// Call the visual recognition Classify method
-	response, responseErr := service.Classify(classifyOptions)
+	classifyResult, _, responseErr := service.Classify(classifyOptions)
 
 	// Check successful call
 	if responseErr != nil {
 		panic(responseErr)
 	}
-
-	// Cast classify.Result to the specific dataType returned by Classify
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	classifyResult := service.GetClassifyResult(response)
 
 	// Check successful casting
 	if classifyResult != nil {
@@ -74,12 +70,11 @@ func main() {
 		AddPositiveExamples("cars", carsFile)
 	createClassifierOptions.NegativeExamples = trucksFile
 
-	response, responseErr = service.CreateClassifier(createClassifierOptions)
+	createResult, _, responseErr := service.CreateClassifier(createClassifierOptions)
 	if responseErr != nil {
 		panic(responseErr)
 	}
 
-	createResult := service.GetCreateClassifierResult(response)
 	if createResult != nil {
 		core.PrettyPrint(createResult, "Create Classifier")
 	}
@@ -93,34 +88,12 @@ func main() {
 	classifyOptions = service.NewClassifyOptions()
 	classifyOptions.ImagesFile = imageFile
 
-	response, responseErr = service.Classify(classifyOptions)
+	classifyResult, _, responseErr = service.Classify(classifyOptions)
 	if responseErr != nil {
 		panic(responseErr)
 	}
 
-	classifyResult = service.GetClassifyResult(response)
 	if classifyResult != nil {
 		core.PrettyPrint(classifyResult, "Classify")
-	}
-
-	// /* DETECT FACES */
-
-	imageFile, imageFileErr = os.Open(pwd + "/../../resources/face.jpg")
-	if imageFileErr != nil {
-		panic(imageFileErr)
-	}
-
-	detectFacesOptions := service.NewDetectFacesOptions()
-	detectFacesOptions.ImagesFile = imageFile
-	detectFacesOptions.URL = core.StringPtr("https://www.ibm.com/ibm/ginni/images/ginni_bio_780x981_v4_03162016.jpg")
-
-	response, responseErr = service.DetectFaces(detectFacesOptions)
-	if responseErr != nil {
-		panic(responseErr)
-	}
-
-	detectResult := service.GetDetectFacesResult(response)
-	if detectResult != nil {
-		core.PrettyPrint(detectResult, "Detect Faces")
 	}
 }

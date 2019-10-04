@@ -19,6 +19,7 @@ package assistantv1
 
 import (
 	"fmt"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
@@ -27,69 +28,91 @@ import (
 // AssistantV1 : The IBM Watson&trade; Assistant service combines machine learning, natural language understanding, and
 // an integrated dialog editor to create conversation flows between your apps and your users.
 //
+// The Assistant v1 API provides authoring methods your application can use to create or update a workspace.
+//
 // Version: 1.0
 // See: https://cloud.ibm.com/docs/services/assistant/
 type AssistantV1 struct {
 	Service *core.BaseService
+	Version string
 }
+
+const defaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
 
 // AssistantV1Options : Service options
 type AssistantV1Options struct {
-	Version         string
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
+	Version       string
 }
 
 // NewAssistantV1 : Instantiate AssistantV1
 func NewAssistantV1(options *AssistantV1Options) (service *AssistantV1, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/assistant/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		Version:         options.Version,
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "conversation", "Assistant")
 	if err != nil {
 		return
 	}
-	
-	service = &AssistantV1{Service: baseService}
+
+	service = &AssistantV1{
+		Service: baseService,
+		Version: options.Version,
+	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (assistant *AssistantV1) SetServiceURL(url string) error {
+	return assistant.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (assistant *AssistantV1) DisableSSLVerification() {
+	assistant.Service.DisableSSLVerification()
 }
 
 // Message : Get response to user input
 // Send user input to a workspace and receive a response.
 //
-// **Note:** For most applications, there are significant advantages to using the v2 runtime API instead. These
-// advantages include ease of deployment, automatic state management, versioning, and search capabilities. For more
-// information, see the [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-api-overview).
+// **Important:** This method has been superseded by the new v2 runtime API. The v2 API offers significant advantages,
+// including ease of deployment, automatic state management, versioning, and search capabilities. For more information,
+// see the [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-api-overview).
 //
 // There is no rate limit for this operation.
-func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(messageOptions, "messageOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (result *MessageResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(messageOptions, "messageOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(messageOptions, "messageOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(messageOptions, "messageOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "message"}
 	pathParameters := []string{*messageOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range messageOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -106,7 +129,7 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	if messageOptions.NodesVisitedDetails != nil {
 		builder.AddQuery("nodes_visited_details", fmt.Sprint(*messageOptions.NodesVisitedDetails))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if messageOptions.Input != nil {
@@ -127,42 +150,46 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (*core.Det
 	if messageOptions.Output != nil {
 		body["output"] = messageOptions.Output
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(MessageResponse))
-	return response, err
-}
-
-// GetMessageResult : Retrieve result of Message operation
-func (assistant *AssistantV1) GetMessageResult(response *core.DetailedResponse) *MessageResponse {
-	result, ok := response.Result.(*MessageResponse)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(MessageResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MessageResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ListWorkspaces : List workspaces
 // List the workspaces associated with a Watson Assistant service instance.
 //
 // This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listWorkspacesOptions, "listWorkspacesOptions"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) (result *WorkspaceCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listWorkspacesOptions, "listWorkspacesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listWorkspacesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -187,24 +214,23 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 	if listWorkspacesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listWorkspacesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(WorkspaceCollection))
-	return response, err
-}
-
-// GetListWorkspacesResult : Retrieve result of ListWorkspaces operation
-func (assistant *AssistantV1) GetListWorkspacesResult(response *core.DetailedResponse) *WorkspaceCollection {
-	result, ok := response.Result.(*WorkspaceCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(WorkspaceCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*WorkspaceCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateWorkspace : Create workspace
@@ -212,16 +238,20 @@ func (assistant *AssistantV1) GetListWorkspacesResult(response *core.DetailedRes
 // workspace.
 //
 // This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(createWorkspaceOptions, "createWorkspaceOptions"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions) (result *Workspace, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(createWorkspaceOptions, "createWorkspaceOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -234,7 +264,7 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if createWorkspaceOptions.Name != nil {
@@ -267,26 +297,26 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	if createWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = createWorkspaceOptions.Counterexamples
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Workspace))
-	return response, err
-}
-
-// GetCreateWorkspaceResult : Retrieve result of CreateWorkspace operation
-func (assistant *AssistantV1) GetCreateWorkspaceResult(response *core.DetailedResponse) *Workspace {
-	result, ok := response.Result.(*Workspace)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Workspace))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Workspace)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetWorkspace : Get information about a workspace
@@ -294,19 +324,24 @@ func (assistant *AssistantV1) GetCreateWorkspaceResult(response *core.DetailedRe
 //
 // With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
 // is 20 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getWorkspaceOptions, "getWorkspaceOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions) (result *Workspace, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getWorkspaceOptions, "getWorkspaceOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getWorkspaceOptions, "getWorkspaceOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getWorkspaceOptions, "getWorkspaceOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces"}
 	pathParameters := []string{*getWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -328,24 +363,23 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 	if getWorkspaceOptions.Sort != nil {
 		builder.AddQuery("sort", fmt.Sprint(*getWorkspaceOptions.Sort))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Workspace))
-	return response, err
-}
-
-// GetGetWorkspaceResult : Retrieve result of GetWorkspace operation
-func (assistant *AssistantV1) GetGetWorkspaceResult(response *core.DetailedResponse) *Workspace {
-	result, ok := response.Result.(*Workspace)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Workspace))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Workspace)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateWorkspace : Update workspace
@@ -353,19 +387,24 @@ func (assistant *AssistantV1) GetGetWorkspaceResult(response *core.DetailedRespo
 // the updated workspace.
 //
 // This operation is limited to 30 request per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateWorkspaceOptions, "updateWorkspaceOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions) (result *Workspace, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateWorkspaceOptions, "updateWorkspaceOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateWorkspaceOptions, "updateWorkspaceOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateWorkspaceOptions, "updateWorkspaceOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces"}
 	pathParameters := []string{*updateWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -382,7 +421,7 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	if updateWorkspaceOptions.Append != nil {
 		builder.AddQuery("append", fmt.Sprint(*updateWorkspaceOptions.Append))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if updateWorkspaceOptions.Name != nil {
@@ -415,45 +454,50 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	if updateWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = updateWorkspaceOptions.Counterexamples
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Workspace))
-	return response, err
-}
-
-// GetUpdateWorkspaceResult : Retrieve result of UpdateWorkspace operation
-func (assistant *AssistantV1) GetUpdateWorkspaceResult(response *core.DetailedResponse) *Workspace {
-	result, ok := response.Result.(*Workspace)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Workspace))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Workspace)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteWorkspace : Delete workspace
 // Delete a workspace from the service instance.
 //
 // This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteWorkspaceOptions, "deleteWorkspaceOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteWorkspaceOptions, "deleteWorkspaceOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteWorkspaceOptions, "deleteWorkspaceOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteWorkspaceOptions, "deleteWorkspaceOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces"}
 	pathParameters := []string{*deleteWorkspaceOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteWorkspaceOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -465,15 +509,16 @@ func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWork
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // ListIntents : List intents
@@ -481,19 +526,24 @@ func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWork
 //
 // With **export**=`false`, this operation is limited to 2000 requests per 30 minutes. With **export**=`true`, the limit
 // is 400 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listIntentsOptions, "listIntentsOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions) (result *IntentCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listIntentsOptions, "listIntentsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listIntentsOptions, "listIntentsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listIntentsOptions, "listIntentsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents"}
 	pathParameters := []string{*listIntentsOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listIntentsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -521,24 +571,23 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 	if listIntentsOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listIntentsOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(IntentCollection))
-	return response, err
-}
-
-// GetListIntentsResult : Retrieve result of ListIntents operation
-func (assistant *AssistantV1) GetListIntentsResult(response *core.DetailedResponse) *IntentCollection {
-	result, ok := response.Result.(*IntentCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(IntentCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*IntentCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateIntent : Create intent
@@ -548,19 +597,24 @@ func (assistant *AssistantV1) GetListIntentsResult(response *core.DetailedRespon
 // workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createIntentOptions, "createIntentOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOptions) (result *Intent, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createIntentOptions, "createIntentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createIntentOptions, "createIntentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createIntentOptions, "createIntentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents"}
 	pathParameters := []string{*createIntentOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -573,7 +627,7 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if createIntentOptions.Intent != nil {
@@ -585,26 +639,26 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 	if createIntentOptions.Examples != nil {
 		body["examples"] = createIntentOptions.Examples
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Intent))
-	return response, err
-}
-
-// GetCreateIntentResult : Retrieve result of CreateIntent operation
-func (assistant *AssistantV1) GetCreateIntentResult(response *core.DetailedResponse) *Intent {
-	result, ok := response.Result.(*Intent)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Intent))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Intent)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetIntent : Get intent
@@ -612,19 +666,24 @@ func (assistant *AssistantV1) GetCreateIntentResult(response *core.DetailedRespo
 //
 // With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
 // is 400 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getIntentOptions, "getIntentOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (result *Intent, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getIntentOptions, "getIntentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getIntentOptions, "getIntentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getIntentOptions, "getIntentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents"}
 	pathParameters := []string{*getIntentOptions.WorkspaceID, *getIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -643,24 +702,23 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (*co
 	if getIntentOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getIntentOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Intent))
-	return response, err
-}
-
-// GetGetIntentResult : Retrieve result of GetIntent operation
-func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse) *Intent {
-	result, ok := response.Result.(*Intent)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Intent))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Intent)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateIntent : Update intent
@@ -671,19 +729,24 @@ func (assistant *AssistantV1) GetGetIntentResult(response *core.DetailedResponse
 // workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateIntentOptions, "updateIntentOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOptions) (result *Intent, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateIntentOptions, "updateIntentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateIntentOptions, "updateIntentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateIntentOptions, "updateIntentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents"}
 	pathParameters := []string{*updateIntentOptions.WorkspaceID, *updateIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -696,7 +759,7 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if updateIntentOptions.NewIntent != nil {
@@ -708,45 +771,50 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 	if updateIntentOptions.NewExamples != nil {
 		body["examples"] = updateIntentOptions.NewExamples
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Intent))
-	return response, err
-}
-
-// GetUpdateIntentResult : Retrieve result of UpdateIntent operation
-func (assistant *AssistantV1) GetUpdateIntentResult(response *core.DetailedResponse) *Intent {
-	result, ok := response.Result.(*Intent)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Intent))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Intent)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteIntent : Delete intent
 // Delete an intent from a workspace.
 //
 // This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteIntentOptions, "deleteIntentOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteIntentOptions, "deleteIntentOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteIntentOptions, "deleteIntentOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteIntentOptions, "deleteIntentOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents"}
 	pathParameters := []string{*deleteIntentOptions.WorkspaceID, *deleteIntentOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteIntentOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -758,34 +826,40 @@ func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOpti
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // ListExamples : List user input examples
 // List the user input examples for an intent, optionally including contextual entity mentions.
 //
 // This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listExamplesOptions, "listExamplesOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOptions) (result *ExampleCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listExamplesOptions, "listExamplesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listExamplesOptions, "listExamplesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listExamplesOptions, "listExamplesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents", "examples"}
 	pathParameters := []string{*listExamplesOptions.WorkspaceID, *listExamplesOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listExamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -810,24 +884,23 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 	if listExamplesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listExamplesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(ExampleCollection))
-	return response, err
-}
-
-// GetListExamplesResult : Retrieve result of ListExamples operation
-func (assistant *AssistantV1) GetListExamplesResult(response *core.DetailedResponse) *ExampleCollection {
-	result, ok := response.Result.(*ExampleCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(ExampleCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ExampleCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateExample : Create user input example
@@ -837,19 +910,24 @@ func (assistant *AssistantV1) GetListExamplesResult(response *core.DetailedRespo
 // method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createExampleOptions, "createExampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleOptions) (result *Example, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createExampleOptions, "createExampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createExampleOptions, "createExampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createExampleOptions, "createExampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents", "examples"}
 	pathParameters := []string{*createExampleOptions.WorkspaceID, *createExampleOptions.Intent}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -862,7 +940,7 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if createExampleOptions.Text != nil {
@@ -871,45 +949,50 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 	if createExampleOptions.Mentions != nil {
 		body["mentions"] = createExampleOptions.Mentions
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Example))
-	return response, err
-}
-
-// GetCreateExampleResult : Retrieve result of CreateExample operation
-func (assistant *AssistantV1) GetCreateExampleResult(response *core.DetailedResponse) *Example {
-	result, ok := response.Result.(*Example)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Example))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Example)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetExample : Get user input example
 // Get information about a user input example.
 //
 // This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getExampleOptions, "getExampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (result *Example, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getExampleOptions, "getExampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getExampleOptions, "getExampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getExampleOptions, "getExampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents", "examples"}
 	pathParameters := []string{*getExampleOptions.WorkspaceID, *getExampleOptions.Intent, *getExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -925,24 +1008,23 @@ func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (
 	if getExampleOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getExampleOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Example))
-	return response, err
-}
-
-// GetGetExampleResult : Retrieve result of GetExample operation
-func (assistant *AssistantV1) GetGetExampleResult(response *core.DetailedResponse) *Example {
-	result, ok := response.Result.(*Example)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Example))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Example)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateExample : Update user input example
@@ -952,19 +1034,24 @@ func (assistant *AssistantV1) GetGetExampleResult(response *core.DetailedRespons
 // intent](#update-intent)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateExampleOptions, "updateExampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleOptions) (result *Example, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateExampleOptions, "updateExampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateExampleOptions, "updateExampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateExampleOptions, "updateExampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents", "examples"}
 	pathParameters := []string{*updateExampleOptions.WorkspaceID, *updateExampleOptions.Intent, *updateExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -977,7 +1064,7 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if updateExampleOptions.NewText != nil {
@@ -986,45 +1073,50 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 	if updateExampleOptions.NewMentions != nil {
 		body["mentions"] = updateExampleOptions.NewMentions
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Example))
-	return response, err
-}
-
-// GetUpdateExampleResult : Retrieve result of UpdateExample operation
-func (assistant *AssistantV1) GetUpdateExampleResult(response *core.DetailedResponse) *Example {
-	result, ok := response.Result.(*Example)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Example))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Example)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteExample : Delete user input example
 // Delete a user input example from an intent.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteExampleOptions, "deleteExampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteExampleOptions, "deleteExampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteExampleOptions, "deleteExampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteExampleOptions, "deleteExampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "intents", "examples"}
 	pathParameters := []string{*deleteExampleOptions.WorkspaceID, *deleteExampleOptions.Intent, *deleteExampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteExampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1036,34 +1128,40 @@ func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleO
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // ListCounterexamples : List counterexamples
 // List the counterexamples for a workspace. Counterexamples are examples that have been marked as irrelevant input.
 //
 // This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *ListCounterexamplesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listCounterexamplesOptions, "listCounterexamplesOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *ListCounterexamplesOptions) (result *CounterexampleCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listCounterexamplesOptions, "listCounterexamplesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listCounterexamplesOptions, "listCounterexamplesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listCounterexamplesOptions, "listCounterexamplesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "counterexamples"}
 	pathParameters := []string{*listCounterexamplesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listCounterexamplesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1088,24 +1186,23 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 	if listCounterexamplesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listCounterexamplesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(CounterexampleCollection))
-	return response, err
-}
-
-// GetListCounterexamplesResult : Retrieve result of ListCounterexamples operation
-func (assistant *AssistantV1) GetListCounterexamplesResult(response *core.DetailedResponse) *CounterexampleCollection {
-	result, ok := response.Result.(*CounterexampleCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(CounterexampleCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*CounterexampleCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateCounterexample : Create counterexample
@@ -1115,19 +1212,24 @@ func (assistant *AssistantV1) GetListCounterexamplesResult(response *core.Detail
 // workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createCounterexampleOptions, "createCounterexampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) (result *Counterexample, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createCounterexampleOptions, "createCounterexampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createCounterexampleOptions, "createCounterexampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createCounterexampleOptions, "createCounterexampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "counterexamples"}
 	pathParameters := []string{*createCounterexampleOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1140,51 +1242,56 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if createCounterexampleOptions.Text != nil {
 		body["text"] = createCounterexampleOptions.Text
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Counterexample))
-	return response, err
-}
-
-// GetCreateCounterexampleResult : Retrieve result of CreateCounterexample operation
-func (assistant *AssistantV1) GetCreateCounterexampleResult(response *core.DetailedResponse) *Counterexample {
-	result, ok := response.Result.(*Counterexample)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Counterexample))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Counterexample)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetCounterexample : Get counterexample
 // Get information about a counterexample. Counterexamples are examples that have been marked as irrelevant input.
 //
 // This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getCounterexampleOptions, "getCounterexampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) (result *Counterexample, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getCounterexampleOptions, "getCounterexampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getCounterexampleOptions, "getCounterexampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getCounterexampleOptions, "getCounterexampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "counterexamples"}
 	pathParameters := []string{*getCounterexampleOptions.WorkspaceID, *getCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1200,24 +1307,23 @@ func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCou
 	if getCounterexampleOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getCounterexampleOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Counterexample))
-	return response, err
-}
-
-// GetGetCounterexampleResult : Retrieve result of GetCounterexample operation
-func (assistant *AssistantV1) GetGetCounterexampleResult(response *core.DetailedResponse) *Counterexample {
-	result, ok := response.Result.(*Counterexample)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Counterexample))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Counterexample)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateCounterexample : Update counterexample
@@ -1227,19 +1333,24 @@ func (assistant *AssistantV1) GetGetCounterexampleResult(response *core.Detailed
 // workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateCounterexampleOptions, "updateCounterexampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions) (result *Counterexample, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateCounterexampleOptions, "updateCounterexampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateCounterexampleOptions, "updateCounterexampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateCounterexampleOptions, "updateCounterexampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "counterexamples"}
 	pathParameters := []string{*updateCounterexampleOptions.WorkspaceID, *updateCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1252,51 +1363,56 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if updateCounterexampleOptions.NewText != nil {
 		body["text"] = updateCounterexampleOptions.NewText
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Counterexample))
-	return response, err
-}
-
-// GetUpdateCounterexampleResult : Retrieve result of UpdateCounterexample operation
-func (assistant *AssistantV1) GetUpdateCounterexampleResult(response *core.DetailedResponse) *Counterexample {
-	result, ok := response.Result.(*Counterexample)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Counterexample))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Counterexample)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteCounterexample : Delete counterexample
 // Delete a counterexample from a workspace. Counterexamples are examples that have been marked as irrelevant input.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteCounterexampleOptions, "deleteCounterexampleOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteCounterexampleOptions, "deleteCounterexampleOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteCounterexampleOptions, "deleteCounterexampleOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteCounterexampleOptions, "deleteCounterexampleOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "counterexamples"}
 	pathParameters := []string{*deleteCounterexampleOptions.WorkspaceID, *deleteCounterexampleOptions.Text}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteCounterexampleOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1308,15 +1424,16 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // ListEntities : List entities
@@ -1324,19 +1441,24 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 //
 // With **export**=`false`, this operation is limited to 1000 requests per 30 minutes. With **export**=`true`, the limit
 // is 200 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listEntitiesOptions, "listEntitiesOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOptions) (result *EntityCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listEntitiesOptions, "listEntitiesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listEntitiesOptions, "listEntitiesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listEntitiesOptions, "listEntitiesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities"}
 	pathParameters := []string{*listEntitiesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listEntitiesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1364,24 +1486,23 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 	if listEntitiesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listEntitiesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(EntityCollection))
-	return response, err
-}
-
-// GetListEntitiesResult : Retrieve result of ListEntities operation
-func (assistant *AssistantV1) GetListEntitiesResult(response *core.DetailedResponse) *EntityCollection {
-	result, ok := response.Result.(*EntityCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(EntityCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*EntityCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateEntity : Create entity
@@ -1391,19 +1512,24 @@ func (assistant *AssistantV1) GetListEntitiesResult(response *core.DetailedRespo
 // workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createEntityOptions, "createEntityOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (result *Entity, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createEntityOptions, "createEntityOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createEntityOptions, "createEntityOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createEntityOptions, "createEntityOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities"}
 	pathParameters := []string{*createEntityOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1416,7 +1542,7 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if createEntityOptions.Entity != nil {
@@ -1434,26 +1560,26 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 	if createEntityOptions.Values != nil {
 		body["values"] = createEntityOptions.Values
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Entity))
-	return response, err
-}
-
-// GetCreateEntityResult : Retrieve result of CreateEntity operation
-func (assistant *AssistantV1) GetCreateEntityResult(response *core.DetailedResponse) *Entity {
-	result, ok := response.Result.(*Entity)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Entity))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Entity)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetEntity : Get entity
@@ -1461,19 +1587,24 @@ func (assistant *AssistantV1) GetCreateEntityResult(response *core.DetailedRespo
 //
 // With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
 // is 200 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getEntityOptions, "getEntityOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (result *Entity, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getEntityOptions, "getEntityOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getEntityOptions, "getEntityOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getEntityOptions, "getEntityOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities"}
 	pathParameters := []string{*getEntityOptions.WorkspaceID, *getEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1492,24 +1623,23 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (*co
 	if getEntityOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getEntityOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Entity))
-	return response, err
-}
-
-// GetGetEntityResult : Retrieve result of GetEntity operation
-func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse) *Entity {
-	result, ok := response.Result.(*Entity)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Entity))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Entity)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateEntity : Update entity
@@ -1520,19 +1650,24 @@ func (assistant *AssistantV1) GetGetEntityResult(response *core.DetailedResponse
 // workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateEntityOptions, "updateEntityOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOptions) (result *Entity, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateEntityOptions, "updateEntityOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateEntityOptions, "updateEntityOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateEntityOptions, "updateEntityOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities"}
 	pathParameters := []string{*updateEntityOptions.WorkspaceID, *updateEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1545,7 +1680,7 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if updateEntityOptions.NewEntity != nil {
@@ -1563,45 +1698,50 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 	if updateEntityOptions.NewValues != nil {
 		body["values"] = updateEntityOptions.NewValues
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Entity))
-	return response, err
-}
-
-// GetUpdateEntityResult : Retrieve result of UpdateEntity operation
-func (assistant *AssistantV1) GetUpdateEntityResult(response *core.DetailedResponse) *Entity {
-	result, ok := response.Result.(*Entity)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Entity))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Entity)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteEntity : Delete entity
 // Delete an entity from a workspace, or disable a system entity.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteEntityOptions, "deleteEntityOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteEntityOptions, "deleteEntityOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteEntityOptions, "deleteEntityOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteEntityOptions, "deleteEntityOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities"}
 	pathParameters := []string{*deleteEntityOptions.WorkspaceID, *deleteEntityOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteEntityOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1613,15 +1753,16 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // ListMentions : List entity mentions
@@ -1629,19 +1770,24 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 // intent user input example.
 //
 // This operation is limited to 200 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listMentionsOptions, "listMentionsOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOptions) (result *EntityMentionCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listMentionsOptions, "listMentionsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listMentionsOptions, "listMentionsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listMentionsOptions, "listMentionsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "mentions"}
 	pathParameters := []string{*listMentionsOptions.WorkspaceID, *listMentionsOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listMentionsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1660,43 +1806,47 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 	if listMentionsOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listMentionsOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(EntityMentionCollection))
-	return response, err
-}
-
-// GetListMentionsResult : Retrieve result of ListMentions operation
-func (assistant *AssistantV1) GetListMentionsResult(response *core.DetailedResponse) *EntityMentionCollection {
-	result, ok := response.Result.(*EntityMentionCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(EntityMentionCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*EntityMentionCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ListValues : List entity values
 // List the values for an entity.
 //
 // This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listValuesOptions, "listValuesOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (result *ValueCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listValuesOptions, "listValuesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listValuesOptions, "listValuesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listValuesOptions, "listValuesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values"}
 	pathParameters := []string{*listValuesOptions.WorkspaceID, *listValuesOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listValuesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1724,24 +1874,23 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 	if listValuesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listValuesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(ValueCollection))
-	return response, err
-}
-
-// GetListValuesResult : Retrieve result of ListValues operation
-func (assistant *AssistantV1) GetListValuesResult(response *core.DetailedResponse) *ValueCollection {
-	result, ok := response.Result.(*ValueCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(ValueCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ValueCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateValue : Create entity value
@@ -1751,19 +1900,24 @@ func (assistant *AssistantV1) GetListValuesResult(response *core.DetailedRespons
 // entity](#update-entity)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createValueOptions, "createValueOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions) (result *Value, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createValueOptions, "createValueOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createValueOptions, "createValueOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createValueOptions, "createValueOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values"}
 	pathParameters := []string{*createValueOptions.WorkspaceID, *createValueOptions.Entity}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1776,7 +1930,7 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if createValueOptions.Value != nil {
@@ -1794,45 +1948,50 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 	if createValueOptions.Patterns != nil {
 		body["patterns"] = createValueOptions.Patterns
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Value))
-	return response, err
-}
-
-// GetCreateValueResult : Retrieve result of CreateValue operation
-func (assistant *AssistantV1) GetCreateValueResult(response *core.DetailedResponse) *Value {
-	result, ok := response.Result.(*Value)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Value))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Value)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetValue : Get entity value
 // Get information about an entity value.
 //
 // This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getValueOptions, "getValueOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (result *Value, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getValueOptions, "getValueOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getValueOptions, "getValueOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getValueOptions, "getValueOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values"}
 	pathParameters := []string{*getValueOptions.WorkspaceID, *getValueOptions.Entity, *getValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1851,24 +2010,23 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (*core.
 	if getValueOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getValueOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Value))
-	return response, err
-}
-
-// GetGetValueResult : Retrieve result of GetValue operation
-func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse) *Value {
-	result, ok := response.Result.(*Value)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Value))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Value)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateValue : Update entity value
@@ -1879,19 +2037,24 @@ func (assistant *AssistantV1) GetGetValueResult(response *core.DetailedResponse)
 // entity](#update-entity)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateValueOptions, "updateValueOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions) (result *Value, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateValueOptions, "updateValueOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateValueOptions, "updateValueOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateValueOptions, "updateValueOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values"}
 	pathParameters := []string{*updateValueOptions.WorkspaceID, *updateValueOptions.Entity, *updateValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1904,7 +2067,7 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if updateValueOptions.NewValue != nil {
@@ -1922,45 +2085,50 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 	if updateValueOptions.NewPatterns != nil {
 		body["patterns"] = updateValueOptions.NewPatterns
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Value))
-	return response, err
-}
-
-// GetUpdateValueResult : Retrieve result of UpdateValue operation
-func (assistant *AssistantV1) GetUpdateValueResult(response *core.DetailedResponse) *Value {
-	result, ok := response.Result.(*Value)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Value))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Value)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteValue : Delete entity value
 // Delete a value from an entity.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteValueOptions, "deleteValueOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteValueOptions, "deleteValueOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteValueOptions, "deleteValueOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteValueOptions, "deleteValueOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values"}
 	pathParameters := []string{*deleteValueOptions.WorkspaceID, *deleteValueOptions.Entity, *deleteValueOptions.Value}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteValueOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -1972,34 +2140,40 @@ func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // ListSynonyms : List entity value synonyms
 // List the synonyms for an entity value.
 //
 // This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listSynonymsOptions, "listSynonymsOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOptions) (result *SynonymCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listSynonymsOptions, "listSynonymsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listSynonymsOptions, "listSynonymsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listSynonymsOptions, "listSynonymsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
 	pathParameters := []string{*listSynonymsOptions.WorkspaceID, *listSynonymsOptions.Entity, *listSynonymsOptions.Value}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listSynonymsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2024,24 +2198,23 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 	if listSynonymsOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listSynonymsOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(SynonymCollection))
-	return response, err
-}
-
-// GetListSynonymsResult : Retrieve result of ListSynonyms operation
-func (assistant *AssistantV1) GetListSynonymsResult(response *core.DetailedResponse) *SynonymCollection {
-	result, ok := response.Result.(*SynonymCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(SynonymCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*SynonymCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateSynonym : Create entity value synonym
@@ -2051,19 +2224,24 @@ func (assistant *AssistantV1) GetListSynonymsResult(response *core.DetailedRespo
 // entity](#update-entity)** or **[Update entity value](#update-entity-value)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createSynonymOptions, "createSynonymOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymOptions) (result *Synonym, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createSynonymOptions, "createSynonymOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createSynonymOptions, "createSynonymOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createSynonymOptions, "createSynonymOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
 	pathParameters := []string{*createSynonymOptions.WorkspaceID, *createSynonymOptions.Entity, *createSynonymOptions.Value}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2076,51 +2254,56 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if createSynonymOptions.Synonym != nil {
 		body["synonym"] = createSynonymOptions.Synonym
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Synonym))
-	return response, err
-}
-
-// GetCreateSynonymResult : Retrieve result of CreateSynonym operation
-func (assistant *AssistantV1) GetCreateSynonymResult(response *core.DetailedResponse) *Synonym {
-	result, ok := response.Result.(*Synonym)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Synonym))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Synonym)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetSynonym : Get entity value synonym
 // Get information about a synonym of an entity value.
 //
 // This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getSynonymOptions, "getSynonymOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (result *Synonym, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getSynonymOptions, "getSynonymOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getSynonymOptions, "getSynonymOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getSynonymOptions, "getSynonymOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
 	pathParameters := []string{*getSynonymOptions.WorkspaceID, *getSynonymOptions.Entity, *getSynonymOptions.Value, *getSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2136,24 +2319,23 @@ func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (
 	if getSynonymOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getSynonymOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Synonym))
-	return response, err
-}
-
-// GetGetSynonymResult : Retrieve result of GetSynonym operation
-func (assistant *AssistantV1) GetGetSynonymResult(response *core.DetailedResponse) *Synonym {
-	result, ok := response.Result.(*Synonym)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Synonym))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Synonym)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateSynonym : Update entity value synonym
@@ -2163,19 +2345,24 @@ func (assistant *AssistantV1) GetGetSynonymResult(response *core.DetailedRespons
 // entity](#update-entity)** or **[Update entity value](#update-entity-value)** method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateSynonymOptions, "updateSynonymOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions) (result *Synonym, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateSynonymOptions, "updateSynonymOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateSynonymOptions, "updateSynonymOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateSynonymOptions, "updateSynonymOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
 	pathParameters := []string{*updateSynonymOptions.WorkspaceID, *updateSynonymOptions.Entity, *updateSynonymOptions.Value, *updateSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2188,51 +2375,56 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if updateSynonymOptions.NewSynonym != nil {
 		body["synonym"] = updateSynonymOptions.NewSynonym
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(Synonym))
-	return response, err
-}
-
-// GetUpdateSynonymResult : Retrieve result of UpdateSynonym operation
-func (assistant *AssistantV1) GetUpdateSynonymResult(response *core.DetailedResponse) *Synonym {
-	result, ok := response.Result.(*Synonym)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(Synonym))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Synonym)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteSynonym : Delete entity value synonym
 // Delete a synonym from an entity value.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteSynonymOptions, "deleteSynonymOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteSynonymOptions, "deleteSynonymOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteSynonymOptions, "deleteSynonymOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteSynonymOptions, "deleteSynonymOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "entities", "values", "synonyms"}
 	pathParameters := []string{*deleteSynonymOptions.WorkspaceID, *deleteSynonymOptions.Entity, *deleteSynonymOptions.Value, *deleteSynonymOptions.Synonym}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteSynonymOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2244,34 +2436,40 @@ func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymO
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // ListDialogNodes : List dialog nodes
 // List the dialog nodes for a workspace.
 //
 // This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listDialogNodesOptions, "listDialogNodesOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) (result *DialogNodeCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listDialogNodesOptions, "listDialogNodesOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listDialogNodesOptions, "listDialogNodesOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listDialogNodesOptions, "listDialogNodesOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
 	pathParameters := []string{*listDialogNodesOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listDialogNodesOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2296,24 +2494,23 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 	if listDialogNodesOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*listDialogNodesOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(DialogNodeCollection))
-	return response, err
-}
-
-// GetListDialogNodesResult : Retrieve result of ListDialogNodes operation
-func (assistant *AssistantV1) GetListDialogNodesResult(response *core.DetailedResponse) *DialogNodeCollection {
-	result, ok := response.Result.(*DialogNodeCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(DialogNodeCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DialogNodeCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateDialogNode : Create dialog node
@@ -2323,19 +2520,24 @@ func (assistant *AssistantV1) GetListDialogNodesResult(response *core.DetailedRe
 // workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createDialogNodeOptions, "createDialogNodeOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions) (result *DialogNode, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createDialogNodeOptions, "createDialogNodeOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createDialogNodeOptions, "createDialogNodeOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createDialogNodeOptions, "createDialogNodeOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
 	pathParameters := []string{*createDialogNodeOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2348,7 +2550,7 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if createDialogNodeOptions.DialogNode != nil {
@@ -2405,45 +2607,50 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	if createDialogNodeOptions.UserLabel != nil {
 		body["user_label"] = createDialogNodeOptions.UserLabel
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(DialogNode))
-	return response, err
-}
-
-// GetCreateDialogNodeResult : Retrieve result of CreateDialogNode operation
-func (assistant *AssistantV1) GetCreateDialogNodeResult(response *core.DetailedResponse) *DialogNode {
-	result, ok := response.Result.(*DialogNode)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(DialogNode))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DialogNode)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetDialogNode : Get dialog node
 // Get information about a dialog node.
 //
 // This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getDialogNodeOptions, "getDialogNodeOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeOptions) (result *DialogNode, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getDialogNodeOptions, "getDialogNodeOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getDialogNodeOptions, "getDialogNodeOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getDialogNodeOptions, "getDialogNodeOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
 	pathParameters := []string{*getDialogNodeOptions.WorkspaceID, *getDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2459,24 +2666,23 @@ func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeO
 	if getDialogNodeOptions.IncludeAudit != nil {
 		builder.AddQuery("include_audit", fmt.Sprint(*getDialogNodeOptions.IncludeAudit))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(DialogNode))
-	return response, err
-}
-
-// GetGetDialogNodeResult : Retrieve result of GetDialogNode operation
-func (assistant *AssistantV1) GetGetDialogNodeResult(response *core.DetailedResponse) *DialogNode {
-	result, ok := response.Result.(*DialogNode)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(DialogNode))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DialogNode)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // UpdateDialogNode : Update dialog node
@@ -2486,19 +2692,24 @@ func (assistant *AssistantV1) GetGetDialogNodeResult(response *core.DetailedResp
 // workspace](#update-workspace)** method instead.
 //
 // This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(updateDialogNodeOptions, "updateDialogNodeOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions) (result *DialogNode, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateDialogNodeOptions, "updateDialogNodeOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(updateDialogNodeOptions, "updateDialogNodeOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(updateDialogNodeOptions, "updateDialogNodeOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
 	pathParameters := []string{*updateDialogNodeOptions.WorkspaceID, *updateDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range updateDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2511,7 +2722,7 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
 	if updateDialogNodeOptions.NewDialogNode != nil {
@@ -2568,45 +2779,50 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	if updateDialogNodeOptions.NewUserLabel != nil {
 		body["user_label"] = updateDialogNodeOptions.NewUserLabel
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(DialogNode))
-	return response, err
-}
-
-// GetUpdateDialogNodeResult : Retrieve result of UpdateDialogNode operation
-func (assistant *AssistantV1) GetUpdateDialogNodeResult(response *core.DetailedResponse) *DialogNode {
-	result, ok := response.Result.(*DialogNode)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(DialogNode))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*DialogNode)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteDialogNode : Delete dialog node
 // Delete a dialog node from a workspace.
 //
 // This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteDialogNodeOptions, "deleteDialogNodeOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteDialogNodeOptions, "deleteDialogNodeOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteDialogNodeOptions, "deleteDialogNodeOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteDialogNodeOptions, "deleteDialogNodeOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "dialog_nodes"}
 	pathParameters := []string{*deleteDialogNodeOptions.WorkspaceID, *deleteDialogNodeOptions.DialogNode}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteDialogNodeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2618,15 +2834,16 @@ func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDi
 	}
 
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // ListLogs : List log events in a workspace
@@ -2634,19 +2851,24 @@ func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDi
 //
 // If **cursor** is not specified, this operation is limited to 40 requests per 30 minutes. If **cursor** is specified,
 // the limit is 120 requests per minute. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listLogsOptions, "listLogsOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (result *LogCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listLogsOptions, "listLogsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listLogsOptions, "listLogsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listLogsOptions, "listLogsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/workspaces", "logs"}
 	pathParameters := []string{*listLogsOptions.WorkspaceID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2671,24 +2893,23 @@ func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (*core.
 	if listLogsOptions.Cursor != nil {
 		builder.AddQuery("cursor", fmt.Sprint(*listLogsOptions.Cursor))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(LogCollection))
-	return response, err
-}
-
-// GetListLogsResult : Retrieve result of ListLogs operation
-func (assistant *AssistantV1) GetListLogsResult(response *core.DetailedResponse) *LogCollection {
-	result, ok := response.Result.(*LogCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(LogCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*LogCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ListAllLogs : List log events in all workspaces
@@ -2696,19 +2917,24 @@ func (assistant *AssistantV1) GetListLogsResult(response *core.DetailedResponse)
 //
 // If **cursor** is not specified, this operation is limited to 40 requests per 30 minutes. If **cursor** is specified,
 // the limit is 120 requests per minute. For more information, see **Rate limiting**.
-func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(listAllLogsOptions, "listAllLogsOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions) (result *LogCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listAllLogsOptions, "listAllLogsOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(listAllLogsOptions, "listAllLogsOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(listAllLogsOptions, "listAllLogsOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/logs"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listAllLogsOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2731,24 +2957,23 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 	if listAllLogsOptions.Cursor != nil {
 		builder.AddQuery("cursor", fmt.Sprint(*listAllLogsOptions.Cursor))
 	}
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, new(LogCollection))
-	return response, err
-}
-
-// GetListAllLogsResult : Retrieve result of ListAllLogs operation
-func (assistant *AssistantV1) GetListAllLogsResult(response *core.DetailedResponse) *LogCollection {
-	result, ok := response.Result.(*LogCollection)
-	if ok {
-		return result
+	response, err = assistant.Service.Request(request, new(LogCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*LogCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteUserData : Delete labeled data
@@ -2758,19 +2983,24 @@ func (assistant *AssistantV1) GetListAllLogsResult(response *core.DetailedRespon
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
 // security](https://cloud.ibm.com/docs/services/assistant?topic=assistant-information-security#information-security).
-func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil"); err != nil {
-		return nil, err
+func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/user_data"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteUserDataOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -2784,15 +3014,16 @@ func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
-	builder.AddQuery("version", assistant.Service.Options.Version)
+	builder.AddQuery("version", assistant.Version)
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := assistant.Service.Request(request, nil)
-	return response, err
+	response, err = assistant.Service.Request(request, nil)
+
+	return
 }
 
 // CaptureGroup : A recognized capture group for a pattern-based entity.
@@ -2810,42 +3041,42 @@ type Context map[string]interface{}
 
 // SetConversationID : Allow user to set ConversationID
 func (this *Context) SetConversationID(ConversationID *string) {
-   (*this)["conversation_id"] = ConversationID
+	(*this)["conversation_id"] = ConversationID
 }
 
 // GetConversationID : Allow user to get ConversationID
 func (this *Context) GetConversationID() *string {
-   return (*this)["conversation_id"].(*string)
+	return (*this)["conversation_id"].(*string)
 }
 
 // SetSystem : Allow user to set System
 func (this *Context) SetSystem(System *SystemResponse) {
-   (*this)["system"] = System
+	(*this)["system"] = System
 }
 
 // GetSystem : Allow user to get System
 func (this *Context) GetSystem() *SystemResponse {
-   return (*this)["system"].(*SystemResponse)
+	return (*this)["system"].(*SystemResponse)
 }
 
 // SetMetadata : Allow user to set Metadata
 func (this *Context) SetMetadata(Metadata *MessageContextMetadata) {
-   (*this)["metadata"] = Metadata
+	(*this)["metadata"] = Metadata
 }
 
 // GetMetadata : Allow user to get Metadata
 func (this *Context) GetMetadata() *MessageContextMetadata {
-   return (*this)["metadata"].(*MessageContextMetadata)
+	return (*this)["metadata"].(*MessageContextMetadata)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *Context) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *Context) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // Counterexample : Counterexample struct
@@ -2892,7 +3123,7 @@ type CreateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
 	return &CreateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -2985,57 +3216,57 @@ type CreateDialogNodeOptions struct {
 // Constants associated with the CreateDialogNodeOptions.Type property.
 // How the dialog node is processed.
 const (
-	CreateDialogNodeOptions_Type_EventHandler = "event_handler"
-	CreateDialogNodeOptions_Type_Folder = "folder"
-	CreateDialogNodeOptions_Type_Frame = "frame"
+	CreateDialogNodeOptions_Type_EventHandler      = "event_handler"
+	CreateDialogNodeOptions_Type_Folder            = "folder"
+	CreateDialogNodeOptions_Type_Frame             = "frame"
 	CreateDialogNodeOptions_Type_ResponseCondition = "response_condition"
-	CreateDialogNodeOptions_Type_Slot = "slot"
-	CreateDialogNodeOptions_Type_Standard = "standard"
+	CreateDialogNodeOptions_Type_Slot              = "slot"
+	CreateDialogNodeOptions_Type_Standard          = "standard"
 )
 
 // Constants associated with the CreateDialogNodeOptions.EventName property.
 // How an `event_handler` node is processed.
 const (
-	CreateDialogNodeOptions_EventName_DigressionReturnPrompt = "digression_return_prompt"
-	CreateDialogNodeOptions_EventName_Filled = "filled"
-	CreateDialogNodeOptions_EventName_FilledMultiple = "filled_multiple"
-	CreateDialogNodeOptions_EventName_Focus = "focus"
-	CreateDialogNodeOptions_EventName_Generic = "generic"
-	CreateDialogNodeOptions_EventName_Input = "input"
-	CreateDialogNodeOptions_EventName_Nomatch = "nomatch"
+	CreateDialogNodeOptions_EventName_DigressionReturnPrompt   = "digression_return_prompt"
+	CreateDialogNodeOptions_EventName_Filled                   = "filled"
+	CreateDialogNodeOptions_EventName_FilledMultiple           = "filled_multiple"
+	CreateDialogNodeOptions_EventName_Focus                    = "focus"
+	CreateDialogNodeOptions_EventName_Generic                  = "generic"
+	CreateDialogNodeOptions_EventName_Input                    = "input"
+	CreateDialogNodeOptions_EventName_Nomatch                  = "nomatch"
 	CreateDialogNodeOptions_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	CreateDialogNodeOptions_EventName_Validate = "validate"
+	CreateDialogNodeOptions_EventName_Validate                 = "validate"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	CreateDialogNodeOptions_DigressIn_DoesNotReturn = "does_not_return"
-	CreateDialogNodeOptions_DigressIn_NotAvailable = "not_available"
-	CreateDialogNodeOptions_DigressIn_Returns = "returns"
+	CreateDialogNodeOptions_DigressIn_NotAvailable  = "not_available"
+	CreateDialogNodeOptions_DigressIn_Returns       = "returns"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	CreateDialogNodeOptions_DigressOut_AllowAll = "allow_all"
+	CreateDialogNodeOptions_DigressOut_AllowAll            = "allow_all"
 	CreateDialogNodeOptions_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	CreateDialogNodeOptions_DigressOut_AllowReturning = "allow_returning"
+	CreateDialogNodeOptions_DigressOut_AllowReturning      = "allow_returning"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	CreateDialogNodeOptions_DigressOutSlots_AllowAll = "allow_all"
+	CreateDialogNodeOptions_DigressOutSlots_AllowAll       = "allow_all"
 	CreateDialogNodeOptions_DigressOutSlots_AllowReturning = "allow_returning"
-	CreateDialogNodeOptions_DigressOutSlots_NotAllowed = "not_allowed"
+	CreateDialogNodeOptions_DigressOutSlots_NotAllowed     = "not_allowed"
 )
 
 // NewCreateDialogNodeOptions : Instantiate CreateDialogNodeOptions
 func (assistant *AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -3219,7 +3450,7 @@ type CreateEntityOptions struct {
 func (assistant *AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
 	return &CreateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -3290,8 +3521,8 @@ type CreateExampleOptions struct {
 func (assistant *AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
 	return &CreateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3371,7 +3602,7 @@ type CreateIntentOptions struct {
 func (assistant *AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
 	return &CreateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -3430,9 +3661,9 @@ type CreateSynonymOptions struct {
 func (assistant *AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
 	return &CreateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -3551,8 +3782,8 @@ const (
 func (assistant *AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -3730,7 +3961,7 @@ type DeleteCounterexampleOptions struct {
 func (assistant *AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
 	return &DeleteCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3769,7 +4000,7 @@ type DeleteDialogNodeOptions struct {
 func (assistant *AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
 	return &DeleteDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -3808,7 +4039,7 @@ type DeleteEntityOptions struct {
 func (assistant *AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
 	return &DeleteEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -3850,8 +4081,8 @@ type DeleteExampleOptions struct {
 func (assistant *AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
 	return &DeleteExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -3896,7 +4127,7 @@ type DeleteIntentOptions struct {
 func (assistant *AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
 	return &DeleteIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -3941,9 +4172,9 @@ type DeleteSynonymOptions struct {
 func (assistant *AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
 	return &DeleteSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -4026,8 +4257,8 @@ type DeleteValueOptions struct {
 func (assistant *AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
 	return &DeleteValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -4158,50 +4389,50 @@ type DialogNode struct {
 // Constants associated with the DialogNode.Type property.
 // How the dialog node is processed.
 const (
-	DialogNode_Type_EventHandler = "event_handler"
-	DialogNode_Type_Folder = "folder"
-	DialogNode_Type_Frame = "frame"
+	DialogNode_Type_EventHandler      = "event_handler"
+	DialogNode_Type_Folder            = "folder"
+	DialogNode_Type_Frame             = "frame"
 	DialogNode_Type_ResponseCondition = "response_condition"
-	DialogNode_Type_Slot = "slot"
-	DialogNode_Type_Standard = "standard"
+	DialogNode_Type_Slot              = "slot"
+	DialogNode_Type_Standard          = "standard"
 )
 
 // Constants associated with the DialogNode.EventName property.
 // How an `event_handler` node is processed.
 const (
-	DialogNode_EventName_DigressionReturnPrompt = "digression_return_prompt"
-	DialogNode_EventName_Filled = "filled"
-	DialogNode_EventName_FilledMultiple = "filled_multiple"
-	DialogNode_EventName_Focus = "focus"
-	DialogNode_EventName_Generic = "generic"
-	DialogNode_EventName_Input = "input"
-	DialogNode_EventName_Nomatch = "nomatch"
+	DialogNode_EventName_DigressionReturnPrompt   = "digression_return_prompt"
+	DialogNode_EventName_Filled                   = "filled"
+	DialogNode_EventName_FilledMultiple           = "filled_multiple"
+	DialogNode_EventName_Focus                    = "focus"
+	DialogNode_EventName_Generic                  = "generic"
+	DialogNode_EventName_Input                    = "input"
+	DialogNode_EventName_Nomatch                  = "nomatch"
 	DialogNode_EventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	DialogNode_EventName_Validate = "validate"
+	DialogNode_EventName_Validate                 = "validate"
 )
 
 // Constants associated with the DialogNode.DigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	DialogNode_DigressIn_DoesNotReturn = "does_not_return"
-	DialogNode_DigressIn_NotAvailable = "not_available"
-	DialogNode_DigressIn_Returns = "returns"
+	DialogNode_DigressIn_NotAvailable  = "not_available"
+	DialogNode_DigressIn_Returns       = "returns"
 )
 
 // Constants associated with the DialogNode.DigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	DialogNode_DigressOut_AllowAll = "allow_all"
+	DialogNode_DigressOut_AllowAll            = "allow_all"
 	DialogNode_DigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	DialogNode_DigressOut_AllowReturning = "allow_returning"
+	DialogNode_DigressOut_AllowReturning      = "allow_returning"
 )
 
 // Constants associated with the DialogNode.DigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	DialogNode_DigressOutSlots_AllowAll = "allow_all"
+	DialogNode_DigressOutSlots_AllowAll       = "allow_all"
 	DialogNode_DigressOutSlots_AllowReturning = "allow_returning"
-	DialogNode_DigressOutSlots_NotAllowed = "not_allowed"
+	DialogNode_DigressOutSlots_NotAllowed     = "not_allowed"
 )
 
 // DialogNodeAction : DialogNodeAction struct
@@ -4226,10 +4457,10 @@ type DialogNodeAction struct {
 // Constants associated with the DialogNodeAction.Type property.
 // The type of action to invoke.
 const (
-	DialogNodeAction_Type_Client = "client"
+	DialogNodeAction_Type_Client        = "client"
 	DialogNodeAction_Type_CloudFunction = "cloud_function"
-	DialogNodeAction_Type_Server = "server"
-	DialogNodeAction_Type_WebAction = "web_action"
+	DialogNodeAction_Type_Server        = "server"
+	DialogNodeAction_Type_WebAction     = "web_action"
 )
 
 // DialogNodeCollection : An array of dialog nodes.
@@ -4294,19 +4525,19 @@ type DialogNodeNextStep struct {
 //     - `skip_all_slots`
 //      If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
 const (
-	DialogNodeNextStep_Behavior_GetUserInput = "get_user_input"
-	DialogNodeNextStep_Behavior_JumpTo = "jump_to"
-	DialogNodeNextStep_Behavior_Reprompt = "reprompt"
-	DialogNodeNextStep_Behavior_SkipAllSlots = "skip_all_slots"
-	DialogNodeNextStep_Behavior_SkipSlot = "skip_slot"
+	DialogNodeNextStep_Behavior_GetUserInput  = "get_user_input"
+	DialogNodeNextStep_Behavior_JumpTo        = "jump_to"
+	DialogNodeNextStep_Behavior_Reprompt      = "reprompt"
+	DialogNodeNextStep_Behavior_SkipAllSlots  = "skip_all_slots"
+	DialogNodeNextStep_Behavior_SkipSlot      = "skip_slot"
 	DialogNodeNextStep_Behavior_SkipUserInput = "skip_user_input"
 )
 
 // Constants associated with the DialogNodeNextStep.Selector property.
 // Which part of the dialog node to process next.
 const (
-	DialogNodeNextStep_Selector_Body = "body"
-	DialogNodeNextStep_Selector_Client = "client"
+	DialogNodeNextStep_Selector_Body      = "body"
+	DialogNodeNextStep_Selector_Client    = "client"
 	DialogNodeNextStep_Selector_Condition = "condition"
 	DialogNodeNextStep_Selector_UserInput = "user_input"
 )
@@ -4317,32 +4548,32 @@ type DialogNodeOutput map[string]interface{}
 
 // SetGeneric : Allow user to set Generic
 func (this *DialogNodeOutput) SetGeneric(Generic *[]DialogNodeOutputGeneric) {
-   (*this)["generic"] = Generic
+	(*this)["generic"] = Generic
 }
 
 // GetGeneric : Allow user to get Generic
 func (this *DialogNodeOutput) GetGeneric() *[]DialogNodeOutputGeneric {
-   return (*this)["generic"].(*[]DialogNodeOutputGeneric)
+	return (*this)["generic"].(*[]DialogNodeOutputGeneric)
 }
 
 // SetModifiers : Allow user to set Modifiers
 func (this *DialogNodeOutput) SetModifiers(Modifiers *DialogNodeOutputModifiers) {
-   (*this)["modifiers"] = Modifiers
+	(*this)["modifiers"] = Modifiers
 }
 
 // GetModifiers : Allow user to get Modifiers
 func (this *DialogNodeOutput) GetModifiers() *DialogNodeOutputModifiers {
-   return (*this)["modifiers"].(*DialogNodeOutputModifiers)
+	return (*this)["modifiers"].(*DialogNodeOutputModifiers)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *DialogNodeOutput) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *DialogNodeOutput) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // DialogNodeOutputGeneric : DialogNodeOutputGeneric struct
@@ -4418,26 +4649,26 @@ type DialogNodeOutputGeneric struct {
 // runtime API.
 const (
 	DialogNodeOutputGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	DialogNodeOutputGeneric_ResponseType_Image = "image"
-	DialogNodeOutputGeneric_ResponseType_Option = "option"
-	DialogNodeOutputGeneric_ResponseType_Pause = "pause"
-	DialogNodeOutputGeneric_ResponseType_SearchSkill = "search_skill"
-	DialogNodeOutputGeneric_ResponseType_Text = "text"
+	DialogNodeOutputGeneric_ResponseType_Image          = "image"
+	DialogNodeOutputGeneric_ResponseType_Option         = "option"
+	DialogNodeOutputGeneric_ResponseType_Pause          = "pause"
+	DialogNodeOutputGeneric_ResponseType_SearchSkill    = "search_skill"
+	DialogNodeOutputGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the DialogNodeOutputGeneric.SelectionPolicy property.
 // How a response is selected from the list, if more than one response is specified. Valid only when
 // **response_type**=`text`.
 const (
-	DialogNodeOutputGeneric_SelectionPolicy_Multiline = "multiline"
-	DialogNodeOutputGeneric_SelectionPolicy_Random = "random"
+	DialogNodeOutputGeneric_SelectionPolicy_Multiline  = "multiline"
+	DialogNodeOutputGeneric_SelectionPolicy_Random     = "random"
 	DialogNodeOutputGeneric_SelectionPolicy_Sequential = "sequential"
 )
 
 // Constants associated with the DialogNodeOutputGeneric.Preference property.
 // The preferred type of control to display, if supported by the channel. Valid only when **response_type**=`option`.
 const (
-	DialogNodeOutputGeneric_Preference_Button = "button"
+	DialogNodeOutputGeneric_Preference_Button   = "button"
 	DialogNodeOutputGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -4445,7 +4676,7 @@ const (
 // The type of the search query. Required when **response_type**=`search_skill`.
 const (
 	DialogNodeOutputGeneric_QueryType_DiscoveryQueryLanguage = "discovery_query_language"
-	DialogNodeOutputGeneric_QueryType_NaturalLanguage = "natural_language"
+	DialogNodeOutputGeneric_QueryType_NaturalLanguage        = "natural_language"
 )
 
 // DialogNodeOutputModifiers : Options that modify how specified output is handled.
@@ -4534,52 +4765,52 @@ type DialogSuggestionOutput map[string]interface{}
 
 // SetNodesVisited : Allow user to set NodesVisited
 func (this *DialogSuggestionOutput) SetNodesVisited(NodesVisited *[]string) {
-   (*this)["nodes_visited"] = NodesVisited
+	(*this)["nodes_visited"] = NodesVisited
 }
 
 // GetNodesVisited : Allow user to get NodesVisited
 func (this *DialogSuggestionOutput) GetNodesVisited() *[]string {
-   return (*this)["nodes_visited"].(*[]string)
+	return (*this)["nodes_visited"].(*[]string)
 }
 
 // SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
 func (this *DialogSuggestionOutput) SetNodesVisitedDetails(NodesVisitedDetails *[]DialogNodeVisitedDetails) {
-   (*this)["nodes_visited_details"] = NodesVisitedDetails
+	(*this)["nodes_visited_details"] = NodesVisitedDetails
 }
 
 // GetNodesVisitedDetails : Allow user to get NodesVisitedDetails
 func (this *DialogSuggestionOutput) GetNodesVisitedDetails() *[]DialogNodeVisitedDetails {
-   return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
+	return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
 }
 
 // SetText : Allow user to set Text
 func (this *DialogSuggestionOutput) SetText(Text *[]string) {
-   (*this)["text"] = Text
+	(*this)["text"] = Text
 }
 
 // GetText : Allow user to get Text
 func (this *DialogSuggestionOutput) GetText() *[]string {
-   return (*this)["text"].(*[]string)
+	return (*this)["text"].(*[]string)
 }
 
 // SetGeneric : Allow user to set Generic
 func (this *DialogSuggestionOutput) SetGeneric(Generic *[]DialogSuggestionResponseGeneric) {
-   (*this)["generic"] = Generic
+	(*this)["generic"] = Generic
 }
 
 // GetGeneric : Allow user to get Generic
 func (this *DialogSuggestionOutput) GetGeneric() *[]DialogSuggestionResponseGeneric {
-   return (*this)["generic"].(*[]DialogSuggestionResponseGeneric)
+	return (*this)["generic"].(*[]DialogSuggestionResponseGeneric)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *DialogSuggestionOutput) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *DialogSuggestionOutput) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // DialogSuggestionResponseGeneric : DialogSuggestionResponseGeneric struct
@@ -4637,17 +4868,17 @@ type DialogSuggestionResponseGeneric struct {
 // by the v2 runtime API.
 const (
 	DialogSuggestionResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	DialogSuggestionResponseGeneric_ResponseType_Image = "image"
-	DialogSuggestionResponseGeneric_ResponseType_Option = "option"
-	DialogSuggestionResponseGeneric_ResponseType_Pause = "pause"
-	DialogSuggestionResponseGeneric_ResponseType_SearchSkill = "search_skill"
-	DialogSuggestionResponseGeneric_ResponseType_Text = "text"
+	DialogSuggestionResponseGeneric_ResponseType_Image          = "image"
+	DialogSuggestionResponseGeneric_ResponseType_Option         = "option"
+	DialogSuggestionResponseGeneric_ResponseType_Pause          = "pause"
+	DialogSuggestionResponseGeneric_ResponseType_SearchSkill    = "search_skill"
+	DialogSuggestionResponseGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the DialogSuggestionResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	DialogSuggestionResponseGeneric_Preference_Button = "button"
+	DialogSuggestionResponseGeneric_Preference_Button   = "button"
 	DialogSuggestionResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -4774,7 +5005,7 @@ type GetCounterexampleOptions struct {
 func (assistant *AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
 	return &GetCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4822,7 +5053,7 @@ type GetDialogNodeOptions struct {
 func (assistant *AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
 	return &GetDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -4874,7 +5105,7 @@ type GetEntityOptions struct {
 func (assistant *AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
 	return &GetEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -4931,8 +5162,8 @@ type GetExampleOptions struct {
 func (assistant *AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
 	return &GetExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4990,7 +5221,7 @@ type GetIntentOptions struct {
 func (assistant *AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
 	return &GetIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -5050,9 +5281,9 @@ type GetSynonymOptions struct {
 func (assistant *AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
 	return &GetSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -5119,8 +5350,8 @@ type GetValueOptions struct {
 func (assistant *AssistantV1) NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
 	return &GetValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -5343,7 +5574,7 @@ type ListCounterexamplesOptions struct {
 // The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
 // minus sign (`-`).
 const (
-	ListCounterexamplesOptions_Sort_Text = "text"
+	ListCounterexamplesOptions_Sort_Text    = "text"
 	ListCounterexamplesOptions_Sort_Updated = "updated"
 )
 
@@ -5418,7 +5649,7 @@ type ListDialogNodesOptions struct {
 // sign (`-`).
 const (
 	ListDialogNodesOptions_Sort_DialogNode = "dialog_node"
-	ListDialogNodesOptions_Sort_Updated = "updated"
+	ListDialogNodesOptions_Sort_Updated    = "updated"
 )
 
 // NewListDialogNodesOptions : Instantiate ListDialogNodesOptions
@@ -5495,7 +5726,7 @@ type ListEntitiesOptions struct {
 // The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListEntitiesOptions_Sort_Entity = "entity"
+	ListEntitiesOptions_Sort_Entity  = "entity"
 	ListEntitiesOptions_Sort_Updated = "updated"
 )
 
@@ -5578,7 +5809,7 @@ type ListExamplesOptions struct {
 // The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListExamplesOptions_Sort_Text = "text"
+	ListExamplesOptions_Sort_Text    = "text"
 	ListExamplesOptions_Sort_Updated = "updated"
 )
 
@@ -5586,7 +5817,7 @@ const (
 func (assistant *AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
 	return &ListExamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -5663,7 +5894,7 @@ type ListIntentsOptions struct {
 // The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus sign
 // (`-`).
 const (
-	ListIntentsOptions_Sort_Intent = "intent"
+	ListIntentsOptions_Sort_Intent  = "intent"
 	ListIntentsOptions_Sort_Updated = "updated"
 )
 
@@ -5807,7 +6038,7 @@ type ListMentionsOptions struct {
 func (assistant *AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
 	return &ListMentionsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -5882,8 +6113,8 @@ const (
 func (assistant *AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
 	return &ListSynonymsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -5970,14 +6201,14 @@ type ListValuesOptions struct {
 // minus sign (`-`).
 const (
 	ListValuesOptions_Sort_Updated = "updated"
-	ListValuesOptions_Sort_Value = "value"
+	ListValuesOptions_Sort_Value   = "value"
 )
 
 // NewListValuesOptions : Instantiate ListValuesOptions
 func (assistant *AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
 	return &ListValuesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -6053,7 +6284,7 @@ type ListWorkspacesOptions struct {
 // The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListWorkspacesOptions_Sort_Name = "name"
+	ListWorkspacesOptions_Sort_Name    = "name"
 	ListWorkspacesOptions_Sort_Updated = "updated"
 )
 
@@ -6141,8 +6372,8 @@ type LogMessage struct {
 // The severity of the log message.
 const (
 	LogMessage_Level_Error = "error"
-	LogMessage_Level_Info = "info"
-	LogMessage_Level_Warn = "warn"
+	LogMessage_Level_Info  = "info"
+	LogMessage_Level_Warn  = "warn"
 )
 
 // LogPagination : The pagination data for the returned objects.
@@ -6187,22 +6418,22 @@ type MessageInput map[string]interface{}
 
 // SetText : Allow user to set Text
 func (this *MessageInput) SetText(Text *string) {
-   (*this)["text"] = Text
+	(*this)["text"] = Text
 }
 
 // GetText : Allow user to get Text
 func (this *MessageInput) GetText() *string {
-   return (*this)["text"].(*string)
+	return (*this)["text"].(*string)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *MessageInput) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *MessageInput) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // MessageOptions : The Message options.
@@ -6361,62 +6592,62 @@ type OutputData map[string]interface{}
 
 // SetNodesVisited : Allow user to set NodesVisited
 func (this *OutputData) SetNodesVisited(NodesVisited *[]string) {
-   (*this)["nodes_visited"] = NodesVisited
+	(*this)["nodes_visited"] = NodesVisited
 }
 
 // GetNodesVisited : Allow user to get NodesVisited
 func (this *OutputData) GetNodesVisited() *[]string {
-   return (*this)["nodes_visited"].(*[]string)
+	return (*this)["nodes_visited"].(*[]string)
 }
 
 // SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
 func (this *OutputData) SetNodesVisitedDetails(NodesVisitedDetails *[]DialogNodeVisitedDetails) {
-   (*this)["nodes_visited_details"] = NodesVisitedDetails
+	(*this)["nodes_visited_details"] = NodesVisitedDetails
 }
 
 // GetNodesVisitedDetails : Allow user to get NodesVisitedDetails
 func (this *OutputData) GetNodesVisitedDetails() *[]DialogNodeVisitedDetails {
-   return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
+	return (*this)["nodes_visited_details"].(*[]DialogNodeVisitedDetails)
 }
 
 // SetLogMessages : Allow user to set LogMessages
 func (this *OutputData) SetLogMessages(LogMessages *[]LogMessage) {
-   (*this)["log_messages"] = LogMessages
+	(*this)["log_messages"] = LogMessages
 }
 
 // GetLogMessages : Allow user to get LogMessages
 func (this *OutputData) GetLogMessages() *[]LogMessage {
-   return (*this)["log_messages"].(*[]LogMessage)
+	return (*this)["log_messages"].(*[]LogMessage)
 }
 
 // SetText : Allow user to set Text
 func (this *OutputData) SetText(Text *[]string) {
-   (*this)["text"] = Text
+	(*this)["text"] = Text
 }
 
 // GetText : Allow user to get Text
 func (this *OutputData) GetText() *[]string {
-   return (*this)["text"].(*[]string)
+	return (*this)["text"].(*[]string)
 }
 
 // SetGeneric : Allow user to set Generic
 func (this *OutputData) SetGeneric(Generic *[]RuntimeResponseGeneric) {
-   (*this)["generic"] = Generic
+	(*this)["generic"] = Generic
 }
 
 // GetGeneric : Allow user to get Generic
 func (this *OutputData) GetGeneric() *[]RuntimeResponseGeneric {
-   return (*this)["generic"].(*[]RuntimeResponseGeneric)
+	return (*this)["generic"].(*[]RuntimeResponseGeneric)
 }
 
 // SetProperty : Allow user to set arbitrary property
 func (this *OutputData) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *OutputData) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // Pagination : The pagination data for the returned objects.
@@ -6533,17 +6764,17 @@ type RuntimeResponseGeneric struct {
 // and Premium users.
 const (
 	RuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
-	RuntimeResponseGeneric_ResponseType_Image = "image"
-	RuntimeResponseGeneric_ResponseType_Option = "option"
-	RuntimeResponseGeneric_ResponseType_Pause = "pause"
-	RuntimeResponseGeneric_ResponseType_Suggestion = "suggestion"
-	RuntimeResponseGeneric_ResponseType_Text = "text"
+	RuntimeResponseGeneric_ResponseType_Image          = "image"
+	RuntimeResponseGeneric_ResponseType_Option         = "option"
+	RuntimeResponseGeneric_ResponseType_Pause          = "pause"
+	RuntimeResponseGeneric_ResponseType_Suggestion     = "suggestion"
+	RuntimeResponseGeneric_ResponseType_Text           = "text"
 )
 
 // Constants associated with the RuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	RuntimeResponseGeneric_Preference_Button = "button"
+	RuntimeResponseGeneric_Preference_Button   = "button"
 	RuntimeResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
@@ -6577,12 +6808,12 @@ type SystemResponse map[string]interface{}
 
 // SetProperty : Allow user to set arbitrary property
 func (this *SystemResponse) SetProperty(Key string, Value *interface{}) {
-   (*this)[Key] = Value
+	(*this)[Key] = Value
 }
 
 // GetProperty : Allow user to get arbitrary property
 func (this *SystemResponse) GetProperty(Key string) *interface{} {
-   return (*this)[Key].(*interface{})
+	return (*this)[Key].(*interface{})
 }
 
 // UpdateCounterexampleOptions : The UpdateCounterexample options.
@@ -6607,7 +6838,7 @@ type UpdateCounterexampleOptions struct {
 func (assistant *AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
 	return &UpdateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -6709,57 +6940,57 @@ type UpdateDialogNodeOptions struct {
 // Constants associated with the UpdateDialogNodeOptions.NewType property.
 // How the dialog node is processed.
 const (
-	UpdateDialogNodeOptions_NewType_EventHandler = "event_handler"
-	UpdateDialogNodeOptions_NewType_Folder = "folder"
-	UpdateDialogNodeOptions_NewType_Frame = "frame"
+	UpdateDialogNodeOptions_NewType_EventHandler      = "event_handler"
+	UpdateDialogNodeOptions_NewType_Folder            = "folder"
+	UpdateDialogNodeOptions_NewType_Frame             = "frame"
 	UpdateDialogNodeOptions_NewType_ResponseCondition = "response_condition"
-	UpdateDialogNodeOptions_NewType_Slot = "slot"
-	UpdateDialogNodeOptions_NewType_Standard = "standard"
+	UpdateDialogNodeOptions_NewType_Slot              = "slot"
+	UpdateDialogNodeOptions_NewType_Standard          = "standard"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewEventName property.
 // How an `event_handler` node is processed.
 const (
-	UpdateDialogNodeOptions_NewEventName_DigressionReturnPrompt = "digression_return_prompt"
-	UpdateDialogNodeOptions_NewEventName_Filled = "filled"
-	UpdateDialogNodeOptions_NewEventName_FilledMultiple = "filled_multiple"
-	UpdateDialogNodeOptions_NewEventName_Focus = "focus"
-	UpdateDialogNodeOptions_NewEventName_Generic = "generic"
-	UpdateDialogNodeOptions_NewEventName_Input = "input"
-	UpdateDialogNodeOptions_NewEventName_Nomatch = "nomatch"
+	UpdateDialogNodeOptions_NewEventName_DigressionReturnPrompt   = "digression_return_prompt"
+	UpdateDialogNodeOptions_NewEventName_Filled                   = "filled"
+	UpdateDialogNodeOptions_NewEventName_FilledMultiple           = "filled_multiple"
+	UpdateDialogNodeOptions_NewEventName_Focus                    = "focus"
+	UpdateDialogNodeOptions_NewEventName_Generic                  = "generic"
+	UpdateDialogNodeOptions_NewEventName_Input                    = "input"
+	UpdateDialogNodeOptions_NewEventName_Nomatch                  = "nomatch"
 	UpdateDialogNodeOptions_NewEventName_NomatchResponsesDepleted = "nomatch_responses_depleted"
-	UpdateDialogNodeOptions_NewEventName_Validate = "validate"
+	UpdateDialogNodeOptions_NewEventName_Validate                 = "validate"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	UpdateDialogNodeOptions_NewDigressIn_DoesNotReturn = "does_not_return"
-	UpdateDialogNodeOptions_NewDigressIn_NotAvailable = "not_available"
-	UpdateDialogNodeOptions_NewDigressIn_Returns = "returns"
+	UpdateDialogNodeOptions_NewDigressIn_NotAvailable  = "not_available"
+	UpdateDialogNodeOptions_NewDigressIn_Returns       = "returns"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	UpdateDialogNodeOptions_NewDigressOut_AllowAll = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOut_AllowAll            = "allow_all"
 	UpdateDialogNodeOptions_NewDigressOut_AllowAllNeverReturn = "allow_all_never_return"
-	UpdateDialogNodeOptions_NewDigressOut_AllowReturning = "allow_returning"
+	UpdateDialogNodeOptions_NewDigressOut_AllowReturning      = "allow_returning"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll = "allow_all"
+	UpdateDialogNodeOptions_NewDigressOutSlots_AllowAll       = "allow_all"
 	UpdateDialogNodeOptions_NewDigressOutSlots_AllowReturning = "allow_returning"
-	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed = "not_allowed"
+	UpdateDialogNodeOptions_NewDigressOutSlots_NotAllowed     = "not_allowed"
 )
 
 // NewUpdateDialogNodeOptions : Instantiate UpdateDialogNodeOptions
 func (assistant *AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -6923,7 +7154,7 @@ type UpdateEntityOptions struct {
 func (assistant *AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
 	return &UpdateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -7003,8 +7234,8 @@ type UpdateExampleOptions struct {
 func (assistant *AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
 	return &UpdateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -7072,7 +7303,7 @@ type UpdateIntentOptions struct {
 func (assistant *AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
 	return &UpdateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -7140,9 +7371,9 @@ type UpdateSynonymOptions struct {
 func (assistant *AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
 	return &UpdateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -7231,8 +7462,8 @@ const (
 func (assistant *AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -7524,10 +7755,10 @@ type Workspace struct {
 // Constants associated with the Workspace.Status property.
 // The current status of the workspace.
 const (
-	Workspace_Status_Available = "Available"
-	Workspace_Status_Failed = "Failed"
+	Workspace_Status_Available   = "Available"
+	Workspace_Status_Failed      = "Failed"
 	Workspace_Status_NonExistent = "Non Existent"
-	Workspace_Status_Training = "Training"
+	Workspace_Status_Training    = "Training"
 	Workspace_Status_Unavailable = "Unavailable"
 )
 

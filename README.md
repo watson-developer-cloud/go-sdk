@@ -19,10 +19,12 @@ Go client library to quickly get started with the various [Watson APIs](https://
 * [Use](#use)
 * [Configuring the HTTP Client](#configuring-the-http-client)
 * [Disable SSL certificate verification](#disable-ssl-certificate-verification)
+* [Set Service URL](#set-service-url)
 * [IBM Cloud Pak for Data(ICP4D)](#ibm-cloud-pak-for-data(icp4d))
 * [Examples](#examples)
 * [Tests](#tests)
 * [Contributing](#contributing)
+* [Migrating](#migrating)
 * [License](#license)
 * [Featured Projects](#featured-projects)
 
@@ -65,21 +67,21 @@ On this page, you should be able to see your credentials for accessing your serv
 
 There are two ways to supply the credentials you found above to the SDK for authentication.
 
-#### Credential file (easier!)
+#### Credential file
 
 With a credential file, you just need to put the file in the right place and the SDK will do the work of parsing and authenticating. You can get this file by clicking the **Download** button for the credentials in the **Manage** tab of your service instance.
 
 The file downloaded will be called `ibm-credentials.env`. This is the name the SDK will search for and **must** be preserved unless you want to configure the file path (more on that later). The SDK will look for your `ibm-credentials.env` file in the following places (in order):
 
-- Your system's home directory
 - The top-level directory of the project you're using the SDK in
+- Your system's home directory
 
 As long as you set that up correctly, you don't have to worry about setting any authentication options in your code. So, for example, if you created and downloaded the credential file for your Discovery instance, you just need to do the following:
 
 ```go
-import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+import "github.com/watson-developer-cloud/go-sdk/servicev1"
 
-service, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+service, serviceErr := servicev1.NewServiceV1(&servicev1.ServiceV1Options{
 	Version:   "2018-03-05",
 })
 ```
@@ -112,13 +114,12 @@ You supply either an IAM service **API key** or an **access token**:
 
 ```go
 // In the constructor, letting the SDK manage the IAM token
-import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+import "github.com/watson-developer-cloud/go-sdk/servicev1"
 authenticator := &core.IamAuthenticator{
 	ApiKey: "<apikey>",
 }
-discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+service, serviceErr := servicev1.NewServiceV1(&servicev1.ServiceV1Options{
 		URL:       "<service_url>",
-		Version:   "2018-03-05",
 		Authenticator: authenticator,
 	})
 ```
@@ -127,11 +128,10 @@ discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Op
 
 ```go
 // In the constructor
-import "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+import "github.com/watson-developer-cloud/go-sdk/servicev1"
 
-discovery, discoveryErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+service, serviceErr := servicev1.NewServiceV1(&servicev1.ServiceV1Options{
 		URL:      "<service_url>",
-		Version:  "2018-03-05",
 		Authenticator: &core.BasicAuthenticator{
 			Username: "<username>",
 			Password: "<password>",
@@ -160,12 +160,12 @@ func main() {
 // Instantiate the Watson Discovery service
 service, serviceErr := discoveryv1.
   NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-    URL:       "YOUR SERVICE URL",
     Version:   "2018-03-05",
 	Authenticator: &core.IamAuthenticator{
 		Apikey: "YOUR APIKEY",
 	},
   })
+service.SetServiceURL("YOUR SERVICE URL")
 
 // Check successful instantiation
 if serviceErr != nil {
@@ -176,9 +176,9 @@ if serviceErr != nil {
 listEnvironmentsOptions := service.NewListEnvironmentsOptions()
 
 // Call the discovery ListEnvironments method
-response, responseErr := service.ListEnvironments(listEnvironmentsOptions)
+listEnvironmentResult, response, responseErr := service.ListEnvironments(listEnvironmentsOptions)
 // Or you can directly pass in the model options
-// response, responseErr := service.ListEnvironments(&discoveryv1.ListEnvironmentsOptions{})
+// listEnvironmentResult, response, responseErr := service.ListEnvironments(&discoveryv1.ListEnvironmentsOptions{})
 
 // Check successful call
 if responseErr != nil {
@@ -194,10 +194,7 @@ response.GetHeaders()
 // Get the API response
 response.GetResult()
 
-// Cast response to the specific dataType returned by ListEnvironments
-// NOTE: most methods have a corresponding Get<methodName>Result() function
-listEnvironmentResult := service.GetListEnvironmentsResult(response)
-
+// Directly access the result
 if listEnvironmentResult != nil {
   fmt.Println(listEnvironmentResult.Environments[0])
   }
@@ -286,6 +283,24 @@ func main() {
 }
 ```
 
+Or can set it from external sources. For example, environment variables:
+
+```bash
+export <YOUR SERVICE NAME>_DISABLE_SSL=True
+
+## Set Service URL
+To set the service URL,
+
+```go
+service.SetServiceURL("my new url")
+```
+
+Or can set it from external sources. For example, environment variables:
+
+```bash
+export <YOUR SERVICE NAME>_URL="my new url"
+```
+
 ## Cloud Pak for Data(CP4D)
 If your service instance is of ICP4D, below are two ways of initializing the assistant service.
 
@@ -319,7 +334,7 @@ func main() {
     return
   }
 
-  discoveryService.Service.DisableSSLVerification() // MAKE SURE SSL VERIFICATION IS DISABLED
+  discoveryService.DisableSSLVerification() // MAKE SURE SSL VERIFICATION IS DISABLED
 }
 ```
 
@@ -349,7 +364,7 @@ func main() {
     return
   }
 
-  discoveryService.Service.DisableSSLVerification() // MAKE SURE SSL VERIFICATION IS DISABLED
+  discoveryService.DisableSSLVerification() // MAKE SURE SSL VERIFICATION IS DISABLED
 }
 ```
 ## Examples
@@ -373,6 +388,9 @@ Run a specific test suite:
 ```bash
 go test ./assistantv1
 ```
+
+## Migrating
+* To move from `v0.11.0` to `v1.0.0`, refer to the [MIGRATION-V1](https://github.com/watson-developer-cloud/go-sdk/blob/master/MIGRATION-V1.md)
 
 ## Contributing
 

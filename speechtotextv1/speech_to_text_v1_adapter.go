@@ -134,12 +134,6 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsocket(recognizeWSOptions *
 	if recognizeWSOptions.BaseModelVersion != nil {
 		param.Set("base_model_version", *recognizeWSOptions.BaseModelVersion)
 	}
-	if recognizeWSOptions.ProcessingMetrics != nil {
-		param.Set("processing_metrics", fmt.Sprint(*recognizeWSOptions.ProcessingMetrics))
-	}
-	if recognizeWSOptions.ProcessingMetricsInterval != nil {
-		param.Set("processing_metrics_interval", fmt.Sprint(*recognizeWSOptions.ProcessingMetricsInterval))
-	}
 
 	speechToText.NewRecognizeListener(callback, recognizeWSOptions, dialURL, param, headers)
 }

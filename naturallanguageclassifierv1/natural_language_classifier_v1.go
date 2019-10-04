@@ -18,10 +18,12 @@
 package naturallanguageclassifierv1
 
 import (
+	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"os"
 )
 
 // NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to
@@ -34,56 +36,75 @@ type NaturalLanguageClassifierV1 struct {
 	Service *core.BaseService
 }
 
+const defaultServiceURL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
+
 // NaturalLanguageClassifierV1Options : Service options
 type NaturalLanguageClassifierV1Options struct {
-	URL             string
-	Authenticator   core.Authenticator
+	URL           string
+	Authenticator core.Authenticator
 }
 
 // NewNaturalLanguageClassifierV1 : Instantiate NaturalLanguageClassifierV1
 func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options) (service *NaturalLanguageClassifierV1, err error) {
 	if options.URL == "" {
-		options.URL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
+		options.URL = defaultServiceURL
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:             options.URL,
-		Authenticator:   options.Authenticator,
+		URL:           options.URL,
+		Authenticator: options.Authenticator,
 	}
 
-    if serviceOptions.Authenticator == nil {
-        serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("natural_language_classifier")
-        if err != nil {
-            return
-        }
-    }
+	if serviceOptions.Authenticator == nil {
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("natural_language_classifier")
+		if err != nil {
+			return
+		}
+	}
 
 	baseService, err := core.NewBaseService(serviceOptions, "natural_language_classifier", "Natural Language Classifier")
 	if err != nil {
 		return
 	}
-	
-	service = &NaturalLanguageClassifierV1{Service: baseService}
+
+	service = &NaturalLanguageClassifierV1{
+		Service: baseService,
+	}
 
 	return
+}
+
+// SetServiceURL sets the service URL
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) SetServiceURL(url string) error {
+	return naturalLanguageClassifier.Service.SetServiceURL(url)
+}
+
+// DisableSSLVerification bypasses verification of the server's SSL certificate
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DisableSSLVerification() {
+	naturalLanguageClassifier.Service.DisableSSLVerification()
 }
 
 // Classify : Classify a phrase
 // Returns label information for the input. The status must be `Available` before you can use the classifier to classify
 // text.
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyOptions *ClassifyOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(classifyOptions, "classifyOptions cannot be nil"); err != nil {
-		return nil, err
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyOptions *ClassifyOptions) (result *Classification, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(classifyOptions, "classifyOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(classifyOptions, "classifyOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(classifyOptions, "classifyOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/classifiers", "classify"}
 	pathParameters := []string{*classifyOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range classifyOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -101,26 +122,26 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) Classify(classifyO
 	if classifyOptions.Text != nil {
 		body["text"] = classifyOptions.Text
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageClassifier.Service.Request(request, new(Classification))
-	return response, err
-}
-
-// GetClassifyResult : Retrieve result of Classify operation
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifyResult(response *core.DetailedResponse) *Classification {
-	result, ok := response.Result.(*Classification)
-	if ok {
-		return result
+	response, err = naturalLanguageClassifier.Service.Request(request, new(Classification))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Classification)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ClassifyCollection : Classify multiple phrases
@@ -128,19 +149,24 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifyResult(
 // classify text.
 //
 // Note that classifying Japanese texts is a beta feature.
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection(classifyCollectionOptions *ClassifyCollectionOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(classifyCollectionOptions, "classifyCollectionOptions cannot be nil"); err != nil {
-		return nil, err
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection(classifyCollectionOptions *ClassifyCollectionOptions) (result *ClassificationCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(classifyCollectionOptions, "classifyCollectionOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(classifyCollectionOptions, "classifyCollectionOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(classifyCollectionOptions, "classifyCollectionOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/classifiers", "classify_collection"}
 	pathParameters := []string{*classifyCollectionOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range classifyCollectionOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -158,43 +184,48 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 	if classifyCollectionOptions.Collection != nil {
 		body["collection"] = classifyCollectionOptions.Collection
 	}
-	if _, err := builder.SetBodyContentJSON(body); err != nil {
-		return nil, err
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
 	}
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageClassifier.Service.Request(request, new(ClassificationCollection))
-	return response, err
-}
-
-// GetClassifyCollectionResult : Retrieve result of ClassifyCollection operation
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifyCollectionResult(response *core.DetailedResponse) *ClassificationCollection {
-	result, ok := response.Result.(*ClassificationCollection)
-	if ok {
-		return result
+	response, err = naturalLanguageClassifier.Service.Request(request, new(ClassificationCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ClassificationCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // CreateClassifier : Create classifier
 // Sends data to create and train a classifier and returns information about the new classifier.
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(createClassifierOptions *CreateClassifierOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(createClassifierOptions, "createClassifierOptions cannot be nil"); err != nil {
-		return nil, err
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(createClassifierOptions *CreateClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createClassifierOptions, "createClassifierOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(createClassifierOptions, "createClassifierOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(createClassifierOptions, "createClassifierOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/classifiers"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.POST)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range createClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -214,34 +245,37 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifier(c
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageClassifier.Service.Request(request, new(Classifier))
-	return response, err
-}
-
-// GetCreateClassifierResult : Retrieve result of CreateClassifier operation
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetCreateClassifierResult(response *core.DetailedResponse) *Classifier {
-	result, ok := response.Result.(*Classifier)
-	if ok {
-		return result
+	response, err = naturalLanguageClassifier.Service.Request(request, new(Classifier))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Classifier)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // ListClassifiers : List classifiers
 // Returns an empty array if no classifiers are available.
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions"); err != nil {
-		return nil, err
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (result *ClassifierList, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/classifiers"}
 	pathParameters := []string{}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range listClassifiersOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -256,37 +290,41 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiers(li
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageClassifier.Service.Request(request, new(ClassifierList))
-	return response, err
-}
-
-// GetListClassifiersResult : Retrieve result of ListClassifiers operation
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetListClassifiersResult(response *core.DetailedResponse) *ClassifierList {
-	result, ok := response.Result.(*ClassifierList)
-	if ok {
-		return result
+	response, err = naturalLanguageClassifier.Service.Request(request, new(ClassifierList))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ClassifierList)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // GetClassifier : Get information about a classifier
 // Returns status and other information about a classifier.
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getClassifierOptions *GetClassifierOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(getClassifierOptions, "getClassifierOptions cannot be nil"); err != nil {
-		return nil, err
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getClassifierOptions *GetClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getClassifierOptions, "getClassifierOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(getClassifierOptions, "getClassifierOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(getClassifierOptions, "getClassifierOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/classifiers"}
 	pathParameters := []string{*getClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.GET)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range getClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -301,36 +339,40 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifier(getC
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageClassifier.Service.Request(request, new(Classifier))
-	return response, err
-}
-
-// GetGetClassifierResult : Retrieve result of GetClassifier operation
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetGetClassifierResult(response *core.DetailedResponse) *Classifier {
-	result, ok := response.Result.(*Classifier)
-	if ok {
-		return result
+	response, err = naturalLanguageClassifier.Service.Request(request, new(Classifier))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Classifier)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
 	}
-	return nil
+
+	return
 }
 
 // DeleteClassifier : Delete classifier
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (*core.DetailedResponse, error) {
-	if err := core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil"); err != nil {
-		return nil, err
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil")
+	if err != nil {
+		return
 	}
-	if err := core.ValidateStruct(deleteClassifierOptions, "deleteClassifierOptions"); err != nil {
-		return nil, err
+	err = core.ValidateStruct(deleteClassifierOptions, "deleteClassifierOptions")
+	if err != nil {
+		return
 	}
 
 	pathSegments := []string{"v1/classifiers"}
 	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	_, err = builder.ConstructHTTPURL(naturalLanguageClassifier.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
 
 	for headerName, headerValue := range deleteClassifierOptions.Headers {
 		builder.AddHeader(headerName, headerValue)
@@ -345,11 +387,12 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) DeleteClassifier(d
 
 	request, err := builder.Build()
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	response, err := naturalLanguageClassifier.Service.Request(request, nil)
-	return response, err
+	response, err = naturalLanguageClassifier.Service.Request(request, nil)
+
+	return
 }
 
 // Classification : Response from the classifier for a phrase.
@@ -423,10 +466,10 @@ type Classifier struct {
 // Constants associated with the Classifier.Status property.
 // The state of the classifier.
 const (
-	Classifier_Status_Available = "Available"
-	Classifier_Status_Failed = "Failed"
+	Classifier_Status_Available   = "Available"
+	Classifier_Status_Failed      = "Failed"
 	Classifier_Status_NonExistent = "Non Existent"
-	Classifier_Status_Training = "Training"
+	Classifier_Status_Training    = "Training"
 	Classifier_Status_Unavailable = "Unavailable"
 )
 
@@ -454,7 +497,7 @@ type ClassifyCollectionOptions struct {
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyCollectionOptions(classifierID string, collection []ClassifyInput) *ClassifyCollectionOptions {
 	return &ClassifyCollectionOptions{
 		ClassifierID: core.StringPtr(classifierID),
-		Collection: collection,
+		Collection:   collection,
 	}
 }
 
@@ -500,7 +543,7 @@ type ClassifyOptions struct {
 func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyOptions(classifierID string, text string) *ClassifyOptions {
 	return &ClassifyOptions{
 		ClassifierID: core.StringPtr(classifierID),
-		Text: core.StringPtr(text),
+		Text:         core.StringPtr(text),
 	}
 }
 
@@ -543,33 +586,33 @@ type CreateClassifierOptions struct {
 	//
 	// Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`), Japanese
 	// (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).
-	TrainingMetadata *os.File `json:"training_metadata" validate:"required"`
+	TrainingMetadata io.ReadCloser `json:"training_metadata" validate:"required"`
 
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
 	// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier?topic=natural-language-classifier-using-your-data).
-	TrainingData *os.File `json:"training_data" validate:"required"`
+	TrainingData io.ReadCloser `json:"training_data" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(trainingMetadata *os.File, trainingData *os.File) *CreateClassifierOptions {
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewCreateClassifierOptions(trainingMetadata io.ReadCloser, trainingData io.ReadCloser) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
 		TrainingMetadata: trainingMetadata,
-		TrainingData: trainingData,
+		TrainingData:     trainingData,
 	}
 }
 
 // SetTrainingMetadata : Allow user to set TrainingMetadata
-func (options *CreateClassifierOptions) SetTrainingMetadata(trainingMetadata *os.File) *CreateClassifierOptions {
+func (options *CreateClassifierOptions) SetTrainingMetadata(trainingMetadata io.ReadCloser) *CreateClassifierOptions {
 	options.TrainingMetadata = trainingMetadata
 	return options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *CreateClassifierOptions) SetTrainingData(trainingData *os.File) *CreateClassifierOptions {
+func (options *CreateClassifierOptions) SetTrainingData(trainingData io.ReadCloser) *CreateClassifierOptions {
 	options.TrainingData = trainingData
 	return options
 }

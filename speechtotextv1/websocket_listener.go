@@ -3,12 +3,13 @@ package speechtotextv1
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
-	"github.com/gorilla/websocket"
 	"io"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/IBM/go-sdk-core/core"
+	"github.com/gorilla/websocket"
 )
 
 type RecognizeListener struct {
@@ -98,7 +99,7 @@ func sendCloseMessage(conn *websocket.Conn) {
 func sendAudio(conn *websocket.Conn, recognizeOptions *RecognizeUsingWebsocketOptions, recognizeListener *RecognizeListener) {
 	chunk := make([]byte, ONE_KB*2)
 	for {
-		bytesRead, err := (*recognizeOptions.Audio).Read(chunk)
+		bytesRead, err := (recognizeOptions.Audio).Read(chunk)
 		if err != nil {
 			if err == io.EOF {
 				break

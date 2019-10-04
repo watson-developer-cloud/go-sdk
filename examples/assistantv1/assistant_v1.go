@@ -9,12 +9,12 @@ import (
 
 func main() {
 	// Instantiate the Watson Assistant service
-    authenticator := &core.IamAuthenticator{
-        ApiKey:     "my-iam-apikey",
-    }
+	authenticator := &core.IamAuthenticator{
+		ApiKey: "my-iam-apikey",
+	}
 	service, serviceErr := assistant.NewAssistantV1(&assistant.AssistantV1Options{
-		URL:       "YOUR SERVICE URL",
-		Version:   "2018-07-10",
+		URL:           "YOUR SERVICE URL",
+		Version:       "2018-07-10",
 		Authenticator: authenticator,
 	})
 
@@ -26,7 +26,7 @@ func main() {
 	/* LIST WORKSPACES */
 
 	// Call the assistant ListWorkspaces method
-	response, responseErr := service.ListWorkspaces(&assistant.ListWorkspacesOptions{})
+	_, response, responseErr := service.ListWorkspaces(&assistant.ListWorkspacesOptions{})
 
 	if responseErr != nil {
 		panic(responseErr)
@@ -49,7 +49,7 @@ func main() {
 		SetDescription("GO example workspace").
 		SetEntities([]assistant.CreateEntity{createEntity})
 
-	response, responseErr = service.CreateWorkspace(createWorkspaceOptions)
+	createWorkspaceResult, response, responseErr := service.CreateWorkspace(createWorkspaceOptions)
 
 	// Check successful call
 	if responseErr != nil {
@@ -57,16 +57,12 @@ func main() {
 	}
 
 	fmt.Println(response)
-
-	// Cast response.Result to the specific dataType
-	// NOTE: most methods have a corresponding Get<methodName>Result() function
-	createWorkspaceResult := service.GetCreateWorkspaceResult(response)
 	workspaceID := createWorkspaceResult.WorkspaceID
 
 	// 	/* GET WORKSPACE */
 
 	// Call the assistant GetWorkspace method
-	response, responseErr = service.GetWorkspace(service.
+	_, response, responseErr = service.GetWorkspace(service.
 		NewGetWorkspaceOptions(*workspaceID).
 		SetExport(true))
 
@@ -83,7 +79,7 @@ func main() {
 		SetName("Updated workspace name").
 		SetDescription("Updated description")
 
-	response, responseErr = service.UpdateWorkspace(updateWorkspaceOptions)
+	_, response, responseErr = service.UpdateWorkspace(updateWorkspaceOptions)
 
 	// Check successful call
 	if responseErr != nil {
@@ -100,7 +96,7 @@ func main() {
 		SetInput(input)
 
 	// Call the Message method with no specified context
-	response, responseErr = service.Message(messageOptions)
+	messageResult, response, responseErr := service.Message(messageOptions)
 
 	// Check successful call
 	if responseErr != nil {
@@ -110,13 +106,13 @@ func main() {
 	fmt.Println(response)
 
 	// To continue with the same assistant, pass in the context from the previous call
-	context := service.GetMessageResult(response).Context
+	context := messageResult.Context
 
 	input.SetText(core.StringPtr("What's the weather right now?"))
 	messageOptions.SetContext(context).
 		SetInput(input)
 
-	response, responseErr = service.Message(messageOptions)
+	_, response, responseErr = service.Message(messageOptions)
 
 	// Check successful call
 	if responseErr != nil {

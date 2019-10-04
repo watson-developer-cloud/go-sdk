@@ -47,15 +47,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetModel(nil)
+				_, returnValue, returnValueErr := testService.GetModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getModelOptions := testService.NewGetModelOptions(modelID)
-				returnValue, returnValueErr = testService.GetModel(getModelOptions)
+				result, returnValue, returnValueErr := testService.GetModel(getModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetModelResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -90,15 +88,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListModels(nil)
+				_, returnValue, returnValueErr := testService.ListModels(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listModelsOptions := testService.NewListModelsOptions()
-				returnValue, returnValueErr = testService.ListModels(listModelsOptions)
+				result, returnValue, returnValueErr := testService.ListModels(listModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListModelsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -133,7 +129,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.Recognize(nil)
+				_, returnValue, returnValueErr := testService.Recognize(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				pwd, _ := os.Getwd()
@@ -143,11 +139,9 @@ var _ = Describe("SpeechToTextV1", func() {
 				}
 				recognizeOptions := testService.
 					NewRecognizeOptions(file)
-				returnValue, returnValueErr = testService.Recognize(recognizeOptions)
+				result, returnValue, returnValueErr := testService.Recognize(recognizeOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetRecognizeResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -184,15 +178,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.CheckJob(nil)
+				_, returnValue, returnValueErr := testService.CheckJob(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				checkJobOptions := testService.NewCheckJobOptions(ID)
-				returnValue, returnValueErr = testService.CheckJob(checkJobOptions)
+				result, returnValue, returnValueErr := testService.CheckJob(checkJobOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetCheckJobResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -227,15 +219,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.CheckJobs(nil)
+				_, returnValue, returnValueErr := testService.CheckJobs(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				checkJobsOptions := testService.NewCheckJobsOptions()
-				returnValue, returnValueErr = testService.CheckJobs(checkJobsOptions)
+				result, returnValue, returnValueErr := testService.CheckJobs(checkJobsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetCheckJobsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -270,7 +260,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.CreateJob(nil)
+				_, returnValue, returnValueErr := testService.CreateJob(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				pwd, _ := os.Getwd()
@@ -280,12 +270,10 @@ var _ = Describe("SpeechToTextV1", func() {
 				}
 				createJobOptions := testService.
 					NewCreateJobOptions(file).
-					SetContentType(speechtotextv1.CreateJobOptions_ContentType_AudioWav)
-				returnValue, returnValueErr = testService.CreateJob(createJobOptions)
+					SetContentType("audio/wav")
+				result, returnValue, returnValueErr := testService.CreateJob(createJobOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetCreateJobResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -363,15 +351,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.RegisterCallback(nil)
+				_, returnValue, returnValueErr := testService.RegisterCallback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				registerCallbackOptions := testService.NewRegisterCallbackOptions(callbackURL)
-				returnValue, returnValueErr = testService.RegisterCallback(registerCallbackOptions)
+				result, returnValue, returnValueErr := testService.RegisterCallback(registerCallbackOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetRegisterCallbackResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -449,15 +435,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.CreateLanguageModel(nil)
+				_, returnValue, returnValueErr := testService.CreateLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				createLanguageModelOptions := testService.NewCreateLanguageModelOptions(name, baseModelName)
-				returnValue, returnValueErr = testService.CreateLanguageModel(createLanguageModelOptions)
+				result, returnValue, returnValueErr := testService.CreateLanguageModel(createLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetCreateLanguageModelResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -536,15 +520,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetLanguageModel(nil)
+				_, returnValue, returnValueErr := testService.GetLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getLanguageModelOptions := testService.NewGetLanguageModelOptions(customizationID)
-				returnValue, returnValueErr = testService.GetLanguageModel(getLanguageModelOptions)
+				result, returnValue, returnValueErr := testService.GetLanguageModel(getLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetLanguageModelResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -579,15 +561,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListLanguageModels(nil)
+				_, returnValue, returnValueErr := testService.ListLanguageModels(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listLanguageModelsOptions := testService.NewListLanguageModelsOptions()
-				returnValue, returnValueErr = testService.ListLanguageModels(listLanguageModelsOptions)
+				result, returnValue, returnValueErr := testService.ListLanguageModels(listLanguageModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListLanguageModelsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -649,8 +629,8 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"hi":"there"}`)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"warnings":[]}`)
 			}))
 			It("Succeed to call TrainLanguageModel", func() {
 				defer testServer.Close()
@@ -666,11 +646,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.TrainLanguageModel(nil)
+				_, returnValue, returnValueErr := testService.TrainLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				trainLanguageModelOptions := testService.NewTrainLanguageModelOptions(customizationID)
-				returnValue, returnValueErr = testService.TrainLanguageModel(trainLanguageModelOptions)
+				_, returnValue, returnValueErr = testService.TrainLanguageModel(trainLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -842,15 +822,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetCorpus(nil)
+				_, returnValue, returnValueErr := testService.GetCorpus(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getCorpusOptions := testService.NewGetCorpusOptions(customizationID, corpusName)
-				returnValue, returnValueErr = testService.GetCorpus(getCorpusOptions)
+				result, returnValue, returnValueErr := testService.GetCorpus(getCorpusOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetCorpusResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -887,15 +865,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListCorpora(nil)
+				_, returnValue, returnValueErr := testService.ListCorpora(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listCorporaOptions := testService.NewListCorporaOptions(customizationID)
-				returnValue, returnValueErr = testService.ListCorpora(listCorporaOptions)
+				result, returnValue, returnValueErr := testService.ListCorpora(listCorporaOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListCorporaResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1062,15 +1038,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetWord(nil)
+				_, returnValue, returnValueErr := testService.GetWord(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getWordOptions := testService.NewGetWordOptions(customizationID, wordName)
-				returnValue, returnValueErr = testService.GetWord(getWordOptions)
+				result, returnValue, returnValueErr := testService.GetWord(getWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetWordResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1107,15 +1081,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListWords(nil)
+				_, returnValue, returnValueErr := testService.ListWords(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listWordsOptions := testService.NewListWordsOptions(customizationID)
-				returnValue, returnValueErr = testService.ListWords(listWordsOptions)
+				result, returnValue, returnValueErr := testService.ListWords(listWordsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListWordsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1152,15 +1124,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.CreateAcousticModel(nil)
+				_, returnValue, returnValueErr := testService.CreateAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				createAcousticModelOptions := testService.NewCreateAcousticModelOptions(name, baseModelName)
-				returnValue, returnValueErr = testService.CreateAcousticModel(createAcousticModelOptions)
+				result, returnValue, returnValueErr := testService.CreateAcousticModel(createAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetCreateAcousticModelResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1238,15 +1208,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetAcousticModel(nil)
+				_, returnValue, returnValueErr := testService.GetAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getAcousticModelOptions := testService.NewGetAcousticModelOptions(customizationID)
-				returnValue, returnValueErr = testService.GetAcousticModel(getAcousticModelOptions)
+				result, returnValue, returnValueErr := testService.GetAcousticModel(getAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetAcousticModelResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1281,15 +1249,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListAcousticModels(nil)
+				_, returnValue, returnValueErr := testService.ListAcousticModels(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listAcousticModelsOptions := testService.NewListAcousticModelsOptions()
-				returnValue, returnValueErr = testService.ListAcousticModels(listAcousticModelsOptions)
+				result, returnValue, returnValueErr := testService.ListAcousticModels(listAcousticModelsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListAcousticModelsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1350,7 +1316,8 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.WriteHeader(200)
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{"warnings":[]}`)
 			}))
 			It("Succeed to call TrainAcousticModel", func() {
 				defer testServer.Close()
@@ -1366,11 +1333,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.TrainAcousticModel(nil)
+				_, returnValue, returnValueErr := testService.TrainAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				trainAcousticModelOptions := testService.NewTrainAcousticModelOptions(customizationID)
-				returnValue, returnValueErr = testService.TrainAcousticModel(trainAcousticModelOptions)
+				_, returnValue, returnValueErr = testService.TrainAcousticModel(trainAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1462,7 +1429,7 @@ var _ = Describe("SpeechToTextV1", func() {
 					NewAddAudioOptions(customizationID,
 						audioName,
 						file).
-					SetContentType(speechtotextv1.AddAudioOptions_ContentType_AudioWav)
+					SetContentType("audio/wav")
 				returnValue, returnValueErr = testService.AddAudio(addAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
@@ -1546,15 +1513,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetAudio(nil)
+				_, returnValue, returnValueErr := testService.GetAudio(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getAudioOptions := testService.NewGetAudioOptions(customizationID, audioName)
-				returnValue, returnValueErr = testService.GetAudio(getAudioOptions)
+				result, returnValue, returnValueErr := testService.GetAudio(getAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetAudioResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1591,15 +1556,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListAudio(nil)
+				_, returnValue, returnValueErr := testService.ListAudio(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listAudioOptions := testService.NewListAudioOptions(customizationID)
-				returnValue, returnValueErr = testService.ListAudio(listAudioOptions)
+				result, returnValue, returnValueErr := testService.ListAudio(listAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListAudioResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1772,15 +1735,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.GetGrammar(nil)
+				_, returnValue, returnValueErr := testService.GetGrammar(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getGrammarOptions := testService.NewGetGrammarOptions(customizationID, grammarName)
-				returnValue, returnValueErr = testService.GetGrammar(getGrammarOptions)
+				result, returnValue, returnValueErr := testService.GetGrammar(getGrammarOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetGetGrammarResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -1817,15 +1778,13 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ListGrammars(nil)
+				_, returnValue, returnValueErr := testService.ListGrammars(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listGrammarsOptions := testService.NewListGrammarsOptions(customizationID)
-				returnValue, returnValueErr = testService.ListGrammars(listGrammarsOptions)
+				result, returnValue, returnValueErr := testService.ListGrammars(listGrammarsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
-
-				result := testService.GetListGrammarsResult(returnValue)
 				Expect(result).ToNot(BeNil())
 			})
 		})
