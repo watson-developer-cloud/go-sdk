@@ -2975,6 +2975,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		bearerToken := "0ui9876453"
 		environmentID := "exampleString"
 		collectionID := "exampleString"
+		prefix := "exampleString"
 		getAutocompletionPath = strings.Replace(getAutocompletionPath, "{environment_id}", environmentID, 1)
 		getAutocompletionPath = strings.Replace(getAutocompletionPath, "{collection_id}", collectionID, 1)
 		Context(`Successfully - Get Autocomplete Suggestions`, func() {
@@ -3010,7 +3011,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				getAutocompletionOptions := testService.NewGetAutocompletionOptions(environmentID, collectionID)
+				getAutocompletionOptions := testService.NewGetAutocompletionOptions(environmentID, collectionID, prefix)
 				result, response, operationErr = testService.GetAutocompletion(getAutocompletionOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
