@@ -29,7 +29,7 @@ NewServiceV1(&servicev1.ServiceV1Options{
 })
 ```
 
-There are 5 authentication variants supplied in the SDK (shown below):
+There are 5 authentication variants supplied in the SDK (shown below): You can also find detailed explanation [Authentication](https://github.com/IBM/go-sdk-core/blob/master/Authentication.md)
 
 #### BasicAuthenticator
 ```go

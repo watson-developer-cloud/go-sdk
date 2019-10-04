@@ -286,7 +286,7 @@ func main() {
 Or can set it from external sources. For example, environment variables:
 
 ```bash
-export <YOUR SERVICE NAMEs>_DISABLE_SSL=True
+export <YOUR SERVICE NAME>_DISABLE_SSL=True
 
 ## Set Service URL
 To set the service URL,
@@ -298,7 +298,7 @@ service.SetServiceURL("my new url")
 Or can set it from external sources. For example, environment variables:
 
 ```bash
-export <YOUR SERVICE NAMEs>_URL="my new url"
+export <YOUR SERVICE NAME>_URL="my new url"
 ```
 
 ## Cloud Pak for Data(CP4D)
