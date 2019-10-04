@@ -19,11 +19,12 @@ package discoveryv1
 
 import (
 	"fmt"
+	"io"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
-	"strings"
 )
 
 // DiscoveryV1 : IBM Watson&trade; Discovery is a cognitive search and content analytics engine that you can add to
@@ -2258,11 +2259,9 @@ func (discovery *DiscoveryV1) GetAutocompletion(getAutocompletionOptions *GetAut
 
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("prefix", fmt.Sprint(*getAutocompletionOptions.Prefix))
 	if getAutocompletionOptions.Field != nil {
 		builder.AddQuery("field", fmt.Sprint(*getAutocompletionOptions.Field))
-	}
-	if getAutocompletionOptions.Prefix != nil {
-		builder.AddQuery("prefix", fmt.Sprint(*getAutocompletionOptions.Prefix))
 	}
 	if getAutocompletionOptions.Count != nil {
 		builder.AddQuery("count", fmt.Sprint(*getAutocompletionOptions.Count))
@@ -6358,12 +6357,12 @@ type GetAutocompletionOptions struct {
 	// The ID of the collection.
 	CollectionID *string `json:"collection_id" validate:"required"`
 
-	// The field in the result documents that autocompletion suggestions are identified from.
-	Field *string `json:"field,omitempty"`
-
 	// The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete to `Hot`, `Housing`, or `How
 	// do I upgrade`. Possible completions are.
-	Prefix *string `json:"prefix,omitempty"`
+	Prefix *string `json:"prefix" validate:"required"`
+
+	// The field in the result documents that autocompletion suggestions are identified from.
+	Field *string `json:"field,omitempty"`
 
 	// The number of autocompletion suggestions to return.
 	Count *int64 `json:"count,omitempty"`
@@ -6373,10 +6372,11 @@ type GetAutocompletionOptions struct {
 }
 
 // NewGetAutocompletionOptions : Instantiate GetAutocompletionOptions
-func (discovery *DiscoveryV1) NewGetAutocompletionOptions(environmentID string, collectionID string) *GetAutocompletionOptions {
+func (discovery *DiscoveryV1) NewGetAutocompletionOptions(environmentID string, collectionID string, prefix string) *GetAutocompletionOptions {
 	return &GetAutocompletionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
+		Prefix:        core.StringPtr(prefix),
 	}
 }
 
@@ -6392,15 +6392,15 @@ func (options *GetAutocompletionOptions) SetCollectionID(collectionID string) *G
 	return options
 }
 
-// SetField : Allow user to set Field
-func (options *GetAutocompletionOptions) SetField(field string) *GetAutocompletionOptions {
-	options.Field = core.StringPtr(field)
-	return options
-}
-
 // SetPrefix : Allow user to set Prefix
 func (options *GetAutocompletionOptions) SetPrefix(prefix string) *GetAutocompletionOptions {
 	options.Prefix = core.StringPtr(prefix)
+	return options
+}
+
+// SetField : Allow user to set Field
+func (options *GetAutocompletionOptions) SetField(field string) *GetAutocompletionOptions {
+	options.Field = core.StringPtr(field)
 	return options
 }
 
@@ -8723,6 +8723,9 @@ type QueryResponse struct {
 
 	// An object contain retrieval type information.
 	RetrievalDetails *RetrievalDetails `json:"retrieval_details,omitempty"`
+
+	// The suggestions for a misspelled natural language query.
+	SuggestedQuery *string `json:"suggested_query,omitempty"`
 }
 
 // QueryResult : Query result object.
