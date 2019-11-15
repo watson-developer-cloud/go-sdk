@@ -1,5 +1,7 @@
 language: go
 
+dist: xenial
+
 go:
 - 1.12.x
 
