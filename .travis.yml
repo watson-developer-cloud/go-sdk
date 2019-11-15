@@ -19,17 +19,18 @@ before_install:
 - npm install -g npm@6.x
 - sudo apt-get update
 - sudo apt-get install python
-- go get -u gopkg.in/alecthomas/gometalinter.v2
-- go get -u golang.org/x/lint/golint
 
 install:
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd
   ../; fi
+- curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.21.0
 
 before_script:
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi
 
 script:
+- env | grep GO
+- golangci-lint run
 - go test `go list ./... | grep -v examples`
 - go test `go list ./... | grep -v core` -v -tags=integration
 - gometalinter.v2 --errors ./...

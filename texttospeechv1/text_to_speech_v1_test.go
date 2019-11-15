@@ -9,10 +9,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
-	"github.com/IBM/go-sdk-core/core"
 )
 
 var _ = Describe("TextToSpeechV1", func() {
@@ -39,7 +39,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -77,7 +77,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -119,14 +119,14 @@ var _ = Describe("TextToSpeechV1", func() {
 				if err != nil {
 					panic(err)
 				}
-				res.Write(bytes)
+				_, _ = res.Write(bytes)
 			}))
 			It("Succeed to call Synthesize", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -165,7 +165,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -204,7 +204,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -244,7 +244,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -283,7 +283,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -321,7 +321,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -361,7 +361,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -403,7 +403,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -443,7 +443,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -484,7 +484,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -525,7 +525,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -565,7 +565,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,
@@ -604,7 +604,7 @@ var _ = Describe("TextToSpeechV1", func() {
 
 				testService, testServiceErr := texttospeechv1.
 					NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-						URL:      testServer.URL,
+						URL: testServer.URL,
 						Authenticator: &core.BasicAuthenticator{
 							Username: username,
 							Password: password,

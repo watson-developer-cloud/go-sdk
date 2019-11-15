@@ -32,14 +32,14 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(201)
-				fmt.Fprintf(res, serializeJSON(createProfileResult()))
+				fmt.Fprint(res, serializeJSON(createProfileResult()))
 			}))
 			It("Succeed to call Profile", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-					URL:      testServer.URL,
-					Version:  version,
+					URL:     testServer.URL,
+					Version: version,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -49,7 +49,7 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.Profile(nil)
+				_, _, returnValueErr := testService.Profile(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				// First test with invalid (incomplete) input
@@ -58,7 +58,7 @@ var _ = Describe("PersonalityInsightsV3", func() {
 					NewProfileOptions().
 					SetContent(content).
 					SetContentType("text/plain")
-				_, returnValue, returnValueErr = testService.Profile(profileOptions)
+				_, returnValue, returnValueErr := testService.Profile(profileOptions)
 				Expect(returnValueErr).ToNot(BeNil())
 				Expect(returnValue).To(BeNil())
 
@@ -97,14 +97,14 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
 				res.Header().Set("Content-type", "text/plain")
 				res.WriteHeader(201)
-				fmt.Fprintf(res, expectedCsvString)
+				fmt.Fprint(res, expectedCsvString)
 			}))
 			It("Succeed to call ProfileAsCsv", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-					URL:      testServer.URL,
-					Version:  version,
+					URL:     testServer.URL,
+					Version: version,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -114,7 +114,7 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ProfileAsCsv(nil)
+				_, _, returnValueErr := testService.ProfileAsCsv(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				profileAsCsvOptions := testService.

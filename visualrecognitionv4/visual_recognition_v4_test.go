@@ -521,7 +521,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				if err != nil {
 					panic(err)
 				}
-				res.Write(bytes)
+				_, _ = res.Write(bytes)
 			}))
 			It(`Succeed to call GetJpegImage`, func() {
 				defer testServer.Close()

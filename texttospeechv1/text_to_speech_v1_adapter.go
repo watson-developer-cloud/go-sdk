@@ -106,7 +106,10 @@ func (textToSpeech *TextToSpeechV1) SynthesizeUsingWebsocket(synthesizeOptions *
 
 	builder := core.NewRequestBuilder(core.POST)
 	dialURL := strings.Replace(textToSpeech.Service.Options.URL, "https", "wss", 1)
-	builder.ConstructHTTPURL(dialURL, pathSegments, pathParameters)
+	_, err := builder.ConstructHTTPURL(dialURL, pathSegments, pathParameters)
+	if err != nil {
+		return err
+	}
 
 	for headerName, headerValue := range synthesizeOptions.Headers {
 		builder.AddHeader(headerName, headerValue)

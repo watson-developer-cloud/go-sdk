@@ -45,7 +45,11 @@ func (wsHandle RecognizeListener) OnData(conn *websocket.Conn, recognizeOptions 
 			wsHandle.OnError(err)
 			break
 		}
-		json.Unmarshal(result, &websocketResponse)
+		err = json.Unmarshal(result, &websocketResponse)
+		if err != nil {
+			wsHandle.OnError(err)
+			break
+		}
 
 		if websocketResponse.State == "listening" {
 			if !isListening {
@@ -90,7 +94,7 @@ func sendStartMessage(conn *websocket.Conn, textParams *RecognizeUsingWebsocketO
 func sendCloseMessage(conn *websocket.Conn) {
 	stop := "stop"
 	closeMsgBytes, _ := json.Marshal(RecognizeUsingWebsocketOptions{Action: &stop})
-	conn.WriteMessage(websocket.TextMessage, closeMsgBytes)
+	_ = conn.WriteMessage(websocket.TextMessage, closeMsgBytes)
 }
 
 /*
