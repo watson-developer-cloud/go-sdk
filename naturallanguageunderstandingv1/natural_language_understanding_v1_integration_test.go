@@ -38,12 +38,11 @@ func init() {
 	if err == nil {
 		service, serviceErr = naturallanguageunderstandingv1.
 			NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
-				URL:      os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_URL"),
-				Version:  "2018-03-16",
-				Authenticator: &core.BasicAuthenticator{
-						Username: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_USERNAME"),
-						Password: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD"),
-                },
+				URL:     os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_URL"),
+				Version: "2018-03-16",
+				Authenticator: &core.IamAuthenticator{
+					ApiKey: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_APIKEY"),
+				},
 			})
 
 		if serviceErr == nil {

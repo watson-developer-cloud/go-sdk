@@ -38,7 +38,7 @@ func init() {
 
 	if err == nil {
 		authenticator := &core.IamAuthenticator{
-        	ApiKey:     os.Getenv("COMPARE_COMPLY_IAMAPIKEY"),
+        	ApiKey:     os.Getenv("COMPARE_COMPLY_APIKEY"),
     	}
 		service, serviceErr = comparecomplyv1.
 			NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
