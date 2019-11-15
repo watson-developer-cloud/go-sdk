@@ -13,8 +13,8 @@ env:
     - GO111MODULE=on
 
 before_install:
-- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && openssl aes-256-cbc -K $encrypted_56d12e7424aa_key
-  -iv $encrypted_56d12e7424aa_iv -in .env.enc -out .env -d || true'
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && openssl aes-256-cbc -K $encrypted_099bfdf6000a_key
+  -iv $encrypted_099bfdf6000a_iv -in .env.enc -out .env -d || true'
 - nvm install 12
 - npm install -g npm@6.x
 - sudo apt-get update
