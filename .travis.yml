@@ -29,8 +29,9 @@ before_script:
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi
 
 script:
-- env | grep GO
-- golangci-lint run
+# This step is required since we use a go module
+- go mod download
+- golangci-lint run -v
 - go test `go list ./... | grep -v examples`
 - go test `go list ./... | grep -v core` -v -tags=integration
 - gometalinter.v2 --errors ./...
