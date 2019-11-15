@@ -34,7 +34,6 @@ script:
 - golangci-lint run -v
 - go test `go list ./... | grep -v examples`
 - go test `go list ./... | grep -v core` -v -tags=integration
-- gometalinter.v2 --errors ./...
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi
 
 before_deploy:
