@@ -3,11 +3,11 @@ package speechtotextv1_test
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
-	"github.com/IBM/go-sdk-core/core"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -37,7 +37,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -47,7 +47,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetModel(nil)
+				_, _, returnValueErr := testService.GetModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getModelOptions := testService.NewGetModelOptions(modelID)
@@ -78,7 +78,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -88,7 +88,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListModels(nil)
+				_, _, returnValueErr := testService.ListModels(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listModelsOptions := testService.NewListModelsOptions()
@@ -119,7 +119,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -129,7 +129,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.Recognize(nil)
+				_, _, returnValueErr := testService.Recognize(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				pwd, _ := os.Getwd()
@@ -168,7 +168,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -178,7 +178,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.CheckJob(nil)
+				_, _, returnValueErr := testService.CheckJob(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				checkJobOptions := testService.NewCheckJobOptions(ID)
@@ -209,7 +209,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -219,7 +219,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.CheckJobs(nil)
+				_, _, returnValueErr := testService.CheckJobs(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				checkJobsOptions := testService.NewCheckJobsOptions()
@@ -250,7 +250,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -260,7 +260,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.CreateJob(nil)
+				_, _, returnValueErr := testService.CreateJob(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				pwd, _ := os.Getwd()
@@ -300,7 +300,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -310,11 +310,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteJob(nil)
+				_, returnValueErr := testService.DeleteJob(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteJobOptions := testService.NewDeleteJobOptions(ID)
-				returnValue, returnValueErr = testService.DeleteJob(deleteJobOptions)
+				returnValue, returnValueErr := testService.DeleteJob(deleteJobOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -341,7 +341,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -351,7 +351,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.RegisterCallback(nil)
+				_, _, returnValueErr := testService.RegisterCallback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				registerCallbackOptions := testService.NewRegisterCallbackOptions(callbackURL)
@@ -383,7 +383,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -393,11 +393,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.UnregisterCallback(nil)
+				_, returnValueErr := testService.UnregisterCallback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				unregisterCallbackOptions := testService.NewUnregisterCallbackOptions(callbackURL)
-				returnValue, returnValueErr = testService.UnregisterCallback(unregisterCallbackOptions)
+				returnValue, returnValueErr := testService.UnregisterCallback(unregisterCallbackOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -425,7 +425,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -435,7 +435,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.CreateLanguageModel(nil)
+				_, _, returnValueErr := testService.CreateLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				createLanguageModelOptions := testService.NewCreateLanguageModelOptions(name, baseModelName)
@@ -468,7 +468,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -478,11 +478,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteLanguageModel(nil)
+				_, returnValueErr := testService.DeleteLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteLanguageModelOptions := testService.NewDeleteLanguageModelOptions(customizationID)
-				returnValue, returnValueErr = testService.DeleteLanguageModel(deleteLanguageModelOptions)
+				returnValue, returnValueErr := testService.DeleteLanguageModel(deleteLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -510,7 +510,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -520,7 +520,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetLanguageModel(nil)
+				_, _, returnValueErr := testService.GetLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getLanguageModelOptions := testService.NewGetLanguageModelOptions(customizationID)
@@ -551,7 +551,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -561,7 +561,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListLanguageModels(nil)
+				_, _, returnValueErr := testService.ListLanguageModels(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listLanguageModelsOptions := testService.NewListLanguageModelsOptions()
@@ -594,7 +594,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -604,11 +604,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ResetLanguageModel(nil)
+				_, returnValueErr := testService.ResetLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				resetLanguageModelOptions := testService.NewResetLanguageModelOptions(customizationID)
-				returnValue, returnValueErr = testService.ResetLanguageModel(resetLanguageModelOptions)
+				returnValue, returnValueErr := testService.ResetLanguageModel(resetLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -636,7 +636,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -646,11 +646,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.TrainLanguageModel(nil)
+				_, _, returnValueErr := testService.TrainLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				trainLanguageModelOptions := testService.NewTrainLanguageModelOptions(customizationID)
-				_, returnValue, returnValueErr = testService.TrainLanguageModel(trainLanguageModelOptions)
+				_, returnValue, returnValueErr := testService.TrainLanguageModel(trainLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -677,7 +677,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -687,11 +687,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.UpgradeLanguageModel(nil)
+				_, returnValueErr := testService.UpgradeLanguageModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				upgradeLanguageModelOptions := testService.NewUpgradeLanguageModelOptions(customizationID)
-				returnValue, returnValueErr = testService.UpgradeLanguageModel(upgradeLanguageModelOptions)
+				returnValue, returnValueErr := testService.UpgradeLanguageModel(upgradeLanguageModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -725,7 +725,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -735,11 +735,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.AddCorpus(nil)
+				_, returnValueErr := testService.AddCorpus(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				addCorpusOptions := testService.NewAddCorpusOptions(customizationID, corpusName, corpus)
-				returnValue, returnValueErr = testService.AddCorpus(addCorpusOptions)
+				returnValue, returnValueErr := testService.AddCorpus(addCorpusOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -768,7 +768,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -778,11 +778,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteCorpus(nil)
+				_, returnValueErr := testService.DeleteCorpus(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteCorpusOptions := testService.NewDeleteCorpusOptions(customizationID, corpusName)
-				returnValue, returnValueErr = testService.DeleteCorpus(deleteCorpusOptions)
+				returnValue, returnValueErr := testService.DeleteCorpus(deleteCorpusOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -812,7 +812,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -822,7 +822,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetCorpus(nil)
+				_, _, returnValueErr := testService.GetCorpus(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getCorpusOptions := testService.NewGetCorpusOptions(customizationID, corpusName)
@@ -855,7 +855,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -865,7 +865,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListCorpora(nil)
+				_, _, returnValueErr := testService.ListCorpora(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listCorporaOptions := testService.NewListCorporaOptions(customizationID)
@@ -899,7 +899,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -909,11 +909,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.AddWord(nil)
+				_, returnValueErr := testService.AddWord(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				addWordOptions := testService.NewAddWordOptions(customizationID, wordName)
-				returnValue, returnValueErr = testService.AddWord(addWordOptions)
+				returnValue, returnValueErr := testService.AddWord(addWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -941,7 +941,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -951,11 +951,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.AddWords(nil)
+				_, returnValueErr := testService.AddWords(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				addWordsOptions := testService.NewAddWordsOptions(customizationID, words)
-				returnValue, returnValueErr = testService.AddWords(addWordsOptions)
+				returnValue, returnValueErr := testService.AddWords(addWordsOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -984,7 +984,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -994,11 +994,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteWord(nil)
+				_, returnValueErr := testService.DeleteWord(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteWordOptions := testService.NewDeleteWordOptions(customizationID, wordName)
-				returnValue, returnValueErr = testService.DeleteWord(deleteWordOptions)
+				returnValue, returnValueErr := testService.DeleteWord(deleteWordOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1028,7 +1028,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1038,7 +1038,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetWord(nil)
+				_, _, returnValueErr := testService.GetWord(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getWordOptions := testService.NewGetWordOptions(customizationID, wordName)
@@ -1071,7 +1071,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1081,7 +1081,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListWords(nil)
+				_, _, returnValueErr := testService.ListWords(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listWordsOptions := testService.NewListWordsOptions(customizationID)
@@ -1114,7 +1114,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1124,7 +1124,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.CreateAcousticModel(nil)
+				_, _, returnValueErr := testService.CreateAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				createAcousticModelOptions := testService.NewCreateAcousticModelOptions(name, baseModelName)
@@ -1156,7 +1156,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1166,11 +1166,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteAcousticModel(nil)
+				_, returnValueErr := testService.DeleteAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteAcousticModelOptions := testService.NewDeleteAcousticModelOptions(customizationID)
-				returnValue, returnValueErr = testService.DeleteAcousticModel(deleteAcousticModelOptions)
+				returnValue, returnValueErr := testService.DeleteAcousticModel(deleteAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1198,7 +1198,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1208,7 +1208,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetAcousticModel(nil)
+				_, _, returnValueErr := testService.GetAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getAcousticModelOptions := testService.NewGetAcousticModelOptions(customizationID)
@@ -1239,7 +1239,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1249,7 +1249,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListAcousticModels(nil)
+				_, _, returnValueErr := testService.ListAcousticModels(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listAcousticModelsOptions := testService.NewListAcousticModelsOptions()
@@ -1281,7 +1281,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1291,11 +1291,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.ResetAcousticModel(nil)
+				_, returnValueErr := testService.ResetAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				resetAcousticModelOptions := testService.NewResetAcousticModelOptions(customizationID)
-				returnValue, returnValueErr = testService.ResetAcousticModel(resetAcousticModelOptions)
+				returnValue, returnValueErr := testService.ResetAcousticModel(resetAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1323,7 +1323,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1333,11 +1333,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.TrainAcousticModel(nil)
+				_, _, returnValueErr := testService.TrainAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				trainAcousticModelOptions := testService.NewTrainAcousticModelOptions(customizationID)
-				_, returnValue, returnValueErr = testService.TrainAcousticModel(trainAcousticModelOptions)
+				_, returnValue, returnValueErr := testService.TrainAcousticModel(trainAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1364,7 +1364,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1374,11 +1374,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.UpgradeAcousticModel(nil)
+				_, returnValueErr := testService.UpgradeAcousticModel(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				upgradeAcousticModelOptions := testService.NewUpgradeAcousticModelOptions(customizationID)
-				returnValue, returnValueErr = testService.UpgradeAcousticModel(upgradeAcousticModelOptions)
+				returnValue, returnValueErr := testService.UpgradeAcousticModel(upgradeAcousticModelOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1407,7 +1407,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1417,7 +1417,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.AddAudio(nil)
+				_, returnValueErr := testService.AddAudio(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				pwd, _ := os.Getwd()
@@ -1430,7 +1430,7 @@ var _ = Describe("SpeechToTextV1", func() {
 						audioName,
 						file).
 					SetContentType("audio/wav")
-				returnValue, returnValueErr = testService.AddAudio(addAudioOptions)
+				returnValue, returnValueErr := testService.AddAudio(addAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1459,7 +1459,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1469,11 +1469,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteAudio(nil)
+				_, returnValueErr := testService.DeleteAudio(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteAudioOptions := testService.NewDeleteAudioOptions(customizationID, audioName)
-				returnValue, returnValueErr = testService.DeleteAudio(deleteAudioOptions)
+				returnValue, returnValueErr := testService.DeleteAudio(deleteAudioOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1503,7 +1503,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1513,7 +1513,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetAudio(nil)
+				_, _, returnValueErr := testService.GetAudio(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getAudioOptions := testService.NewGetAudioOptions(customizationID, audioName)
@@ -1546,7 +1546,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1556,7 +1556,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListAudio(nil)
+				_, _, returnValueErr := testService.ListAudio(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listAudioOptions := testService.NewListAudioOptions(customizationID)
@@ -1587,7 +1587,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1597,11 +1597,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteUserData(nil)
+				_, returnValueErr := testService.DeleteUserData(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteUserDataOptions := testService.NewDeleteUserDataOptions(customerID)
-				returnValue, returnValueErr = testService.DeleteUserData(deleteUserDataOptions)
+				returnValue, returnValueErr := testService.DeleteUserData(deleteUserDataOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1637,7 +1637,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1647,11 +1647,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.AddGrammar(nil)
+				_, returnValueErr := testService.AddGrammar(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				addGrammarOptions := testService.NewAddGrammarOptions(customizationID, grammarName, grammarFile, contentType)
-				returnValue, returnValueErr = testService.AddGrammar(addGrammarOptions)
+				returnValue, returnValueErr := testService.AddGrammar(addGrammarOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1681,7 +1681,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1691,11 +1691,11 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				returnValue, returnValueErr := testService.DeleteGrammar(nil)
+				_, returnValueErr := testService.DeleteGrammar(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteGrammarOptions := testService.NewDeleteGrammarOptions(customizationID, grammarName)
-				returnValue, returnValueErr = testService.DeleteGrammar(deleteGrammarOptions)
+				returnValue, returnValueErr := testService.DeleteGrammar(deleteGrammarOptions)
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 			})
@@ -1725,7 +1725,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1735,7 +1735,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetGrammar(nil)
+				_, _, returnValueErr := testService.GetGrammar(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getGrammarOptions := testService.NewGetGrammarOptions(customizationID, grammarName)
@@ -1768,7 +1768,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-					URL:      testServer.URL,
+					URL: testServer.URL,
 					Authenticator: &core.BasicAuthenticator{
 						Username: username,
 						Password: password,
@@ -1778,7 +1778,7 @@ var _ = Describe("SpeechToTextV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListGrammars(nil)
+				_, _, returnValueErr := testService.ListGrammars(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listGrammarsOptions := testService.NewListGrammarsOptions(customizationID)

@@ -37,7 +37,7 @@ type SynthesizeListener struct {
 }
 
 func decode(b []byte, target interface{}) {
-	json.NewDecoder(bytes.NewReader(b)).Decode(&target)
+	_ = json.NewDecoder(bytes.NewReader(b)).Decode(&target)
 }
 
 // OnError: Callback when error encountered
@@ -91,6 +91,11 @@ func (listener SynthesizeListener) OnData(conn *websocket.Conn) {
 		if messageType == websocket.TextMessage {
 			var r map[string]interface{}
 			err = json.NewDecoder(bytes.NewReader(result)).Decode(&r)
+			if err != nil {
+				listener.OnError(fmt.Errorf(err.Error()))
+				listener.IsClosed <- true
+				break
+			}
 			if err, ok := r["error"]; ok {
 				listener.OnError(fmt.Errorf(err.(string)))
 				listener.IsClosed <- true

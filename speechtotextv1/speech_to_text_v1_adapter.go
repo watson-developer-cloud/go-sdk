@@ -110,8 +110,8 @@ func (speechToText *SpeechToTextV1) RecognizeUsingWebsocket(recognizeWSOptions *
 
 	// Create a dummy request for authenticate
 	// Need to update design to let recognizeListener take in a request object
-	req, err := http.NewRequest("POST", speechToText.Service.Options.URL, nil)
-	err = speechToText.Service.Options.Authenticator.Authenticate(req)
+	req, _ := http.NewRequest("POST", speechToText.Service.Options.URL, nil)
+	err := speechToText.Service.Options.Authenticator.Authenticate(req)
 	if err != nil {
 		panic(err)
 	}

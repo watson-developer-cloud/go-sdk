@@ -38,13 +38,7 @@ func init() {
 
 	if err == nil {
 		service, serviceErr = naturallanguageclassifierv1.
-			NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				URL:      os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_URL"),
-				Authenticator: &core.BasicAuthenticator{
-						Username: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_USERNAME"),
-						Password: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_PASSWORD"),
-                },
-			})
+			NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
 
 		if serviceErr == nil {
 			customHeaders := http.Header{}
@@ -74,8 +68,8 @@ func TestClassifier(t *testing.T) {
 
 	createClassifier, _, responseErr := service.CreateClassifier(
 		&naturallanguageclassifierv1.CreateClassifierOptions{
-			TrainingData: trainingData,
-			TrainingMetadata:     metadata,
+			TrainingData:     trainingData,
+			TrainingMetadata: metadata,
 		},
 	)
 	assert.Nil(t, responseErr)

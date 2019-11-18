@@ -38,12 +38,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = assistantv1.
 			NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:      os.Getenv("ASSISTANT_GO_SDK_URL"),
-				Version:  "2018-09-20",
-				Authenticator: &core.BasicAuthenticator{
-						Username: os.Getenv("ASSISTANT_GO_SDK_USERNAME"),
-						Password: os.Getenv("ASSISTANT_GO_SDK_PASSWORD"),
-                },
+				Version: "2018-09-20",
 			})
 
 		if serviceErr == nil {
@@ -66,27 +61,27 @@ func TestCounterexamples(t *testing.T) {
 
 	// List Counter Examples
 	result, response, responseErr := service.ListCounterexamples(service.
-		NewListCounterexamplesOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")))
+		NewListCounterexamplesOptions(os.Getenv("ASSISTANT_WORKSPACE_ID")))
 	assert.Nil(t, responseErr)
 
 	assert.NotNil(t, result)
 
 	// Create counter example
 	createCounterExample, _, responseErr := service.CreateCounterexample(service.
-		NewCreateCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade?"))
+		NewCreateCounterexampleOptions(os.Getenv("ASSISTANT_WORKSPACE_ID"), "Make me a lemonade?"))
 	assert.Nil(t, responseErr)
 
 	assert.NotNil(t, createCounterExample)
 
 	// Get counter example
 	getCounterExample, response, responseErr := service.GetCounterexample(service.
-		NewGetCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a lemonade?"))
+		NewGetCounterexampleOptions(os.Getenv("ASSISTANT_WORKSPACE_ID"), "Make me a lemonade?"))
 	assert.Nil(t, responseErr)
 
 	assert.NotNil(t, getCounterExample)
 
 	// Update counter example
-	options := service.NewUpdateCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"),
+	options := service.NewUpdateCounterexampleOptions(os.Getenv("ASSISTANT_WORKSPACE_ID"),
 		"Make me a lemonade?").
 		SetNewText("Make me a smoothie?")
 	updateCounterExample, _, responseErr := service.UpdateCounterexample(options)
@@ -96,7 +91,7 @@ func TestCounterexamples(t *testing.T) {
 
 	// Delete counter example
 	response, responseErr = service.DeleteCounterexample(service.
-		NewDeleteCounterexampleOptions(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID"), "Make me a smoothie?"))
+		NewDeleteCounterexampleOptions(os.Getenv("ASSISTANT_WORKSPACE_ID"), "Make me a smoothie?"))
 	assert.NotNil(t, response)
 }
 
@@ -106,7 +101,7 @@ func TestEntity(t *testing.T) {
 	// List entities
 	listEntities, _, responseErr := service.ListEntities(
 		&assistantv1.ListEntitiesOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -116,7 +111,7 @@ func TestEntity(t *testing.T) {
 	// Create entity
 	createEntity, _, responseErr := service.CreateEntity(
 		&assistantv1.CreateEntityOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Values: []assistantv1.CreateValue{
 				assistantv1.CreateValue{
@@ -135,7 +130,7 @@ func TestEntity(t *testing.T) {
 	//Get entity
 	getEntity, _, responseErr := service.GetEntity(
 		&assistantv1.GetEntityOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Export:      core.BoolPtr(true),
 		},
@@ -147,7 +142,7 @@ func TestEntity(t *testing.T) {
 	// Update entity
 	updateEntity, _, responseErr := service.UpdateEntity(
 		&assistantv1.UpdateEntityOptions{
-			WorkspaceID:    core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID:    core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:         core.StringPtr("coffee"),
 			NewDescription: core.StringPtr("cafe"),
 		},
@@ -163,7 +158,7 @@ func TestValues(t *testing.T) {
 	// List values
 	listValues, _, responseErr := service.ListValues(
 		&assistantv1.ListValuesOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 		},
 	)
@@ -174,7 +169,7 @@ func TestValues(t *testing.T) {
 	// Create value
 	createValue, _, responseErr := service.CreateValue(
 		&assistantv1.CreateValueOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("mocha"),
 		},
@@ -186,7 +181,7 @@ func TestValues(t *testing.T) {
 	//Get value
 	getValue, _, responseErr := service.GetValue(
 		&assistantv1.GetValueOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("mocha"),
 		},
@@ -198,7 +193,7 @@ func TestValues(t *testing.T) {
 	// Update value
 	updateValue, _, responseErr := service.UpdateValue(
 		&assistantv1.UpdateValueOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("mocha"),
 			NewValue:    core.StringPtr("new mocha"),
@@ -215,7 +210,7 @@ func TestListMentions(t *testing.T) {
 	// List mentions
 	listMentions, _, responseErr := service.ListMentions(
 		&assistantv1.ListMentionsOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 		},
 	)
@@ -230,7 +225,7 @@ func TestSynonyms(t *testing.T) {
 	// List synonyms
 	listSynonyms, _, responseErr := service.ListSynonyms(
 		&assistantv1.ListSynonymsOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
 		},
@@ -242,7 +237,7 @@ func TestSynonyms(t *testing.T) {
 	// Create synonym
 	createSynonym, _, responseErr := service.CreateSynonym(
 		&assistantv1.CreateSynonymOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
 			Synonym:     core.StringPtr("NM"),
@@ -255,7 +250,7 @@ func TestSynonyms(t *testing.T) {
 	//Get synonym
 	getSynonym, _, responseErr := service.GetSynonym(
 		&assistantv1.GetSynonymOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
 			Synonym:     core.StringPtr("NM"),
@@ -268,7 +263,7 @@ func TestSynonyms(t *testing.T) {
 	// Update synonym
 	updateSynonym, _, responseErr := service.UpdateSynonym(
 		&assistantv1.UpdateSynonymOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
 			Synonym:     core.StringPtr("NM"),
@@ -282,7 +277,7 @@ func TestSynonyms(t *testing.T) {
 	// Delete synonym
 	_, responseErr = service.DeleteSynonym(
 		&assistantv1.DeleteSynonymOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
 			Synonym:     core.StringPtr("N.M."),
@@ -293,7 +288,7 @@ func TestSynonyms(t *testing.T) {
 	// Delete value
 	_, responseErr = service.DeleteValue(
 		&assistantv1.DeleteValueOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 			Value:       core.StringPtr("new mocha"),
 		},
@@ -303,7 +298,7 @@ func TestSynonyms(t *testing.T) {
 	// Delete entity
 	_, responseErr = service.DeleteEntity(
 		&assistantv1.DeleteEntityOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Entity:      core.StringPtr("coffee"),
 		},
 	)
@@ -316,7 +311,7 @@ func TestIntents(t *testing.T) {
 	// List intents
 	listIntents, _, responseErr := service.ListIntents(
 		&assistantv1.ListIntentsOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -326,7 +321,7 @@ func TestIntents(t *testing.T) {
 	// Create intent
 	createIntent, _, responseErr := service.CreateIntent(
 		&assistantv1.CreateIntentOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hello"),
 			Description: core.StringPtr("greetings"),
 		},
@@ -338,7 +333,7 @@ func TestIntents(t *testing.T) {
 	//Get intent
 	getIntent, _, responseErr := service.GetIntent(
 		&assistantv1.GetIntentOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hello"),
 		},
 	)
@@ -349,7 +344,7 @@ func TestIntents(t *testing.T) {
 	// Update intent
 	updateIntent, _, responseErr := service.UpdateIntent(
 		&assistantv1.UpdateIntentOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hello"),
 			NewIntent:   core.StringPtr("hi"),
 		},
@@ -365,7 +360,7 @@ func TestExamples(t *testing.T) {
 	// List examples
 	listExamples, _, responseErr := service.ListExamples(
 		&assistantv1.ListExamplesOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 		},
 	)
@@ -376,7 +371,7 @@ func TestExamples(t *testing.T) {
 	// Create example
 	createExample, _, responseErr := service.CreateExample(
 		&assistantv1.CreateExampleOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 			Text:        core.StringPtr("Howdy"),
 		},
@@ -388,7 +383,7 @@ func TestExamples(t *testing.T) {
 	//Get example
 	getExample, _, responseErr := service.GetExample(
 		&assistantv1.GetExampleOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 			Text:        core.StringPtr("Howdy"),
 		},
@@ -400,7 +395,7 @@ func TestExamples(t *testing.T) {
 	// Update example
 	updateExample, _, responseErr := service.UpdateExample(
 		&assistantv1.UpdateExampleOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 			Text:        core.StringPtr("Howdy"),
 			NewText:     core.StringPtr("Hello there!"),
@@ -413,7 +408,7 @@ func TestExamples(t *testing.T) {
 	// Delete example
 	_, responseErr = service.DeleteExample(
 		&assistantv1.DeleteExampleOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 			Text:        core.StringPtr("Hello there!"),
 		},
@@ -423,7 +418,7 @@ func TestExamples(t *testing.T) {
 	// Delete intent
 	_, responseErr = service.DeleteIntent(
 		&assistantv1.DeleteIntentOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Intent:      core.StringPtr("hi"),
 		},
 	)
@@ -436,7 +431,7 @@ func TestDialogNodes(t *testing.T) {
 	// List dialog nodes
 	listDialogNodes, _, responseErr := service.ListDialogNodes(
 		&assistantv1.ListDialogNodesOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -446,7 +441,7 @@ func TestDialogNodes(t *testing.T) {
 	// Create dialog node
 	createDialog, _, responseErr := service.CreateDialogNode(
 		&assistantv1.CreateDialogNodeOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			DialogNode:  core.StringPtr("greeting"),
 			Conditions:  core.StringPtr("#hello"),
 			Output: &assistantv1.DialogNodeOutput{
@@ -471,7 +466,7 @@ func TestDialogNodes(t *testing.T) {
 	//Get dialog node
 	getDialogNode, _, responseErr := service.GetDialogNode(
 		&assistantv1.GetDialogNodeOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			DialogNode:  core.StringPtr("greeting"),
 		},
 	)
@@ -482,7 +477,7 @@ func TestDialogNodes(t *testing.T) {
 	// Update dialog node
 	updateDialogNode, _, responseErr := service.UpdateDialogNode(
 		&assistantv1.UpdateDialogNodeOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			DialogNode:  core.StringPtr("greeting"),
 			NewTitle:    core.StringPtr("Greeting."),
 		},
@@ -494,7 +489,7 @@ func TestDialogNodes(t *testing.T) {
 	// Delete dialog node
 	_, responseErr = service.DeleteDialogNode(
 		&assistantv1.DeleteDialogNodeOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			DialogNode:  core.StringPtr("greeting"),
 		},
 	)
@@ -516,7 +511,7 @@ func TestWorkspaces(t *testing.T) {
 	createWorkspace, _, responseErr := service.CreateWorkspace(
 		&assistantv1.CreateWorkspaceOptions{
 			Name:        core.StringPtr("API test"),
-			Description: core.StringPtr("Example workspace created via API"),
+			Description: core.StringPtr("Example workspace created via SDK"),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -559,7 +554,7 @@ func TestMessage(t *testing.T) {
 
 	message, _, responseErr := service.Message(
 		&assistantv1.MessageOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 			Input: &assistantv1.MessageInput{
 				"text": "Hello World",
 			},
@@ -576,7 +571,7 @@ func TestLogs(t *testing.T) {
 	// List logs
 	listLogs, _, responseErr := service.ListLogs(
 		&assistantv1.ListLogsOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_GO_SDK_WORKSPACE_ID")),
+			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
 		},
 	)
 	assert.Nil(t, responseErr)

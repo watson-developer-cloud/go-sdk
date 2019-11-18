@@ -39,11 +39,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = visualrecognitionv3.
 			NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     os.Getenv("VISUAL_RECOGNITION_URL"),
 				Version: "2018-03-19",
-				Authenticator: &core.IamAuthenticator{
-					ApiKey: os.Getenv("VISUAL_RECOGNITION_APIKEY"),
-				},
 			})
 
 		if serviceErr == nil {

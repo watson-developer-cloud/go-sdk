@@ -30,9 +30,7 @@ If you want to contribute to the repository, here's a quick guide:
   ```
   6. Check your code for lint issues
   ```sh
-  go get -u gopkg.in/alecthomas/gometalinter.v2
-  go get -u golang.org/x/lint/golint
-  gometalinter.v2 --errors ./...
+  golangci-lint run
   ```
   7. Develop and test your code changes `go test ./...`
   8. Commit your changes:

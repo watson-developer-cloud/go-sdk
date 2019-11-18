@@ -20,7 +20,6 @@ package texttospeechv1_test
 
 import (
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/IBM/go-sdk-core/core"
@@ -38,13 +37,7 @@ func init() {
 
 	if err == nil {
 		service, serviceErr = texttospeechv1.
-			NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL:	os.Getenv("TEXT_TO_SPEECH_URL"),
-				Authenticator: &core.BasicAuthenticator{
-					Username:	os.Getenv("TEXT_TO_SPEECH_USERNAME"),
-					Password:	os.Getenv("TEXT_TO_SPEECH_PASSWORD"),
-				},
-			})
+			NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
 
 		if serviceErr == nil {
 			customHeaders := http.Header{}
@@ -96,7 +89,6 @@ func TestSynthesize(t *testing.T) {
 	synthesize.Close()
 }
 
-
 type myCallBack struct {
 	T *testing.T
 }
@@ -134,7 +126,7 @@ func TestSynthesizeUsingWebsocket(t *testing.T) {
 
 	callback := myCallBack{T: t}
 	synthesizeUsingWebsocketOptions := service.
-	NewSynthesizeUsingWebsocketOptions("This is a <mark name=\"SIMPLE\"/>simple <mark name=\"EXAMPLE\"/> example.", callback)
+		NewSynthesizeUsingWebsocketOptions("This is a <mark name=\"SIMPLE\"/>simple <mark name=\"EXAMPLE\"/> example.", callback)
 
 	synthesizeUsingWebsocketOptions.
 		SetAccept("audio/mp3").

@@ -20,7 +20,6 @@ package naturallanguageunderstandingv1_test
 
 import (
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/IBM/go-sdk-core/core"
@@ -38,12 +37,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = naturallanguageunderstandingv1.
 			NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
-				URL:      os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_URL"),
-				Version:  "2018-03-16",
-				Authenticator: &core.BasicAuthenticator{
-						Username: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_USERNAME"),
-						Password: os.Getenv("NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD"),
-                },
+				Version: "2018-03-16",
 			})
 
 		if serviceErr == nil {

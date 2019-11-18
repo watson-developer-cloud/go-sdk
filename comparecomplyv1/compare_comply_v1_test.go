@@ -73,7 +73,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ConvertToHTML(nil)
+				_, _, returnValueErr := testService.ConvertToHTML(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				convertToHTMLOptions := testService.NewConvertToHTMLOptions(testPDF)
@@ -131,7 +131,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ClassifyElements(nil)
+				_, _, returnValueErr := testService.ClassifyElements(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				classifyElementsOptions := testService.NewClassifyElementsOptions(testPDF)
@@ -189,7 +189,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ExtractTables(nil)
+				_, _, returnValueErr := testService.ExtractTables(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				extractTablesOptions := testService.NewExtractTablesOptions(testPDF)
@@ -251,7 +251,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.CompareDocuments(nil)
+				_, _, returnValueErr := testService.CompareDocuments(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				compareDocumentsOptions := testService.NewCompareDocumentsOptions(file1, file2)
@@ -305,7 +305,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.AddFeedback(nil)
+				_, _, returnValueErr := testService.AddFeedback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				addFeedbackOptions := testService.NewAddFeedbackOptions(&comparecomplyv1.FeedbackDataInput{
@@ -410,7 +410,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.DeleteFeedback(nil)
+				_, _, returnValueErr := testService.DeleteFeedback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				deleteFeedbackOptions := testService.NewDeleteFeedbackOptions(feedbackID)
@@ -466,7 +466,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetFeedback(nil)
+				_, _, returnValueErr := testService.GetFeedback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getFeedbackOptions := testService.NewGetFeedbackOptions(feedbackID)
@@ -520,7 +520,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListFeedback(nil)
+				_, _, returnValueErr := testService.ListFeedback(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listFeedbackOptions := testService.NewListFeedbackOptions()
@@ -588,7 +588,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.CreateBatch(nil)
+				_, _, returnValueErr := testService.CreateBatch(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				createBatchOptions := testService.NewCreateBatchOptions(function, inputCredentialsFile, inputBucketLocation, inputBucketName, outputCredentialsFile, outputBucketLocation, outputBucketName)
@@ -644,7 +644,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.GetBatch(nil)
+				_, _, returnValueErr := testService.GetBatch(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				getBatchOptions := testService.NewGetBatchOptions(batchID)
@@ -697,7 +697,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.ListBatches(nil)
+				_, _, returnValueErr := testService.ListBatches(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				listBatchesOptions := testService.NewListBatchesOptions()
@@ -754,7 +754,7 @@ var _ = Describe("CompareComplyV1", func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, returnValue, returnValueErr := testService.UpdateBatch(nil)
+				_, _, returnValueErr := testService.UpdateBatch(nil)
 				Expect(returnValueErr).NotTo(BeNil())
 
 				updateBatchOptions := testService.NewUpdateBatchOptions(batchID, action)

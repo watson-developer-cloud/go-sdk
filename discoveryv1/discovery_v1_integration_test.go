@@ -40,14 +40,9 @@ func init() {
 	err := godotenv.Load("../.env")
 
 	if err == nil {
-		authenticator := &core.IamAuthenticator{
-        	ApiKey:     os.Getenv("DISCOVERY_IAMAPIKEY"),
-    	}
 		service, serviceErr = discoveryv1.
 			NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:       os.Getenv("DISCOVERY_URL"),
-				Version:   "2018-03-05",
-				Authenticator: authenticator,
+				Version:       "2018-03-05",
 			})
 		environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
 
@@ -319,7 +314,7 @@ func TestQuery(t *testing.T) {
 			EnvironmentID: environmentID,
 			CollectionID:  collectionID,
 			Filter:        core.StringPtr("extracted_metadata.sha1::9181d244*"),
-			Return:  core.StringPtr("extracted_metadata.sha1"),
+			Return:        core.StringPtr("extracted_metadata.sha1"),
 		},
 	)
 	assert.Nil(t, responseErr)
