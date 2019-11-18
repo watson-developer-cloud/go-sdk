@@ -40,14 +40,9 @@ func init() {
 	err := godotenv.Load("../.env")
 
 	if err == nil {
-		authenticator := &core.IamAuthenticator{
-			ApiKey: os.Getenv("DISCOVERY_APIKEY"),
-		}
 		service, serviceErr = discoveryv1.
 			NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:           os.Getenv("DISCOVERY_URL"),
 				Version:       "2018-03-05",
-				Authenticator: authenticator,
 			})
 		environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
 

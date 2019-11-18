@@ -20,7 +20,6 @@ package texttospeechv1_test
 
 import (
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/IBM/go-sdk-core/core"
@@ -38,12 +37,7 @@ func init() {
 
 	if err == nil {
 		service, serviceErr = texttospeechv1.
-			NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: os.Getenv("TEXT_TO_SPEECH_URL"),
-				Authenticator: &core.IamAuthenticator{
-					ApiKey: os.Getenv("TEXT_TO_SPEECH_APIKEY"),
-				},
-			})
+			NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
 
 		if serviceErr == nil {
 			customHeaders := http.Header{}

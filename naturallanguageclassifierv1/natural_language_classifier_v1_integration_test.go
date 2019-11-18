@@ -38,12 +38,7 @@ func init() {
 
 	if err == nil {
 		service, serviceErr = naturallanguageclassifierv1.
-			NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				URL: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_URL"),
-				Authenticator: &core.IamAuthenticator{
-					ApiKey: os.Getenv("NATURAL_LANGUAGE_CLASSIFIER_APIKEY"),
-				},
-			})
+			NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
 
 		if serviceErr == nil {
 			customHeaders := http.Header{}

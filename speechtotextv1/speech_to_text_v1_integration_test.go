@@ -40,12 +40,7 @@ func init() {
 
 	if err == nil {
 		service, serviceErr = speechtotextv1.
-			NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				URL: os.Getenv("SPEECH_TO_TEXT_URL"),
-				Authenticator: &core.IamAuthenticator{
-					ApiKey: os.Getenv("SPEECH_TO_TEXT_APIKEY"),
-				},
-			})
+			NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 		if serviceErr == nil {
 			customHeaders := http.Header{}

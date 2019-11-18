@@ -38,11 +38,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = assistantv2.
 			NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     os.Getenv("ASSISTANT_URL"),
 				Version: "2017-04-21",
-				Authenticator: &core.IamAuthenticator{
-					ApiKey: os.Getenv("ASSISTANT_APIKEY"),
-				},
 			})
 
 		if serviceErr == nil {

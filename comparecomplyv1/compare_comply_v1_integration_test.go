@@ -37,14 +37,9 @@ func init() {
 	err := godotenv.Load("../.env")
 
 	if err == nil {
-		authenticator := &core.IamAuthenticator{
-        	ApiKey:     os.Getenv("COMPARE_COMPLY_APIKEY"),
-    	}
 		service, serviceErr = comparecomplyv1.
 			NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL:       os.Getenv("COMPARE_COMPLY_URL"),
 				Version:   "2018-10-15",
-				Authenticator: authenticator,
 			})
 
 		if serviceErr == nil {

@@ -40,11 +40,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = personalityinsightsv3.
 			NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-				URL:     os.Getenv("PERSONALITY_INSIGHTS_URL"),
 				Version: "2017-10-13",
-				Authenticator: &core.IamAuthenticator{
-					ApiKey: os.Getenv("PERSONALITY_INSIGHTS_APIKEY"),
-				},
 			})
 
 		if serviceErr == nil {

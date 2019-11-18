@@ -20,7 +20,6 @@ package toneanalyzerv3_test
 
 import (
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/IBM/go-sdk-core/core"
@@ -38,11 +37,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = toneanalyzerv3.
 			NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-				URL:     os.Getenv("TONE_ANALYZER_URL"),
 				Version: "2017-09-21",
-				Authenticator: &core.IamAuthenticator{
-					ApiKey: os.Getenv("TONE_ANALYZER_APIKEY"),
-				},
 			})
 
 		if serviceErr == nil {

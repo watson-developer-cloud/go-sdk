@@ -38,11 +38,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = languagetranslatorv3.
 			NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     os.Getenv("LANGUAGE_TRANSLATOR_URL"),
 				Version: "2019-06-03",
-				Authenticator: &core.IamAuthenticator{
-					ApiKey: os.Getenv("LANGUAGE_TRANSLATOR_APIKEY"),
-				},
 			})
 
 		if serviceErr == nil {
