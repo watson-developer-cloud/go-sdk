@@ -19,10 +19,9 @@ package toneanalyzerv3
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"strings"
 )
 
 // ToneAnalyzerV3 : The IBM Watson&trade; Tone Analyzer service uses linguistic analysis to detect emotional and

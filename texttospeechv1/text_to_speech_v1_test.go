@@ -3,16 +3,15 @@ package texttospeechv1_test
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/IBM/go-sdk-core/core"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
-
-	"github.com/IBM/go-sdk-core/core"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
 )
 
 var _ = Describe("TextToSpeechV1", func() {

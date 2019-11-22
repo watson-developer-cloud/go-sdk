@@ -18,13 +18,12 @@ package toneanalyzerv3_test
 
 import (
 	"fmt"
-	"net/http"
-	"net/http/httptest"
-
 	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
+	"net/http"
+	"net/http/httptest"
 )
 
 var _ = Describe(`ToneAnalyzerV3`, func() {
