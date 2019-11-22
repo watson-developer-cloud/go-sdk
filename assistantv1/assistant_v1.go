@@ -2788,6 +2788,9 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	if updateDialogNodeOptions.NewUserLabel != nil {
 		body["user_label"] = updateDialogNodeOptions.NewUserLabel
 	}
+	if updateDialogNodeOptions.NewDisambiguationOptOut != nil {
+		body["disambiguation_opt_out"] = updateDialogNodeOptions.NewDisambiguationOptOut
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -6963,6 +6966,9 @@ type UpdateDialogNodeOptions struct {
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	NewUserLabel *string `json:"new_user_label,omitempty"`
 
+	// Whether the dialog node should be excluded from disambiguation suggestions.
+	NewDisambiguationOptOut *bool `json:"new_disambiguation_opt_out,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -7141,6 +7147,12 @@ func (options *UpdateDialogNodeOptions) SetNewDigressOutSlots(newDigressOutSlots
 // SetNewUserLabel : Allow user to set NewUserLabel
 func (options *UpdateDialogNodeOptions) SetNewUserLabel(newUserLabel string) *UpdateDialogNodeOptions {
 	options.NewUserLabel = core.StringPtr(newUserLabel)
+	return options
+}
+
+// SetNewDisambiguationOptOut : Allow user to set NewDisambiguationOptOut
+func (options *UpdateDialogNodeOptions) SetNewDisambiguationOptOut(newDisambiguationOptOut bool) *UpdateDialogNodeOptions {
+	options.NewDisambiguationOptOut = core.BoolPtr(newDisambiguationOptOut)
 	return options
 }
 

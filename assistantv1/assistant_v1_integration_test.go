@@ -478,9 +478,10 @@ func TestDialogNodes(t *testing.T) {
 	// Update dialog node
 	updateDialogNode, _, responseErr := service.UpdateDialogNode(
 		&assistantv1.UpdateDialogNodeOptions{
-			WorkspaceID: core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
-			DialogNode:  core.StringPtr("greeting"),
-			NewTitle:    core.StringPtr("Greeting."),
+			WorkspaceID:             core.StringPtr(os.Getenv("ASSISTANT_WORKSPACE_ID")),
+			DialogNode:              core.StringPtr("greeting"),
+			NewTitle:                core.StringPtr("Greeting."),
+			NewDisambiguationOptOut: core.BoolPtr(false),
 		},
 	)
 	assert.Nil(t, responseErr)
