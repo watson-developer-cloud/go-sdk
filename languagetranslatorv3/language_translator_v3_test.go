@@ -52,7 +52,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -97,7 +97,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -143,7 +143,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -188,7 +188,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -236,7 +236,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -289,7 +289,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -336,7 +336,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -381,7 +381,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -427,7 +427,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -478,7 +478,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -523,7 +523,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -566,7 +566,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
