@@ -297,6 +297,9 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	if createWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = createWorkspaceOptions.Counterexamples
 	}
+	if createWorkspaceOptions.Webhooks != nil {
+		body["webhooks"] = createWorkspaceOptions.Webhooks
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -453,6 +456,9 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	}
 	if updateWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = updateWorkspaceOptions.Counterexamples
+	}
+	if updateWorkspaceOptions.Webhooks != nil {
+		body["webhooks"] = updateWorkspaceOptions.Webhooks
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -3869,6 +3875,8 @@ type CreateWorkspaceOptions struct {
 	// An array of objects defining input examples that have been marked as irrelevant input.
 	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
+	Webhooks []Webhook `json:"webhooks,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -3935,6 +3943,12 @@ func (options *CreateWorkspaceOptions) SetDialogNodes(dialogNodes []DialogNode) 
 // SetCounterexamples : Allow user to set Counterexamples
 func (options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []Counterexample) *CreateWorkspaceOptions {
 	options.Counterexamples = counterexamples
+	return options
+}
+
+// SetWebhooks : Allow user to set Webhooks
+func (options *CreateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *CreateWorkspaceOptions {
+	options.Webhooks = webhooks
 	return options
 }
 
@@ -4461,6 +4475,7 @@ const (
 	DialogNodeAction_Type_CloudFunction = "cloud_function"
 	DialogNodeAction_Type_Server        = "server"
 	DialogNodeAction_Type_WebAction     = "web_action"
+	DialogNodeAction_Type_Webhook       = "webhook"
 )
 
 // DialogNodeCollection : An array of dialog nodes.
@@ -7558,6 +7573,8 @@ type UpdateWorkspaceOptions struct {
 	// An array of objects defining input examples that have been marked as irrelevant input.
 	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
+	Webhooks []Webhook `json:"webhooks,omitempty"`
+
 	// Whether the new data is to be appended to the existing data in the workspace. If **append**=`false`, elements
 	// included in the new data completely replace the corresponding existing elements, including all subelements. For
 	// example, if the new data includes **entities** and **append**=`false`, all existing entities in the workspace are
@@ -7644,6 +7661,12 @@ func (options *UpdateWorkspaceOptions) SetCounterexamples(counterexamples []Coun
 	return options
 }
 
+// SetWebhooks : Allow user to set Webhooks
+func (options *UpdateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *UpdateWorkspaceOptions {
+	options.Webhooks = webhooks
+	return options
+}
+
 // SetAppend : Allow user to set Append
 func (options *UpdateWorkspaceOptions) SetAppend(append bool) *UpdateWorkspaceOptions {
 	options.Append = core.BoolPtr(append)
@@ -7705,6 +7728,31 @@ type ValueCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
+// Webhook : A webhook that can be used by dialog nodes to make programmatic calls to an external function.
+//
+// **Note:** Currently, only a single webhook named `main_webhook` is supported.
+type Webhook struct {
+
+	// The URL for the external service or application to which you want to send HTTP POST requests.
+	URL *string `json:"url" validate:"required"`
+
+	// The name of the webhook. Currently, `main_webhook` is the only supported value.
+	Name *string `json:"name" validate:"required"`
+
+	// An optional array of HTTP headers to pass with the HTTP request.
+	Headers []WebhookHeader `json:"headers,omitempty"`
+}
+
+// WebhookHeader : A key/value pair defining an HTTP header and a value.
+type WebhookHeader struct {
+
+	// The name of an HTTP header (for example, `Authorization`).
+	Name *string `json:"name" validate:"required"`
+
+	// The value of an HTTP header.
+	Value *string `json:"value" validate:"required"`
+}
+
 // Workspace : Workspace struct
 type Workspace struct {
 
@@ -7750,6 +7798,8 @@ type Workspace struct {
 
 	// An array of counterexamples.
 	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
+
+	Webhooks []Webhook `json:"webhooks,omitempty"`
 }
 
 // Constants associated with the Workspace.Status property.

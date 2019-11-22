@@ -512,6 +512,12 @@ func TestWorkspaces(t *testing.T) {
 		&assistantv1.CreateWorkspaceOptions{
 			Name:        core.StringPtr("API test"),
 			Description: core.StringPtr("Example workspace created via SDK"),
+			Webhooks: []assistantv1.Webhook{
+				assistantv1.Webhook{
+					URL:  core.StringPtr("https://test-webhook"),
+					Name: core.StringPtr("Dwight Schrute"),
+				},
+			},
 		},
 	)
 	assert.Nil(t, responseErr)
