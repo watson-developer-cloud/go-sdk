@@ -7885,6 +7885,16 @@ type WorkspaceSystemSettingsDisambiguation struct {
 	// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the
 	// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
 	Sensitivity *string `json:"sensitivity,omitempty"`
+
+	// Whether the order in which disambiguation suggestions are presented should be randomized (but still influenced by
+	// relative confidence).
+	Randomize *bool `json:"randomize,omitempty"`
+
+	// The maximum number of disambigation suggestions that can be included in a `suggestion` response.
+	MaxSuggestions *int64 `json:"max_suggestions,omitempty"`
+
+	// For internal use only.
+	SuggestionTextPolicy *string `json:"suggestion_text_policy,omitempty"`
 }
 
 // Constants associated with the WorkspaceSystemSettingsDisambiguation.Sensitivity property.
