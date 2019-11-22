@@ -19,7 +19,6 @@ package assistantv2
 
 import (
 	"fmt"
-
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
@@ -89,7 +88,9 @@ func (assistant *AssistantV2) DisableSSLVerification() {
 
 // CreateSession : Create a session
 // Create a new session. A session is used to send user input to a skill and receive responses. It also maintains the
-// state of the conversation.
+// state of the conversation. A session persists until it is deleted, or until it times out because of inactivity. (For
+// more information, see the
+// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-settings).
 func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionOptions) (result *SessionResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createSessionOptions, "createSessionOptions cannot be nil")
 	if err != nil {
@@ -139,7 +140,8 @@ func (assistant *AssistantV2) CreateSession(createSessionOptions *CreateSessionO
 }
 
 // DeleteSession : Delete session
-// Deletes a session explicitly before it times out.
+// Deletes a session explicitly before it times out. (For more information about the session inactivity timeout, see the
+// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-settings)).
 func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteSessionOptions, "deleteSessionOptions cannot be nil")
 	if err != nil {
@@ -411,8 +413,8 @@ type DialogNodesVisited struct {
 // DialogSuggestion : DialogSuggestion struct
 type DialogSuggestion struct {
 
-	// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of the
-	// corresponding dialog node.
+	// The user-facing label for the disambiguation option. This label is taken from the **title** or **user_label**
+	// property of the corresponding dialog node, depending on the disambiguation options.
 	Label *string `json:"label" validate:"required"`
 
 	// An object defining the message input to be sent to the assistant if the user selects the corresponding
