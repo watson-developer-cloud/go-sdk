@@ -7857,16 +7857,19 @@ type WorkspaceSystemSettings struct {
 
 	// Workspace settings related to the disambiguation feature.
 	//
-	// **Note:** This feature is available only to Premium users.
+	// **Note:** This feature is available only to Plus and Premium users.
 	Disambiguation *WorkspaceSystemSettingsDisambiguation `json:"disambiguation,omitempty"`
 
 	// For internal use only.
 	HumanAgentAssist map[string]interface{} `json:"human_agent_assist,omitempty"`
+
+	// Workspace settings related to detection of irrelevant input.
+	OffTopic *WorkspaceSystemSettingsOffTopic `json:"off_topic,omitempty"`
 }
 
 // WorkspaceSystemSettingsDisambiguation : Workspace settings related to the disambiguation feature.
 //
-// **Note:** This feature is available only to Premium users.
+// **Note:** This feature is available only to Plus and Premium users.
 type WorkspaceSystemSettingsDisambiguation struct {
 
 	// The text of the introductory prompt that accompanies disambiguation options presented to the user.
