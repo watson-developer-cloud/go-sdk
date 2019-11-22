@@ -4775,8 +4775,8 @@ type DialogNodeVisitedDetails struct {
 // DialogSuggestion : DialogSuggestion struct
 type DialogSuggestion struct {
 
-	// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of the
-	// corresponding dialog node.
+	// The user-facing label for the disambiguation option. This label is taken from the **title** or **user_label**
+	// property of the corresponding dialog node, depending on the disambiguation options.
 	Label *string `json:"label" validate:"required"`
 
 	// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
@@ -5524,8 +5524,8 @@ type IntentCollection struct {
 type ListAllLogsOptions struct {
 
 	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter
-	// query that includes a value for `language`, as well as a value for `workspace_id` or
-	// `request.context.metadata.deployment`. For more information, see the
+	// query that includes a value for `language`, as well as a value for `request.context.system.assistant_id`,
+	// `workspace_id`, or `request.context.metadata.deployment`. For more information, see the
 	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
 	Filter *string `json:"filter" validate:"required"`
 
@@ -6784,8 +6784,8 @@ type RuntimeResponseGeneric struct {
 
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
 	//
-	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium
-	// users.
+	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Plus and
+	// Premium users.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 }
 
@@ -7904,6 +7904,13 @@ const (
 	WorkspaceSystemSettingsDisambiguation_Sensitivity_Auto = "auto"
 	WorkspaceSystemSettingsDisambiguation_Sensitivity_High = "high"
 )
+
+// WorkspaceSystemSettingsOffTopic : Workspace settings related to detection of irrelevant input.
+type WorkspaceSystemSettingsOffTopic struct {
+
+	// Whether enhanced irrelevance detection is enabled for the workspace.
+	Enabled *bool `json:"enabled,omitempty"`
+}
 
 // WorkspaceSystemSettingsTooling : Workspace settings related to the Watson Assistant user interface.
 type WorkspaceSystemSettingsTooling struct {
