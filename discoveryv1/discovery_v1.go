@@ -19,12 +19,11 @@ package discoveryv1
 
 import (
 	"fmt"
-	"io"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
+	"strings"
 )
 
 // DiscoveryV1 : IBM Watson&trade; Discovery is a cognitive search and content analytics engine that you can add to
@@ -3774,7 +3773,7 @@ type AddDocumentOptions struct {
 	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
-	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
+	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
 	// supported size are rejected.
 	File io.ReadCloser `json:"file,omitempty"`
 
@@ -8342,16 +8341,6 @@ func (this *QueryNoticesResult) GetResultMetadata() *QueryResultMetadata {
 	return (*this)["result_metadata"].(*QueryResultMetadata)
 }
 
-// SetTitle : Allow user to set Title
-func (this *QueryNoticesResult) SetTitle(Title *string) {
-	(*this)["title"] = Title
-}
-
-// GetTitle : Allow user to get Title
-func (this *QueryNoticesResult) GetTitle() *string {
-	return (*this)["title"].(*string)
-}
-
 // SetCode : Allow user to set Code
 func (this *QueryNoticesResult) SetCode(Code *int64) {
 	(*this)["code"] = Code
@@ -8769,16 +8758,6 @@ func (this *QueryResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) 
 // GetResultMetadata : Allow user to get ResultMetadata
 func (this *QueryResult) GetResultMetadata() *QueryResultMetadata {
 	return (*this)["result_metadata"].(*QueryResultMetadata)
-}
-
-// SetTitle : Allow user to set Title
-func (this *QueryResult) SetTitle(Title *string) {
-	(*this)["title"] = Title
-}
-
-// GetTitle : Allow user to get Title
-func (this *QueryResult) GetTitle() *string {
-	return (*this)["title"].(*string)
 }
 
 // SetProperty : Allow user to set arbitrary property
@@ -9574,7 +9553,7 @@ type UpdateDocumentOptions struct {
 	DocumentID *string `json:"document_id" validate:"required"`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
-	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
+	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
 	// supported size are rejected.
 	File io.ReadCloser `json:"file,omitempty"`
 
