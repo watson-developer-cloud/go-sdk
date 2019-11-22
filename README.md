@@ -11,6 +11,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 * [Before you begin](#before-you-begin)
 * [Installation](#installation)
+* [Discovery v2 only on CP4D](#discovery-v2-only-on-cp4d)
 * [Running in IBM Cloud](#running-in-ibm-cloud)
 * [Authentication](#authentication)
 	* [Getting-credentials](#getting-credentials)
@@ -42,6 +43,9 @@ go get -u github.com/watson-developer-cloud/go-sdk@v1.1.0
 ```
 
 Note: For the latest tag release, look into [examples][examples] folder for basic and advanced examples.
+
+## Discovery v2 only on CP4D
+Discovery v2 is only available on Cloud Pak for Data.
 
 ## Running in IBM Cloud
 

@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	// Discovery v2 is only available on Cloud Pak for Data.
 	// Instantiate the Watson Discovery service
 	authenticator := &core.CloudPakForDataAuthenticator{
 		URL:                    "<authenticating url>",
