@@ -456,7 +456,8 @@ func TestDialogNodes(t *testing.T) {
 					},
 				},
 			},
-			Title: core.StringPtr("Greeting"),
+			Title:                core.StringPtr("Greeting"),
+			DisambiguationOptOut: core.BoolPtr(true),
 		},
 	)
 	assert.Nil(t, responseErr)

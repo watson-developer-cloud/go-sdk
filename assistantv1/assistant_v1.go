@@ -2613,6 +2613,9 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	if createDialogNodeOptions.UserLabel != nil {
 		body["user_label"] = createDialogNodeOptions.UserLabel
 	}
+	if createDialogNodeOptions.DisambiguationOptOut != nil {
+		body["disambiguation_opt_out"] = createDialogNodeOptions.DisambiguationOptOut
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -3215,6 +3218,9 @@ type CreateDialogNodeOptions struct {
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	UserLabel *string `json:"user_label,omitempty"`
 
+	// Whether the dialog node should be excluded from disambiguation suggestions.
+	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -3387,6 +3393,12 @@ func (options *CreateDialogNodeOptions) SetDigressOutSlots(digressOutSlots strin
 // SetUserLabel : Allow user to set UserLabel
 func (options *CreateDialogNodeOptions) SetUserLabel(userLabel string) *CreateDialogNodeOptions {
 	options.UserLabel = core.StringPtr(userLabel)
+	return options
+}
+
+// SetDisambiguationOptOut : Allow user to set DisambiguationOptOut
+func (options *CreateDialogNodeOptions) SetDisambiguationOptOut(disambiguationOptOut bool) *CreateDialogNodeOptions {
+	options.DisambiguationOptOut = core.BoolPtr(disambiguationOptOut)
 	return options
 }
 
@@ -4389,6 +4401,9 @@ type DialogNode struct {
 
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	UserLabel *string `json:"user_label,omitempty"`
+
+	// Whether the dialog node should be excluded from disambiguation suggestions.
+	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
 
 	// For internal use only.
 	Disabled *bool `json:"disabled,omitempty"`
