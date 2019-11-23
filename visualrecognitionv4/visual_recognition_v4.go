@@ -1463,33 +1463,32 @@ type Image struct {
 	// Container for the list of collections that have objects detected in an image.
 	Objects *DetectedObjects `json:"objects" validate:"required"`
 
-	// Details about an error.
-	Errors *Error `json:"errors,omitempty"`
+	// A container for the problems in the request.
+	Errors []Error `json:"errors,omitempty"`
 }
 
 // ImageDetails : Details about an image.
 type ImageDetails struct {
 
 	// The identifier of the image.
-	ImageID *string `json:"image_id" validate:"required"`
+	ImageID *string `json:"image_id,omitempty"`
 
 	// Date and time in Coordinated Universal Time (UTC) that the image was most recently updated.
-	Updated *strfmt.DateTime `json:"updated" validate:"required"`
+	Updated *strfmt.DateTime `json:"updated,omitempty"`
 
 	// Date and time in Coordinated Universal Time (UTC) that the image was created.
-	Created *strfmt.DateTime `json:"created" validate:"required"`
+	Created *strfmt.DateTime `json:"created,omitempty"`
 
 	// The source type of the image.
 	Source *ImageSource `json:"source" validate:"required"`
 
 	// Height and width of an image.
-	Dimensions *ImageDimensions `json:"dimensions" validate:"required"`
+	Dimensions *ImageDimensions `json:"dimensions,omitempty"`
 
-	// Details about an error.
-	Errors *Error `json:"errors,omitempty"`
+	Errors []Error `json:"errors,omitempty"`
 
 	// Training data for all objects.
-	TrainingData *TrainingDataObjects `json:"training_data" validate:"required"`
+	TrainingData *TrainingDataObjects `json:"training_data,omitempty"`
 }
 
 // ImageDetailsList : List of information about the images.
