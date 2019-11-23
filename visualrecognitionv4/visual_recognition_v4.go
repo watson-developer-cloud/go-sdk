@@ -1509,10 +1509,10 @@ type ImageDetailsList struct {
 type ImageDimensions struct {
 
 	// Height in pixels of the image.
-	Height *int64 `json:"height" validate:"required"`
+	Height *int64 `json:"height,omitempty"`
 
 	// Width in pixels of the image.
-	Width *int64 `json:"width" validate:"required"`
+	Width *int64 `json:"width,omitempty"`
 }
 
 // ImageSource : The source type of the image.
