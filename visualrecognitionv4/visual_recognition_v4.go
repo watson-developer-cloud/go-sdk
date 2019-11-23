@@ -1414,9 +1414,11 @@ type GetJpegImageOptions struct {
 }
 
 // Constants associated with the GetJpegImageOptions.Size property.
-// Specify the image size.
+// The image size. Specify `thumbnail` to return a version that maintains the original aspect ratio but is no larger
+// than 200 pixels in the larger dimension. For example, an original 800 x 1000 image is resized to 160 x 200 pixels.
 const (
-	GetJpegImageOptions_Size_Full = "full"
+	GetJpegImageOptions_Size_Full      = "full"
+	GetJpegImageOptions_Size_Thumbnail = "thumbnail"
 )
 
 // NewGetJpegImageOptions : Instantiate GetJpegImageOptions
