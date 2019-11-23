@@ -19,12 +19,11 @@ package visualrecognitionv3
 
 import (
 	"fmt"
-	"io"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
+	"strings"
 )
 
 // VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
