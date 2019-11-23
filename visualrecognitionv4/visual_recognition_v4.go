@@ -30,11 +30,6 @@ import (
 // VisualRecognitionV4 : Provide images to the IBM Watson&trade; Visual Recognition service for analysis. The service
 // detects objects based on a set of images with training data.
 //
-// **Beta:** The Visual Recognition v4 API and Object Detection model are beta features. For more information about beta
-// features, see the [Release
-// notes](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-release-notes#beta).
-// {: important}
-//
 // Version: 4.0
 // See: https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-object-detection-overview
 type VisualRecognitionV4 struct {
@@ -826,6 +821,60 @@ func (visualRecognition *VisualRecognitionV4) AddImageTrainingData(addImageTrain
 	return
 }
 
+// GetTrainingUsage : Get training usage
+// Information about the completed training events. You can use this information to determine how close you are to the
+// training limits for the month.
+func (visualRecognition *VisualRecognitionV4) GetTrainingUsage(getTrainingUsageOptions *GetTrainingUsageOptions) (result *TrainingEvents, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(getTrainingUsageOptions, "getTrainingUsageOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v4/training_usage"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getTrainingUsageOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V4", "GetTrainingUsage")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if getTrainingUsageOptions.StartTime != nil {
+		builder.AddQuery("start_time", fmt.Sprint(*getTrainingUsageOptions.StartTime))
+	}
+	if getTrainingUsageOptions.EndTime != nil {
+		builder.AddQuery("end_time", fmt.Sprint(*getTrainingUsageOptions.EndTime))
+	}
+	builder.AddQuery("version", visualRecognition.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = visualRecognition.Service.Request(request, new(TrainingEvents))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*TrainingEvents)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
 // DeleteUserData : Delete labeled data
 // Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
 // customer ID.
@@ -1406,7 +1455,8 @@ type GetJpegImageOptions struct {
 	// The identifier of the image.
 	ImageID *string `json:"image_id" validate:"required"`
 
-	// Specify the image size.
+	// The image size. Specify `thumbnail` to return a version that maintains the original aspect ratio but is no larger
+	// than 200 pixels in the larger dimension. For example, an original 800 x 1000 image is resized to 160 x 200 pixels.
 	Size *string `json:"size,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1449,6 +1499,45 @@ func (options *GetJpegImageOptions) SetSize(size string) *GetJpegImageOptions {
 
 // SetHeaders : Allow user to set Headers
 func (options *GetJpegImageOptions) SetHeaders(param map[string]string) *GetJpegImageOptions {
+	options.Headers = param
+	return options
+}
+
+// GetTrainingUsageOptions : The GetTrainingUsage options.
+type GetTrainingUsageOptions struct {
+
+	// The earliest day to include training events. Specify dates in YYYY-MM-DD format. If empty or not specified, the
+	// earliest training event is included.
+	StartTime *string `json:"start_time,omitempty"`
+
+	// The most recent day to include training events. Specify dates in YYYY-MM-DD format. All events for the day are
+	// included. If empty or not specified, the current day is used. Specify the same value as `start_time` to request
+	// events for a single day.
+	EndTime *string `json:"end_time,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetTrainingUsageOptions : Instantiate GetTrainingUsageOptions
+func (visualRecognition *VisualRecognitionV4) NewGetTrainingUsageOptions() *GetTrainingUsageOptions {
+	return &GetTrainingUsageOptions{}
+}
+
+// SetStartTime : Allow user to set StartTime
+func (options *GetTrainingUsageOptions) SetStartTime(startTime string) *GetTrainingUsageOptions {
+	options.StartTime = core.StringPtr(startTime)
+	return options
+}
+
+// SetEndTime : Allow user to set EndTime
+func (options *GetTrainingUsageOptions) SetEndTime(endTime string) *GetTrainingUsageOptions {
+	options.EndTime = core.StringPtr(endTime)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetTrainingUsageOptions) SetHeaders(param map[string]string) *GetTrainingUsageOptions {
 	options.Headers = param
 	return options
 }
@@ -1700,6 +1789,59 @@ type TrainingDataObjects struct {
 
 	// Training data for specific objects.
 	Objects []TrainingDataObject `json:"objects,omitempty"`
+}
+
+// TrainingEvent : Details about the training event.
+type TrainingEvent struct {
+
+	// Trained object type. Only `objects` is currently supported.
+	Type *string `json:"type,omitempty"`
+
+	// Identifier of the trained collection.
+	CollectionID *string `json:"collection_id,omitempty"`
+
+	// Date and time in Coordinated Universal Time (UTC) that training on the collection finished.
+	CompletionTime *strfmt.DateTime `json:"completion_time,omitempty"`
+
+	// Training status of the training event.
+	Status *string `json:"status,omitempty"`
+
+	// The total number of images that were used in training for this training event.
+	ImageCount *int64 `json:"image_count,omitempty"`
+}
+
+// Constants associated with the TrainingEvent.Type property.
+// Trained object type. Only `objects` is currently supported.
+const (
+	TrainingEvent_Type_Objects = "objects"
+)
+
+// Constants associated with the TrainingEvent.Status property.
+// Training status of the training event.
+const (
+	TrainingEvent_Status_Failed    = "failed"
+	TrainingEvent_Status_Succeeded = "succeeded"
+)
+
+// TrainingEvents : Details about the training events.
+type TrainingEvents struct {
+
+	// The starting day for the returned training events in Coordinated Universal Time (UTC). If not specified in the
+	// request, it identifies the earliest training event.
+	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
+
+	// The ending day for the returned training events in Coordinated Universal Time (UTC). If not specified in the
+	// request, it lists the current time.
+	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
+
+	// The total number of training events in the response for the start and end times.
+	CompletedEvents *int64 `json:"completed_events,omitempty"`
+
+	// The total number of images that were used in training for the start and end times.
+	TrainedImages *int64 `json:"trained_images,omitempty"`
+
+	// The completed training events for the start and end time.
+	Events []TrainingEvent `json:"events,omitempty"`
 }
 
 // TrainingStatus : Training status information for the collection.

@@ -265,6 +265,15 @@ func TestTraining(t *testing.T) {
 	assert.Nil(t, responseErr)
 	assert.NotNil(t, train)
 
+	trainingUsage, _, trainingUsageErr := service.GetTrainingUsage(
+		&visualrecognitionv4.GetTrainingUsageOptions{
+			StartTime: core.StringPtr("2019-11-19"),
+		},
+	)
+	core.PrettyPrint(trainingUsage, "r")
+	assert.Nil(t, trainingUsageErr)
+	assert.NotNil(t, trainingUsage)
+
 	_, responseErr = service.DeleteCollection(
 		&visualrecognitionv4.DeleteCollectionOptions{
 			CollectionID: collectionId,
