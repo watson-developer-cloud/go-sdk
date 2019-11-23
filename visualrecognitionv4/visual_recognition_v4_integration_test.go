@@ -266,9 +266,7 @@ func TestTraining(t *testing.T) {
 	assert.NotNil(t, train)
 
 	trainingUsage, _, trainingUsageErr := service.GetTrainingUsage(
-		&visualrecognitionv4.GetTrainingUsageOptions{
-			StartTime: core.StringPtr("2019-11-19"),
-		},
+		&visualrecognitionv4.GetTrainingUsageOptions{},
 	)
 	core.PrettyPrint(trainingUsage, "r")
 	assert.Nil(t, trainingUsageErr)
