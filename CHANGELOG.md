@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/watson-developer-cloud/go-sdk/compare/v1.1.0...v1.1.1) (2019-11-25)
+
+
+### Bug Fixes
+
+* **go module:** Regenerate go module with correct path ([8b3be06](https://github.com/watson-developer-cloud/go-sdk/commit/8b3be061d44cfc4e9c7dc3dd7a9a89f218e930ed))
+
 # [1.1.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.0.0...v1.1.0) (2019-11-18)
 
 
