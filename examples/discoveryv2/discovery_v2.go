@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 
-	PROJECT_ID := "9558dc01-8554-4d18-b0a5-70196f9f2fe6"
+	PROJECT_ID := "<project id>"
 
 	// LIST COLLECTIONS
 	listCollectionsResult, _, responseErr := service.ListCollections(&discovery.ListCollectionsOptions{
@@ -62,7 +62,7 @@ func main() {
 	}
 
 	// ADD DOCUMENT
-	COLLECTION_ID := "161d1e47-9651-e657-0000-016e8e6fb5b6"
+	COLLECTION_ID := "<collection id>"
 	pwd, _ := os.Getwd()
 	file, fileErr := os.Open(pwd + "/../../resources/example.html")
 
