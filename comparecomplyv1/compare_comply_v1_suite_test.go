@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package languagetranslatorv3_test
+package comparecomplyv1_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -24,7 +24,7 @@ import (
 	"testing"
 )
 
-func TestLanguageTranslatorV3(t *testing.T) {
+func TestCompareComplyV1(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "LanguageTranslatorV3 Suite")
+	RunSpecs(t, "CompareComplyV1 Suite")
 }

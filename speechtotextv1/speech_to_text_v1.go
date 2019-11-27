@@ -19,11 +19,10 @@ package speechtotextv1
 
 import (
 	"fmt"
-	"io"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
+	"strings"
 )
 
 // SpeechToTextV1 : The IBM&reg; Speech to Text service provides APIs that use IBM's speech-recognition capabilities to
@@ -883,6 +882,10 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 // Creates a new custom language model for a specified base model. The custom language model can be used only with the
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
+//
+// You can create a maximum of 1024 custom language models, per credential. The service returns an error if you attempt
+// to create more than 1024 models. You do not lose any models, but you cannot create any more until your model count is
+// below the limit.
 //
 // **See also:** [Create a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-languageCreate#createModel-language).
@@ -2125,6 +2128,10 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 // Creates a new custom acoustic model for a specified base model. The custom acoustic model can be used only with the
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
+//
+// You can create a maximum of 1024 custom acoustic models, per credential. The service returns an error if you attempt
+// to create more than 1024 models. You do not lose any models, but you cannot create any more until your model count is
+// below the limit.
 //
 // **See also:** [Create a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-acoustic#createModel-acoustic).

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package languagetranslatorv3_test
+package discoveryv2_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -24,7 +24,7 @@ import (
 	"testing"
 )
 
-func TestLanguageTranslatorV3(t *testing.T) {
+func TestDiscoveryV2(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "LanguageTranslatorV3 Suite")
+	RunSpecs(t, "DiscoveryV2 Suite")
 }

@@ -52,7 +52,7 @@ var _ = Describe(`AssistantV2`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -99,7 +99,7 @@ var _ = Describe(`AssistantV2`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -146,7 +146,7 @@ var _ = Describe(`AssistantV2`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,

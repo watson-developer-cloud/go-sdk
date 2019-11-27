@@ -42,7 +42,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = discoveryv1.
 			NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version:       "2018-03-05",
+				Version: "2018-03-05",
 			})
 		environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
 

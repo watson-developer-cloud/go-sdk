@@ -39,7 +39,7 @@ func init() {
 	if err == nil {
 		service, serviceErr = comparecomplyv1.
 			NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				Version:   "2018-10-15",
+				Version: "2018-10-15",
 			})
 
 		if serviceErr == nil {
@@ -68,7 +68,7 @@ func TestConvertToHTML(t *testing.T) {
 
 	html, _, responseErr := service.ConvertToHTML(
 		&comparecomplyv1.ConvertToHTMLOptions{
-			File:     testPDF,
+			File:            testPDF,
 			FileContentType: core.StringPtr("application/pdf"),
 		},
 	)

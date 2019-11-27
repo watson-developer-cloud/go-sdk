@@ -19,7 +19,6 @@ package assistantv1
 
 import (
 	"fmt"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
@@ -297,6 +296,9 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 	if createWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = createWorkspaceOptions.Counterexamples
 	}
+	if createWorkspaceOptions.Webhooks != nil {
+		body["webhooks"] = createWorkspaceOptions.Webhooks
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -453,6 +455,9 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 	}
 	if updateWorkspaceOptions.Counterexamples != nil {
 		body["counterexamples"] = updateWorkspaceOptions.Counterexamples
+	}
+	if updateWorkspaceOptions.Webhooks != nil {
+		body["webhooks"] = updateWorkspaceOptions.Webhooks
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -2607,6 +2612,9 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 	if createDialogNodeOptions.UserLabel != nil {
 		body["user_label"] = createDialogNodeOptions.UserLabel
 	}
+	if createDialogNodeOptions.DisambiguationOptOut != nil {
+		body["disambiguation_opt_out"] = createDialogNodeOptions.DisambiguationOptOut
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -2778,6 +2786,9 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 	}
 	if updateDialogNodeOptions.NewUserLabel != nil {
 		body["user_label"] = updateDialogNodeOptions.NewUserLabel
+	}
+	if updateDialogNodeOptions.NewDisambiguationOptOut != nil {
+		body["disambiguation_opt_out"] = updateDialogNodeOptions.NewDisambiguationOptOut
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -3209,6 +3220,9 @@ type CreateDialogNodeOptions struct {
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	UserLabel *string `json:"user_label,omitempty"`
 
+	// Whether the dialog node should be excluded from disambiguation suggestions.
+	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -3381,6 +3395,12 @@ func (options *CreateDialogNodeOptions) SetDigressOutSlots(digressOutSlots strin
 // SetUserLabel : Allow user to set UserLabel
 func (options *CreateDialogNodeOptions) SetUserLabel(userLabel string) *CreateDialogNodeOptions {
 	options.UserLabel = core.StringPtr(userLabel)
+	return options
+}
+
+// SetDisambiguationOptOut : Allow user to set DisambiguationOptOut
+func (options *CreateDialogNodeOptions) SetDisambiguationOptOut(disambiguationOptOut bool) *CreateDialogNodeOptions {
+	options.DisambiguationOptOut = core.BoolPtr(disambiguationOptOut)
 	return options
 }
 
@@ -3869,6 +3889,8 @@ type CreateWorkspaceOptions struct {
 	// An array of objects defining input examples that have been marked as irrelevant input.
 	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
+	Webhooks []Webhook `json:"webhooks,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -3935,6 +3957,12 @@ func (options *CreateWorkspaceOptions) SetDialogNodes(dialogNodes []DialogNode) 
 // SetCounterexamples : Allow user to set Counterexamples
 func (options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []Counterexample) *CreateWorkspaceOptions {
 	options.Counterexamples = counterexamples
+	return options
+}
+
+// SetWebhooks : Allow user to set Webhooks
+func (options *CreateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *CreateWorkspaceOptions {
+	options.Webhooks = webhooks
 	return options
 }
 
@@ -4376,6 +4404,9 @@ type DialogNode struct {
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	UserLabel *string `json:"user_label,omitempty"`
 
+	// Whether the dialog node should be excluded from disambiguation suggestions.
+	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
+
 	// For internal use only.
 	Disabled *bool `json:"disabled,omitempty"`
 
@@ -4461,6 +4492,7 @@ const (
 	DialogNodeAction_Type_CloudFunction = "cloud_function"
 	DialogNodeAction_Type_Server        = "server"
 	DialogNodeAction_Type_WebAction     = "web_action"
+	DialogNodeAction_Type_Webhook       = "webhook"
 )
 
 // DialogNodeCollection : An array of dialog nodes.
@@ -4742,8 +4774,8 @@ type DialogNodeVisitedDetails struct {
 // DialogSuggestion : DialogSuggestion struct
 type DialogSuggestion struct {
 
-	// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of the
-	// corresponding dialog node.
+	// The user-facing label for the disambiguation option. This label is taken from the **title** or **user_label**
+	// property of the corresponding dialog node, depending on the disambiguation options.
 	Label *string `json:"label" validate:"required"`
 
 	// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
@@ -5491,8 +5523,8 @@ type IntentCollection struct {
 type ListAllLogsOptions struct {
 
 	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter
-	// query that includes a value for `language`, as well as a value for `workspace_id` or
-	// `request.context.metadata.deployment`. For more information, see the
+	// query that includes a value for `language`, as well as a value for `request.context.system.assistant_id`,
+	// `workspace_id`, or `request.context.metadata.deployment`. For more information, see the
 	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
 	Filter *string `json:"filter" validate:"required"`
 
@@ -6751,8 +6783,8 @@ type RuntimeResponseGeneric struct {
 
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
 	//
-	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium
-	// users.
+	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Plus and
+	// Premium users.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 }
 
@@ -6933,6 +6965,9 @@ type UpdateDialogNodeOptions struct {
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	NewUserLabel *string `json:"new_user_label,omitempty"`
 
+	// Whether the dialog node should be excluded from disambiguation suggestions.
+	NewDisambiguationOptOut *bool `json:"new_disambiguation_opt_out,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -7111,6 +7146,12 @@ func (options *UpdateDialogNodeOptions) SetNewDigressOutSlots(newDigressOutSlots
 // SetNewUserLabel : Allow user to set NewUserLabel
 func (options *UpdateDialogNodeOptions) SetNewUserLabel(newUserLabel string) *UpdateDialogNodeOptions {
 	options.NewUserLabel = core.StringPtr(newUserLabel)
+	return options
+}
+
+// SetNewDisambiguationOptOut : Allow user to set NewDisambiguationOptOut
+func (options *UpdateDialogNodeOptions) SetNewDisambiguationOptOut(newDisambiguationOptOut bool) *UpdateDialogNodeOptions {
+	options.NewDisambiguationOptOut = core.BoolPtr(newDisambiguationOptOut)
 	return options
 }
 
@@ -7558,6 +7599,8 @@ type UpdateWorkspaceOptions struct {
 	// An array of objects defining input examples that have been marked as irrelevant input.
 	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
+	Webhooks []Webhook `json:"webhooks,omitempty"`
+
 	// Whether the new data is to be appended to the existing data in the workspace. If **append**=`false`, elements
 	// included in the new data completely replace the corresponding existing elements, including all subelements. For
 	// example, if the new data includes **entities** and **append**=`false`, all existing entities in the workspace are
@@ -7644,6 +7687,12 @@ func (options *UpdateWorkspaceOptions) SetCounterexamples(counterexamples []Coun
 	return options
 }
 
+// SetWebhooks : Allow user to set Webhooks
+func (options *UpdateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *UpdateWorkspaceOptions {
+	options.Webhooks = webhooks
+	return options
+}
+
 // SetAppend : Allow user to set Append
 func (options *UpdateWorkspaceOptions) SetAppend(append bool) *UpdateWorkspaceOptions {
 	options.Append = core.BoolPtr(append)
@@ -7705,6 +7754,31 @@ type ValueCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
+// Webhook : A webhook that can be used by dialog nodes to make programmatic calls to an external function.
+//
+// **Note:** Currently, only a single webhook named `main_webhook` is supported.
+type Webhook struct {
+
+	// The URL for the external service or application to which you want to send HTTP POST requests.
+	URL *string `json:"url" validate:"required"`
+
+	// The name of the webhook. Currently, `main_webhook` is the only supported value.
+	Name *string `json:"name" validate:"required"`
+
+	// An optional array of HTTP headers to pass with the HTTP request.
+	Headers []WebhookHeader `json:"headers,omitempty"`
+}
+
+// WebhookHeader : A key/value pair defining an HTTP header and a value.
+type WebhookHeader struct {
+
+	// The name of an HTTP header (for example, `Authorization`).
+	Name *string `json:"name" validate:"required"`
+
+	// The value of an HTTP header.
+	Value *string `json:"value" validate:"required"`
+}
+
 // Workspace : Workspace struct
 type Workspace struct {
 
@@ -7750,6 +7824,8 @@ type Workspace struct {
 
 	// An array of counterexamples.
 	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
+
+	Webhooks []Webhook `json:"webhooks,omitempty"`
 }
 
 // Constants associated with the Workspace.Status property.
@@ -7780,16 +7856,19 @@ type WorkspaceSystemSettings struct {
 
 	// Workspace settings related to the disambiguation feature.
 	//
-	// **Note:** This feature is available only to Premium users.
+	// **Note:** This feature is available only to Plus and Premium users.
 	Disambiguation *WorkspaceSystemSettingsDisambiguation `json:"disambiguation,omitempty"`
 
 	// For internal use only.
 	HumanAgentAssist map[string]interface{} `json:"human_agent_assist,omitempty"`
+
+	// Workspace settings related to detection of irrelevant input.
+	OffTopic *WorkspaceSystemSettingsOffTopic `json:"off_topic,omitempty"`
 }
 
 // WorkspaceSystemSettingsDisambiguation : Workspace settings related to the disambiguation feature.
 //
-// **Note:** This feature is available only to Premium users.
+// **Note:** This feature is available only to Plus and Premium users.
 type WorkspaceSystemSettingsDisambiguation struct {
 
 	// The text of the introductory prompt that accompanies disambiguation options presented to the user.
@@ -7805,6 +7884,16 @@ type WorkspaceSystemSettingsDisambiguation struct {
 	// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the
 	// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
 	Sensitivity *string `json:"sensitivity,omitempty"`
+
+	// Whether the order in which disambiguation suggestions are presented should be randomized (but still influenced by
+	// relative confidence).
+	Randomize *bool `json:"randomize,omitempty"`
+
+	// The maximum number of disambigation suggestions that can be included in a `suggestion` response.
+	MaxSuggestions *int64 `json:"max_suggestions,omitempty"`
+
+	// For internal use only.
+	SuggestionTextPolicy *string `json:"suggestion_text_policy,omitempty"`
 }
 
 // Constants associated with the WorkspaceSystemSettingsDisambiguation.Sensitivity property.
@@ -7814,6 +7903,13 @@ const (
 	WorkspaceSystemSettingsDisambiguation_Sensitivity_Auto = "auto"
 	WorkspaceSystemSettingsDisambiguation_Sensitivity_High = "high"
 )
+
+// WorkspaceSystemSettingsOffTopic : Workspace settings related to detection of irrelevant input.
+type WorkspaceSystemSettingsOffTopic struct {
+
+	// Whether enhanced irrelevance detection is enabled for the workspace.
+	Enabled *bool `json:"enabled,omitempty"`
+}
 
 // WorkspaceSystemSettingsTooling : Workspace settings related to the Watson Assistant user interface.
 type WorkspaceSystemSettingsTooling struct {

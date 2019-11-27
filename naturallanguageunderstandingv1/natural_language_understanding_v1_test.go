@@ -51,7 +51,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := naturallanguageunderstandingv1.NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -96,7 +96,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := naturallanguageunderstandingv1.NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -143,7 +143,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := naturallanguageunderstandingv1.NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,

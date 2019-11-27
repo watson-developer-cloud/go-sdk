@@ -52,7 +52,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -97,7 +97,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -142,7 +142,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -189,7 +189,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -236,7 +236,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -281,7 +281,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -326,7 +326,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -374,7 +374,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -423,7 +423,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -472,7 +472,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -519,7 +519,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -566,7 +566,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -616,7 +616,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -667,7 +667,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -718,7 +718,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -767,7 +767,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -812,7 +812,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -860,7 +860,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -909,7 +909,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -958,7 +958,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1005,7 +1005,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1050,7 +1050,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1098,7 +1098,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1147,7 +1147,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1196,7 +1196,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1243,7 +1243,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1290,7 +1290,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1339,7 +1339,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1389,7 +1389,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1440,7 +1440,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1491,7 +1491,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1540,7 +1540,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1589,7 +1589,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1641,7 +1641,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1694,7 +1694,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1747,7 +1747,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1798,7 +1798,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1843,7 +1843,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1891,7 +1891,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1940,7 +1940,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -1989,7 +1989,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2036,7 +2036,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2081,7 +2081,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2129,7 +2129,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,
@@ -2175,7 +2175,7 @@ var _ = Describe(`AssistantV1`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: testServer.URL,
+					URL:     testServer.URL,
 					Version: version,
 					Authenticator: &core.BearerTokenAuthenticator{
 						BearerToken: bearerToken,

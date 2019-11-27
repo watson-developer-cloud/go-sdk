@@ -646,6 +646,51 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			})
 		})
 	})
+	Describe(`GetTrainingUsage(getTrainingUsageOptions *GetTrainingUsageOptions)`, func() {
+		getTrainingUsagePath := "/v4/training_usage"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		Context(`Successfully - Get training usage`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getTrainingUsagePath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				fmt.Fprintf(res, `{}`)
+				res.WriteHeader(200)
+			}))
+			It(`Succeed to call GetTrainingUsage`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetTrainingUsage(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getTrainingUsageOptions := testService.NewGetTrainingUsageOptions()
+				result, response, operationErr = testService.GetTrainingUsage(getTrainingUsageOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 	Describe(`DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)`, func() {
 		deleteUserDataPath := "/v4/user_data"
 		version := "exampleString"

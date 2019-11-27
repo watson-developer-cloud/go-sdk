@@ -19,10 +19,9 @@ package personalityinsightsv3
 
 import (
 	"fmt"
-	"io"
-
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
 )
 
 // PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights

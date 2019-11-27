@@ -19,11 +19,10 @@ package comparecomplyv1
 
 import (
 	"fmt"
-	"io"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
 )
 
 // CompareComplyV1 : IBM Watson&trade; Compare and Comply analyzes governing documents to provide details about critical
