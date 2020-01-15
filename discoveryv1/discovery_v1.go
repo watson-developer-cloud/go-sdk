@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,36 +38,50 @@ type DiscoveryV1 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/discovery/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/discovery/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "discovery"
 
 // DiscoveryV1Options : Service options
 type DiscoveryV1Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewDiscoveryV1 : Instantiate DiscoveryV1
+// NewDiscoveryV1 : constructs an instance of DiscoveryV1 with passed in options.
 func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("discovery")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "discovery", "Discovery")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &DiscoveryV1{
@@ -2049,6 +2063,9 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	builder.AddQuery("version", discovery.Version)
 
 	body := make(map[string]interface{})
+	if federatedQueryOptions.CollectionIds != nil {
+		body["collection_ids"] = federatedQueryOptions.CollectionIds
+	}
 	if federatedQueryOptions.Filter != nil {
 		body["filter"] = federatedQueryOptions.Filter
 	}
@@ -2105,9 +2122,6 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	}
 	if federatedQueryOptions.Bias != nil {
 		body["bias"] = federatedQueryOptions.Bias
-	}
-	if federatedQueryOptions.CollectionIds != nil {
-		body["collection_ids"] = federatedQueryOptions.CollectionIds
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -2855,7 +2869,7 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 
 // CreateEvent : Create event
 // The **Events** API can be used to create log entries that are associated with specific queries. For example, you can
-// record which documents in the results set were "clicked" by a user and when that click occured.
+// record which documents in the results set were "clicked" by a user and when that click occurred.
 func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions) (result *CreateEventResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createEventOptions, "createEventOptions cannot be nil")
 	if err != nil {
@@ -3922,16 +3936,6 @@ type AggregationResult struct {
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 }
 
-// Calculation : Calculation struct
-type Calculation struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	// Value of the aggregation.
-	Value *float64 `json:"value,omitempty"`
-}
-
 // Collection : A collection for storing documents.
 type Collection struct {
 
@@ -4045,6 +4049,15 @@ type Configuration struct {
 
 	// Object containing source parameters for the configuration.
 	Source *Source `json:"source,omitempty"`
+}
+
+// NewConfiguration : Instantiate Configuration (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewConfiguration(name string) (model *Configuration, err error) {
+	model = &Configuration{
+		Name: core.StringPtr(name),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // Conversions : Document conversion settings.
@@ -5664,6 +5677,17 @@ type Enrichment struct {
 	Options *EnrichmentOptions `json:"options,omitempty"`
 }
 
+// NewEnrichment : Instantiate Enrichment (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewEnrichment(destinationField string, sourceField string, enrichment string) (model *Enrichment, err error) {
+	model = &Enrichment{
+		DestinationField: core.StringPtr(destinationField),
+		SourceField:      core.StringPtr(sourceField),
+		Enrichment:       core.StringPtr(enrichment),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // EnrichmentOptions : Options which are specific to a particular enrichment.
 type EnrichmentOptions struct {
 
@@ -5799,6 +5823,18 @@ type EventData struct {
 	QueryID *string `json:"query_id,omitempty"`
 }
 
+// NewEventData : Instantiate EventData (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewEventData(environmentID string, sessionToken string, collectionID string, documentID string) (model *EventData, err error) {
+	model = &EventData{
+		EnvironmentID: core.StringPtr(environmentID),
+		SessionToken:  core.StringPtr(sessionToken),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // Expansion : An expansion definition. Each object respresents one set of expandable strings. For example, you could have
 // expansions for the word `hot` in one object, and expansions for the word `cold` in another.
 type Expansion struct {
@@ -5809,6 +5845,15 @@ type Expansion struct {
 	// A list of terms that this expansion will be expanded to. If specified without **input_terms**, it also functions as
 	// the input term list.
 	ExpandedTerms []string `json:"expanded_terms" validate:"required"`
+}
+
+// NewExpansion : Instantiate Expansion (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewExpansion(expandedTerms []string) (model *Expansion, err error) {
+	model = &Expansion{
+		ExpandedTerms: expandedTerms,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // Expansions : The query expansion definitions for the specified collection.
@@ -5828,6 +5873,15 @@ type Expansions struct {
 	// When items in the **input_terms** array are present in a query, they are expanded using the items listed in the
 	// **expanded_terms** array.
 	Expansions []Expansion `json:"expansions" validate:"required"`
+}
+
+// NewExpansions : Instantiate Expansions (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewExpansions(expansions []Expansion) (model *Expansions, err error) {
+	model = &Expansions{
+		Expansions: expansions,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // FederatedQueryNoticesOptions : The FederatedQueryNotices options.
@@ -6010,6 +6064,9 @@ type FederatedQueryOptions struct {
 	// The ID of the environment.
 	EnvironmentID *string `json:"environment_id" validate:"required"`
 
+	// A comma-separated list of collection IDs to be queried against.
+	CollectionIds *string `json:"collection_ids" validate:"required"`
+
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
 	Filter *string `json:"filter,omitempty"`
@@ -6090,9 +6147,6 @@ type FederatedQueryOptions struct {
 	// This parameter cannot be used in the same query as the **sort** parameter.
 	Bias *string `json:"bias,omitempty"`
 
-	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds *string `json:"collection_ids,omitempty"`
-
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
 	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
@@ -6101,15 +6155,22 @@ type FederatedQueryOptions struct {
 }
 
 // NewFederatedQueryOptions : Instantiate FederatedQueryOptions
-func (discovery *DiscoveryV1) NewFederatedQueryOptions(environmentID string) *FederatedQueryOptions {
+func (discovery *DiscoveryV1) NewFederatedQueryOptions(environmentID string, collectionIds string) *FederatedQueryOptions {
 	return &FederatedQueryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
+		CollectionIds: core.StringPtr(collectionIds),
 	}
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
 func (options *FederatedQueryOptions) SetEnvironmentID(environmentID string) *FederatedQueryOptions {
 	options.EnvironmentID = core.StringPtr(environmentID)
+	return options
+}
+
+// SetCollectionIds : Allow user to set CollectionIds
+func (options *FederatedQueryOptions) SetCollectionIds(collectionIds string) *FederatedQueryOptions {
+	options.CollectionIds = core.StringPtr(collectionIds)
 	return options
 }
 
@@ -6227,12 +6288,6 @@ func (options *FederatedQueryOptions) SetBias(bias string) *FederatedQueryOption
 	return options
 }
 
-// SetCollectionIds : Allow user to set CollectionIds
-func (options *FederatedQueryOptions) SetCollectionIds(collectionIds string) *FederatedQueryOptions {
-	options.CollectionIds = core.StringPtr(collectionIds)
-	return options
-}
-
 // SetXWatsonLoggingOptOut : Allow user to set XWatsonLoggingOptOut
 func (options *FederatedQueryOptions) SetXWatsonLoggingOptOut(xWatsonLoggingOptOut bool) *FederatedQueryOptions {
 	options.XWatsonLoggingOptOut = core.BoolPtr(xWatsonLoggingOptOut)
@@ -6270,13 +6325,6 @@ const (
 	Field_Type_Short   = "short"
 	Field_Type_String  = "string"
 )
-
-// Filter : Filter struct
-type Filter struct {
-
-	// The match the aggregated results queried for.
-	Match *string `json:"match,omitempty"`
-}
 
 // FontSetting : Font matching configuration.
 type FontSetting struct {
@@ -7067,16 +7115,6 @@ func (options *GetTrainingExampleOptions) SetHeaders(param map[string]string) *G
 	return options
 }
 
-// Histogram : Histogram struct
-type Histogram struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	// Interval of the aggregation. (For 'histogram' type).
-	Interval *int64 `json:"interval,omitempty"`
-}
-
 // HTMLSettings : A list of HTML conversion settings.
 type HTMLSettings struct {
 
@@ -7723,13 +7761,6 @@ type MetricTokenResponse struct {
 
 	// Array of metric token aggregations.
 	Aggregations []MetricTokenAggregation `json:"aggregations,omitempty"`
-}
-
-// Nested : Nested struct
-type Nested struct {
-
-	// The area of the results the aggregation was restricted to.
-	Path *string `json:"path,omitempty"`
 }
 
 // NluEnrichmentCategories : An object that indicates the Categories enrichment will be applied to the specified field.
@@ -8972,6 +9003,15 @@ type SourceOptionsBuckets struct {
 	Limit *int64 `json:"limit,omitempty"`
 }
 
+// NewSourceOptionsBuckets : Instantiate SourceOptionsBuckets (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewSourceOptionsBuckets(name string) (model *SourceOptionsBuckets, err error) {
+	model = &SourceOptionsBuckets{
+		Name: core.StringPtr(name),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // SourceOptionsFolder : Object that defines a box folder to crawl with this configuration.
 type SourceOptionsFolder struct {
 
@@ -8985,6 +9025,16 @@ type SourceOptionsFolder struct {
 	Limit *int64 `json:"limit,omitempty"`
 }
 
+// NewSourceOptionsFolder : Instantiate SourceOptionsFolder (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewSourceOptionsFolder(ownerUserID string, folderID string) (model *SourceOptionsFolder, err error) {
+	model = &SourceOptionsFolder{
+		OwnerUserID: core.StringPtr(ownerUserID),
+		FolderID:    core.StringPtr(folderID),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // SourceOptionsObject : Object that defines a Salesforce document object type crawl with this configuration.
 type SourceOptionsObject struct {
 
@@ -8994,6 +9044,15 @@ type SourceOptionsObject struct {
 	// The maximum number of documents to crawl for this document object. By default, all documents in the document object
 	// are crawled.
 	Limit *int64 `json:"limit,omitempty"`
+}
+
+// NewSourceOptionsObject : Instantiate SourceOptionsObject (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewSourceOptionsObject(name string) (model *SourceOptionsObject, err error) {
+	model = &SourceOptionsObject{
+		Name: core.StringPtr(name),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // SourceOptionsSiteColl : Object that defines a Microsoft SharePoint site collection to crawl with this configuration.
@@ -9006,6 +9065,15 @@ type SourceOptionsSiteColl struct {
 	// The maximum number of documents to crawl for this site collection. By default, all documents in the site collection
 	// are crawled.
 	Limit *int64 `json:"limit,omitempty"`
+}
+
+// NewSourceOptionsSiteColl : Instantiate SourceOptionsSiteColl (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewSourceOptionsSiteColl(siteCollectionPath string) (model *SourceOptionsSiteColl, err error) {
+	model = &SourceOptionsSiteColl{
+		SiteCollectionPath: core.StringPtr(siteCollectionPath),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // SourceOptionsWebCrawl : Object defining which URL to crawl and how to crawl it.
@@ -9052,6 +9120,15 @@ const (
 	SourceOptionsWebCrawl_CrawlSpeed_Gentle     = "gentle"
 	SourceOptionsWebCrawl_CrawlSpeed_Normal     = "normal"
 )
+
+// NewSourceOptionsWebCrawl : Instantiate SourceOptionsWebCrawl (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewSourceOptionsWebCrawl(URL string) (model *SourceOptionsWebCrawl, err error) {
+	model = &SourceOptionsWebCrawl{
+		URL: core.StringPtr(URL),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
 
 // SourceSchedule : Object containing the schedule information for the source.
 type SourceSchedule struct {
@@ -9122,31 +9199,6 @@ const (
 	SourceStatus_Status_Unknown       = "unknown"
 )
 
-// Term : Term struct
-type Term struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	// The number of terms identified.
-	Count *int64 `json:"count,omitempty"`
-}
-
-// Timeslice : Timeslice struct
-type Timeslice struct {
-
-	// The field where the aggregation is located in the document.
-	Field *string `json:"field,omitempty"`
-
-	// Interval of the aggregation. Valid date interval values are second/seconds minute/minutes, hour/hours, day/days,
-	// week/weeks, month/months, and year/years.
-	Interval *string `json:"interval,omitempty"`
-
-	// Used to indicate that anomaly detection should be performed. Anomaly detection is used to locate unusual datapoints
-	// within a time series.
-	Anomaly *bool `json:"anomaly,omitempty"`
-}
-
 // TokenDictRule : An object defining a single tokenizaion rule.
 type TokenDictRule struct {
 
@@ -9161,6 +9213,17 @@ type TokenDictRule struct {
 
 	// The part of speech that the `text` string belongs to. For example `noun`. Custom parts of speech can be specified.
 	PartOfSpeech *string `json:"part_of_speech" validate:"required"`
+}
+
+// NewTokenDictRule : Instantiate TokenDictRule (Generic Model Constructor)
+func (discovery *DiscoveryV1) NewTokenDictRule(text string, tokens []string, partOfSpeech string) (model *TokenDictRule, err error) {
+	model = &TokenDictRule{
+		Text:         core.StringPtr(text),
+		Tokens:       tokens,
+		PartOfSpeech: core.StringPtr(partOfSpeech),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // TokenDictStatusResponse : Object describing the current status of the wordlist.
@@ -9180,15 +9243,6 @@ const (
 	TokenDictStatusResponse_Status_NotFound = "not found"
 	TokenDictStatusResponse_Status_Pending  = "pending"
 )
-
-// TopHits : TopHits struct
-type TopHits struct {
-
-	// Number of top hits returned by the aggregation.
-	Size *int64 `json:"size,omitempty"`
-
-	Hits *TopHitsResults `json:"hits,omitempty"`
-}
 
 // TopHitsResults : Top hit information for this query.
 type TopHitsResults struct {
@@ -9290,7 +9344,7 @@ type UpdateCollectionOptions struct {
 	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The name of the collection.
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name" validate:"required"`
 
 	// A description of the collection.
 	Description *string `json:"description,omitempty"`
@@ -9303,10 +9357,11 @@ type UpdateCollectionOptions struct {
 }
 
 // NewUpdateCollectionOptions : Instantiate UpdateCollectionOptions
-func (discovery *DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string) *UpdateCollectionOptions {
+func (discovery *DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string, name string) *UpdateCollectionOptions {
 	return &UpdateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
+		Name:          core.StringPtr(name),
 	}
 }
 
@@ -9810,4 +9865,72 @@ type XPathPatterns struct {
 
 	// An array to XPaths.
 	Xpaths []string `json:"xpaths,omitempty"`
+}
+
+// Calculation : Calculation struct
+type Calculation struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	// Value of the aggregation.
+	Value *float64 `json:"value,omitempty"`
+}
+
+// Filter : Filter struct
+type Filter struct {
+
+	// The match the aggregated results queried for.
+	Match *string `json:"match,omitempty"`
+}
+
+// Histogram : Histogram struct
+type Histogram struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	// Interval of the aggregation. (For 'histogram' type).
+	Interval *int64 `json:"interval,omitempty"`
+}
+
+// Nested : Nested struct
+type Nested struct {
+
+	// The area of the results the aggregation was restricted to.
+	Path *string `json:"path,omitempty"`
+}
+
+// Term : Term struct
+type Term struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	// The number of terms identified.
+	Count *int64 `json:"count,omitempty"`
+}
+
+// Timeslice : Timeslice struct
+type Timeslice struct {
+
+	// The field where the aggregation is located in the document.
+	Field *string `json:"field,omitempty"`
+
+	// Interval of the aggregation. Valid date interval values are second/seconds minute/minutes, hour/hours, day/days,
+	// week/weeks, month/months, and year/years.
+	Interval *string `json:"interval,omitempty"`
+
+	// Used to indicate that anomaly detection should be performed. Anomaly detection is used to locate unusual datapoints
+	// within a time series.
+	Anomaly *bool `json:"anomaly,omitempty"`
+}
+
+// TopHits : TopHits struct
+type TopHits struct {
+
+	// Number of top hits returned by the aggregation.
+	Size *int64 `json:"size,omitempty"`
+
+	Hits *TopHitsResults `json:"hits,omitempty"`
 }
