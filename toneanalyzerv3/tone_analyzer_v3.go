@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,36 +40,50 @@ type ToneAnalyzerV3 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/tone-analyzer/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/tone-analyzer/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "tone_analyzer"
 
 // ToneAnalyzerV3Options : Service options
 type ToneAnalyzerV3Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewToneAnalyzerV3 : Instantiate ToneAnalyzerV3
+// NewToneAnalyzerV3 : constructs an instance of ToneAnalyzerV3 with passed in options.
 func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (service *ToneAnalyzerV3, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("tone_analyzer")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "tone_analyzer", "Tone Analyzer")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &ToneAnalyzerV3{
@@ -445,6 +459,15 @@ type ToneInput struct {
 	Text *string `json:"text" validate:"required"`
 }
 
+// NewToneInput : Instantiate ToneInput (Generic Model Constructor)
+func (toneAnalyzer *ToneAnalyzerV3) NewToneInput(text string) (model *ToneInput, err error) {
+	model = &ToneInput{
+		Text: core.StringPtr(text),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // ToneOptions : The Tone options.
 type ToneOptions struct {
 
@@ -614,6 +637,15 @@ type Utterance struct {
 
 	// A string that identifies the user who contributed the utterance specified by the `text` parameter.
 	User *string `json:"user,omitempty"`
+}
+
+// NewUtterance : Instantiate Utterance (Generic Model Constructor)
+func (toneAnalyzer *ToneAnalyzerV3) NewUtterance(text string) (model *Utterance, err error) {
+	model = &Utterance{
+		Text: core.StringPtr(text),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // UtteranceAnalyses : The results of the analysis for the utterances of the input content.
