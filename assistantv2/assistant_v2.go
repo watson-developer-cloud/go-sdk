@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,36 +36,50 @@ type AssistantV2 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "conversation"
 
 // AssistantV2Options : Service options
 type AssistantV2Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewAssistantV2 : Instantiate AssistantV2
+// NewAssistantV2 : constructs an instance of AssistantV2 with passed in options.
 func NewAssistantV2(options *AssistantV2Options) (service *AssistantV2, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "conversation", "Assistant")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &AssistantV2{
@@ -256,6 +270,15 @@ type CaptureGroup struct {
 
 	// Zero-based character offsets that indicate where the entity value begins and ends in the input text.
 	Location []int64 `json:"location,omitempty"`
+}
+
+// NewCaptureGroup : Instantiate CaptureGroup (Generic Model Constructor)
+func (assistant *AssistantV2) NewCaptureGroup(group string) (model *CaptureGroup, err error) {
+	model = &CaptureGroup{
+		Group: core.StringPtr(group),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // CreateSessionOptions : The CreateSession options.
@@ -477,6 +500,9 @@ type MessageContextSkill struct {
 
 	// Arbitrary variables that can be read and written by a particular skill.
 	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
+
+	// For internal use only.
+	System map[string]interface{} `json:"system,omitempty"`
 }
 
 // MessageContextSkills : Information specific to particular skills used by the Assistant.
@@ -692,6 +718,17 @@ type RuntimeEntity struct {
 	Groups []CaptureGroup `json:"groups,omitempty"`
 }
 
+// NewRuntimeEntity : Instantiate RuntimeEntity (Generic Model Constructor)
+func (assistant *AssistantV2) NewRuntimeEntity(entity string, location []int64, value string) (model *RuntimeEntity, err error) {
+	model = &RuntimeEntity{
+		Entity:   core.StringPtr(entity),
+		Location: location,
+		Value:    core.StringPtr(value),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // RuntimeIntent : An intent identified in the user input.
 type RuntimeIntent struct {
 
@@ -700,6 +737,16 @@ type RuntimeIntent struct {
 
 	// A decimal percentage that represents Watson's confidence in the intent.
 	Confidence *float64 `json:"confidence" validate:"required"`
+}
+
+// NewRuntimeIntent : Instantiate RuntimeIntent (Generic Model Constructor)
+func (assistant *AssistantV2) NewRuntimeIntent(intent string, confidence float64) (model *RuntimeIntent, err error) {
+	model = &RuntimeIntent{
+		Intent:     core.StringPtr(intent),
+		Confidence: core.Float64Ptr(confidence),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // RuntimeResponseGeneric : RuntimeResponseGeneric struct
