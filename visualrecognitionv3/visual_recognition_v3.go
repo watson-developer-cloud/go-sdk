@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,12 @@ package visualrecognitionv3
 
 import (
 	"fmt"
+	"io"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
-	"strings"
 )
 
 // VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
@@ -37,36 +38,50 @@ type VisualRecognitionV3 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "watson_vision_combined"
 
 // VisualRecognitionV3Options : Service options
 type VisualRecognitionV3Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewVisualRecognitionV3 : Instantiate VisualRecognitionV3
+// NewVisualRecognitionV3 : constructs an instance of VisualRecognitionV3 with passed in options.
 func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (service *VisualRecognitionV3, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("watson_vision_combined")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "watson_vision_combined", "Visual Recognition")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &VisualRecognitionV3{
@@ -818,7 +833,8 @@ type CreateClassifierOptions struct {
 	// positive example file in a call.
 	//
 	// Specify the parameter name by appending `_positive_examples` to the class name. For example,
-	// `goldenretriever_positive_examples` creates the class **goldenretriever**.
+	// `goldenretriever_positive_examples` creates the class **goldenretriever**. The string cannot contain the following
+	// characters: ``$ * - { } \ | / ' " ` [ ]``.
 	//
 	// Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
@@ -1046,7 +1062,8 @@ type UpdateClassifierOptions struct {
 	// update classes in the classifier. You can include more than one positive example file in a call.
 	//
 	// Specify the parameter name by appending `_positive_examples` to the class name. For example,
-	// `goldenretriever_positive_examples` creates the class `goldenretriever`.
+	// `goldenretriever_positive_examples` creates the class `goldenretriever`. The string cannot contain the following
+	// characters: ``$ * - { } \ | / ' " ` [ ]``.
 	//
 	// Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels. The
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
