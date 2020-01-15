@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,36 +35,50 @@ type CompareComplyV1 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/compare-comply/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/compare-comply/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "compare-comply"
 
 // CompareComplyV1Options : Service options
 type CompareComplyV1Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewCompareComplyV1 : Instantiate CompareComplyV1
+// NewCompareComplyV1 : constructs an instance of CompareComplyV1 with passed in options.
 func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComplyV1, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("compare-comply")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "compare-comply", "Compare Comply")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &CompareComplyV1{
@@ -1945,6 +1959,19 @@ type FeedbackDataInput struct {
 	UpdatedLabels *UpdatedLabelsIn `json:"updated_labels" validate:"required"`
 }
 
+// NewFeedbackDataInput : Instantiate FeedbackDataInput (Generic Model Constructor)
+func (compareComply *CompareComplyV1) NewFeedbackDataInput(feedbackType string, location *Location, text string, originalLabels *OriginalLabelsIn, updatedLabels *UpdatedLabelsIn) (model *FeedbackDataInput, err error) {
+	model = &FeedbackDataInput{
+		FeedbackType:   core.StringPtr(feedbackType),
+		Location:       location,
+		Text:           core.StringPtr(text),
+		OriginalLabels: originalLabels,
+		UpdatedLabels:  updatedLabels,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // FeedbackDataOutput : Information returned from the **Add Feedback** method.
 type FeedbackDataOutput struct {
 
@@ -2179,6 +2206,16 @@ type Label struct {
 	Party *string `json:"party" validate:"required"`
 }
 
+// NewLabel : Instantiate Label (Generic Model Constructor)
+func (compareComply *CompareComplyV1) NewLabel(nature string, party string) (model *Label, err error) {
+	model = &Label{
+		Nature: core.StringPtr(nature),
+		Party:  core.StringPtr(party),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // LeadingSentence : The leading sentences in a section or subsection of the input document.
 type LeadingSentence struct {
 
@@ -2399,6 +2436,16 @@ type Location struct {
 	End *int64 `json:"end" validate:"required"`
 }
 
+// NewLocation : Instantiate Location (Generic Model Constructor)
+func (compareComply *CompareComplyV1) NewLocation(begin int64, end int64) (model *Location, err error) {
+	model = &Location{
+		Begin: core.Int64Ptr(begin),
+		End:   core.Int64Ptr(end),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // Mention : A mention of a party.
 type Mention struct {
 
@@ -2418,6 +2465,16 @@ type OriginalLabelsIn struct {
 
 	// List of functional categories into which the element falls; in other words, the subject matter of the element.
 	Categories []Category `json:"categories" validate:"required"`
+}
+
+// NewOriginalLabelsIn : Instantiate OriginalLabelsIn (Generic Model Constructor)
+func (compareComply *CompareComplyV1) NewOriginalLabelsIn(types []TypeLabel, categories []Category) (model *OriginalLabelsIn, err error) {
+	model = &OriginalLabelsIn{
+		Types:      types,
+		Categories: categories,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // OriginalLabelsOut : The original labeling from the input document, without the submitted feedback.
@@ -2843,6 +2900,16 @@ type UpdatedLabelsIn struct {
 
 	// List of functional categories into which the element falls; in other words, the subject matter of the element.
 	Categories []Category `json:"categories" validate:"required"`
+}
+
+// NewUpdatedLabelsIn : Instantiate UpdatedLabelsIn (Generic Model Constructor)
+func (compareComply *CompareComplyV1) NewUpdatedLabelsIn(types []TypeLabel, categories []Category) (model *UpdatedLabelsIn, err error) {
+	model = &UpdatedLabelsIn{
+		Types:      types,
+		Categories: categories,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // UpdatedLabelsOut : The updated labeling from the input document, accounting for the submitted feedback.
