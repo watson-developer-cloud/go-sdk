@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,35 +46,49 @@ type TextToSpeechV1 struct {
 	Service *core.BaseService
 }
 
-const defaultServiceURL = "https://stream.watsonplatform.net/text-to-speech/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://stream.watsonplatform.net/text-to-speech/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "text_to_speech"
 
 // TextToSpeechV1Options : Service options
 type TextToSpeechV1Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 }
 
-// NewTextToSpeechV1 : Instantiate TextToSpeechV1
+// NewTextToSpeechV1 : constructs an instance of TextToSpeechV1 with passed in options.
 func NewTextToSpeechV1(options *TextToSpeechV1Options) (service *TextToSpeechV1, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("text_to_speech")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "text_to_speech", "Text to Speech")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &TextToSpeechV1{
@@ -326,7 +340,8 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 // can also request the pronunciation for a specific voice to see the default translation for the language of that voice
 // or for a specific custom voice model to see the translation for that voice model.
 //
-// **Note:** This method is currently a beta release.
+// **Note:** This method is currently a beta release. The method does not support the Arabic, Chinese, and Dutch
+// languages.
 //
 // **See also:** [Querying a word from a
 // language](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
@@ -393,7 +408,8 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 // the language and a description for the new model. The model is owned by the instance of the service whose credentials
 // are used to create it.
 //
-// **Note:** This method is currently a beta release.
+// **Note:** This method is currently a beta release. The service does not support voice model customization for the
+// Arabic, Chinese, and Dutch languages.
 //
 // **See also:** [Creating a custom
 // model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
@@ -1738,6 +1754,7 @@ type SynthesizeOptions struct {
 // Constants associated with the SynthesizeOptions.Voice property.
 // The voice to use for synthesis.
 const (
+	SynthesizeOptions_Voice_ArArOmarvoice        = "ar-AR_OmarVoice"
 	SynthesizeOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
 	SynthesizeOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
 	SynthesizeOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
@@ -1764,8 +1781,13 @@ const (
 	SynthesizeOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
 	SynthesizeOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
 	SynthesizeOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_NlNlEmmavoice        = "nl-NL_EmmaVoice"
+	SynthesizeOptions_Voice_NlNlLiamvoice        = "nl-NL_LiamVoice"
 	SynthesizeOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
 	SynthesizeOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
+	SynthesizeOptions_Voice_ZhCnLinavoice        = "zh-CN_LiNaVoice"
+	SynthesizeOptions_Voice_ZhCnWangweivoice     = "zh-CN_WangWeiVoice"
+	SynthesizeOptions_Voice_ZhCnZhangjingvoice   = "zh-CN_ZhangJingVoice"
 )
 
 // NewSynthesizeOptions : Instantiate SynthesizeOptions
@@ -1844,6 +1866,15 @@ const (
 	Translation_PartOfSpeech_Stzo = "Stzo"
 	Translation_PartOfSpeech_Suji = "Suji"
 )
+
+// NewTranslation : Instantiate Translation (Generic Model Constructor)
+func (textToSpeech *TextToSpeechV1) NewTranslation(translation string) (model *Translation, err error) {
+	model = &Translation{
+		Translation: core.StringPtr(translation),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
 
 // UpdateVoiceModelOptions : The UpdateVoiceModel options.
 type UpdateVoiceModelOptions struct {
@@ -2027,6 +2058,16 @@ const (
 	Word_PartOfSpeech_Suji = "Suji"
 )
 
+// NewWord : Instantiate Word (Generic Model Constructor)
+func (textToSpeech *TextToSpeechV1) NewWord(word string, translation string) (model *Word, err error) {
+	model = &Word{
+		Word:        core.StringPtr(word),
+		Translation: core.StringPtr(translation),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // Words : For the **Add custom words** method, one or more words that are to be added or updated for the custom voice model and
 // the translation for each specified word.
 //
@@ -2040,4 +2081,13 @@ type Words struct {
 	// from the custom voice model. The words are listed in alphabetical order, with uppercase letters listed before
 	// lowercase letters. The array is empty if the custom model contains no words.
 	Words []Word `json:"words" validate:"required"`
+}
+
+// NewWords : Instantiate Words (Generic Model Constructor)
+func (textToSpeech *TextToSpeechV1) NewWords(words []Word) (model *Words, err error) {
+	model = &Words{
+		Words: words,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
