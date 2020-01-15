@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,36 +49,50 @@ type PersonalityInsightsV3 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "personality_insights"
 
 // PersonalityInsightsV3Options : Service options
 type PersonalityInsightsV3Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewPersonalityInsightsV3 : Instantiate PersonalityInsightsV3
+// NewPersonalityInsightsV3 : constructs an instance of PersonalityInsightsV3 with passed in options.
 func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *PersonalityInsightsV3, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("personality_insights")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "personality_insights", "Personality Insights")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &PersonalityInsightsV3{
@@ -374,6 +388,15 @@ type Content struct {
 	ContentItems []ContentItem `json:"contentItems" validate:"required"`
 }
 
+// NewContent : Instantiate Content (Generic Model Constructor)
+func (personalityInsights *PersonalityInsightsV3) NewContent(contentItems []ContentItem) (model *Content, err error) {
+	model = &Content{
+		ContentItems: contentItems,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // ContentItem : An input content item that the service is to analyze.
 type ContentItem struct {
 
@@ -437,6 +460,15 @@ const (
 	ContentItem_Language_Ja = "ja"
 	ContentItem_Language_Ko = "ko"
 )
+
+// NewContentItem : Instantiate ContentItem (Generic Model Constructor)
+func (personalityInsights *PersonalityInsightsV3) NewContentItem(content string) (model *ContentItem, err error) {
+	model = &ContentItem{
+		Content: core.StringPtr(content),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
 
 // Profile : The personality profile that the service generated for the input content.
 type Profile struct {
