@@ -362,6 +362,12 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	if recognizeOptions.AudioMetrics != nil {
 		builder.AddQuery("audio_metrics", fmt.Sprint(*recognizeOptions.AudioMetrics))
 	}
+	if recognizeOptions.EndOfPhraseSilenceTime != nil {
+		builder.AddQuery("end_of_phrase_silence_time", fmt.Sprint(*recognizeOptions.EndOfPhraseSilenceTime))
+	}
+	if recognizeOptions.SplitTranscriptAtPhraseEnd != nil {
+		builder.AddQuery("split_transcript_at_phrase_end", fmt.Sprint(*recognizeOptions.SplitTranscriptAtPhraseEnd))
+	}
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio)
 	if err != nil {
@@ -698,6 +704,12 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 	}
 	if createJobOptions.AudioMetrics != nil {
 		builder.AddQuery("audio_metrics", fmt.Sprint(*createJobOptions.AudioMetrics))
+	}
+	if createJobOptions.EndOfPhraseSilenceTime != nil {
+		builder.AddQuery("end_of_phrase_silence_time", fmt.Sprint(*createJobOptions.EndOfPhraseSilenceTime))
+	}
+	if createJobOptions.SplitTranscriptAtPhraseEnd != nil {
+		builder.AddQuery("split_transcript_at_phrase_end", fmt.Sprint(*createJobOptions.SplitTranscriptAtPhraseEnd))
 	}
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio)
@@ -4046,11 +4058,42 @@ type CreateJobOptions struct {
 	// The service does not impose a maximum value. If you want to receive processing metrics only for transcription events
 	// instead of at periodic intervals, set the value to a large number. If the value is larger than the duration of the
 	// audio, the service returns processing metrics only for transcription events.
+	//
+	// See [Processing
+	// metrics](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-metrics#processing_metrics).
 	ProcessingMetricsInterval *float32 `json:"processing_metrics_interval,omitempty"`
 
 	// If `true`, requests detailed information about the signal characteristics of the input audio. The service returns
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
+	//
+	// See [Audio metrics](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-metrics#audio_metrics).
 	AudioMetrics *bool `json:"audio_metrics,omitempty"`
+
+	// If `true`, specifies the duration of the pause interval at which the service splits a transcript into multiple final
+	// results. If the service detects pauses or extended silence before it reaches the end of the audio stream, its
+	// response can include multiple final results. Silence indicates a point at which the speaker pauses between spoken
+	// words or phrases.
+	//
+	// Specify a value for the pause interval in the range of 0.0 to 120.0.
+	// * A value greater than 0 specifies the interval that the service is to use for speech recognition.
+	// * A value of 0 indicates that the service is to use the default interval. It is equivalent to omitting the
+	// parameter.
+	//
+	// The default pause interval for most languages is 0.8 seconds; the default for Chinese is 0.6 seconds.
+	//
+	// See [End of phrase silence
+	// time](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#silence_time).
+	EndOfPhraseSilenceTime *float64 `json:"end_of_phrase_silence_time,omitempty"`
+
+	// If `true`, directs the service to split the transcript into multiple final results based on semantic features of the
+	// input, for example, at the conclusion of meaningful phrases such as sentences. The service bases its understanding
+	// of semantic features on the base language model that you use with a request. Custom language models and grammars can
+	// also influence how and where the service splits a transcript. By default, the service splits transcripts based
+	// solely on the pause interval.
+	//
+	// See [Split transcript at phrase
+	// end](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#split_transcript).
+	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -4281,6 +4324,18 @@ func (options *CreateJobOptions) SetProcessingMetricsInterval(processingMetricsI
 // SetAudioMetrics : Allow user to set AudioMetrics
 func (options *CreateJobOptions) SetAudioMetrics(audioMetrics bool) *CreateJobOptions {
 	options.AudioMetrics = core.BoolPtr(audioMetrics)
+	return options
+}
+
+// SetEndOfPhraseSilenceTime : Allow user to set EndOfPhraseSilenceTime
+func (options *CreateJobOptions) SetEndOfPhraseSilenceTime(endOfPhraseSilenceTime float64) *CreateJobOptions {
+	options.EndOfPhraseSilenceTime = core.Float64Ptr(endOfPhraseSilenceTime)
+	return options
+}
+
+// SetSplitTranscriptAtPhraseEnd : Allow user to set SplitTranscriptAtPhraseEnd
+func (options *CreateJobOptions) SetSplitTranscriptAtPhraseEnd(splitTranscriptAtPhraseEnd bool) *CreateJobOptions {
+	options.SplitTranscriptAtPhraseEnd = core.BoolPtr(splitTranscriptAtPhraseEnd)
 	return options
 }
 
@@ -5678,7 +5733,35 @@ type RecognizeOptions struct {
 
 	// If `true`, requests detailed information about the signal characteristics of the input audio. The service returns
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
+	//
+	// See [Audio metrics](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-metrics#audio_metrics).
 	AudioMetrics *bool `json:"audio_metrics,omitempty"`
+
+	// If `true`, specifies the duration of the pause interval at which the service splits a transcript into multiple final
+	// results. If the service detects pauses or extended silence before it reaches the end of the audio stream, its
+	// response can include multiple final results. Silence indicates a point at which the speaker pauses between spoken
+	// words or phrases.
+	//
+	// Specify a value for the pause interval in the range of 0.0 to 120.0.
+	// * A value greater than 0 specifies the interval that the service is to use for speech recognition.
+	// * A value of 0 indicates that the service is to use the default interval. It is equivalent to omitting the
+	// parameter.
+	//
+	// The default pause interval for most languages is 0.8 seconds; the default for Chinese is 0.6 seconds.
+	//
+	// See [End of phrase silence
+	// time](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#silence_time).
+	EndOfPhraseSilenceTime *float64 `json:"end_of_phrase_silence_time,omitempty"`
+
+	// If `true`, directs the service to split the transcript into multiple final results based on semantic features of the
+	// input, for example, at the conclusion of meaningful phrases such as sentences. The service bases its understanding
+	// of semantic features on the base language model that you use with a request. Custom language models and grammars can
+	// also influence how and where the service splits a transcript. By default, the service splits transcripts based
+	// solely on the pause interval.
+	//
+	// See [Split transcript at phrase
+	// end](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#split_transcript).
+	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -5850,6 +5933,18 @@ func (options *RecognizeOptions) SetRedaction(redaction bool) *RecognizeOptions 
 // SetAudioMetrics : Allow user to set AudioMetrics
 func (options *RecognizeOptions) SetAudioMetrics(audioMetrics bool) *RecognizeOptions {
 	options.AudioMetrics = core.BoolPtr(audioMetrics)
+	return options
+}
+
+// SetEndOfPhraseSilenceTime : Allow user to set EndOfPhraseSilenceTime
+func (options *RecognizeOptions) SetEndOfPhraseSilenceTime(endOfPhraseSilenceTime float64) *RecognizeOptions {
+	options.EndOfPhraseSilenceTime = core.Float64Ptr(endOfPhraseSilenceTime)
+	return options
+}
+
+// SetSplitTranscriptAtPhraseEnd : Allow user to set SplitTranscriptAtPhraseEnd
+func (options *RecognizeOptions) SetSplitTranscriptAtPhraseEnd(splitTranscriptAtPhraseEnd bool) *RecognizeOptions {
+	options.SplitTranscriptAtPhraseEnd = core.BoolPtr(splitTranscriptAtPhraseEnd)
 	return options
 }
 
