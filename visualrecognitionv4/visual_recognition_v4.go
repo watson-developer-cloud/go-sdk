@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,36 +37,50 @@ type VisualRecognitionV4 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "watson_vision_combined"
 
 // VisualRecognitionV4Options : Service options
 type VisualRecognitionV4Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewVisualRecognitionV4 : Instantiate VisualRecognitionV4
+// NewVisualRecognitionV4 : constructs an instance of VisualRecognitionV4 with passed in options.
 func NewVisualRecognitionV4(options *VisualRecognitionV4Options) (service *VisualRecognitionV4, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("watson_vision_combined")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "watson_vision_combined", "Visual Recognition")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &VisualRecognitionV4{
@@ -1378,6 +1392,15 @@ type FileWithMetadata struct {
 	ContentType *string `json:"content_type,omitempty"`
 }
 
+// NewFileWithMetadata : Instantiate FileWithMetadata (Generic Model Constructor)
+func (visualRecognition *VisualRecognitionV4) NewFileWithMetadata(data io.ReadCloser) (model *FileWithMetadata, err error) {
+	model = &FileWithMetadata{
+		Data: data,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // GetCollectionOptions : The GetCollection options.
 type GetCollectionOptions struct {
 
@@ -1711,6 +1734,18 @@ type Location struct {
 	Height *int64 `json:"height" validate:"required"`
 }
 
+// NewLocation : Instantiate Location (Generic Model Constructor)
+func (visualRecognition *VisualRecognitionV4) NewLocation(top int64, left int64, width int64, height int64) (model *Location, err error) {
+	model = &Location{
+		Top:    core.Int64Ptr(top),
+		Left:   core.Int64Ptr(left),
+		Width:  core.Int64Ptr(width),
+		Height: core.Int64Ptr(height),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // ObjectDetail : Details about an object in the collection.
 type ObjectDetail struct {
 
@@ -1743,6 +1778,19 @@ type ObjectTrainingStatus struct {
 	// Details about the training. If training is in progress, includes information about the status. If training is not in
 	// progress, includes a success message or information about why training failed.
 	Description *string `json:"description" validate:"required"`
+}
+
+// NewObjectTrainingStatus : Instantiate ObjectTrainingStatus (Generic Model Constructor)
+func (visualRecognition *VisualRecognitionV4) NewObjectTrainingStatus(ready bool, inProgress bool, dataChanged bool, latestFailed bool, description string) (model *ObjectTrainingStatus, err error) {
+	model = &ObjectTrainingStatus{
+		Ready:        core.BoolPtr(ready),
+		InProgress:   core.BoolPtr(inProgress),
+		DataChanged:  core.BoolPtr(dataChanged),
+		LatestFailed: core.BoolPtr(latestFailed),
+		Description:  core.StringPtr(description),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // TrainOptions : The Train options.
@@ -1849,6 +1897,15 @@ type TrainingStatus struct {
 
 	// Training status for the objects in the collection.
 	Objects *ObjectTrainingStatus `json:"objects" validate:"required"`
+}
+
+// NewTrainingStatus : Instantiate TrainingStatus (Generic Model Constructor)
+func (visualRecognition *VisualRecognitionV4) NewTrainingStatus(objects *ObjectTrainingStatus) (model *TrainingStatus, err error) {
+	model = &TrainingStatus{
+		Objects: objects,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // UpdateCollectionOptions : The UpdateCollection options.
