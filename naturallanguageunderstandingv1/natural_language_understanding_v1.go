@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import (
 //
 // You can create [custom
 // models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
-// with Watson Knowledge Studio to detect custom entities, relations, and categories in Natural Language Understanding.
+// with Watson Knowledge Studio to detect custom entities and relations in Natural Language Understanding.
 //
 // Version: 1.0
 // See: https://cloud.ibm.com/docs/services/natural-language-understanding/
@@ -40,36 +40,50 @@ type NaturalLanguageUnderstandingV1 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "natural-language-understanding"
 
 // NaturalLanguageUnderstandingV1Options : Service options
 type NaturalLanguageUnderstandingV1Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewNaturalLanguageUnderstandingV1 : Instantiate NaturalLanguageUnderstandingV1
+// NewNaturalLanguageUnderstandingV1 : constructs an instance of NaturalLanguageUnderstandingV1 with passed in options.
 func NewNaturalLanguageUnderstandingV1(options *NaturalLanguageUnderstandingV1Options) (service *NaturalLanguageUnderstandingV1, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("natural-language-understanding")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "natural-language-understanding", "Natural Language Understanding")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &NaturalLanguageUnderstandingV1{
@@ -102,6 +116,10 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DisableSSLVe
 // - Semantic roles
 // - Sentiment
 // - Syntax (Experimental).
+//
+// If a language for the input text is not specified with the `language` parameter, the service [automatically detects
+// the
+// language](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-detectable-languages).
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(analyzeOptions *AnalyzeOptions) (result *AnalysisResults, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(analyzeOptions, "analyzeOptions cannot be nil")
 	if err != nil {
@@ -499,11 +517,6 @@ type CategoriesOptions struct {
 
 	// Maximum number of categories to return.
 	Limit *int64 `json:"limit,omitempty"`
-
-	// Enter a [custom
-	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
-	// ID to override the standard categories model.
-	Model *string `json:"model,omitempty"`
 }
 
 // CategoriesRelevantText : Relevant text that contributed to the categorization.
