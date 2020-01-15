@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,30 +38,50 @@ type DiscoveryV2 struct {
 	Version string
 }
 
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = ""
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "discovery"
+
 // DiscoveryV2Options : Service options
 type DiscoveryV2Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewDiscoveryV2 : Instantiate DiscoveryV2
+// NewDiscoveryV2 : constructs an instance of DiscoveryV2 with passed in options.
 func NewDiscoveryV2(options *DiscoveryV2Options) (service *DiscoveryV2, err error) {
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
+	}
+
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("discovery")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "discovery", "Discovery")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &DiscoveryV2{
@@ -490,7 +510,7 @@ func (discovery *DiscoveryV2) GetComponentSettings(getComponentSettingsOptions *
 // **_/v2/projects/{project_id}/collections/{collection_id}/documents** method.
 //
 // **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
-// a collection that conects to an external source such as Microsoft SharePoint.
+// a collection that connects to an external source such as Microsoft SharePoint.
 func (discovery *DiscoveryV2) AddDocument(addDocumentOptions *AddDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addDocumentOptions, "addDocumentOptions cannot be nil")
 	if err != nil {
@@ -565,7 +585,7 @@ func (discovery *DiscoveryV2) AddDocument(addDocumentOptions *AddDocumentOptions
 // **document_id** if it exists.
 //
 // **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
-// a collection that conects to an external source such as Microsoft SharePoint.
+// a collection that connects to an external source such as Microsoft SharePoint.
 func (discovery *DiscoveryV2) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil")
 	if err != nil {
@@ -634,7 +654,7 @@ func (discovery *DiscoveryV2) UpdateDocument(updateDocumentOptions *UpdateDocume
 // status code `200`) with the status set to 'deleted'.
 //
 // **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
-// a collection that conects to an external source such as Microsoft SharePoint.
+// a collection that connects to an external source such as Microsoft SharePoint.
 func (discovery *DiscoveryV2) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (result *DeleteDocumentResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil")
 	if err != nil {
@@ -816,11 +836,11 @@ func (discovery *DiscoveryV2) CreateTrainingQuery(createTrainingQueryOptions *Cr
 	if createTrainingQueryOptions.NaturalLanguageQuery != nil {
 		body["natural_language_query"] = createTrainingQueryOptions.NaturalLanguageQuery
 	}
-	if createTrainingQueryOptions.Filter != nil {
-		body["filter"] = createTrainingQueryOptions.Filter
-	}
 	if createTrainingQueryOptions.Examples != nil {
 		body["examples"] = createTrainingQueryOptions.Examples
+	}
+	if createTrainingQueryOptions.Filter != nil {
+		body["filter"] = createTrainingQueryOptions.Filter
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -970,7 +990,7 @@ type AddDocumentOptions struct {
 	CollectionID *string `json:"collection_id" validate:"required"`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
-	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
+	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
 	// supported size are rejected.
 	File io.ReadCloser `json:"file,omitempty"`
 
@@ -1145,22 +1165,24 @@ type CreateTrainingQueryOptions struct {
 	ProjectID *string `json:"project_id" validate:"required"`
 
 	// The natural text query for the training query.
-	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
+	NaturalLanguageQuery *string `json:"natural_language_query" validate:"required"`
+
+	// Array of training examples.
+	Examples []TrainingExample `json:"examples" validate:"required"`
 
 	// The filter used on the collection before the **natural_language_query** is applied.
 	Filter *string `json:"filter,omitempty"`
-
-	// Array of training examples.
-	Examples []TrainingExample `json:"examples,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
 
 // NewCreateTrainingQueryOptions : Instantiate CreateTrainingQueryOptions
-func (discovery *DiscoveryV2) NewCreateTrainingQueryOptions(projectID string) *CreateTrainingQueryOptions {
+func (discovery *DiscoveryV2) NewCreateTrainingQueryOptions(projectID string, naturalLanguageQuery string, examples []TrainingExample) *CreateTrainingQueryOptions {
 	return &CreateTrainingQueryOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:            core.StringPtr(projectID),
+		NaturalLanguageQuery: core.StringPtr(naturalLanguageQuery),
+		Examples:             examples,
 	}
 }
 
@@ -1176,15 +1198,15 @@ func (options *CreateTrainingQueryOptions) SetNaturalLanguageQuery(naturalLangua
 	return options
 }
 
-// SetFilter : Allow user to set Filter
-func (options *CreateTrainingQueryOptions) SetFilter(filter string) *CreateTrainingQueryOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
-}
-
 // SetExamples : Allow user to set Examples
 func (options *CreateTrainingQueryOptions) SetExamples(examples []TrainingExample) *CreateTrainingQueryOptions {
 	options.Examples = examples
+	return options
+}
+
+// SetFilter : Allow user to set Filter
+func (options *CreateTrainingQueryOptions) SetFilter(filter string) *CreateTrainingQueryOptions {
+	options.Filter = core.StringPtr(filter)
 	return options
 }
 
@@ -1665,44 +1687,6 @@ type QueryAggregation struct {
 	Type *string `json:"type" validate:"required"`
 }
 
-// QueryCalculationAggregation : Returns a scalar calculation across all documents for the field specified. Possible calculations include min, max,
-// sum, average, and unique_count.
-type QueryCalculationAggregation struct {
-
-	// The field to perform the calculation on.
-	Field *string `json:"field" validate:"required"`
-
-	// The value of the calculation.
-	Value *float64 `json:"value,omitempty"`
-}
-
-// QueryFilterAggregation : A modifier that will narrow down the document set of the sub aggregations it precedes.
-type QueryFilterAggregation struct {
-
-	// The filter written in Discovery Query Language syntax applied to the documents before sub aggregations are run.
-	Match *string `json:"match" validate:"required"`
-
-	// Number of documents matching the filter.
-	MatchingResults *int64 `json:"matching_results" validate:"required"`
-
-	// An array of sub aggregations.
-	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
-}
-
-// QueryHistogramAggregation : Numeric interval segments to categorize documents by using field values from a single numeric field to describe the
-// category.
-type QueryHistogramAggregation struct {
-
-	// The numeric field name used to create the histogram.
-	Field *string `json:"field" validate:"required"`
-
-	// The size of the sections the results are split into.
-	Interval *int64 `json:"interval" validate:"required"`
-
-	// Array of numeric intervals.
-	Results []QueryHistogramAggregationResult `json:"results,omitempty"`
-}
-
 // QueryHistogramAggregationResult : Histogram numeric interval result.
 type QueryHistogramAggregationResult struct {
 
@@ -1722,7 +1706,7 @@ type QueryLargePassages struct {
 	// A passages query that returns the most relevant passages from the results.
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// When `true`, passages will be returned whithin their respective result.
+	// When `true`, passages will be returned within their respective result.
 	PerDocument *bool `json:"per_document,omitempty"`
 
 	// Maximum number of passages to return per result.
@@ -1758,20 +1742,6 @@ type QueryLargeTableResults struct {
 
 	// Maximum number of tables to return.
 	Count *int64 `json:"count,omitempty"`
-}
-
-// QueryNestedAggregation : A restriction that alter the document set used for sub aggregations it precedes to nested documents found in the
-// field specified.
-type QueryNestedAggregation struct {
-
-	// The path to the document field to scope sub aggregations to.
-	Path *string `json:"path" validate:"required"`
-
-	// Number of nested documents found in the specified field.
-	MatchingResults *int64 `json:"matching_results" validate:"required"`
-
-	// An array of sub aggregations.
-	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 }
 
 // QueryNoticesOptions : The QueryNotices options.
@@ -2047,7 +2017,7 @@ type QueryResponse struct {
 	// Suggested correction to the submitted **natural_language_query** value.
 	SuggestedQuery *string `json:"suggested_query,omitempty"`
 
-	// Array of suggested refinments.
+	// Array of suggested refinements.
 	SuggestedRefinements []QuerySuggestedRefinement `json:"suggested_refinements,omitempty"`
 
 	// Array of table results.
@@ -2175,19 +2145,6 @@ type QueryTableResult struct {
 	Table *TableResultTable `json:"table,omitempty"`
 }
 
-// QueryTermAggregation : Returns the top values for the field specified.
-type QueryTermAggregation struct {
-
-	// The field in the document used to generate top values from.
-	Field *string `json:"field" validate:"required"`
-
-	// The number of top values returned.
-	Count *int64 `json:"count,omitempty"`
-
-	// Array of top values for the field.
-	Results []QueryTermAggregationResult `json:"results,omitempty"`
-}
-
 // QueryTermAggregationResult : Top value result for the term aggregation.
 type QueryTermAggregationResult struct {
 
@@ -2201,26 +2158,13 @@ type QueryTermAggregationResult struct {
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 }
 
-// QueryTimesliceAggregation : A specialized histogram aggregation that uses dates to create interval segments.
-type QueryTimesliceAggregation struct {
-
-	// The date field name used to create the timeslice.
-	Field *string `json:"field" validate:"required"`
-
-	// The date interval value. Valid values are seconds, minutes, hours, days, weeks, and years.
-	Interval *string `json:"interval" validate:"required"`
-
-	// Array of aggregation results.
-	Results []QueryTimesliceAggregationResult `json:"results,omitempty"`
-}
-
 // QueryTimesliceAggregationResult : A timeslice interval segment.
 type QueryTimesliceAggregationResult struct {
 
 	// String date value of the upper bound for the timeslice interval in ISO-8601 format.
 	KeyAsString *string `json:"key_as_string" validate:"required"`
 
-	// Numeric date value of the upper bound for the timeslice interval in UNIX miliseconds since epoch.
+	// Numeric date value of the upper bound for the timeslice interval in UNIX milliseconds since epoch.
 	Key *int64 `json:"key" validate:"required"`
 
 	// Number of documents with the specified key as the upper bound.
@@ -2228,15 +2172,6 @@ type QueryTimesliceAggregationResult struct {
 
 	// An array of sub aggregations.
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
-}
-
-// QueryTopHitsAggregation : Returns the top documents ranked by the score of the query.
-type QueryTopHitsAggregation struct {
-
-	// The number of documents to return.
-	Size *int64 `json:"size" validate:"required"`
-
-	Hits *QueryTopHitsAggregationResult `json:"hits,omitempty"`
 }
 
 // QueryTopHitsAggregationResult : A query response containing the matching documents for the preceding aggregations.
@@ -2252,8 +2187,8 @@ type QueryTopHitsAggregationResult struct {
 // RetrievalDetails : An object contain retrieval type information.
 type RetrievalDetails struct {
 
-	// Indentifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results
-	// were returned using a relevancy trained model.
+	// Identifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results were
+	// returned using a relevancy trained model.
 	//
 	//  **Note**: In the event of trained collections being queried, but the trained model is not used to return results,
 	// the **document_retrieval_strategy** will be listed as `untrained`.
@@ -2261,7 +2196,7 @@ type RetrievalDetails struct {
 }
 
 // Constants associated with the RetrievalDetails.DocumentRetrievalStrategy property.
-// Indentifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results were
+// Identifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results were
 // returned using a relevancy trained model.
 //
 //  **Note**: In the event of trained collections being queried, but the trained model is not used to return results,
@@ -2565,6 +2500,17 @@ type TrainingExample struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
+// NewTrainingExample : Instantiate TrainingExample (Generic Model Constructor)
+func (discovery *DiscoveryV2) NewTrainingExample(documentID string, collectionID string, relevance int64) (model *TrainingExample, err error) {
+	model = &TrainingExample{
+		DocumentID:   core.StringPtr(documentID),
+		CollectionID: core.StringPtr(collectionID),
+		Relevance:    core.Int64Ptr(relevance),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // TrainingQuery : Object containing training query details.
 type TrainingQuery struct {
 
@@ -2587,6 +2533,16 @@ type TrainingQuery struct {
 	Examples []TrainingExample `json:"examples" validate:"required"`
 }
 
+// NewTrainingQuery : Instantiate TrainingQuery (Generic Model Constructor)
+func (discovery *DiscoveryV2) NewTrainingQuery(naturalLanguageQuery string, examples []TrainingExample) (model *TrainingQuery, err error) {
+	model = &TrainingQuery{
+		NaturalLanguageQuery: core.StringPtr(naturalLanguageQuery),
+		Examples:             examples,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // TrainingQuerySet : Object specifying the training queries contained in the identified training set.
 type TrainingQuerySet struct {
 
@@ -2607,7 +2563,7 @@ type UpdateDocumentOptions struct {
 	DocumentID *string `json:"document_id" validate:"required"`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
-	// megabytes, the maximum supported file size when testing a confiruration is 1 megabyte. Files larger than the
+	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
 	// supported size are rejected.
 	File io.ReadCloser `json:"file,omitempty"`
 
@@ -2760,4 +2716,91 @@ func (options *UpdateTrainingQueryOptions) SetFilter(filter string) *UpdateTrain
 func (options *UpdateTrainingQueryOptions) SetHeaders(param map[string]string) *UpdateTrainingQueryOptions {
 	options.Headers = param
 	return options
+}
+
+// QueryCalculationAggregation : Returns a scalar calculation across all documents for the field specified. Possible calculations include min, max,
+// sum, average, and unique_count.
+type QueryCalculationAggregation struct {
+
+	// The field to perform the calculation on.
+	Field *string `json:"field" validate:"required"`
+
+	// The value of the calculation.
+	Value *float64 `json:"value,omitempty"`
+}
+
+// QueryFilterAggregation : A modifier that will narrow down the document set of the sub aggregations it precedes.
+type QueryFilterAggregation struct {
+
+	// The filter written in Discovery Query Language syntax applied to the documents before sub aggregations are run.
+	Match *string `json:"match" validate:"required"`
+
+	// Number of documents matching the filter.
+	MatchingResults *int64 `json:"matching_results" validate:"required"`
+
+	// An array of sub aggregations.
+	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
+}
+
+// QueryHistogramAggregation : Numeric interval segments to categorize documents by using field values from a single numeric field to describe the
+// category.
+type QueryHistogramAggregation struct {
+
+	// The numeric field name used to create the histogram.
+	Field *string `json:"field" validate:"required"`
+
+	// The size of the sections the results are split into.
+	Interval *int64 `json:"interval" validate:"required"`
+
+	// Array of numeric intervals.
+	Results []QueryHistogramAggregationResult `json:"results,omitempty"`
+}
+
+// QueryNestedAggregation : A restriction that alter the document set used for sub aggregations it precedes to nested documents found in the
+// field specified.
+type QueryNestedAggregation struct {
+
+	// The path to the document field to scope sub aggregations to.
+	Path *string `json:"path" validate:"required"`
+
+	// Number of nested documents found in the specified field.
+	MatchingResults *int64 `json:"matching_results" validate:"required"`
+
+	// An array of sub aggregations.
+	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
+}
+
+// QueryTermAggregation : Returns the top values for the field specified.
+type QueryTermAggregation struct {
+
+	// The field in the document used to generate top values from.
+	Field *string `json:"field" validate:"required"`
+
+	// The number of top values returned.
+	Count *int64 `json:"count,omitempty"`
+
+	// Array of top values for the field.
+	Results []QueryTermAggregationResult `json:"results,omitempty"`
+}
+
+// QueryTimesliceAggregation : A specialized histogram aggregation that uses dates to create interval segments.
+type QueryTimesliceAggregation struct {
+
+	// The date field name used to create the timeslice.
+	Field *string `json:"field" validate:"required"`
+
+	// The date interval value. Valid values are seconds, minutes, hours, days, weeks, and years.
+	Interval *string `json:"interval" validate:"required"`
+
+	// Array of aggregation results.
+	Results []QueryTimesliceAggregationResult `json:"results,omitempty"`
+}
+
+// QueryTopHitsAggregation : Returns the top documents ranked by the score of the query.
+type QueryTopHitsAggregation struct {
+
+	// The number of documents to return.
+	Size *int64 `json:"size" validate:"required"`
+
+	Hits *QueryTopHitsAggregationResult `json:"hits,omitempty"`
 }
