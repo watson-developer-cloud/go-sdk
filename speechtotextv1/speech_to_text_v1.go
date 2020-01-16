@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,35 +49,49 @@ type SpeechToTextV1 struct {
 	Service *core.BaseService
 }
 
-const defaultServiceURL = "https://stream.watsonplatform.net/speech-to-text/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://stream.watsonplatform.net/speech-to-text/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "speech_to_text"
 
 // SpeechToTextV1Options : Service options
 type SpeechToTextV1Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 }
 
-// NewSpeechToTextV1 : Instantiate SpeechToTextV1
+// NewSpeechToTextV1 : constructs an instance of SpeechToTextV1 with passed in options.
 func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("speech_to_text")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "speech_to_text", "Speech to Text")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		baseService.SetServiceURL(options.URL)
 	}
 
 	service = &SpeechToTextV1{
@@ -895,9 +909,9 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
 //
-// You can create a maximum of 1024 custom language models, per credential. The service returns an error if you attempt
-// to create more than 1024 models. You do not lose any models, but you cannot create any more until your model count is
-// below the limit.
+// You can create a maximum of 1024 custom language models per owning credentials. The service returns an error if you
+// attempt to create more than 1024 models. You do not lose any models, but you cannot create any more until your model
+// count is below the limit.
 //
 // **See also:** [Create a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-languageCreate#createModel-language).
@@ -2141,9 +2155,9 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
 //
-// You can create a maximum of 1024 custom acoustic models, per credential. The service returns an error if you attempt
-// to create more than 1024 models. You do not lose any models, but you cannot create any more until your model count is
-// below the limit.
+// You can create a maximum of 1024 custom acoustic models per owning credentials. The service returns an error if you
+// attempt to create more than 1024 models. You do not lose any models, but you cannot create any more until your model
+// count is below the limit.
 //
 // **See also:** [Create a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-acoustic#createModel-acoustic).
@@ -3820,10 +3834,14 @@ const (
 	CreateAcousticModelOptions_BaseModelName_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
@@ -4047,6 +4065,9 @@ type CreateJobOptions struct {
 	// processing metrics at the interval specified by the `processing_metrics_interval` parameter. It also returns
 	// processing metrics for transcription events, for example, for final and interim results. By default, the service
 	// returns no processing metrics.
+	//
+	// See [Processing
+	// metrics](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-metrics#processing_metrics).
 	ProcessingMetrics *bool `json:"processing_metrics,omitempty"`
 
 	// Specifies the interval in real wall-clock seconds at which the service is to return processing metrics. The
@@ -4125,10 +4146,14 @@ const (
 	CreateJobOptions_Model_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	CreateJobOptions_Model_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	CreateJobOptions_Model_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	CreateJobOptions_Model_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	CreateJobOptions_Model_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	CreateJobOptions_Model_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	CreateJobOptions_Model_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	CreateJobOptions_Model_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	CreateJobOptions_Model_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	CreateJobOptions_Model_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	CreateJobOptions_Model_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	CreateJobOptions_Model_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	CreateJobOptions_Model_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 	CreateJobOptions_Model_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
@@ -4986,10 +5011,14 @@ const (
 	GetModelOptions_ModelID_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	GetModelOptions_ModelID_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	GetModelOptions_ModelID_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	GetModelOptions_ModelID_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	GetModelOptions_ModelID_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	GetModelOptions_ModelID_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	GetModelOptions_ModelID_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	GetModelOptions_ModelID_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	GetModelOptions_ModelID_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	GetModelOptions_ModelID_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	GetModelOptions_ModelID_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	GetModelOptions_ModelID_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	GetModelOptions_ModelID_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 	GetModelOptions_ModelID_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
@@ -5793,10 +5822,14 @@ const (
 	RecognizeOptions_Model_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	RecognizeOptions_Model_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	RecognizeOptions_Model_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	RecognizeOptions_Model_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	RecognizeOptions_Model_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	RecognizeOptions_Model_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	RecognizeOptions_Model_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	RecognizeOptions_Model_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	RecognizeOptions_Model_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	RecognizeOptions_Model_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	RecognizeOptions_Model_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	RecognizeOptions_Model_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	RecognizeOptions_Model_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 	RecognizeOptions_Model_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
@@ -6172,7 +6205,31 @@ type SpeechRecognitionResult struct {
 	// An array of alternative hypotheses found for words of the input audio if a `word_alternatives_threshold` is
 	// specified.
 	WordAlternatives []WordAlternativeResults `json:"word_alternatives,omitempty"`
+
+	// If the `split_transcript_at_phrase_end` parameter is `true`, describes the reason for the split:
+	// * `end_of_data` - The end of the input audio stream.
+	// * `full_stop` - A full semantic stop, such as for the conclusion of a grammatical sentence. The insertion of splits
+	// is influenced by the base language model and biased by custom language models and grammars.
+	// * `reset` - The amount of audio that is currently being processed exceeds the two-minute maximum. The service splits
+	// the transcript to avoid excessive memory use.
+	// * `silence` - A pause or silence that is at least as long as the pause interval.
+	EndOfUtterance *string `json:"end_of_utterance,omitempty"`
 }
+
+// Constants associated with the SpeechRecognitionResult.EndOfUtterance property.
+// If the `split_transcript_at_phrase_end` parameter is `true`, describes the reason for the split:
+// * `end_of_data` - The end of the input audio stream.
+// * `full_stop` - A full semantic stop, such as for the conclusion of a grammatical sentence. The insertion of splits
+// is influenced by the base language model and biased by custom language models and grammars.
+// * `reset` - The amount of audio that is currently being processed exceeds the two-minute maximum. The service splits
+// the transcript to avoid excessive memory use.
+// * `silence` - A pause or silence that is at least as long as the pause interval.
+const (
+	SpeechRecognitionResult_EndOfUtterance_EndOfData = "end_of_data"
+	SpeechRecognitionResult_EndOfUtterance_FullStop  = "full_stop"
+	SpeechRecognitionResult_EndOfUtterance_Reset     = "reset"
+	SpeechRecognitionResult_EndOfUtterance_Silence   = "silence"
+)
 
 // SpeechRecognitionResults : The complete results for a speech recognition request.
 type SpeechRecognitionResults struct {
