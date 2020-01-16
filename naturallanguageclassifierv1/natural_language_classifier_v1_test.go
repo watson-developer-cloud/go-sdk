@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call Classify`, func() {
 				defer testServer.Close()
@@ -90,8 +90,8 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ClassifyCollection`, func() {
 				defer testServer.Close()
@@ -132,7 +132,8 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"url": "fake URL", "classifier_id": "fake ClassifierID"}`)
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"url": "fake_URL", "classifier_id": "fake_ClassifierID"}`)
 			}))
 			It(`Succeed to call CreateClassifier`, func() {
 				defer testServer.Close()
@@ -182,8 +183,8 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"classifiers": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"classifiers": []}`)
 			}))
 			It(`Succeed to call ListClassifiers`, func() {
 				defer testServer.Close()
@@ -226,7 +227,8 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"url": "fake URL", "classifier_id": "fake ClassifierID"}`)
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"url": "fake_URL", "classifier_id": "fake_ClassifierID"}`)
 			}))
 			It(`Succeed to call GetClassifier`, func() {
 				defer testServer.Close()
@@ -291,6 +293,20 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				response, operationErr = testService.DeleteClassifier(deleteClassifierOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("Model constructor tests", func() {
+		Context("with a sample service", func() {
+			testService, _ := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+				URL:           "http://naturallanguageclassifierv1modelgenerator.com",
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewClassifyInput successfully", func() {
+				text := "exampleString"
+				model, err := testService.NewClassifyInput(text)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 		})
 	})

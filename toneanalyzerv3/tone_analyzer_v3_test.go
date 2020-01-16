@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"document_tone": {}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"document_tone": {}}`)
 			}))
 			It(`Succeed to call Tone`, func() {
 				defer testServer.Close()
@@ -88,8 +88,8 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"utterances_tone": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"utterances_tone": []}`)
 			}))
 			It(`Succeed to call ToneChat`, func() {
 				defer testServer.Close()
@@ -115,6 +115,28 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("Model constructor tests", func() {
+		Context("with a sample service", func() {
+			version := "1970-01-01"
+			testService, _ := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
+				URL:           "http://toneanalyzerv3modelgenerator.com",
+				Version:       version,
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewToneInput successfully", func() {
+				text := "exampleString"
+				model, err := testService.NewToneInput(text)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewUtterance successfully", func() {
+				text := "exampleString"
+				model, err := testService.NewUtterance(text)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 		})
 	})

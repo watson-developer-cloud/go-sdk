@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call Analyze`, func() {
 				defer testServer.Close()
@@ -89,8 +89,8 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListModels`, func() {
 				defer testServer.Close()
@@ -136,8 +136,8 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call DeleteModel`, func() {
 				defer testServer.Close()

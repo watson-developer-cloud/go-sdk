@@ -3,7 +3,7 @@ module github.com/watson-developer-cloud/go-sdk
 go 1.12
 
 require (
-	github.com/IBM/go-sdk-core v1.1.0
+	github.com/IBM/go-sdk-core v1.1.1-0.20191204032945-b7e55c23dc56
 	github.com/go-openapi/strfmt v0.19.3
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/gorilla/websocket v1.4.1

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,14 @@ package discoveryv1_test
 
 import (
 	"fmt"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/discoveryv1"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"strings"
 )
 
 var _ = Describe(`DiscoveryV1`, func() {
@@ -46,8 +45,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call CreateEnvironment`, func() {
 				defer testServer.Close()
@@ -91,8 +90,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListEnvironments`, func() {
 				defer testServer.Close()
@@ -138,8 +137,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetEnvironment`, func() {
 				defer testServer.Close()
@@ -185,8 +184,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call UpdateEnvironment`, func() {
 				defer testServer.Close()
@@ -232,8 +231,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"environment_id": "fake EnvironmentID", "status": "fake Status"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"environment_id": "fake_EnvironmentID", "status": "fake_Status"}`)
 			}))
 			It(`Succeed to call DeleteEnvironment`, func() {
 				defer testServer.Close()
@@ -280,8 +279,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListFields`, func() {
 				defer testServer.Close()
@@ -328,8 +327,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"name": "fake Name"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"name": "fake_Name"}`)
 			}))
 			It(`Succeed to call CreateConfiguration`, func() {
 				defer testServer.Close()
@@ -375,8 +374,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListConfigurations`, func() {
 				defer testServer.Close()
@@ -424,8 +423,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"name": "fake Name"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"name": "fake_Name"}`)
 			}))
 			It(`Succeed to call GetConfiguration`, func() {
 				defer testServer.Close()
@@ -474,8 +473,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"name": "fake Name"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"name": "fake_Name"}`)
 			}))
 			It(`Succeed to call UpdateConfiguration`, func() {
 				defer testServer.Close()
@@ -523,8 +522,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"configuration_id": "fake ConfigurationID", "status": "fake Status"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"configuration_id": "fake_ConfigurationID", "status": "fake_Status"}`)
 			}))
 			It(`Succeed to call DeleteConfiguration`, func() {
 				defer testServer.Close()
@@ -571,8 +570,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call CreateCollection`, func() {
 				defer testServer.Close()
@@ -618,8 +617,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListCollections`, func() {
 				defer testServer.Close()
@@ -667,8 +666,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetCollection`, func() {
 				defer testServer.Close()
@@ -703,6 +702,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		bearerToken := "0ui9876453"
 		environmentID := "exampleString"
 		collectionID := "exampleString"
+		name := "exampleString"
 		updateCollectionPath = strings.Replace(updateCollectionPath, "{environment_id}", environmentID, 1)
 		updateCollectionPath = strings.Replace(updateCollectionPath, "{collection_id}", collectionID, 1)
 		Context(`Successfully - Update a collection`, func() {
@@ -716,8 +716,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call UpdateCollection`, func() {
 				defer testServer.Close()
@@ -738,7 +738,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				updateCollectionOptions := testService.NewUpdateCollectionOptions(environmentID, collectionID)
+				updateCollectionOptions := testService.NewUpdateCollectionOptions(environmentID, collectionID, name)
 				result, response, operationErr = testService.UpdateCollection(updateCollectionOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -765,8 +765,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"collection_id": "fake CollectionID", "status": "fake Status"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "status": "fake_Status"}`)
 			}))
 			It(`Succeed to call DeleteCollection`, func() {
 				defer testServer.Close()
@@ -814,8 +814,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListCollectionFields`, func() {
 				defer testServer.Close()
@@ -863,8 +863,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"expansions": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"expansions": []}`)
 			}))
 			It(`Succeed to call ListExpansions`, func() {
 				defer testServer.Close()
@@ -913,8 +913,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"expansions": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"expansions": []}`)
 			}))
 			It(`Succeed to call CreateExpansions`, func() {
 				defer testServer.Close()
@@ -1007,8 +1007,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetTokenizationDictionaryStatus`, func() {
 				defer testServer.Close()
@@ -1056,8 +1056,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(202)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call CreateTokenizationDictionary`, func() {
 				defer testServer.Close()
@@ -1150,8 +1150,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetStopwordListStatus`, func() {
 				defer testServer.Close()
@@ -1187,11 +1187,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 		environmentID := "exampleString"
 		collectionID := "exampleString"
 		pwd, _ := os.Getwd()
-		stopwordsFile, stopwordsFileErr := os.Open(pwd + "/../resources/stopwords.txt")
+		stopwordFile, stopwordsFileErr := os.Open(pwd + "/../resources/stopwords.txt")
 		if stopwordsFileErr != nil {
 			panic(stopwordsFileErr)
 		}
-		stopwordsFilename := "exampleString"
+		stopwordFilename := "exampleString"
 		createStopwordListPath = strings.Replace(createStopwordListPath, "{environment_id}", environmentID, 1)
 		createStopwordListPath = strings.Replace(createStopwordListPath, "{collection_id}", collectionID, 1)
 		Context(`Successfully - Create stopword list`, func() {
@@ -1205,8 +1205,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call CreateStopwordList`, func() {
 				defer testServer.Close()
@@ -1227,7 +1227,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				createStopwordListOptions := testService.NewCreateStopwordListOptions(environmentID, collectionID, stopwordsFile, stopwordsFilename)
+				createStopwordListOptions := testService.NewCreateStopwordListOptions(environmentID, collectionID, stopwordFile, stopwordFilename)
 				result, response, operationErr = testService.CreateStopwordList(createStopwordListOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -1299,8 +1299,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(202)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call AddDocument`, func() {
 				defer testServer.Close()
@@ -1351,8 +1351,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"document_id": "fake DocumentID", "status": "fake Status", "status_description": "fake StatusDescription", "notices": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"document_id": "fake_DocumentID", "status": "fake_Status", "status_description": "fake_StatusDescription", "notices": []}`)
 			}))
 			It(`Succeed to call GetDocumentStatus`, func() {
 				defer testServer.Close()
@@ -1402,8 +1402,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(202)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call UpdateDocument`, func() {
 				defer testServer.Close()
@@ -1454,8 +1454,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call DeleteDocument`, func() {
 				defer testServer.Close()
@@ -1503,8 +1503,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call Query`, func() {
 				defer testServer.Close()
@@ -1552,8 +1552,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call QueryNotices`, func() {
 				defer testServer.Close()
@@ -1587,6 +1587,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		version := "exampleString"
 		bearerToken := "0ui9876453"
 		environmentID := "exampleString"
+		collectionIds := "exampleString"
 		federatedQueryPath = strings.Replace(federatedQueryPath, "{environment_id}", environmentID, 1)
 		Context(`Successfully - Query multiple collections`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
@@ -1599,8 +1600,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call FederatedQuery`, func() {
 				defer testServer.Close()
@@ -1621,7 +1622,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				federatedQueryOptions := testService.NewFederatedQueryOptions(environmentID)
+				federatedQueryOptions := testService.NewFederatedQueryOptions(environmentID, collectionIds)
 				result, response, operationErr = testService.FederatedQuery(federatedQueryOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -1647,8 +1648,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call FederatedQueryNotices`, func() {
 				defer testServer.Close()
@@ -1677,6 +1678,58 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
+	Describe(`GetAutocompletion(getAutocompletionOptions *GetAutocompletionOptions)`, func() {
+		getAutocompletionPath := "/v1/environments/{environment_id}/collections/{collection_id}/autocompletion"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		environmentID := "exampleString"
+		collectionID := "exampleString"
+		prefix := "exampleString"
+		getAutocompletionPath = strings.Replace(getAutocompletionPath, "{environment_id}", environmentID, 1)
+		getAutocompletionPath = strings.Replace(getAutocompletionPath, "{collection_id}", collectionID, 1)
+		Context(`Successfully - Get Autocomplete Suggestions`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getAutocompletionPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				Expect(req.URL.Query()["prefix"]).To(Equal([]string{prefix}))
+
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call GetAutocompletion`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetAutocompletion(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getAutocompletionOptions := testService.NewGetAutocompletionOptions(environmentID, collectionID, prefix)
+				result, response, operationErr = testService.GetAutocompletion(getAutocompletionOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 	Describe(`ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions)`, func() {
 		listTrainingDataPath := "/v1/environments/{environment_id}/collections/{collection_id}/training_data"
 		version := "exampleString"
@@ -1696,8 +1749,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListTrainingData`, func() {
 				defer testServer.Close()
@@ -1745,8 +1798,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call AddTrainingData`, func() {
 				defer testServer.Close()
@@ -1841,8 +1894,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetTrainingData`, func() {
 				defer testServer.Close()
@@ -1939,8 +1992,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListTrainingExamples`, func() {
 				defer testServer.Close()
@@ -1990,8 +2043,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call CreateTrainingExample`, func() {
 				defer testServer.Close()
@@ -2092,8 +2145,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call UpdateTrainingExample`, func() {
 				defer testServer.Close()
@@ -2145,8 +2198,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetTrainingExample`, func() {
 				defer testServer.Close()
@@ -2236,8 +2289,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call CreateEvent`, func() {
 				defer testServer.Close()
@@ -2281,8 +2334,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call QueryLog`, func() {
 				defer testServer.Close()
@@ -2326,8 +2379,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetMetricsQuery`, func() {
 				defer testServer.Close()
@@ -2371,8 +2424,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetMetricsQueryEvent`, func() {
 				defer testServer.Close()
@@ -2416,8 +2469,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetMetricsQueryNoResults`, func() {
 				defer testServer.Close()
@@ -2461,8 +2514,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetMetricsEventRate`, func() {
 				defer testServer.Close()
@@ -2506,8 +2559,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetMetricsQueryTokenEvent`, func() {
 				defer testServer.Close()
@@ -2553,8 +2606,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListCredentials`, func() {
 				defer testServer.Close()
@@ -2600,8 +2653,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call CreateCredentials`, func() {
 				defer testServer.Close()
@@ -2649,8 +2702,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetCredentials`, func() {
 				defer testServer.Close()
@@ -2698,8 +2751,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call UpdateCredentials`, func() {
 				defer testServer.Close()
@@ -2747,8 +2800,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call DeleteCredentials`, func() {
 				defer testServer.Close()
@@ -2794,8 +2847,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListGateways`, func() {
 				defer testServer.Close()
@@ -2841,8 +2894,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call CreateGateway`, func() {
 				defer testServer.Close()
@@ -2890,8 +2943,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetGateway`, func() {
 				defer testServer.Close()
@@ -2939,8 +2992,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call DeleteGateway`, func() {
 				defer testServer.Close()
@@ -2969,53 +3022,87 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-	Describe(`GetAutocompletion(getAutocompletionOptions *GetAutocompletionOptions)`, func() {
-		getAutocompletionPath := "/v1/environments/{environment_id}/collections/{collection_id}/autocompletion"
-		version := "exampleString"
-		bearerToken := "0ui9876453"
-		environmentID := "exampleString"
-		collectionID := "exampleString"
-		prefix := "exampleString"
-		getAutocompletionPath = strings.Replace(getAutocompletionPath, "{environment_id}", environmentID, 1)
-		getAutocompletionPath = strings.Replace(getAutocompletionPath, "{collection_id}", collectionID, 1)
-		Context(`Successfully - Get Autocomplete Suggestions`, func() {
-			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-				defer GinkgoRecover()
-
-				// Verify the contents of the request
-				Expect(req.URL.Path).To(Equal(getAutocompletionPath))
-				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
-				Expect(req.Method).To(Equal("GET"))
-				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
-				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
-				res.WriteHeader(200)
-			}))
-			It(`Succeed to call GetAutocompletion`, func() {
-				defer testServer.Close()
-
-				testService, testServiceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     testServer.URL,
-					Version: version,
-					Authenticator: &core.BearerTokenAuthenticator{
-						BearerToken: bearerToken,
-					},
-				})
-				Expect(testServiceErr).To(BeNil())
-				Expect(testService).ToNot(BeNil())
-
-				// Pass empty options
-				result, response, operationErr := testService.GetAutocompletion(nil)
-				Expect(operationErr).NotTo(BeNil())
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-
-				getAutocompletionOptions := testService.NewGetAutocompletionOptions(environmentID, collectionID, prefix)
-				result, response, operationErr = testService.GetAutocompletion(getAutocompletionOptions)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
+	Describe("Model constructor tests", func() {
+		Context("with a sample service", func() {
+			version := "1970-01-01"
+			testService, _ := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+				URL:           "http://discoveryv1modelgenerator.com",
+				Version:       version,
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewConfiguration successfully", func() {
+				name := "exampleString"
+				model, err := testService.NewConfiguration(name)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewEnrichment successfully", func() {
+				destinationField := "exampleString"
+				sourceField := "exampleString"
+				enrichment := "exampleString"
+				model, err := testService.NewEnrichment(destinationField, sourceField, enrichment)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewEventData successfully", func() {
+				environmentID := "exampleString"
+				sessionToken := "exampleString"
+				collectionID := "exampleString"
+				documentID := "exampleString"
+				model, err := testService.NewEventData(environmentID, sessionToken, collectionID, documentID)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewExpansion successfully", func() {
+				expandedTerms := []string{}
+				model, err := testService.NewExpansion(expandedTerms)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewExpansions successfully", func() {
+				expansions := []discoveryv1.Expansion{}
+				model, err := testService.NewExpansions(expansions)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewSourceOptionsBuckets successfully", func() {
+				name := "exampleString"
+				model, err := testService.NewSourceOptionsBuckets(name)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewSourceOptionsFolder successfully", func() {
+				ownerUserID := "exampleString"
+				folderID := "exampleString"
+				model, err := testService.NewSourceOptionsFolder(ownerUserID, folderID)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewSourceOptionsObject successfully", func() {
+				name := "exampleString"
+				model, err := testService.NewSourceOptionsObject(name)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewSourceOptionsSiteColl successfully", func() {
+				siteCollectionPath := "exampleString"
+				model, err := testService.NewSourceOptionsSiteColl(siteCollectionPath)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewSourceOptionsWebCrawl successfully", func() {
+				url := "exampleString"
+				model, err := testService.NewSourceOptionsWebCrawl(url)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewTokenDictRule successfully", func() {
+				text := "exampleString"
+				tokens := []string{}
+				partOfSpeech := "exampleString"
+				model, err := testService.NewTokenDictRule(text, tokens, partOfSpeech)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 		})
 	})

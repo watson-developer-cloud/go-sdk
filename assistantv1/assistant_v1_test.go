@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"input": {}, "intents": [], "entities": [], "context": {}, "output": {"log_messages": [], "text": []}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"input": {}, "intents": [], "entities": [], "context": {}, "output": {"log_messages": [], "text": []}}`)
 			}))
 			It(`Succeed to call Message`, func() {
 				defer testServer.Close()
@@ -90,8 +90,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"workspaces": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"workspaces": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListWorkspaces`, func() {
 				defer testServer.Close()
@@ -135,8 +135,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"name": "fake Name", "language": "fake Language", "learning_opt_out": true, "workspace_id": "fake WorkspaceID"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"name": "fake_Name", "language": "fake_Language", "learning_opt_out": true, "workspace_id": "fake_WorkspaceID"}`)
 			}))
 			It(`Succeed to call CreateWorkspace`, func() {
 				defer testServer.Close()
@@ -182,8 +182,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"name": "fake Name", "language": "fake Language", "learning_opt_out": true, "workspace_id": "fake WorkspaceID"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"name": "fake_Name", "language": "fake_Language", "learning_opt_out": true, "workspace_id": "fake_WorkspaceID"}`)
 			}))
 			It(`Succeed to call GetWorkspace`, func() {
 				defer testServer.Close()
@@ -229,8 +229,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"name": "fake Name", "language": "fake Language", "learning_opt_out": true, "workspace_id": "fake WorkspaceID"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"name": "fake_Name", "language": "fake_Language", "learning_opt_out": true, "workspace_id": "fake_WorkspaceID"}`)
 			}))
 			It(`Succeed to call UpdateWorkspace`, func() {
 				defer testServer.Close()
@@ -319,8 +319,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"intents": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"intents": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListIntents`, func() {
 				defer testServer.Close()
@@ -367,8 +367,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"intent": "fake Intent"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"intent": "fake_Intent"}`)
 			}))
 			It(`Succeed to call CreateIntent`, func() {
 				defer testServer.Close()
@@ -416,8 +416,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"intent": "fake Intent"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"intent": "fake_Intent"}`)
 			}))
 			It(`Succeed to call GetIntent`, func() {
 				defer testServer.Close()
@@ -465,8 +465,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"intent": "fake Intent"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"intent": "fake_Intent"}`)
 			}))
 			It(`Succeed to call UpdateIntent`, func() {
 				defer testServer.Close()
@@ -559,8 +559,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"examples": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"examples": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListExamples`, func() {
 				defer testServer.Close()
@@ -609,8 +609,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"text": "fake Text"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"text": "fake_Text"}`)
 			}))
 			It(`Succeed to call CreateExample`, func() {
 				defer testServer.Close()
@@ -660,8 +660,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"text": "fake Text"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"text": "fake_Text"}`)
 			}))
 			It(`Succeed to call GetExample`, func() {
 				defer testServer.Close()
@@ -711,8 +711,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"text": "fake Text"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"text": "fake_Text"}`)
 			}))
 			It(`Succeed to call UpdateExample`, func() {
 				defer testServer.Close()
@@ -805,8 +805,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"counterexamples": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"counterexamples": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListCounterexamples`, func() {
 				defer testServer.Close()
@@ -853,8 +853,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"text": "fake Text"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"text": "fake_Text"}`)
 			}))
 			It(`Succeed to call CreateCounterexample`, func() {
 				defer testServer.Close()
@@ -902,8 +902,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"text": "fake Text"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"text": "fake_Text"}`)
 			}))
 			It(`Succeed to call GetCounterexample`, func() {
 				defer testServer.Close()
@@ -951,8 +951,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"text": "fake Text"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"text": "fake_Text"}`)
 			}))
 			It(`Succeed to call UpdateCounterexample`, func() {
 				defer testServer.Close()
@@ -1043,8 +1043,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"entities": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"entities": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListEntities`, func() {
 				defer testServer.Close()
@@ -1091,8 +1091,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"entity": "fake Entity"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"entity": "fake_Entity"}`)
 			}))
 			It(`Succeed to call CreateEntity`, func() {
 				defer testServer.Close()
@@ -1140,8 +1140,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"entity": "fake Entity"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"entity": "fake_Entity"}`)
 			}))
 			It(`Succeed to call GetEntity`, func() {
 				defer testServer.Close()
@@ -1189,8 +1189,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"entity": "fake Entity"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"entity": "fake_Entity"}`)
 			}))
 			It(`Succeed to call UpdateEntity`, func() {
 				defer testServer.Close()
@@ -1283,8 +1283,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"examples": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"examples": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListMentions`, func() {
 				defer testServer.Close()
@@ -1332,8 +1332,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"values": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"values": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListValues`, func() {
 				defer testServer.Close()
@@ -1382,8 +1382,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"value": "fake Value", "type": "fake Type"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"value": "fake_Value", "type": "fake_Type"}`)
 			}))
 			It(`Succeed to call CreateValue`, func() {
 				defer testServer.Close()
@@ -1433,8 +1433,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"value": "fake Value", "type": "fake Type"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"value": "fake_Value", "type": "fake_Type"}`)
 			}))
 			It(`Succeed to call GetValue`, func() {
 				defer testServer.Close()
@@ -1484,8 +1484,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"value": "fake Value", "type": "fake Type"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"value": "fake_Value", "type": "fake_Type"}`)
 			}))
 			It(`Succeed to call UpdateValue`, func() {
 				defer testServer.Close()
@@ -1582,8 +1582,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"synonyms": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"synonyms": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListSynonyms`, func() {
 				defer testServer.Close()
@@ -1634,8 +1634,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"synonym": "fake Synonym"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"synonym": "fake_Synonym"}`)
 			}))
 			It(`Succeed to call CreateSynonym`, func() {
 				defer testServer.Close()
@@ -1687,8 +1687,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"synonym": "fake Synonym"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"synonym": "fake_Synonym"}`)
 			}))
 			It(`Succeed to call GetSynonym`, func() {
 				defer testServer.Close()
@@ -1740,8 +1740,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"synonym": "fake Synonym"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"synonym": "fake_Synonym"}`)
 			}))
 			It(`Succeed to call UpdateSynonym`, func() {
 				defer testServer.Close()
@@ -1836,8 +1836,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"dialog_nodes": [], "pagination": {"refresh_url": "fake RefreshURL"}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"dialog_nodes": [], "pagination": {"refresh_url": "fake_RefreshURL"}}`)
 			}))
 			It(`Succeed to call ListDialogNodes`, func() {
 				defer testServer.Close()
@@ -1884,8 +1884,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"dialog_node": "fake DialogNode"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"dialog_node": "fake_DialogNode"}`)
 			}))
 			It(`Succeed to call CreateDialogNode`, func() {
 				defer testServer.Close()
@@ -1933,8 +1933,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"dialog_node": "fake DialogNode"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"dialog_node": "fake_DialogNode"}`)
 			}))
 			It(`Succeed to call GetDialogNode`, func() {
 				defer testServer.Close()
@@ -1982,8 +1982,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"dialog_node": "fake DialogNode"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"dialog_node": "fake_DialogNode"}`)
 			}))
 			It(`Succeed to call UpdateDialogNode`, func() {
 				defer testServer.Close()
@@ -2074,8 +2074,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"logs": [], "pagination": {}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"logs": [], "pagination": {}}`)
 			}))
 			It(`Succeed to call ListLogs`, func() {
 				defer testServer.Close()
@@ -2122,8 +2122,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(req.URL.Query()["filter"]).To(Equal([]string{filter}))
 
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"logs": [], "pagination": {}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"logs": [], "pagination": {}}`)
 			}))
 			It(`Succeed to call ListAllLogs`, func() {
 				defer testServer.Close()
@@ -2193,6 +2193,152 @@ var _ = Describe(`AssistantV1`, func() {
 				response, operationErr = testService.DeleteUserData(deleteUserDataOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("Model constructor tests", func() {
+		Context("with a sample service", func() {
+			version := "1970-01-01"
+			testService, _ := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+				URL:           "http://assistantv1modelgenerator.com",
+				Version:       version,
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewCaptureGroup successfully", func() {
+				group := "exampleString"
+				model, err := testService.NewCaptureGroup(group)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewCounterexample successfully", func() {
+				text := "exampleString"
+				model, err := testService.NewCounterexample(text)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewCreateEntity successfully", func() {
+				entity := "exampleString"
+				model, err := testService.NewCreateEntity(entity)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewCreateIntent successfully", func() {
+				intent := "exampleString"
+				model, err := testService.NewCreateIntent(intent)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewCreateValue successfully", func() {
+				value := "exampleString"
+				model, err := testService.NewCreateValue(value)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewDialogNode successfully", func() {
+				dialogNode := "exampleString"
+				model, err := testService.NewDialogNode(dialogNode)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewDialogNodeAction successfully", func() {
+				name := "exampleString"
+				resultVariable := "exampleString"
+				model, err := testService.NewDialogNodeAction(name, resultVariable)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewDialogNodeNextStep successfully", func() {
+				behavior := "exampleString"
+				model, err := testService.NewDialogNodeNextStep(behavior)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewDialogNodeOutputGeneric successfully", func() {
+				responseType := "exampleString"
+				model, err := testService.NewDialogNodeOutputGeneric(responseType)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewDialogNodeOutputOptionsElement successfully", func() {
+				label := "exampleString"
+				value := new(assistantv1.DialogNodeOutputOptionsElementValue)
+				model, err := testService.NewDialogNodeOutputOptionsElement(label, value)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewDialogSuggestion successfully", func() {
+				label := "exampleString"
+				value := new(assistantv1.DialogSuggestionValue)
+				model, err := testService.NewDialogSuggestion(label, value)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewDialogSuggestionResponseGeneric successfully", func() {
+				responseType := "exampleString"
+				model, err := testService.NewDialogSuggestionResponseGeneric(responseType)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewExample successfully", func() {
+				text := "exampleString"
+				model, err := testService.NewExample(text)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewLogMessage successfully", func() {
+				level := "exampleString"
+				msg := "exampleString"
+				model, err := testService.NewLogMessage(level, msg)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewMention successfully", func() {
+				entity := "exampleString"
+				location := []int64{}
+				model, err := testService.NewMention(entity, location)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewRuntimeEntity successfully", func() {
+				entity := "exampleString"
+				location := []int64{}
+				value := "exampleString"
+				model, err := testService.NewRuntimeEntity(entity, location, value)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewRuntimeIntent successfully", func() {
+				intent := "exampleString"
+				confidence := float64(1234)
+				model, err := testService.NewRuntimeIntent(intent, confidence)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewRuntimeResponseGeneric successfully", func() {
+				responseType := "exampleString"
+				model, err := testService.NewRuntimeResponseGeneric(responseType)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewSynonym successfully", func() {
+				synonym := "exampleString"
+				model, err := testService.NewSynonym(synonym)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewWebhook successfully", func() {
+				url := "exampleString"
+				name := "exampleString"
+				model, err := testService.NewWebhook(url, name)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewWebhookHeader successfully", func() {
+				name := "exampleString"
+				value := "exampleString"
+				model, err := testService.NewWebhookHeader(name, value)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 		})
 	})

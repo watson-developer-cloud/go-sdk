@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2019, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListCollections`, func() {
@@ -93,6 +94,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call Query`, func() {
@@ -142,6 +144,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.URL.Query()["prefix"]).To(Equal([]string{prefix}))
 
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetAutocompletion`, func() {
@@ -188,6 +191,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call QueryNotices`, func() {
@@ -234,6 +238,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListFields`, func() {
@@ -280,6 +285,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetComponentSettings`, func() {
@@ -333,6 +339,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(202)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call AddDocument`, func() {
@@ -389,6 +396,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(202)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call UpdateDocument`, func() {
@@ -440,6 +448,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call DeleteDocument`, func() {
@@ -486,6 +495,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
 				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call ListTrainingQueries`, func() {
@@ -531,6 +541,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Method).To(Equal("DELETE"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.WriteHeader(204)
 			}))
 			It(`Succeed to call DeleteTrainingQueries`, func() {
 				defer testServer.Close()
@@ -562,6 +573,8 @@ var _ = Describe(`DiscoveryV2`, func() {
 		version := "exampleString"
 		bearerToken := "0ui9876453"
 		projectID := "exampleString"
+		naturalLanguageQuery := "exampleString"
+		examples := []discoveryv2.TrainingExample{}
 		createTrainingQueryPath = strings.Replace(createTrainingQueryPath, "{project_id}", projectID, 1)
 		Context(`Successfully - Create training query`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
@@ -574,7 +587,8 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"natural_language_query": "fake NaturalLanguageQuery", "examples": []}`)
+				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"natural_language_query": "fake_NaturalLanguageQuery", "examples": []}`)
 			}))
 			It(`Succeed to call CreateTrainingQuery`, func() {
 				defer testServer.Close()
@@ -595,7 +609,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				createTrainingQueryOptions := testService.NewCreateTrainingQueryOptions(projectID)
+				createTrainingQueryOptions := testService.NewCreateTrainingQueryOptions(projectID, naturalLanguageQuery, examples)
 				result, response, operationErr = testService.CreateTrainingQuery(createTrainingQueryOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -622,7 +636,8 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"natural_language_query": "fake NaturalLanguageQuery", "examples": []}`)
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"natural_language_query": "fake_NaturalLanguageQuery", "examples": []}`)
 			}))
 			It(`Succeed to call GetTrainingQuery`, func() {
 				defer testServer.Close()
@@ -672,7 +687,8 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"natural_language_query": "fake NaturalLanguageQuery", "examples": []}`)
+				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"natural_language_query": "fake_NaturalLanguageQuery", "examples": []}`)
 			}))
 			It(`Succeed to call UpdateTrainingQuery`, func() {
 				defer testServer.Close()
@@ -698,6 +714,31 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("Model constructor tests", func() {
+		Context("with a sample service", func() {
+			version := "1970-01-01"
+			testService, _ := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+				URL:           "http://discoveryv2modelgenerator.com",
+				Version:       version,
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewTrainingExample successfully", func() {
+				documentID := "exampleString"
+				collectionID := "exampleString"
+				relevance := int64(1234)
+				model, err := testService.NewTrainingExample(documentID, collectionID, relevance)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewTrainingQuery successfully", func() {
+				naturalLanguageQuery := "exampleString"
+				examples := []discoveryv2.TrainingExample{}
+				model, err := testService.NewTrainingQuery(naturalLanguageQuery, examples)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 		})
 	})

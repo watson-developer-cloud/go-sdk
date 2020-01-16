@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,35 +35,52 @@ type NaturalLanguageClassifierV1 struct {
 	Service *core.BaseService
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "natural_language_classifier"
 
 // NaturalLanguageClassifierV1Options : Service options
 type NaturalLanguageClassifierV1Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 }
 
-// NewNaturalLanguageClassifierV1 : Instantiate NaturalLanguageClassifierV1
+// NewNaturalLanguageClassifierV1 : constructs an instance of NaturalLanguageClassifierV1 with passed in options.
 func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options) (service *NaturalLanguageClassifierV1, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("natural_language_classifier")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "natural_language_classifier", "Natural Language Classifier")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &NaturalLanguageClassifierV1{
@@ -523,6 +540,15 @@ type ClassifyInput struct {
 
 	// The submitted phrase. The maximum length is 2048 characters.
 	Text *string `json:"text" validate:"required"`
+}
+
+// NewClassifyInput : Instantiate ClassifyInput (Generic Model Constructor)
+func (naturalLanguageClassifier *NaturalLanguageClassifierV1) NewClassifyInput(text string) (model *ClassifyInput, err error) {
+	model = &ClassifyInput{
+		Text: core.StringPtr(text),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // ClassifyOptions : The Classify options.

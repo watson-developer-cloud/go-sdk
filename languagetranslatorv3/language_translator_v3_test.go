@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"word_count": 9, "character_count": 14, "translations": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"word_count": 9, "character_count": 14, "translations": []}`)
 			}))
 			It(`Succeed to call Translate`, func() {
 				defer testServer.Close()
@@ -90,8 +90,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"languages": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"languages": []}`)
 			}))
 			It(`Succeed to call ListIdentifiableLanguages`, func() {
 				defer testServer.Close()
@@ -136,8 +136,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"languages": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"languages": []}`)
 			}))
 			It(`Succeed to call Identify`, func() {
 				defer testServer.Close()
@@ -181,8 +181,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"models": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"models": []}`)
 			}))
 			It(`Succeed to call ListModels`, func() {
 				defer testServer.Close()
@@ -229,8 +229,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.URL.Query()["base_model_id"]).To(Equal([]string{baseModelID}))
 
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"model_id": "fake ModelID"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"model_id": "fake_ModelID"}`)
 			}))
 			It(`Succeed to call CreateModel`, func() {
 				defer testServer.Close()
@@ -260,8 +260,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					SetForcedGlossary(file)
 				result, response, operationErr = testService.CreateModel(createModelOptions)
 				Expect(operationErr).To(BeNil())
-				Expect(response).NotTo(BeNil())
-				Expect(result).NotTo(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
 			})
 		})
 	})
@@ -282,8 +282,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"status": "fake Status"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"status": "fake_Status"}`)
 			}))
 			It(`Succeed to call DeleteModel`, func() {
 				defer testServer.Close()
@@ -329,8 +329,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"model_id": "fake ModelID"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"model_id": "fake_ModelID"}`)
 			}))
 			It(`Succeed to call GetModel`, func() {
 				defer testServer.Close()
@@ -374,8 +374,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"documents": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"documents": []}`)
 			}))
 			It(`Succeed to call ListDocuments`, func() {
 				defer testServer.Close()
@@ -420,8 +420,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"document_id": "fake DocumentID", "filename": "fake Filename", "status": "fake Status", "model_id": "fake ModelID", "source": "fake Source", "target": "fake Target", "created": "2017-05-16T13:56:54.957Z"}`)
 				res.WriteHeader(202)
+				fmt.Fprintf(res, `{"document_id": "fake_DocumentID", "filename": "fake_Filename", "status": "fake_Status", "model_id": "fake_ModelID", "source": "fake_Source", "target": "fake_Target", "created": "2017-05-16T13:56:54.957Z"}`)
 			}))
 			It(`Succeed to call TranslateDocument`, func() {
 				defer testServer.Close()
@@ -471,8 +471,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"document_id": "fake DocumentID", "filename": "fake Filename", "status": "fake Status", "model_id": "fake ModelID", "source": "fake Source", "target": "fake Target", "created": "2017-05-16T13:56:54.957Z"}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"document_id": "fake_DocumentID", "filename": "fake_Filename", "status": "fake_Status", "model_id": "fake_ModelID", "source": "fake_Source", "target": "fake_Target", "created": "2017-05-16T13:56:54.957Z"}`)
 			}))
 			It(`Succeed to call GetDocumentStatus`, func() {
 				defer testServer.Close()
@@ -560,7 +560,9 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `Contents of response byte-stream...`)
 			}))
 			It(`Succeed to call GetTranslatedDocument`, func() {
 				defer testServer.Close()

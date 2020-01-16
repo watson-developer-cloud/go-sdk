@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,35 +49,52 @@ type SpeechToTextV1 struct {
 	Service *core.BaseService
 }
 
-const defaultServiceURL = "https://stream.watsonplatform.net/speech-to-text/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://stream.watsonplatform.net/speech-to-text/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "speech_to_text"
 
 // SpeechToTextV1Options : Service options
 type SpeechToTextV1Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 }
 
-// NewSpeechToTextV1 : Instantiate SpeechToTextV1
+// NewSpeechToTextV1 : constructs an instance of SpeechToTextV1 with passed in options.
 func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("speech_to_text")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "speech_to_text", "Speech to Text")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &SpeechToTextV1{
@@ -361,6 +378,12 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	}
 	if recognizeOptions.AudioMetrics != nil {
 		builder.AddQuery("audio_metrics", fmt.Sprint(*recognizeOptions.AudioMetrics))
+	}
+	if recognizeOptions.EndOfPhraseSilenceTime != nil {
+		builder.AddQuery("end_of_phrase_silence_time", fmt.Sprint(*recognizeOptions.EndOfPhraseSilenceTime))
+	}
+	if recognizeOptions.SplitTranscriptAtPhraseEnd != nil {
+		builder.AddQuery("split_transcript_at_phrase_end", fmt.Sprint(*recognizeOptions.SplitTranscriptAtPhraseEnd))
 	}
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio)
@@ -699,6 +722,12 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 	if createJobOptions.AudioMetrics != nil {
 		builder.AddQuery("audio_metrics", fmt.Sprint(*createJobOptions.AudioMetrics))
 	}
+	if createJobOptions.EndOfPhraseSilenceTime != nil {
+		builder.AddQuery("end_of_phrase_silence_time", fmt.Sprint(*createJobOptions.EndOfPhraseSilenceTime))
+	}
+	if createJobOptions.SplitTranscriptAtPhraseEnd != nil {
+		builder.AddQuery("split_transcript_at_phrase_end", fmt.Sprint(*createJobOptions.SplitTranscriptAtPhraseEnd))
+	}
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio)
 	if err != nil {
@@ -883,9 +912,9 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
 //
-// You can create a maximum of 1024 custom language models, per credential. The service returns an error if you attempt
-// to create more than 1024 models. You do not lose any models, but you cannot create any more until your model count is
-// below the limit.
+// You can create a maximum of 1024 custom language models per owning credentials. The service returns an error if you
+// attempt to create more than 1024 models. You do not lose any models, but you cannot create any more until your model
+// count is below the limit.
 //
 // **See also:** [Create a custom language
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-languageCreate#createModel-language).
@@ -2129,9 +2158,9 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 // base model for which it is created. The model is owned by the instance of the service whose credentials are used to
 // create it.
 //
-// You can create a maximum of 1024 custom acoustic models, per credential. The service returns an error if you attempt
-// to create more than 1024 models. You do not lose any models, but you cannot create any more until your model count is
-// below the limit.
+// You can create a maximum of 1024 custom acoustic models per owning credentials. The service returns an error if you
+// attempt to create more than 1024 models. You do not lose any models, but you cannot create any more until your model
+// count is below the limit.
 //
 // **See also:** [Create a custom acoustic
 // model](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-acoustic#createModel-acoustic).
@@ -3808,10 +3837,14 @@ const (
 	CreateAcousticModelOptions_BaseModelName_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	CreateAcousticModelOptions_BaseModelName_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	CreateAcousticModelOptions_BaseModelName_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	CreateAcousticModelOptions_BaseModelName_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 	CreateAcousticModelOptions_BaseModelName_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
@@ -4035,6 +4068,9 @@ type CreateJobOptions struct {
 	// processing metrics at the interval specified by the `processing_metrics_interval` parameter. It also returns
 	// processing metrics for transcription events, for example, for final and interim results. By default, the service
 	// returns no processing metrics.
+	//
+	// See [Processing
+	// metrics](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-metrics#processing_metrics).
 	ProcessingMetrics *bool `json:"processing_metrics,omitempty"`
 
 	// Specifies the interval in real wall-clock seconds at which the service is to return processing metrics. The
@@ -4046,11 +4082,42 @@ type CreateJobOptions struct {
 	// The service does not impose a maximum value. If you want to receive processing metrics only for transcription events
 	// instead of at periodic intervals, set the value to a large number. If the value is larger than the duration of the
 	// audio, the service returns processing metrics only for transcription events.
+	//
+	// See [Processing
+	// metrics](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-metrics#processing_metrics).
 	ProcessingMetricsInterval *float32 `json:"processing_metrics_interval,omitempty"`
 
 	// If `true`, requests detailed information about the signal characteristics of the input audio. The service returns
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
+	//
+	// See [Audio metrics](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-metrics#audio_metrics).
 	AudioMetrics *bool `json:"audio_metrics,omitempty"`
+
+	// If `true`, specifies the duration of the pause interval at which the service splits a transcript into multiple final
+	// results. If the service detects pauses or extended silence before it reaches the end of the audio stream, its
+	// response can include multiple final results. Silence indicates a point at which the speaker pauses between spoken
+	// words or phrases.
+	//
+	// Specify a value for the pause interval in the range of 0.0 to 120.0.
+	// * A value greater than 0 specifies the interval that the service is to use for speech recognition.
+	// * A value of 0 indicates that the service is to use the default interval. It is equivalent to omitting the
+	// parameter.
+	//
+	// The default pause interval for most languages is 0.8 seconds; the default for Chinese is 0.6 seconds.
+	//
+	// See [End of phrase silence
+	// time](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#silence_time).
+	EndOfPhraseSilenceTime *float64 `json:"end_of_phrase_silence_time,omitempty"`
+
+	// If `true`, directs the service to split the transcript into multiple final results based on semantic features of the
+	// input, for example, at the conclusion of meaningful phrases such as sentences. The service bases its understanding
+	// of semantic features on the base language model that you use with a request. Custom language models and grammars can
+	// also influence how and where the service splits a transcript. By default, the service splits transcripts based
+	// solely on the pause interval.
+	//
+	// See [Split transcript at phrase
+	// end](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#split_transcript).
+	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -4082,10 +4149,14 @@ const (
 	CreateJobOptions_Model_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	CreateJobOptions_Model_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	CreateJobOptions_Model_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	CreateJobOptions_Model_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	CreateJobOptions_Model_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	CreateJobOptions_Model_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	CreateJobOptions_Model_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	CreateJobOptions_Model_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	CreateJobOptions_Model_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	CreateJobOptions_Model_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	CreateJobOptions_Model_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	CreateJobOptions_Model_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	CreateJobOptions_Model_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 	CreateJobOptions_Model_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
@@ -4281,6 +4352,18 @@ func (options *CreateJobOptions) SetProcessingMetricsInterval(processingMetricsI
 // SetAudioMetrics : Allow user to set AudioMetrics
 func (options *CreateJobOptions) SetAudioMetrics(audioMetrics bool) *CreateJobOptions {
 	options.AudioMetrics = core.BoolPtr(audioMetrics)
+	return options
+}
+
+// SetEndOfPhraseSilenceTime : Allow user to set EndOfPhraseSilenceTime
+func (options *CreateJobOptions) SetEndOfPhraseSilenceTime(endOfPhraseSilenceTime float64) *CreateJobOptions {
+	options.EndOfPhraseSilenceTime = core.Float64Ptr(endOfPhraseSilenceTime)
+	return options
+}
+
+// SetSplitTranscriptAtPhraseEnd : Allow user to set SplitTranscriptAtPhraseEnd
+func (options *CreateJobOptions) SetSplitTranscriptAtPhraseEnd(splitTranscriptAtPhraseEnd bool) *CreateJobOptions {
+	options.SplitTranscriptAtPhraseEnd = core.BoolPtr(splitTranscriptAtPhraseEnd)
 	return options
 }
 
@@ -4931,10 +5014,14 @@ const (
 	GetModelOptions_ModelID_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	GetModelOptions_ModelID_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	GetModelOptions_ModelID_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	GetModelOptions_ModelID_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	GetModelOptions_ModelID_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	GetModelOptions_ModelID_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	GetModelOptions_ModelID_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	GetModelOptions_ModelID_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	GetModelOptions_ModelID_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	GetModelOptions_ModelID_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	GetModelOptions_ModelID_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	GetModelOptions_ModelID_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	GetModelOptions_ModelID_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 	GetModelOptions_ModelID_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
@@ -5678,7 +5765,35 @@ type RecognizeOptions struct {
 
 	// If `true`, requests detailed information about the signal characteristics of the input audio. The service returns
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
+	//
+	// See [Audio metrics](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-metrics#audio_metrics).
 	AudioMetrics *bool `json:"audio_metrics,omitempty"`
+
+	// If `true`, specifies the duration of the pause interval at which the service splits a transcript into multiple final
+	// results. If the service detects pauses or extended silence before it reaches the end of the audio stream, its
+	// response can include multiple final results. Silence indicates a point at which the speaker pauses between spoken
+	// words or phrases.
+	//
+	// Specify a value for the pause interval in the range of 0.0 to 120.0.
+	// * A value greater than 0 specifies the interval that the service is to use for speech recognition.
+	// * A value of 0 indicates that the service is to use the default interval. It is equivalent to omitting the
+	// parameter.
+	//
+	// The default pause interval for most languages is 0.8 seconds; the default for Chinese is 0.6 seconds.
+	//
+	// See [End of phrase silence
+	// time](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#silence_time).
+	EndOfPhraseSilenceTime *float64 `json:"end_of_phrase_silence_time,omitempty"`
+
+	// If `true`, directs the service to split the transcript into multiple final results based on semantic features of the
+	// input, for example, at the conclusion of meaningful phrases such as sentences. The service bases its understanding
+	// of semantic features on the base language model that you use with a request. Custom language models and grammars can
+	// also influence how and where the service splits a transcript. By default, the service splits transcripts based
+	// solely on the pause interval.
+	//
+	// See [Split transcript at phrase
+	// end](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#split_transcript).
+	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -5710,10 +5825,14 @@ const (
 	RecognizeOptions_Model_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	RecognizeOptions_Model_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	RecognizeOptions_Model_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	RecognizeOptions_Model_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	RecognizeOptions_Model_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	RecognizeOptions_Model_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	RecognizeOptions_Model_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	RecognizeOptions_Model_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	RecognizeOptions_Model_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	RecognizeOptions_Model_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	RecognizeOptions_Model_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	RecognizeOptions_Model_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	RecognizeOptions_Model_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 	RecognizeOptions_Model_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
@@ -5850,6 +5969,18 @@ func (options *RecognizeOptions) SetRedaction(redaction bool) *RecognizeOptions 
 // SetAudioMetrics : Allow user to set AudioMetrics
 func (options *RecognizeOptions) SetAudioMetrics(audioMetrics bool) *RecognizeOptions {
 	options.AudioMetrics = core.BoolPtr(audioMetrics)
+	return options
+}
+
+// SetEndOfPhraseSilenceTime : Allow user to set EndOfPhraseSilenceTime
+func (options *RecognizeOptions) SetEndOfPhraseSilenceTime(endOfPhraseSilenceTime float64) *RecognizeOptions {
+	options.EndOfPhraseSilenceTime = core.Float64Ptr(endOfPhraseSilenceTime)
+	return options
+}
+
+// SetSplitTranscriptAtPhraseEnd : Allow user to set SplitTranscriptAtPhraseEnd
+func (options *RecognizeOptions) SetSplitTranscriptAtPhraseEnd(splitTranscriptAtPhraseEnd bool) *RecognizeOptions {
+	options.SplitTranscriptAtPhraseEnd = core.BoolPtr(splitTranscriptAtPhraseEnd)
 	return options
 }
 
@@ -6077,7 +6208,31 @@ type SpeechRecognitionResult struct {
 	// An array of alternative hypotheses found for words of the input audio if a `word_alternatives_threshold` is
 	// specified.
 	WordAlternatives []WordAlternativeResults `json:"word_alternatives,omitempty"`
+
+	// If the `split_transcript_at_phrase_end` parameter is `true`, describes the reason for the split:
+	// * `end_of_data` - The end of the input audio stream.
+	// * `full_stop` - A full semantic stop, such as for the conclusion of a grammatical sentence. The insertion of splits
+	// is influenced by the base language model and biased by custom language models and grammars.
+	// * `reset` - The amount of audio that is currently being processed exceeds the two-minute maximum. The service splits
+	// the transcript to avoid excessive memory use.
+	// * `silence` - A pause or silence that is at least as long as the pause interval.
+	EndOfUtterance *string `json:"end_of_utterance,omitempty"`
 }
+
+// Constants associated with the SpeechRecognitionResult.EndOfUtterance property.
+// If the `split_transcript_at_phrase_end` parameter is `true`, describes the reason for the split:
+// * `end_of_data` - The end of the input audio stream.
+// * `full_stop` - A full semantic stop, such as for the conclusion of a grammatical sentence. The insertion of splits
+// is influenced by the base language model and biased by custom language models and grammars.
+// * `reset` - The amount of audio that is currently being processed exceeds the two-minute maximum. The service splits
+// the transcript to avoid excessive memory use.
+// * `silence` - A pause or silence that is at least as long as the pause interval.
+const (
+	SpeechRecognitionResult_EndOfUtterance_EndOfData = "end_of_data"
+	SpeechRecognitionResult_EndOfUtterance_FullStop  = "full_stop"
+	SpeechRecognitionResult_EndOfUtterance_Reset     = "reset"
+	SpeechRecognitionResult_EndOfUtterance_Silence   = "silence"
+)
 
 // SpeechRecognitionResults : The complete results for a speech recognition request.
 type SpeechRecognitionResults struct {

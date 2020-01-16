@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"session_id": "fake SessionID"}`)
 				res.WriteHeader(201)
+				fmt.Fprintf(res, `{"session_id": "fake_SessionID"}`)
 			}))
 			It(`Succeed to call CreateSession`, func() {
 				defer testServer.Close()
@@ -139,8 +139,8 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"output": {}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"output": {}}`)
 			}))
 			It(`Succeed to call Message`, func() {
 				defer testServer.Close()
@@ -166,6 +166,37 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("Model constructor tests", func() {
+		Context("with a sample service", func() {
+			version := "1970-01-01"
+			testService, _ := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+				URL:           "http://assistantv2modelgenerator.com",
+				Version:       version,
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewCaptureGroup successfully", func() {
+				group := "exampleString"
+				model, err := testService.NewCaptureGroup(group)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewRuntimeEntity successfully", func() {
+				entity := "exampleString"
+				location := []int64{}
+				value := "exampleString"
+				model, err := testService.NewRuntimeEntity(entity, location, value)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewRuntimeIntent successfully", func() {
+				intent := "exampleString"
+				confidence := float64(1234)
+				model, err := testService.NewRuntimeIntent(intent, confidence)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 		})
 	})

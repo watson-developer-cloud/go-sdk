@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,36 +36,53 @@ type AssistantV1 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "conversation"
 
 // AssistantV1Options : Service options
 type AssistantV1Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewAssistantV1 : Instantiate AssistantV1
+// NewAssistantV1 : constructs an instance of AssistantV1 with passed in options.
 func NewAssistantV1(options *AssistantV1Options) (service *AssistantV1, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("conversation")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "conversation", "Assistant")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}	
 	}
 
 	service = &AssistantV1{
@@ -2994,6 +3011,8 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
 // security](https://cloud.ibm.com/docs/services/assistant?topic=assistant-information-security#information-security).
+//
+// This operation is limited to 4 requests per minute. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
 	if err != nil {
@@ -3045,6 +3064,15 @@ type CaptureGroup struct {
 
 	// Zero-based character offsets that indicate where the entity value begins and ends in the input text.
 	Location []int64 `json:"location,omitempty"`
+}
+
+// NewCaptureGroup : Instantiate CaptureGroup (Generic Model Constructor)
+func (assistant *AssistantV1) NewCaptureGroup(group string) (model *CaptureGroup, err error) {
+	model = &CaptureGroup{
+		Group: core.StringPtr(group),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // Context : State information for the conversation. To maintain state, include the context from the previous response.
@@ -3103,6 +3131,15 @@ type Counterexample struct {
 
 	// The timestamp for the most recent update to the object.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
+}
+
+// NewCounterexample : Instantiate Counterexample (Generic Model Constructor)
+func (assistant *AssistantV1) NewCounterexample(text string) (model *Counterexample, err error) {
+	model = &Counterexample{
+		Text: core.StringPtr(text),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // CounterexampleCollection : CounterexampleCollection struct
@@ -3438,6 +3475,15 @@ type CreateEntity struct {
 	Values []CreateValue `json:"values,omitempty"`
 }
 
+// NewCreateEntity : Instantiate CreateEntity (Generic Model Constructor)
+func (assistant *AssistantV1) NewCreateEntity(entity string) (model *CreateEntity, err error) {
+	model = &CreateEntity{
+		Entity: core.StringPtr(entity),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // CreateEntityOptions : The CreateEntity options.
 type CreateEntityOptions struct {
 
@@ -3595,6 +3641,15 @@ type CreateIntent struct {
 
 	// An array of user input examples for the intent.
 	Examples []Example `json:"examples,omitempty"`
+}
+
+// NewCreateIntent : Instantiate CreateIntent (Generic Model Constructor)
+func (assistant *AssistantV1) NewCreateIntent(intent string) (model *CreateIntent, err error) {
+	model = &CreateIntent{
+		Intent: core.StringPtr(intent),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // CreateIntentOptions : The CreateIntent options.
@@ -3755,6 +3810,15 @@ const (
 	CreateValue_Type_Patterns = "patterns"
 	CreateValue_Type_Synonyms = "synonyms"
 )
+
+// NewCreateValue : Instantiate CreateValue (Generic Model Constructor)
+func (assistant *AssistantV1) NewCreateValue(value string) (model *CreateValue, err error) {
+	model = &CreateValue{
+		Value: core.StringPtr(value),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
 
 // CreateValueOptions : The CreateValue options.
 type CreateValueOptions struct {
@@ -4466,6 +4530,15 @@ const (
 	DialogNode_DigressOutSlots_NotAllowed     = "not_allowed"
 )
 
+// NewDialogNode : Instantiate DialogNode (Generic Model Constructor)
+func (assistant *AssistantV1) NewDialogNode(dialogNode string) (model *DialogNode, err error) {
+	model = &DialogNode{
+		DialogNode: core.StringPtr(dialogNode),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // DialogNodeAction : DialogNodeAction struct
 type DialogNodeAction struct {
 
@@ -4494,6 +4567,16 @@ const (
 	DialogNodeAction_Type_WebAction     = "web_action"
 	DialogNodeAction_Type_Webhook       = "webhook"
 )
+
+// NewDialogNodeAction : Instantiate DialogNodeAction (Generic Model Constructor)
+func (assistant *AssistantV1) NewDialogNodeAction(name string, resultVariable string) (model *DialogNodeAction, err error) {
+	model = &DialogNodeAction{
+		Name:           core.StringPtr(name),
+		ResultVariable: core.StringPtr(resultVariable),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
 
 // DialogNodeCollection : An array of dialog nodes.
 type DialogNodeCollection struct {
@@ -4573,6 +4656,15 @@ const (
 	DialogNodeNextStep_Selector_Condition = "condition"
 	DialogNodeNextStep_Selector_UserInput = "user_input"
 )
+
+// NewDialogNodeNextStep : Instantiate DialogNodeNextStep (Generic Model Constructor)
+func (assistant *AssistantV1) NewDialogNodeNextStep(behavior string) (model *DialogNodeNextStep, err error) {
+	model = &DialogNodeNextStep{
+		Behavior: core.StringPtr(behavior),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
 
 // DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the
 // [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
@@ -4711,6 +4803,15 @@ const (
 	DialogNodeOutputGeneric_QueryType_NaturalLanguage        = "natural_language"
 )
 
+// NewDialogNodeOutputGeneric : Instantiate DialogNodeOutputGeneric (Generic Model Constructor)
+func (assistant *AssistantV1) NewDialogNodeOutputGeneric(responseType string) (model *DialogNodeOutputGeneric, err error) {
+	model = &DialogNodeOutputGeneric{
+		ResponseType: core.StringPtr(responseType),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // DialogNodeOutputModifiers : Options that modify how specified output is handled.
 type DialogNodeOutputModifiers struct {
 
@@ -4728,6 +4829,16 @@ type DialogNodeOutputOptionsElement struct {
 	// An object defining the message input to be sent to the Watson Assistant service if the user selects the
 	// corresponding option.
 	Value *DialogNodeOutputOptionsElementValue `json:"value" validate:"required"`
+}
+
+// NewDialogNodeOutputOptionsElement : Instantiate DialogNodeOutputOptionsElement (Generic Model Constructor)
+func (assistant *AssistantV1) NewDialogNodeOutputOptionsElement(label string, value *DialogNodeOutputOptionsElementValue) (model *DialogNodeOutputOptionsElement, err error) {
+	model = &DialogNodeOutputOptionsElement{
+		Label: core.StringPtr(label),
+		Value: value,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // DialogNodeOutputOptionsElementValue : An object defining the message input to be sent to the Watson Assistant service if the user selects the corresponding
@@ -4789,6 +4900,16 @@ type DialogSuggestion struct {
 	// The ID of the dialog node that the **label** property is taken from. The **label** property is populated using the
 	// value of the dialog node's **user_label** property.
 	DialogNode *string `json:"dialog_node,omitempty"`
+}
+
+// NewDialogSuggestion : Instantiate DialogSuggestion (Generic Model Constructor)
+func (assistant *AssistantV1) NewDialogSuggestion(label string, value *DialogSuggestionValue) (model *DialogSuggestion, err error) {
+	model = &DialogSuggestion{
+		Label: core.StringPtr(label),
+		Value: value,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // DialogSuggestionOutput : The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding
@@ -4914,6 +5035,15 @@ const (
 	DialogSuggestionResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
+// NewDialogSuggestionResponseGeneric : Instantiate DialogSuggestionResponseGeneric (Generic Model Constructor)
+func (assistant *AssistantV1) NewDialogSuggestionResponseGeneric(responseType string) (model *DialogSuggestionResponseGeneric, err error) {
+	model = &DialogSuggestionResponseGeneric{
+		ResponseType: core.StringPtr(responseType),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // DialogSuggestionValue : An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
 // selects the corresponding disambiguation option.
 type DialogSuggestionValue struct {
@@ -5005,6 +5135,15 @@ type Example struct {
 
 	// The timestamp for the most recent update to the object.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
+}
+
+// NewExample : Instantiate Example (Generic Model Constructor)
+func (assistant *AssistantV1) NewExample(text string) (model *Example, err error) {
+	model = &Example{
+		Text: core.StringPtr(text),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // ExampleCollection : ExampleCollection struct
@@ -6408,6 +6547,16 @@ const (
 	LogMessage_Level_Warn  = "warn"
 )
 
+// NewLogMessage : Instantiate LogMessage (Generic Model Constructor)
+func (assistant *AssistantV1) NewLogMessage(level string, msg string) (model *LogMessage, err error) {
+	model = &LogMessage{
+		Level: core.StringPtr(level),
+		Msg:   core.StringPtr(msg),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // LogPagination : The pagination data for the returned objects.
 type LogPagination struct {
 
@@ -6429,6 +6578,16 @@ type Mention struct {
 
 	// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input text.
 	Location []int64 `json:"location" validate:"required"`
+}
+
+// NewMention : Instantiate Mention (Generic Model Constructor)
+func (assistant *AssistantV1) NewMention(entity string, location []int64) (model *Mention, err error) {
+	model = &Mention{
+		Entity:   core.StringPtr(entity),
+		Location: location,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // MessageContextMetadata : Metadata related to the message.
@@ -6727,6 +6886,17 @@ type RuntimeEntity struct {
 	Groups []CaptureGroup `json:"groups,omitempty"`
 }
 
+// NewRuntimeEntity : Instantiate RuntimeEntity (Generic Model Constructor)
+func (assistant *AssistantV1) NewRuntimeEntity(entity string, location []int64, value string) (model *RuntimeEntity, err error) {
+	model = &RuntimeEntity{
+		Entity:   core.StringPtr(entity),
+		Location: location,
+		Value:    core.StringPtr(value),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // RuntimeIntent : An intent identified in the user input.
 type RuntimeIntent struct {
 
@@ -6735,6 +6905,16 @@ type RuntimeIntent struct {
 
 	// A decimal percentage that represents Watson's confidence in the intent.
 	Confidence *float64 `json:"confidence" validate:"required"`
+}
+
+// NewRuntimeIntent : Instantiate RuntimeIntent (Generic Model Constructor)
+func (assistant *AssistantV1) NewRuntimeIntent(intent string, confidence float64) (model *RuntimeIntent, err error) {
+	model = &RuntimeIntent{
+		Intent:     core.StringPtr(intent),
+		Confidence: core.Float64Ptr(confidence),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // RuntimeResponseGeneric : RuntimeResponseGeneric struct
@@ -6810,6 +6990,15 @@ const (
 	RuntimeResponseGeneric_Preference_Dropdown = "dropdown"
 )
 
+// NewRuntimeResponseGeneric : Instantiate RuntimeResponseGeneric (Generic Model Constructor)
+func (assistant *AssistantV1) NewRuntimeResponseGeneric(responseType string) (model *RuntimeResponseGeneric, err error) {
+	model = &RuntimeResponseGeneric{
+		ResponseType: core.StringPtr(responseType),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // Synonym : Synonym struct
 type Synonym struct {
 
@@ -6823,6 +7012,15 @@ type Synonym struct {
 
 	// The timestamp for the most recent update to the object.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
+}
+
+// NewSynonym : Instantiate Synonym (Generic Model Constructor)
+func (assistant *AssistantV1) NewSynonym(synonym string) (model *Synonym, err error) {
+	model = &Synonym{
+		Synonym: core.StringPtr(synonym),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // SynonymCollection : SynonymCollection struct
@@ -7769,6 +7967,16 @@ type Webhook struct {
 	Headers []WebhookHeader `json:"headers,omitempty"`
 }
 
+// NewWebhook : Instantiate Webhook (Generic Model Constructor)
+func (assistant *AssistantV1) NewWebhook(URL string, name string) (model *Webhook, err error) {
+	model = &Webhook{
+		URL:  core.StringPtr(URL),
+		Name: core.StringPtr(name),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
 // WebhookHeader : A key/value pair defining an HTTP header and a value.
 type WebhookHeader struct {
 
@@ -7777,6 +7985,16 @@ type WebhookHeader struct {
 
 	// The value of an HTTP header.
 	Value *string `json:"value" validate:"required"`
+}
+
+// NewWebhookHeader : Instantiate WebhookHeader (Generic Model Constructor)
+func (assistant *AssistantV1) NewWebhookHeader(name string, value string) (model *WebhookHeader, err error) {
+	model = &WebhookHeader{
+		Name:  core.StringPtr(name),
+		Value: core.StringPtr(value),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
 }
 
 // Workspace : Workspace struct

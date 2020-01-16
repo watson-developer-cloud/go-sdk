@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,36 +37,53 @@ type LanguageTranslatorV3 struct {
 	Version string
 }
 
-const defaultServiceURL = "https://gateway.watsonplatform.net/language-translator/api"
+// DefaultServiceURL is the default URL to make service requests to.
+const DefaultServiceURL = "https://gateway.watsonplatform.net/language-translator/api"
+
+// DefaultServiceName is the default key used to find external configuration information.
+const DefaultServiceName = "language_translator"
 
 // LanguageTranslatorV3Options : Service options
 type LanguageTranslatorV3Options struct {
+	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
 	Version       string
 }
 
-// NewLanguageTranslatorV3 : Instantiate LanguageTranslatorV3
+// NewLanguageTranslatorV3 : constructs an instance of LanguageTranslatorV3 with passed in options.
 func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (service *LanguageTranslatorV3, err error) {
-	if options.URL == "" {
-		options.URL = defaultServiceURL
+	if options.ServiceName == "" {
+		options.ServiceName = DefaultServiceName
 	}
 
 	serviceOptions := &core.ServiceOptions{
-		URL:           options.URL,
+		URL:           DefaultServiceURL,
 		Authenticator: options.Authenticator,
 	}
 
 	if serviceOptions.Authenticator == nil {
-		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment("language_translator")
+		serviceOptions.Authenticator, err = core.GetAuthenticatorFromEnvironment(options.ServiceName)
 		if err != nil {
 			return
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions, "language_translator", "Language Translator")
+	baseService, err := core.NewBaseService(serviceOptions)
 	if err != nil {
 		return
+	}
+
+	err = baseService.ConfigureService(options.ServiceName)
+	if err != nil {
+		return
+	}
+
+	if options.URL != "" {
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &LanguageTranslatorV3{
@@ -918,7 +935,7 @@ type DocumentStatus struct {
 	// The time when the translation completed.
 	Completed *strfmt.DateTime `json:"completed,omitempty"`
 
-	// The number of words in the source document, present only if status=available.
+	// An estimate of the number of words in the source document. Returned only if `status` is `available`.
 	WordCount *int64 `json:"word_count,omitempty"`
 
 	// The number of characters in the source document, present only if status=available.
@@ -1185,7 +1202,7 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 // TranslateDocumentOptions : The TranslateDocument options.
 type TranslateDocumentOptions struct {
 
-	// The source file to translate.
+	// The contents of the source file to translate.
 	//
 	// [Supported file
 	// types](https://cloud.ibm.com/docs/services/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
@@ -1397,7 +1414,7 @@ type TranslationModels struct {
 // TranslationResult : TranslationResult struct
 type TranslationResult struct {
 
-	// Number of words in the input text.
+	// An estimate of the number of words in the input text.
 	WordCount *int64 `json:"word_count" validate:"required"`
 
 	// Number of characters in the input text.
