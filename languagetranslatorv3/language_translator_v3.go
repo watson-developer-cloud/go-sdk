@@ -80,7 +80,10 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (service *Lan
 	}
 
 	if options.URL != "" {
-		baseService.SetServiceURL(options.URL)
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &LanguageTranslatorV3{

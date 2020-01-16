@@ -80,7 +80,10 @@ func NewVisualRecognitionV4(options *VisualRecognitionV4Options) (service *Visua
 	}
 
 	if options.URL != "" {
-		baseService.SetServiceURL(options.URL)
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &VisualRecognitionV4{

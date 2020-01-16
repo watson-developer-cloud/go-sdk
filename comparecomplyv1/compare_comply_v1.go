@@ -78,7 +78,10 @@ func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComply
 	}
 
 	if options.URL != "" {
-		baseService.SetServiceURL(options.URL)
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &CompareComplyV1{

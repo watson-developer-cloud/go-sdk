@@ -81,7 +81,10 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err erro
 	}
 
 	if options.URL != "" {
-		baseService.SetServiceURL(options.URL)
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &DiscoveryV1{

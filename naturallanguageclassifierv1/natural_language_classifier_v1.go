@@ -77,7 +77,10 @@ func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options)
 	}
 
 	if options.URL != "" {
-		baseService.SetServiceURL(options.URL)
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &NaturalLanguageClassifierV1{

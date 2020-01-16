@@ -91,7 +91,10 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1,
 	}
 
 	if options.URL != "" {
-		baseService.SetServiceURL(options.URL)
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &SpeechToTextV1{

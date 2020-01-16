@@ -79,7 +79,10 @@ func NewAssistantV2(options *AssistantV2Options) (service *AssistantV2, err erro
 	}
 
 	if options.URL != "" {
-		baseService.SetServiceURL(options.URL)
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &AssistantV2{

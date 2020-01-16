@@ -92,7 +92,10 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *P
 	}
 
 	if options.URL != "" {
-		baseService.SetServiceURL(options.URL)
+		err = baseService.SetServiceURL(options.URL)
+		if err != nil {
+			return
+		}
 	}
 
 	service = &PersonalityInsightsV3{
