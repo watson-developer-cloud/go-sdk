@@ -520,6 +520,11 @@ type CategoriesOptions struct {
 
 	// Maximum number of categories to return.
 	Limit *int64 `json:"limit,omitempty"`
+
+	// Deprecated: Enter a [custom
+	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// ID to override the standard categories model.
+	Model *string `json:"model,omitempty"`
 }
 
 // CategoriesRelevantText : Relevant text that contributed to the categorization.
