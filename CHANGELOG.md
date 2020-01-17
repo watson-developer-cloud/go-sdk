@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/watson-developer-cloud/go-sdk/compare/v1.3.0...v1.3.1) (2020-01-17)
+
+
+### Bug Fixes
+
+* **nlu:** Add Deprecated param `Model` back in `CategoriesOptions` ([6022eec](https://github.com/watson-developer-cloud/go-sdk/commit/6022eec2da270423ffd81bde9cbbf1d54f2f5ae9))
+
 # [1.3.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.2.0...v1.3.0) (2020-01-17)
 
 
