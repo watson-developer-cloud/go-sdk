@@ -521,9 +521,9 @@ type CategoriesOptions struct {
 	// Maximum number of categories to return.
 	Limit *int64 `json:"limit,omitempty"`
 
-	// Deprecated: Enter a [custom
-	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
-	// ID to override the standard categories model.
+	// Deprecated: The custom categories experimental feature will be retired on 19 December 2019. On that date,
+	// deployed custom categories models will no longer be accessible in Natural Language Understanding.
+	// The feature will be removed from Knowledge Studio on an earlier date.
 	Model *string `json:"model,omitempty"`
 }
 
