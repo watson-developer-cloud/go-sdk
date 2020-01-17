@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.2.0...v1.3.0) (2020-01-17)
+
+
+### Features
+
+* **core:** Update core to v2.1.0 ([7609848](https://github.com/watson-developer-cloud/go-sdk/commit/7609848452cda4ad0d6e4da79f112d152580bd65))
+* **speech to text:** New params `EndOfPhraseSilenceTime` and `SplitTranscriptAtPhraseEnd ` in `RecognizeOptions` and `CreateJobOptions` ([af0a3c3](https://github.com/watson-developer-cloud/go-sdk/commit/af0a3c3cdda026f7ffb215e1ca17701f8c76dd1c))
+
 # [1.2.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.1.1...v1.2.0) (2019-11-27)
 
 
