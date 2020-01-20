@@ -3930,7 +3930,7 @@ func (options *AddTrainingDataOptions) SetHeaders(param map[string]string) *AddT
 type AggregationResult struct {
 
 	// Key that matched the aggregation type.
-	Key *string `json:"key,omitempty"`
+	Key *string `json:"key_as_string,omitempty" json:"key,omitempty"`
 
 	// Number of matching results.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
