@@ -18,12 +18,15 @@
 package discoveryv1
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
+	"strconv"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
-	"strings"
 )
 
 // DiscoveryV1 : IBM Watson&trade; Discovery is a cognitive search and content analytics engine that you can add to
@@ -3924,6 +3927,45 @@ func (options *AddTrainingDataOptions) SetExamples(examples []TrainingExample) *
 func (options *AddTrainingDataOptions) SetHeaders(param map[string]string) *AddTrainingDataOptions {
 	options.Headers = param
 	return options
+}
+
+func (n *AggregationResult) UnmarshalJSON(bytes []byte) error {
+	var rawStrings map[string]*json.RawMessage
+
+	if err := json.Unmarshal(bytes, &rawStrings); err != nil {
+		return err
+	}
+
+	if value, ok := rawStrings["key_as_string"]; ok {
+		var keyAsString string
+		if err := json.Unmarshal(*value, &keyAsString); err != nil {
+			return nil
+		}
+		n.Key = &keyAsString
+	}
+	if value, ok := rawStrings["key"]; ok && n.Key == nil {
+		var key int64
+		if err := json.Unmarshal(*value, &key); err != nil {
+			return nil
+		}
+		keyAsString := strconv.FormatInt(key, 10)
+		n.Key = &keyAsString
+	}
+	if value, ok := rawStrings["matching_results"]; ok {
+		var matchingResults int64
+		if err := json.Unmarshal(*value, &matchingResults); err != nil {
+			return nil
+		}
+		n.MatchingResults = &matchingResults
+	}
+	if value, ok := rawStrings["aggregations"]; ok {
+		var aggregations []QueryAggregation
+		if err := json.Unmarshal(*value, &aggregations); err != nil {
+			return nil
+		}
+		n.Aggregations = aggregations
+	}
+	return nil
 }
 
 // AggregationResult : Aggregation results for the specified query.
