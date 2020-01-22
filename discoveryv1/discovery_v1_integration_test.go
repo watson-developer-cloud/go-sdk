@@ -327,7 +327,7 @@ func TestQueryWithTimesliceAggregation(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Query
-	query, response, responseErr := service.Query(
+	query, _, responseErr := service.Query(
 		&discoveryv1.QueryOptions{
 			EnvironmentID: core.StringPtr("system"),
 			CollectionID:  core.StringPtr("news-en"),
@@ -336,7 +336,6 @@ func TestQueryWithTimesliceAggregation(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-	fmt.Println(response)
 
 	assert.NotNil(t, query)
 }
