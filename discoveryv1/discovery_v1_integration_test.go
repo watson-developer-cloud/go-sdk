@@ -60,398 +60,416 @@ func shouldSkipTest(t *testing.T) {
 		t.Skip("Skipping test as service credentials are missing")
 	}
 }
-// func TestEnvironment(t *testing.T) {
-// 	shouldSkipTest(t)
-
-// 	// List environment
-// 	listEnvironments, _, responseErr := service.ListEnvironments(
-// 		&discoveryv1.ListEnvironmentsOptions{},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, listEnvironments)
-
-// 	t.Skip("Skip rest of environment API tests")
-// 	// Create environment
-// 	createEnvironment, _, responseErr := service.CreateEnvironment(
-// 		&discoveryv1.CreateEnvironmentOptions{
-// 			Name:        core.StringPtr("test environment for SDKS DO NOT DELETE"),
-// 			Description: core.StringPtr("My environment"),
-// 		},
-// 	)
-
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, createEnvironment)
-
-// 	var newsEnvironmentId *string
-// 	for _, environment := range listEnvironments.Environments {
-// 		if *environment.Name == "Watson Discovery News Environment" {
-// 			newsEnvironmentId = environment.EnvironmentID
-// 		}
-// 	}
-// 	if newsEnvironmentId != nil {
-// 		_, _, responseErr = service.ListCollections(
-// 			&discoveryv1.ListCollectionsOptions{
-// 				EnvironmentID: newsEnvironmentId,
-// 			},
-// 		)
-// 		assert.Nil(t, responseErr)
-// 	}
-
-// 	// Get environment
-// 	getEnvironment, _, responseErr := service.GetEnvironment(
-// 		&discoveryv1.GetEnvironmentOptions{
-// 			EnvironmentID: createEnvironment.EnvironmentID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, getEnvironment)
-
-// 	// Update environment
-// 	updateEnvironment, _, responseErr := service.UpdateEnvironment(
-// 		&discoveryv1.UpdateEnvironmentOptions{
-// 			EnvironmentID: createEnvironment.EnvironmentID,
-// 			Name:          core.StringPtr("Updated name"),
-// 			Description:   core.StringPtr("Updated description"),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, updateEnvironment)
-// }
-
-// func TestConfiguration(t *testing.T) {
-// 	shouldSkipTest(t)
-
-// 	// Create Configuraion
-// 	createConfiguration, _, responseErr := service.CreateConfiguration(
-// 		&discoveryv1.CreateConfigurationOptions{
-// 			EnvironmentID: environmentID,
-// 			Name:          core.StringPtr("Test configuration for GO"),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, createConfiguration)
-
-// 	// List Configuraion
-// 	listConfiguration, _, responseErr := service.ListConfigurations(
-// 		&discoveryv1.ListConfigurationsOptions{
-// 			EnvironmentID: environmentID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, listConfiguration)
-
-// 	// Get configuration
-// 	getConfiguration, _, responseErr := service.GetConfiguration(
-// 		&discoveryv1.GetConfigurationOptions{
-// 			EnvironmentID:   environmentID,
-// 			ConfigurationID: createConfiguration.ConfigurationID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, getConfiguration)
-
-// 	// Update configuration
-// 	updateConfiguration, _, responseErr := service.UpdateConfiguration(
-// 		&discoveryv1.UpdateConfigurationOptions{
-// 			EnvironmentID:   environmentID,
-// 			ConfigurationID: createConfiguration.ConfigurationID,
-// 			Name:            core.StringPtr("Test configuration for GO with name update"),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, updateConfiguration)
-
-// 	configurationID = createConfiguration.ConfigurationID
-// }
-
-// func TestCollection(t *testing.T) {
-// 	shouldSkipTest(t)
-
-// 	// Create collection
-// 	createCollection, _, responseErr := service.CreateCollection(
-// 		&discoveryv1.CreateCollectionOptions{
-// 			EnvironmentID:   environmentID,
-// 			ConfigurationID: configurationID,
-// 			Name:            core.StringPtr("Name for GO collection"),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, createCollection)
-
-// 	// List collection
-// 	listCollection, _, responseErr := service.ListCollections(
-// 		&discoveryv1.ListCollectionsOptions{
-// 			EnvironmentID: environmentID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, listCollection)
-
-// 	// Get collection
-// 	getCollection, _, responseErr := service.GetCollection(
-// 		&discoveryv1.GetCollectionOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  createCollection.CollectionID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, getCollection)
-
-// 	// Update collection
-// 	updateCollection, _, responseErr := service.UpdateCollection(
-// 		&discoveryv1.UpdateCollectionOptions{
-// 			EnvironmentID:   environmentID,
-// 			CollectionID:    createCollection.CollectionID,
-// 			ConfigurationID: configurationID,
-// 			Name:            core.StringPtr("Update collection in GO"),
-// 			Description:     core.StringPtr("Update description in GO"),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, updateCollection)
-
-// 	// List collection fields
-// 	listCollectionFields, _, responseErr := service.ListCollectionFields(
-// 		&discoveryv1.ListCollectionFieldsOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  createCollection.CollectionID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, listCollectionFields)
-
-// 	// List fields
-// 	listFields, _, responseErr := service.ListFields(
-// 		&discoveryv1.ListFieldsOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionIds: []string{*createCollection.CollectionID},
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, listFields)
-
-// 	collectionID = createCollection.CollectionID
-// }
-
-// func TestDocument(t *testing.T) {
-// 	shouldSkipTest(t)
-
-// 	// Add document
-// 	pwd, _ := os.Getwd()
-// 	file, fileErr := os.Open(pwd + "/../resources/example.html")
-// 	assert.Nil(t, fileErr)
-
-// 	addDocument, _, responseErr := service.AddDocument(
-// 		&discoveryv1.AddDocumentOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  collectionID,
-// 			File:          file,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, addDocument)
-
-// 	// Get document
-// 	getDocument, _, responseErr := service.GetDocumentStatus(
-// 		&discoveryv1.GetDocumentStatusOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  collectionID,
-// 			DocumentID:    addDocument.DocumentID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, getDocument)
-
-// 	// Update document
-// 	fileInfo, fileInfoErr := os.Open(pwd + "/../resources/example.html")
-// 	assert.Nil(t, fileInfoErr)
-
-// 	updateDocument, _, responseErr := service.UpdateDocument(
-// 		&discoveryv1.UpdateDocumentOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  collectionID,
-// 			DocumentID:    addDocument.DocumentID,
-// 			File:          fileInfo,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, updateDocument)
-
-// 	// Delete document
-// 	_, _, responseErr = service.DeleteDocument(
-// 		&discoveryv1.DeleteDocumentOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  collectionID,
-// 			DocumentID:    addDocument.DocumentID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-// }
-
-// func TestQuery(t *testing.T) {
-// 	shouldSkipTest(t)
-
-// 	// Query
-// 	query, _, responseErr := service.Query(
-// 		&discoveryv1.QueryOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  collectionID,
-// 			Filter:        core.StringPtr("extracted_metadata.sha1::9181d244*"),
-// 			Return:        core.StringPtr("extracted_metadata.sha1"),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, query)
-// }
-
-// func TestTokenizationDictionary(t *testing.T) {
-// 	shouldSkipTest(t)
-
-// 	t.Skip("Disable temporarily")
-// 	// Create collection in Japanese as create tokenization dictionary is only supported in JA
-// 	testCollection, _, responseErr := service.CreateCollection(
-// 		&discoveryv1.CreateCollectionOptions{
-// 			EnvironmentID: environmentID,
-// 			Name:          core.StringPtr("Test Tokenization Dictionary For Golang"),
-// 			Language:      core.StringPtr(discoveryv1.CreateCollectionOptions_Language_Ja),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, testCollection)
-
-// 	// create tokenization dictionary
-// 	createTokenizationDictionary, _, responseErr := service.CreateTokenizationDictionary(
-// 		&discoveryv1.CreateTokenizationDictionaryOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  testCollection.CollectionID,
-// 			TokenizationRules: []discoveryv1.TokenDictRule{
-// 				discoveryv1.TokenDictRule{
-// 					Text:         core.StringPtr("token"),
-// 					Tokens:       []string{"token 1", "token 2"},
-// 					Readings:     []string{"reading 1", "reading 2"},
-// 					PartOfSpeech: core.StringPtr("noun"),
-// 				},
-// 			},
-// 		},
-// 	)
-
-// 	assert.NotNil(t, createTokenizationDictionary)
-
-// 	// get tokenization dictionary status
-// 	getTokenizationDictionaryStatus, _, responseErr := service.GetTokenizationDictionaryStatus(
-// 		&discoveryv1.GetTokenizationDictionaryStatusOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  testCollection.CollectionID,
-// 		},
-// 	)
-
-// 	assert.NotNil(t, getTokenizationDictionaryStatus)
-
-// 	// delete tokenization dictionary
-// 	_, responseErr = service.DeleteTokenizationDictionary(
-// 		&discoveryv1.DeleteTokenizationDictionaryOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  testCollection.CollectionID,
-// 		},
-// 	)
-// }
-
-// func TestStopwordOperations(t *testing.T) {
-// 	shouldSkipTest(t)
-
-// 	t.Skip("Disable temporarily")
-// 	// Create stopword list
-// 	pwd, _ := os.Getwd()
-// 	file, fileErr := os.Open(pwd + "/../resources/stopwords.txt")
-// 	assert.Nil(t, fileErr)
-
-// 	stopwordsListStatus, _, responseErr := service.CreateStopwordList(
-// 		&discoveryv1.CreateStopwordListOptions{
-// 			EnvironmentID:    environmentID,
-// 			CollectionID:     collectionID,
-// 			StopwordFile:     file,
-// 			StopwordFilename: core.StringPtr("stopwords.txt"),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, stopwordsListStatus)
-
-// 	// Delete stopword list
-// 	_, responseErr = service.DeleteStopwordList(
-// 		&discoveryv1.DeleteStopwordListOptions{
-// 			EnvironmentID: environmentID,
-// 			CollectionID:  collectionID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-// }
-
-// func TestGatewayConfiguration(t *testing.T) {
-// 	shouldSkipTest(t)
-
-// 	// Create gateway
-// 	createGateway, _, responseErr := service.CreateGateway(
-// 		&discoveryv1.CreateGatewayOptions{
-// 			EnvironmentID: environmentID,
-// 			Name:          core.StringPtr("test-gateway-configuration-go"),
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, createGateway)
-
-// 	// Get gateway
-// 	getGateway, _, responseErr := service.GetGateway(
-// 		&discoveryv1.GetGatewayOptions{
-// 			EnvironmentID: environmentID,
-// 			GatewayID:     createGateway.GatewayID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, getGateway)
-
-// 	// List gateways
-// 	listGateways, _, responseErr := service.ListGateways(
-// 		&discoveryv1.ListGatewaysOptions{
-// 			EnvironmentID: environmentID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, listGateways)
-
-// 	// Delete gateway
-// 	deleteGateway, _, responseErr := service.DeleteGateway(
-// 		&discoveryv1.DeleteGatewayOptions{
-// 			EnvironmentID: environmentID,
-// 			GatewayID:     getGateway.GatewayID,
-// 		},
-// 	)
-// 	assert.Nil(t, responseErr)
-
-// 	assert.NotNil(t, deleteGateway)
-// }
+
+func TestEnvironment(t *testing.T) {
+	shouldSkipTest(t)
+
+	// List environment
+	listEnvironments, _, responseErr := service.ListEnvironments(
+		&discoveryv1.ListEnvironmentsOptions{},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, listEnvironments)
+
+	t.Skip("Skip rest of environment API tests")
+	// Create environment
+	createEnvironment, _, responseErr := service.CreateEnvironment(
+		&discoveryv1.CreateEnvironmentOptions{
+			Name:        core.StringPtr("test environment for SDKS DO NOT DELETE"),
+			Description: core.StringPtr("My environment"),
+		},
+	)
+
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, createEnvironment)
+
+	var newsEnvironmentId *string
+	for _, environment := range listEnvironments.Environments {
+		if *environment.Name == "Watson Discovery News Environment" {
+			newsEnvironmentId = environment.EnvironmentID
+		}
+	}
+	if newsEnvironmentId != nil {
+		_, _, responseErr = service.ListCollections(
+			&discoveryv1.ListCollectionsOptions{
+				EnvironmentID: newsEnvironmentId,
+			},
+		)
+		assert.Nil(t, responseErr)
+	}
+
+	// Get environment
+	getEnvironment, _, responseErr := service.GetEnvironment(
+		&discoveryv1.GetEnvironmentOptions{
+			EnvironmentID: createEnvironment.EnvironmentID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, getEnvironment)
+
+	// Update environment
+	updateEnvironment, _, responseErr := service.UpdateEnvironment(
+		&discoveryv1.UpdateEnvironmentOptions{
+			EnvironmentID: createEnvironment.EnvironmentID,
+			Name:          core.StringPtr("Updated name"),
+			Description:   core.StringPtr("Updated description"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, updateEnvironment)
+}
+
+func TestConfiguration(t *testing.T) {
+	shouldSkipTest(t)
+
+	// Create Configuraion
+	createConfiguration, _, responseErr := service.CreateConfiguration(
+		&discoveryv1.CreateConfigurationOptions{
+			EnvironmentID: environmentID,
+			Name:          core.StringPtr("Test configuration for GO"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, createConfiguration)
+
+	// List Configuraion
+	listConfiguration, _, responseErr := service.ListConfigurations(
+		&discoveryv1.ListConfigurationsOptions{
+			EnvironmentID: environmentID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, listConfiguration)
+
+	// Get configuration
+	getConfiguration, _, responseErr := service.GetConfiguration(
+		&discoveryv1.GetConfigurationOptions{
+			EnvironmentID:   environmentID,
+			ConfigurationID: createConfiguration.ConfigurationID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, getConfiguration)
+
+	// Update configuration
+	updateConfiguration, _, responseErr := service.UpdateConfiguration(
+		&discoveryv1.UpdateConfigurationOptions{
+			EnvironmentID:   environmentID,
+			ConfigurationID: createConfiguration.ConfigurationID,
+			Name:            core.StringPtr("Test configuration for GO with name update"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, updateConfiguration)
+
+	configurationID = createConfiguration.ConfigurationID
+}
+
+func TestCollection(t *testing.T) {
+	shouldSkipTest(t)
+
+	// Create collection
+	createCollection, _, responseErr := service.CreateCollection(
+		&discoveryv1.CreateCollectionOptions{
+			EnvironmentID:   environmentID,
+			ConfigurationID: configurationID,
+			Name:            core.StringPtr("Name for GO collection"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, createCollection)
+
+	// List collection
+	listCollection, _, responseErr := service.ListCollections(
+		&discoveryv1.ListCollectionsOptions{
+			EnvironmentID: environmentID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, listCollection)
+
+	// Get collection
+	getCollection, _, responseErr := service.GetCollection(
+		&discoveryv1.GetCollectionOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  createCollection.CollectionID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, getCollection)
+
+	// Update collection
+	updateCollection, _, responseErr := service.UpdateCollection(
+		&discoveryv1.UpdateCollectionOptions{
+			EnvironmentID:   environmentID,
+			CollectionID:    createCollection.CollectionID,
+			ConfigurationID: configurationID,
+			Name:            core.StringPtr("Update collection in GO"),
+			Description:     core.StringPtr("Update description in GO"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, updateCollection)
+
+	// List collection fields
+	listCollectionFields, _, responseErr := service.ListCollectionFields(
+		&discoveryv1.ListCollectionFieldsOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  createCollection.CollectionID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, listCollectionFields)
+
+	// List fields
+	listFields, _, responseErr := service.ListFields(
+		&discoveryv1.ListFieldsOptions{
+			EnvironmentID: environmentID,
+			CollectionIds: []string{*createCollection.CollectionID},
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, listFields)
+
+	collectionID = createCollection.CollectionID
+}
+
+func TestDocument(t *testing.T) {
+	shouldSkipTest(t)
+
+	// Add document
+	pwd, _ := os.Getwd()
+	file, fileErr := os.Open(pwd + "/../resources/example.html")
+	assert.Nil(t, fileErr)
+
+	addDocument, _, responseErr := service.AddDocument(
+		&discoveryv1.AddDocumentOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  collectionID,
+			File:          file,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, addDocument)
+
+	// Get document
+	getDocument, _, responseErr := service.GetDocumentStatus(
+		&discoveryv1.GetDocumentStatusOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  collectionID,
+			DocumentID:    addDocument.DocumentID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, getDocument)
+
+	// Update document
+	fileInfo, fileInfoErr := os.Open(pwd + "/../resources/example.html")
+	assert.Nil(t, fileInfoErr)
+
+	updateDocument, _, responseErr := service.UpdateDocument(
+		&discoveryv1.UpdateDocumentOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  collectionID,
+			DocumentID:    addDocument.DocumentID,
+			File:          fileInfo,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, updateDocument)
+
+	// Delete document
+	_, _, responseErr = service.DeleteDocument(
+		&discoveryv1.DeleteDocumentOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  collectionID,
+			DocumentID:    addDocument.DocumentID,
+		},
+	)
+	assert.Nil(t, responseErr)
+}
+
+func TestQuery(t *testing.T) {
+	shouldSkipTest(t)
+
+	// Query
+	query, _, responseErr := service.Query(
+		&discoveryv1.QueryOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  collectionID,
+			Filter:        core.StringPtr("extracted_metadata.sha1::9181d244*"),
+			Return:        core.StringPtr("extracted_metadata.sha1"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, query)
+}
+
+func TestQueryWithTimesliceAggregation(t *testing.T) {
+	shouldSkipTest(t)
+
+	// Query
+	query, _, responseErr := service.Query(
+		&discoveryv1.QueryOptions{
+			EnvironmentID: core.StringPtr("system"),
+			CollectionID:  core.StringPtr("news-en"),
+			Query:         core.StringPtr("enriched_text.concepts.text:\"Cloud computing\""),
+			Aggregation:   core.StringPtr("timeslice(publication_date,1day,anomaly:false)"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, query)
+}
+
+func TestTokenizationDictionary(t *testing.T) {
+	shouldSkipTest(t)
+
+	t.Skip("Disable temporarily")
+	// Create collection in Japanese as create tokenization dictionary is only supported in JA
+	testCollection, _, responseErr := service.CreateCollection(
+		&discoveryv1.CreateCollectionOptions{
+			EnvironmentID: environmentID,
+			Name:          core.StringPtr("Test Tokenization Dictionary For Golang"),
+			Language:      core.StringPtr(discoveryv1.CreateCollectionOptions_Language_Ja),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, testCollection)
+
+	// create tokenization dictionary
+	createTokenizationDictionary, _, responseErr := service.CreateTokenizationDictionary(
+		&discoveryv1.CreateTokenizationDictionaryOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  testCollection.CollectionID,
+			TokenizationRules: []discoveryv1.TokenDictRule{
+				discoveryv1.TokenDictRule{
+					Text:         core.StringPtr("token"),
+					Tokens:       []string{"token 1", "token 2"},
+					Readings:     []string{"reading 1", "reading 2"},
+					PartOfSpeech: core.StringPtr("noun"),
+				},
+			},
+		},
+	)
+
+	assert.NotNil(t, createTokenizationDictionary)
+
+	// get tokenization dictionary status
+	getTokenizationDictionaryStatus, _, responseErr := service.GetTokenizationDictionaryStatus(
+		&discoveryv1.GetTokenizationDictionaryStatusOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  testCollection.CollectionID,
+		},
+	)
+
+	assert.NotNil(t, getTokenizationDictionaryStatus)
+
+	// delete tokenization dictionary
+	_, responseErr = service.DeleteTokenizationDictionary(
+		&discoveryv1.DeleteTokenizationDictionaryOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  testCollection.CollectionID,
+		},
+	)
+}
+
+func TestStopwordOperations(t *testing.T) {
+	shouldSkipTest(t)
+
+	t.Skip("Disable temporarily")
+	// Create stopword list
+	pwd, _ := os.Getwd()
+	file, fileErr := os.Open(pwd + "/../resources/stopwords.txt")
+	assert.Nil(t, fileErr)
+
+	stopwordsListStatus, _, responseErr := service.CreateStopwordList(
+		&discoveryv1.CreateStopwordListOptions{
+			EnvironmentID:    environmentID,
+			CollectionID:     collectionID,
+			StopwordFile:     file,
+			StopwordFilename: core.StringPtr("stopwords.txt"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, stopwordsListStatus)
+
+	// Delete stopword list
+	_, responseErr = service.DeleteStopwordList(
+		&discoveryv1.DeleteStopwordListOptions{
+			EnvironmentID: environmentID,
+			CollectionID:  collectionID,
+		},
+	)
+	assert.Nil(t, responseErr)
+}
+
+func TestGatewayConfiguration(t *testing.T) {
+	shouldSkipTest(t)
+
+	// Create gateway
+	createGateway, _, responseErr := service.CreateGateway(
+		&discoveryv1.CreateGatewayOptions{
+			EnvironmentID: environmentID,
+			Name:          core.StringPtr("test-gateway-configuration-go"),
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, createGateway)
+
+	// Get gateway
+	getGateway, _, responseErr := service.GetGateway(
+		&discoveryv1.GetGatewayOptions{
+			EnvironmentID: environmentID,
+			GatewayID:     createGateway.GatewayID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, getGateway)
+
+	// List gateways
+	listGateways, _, responseErr := service.ListGateways(
+		&discoveryv1.ListGatewaysOptions{
+			EnvironmentID: environmentID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, listGateways)
+
+	// Delete gateway
+	deleteGateway, _, responseErr := service.DeleteGateway(
+		&discoveryv1.DeleteGatewayOptions{
+			EnvironmentID: environmentID,
+			GatewayID:     getGateway.GatewayID,
+		},
+	)
+	assert.Nil(t, responseErr)
+
+	assert.NotNil(t, deleteGateway)
+}
 
 func TestDeleteOperations(t *testing.T) {
 	shouldSkipTest(t)
