@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/watson-developer-cloud/go-sdk/compare/v1.3.1...v1.3.2) (2020-01-24)
+
+
+### Bug Fixes
+
+* **discoveryv1:** Add custom UnmarshalJSON for AggregationResult ([4d41191](https://github.com/watson-developer-cloud/go-sdk/commit/4d411912d27fb4568be692349829a1170c133271))
+
 ## [1.3.1](https://github.com/watson-developer-cloud/go-sdk/compare/v1.3.0...v1.3.1) (2020-01-17)
 
 
