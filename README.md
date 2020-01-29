@@ -21,6 +21,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 * [Configuring the HTTP Client](#configuring-the-http-client)
 * [Disable SSL certificate verification](#disable-ssl-certificate-verification)
 * [Set Service URL](#set-service-url)
+* [Getting the transaction ID](#getting-the-transaction-id)
 * [IBM Cloud Pak for Data(ICP4D)](#ibm-cloud-pak-for-data(icp4d))
 * [Examples](#examples)
 * [Tests](#tests)
@@ -304,6 +305,15 @@ Or can set it from external sources. For example, environment variables:
 ```bash
 export <YOUR SERVICE NAME>_URL="my new url"
 ```
+
+## Getting the transaction ID
+Every SDK call returns a response with a transaction ID in the x-global-transaction-id header. This transaction ID is useful for troubleshooting and accessing relevant logs from your service instance.
+
+```go
+result, response, responseErr := service.MyServiceCall(myServiceOptions)
+fmt.Println(response.GetHeaders().Get("X-Global-Transaction-Id"))
+```
+
 
 ## Cloud Pak for Data(CP4D)
 If your service instance is of ICP4D, below are two ways of initializing the assistant service.
