@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import (
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
 // Version: 3.5.3
-// See: https://cloud.ibm.com/docs/services/tone-analyzer/
+// See: https://cloud.ibm.com/docs/tone-analyzer/
 type ToneAnalyzerV3 struct {
 	Service *core.BaseService
 	Version string
@@ -123,7 +123,7 @@ func (toneAnalyzer *ToneAnalyzerV3) DisableSSLVerification() {
 // removes HTML tags and analyzes only the textual content.
 //
 // **See also:** [Using the general-purpose
-// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utgpe#utgpe).
+// endpoint](https://cloud.ibm.com/docs/tone-analyzer?topic=tone-analyzer-utgpe#utgpe).
 func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *ToneAnalysis, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(toneOptions, "toneOptions cannot be nil")
 	if err != nil {
@@ -204,7 +204,7 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *Tone
 // characters. Per the JSON specification, the default character encoding for JSON content is effectively always UTF-8.
 //
 // **See also:** [Using the customer-engagement
-// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utco#utco).
+// endpoint](https://cloud.ibm.com/docs/tone-analyzer?topic=tone-analyzer-utco#utco).
 func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (result *UtteranceAnalyses, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(toneChatOptions, "toneChatOptions cannot be nil")
 	if err != nil {
