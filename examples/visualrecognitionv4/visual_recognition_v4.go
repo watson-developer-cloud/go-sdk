@@ -74,6 +74,16 @@ func main() {
 	)
 	core.PrettyPrint(trainingData, "Training data: ")
 
+	/* UPDATE OBJECT METADATA */
+	updateObjectMetadata, _, responseErr := service.UpdateObjectMetadata(
+		&visualrecognitionv4.UpdateObjectMetadataOptions{
+			CollectionID: collectionId,
+			Object:       core.StringPtr("giraffe training data"),
+			NewObject:    core.StringPtr("updated giraffe training data"),
+		},
+	)
+	core.PrettyPrint(updateObjectMetadata, "Updated object metadata: ")
+
 	/* TRAIN */
 	train, _, responseErr := service.Train(
 		&visualrecognitionv4.TrainOptions{
