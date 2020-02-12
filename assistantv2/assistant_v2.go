@@ -496,7 +496,49 @@ type MessageContextGlobalSystem struct {
 	// the the first turn of a new conversation, which can affect the behavior of some skills (for example, triggering the
 	// start node of a dialog).
 	TurnCount *int64 `json:"turn_count,omitempty"`
+
+	// The language code for localization in the user input. The specified locale overrides the default for the assistant,
+	// and is used for interpreting entity values in user input such as date values. For example, `04/03/2018` might be
+	// interpreted either as April 3 or March 4, depending on the locale.
+	//
+	//  This property is included only if the new system entities are enabled for the skill.
+	Locale *string `json:"locale,omitempty"`
+
+	// The base time for interpreting any relative time mentions in the user input. The specified time overrides the
+	// current server time, and is used to calculate times mentioned in relative terms such as `now` or `tomorrow`. This
+	// can be useful for simulating past or future times for testing purposes, or when analyzing documents such as news
+	// articles.
+	//
+	// This value must be a UTC time value formatted according to ISO 8601 (for example, `2019-06-26T12:00:00Z` for noon on
+	// 26 June 2019.
+	//
+	// This property is included only if the new system entities are enabled for the skill.
+	ReferenceTime *string `json:"reference_time,omitempty"`
 }
+
+// Constants associated with the MessageContextGlobalSystem.Locale property.
+// The language code for localization in the user input. The specified locale overrides the default for the assistant,
+// and is used for interpreting entity values in user input such as date values. For example, `04/03/2018` might be
+// interpreted either as April 3 or March 4, depending on the locale.
+//
+//  This property is included only if the new system entities are enabled for the skill.
+const (
+	MessageContextGlobalSystem_Locale_ArAr = "ar-ar"
+	MessageContextGlobalSystem_Locale_CsCz = "cs-cz"
+	MessageContextGlobalSystem_Locale_DeDe = "de-de"
+	MessageContextGlobalSystem_Locale_EnCa = "en-ca"
+	MessageContextGlobalSystem_Locale_EnGb = "en-gb"
+	MessageContextGlobalSystem_Locale_EnUs = "en-us"
+	MessageContextGlobalSystem_Locale_EsEs = "es-es"
+	MessageContextGlobalSystem_Locale_FrFr = "fr-fr"
+	MessageContextGlobalSystem_Locale_ItIt = "it-it"
+	MessageContextGlobalSystem_Locale_JaJp = "ja-jp"
+	MessageContextGlobalSystem_Locale_KoKr = "ko-kr"
+	MessageContextGlobalSystem_Locale_NlNl = "nl-nl"
+	MessageContextGlobalSystem_Locale_PtBr = "pt-br"
+	MessageContextGlobalSystem_Locale_ZhCn = "zh-cn"
+	MessageContextGlobalSystem_Locale_ZhTw = "zh-tw"
+)
 
 // MessageContextSkill : Contains information specific to a particular skill used by the Assistant.
 type MessageContextSkill struct {
