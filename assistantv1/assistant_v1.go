@@ -6884,6 +6884,17 @@ type RuntimeEntity struct {
 
 	// The recognized capture groups for the entity, as defined by the entity pattern.
 	Groups []CaptureGroup `json:"groups,omitempty"`
+
+	// An object containing detailed information about the entity recognized in the user input. This property is included
+	// only if the new system entities are enabled for the workspace.
+	//
+	// For more information about how the new system entities are interpreted, see the
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-beta-system-entities).
+	Interpretation *RuntimeEntityInterpretation `json:"interpretation,omitempty"`
+
+	// An object describing the role played by a system entity that is specifies the beginning or end of a range recognized
+	// in the user input. This property is included only if the new system entities are enabled for the workspace.
+	Role *RuntimeEntityRole `json:"role,omitempty"`
 }
 
 // NewRuntimeEntity : Instantiate RuntimeEntity (Generic Model Constructor)
@@ -6896,6 +6907,139 @@ func (assistant *AssistantV1) NewRuntimeEntity(entity string, location []int64, 
 	err = core.ValidateStruct(model, "required parameters")
 	return
 }
+
+// RuntimeEntityInterpretation : RuntimeEntityInterpretation struct
+type RuntimeEntityInterpretation struct {
+
+	// The calendar used to represent a recognized date (for example, `Gregorian`).
+	CalendarType *string `json:"calendar_type,omitempty"`
+
+	// A unique identifier used to associate a recognized time and date. If the user input contains a date and time that
+	// are mentioned together (for example, `Today at 5`, the same **datetime_link** value is returned for both the
+	// `@sys-date` and `@sys-time` entities).
+	DatetimeLink *string `json:"datetime_link,omitempty"`
+
+	// A locale-specific holiday name (such as `thanksgiving` or `christmas`). This property is included when a `@sys-date`
+	// entity is recognized based on a holiday name in the user input.
+	Festival *string `json:"festival,omitempty"`
+
+	// The precision or duration of a time range specified by a recognized `@sys-time` or `@sys-date` entity.
+	Granularity *string `json:"granularity,omitempty"`
+
+	// A unique identifier used to associate multiple recognized `@sys-date`, `@sys-time`, or `@sys-number` entities that
+	// are recognized as a range of values in the user's input (for example, `from July 4 until July 14` or `from 20 to
+	// 25`).
+	RangeLink *string `json:"range_link,omitempty"`
+
+	// The word in the user input that indicates that a `sys-date` or `sys-time` entity is part of an implied range where
+	// only one date or time is specified (for example, `since` or `until`).
+	RangeModifier *string `json:"range_modifier,omitempty"`
+
+	// A recognized mention of a relative day, represented numerically as an offset from the current date (for example,
+	// `-1` for `yesterday` or `10` for `in ten days`).
+	RelativeDay *float64 `json:"relative_day,omitempty"`
+
+	// A recognized mention of a relative month, represented numerically as an offset from the current month (for example,
+	// `1` for `next month` or `-3` for `three months ago`).
+	RelativeMonth *float64 `json:"relative_month,omitempty"`
+
+	// A recognized mention of a relative week, represented numerically as an offset from the current week (for example,
+	// `2` for `in two weeks` or `-1` for `last week).
+	RelativeWeek *float64 `json:"relative_week,omitempty"`
+
+	// A recognized mention of a relative date range for a weekend, represented numerically as an offset from the current
+	// weekend (for example, `0` for `this weekend` or `-1` for `last weekend`).
+	RelativeWeekend *float64 `json:"relative_weekend,omitempty"`
+
+	// A recognized mention of a relative year, represented numerically as an offset from the current year (for example,
+	// `1` for `next year` or `-5` for `five years ago`).
+	RelativeYear *float64 `json:"relative_year,omitempty"`
+
+	// A recognized mention of a specific date, represented numerically as the date within the month (for example, `30` for
+	// `June 30`.).
+	SpecificDay *float64 `json:"specific_day,omitempty"`
+
+	// A recognized mention of a specific day of the week as a lowercase string (for example, `monday`).
+	SpecificDayOfWeek *string `json:"specific_day_of_week,omitempty"`
+
+	// A recognized mention of a specific month, represented numerically (for example, `7` for `July`).
+	SpecificMonth *float64 `json:"specific_month,omitempty"`
+
+	// A recognized mention of a specific quarter, represented numerically (for example, `3` for `the third quarter`).
+	SpecificQuarter *float64 `json:"specific_quarter,omitempty"`
+
+	// A recognized mention of a specific year (for example, `2016`).
+	SpecificYear *float64 `json:"specific_year,omitempty"`
+
+	// A recognized numeric value, represented as an integer or double.
+	NumericValue *float64 `json:"numeric_value,omitempty"`
+
+	// The type of numeric value recognized in the user input (`integer` or `rational`).
+	Subtype *string `json:"subtype,omitempty"`
+
+	// A recognized term for a time that was mentioned as a part of the day in the user's input (for example, `morning` or
+	// `afternoon`).
+	PartOfDay *string `json:"part_of_day,omitempty"`
+
+	// A recognized mention of a relative hour, represented numerically as an offset from the current hour (for example,
+	// `3` for `in three hours` or `-1` for `an hour ago`).
+	RelativeHour *float64 `json:"relative_hour,omitempty"`
+
+	// A recognized mention of a relative time, represented numerically as an offset in minutes from the current time (for
+	// example, `5` for `in five minutes` or `-15` for `fifteen minutes ago`).
+	RelativeMinute *float64 `json:"relative_minute,omitempty"`
+
+	// A recognized mention of a relative time, represented numerically as an offset in seconds from the current time (for
+	// example, `10` for `in ten seconds` or `-30` for `thirty seconds ago`).
+	RelativeSecond *float64 `json:"relative_second,omitempty"`
+
+	// A recognized specific hour mentioned as part of a time value (for example, `10` for `10:15 AM`.).
+	SpecificHour *float64 `json:"specific_hour,omitempty"`
+
+	// A recognized specific minute mentioned as part of a time value (for example, `15` for `10:15 AM`.).
+	SpecificMinute *float64 `json:"specific_minute,omitempty"`
+
+	// A recognized specific second mentioned as part of a time value (for example, `30` for `10:15:30 AM`.).
+	SpecificSecond *float64 `json:"specific_second,omitempty"`
+
+	// A recognized time zone mentioned as part of a time value (for example, `EST`).
+	Timezone *string `json:"timezone,omitempty"`
+}
+
+// Constants associated with the RuntimeEntityInterpretation.Granularity property.
+// The precision or duration of a time range specified by a recognized `@sys-time` or `@sys-date` entity.
+const (
+	RuntimeEntityInterpretation_Granularity_Day       = "day"
+	RuntimeEntityInterpretation_Granularity_Fortnight = "fortnight"
+	RuntimeEntityInterpretation_Granularity_Hour      = "hour"
+	RuntimeEntityInterpretation_Granularity_Instant   = "instant"
+	RuntimeEntityInterpretation_Granularity_Minute    = "minute"
+	RuntimeEntityInterpretation_Granularity_Month     = "month"
+	RuntimeEntityInterpretation_Granularity_Quarter   = "quarter"
+	RuntimeEntityInterpretation_Granularity_Second    = "second"
+	RuntimeEntityInterpretation_Granularity_Week      = "week"
+	RuntimeEntityInterpretation_Granularity_Weekend   = "weekend"
+	RuntimeEntityInterpretation_Granularity_Year      = "year"
+)
+
+// RuntimeEntityRole : An object describing the role played by a system entity that is specifies the beginning or end of a range recognized
+// in the user input. This property is included only if the new system entities are enabled for the workspace.
+type RuntimeEntityRole struct {
+
+	// The relationship of the entity to the range.
+	Type *string `json:"type,omitempty"`
+}
+
+// Constants associated with the RuntimeEntityRole.Type property.
+// The relationship of the entity to the range.
+const (
+	RuntimeEntityRole_Type_DateFrom   = "date_from"
+	RuntimeEntityRole_Type_DateTo     = "date_to"
+	RuntimeEntityRole_Type_NumberFrom = "number_from"
+	RuntimeEntityRole_Type_NumberTo   = "number_to"
+	RuntimeEntityRole_Type_TimeFrom   = "time_from"
+	RuntimeEntityRole_Type_TimeTo     = "time_to"
+)
 
 // RuntimeIntent : An intent identified in the user input.
 type RuntimeIntent struct {
