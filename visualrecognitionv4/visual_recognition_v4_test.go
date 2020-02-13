@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019.
+ * (C) Copyright IBM Corp. 2019, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +48,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"images": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"images": []}`)
 			}))
 			It(`Succeed to call Analyze`, func() {
 				defer testServer.Close()
@@ -93,8 +93,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"collection_id": "fake CollectionID", "name": "fake Name", "description": "fake Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake Description"}}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake_Description"}}}`)
 			}))
 			It(`Succeed to call CreateCollection`, func() {
 				defer testServer.Close()
@@ -138,8 +138,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"collections": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"collections": []}`)
 			}))
 			It(`Succeed to call ListCollections`, func() {
 				defer testServer.Close()
@@ -185,8 +185,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"collection_id": "fake CollectionID", "name": "fake Name", "description": "fake Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake Description"}}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake_Description"}}}`)
 			}))
 			It(`Succeed to call GetCollection`, func() {
 				defer testServer.Close()
@@ -232,8 +232,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"collection_id": "fake CollectionID", "name": "fake Name", "description": "fake Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake Description"}}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake_Description"}}}`)
 			}))
 			It(`Succeed to call UpdateCollection`, func() {
 				defer testServer.Close()
@@ -418,8 +418,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"image_id": "fake ImageID", "updated": "2017-05-16T13:56:54.957Z", "created": "2017-05-16T13:56:54.957Z", "source": {"type": "fake Type"}, "dimensions": {"height": 6, "width": 5}, "training_data": {"objects": []}}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"source": {"type": "fake_Type"}}`)
 			}))
 			It(`Succeed to call GetImageDetails`, func() {
 				defer testServer.Close()
@@ -550,6 +550,197 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			})
 		})
 	})
+	Describe(`ListObjectMetadata(listObjectMetadataOptions *ListObjectMetadataOptions)`, func() {
+		listObjectMetadataPath := "/v4/collections/{collection_id}/objects"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		collectionID := "exampleString"
+		listObjectMetadataPath = strings.Replace(listObjectMetadataPath, "{collection_id}", collectionID, 1)
+		Context(`Successfully - List object metadata`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(listObjectMetadataPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"object_count": 11}`)
+			}))
+			It(`Succeed to call ListObjectMetadata`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.ListObjectMetadata(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				listObjectMetadataOptions := testService.NewListObjectMetadataOptions(collectionID)
+				result, response, operationErr = testService.ListObjectMetadata(listObjectMetadataOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`UpdateObjectMetadata(updateObjectMetadataOptions *UpdateObjectMetadataOptions)`, func() {
+		updateObjectMetadataPath := "/v4/collections/{collection_id}/objects/{object}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		collectionID := "exampleString"
+		object := "exampleString"
+		newObject := "exampleString"
+		updateObjectMetadataPath = strings.Replace(updateObjectMetadataPath, "{collection_id}", collectionID, 1)
+		updateObjectMetadataPath = strings.Replace(updateObjectMetadataPath, "{object}", object, 1)
+		Context(`Successfully - Update an object name`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(updateObjectMetadataPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"object": "fake_Object", "count": 5}`)
+			}))
+			It(`Succeed to call UpdateObjectMetadata`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.UpdateObjectMetadata(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				updateObjectMetadataOptions := testService.NewUpdateObjectMetadataOptions(collectionID, object, newObject)
+				result, response, operationErr = testService.UpdateObjectMetadata(updateObjectMetadataOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`GetObjectMetadata(getObjectMetadataOptions *GetObjectMetadataOptions)`, func() {
+		getObjectMetadataPath := "/v4/collections/{collection_id}/objects/{object}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		collectionID := "exampleString"
+		object := "exampleString"
+		getObjectMetadataPath = strings.Replace(getObjectMetadataPath, "{collection_id}", collectionID, 1)
+		getObjectMetadataPath = strings.Replace(getObjectMetadataPath, "{object}", object, 1)
+		Context(`Successfully - Get object metadata`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getObjectMetadataPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call GetObjectMetadata`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetObjectMetadata(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getObjectMetadataOptions := testService.NewGetObjectMetadataOptions(collectionID, object)
+				result, response, operationErr = testService.GetObjectMetadata(getObjectMetadataOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`DeleteObject(deleteObjectOptions *DeleteObjectOptions)`, func() {
+		deleteObjectPath := "/v4/collections/{collection_id}/objects/{object}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		collectionID := "exampleString"
+		object := "exampleString"
+		deleteObjectPath = strings.Replace(deleteObjectPath, "{collection_id}", collectionID, 1)
+		deleteObjectPath = strings.Replace(deleteObjectPath, "{object}", object, 1)
+		Context(`Successfully - Delete an object`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(deleteObjectPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.WriteHeader(200)
+			}))
+			It(`Succeed to call DeleteObject`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				response, operationErr := testService.DeleteObject(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				deleteObjectOptions := testService.NewDeleteObjectOptions(collectionID, object)
+				response, operationErr = testService.DeleteObject(deleteObjectOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+		})
+	})
 	Describe(`Train(trainOptions *TrainOptions)`, func() {
 		trainPath := "/v4/collections/{collection_id}/train"
 		version := "exampleString"
@@ -567,8 +758,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"collection_id": "fake CollectionID", "name": "fake Name", "description": "fake Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake Description"}}}`)
 				res.WriteHeader(202)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake_Description"}}}`)
 			}))
 			It(`Succeed to call Train`, func() {
 				defer testServer.Close()
@@ -616,8 +807,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"objects": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"objects": []}`)
 			}))
 			It(`Succeed to call AddImageTrainingData`, func() {
 				defer testServer.Close()
@@ -661,8 +852,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call GetTrainingUsage`, func() {
 				defer testServer.Close()
@@ -732,6 +923,54 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				response, operationErr = testService.DeleteUserData(deleteUserDataOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
+			})
+		})
+	})
+	Describe("Model constructor tests", func() {
+		Context("with a sample service", func() {
+			version := "1970-01-01"
+			testService, _ := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+				URL:           "http://visualrecognitionv4modelgenerator.com",
+				Version:       version,
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewFileWithMetadata successfully", func() {
+				data := new(os.File)
+				model, err := testService.NewFileWithMetadata(data)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewLocation successfully", func() {
+				top := int64(1234)
+				left := int64(1234)
+				width := int64(1234)
+				height := int64(1234)
+				model, err := testService.NewLocation(top, left, width, height)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewObjectTrainingStatus successfully", func() {
+				ready := true
+				inProgress := true
+				dataChanged := true
+				latestFailed := true
+				description := "exampleString"
+				model, err := testService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, description)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewTrainingStatus successfully", func() {
+				objects := &visualrecognitionv4.ObjectTrainingStatus{Ready: core.BoolPtr(true), InProgress: core.BoolPtr(true), DataChanged: core.BoolPtr(true), LatestFailed: core.BoolPtr(true), Description: core.StringPtr("exampleString")}
+				model, err := testService.NewTrainingStatus(objects)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewUpdateObjectMetadata successfully", func() {
+				object := "exampleString"
+				count := int64(1234)
+				model, err := testService.NewUpdateObjectMetadata(object, count)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 		})
 	})

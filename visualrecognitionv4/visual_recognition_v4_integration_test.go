@@ -3,7 +3,7 @@
 package visualrecognitionv4_test
 
 /**
- * Copyright 2019 IBM All Rights Reserved.
+ * (C) Copyright IBM Corp. 2019, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -257,6 +257,34 @@ func TestTraining(t *testing.T) {
 	assert.Nil(t, responseErr)
 	assert.NotNil(t, trainingData)
 
+	objectMetadataList, _, responseErr := service.ListObjectMetadata(
+		&visualrecognitionv4.ListObjectMetadataOptions{
+			CollectionID: collectionId,
+		},
+	)
+	assert.Nil(t, responseErr)
+	assert.NotNil(t, objectMetadataList)
+
+	objectMetadata := objectMetadataList.Objects[0]
+	updatedObjectMetadata, _, responseErr := service.UpdateObjectMetadata(
+		&visualrecognitionv4.UpdateObjectMetadataOptions{
+			CollectionID: collectionId,
+			Object:       objectMetadata.Object,
+			NewObject:    core.StringPtr("updated giraffe training data"),
+		},
+	)
+	assert.Nil(t, responseErr)
+	assert.NotNil(t, updatedObjectMetadata)
+
+	objMetadata, _, responseErr := service.GetObjectMetadata(
+		&visualrecognitionv4.GetObjectMetadataOptions{
+			CollectionID: collectionId,
+			Object:       core.StringPtr("updated giraffe training data"),
+		},
+	)
+	assert.Nil(t, responseErr)
+	assert.NotNil(t, objMetadata)
+
 	train, _, responseErr := service.Train(
 		&visualrecognitionv4.TrainOptions{
 			CollectionID: collectionId,
@@ -271,6 +299,14 @@ func TestTraining(t *testing.T) {
 	core.PrettyPrint(trainingUsage, "r")
 	assert.Nil(t, trainingUsageErr)
 	assert.NotNil(t, trainingUsage)
+
+	_, responseErr = service.DeleteObject(
+		&visualrecognitionv4.DeleteObjectOptions{
+			CollectionID: collectionId,
+			Object:       core.StringPtr("updated giraffe training data"),
+		},
+	)
+	assert.Nil(t, responseErr)
 
 	_, responseErr = service.DeleteCollection(
 		&visualrecognitionv4.DeleteCollectionOptions{

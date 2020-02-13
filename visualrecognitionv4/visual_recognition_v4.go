@@ -31,7 +31,7 @@ import (
 // detects objects based on a set of images with training data.
 //
 // Version: 4.0
-// See: https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-object-detection-overview
+// See: https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-object-detection-overview
 type VisualRecognitionV4 struct {
 	Service *core.BaseService
 	Version string
@@ -719,6 +719,210 @@ func (visualRecognition *VisualRecognitionV4) GetJpegImage(getJpegImageOptions *
 	return
 }
 
+// ListObjectMetadata : List object metadata
+// Retrieves a list of object names in a collection.
+func (visualRecognition *VisualRecognitionV4) ListObjectMetadata(listObjectMetadataOptions *ListObjectMetadataOptions) (result *ObjectMetadataList, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listObjectMetadataOptions, "listObjectMetadataOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(listObjectMetadataOptions, "listObjectMetadataOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v4/collections", "objects"}
+	pathParameters := []string{*listObjectMetadataOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range listObjectMetadataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V4", "ListObjectMetadata")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", visualRecognition.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = visualRecognition.Service.Request(request, new(ObjectMetadataList))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ObjectMetadataList)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// UpdateObjectMetadata : Update an object name
+// Update the name of an object. A successful request updates the training data for all images that use the object.
+func (visualRecognition *VisualRecognitionV4) UpdateObjectMetadata(updateObjectMetadataOptions *UpdateObjectMetadataOptions) (result *UpdateObjectMetadata, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateObjectMetadataOptions, "updateObjectMetadataOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(updateObjectMetadataOptions, "updateObjectMetadataOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v4/collections", "objects"}
+	pathParameters := []string{*updateObjectMetadataOptions.CollectionID, *updateObjectMetadataOptions.Object}
+
+	builder := core.NewRequestBuilder(core.POST)
+	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range updateObjectMetadataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V4", "UpdateObjectMetadata")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", visualRecognition.Version)
+
+	body := make(map[string]interface{})
+	if updateObjectMetadataOptions.NewObject != nil {
+		body["object"] = updateObjectMetadataOptions.NewObject
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = visualRecognition.Service.Request(request, new(UpdateObjectMetadata))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*UpdateObjectMetadata)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// GetObjectMetadata : Get object metadata
+// Get the number of bounding boxes for a single object in a collection.
+func (visualRecognition *VisualRecognitionV4) GetObjectMetadata(getObjectMetadataOptions *GetObjectMetadataOptions) (result *ObjectMetadata, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getObjectMetadataOptions, "getObjectMetadataOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getObjectMetadataOptions, "getObjectMetadataOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v4/collections", "objects"}
+	pathParameters := []string{*getObjectMetadataOptions.CollectionID, *getObjectMetadataOptions.Object}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getObjectMetadataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V4", "GetObjectMetadata")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", visualRecognition.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = visualRecognition.Service.Request(request, new(ObjectMetadata))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ObjectMetadata)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// DeleteObject : Delete an object
+// Delete one object from a collection. A successful request deletes the training data from all images that use the
+// object.
+func (visualRecognition *VisualRecognitionV4) DeleteObject(deleteObjectOptions *DeleteObjectOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteObjectOptions, "deleteObjectOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteObjectOptions, "deleteObjectOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v4/collections", "objects"}
+	pathParameters := []string{*deleteObjectOptions.CollectionID, *deleteObjectOptions.Object}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteObjectOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V4", "DeleteObject")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", visualRecognition.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = visualRecognition.Service.Request(request, nil)
+
+	return
+}
+
 // Train : Train a collection
 // Start training on images in a collection. The collection must have enough training data and untrained data (the
 // **training_status.objects.data_changed** is `true`). If training is in progress, the request queues the next training
@@ -898,7 +1102,7 @@ func (visualRecognition *VisualRecognitionV4) GetTrainingUsage(getTrainingUsageO
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
-// security](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-information-security).
+// security](https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-information-security).
 func (visualRecognition *VisualRecognitionV4) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
 	if err != nil {
@@ -1302,6 +1506,45 @@ func (options *DeleteImageOptions) SetHeaders(param map[string]string) *DeleteIm
 	return options
 }
 
+// DeleteObjectOptions : The DeleteObject options.
+type DeleteObjectOptions struct {
+
+	// The identifier of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// The name of the object.
+	Object *string `json:"object" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteObjectOptions : Instantiate DeleteObjectOptions
+func (visualRecognition *VisualRecognitionV4) NewDeleteObjectOptions(collectionID string, object string) *DeleteObjectOptions {
+	return &DeleteObjectOptions{
+		CollectionID: core.StringPtr(collectionID),
+		Object:       core.StringPtr(object),
+	}
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteObjectOptions) SetCollectionID(collectionID string) *DeleteObjectOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetObject : Allow user to set Object
+func (options *DeleteObjectOptions) SetObject(object string) *DeleteObjectOptions {
+	options.Object = core.StringPtr(object)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteObjectOptions) SetHeaders(param map[string]string) *DeleteObjectOptions {
+	options.Headers = param
+	return options
+}
+
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 
@@ -1529,6 +1772,45 @@ func (options *GetJpegImageOptions) SetHeaders(param map[string]string) *GetJpeg
 	return options
 }
 
+// GetObjectMetadataOptions : The GetObjectMetadata options.
+type GetObjectMetadataOptions struct {
+
+	// The identifier of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// The name of the object.
+	Object *string `json:"object" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetObjectMetadataOptions : Instantiate GetObjectMetadataOptions
+func (visualRecognition *VisualRecognitionV4) NewGetObjectMetadataOptions(collectionID string, object string) *GetObjectMetadataOptions {
+	return &GetObjectMetadataOptions{
+		CollectionID: core.StringPtr(collectionID),
+		Object:       core.StringPtr(object),
+	}
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetObjectMetadataOptions) SetCollectionID(collectionID string) *GetObjectMetadataOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetObject : Allow user to set Object
+func (options *GetObjectMetadataOptions) SetObject(object string) *GetObjectMetadataOptions {
+	options.Object = core.StringPtr(object)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetObjectMetadataOptions) SetHeaders(param map[string]string) *GetObjectMetadataOptions {
+	options.Headers = param
+	return options
+}
+
 // GetTrainingUsageOptions : The GetTrainingUsage options.
 type GetTrainingUsageOptions struct {
 
@@ -1721,6 +2003,35 @@ func (options *ListImagesOptions) SetHeaders(param map[string]string) *ListImage
 	return options
 }
 
+// ListObjectMetadataOptions : The ListObjectMetadata options.
+type ListObjectMetadataOptions struct {
+
+	// The identifier of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewListObjectMetadataOptions : Instantiate ListObjectMetadataOptions
+func (visualRecognition *VisualRecognitionV4) NewListObjectMetadataOptions(collectionID string) *ListObjectMetadataOptions {
+	return &ListObjectMetadataOptions{
+		CollectionID: core.StringPtr(collectionID),
+	}
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *ListObjectMetadataOptions) SetCollectionID(collectionID string) *ListObjectMetadataOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListObjectMetadataOptions) SetHeaders(param map[string]string) *ListObjectMetadataOptions {
+	options.Headers = param
+	return options
+}
+
 // Location : Defines the location of the bounding box around the object.
 type Location struct {
 
@@ -1761,6 +2072,26 @@ type ObjectDetail struct {
 	// Confidence score for the object in the range of 0 to 1. A higher score indicates greater likelihood that the object
 	// is depicted at this location in the image.
 	Score *float32 `json:"score" validate:"required"`
+}
+
+// ObjectMetadata : Basic information about an object.
+type ObjectMetadata struct {
+
+	// The name of the object.
+	Object *string `json:"object,omitempty"`
+
+	// Number of bounding boxes with this object name in the collection.
+	Count *int64 `json:"count,omitempty"`
+}
+
+// ObjectMetadataList : List of objects.
+type ObjectMetadataList struct {
+
+	// Number of unique named objects in the collection.
+	ObjectCount *int64 `json:"object_count" validate:"required"`
+
+	// The objects in the collection.
+	Objects []ObjectMetadata `json:"objects,omitempty"`
 }
 
 // ObjectTrainingStatus : Training status for the objects in the collection.
@@ -1955,6 +2286,77 @@ func (options *UpdateCollectionOptions) SetDescription(description string) *Upda
 
 // SetHeaders : Allow user to set Headers
 func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *UpdateCollectionOptions {
+	options.Headers = param
+	return options
+}
+
+// UpdateObjectMetadata : Basic information about an updated object.
+type UpdateObjectMetadata struct {
+
+	// The updated name of the object. The name can contain alphanumeric, underscore, hyphen, space, and dot characters. It
+	// cannot begin with the reserved prefix `sys-`.
+	Object *string `json:"object" validate:"required"`
+
+	// Number of bounding boxes in the collection with the updated object name.
+	Count *int64 `json:"count" validate:"required"`
+}
+
+// NewUpdateObjectMetadata : Instantiate UpdateObjectMetadata (Generic Model Constructor)
+func (visualRecognition *VisualRecognitionV4) NewUpdateObjectMetadata(object string, count int64) (model *UpdateObjectMetadata, err error) {
+	model = &UpdateObjectMetadata{
+		Object: core.StringPtr(object),
+		Count:  core.Int64Ptr(count),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
+// UpdateObjectMetadataOptions : The UpdateObjectMetadata options.
+type UpdateObjectMetadataOptions struct {
+
+	// The identifier of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// The name of the object.
+	Object *string `json:"object" validate:"required"`
+
+	// The updated name of the object. The name can contain alphanumeric, underscore, hyphen, space, and dot characters. It
+	// cannot begin with the reserved prefix `sys-`.
+	NewObject *string `json:"new_object" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewUpdateObjectMetadataOptions : Instantiate UpdateObjectMetadataOptions
+func (visualRecognition *VisualRecognitionV4) NewUpdateObjectMetadataOptions(collectionID string, object string, newObject string) *UpdateObjectMetadataOptions {
+	return &UpdateObjectMetadataOptions{
+		CollectionID: core.StringPtr(collectionID),
+		Object:       core.StringPtr(object),
+		NewObject:    core.StringPtr(newObject),
+	}
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *UpdateObjectMetadataOptions) SetCollectionID(collectionID string) *UpdateObjectMetadataOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetObject : Allow user to set Object
+func (options *UpdateObjectMetadataOptions) SetObject(object string) *UpdateObjectMetadataOptions {
+	options.Object = core.StringPtr(object)
+	return options
+}
+
+// SetNewObject : Allow user to set NewObject
+func (options *UpdateObjectMetadataOptions) SetNewObject(newObject string) *UpdateObjectMetadataOptions {
+	options.NewObject = core.StringPtr(newObject)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateObjectMetadataOptions) SetHeaders(param map[string]string) *UpdateObjectMetadataOptions {
 	options.Headers = param
 	return options
 }

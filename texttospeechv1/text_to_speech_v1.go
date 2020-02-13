@@ -19,9 +19,10 @@ package texttospeechv1
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // TextToSpeechV1 : The IBM&reg; Text to Speech service provides APIs that use IBM's speech-synthesis capabilities to
@@ -41,7 +42,7 @@ import (
 // Phonetic Representation (SPR).
 //
 // Version: 1.0.0
-// See: https://cloud.ibm.com/docs/services/text-to-speech/
+// See: https://cloud.ibm.com/docs/text-to-speech/
 type TextToSpeechV1 struct {
 	Service *core.BaseService
 }
@@ -116,7 +117,7 @@ func (textToSpeech *TextToSpeechV1) DisableSSLVerification() {
 // details about the voice. To see information about a specific voice, use the **Get a voice** method.
 //
 // **See also:** [Listing all available
-// voices](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoices).
+// voices](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoices).
 func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOptions) (result *Voices, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listVoicesOptions, "listVoicesOptions")
 	if err != nil {
@@ -166,7 +167,7 @@ func (textToSpeech *TextToSpeechV1) ListVoices(listVoicesOptions *ListVoicesOpti
 // language of the specified voice. To list information about all available voices, use the **List voices** method.
 //
 // **See also:** [Listing a specific
-// voice](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoice).
+// voice](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoice).
 func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (result *Voice, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getVoiceOptions, "getVoiceOptions cannot be nil")
 	if err != nil {
@@ -227,7 +228,7 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 // bytes.
 //
 // **See also:** [The HTTP
-// interface](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingHTTP#usingHTTP).
+// interface](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-usingHTTP#usingHTTP).
 //
 // ### Audio formats (accept types)
 //
@@ -263,7 +264,7 @@ func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (
 // 22,050 Hz.
 //
 // For more information about specifying an audio format, including additional details about some of the formats, see
-// [Audio formats](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
+// [Audio formats](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
 //
 // ### Warning messages
 //
@@ -347,7 +348,7 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 // languages.
 //
 // **See also:** [Querying a word from a
-// language](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
+// language](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
 func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (result *Pronunciation, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getPronunciationOptions, "getPronunciationOptions cannot be nil")
 	if err != nil {
@@ -415,7 +416,7 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 // Arabic, Chinese, and Dutch languages.
 //
 // **See also:** [Creating a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
 func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *CreateVoiceModelOptions) (result *VoiceModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createVoiceModelOptions, "createVoiceModelOptions cannot be nil")
 	if err != nil {
@@ -488,7 +489,7 @@ func (textToSpeech *TextToSpeechV1) CreateVoiceModel(createVoiceModelOptions *Cr
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying all custom
-// models](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
+// models](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
 func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *ListVoiceModelsOptions) (result *VoiceModels, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listVoiceModelsOptions, "listVoiceModelsOptions")
 	if err != nil {
@@ -556,11 +557,11 @@ func (textToSpeech *TextToSpeechV1) ListVoiceModels(listVoiceModelsOptions *List
 //
 // **See also:**
 // * [Updating a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsUpdate)
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsUpdate)
 // * [Adding words to a Japanese custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
 // * [Understanding
-// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
+// customization](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customIntro#customIntro).
 func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *UpdateVoiceModelOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateVoiceModelOptions, "updateVoiceModelOptions cannot be nil")
 	if err != nil {
@@ -625,7 +626,7 @@ func (textToSpeech *TextToSpeechV1) UpdateVoiceModel(updateVoiceModelOptions *Up
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
 func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoiceModelOptions) (result *VoiceModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getVoiceModelOptions, "getVoiceModelOptions cannot be nil")
 	if err != nil {
@@ -680,7 +681,7 @@ func (textToSpeech *TextToSpeechV1) GetVoiceModel(getVoiceModelOptions *GetVoice
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Deleting a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsDelete).
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsDelete).
 func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *DeleteVoiceModelOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteVoiceModelOptions, "deleteVoiceModelOptions cannot be nil")
 	if err != nil {
@@ -739,11 +740,11 @@ func (textToSpeech *TextToSpeechV1) DeleteVoiceModel(deleteVoiceModelOptions *De
 //
 // **See also:**
 // * [Adding multiple words to a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsAdd)
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsAdd)
 // * [Adding words to a Japanese custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
 // * [Understanding
-// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
+// customization](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customIntro#customIntro).
 func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil")
 	if err != nil {
@@ -802,7 +803,7 @@ func (textToSpeech *TextToSpeechV1) AddWords(addWordsOptions *AddWordsOptions) (
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying all words from a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryModel).
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryModel).
 func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions) (result *Words, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil")
 	if err != nil {
@@ -869,11 +870,11 @@ func (textToSpeech *TextToSpeechV1) ListWords(listWordsOptions *ListWordsOptions
 //
 // **See also:**
 // * [Adding a single word to a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordAdd)
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordAdd)
 // * [Adding words to a Japanese custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
 // * [Understanding
-// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
+// customization](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customIntro#customIntro).
 func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil")
 	if err != nil {
@@ -933,7 +934,7 @@ func (textToSpeech *TextToSpeechV1) AddWord(addWordOptions *AddWordOptions) (res
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying a single word from a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordQueryModel).
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordQueryModel).
 func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (result *Translation, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil")
 	if err != nil {
@@ -988,7 +989,7 @@ func (textToSpeech *TextToSpeechV1) GetWord(getWordOptions *GetWordOptions) (res
 // **Note:** This method is currently a beta release.
 //
 // **See also:** [Deleting a word from a custom
-// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordDelete).
+// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordDelete).
 func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil")
 	if err != nil {
@@ -1036,7 +1037,7 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
 //
 // **See also:** [Information
-// security](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-information-security#information-security).
+// security](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-information-security#information-security).
 func (textToSpeech *TextToSpeechV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
 	if err != nil {
@@ -1095,7 +1096,7 @@ type AddWordOptions struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+	// Japanese entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1106,7 +1107,7 @@ type AddWordOptions struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+// Japanese entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
 const (
 	AddWordOptions_PartOfSpeech_Dosi = "Dosi"
 	AddWordOptions_PartOfSpeech_Fuku = "Fuku"
@@ -1841,7 +1842,7 @@ type Translation struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+	// Japanese entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 }
 
@@ -1849,7 +1850,7 @@ type Translation struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+// Japanese entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
 const (
 	Translation_PartOfSpeech_Dosi = "Dosi"
 	Translation_PartOfSpeech_Fuku = "Fuku"
@@ -2032,7 +2033,7 @@ type Word struct {
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
-	// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+	// Japanese entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 }
 
@@ -2040,7 +2041,7 @@ type Word struct {
 // **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 // the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 // create multiple entries with different parts of speech for the same word. For more information, see [Working with
-// Japanese entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+// Japanese entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
 const (
 	Word_PartOfSpeech_Dosi = "Dosi"
 	Word_PartOfSpeech_Fuku = "Fuku"

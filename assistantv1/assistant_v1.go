@@ -30,7 +30,7 @@ import (
 // The Assistant v1 API provides authoring methods your application can use to create or update a workspace.
 //
 // Version: 1.0
-// See: https://cloud.ibm.com/docs/services/assistant/
+// See: https://cloud.ibm.com/docs/assistant/
 type AssistantV1 struct {
 	Service *core.BaseService
 	Version string
@@ -82,7 +82,7 @@ func NewAssistantV1(options *AssistantV1Options) (service *AssistantV1, err erro
 		err = baseService.SetServiceURL(options.URL)
 		if err != nil {
 			return
-		}	
+		}
 	}
 
 	service = &AssistantV1{
@@ -108,7 +108,7 @@ func (assistant *AssistantV1) DisableSSLVerification() {
 //
 // **Important:** This method has been superseded by the new v2 runtime API. The v2 API offers significant advantages,
 // including ease of deployment, automatic state management, versioning, and search capabilities. For more information,
-// see the [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-api-overview).
+// see the [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-api-overview).
 //
 // There is no rate limit for this operation.
 func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (result *MessageResponse, response *core.DetailedResponse, err error) {
@@ -280,6 +280,10 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if createWorkspaceOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*createWorkspaceOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -439,6 +443,9 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 
 	if updateWorkspaceOptions.Append != nil {
 		builder.AddQuery("append", fmt.Sprint(*updateWorkspaceOptions.Append))
+	}
+	if updateWorkspaceOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*updateWorkspaceOptions.IncludeAudit))
 	}
 	builder.AddQuery("version", assistant.Version)
 
@@ -649,6 +656,10 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if createIntentOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*createIntentOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -781,6 +792,13 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if updateIntentOptions.Append != nil {
+		builder.AddQuery("append", fmt.Sprint(*updateIntentOptions.Append))
+	}
+	if updateIntentOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*updateIntentOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -962,6 +980,10 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if createExampleOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*createExampleOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -1086,6 +1108,10 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if updateExampleOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*updateExampleOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -1264,6 +1290,10 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if createCounterexampleOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*createCounterexampleOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -1385,6 +1415,10 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if updateCounterexampleOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*updateCounterexampleOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -1564,6 +1598,10 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if createEntityOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*createEntityOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -1702,6 +1740,13 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if updateEntityOptions.Append != nil {
+		builder.AddQuery("append", fmt.Sprint(*updateEntityOptions.Append))
+	}
+	if updateEntityOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*updateEntityOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -1952,6 +1997,10 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if createValueOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*createValueOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -2089,6 +2138,13 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if updateValueOptions.Append != nil {
+		builder.AddQuery("append", fmt.Sprint(*updateValueOptions.Append))
+	}
+	if updateValueOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*updateValueOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -2276,6 +2332,10 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if createSynonymOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*createSynonymOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -2397,6 +2457,10 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if updateSynonymOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*updateSynonymOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -2572,6 +2636,10 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if createDialogNodeOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*createDialogNodeOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -2747,6 +2815,10 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
+
+	if updateDialogNodeOptions.IncludeAudit != nil {
+		builder.AddQuery("include_audit", fmt.Sprint(*updateDialogNodeOptions.IncludeAudit))
+	}
 	builder.AddQuery("version", assistant.Version)
 
 	body := make(map[string]interface{})
@@ -3010,7 +3082,7 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 //
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
-// security](https://cloud.ibm.com/docs/services/assistant?topic=assistant-information-security#information-security).
+// security](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security).
 //
 // This operation is limited to 4 requests per minute. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
@@ -3163,6 +3235,9 @@ type CreateCounterexampleOptions struct {
 	// - It cannot consist of only whitespace characters.
 	Text *string `json:"text" validate:"required"`
 
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -3184,6 +3259,12 @@ func (options *CreateCounterexampleOptions) SetWorkspaceID(workspaceID string) *
 // SetText : Allow user to set Text
 func (options *CreateCounterexampleOptions) SetText(text string) *CreateCounterexampleOptions {
 	options.Text = core.StringPtr(text)
+	return options
+}
+
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *CreateCounterexampleOptions) SetIncludeAudit(includeAudit bool) *CreateCounterexampleOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -3217,7 +3298,7 @@ type CreateDialogNodeOptions struct {
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
@@ -3259,6 +3340,9 @@ type CreateDialogNodeOptions struct {
 
 	// Whether the dialog node should be excluded from disambiguation suggestions.
 	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3441,6 +3525,12 @@ func (options *CreateDialogNodeOptions) SetDisambiguationOptOut(disambiguationOp
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *CreateDialogNodeOptions) SetIncludeAudit(includeAudit bool) *CreateDialogNodeOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateDialogNodeOptions) SetHeaders(param map[string]string) *CreateDialogNodeOptions {
 	options.Headers = param
@@ -3508,6 +3598,9 @@ type CreateEntityOptions struct {
 	// An array of objects describing the entity values.
 	Values []CreateValue `json:"values,omitempty"`
 
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -3556,6 +3649,12 @@ func (options *CreateEntityOptions) SetValues(values []CreateValue) *CreateEntit
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *CreateEntityOptions) SetIncludeAudit(includeAudit bool) *CreateEntityOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateEntityOptions) SetHeaders(param map[string]string) *CreateEntityOptions {
 	options.Headers = param
@@ -3578,6 +3677,9 @@ type CreateExampleOptions struct {
 
 	// An array of contextual entity mentions.
 	Mentions []Mention `json:"mentions,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3613,6 +3715,12 @@ func (options *CreateExampleOptions) SetText(text string) *CreateExampleOptions 
 // SetMentions : Allow user to set Mentions
 func (options *CreateExampleOptions) SetMentions(mentions []Mention) *CreateExampleOptions {
 	options.Mentions = mentions
+	return options
+}
+
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *CreateExampleOptions) SetIncludeAudit(includeAudit bool) *CreateExampleOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -3669,6 +3777,9 @@ type CreateIntentOptions struct {
 	// An array of user input examples for the intent.
 	Examples []Example `json:"examples,omitempty"`
 
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -3705,6 +3816,12 @@ func (options *CreateIntentOptions) SetExamples(examples []Example) *CreateInten
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *CreateIntentOptions) SetIncludeAudit(includeAudit bool) *CreateIntentOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateIntentOptions) SetHeaders(param map[string]string) *CreateIntentOptions {
 	options.Headers = param
@@ -3727,6 +3844,9 @@ type CreateSynonymOptions struct {
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
 	Synonym *string `json:"synonym" validate:"required"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3766,6 +3886,12 @@ func (options *CreateSynonymOptions) SetSynonym(synonym string) *CreateSynonymOp
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *CreateSynonymOptions) SetIncludeAudit(includeAudit bool) *CreateSynonymOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateSynonymOptions) SetHeaders(param map[string]string) *CreateSynonymOptions {
 	options.Headers = param
@@ -3794,7 +3920,7 @@ type CreateValue struct {
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// The timestamp for creation of the object.
@@ -3848,8 +3974,11 @@ type CreateValueOptions struct {
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -3913,6 +4042,12 @@ func (options *CreateValueOptions) SetPatterns(patterns []string) *CreateValueOp
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *CreateValueOptions) SetIncludeAudit(includeAudit bool) *CreateValueOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateValueOptions) SetHeaders(param map[string]string) *CreateValueOptions {
 	options.Headers = param
@@ -3954,6 +4089,9 @@ type CreateWorkspaceOptions struct {
 	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
 	Webhooks []Webhook `json:"webhooks,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -4027,6 +4165,12 @@ func (options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []Coun
 // SetWebhooks : Allow user to set Webhooks
 func (options *CreateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *CreateWorkspaceOptions {
 	options.Webhooks = webhooks
+	return options
+}
+
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *CreateWorkspaceOptions) SetIncludeAudit(includeAudit bool) *CreateWorkspaceOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -4428,7 +4572,7 @@ type DialogNode struct {
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
 	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
@@ -4667,7 +4811,7 @@ func (assistant *AssistantV1) NewDialogNodeNextStep(behavior string) (model *Dia
 }
 
 // DialogNodeOutput : The output of the dialog node. For more information about how to specify dialog node output, see the
-// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
+// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
 type DialogNodeOutput map[string]interface{}
 
 // SetGeneric : Allow user to set Generic
@@ -5664,7 +5808,7 @@ type ListAllLogsOptions struct {
 	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter
 	// query that includes a value for `language`, as well as a value for `request.context.system.assistant_id`,
 	// `workspace_id`, or `request.context.metadata.deployment`. For more information, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
 	Filter *string `json:"filter" validate:"required"`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
@@ -6129,7 +6273,7 @@ type ListLogsOptions struct {
 	Sort *string `json:"sort,omitempty"`
 
 	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
 	Filter *string `json:"filter,omitempty"`
 
 	// The number of records to return in each page of results.
@@ -6884,6 +7028,17 @@ type RuntimeEntity struct {
 
 	// The recognized capture groups for the entity, as defined by the entity pattern.
 	Groups []CaptureGroup `json:"groups,omitempty"`
+
+	// An object containing detailed information about the entity recognized in the user input. This property is included
+	// only if the new system entities are enabled for the workspace.
+	//
+	// For more information about how the new system entities are interpreted, see the
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-beta-system-entities).
+	Interpretation *RuntimeEntityInterpretation `json:"interpretation,omitempty"`
+
+	// An object describing the role played by a system entity that is specifies the beginning or end of a range recognized
+	// in the user input. This property is included only if the new system entities are enabled for the workspace.
+	Role *RuntimeEntityRole `json:"role,omitempty"`
 }
 
 // NewRuntimeEntity : Instantiate RuntimeEntity (Generic Model Constructor)
@@ -6896,6 +7051,139 @@ func (assistant *AssistantV1) NewRuntimeEntity(entity string, location []int64, 
 	err = core.ValidateStruct(model, "required parameters")
 	return
 }
+
+// RuntimeEntityInterpretation : RuntimeEntityInterpretation struct
+type RuntimeEntityInterpretation struct {
+
+	// The calendar used to represent a recognized date (for example, `Gregorian`).
+	CalendarType *string `json:"calendar_type,omitempty"`
+
+	// A unique identifier used to associate a recognized time and date. If the user input contains a date and time that
+	// are mentioned together (for example, `Today at 5`, the same **datetime_link** value is returned for both the
+	// `@sys-date` and `@sys-time` entities).
+	DatetimeLink *string `json:"datetime_link,omitempty"`
+
+	// A locale-specific holiday name (such as `thanksgiving` or `christmas`). This property is included when a `@sys-date`
+	// entity is recognized based on a holiday name in the user input.
+	Festival *string `json:"festival,omitempty"`
+
+	// The precision or duration of a time range specified by a recognized `@sys-time` or `@sys-date` entity.
+	Granularity *string `json:"granularity,omitempty"`
+
+	// A unique identifier used to associate multiple recognized `@sys-date`, `@sys-time`, or `@sys-number` entities that
+	// are recognized as a range of values in the user's input (for example, `from July 4 until July 14` or `from 20 to
+	// 25`).
+	RangeLink *string `json:"range_link,omitempty"`
+
+	// The word in the user input that indicates that a `sys-date` or `sys-time` entity is part of an implied range where
+	// only one date or time is specified (for example, `since` or `until`).
+	RangeModifier *string `json:"range_modifier,omitempty"`
+
+	// A recognized mention of a relative day, represented numerically as an offset from the current date (for example,
+	// `-1` for `yesterday` or `10` for `in ten days`).
+	RelativeDay *float64 `json:"relative_day,omitempty"`
+
+	// A recognized mention of a relative month, represented numerically as an offset from the current month (for example,
+	// `1` for `next month` or `-3` for `three months ago`).
+	RelativeMonth *float64 `json:"relative_month,omitempty"`
+
+	// A recognized mention of a relative week, represented numerically as an offset from the current week (for example,
+	// `2` for `in two weeks` or `-1` for `last week).
+	RelativeWeek *float64 `json:"relative_week,omitempty"`
+
+	// A recognized mention of a relative date range for a weekend, represented numerically as an offset from the current
+	// weekend (for example, `0` for `this weekend` or `-1` for `last weekend`).
+	RelativeWeekend *float64 `json:"relative_weekend,omitempty"`
+
+	// A recognized mention of a relative year, represented numerically as an offset from the current year (for example,
+	// `1` for `next year` or `-5` for `five years ago`).
+	RelativeYear *float64 `json:"relative_year,omitempty"`
+
+	// A recognized mention of a specific date, represented numerically as the date within the month (for example, `30` for
+	// `June 30`.).
+	SpecificDay *float64 `json:"specific_day,omitempty"`
+
+	// A recognized mention of a specific day of the week as a lowercase string (for example, `monday`).
+	SpecificDayOfWeek *string `json:"specific_day_of_week,omitempty"`
+
+	// A recognized mention of a specific month, represented numerically (for example, `7` for `July`).
+	SpecificMonth *float64 `json:"specific_month,omitempty"`
+
+	// A recognized mention of a specific quarter, represented numerically (for example, `3` for `the third quarter`).
+	SpecificQuarter *float64 `json:"specific_quarter,omitempty"`
+
+	// A recognized mention of a specific year (for example, `2016`).
+	SpecificYear *float64 `json:"specific_year,omitempty"`
+
+	// A recognized numeric value, represented as an integer or double.
+	NumericValue *float64 `json:"numeric_value,omitempty"`
+
+	// The type of numeric value recognized in the user input (`integer` or `rational`).
+	Subtype *string `json:"subtype,omitempty"`
+
+	// A recognized term for a time that was mentioned as a part of the day in the user's input (for example, `morning` or
+	// `afternoon`).
+	PartOfDay *string `json:"part_of_day,omitempty"`
+
+	// A recognized mention of a relative hour, represented numerically as an offset from the current hour (for example,
+	// `3` for `in three hours` or `-1` for `an hour ago`).
+	RelativeHour *float64 `json:"relative_hour,omitempty"`
+
+	// A recognized mention of a relative time, represented numerically as an offset in minutes from the current time (for
+	// example, `5` for `in five minutes` or `-15` for `fifteen minutes ago`).
+	RelativeMinute *float64 `json:"relative_minute,omitempty"`
+
+	// A recognized mention of a relative time, represented numerically as an offset in seconds from the current time (for
+	// example, `10` for `in ten seconds` or `-30` for `thirty seconds ago`).
+	RelativeSecond *float64 `json:"relative_second,omitempty"`
+
+	// A recognized specific hour mentioned as part of a time value (for example, `10` for `10:15 AM`.).
+	SpecificHour *float64 `json:"specific_hour,omitempty"`
+
+	// A recognized specific minute mentioned as part of a time value (for example, `15` for `10:15 AM`.).
+	SpecificMinute *float64 `json:"specific_minute,omitempty"`
+
+	// A recognized specific second mentioned as part of a time value (for example, `30` for `10:15:30 AM`.).
+	SpecificSecond *float64 `json:"specific_second,omitempty"`
+
+	// A recognized time zone mentioned as part of a time value (for example, `EST`).
+	Timezone *string `json:"timezone,omitempty"`
+}
+
+// Constants associated with the RuntimeEntityInterpretation.Granularity property.
+// The precision or duration of a time range specified by a recognized `@sys-time` or `@sys-date` entity.
+const (
+	RuntimeEntityInterpretation_Granularity_Day       = "day"
+	RuntimeEntityInterpretation_Granularity_Fortnight = "fortnight"
+	RuntimeEntityInterpretation_Granularity_Hour      = "hour"
+	RuntimeEntityInterpretation_Granularity_Instant   = "instant"
+	RuntimeEntityInterpretation_Granularity_Minute    = "minute"
+	RuntimeEntityInterpretation_Granularity_Month     = "month"
+	RuntimeEntityInterpretation_Granularity_Quarter   = "quarter"
+	RuntimeEntityInterpretation_Granularity_Second    = "second"
+	RuntimeEntityInterpretation_Granularity_Week      = "week"
+	RuntimeEntityInterpretation_Granularity_Weekend   = "weekend"
+	RuntimeEntityInterpretation_Granularity_Year      = "year"
+)
+
+// RuntimeEntityRole : An object describing the role played by a system entity that is specifies the beginning or end of a range recognized
+// in the user input. This property is included only if the new system entities are enabled for the workspace.
+type RuntimeEntityRole struct {
+
+	// The relationship of the entity to the range.
+	Type *string `json:"type,omitempty"`
+}
+
+// Constants associated with the RuntimeEntityRole.Type property.
+// The relationship of the entity to the range.
+const (
+	RuntimeEntityRole_Type_DateFrom   = "date_from"
+	RuntimeEntityRole_Type_DateTo     = "date_to"
+	RuntimeEntityRole_Type_NumberFrom = "number_from"
+	RuntimeEntityRole_Type_NumberTo   = "number_to"
+	RuntimeEntityRole_Type_TimeFrom   = "time_from"
+	RuntimeEntityRole_Type_TimeTo     = "time_to"
+)
 
 // RuntimeIntent : An intent identified in the user input.
 type RuntimeIntent struct {
@@ -7060,6 +7348,9 @@ type UpdateCounterexampleOptions struct {
 	// - It cannot consist of only whitespace characters.
 	NewText *string `json:"new_text,omitempty"`
 
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
+
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
@@ -7087,6 +7378,12 @@ func (options *UpdateCounterexampleOptions) SetText(text string) *UpdateCountere
 // SetNewText : Allow user to set NewText
 func (options *UpdateCounterexampleOptions) SetNewText(newText string) *UpdateCounterexampleOptions {
 	options.NewText = core.StringPtr(newText)
+	return options
+}
+
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *UpdateCounterexampleOptions) SetIncludeAudit(includeAudit bool) *UpdateCounterexampleOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
 	return options
 }
 
@@ -7123,7 +7420,7 @@ type UpdateDialogNodeOptions struct {
 	NewPreviousSibling *string `json:"new_previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
 	NewOutput *DialogNodeOutput `json:"new_output,omitempty"`
 
 	// The context for the dialog node.
@@ -7165,6 +7462,9 @@ type UpdateDialogNodeOptions struct {
 
 	// Whether the dialog node should be excluded from disambiguation suggestions.
 	NewDisambiguationOptOut *bool `json:"new_disambiguation_opt_out,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -7353,6 +7653,12 @@ func (options *UpdateDialogNodeOptions) SetNewDisambiguationOptOut(newDisambigua
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *UpdateDialogNodeOptions) SetIncludeAudit(includeAudit bool) *UpdateDialogNodeOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *UpdateDialogNodeOptions) SetHeaders(param map[string]string) *UpdateDialogNodeOptions {
 	options.Headers = param
@@ -7384,6 +7690,18 @@ type UpdateEntityOptions struct {
 
 	// An array of objects describing the entity values.
 	NewValues []CreateValue `json:"new_values,omitempty"`
+
+	// Whether the new data is to be appended to the existing data in the entity. If **append**=`false`, elements included
+	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
+	// the new data for the entity includes **values** and **append**=`false`, all existing values for the entity are
+	// discarded and replaced with the new values.
+	//
+	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
+	// data collide with existing elements, the update request fails.
+	Append *bool `json:"append,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -7439,6 +7757,18 @@ func (options *UpdateEntityOptions) SetNewValues(newValues []CreateValue) *Updat
 	return options
 }
 
+// SetAppend : Allow user to set Append
+func (options *UpdateEntityOptions) SetAppend(append bool) *UpdateEntityOptions {
+	options.Append = core.BoolPtr(append)
+	return options
+}
+
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *UpdateEntityOptions) SetIncludeAudit(includeAudit bool) *UpdateEntityOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *UpdateEntityOptions) SetHeaders(param map[string]string) *UpdateEntityOptions {
 	options.Headers = param
@@ -7464,6 +7794,9 @@ type UpdateExampleOptions struct {
 
 	// An array of contextual entity mentions.
 	NewMentions []Mention `json:"new_mentions,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -7508,6 +7841,12 @@ func (options *UpdateExampleOptions) SetNewMentions(newMentions []Mention) *Upda
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *UpdateExampleOptions) SetIncludeAudit(includeAudit bool) *UpdateExampleOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *UpdateExampleOptions) SetHeaders(param map[string]string) *UpdateExampleOptions {
 	options.Headers = param
@@ -7533,6 +7872,18 @@ type UpdateIntentOptions struct {
 
 	// An array of user input examples for the intent.
 	NewExamples []Example `json:"new_examples,omitempty"`
+
+	// Whether the new data is to be appended to the existing data in the object. If **append**=`false`, elements included
+	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
+	// the new data for the intent includes **examples** and **append**=`false`, all existing examples for the intent are
+	// discarded and replaced with the new examples.
+	//
+	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
+	// data collide with existing elements, the update request fails.
+	Append *bool `json:"append,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -7576,6 +7927,18 @@ func (options *UpdateIntentOptions) SetNewExamples(newExamples []Example) *Updat
 	return options
 }
 
+// SetAppend : Allow user to set Append
+func (options *UpdateIntentOptions) SetAppend(append bool) *UpdateIntentOptions {
+	options.Append = core.BoolPtr(append)
+	return options
+}
+
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *UpdateIntentOptions) SetIncludeAudit(includeAudit bool) *UpdateIntentOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *UpdateIntentOptions) SetHeaders(param map[string]string) *UpdateIntentOptions {
 	options.Headers = param
@@ -7601,6 +7964,9 @@ type UpdateSynonymOptions struct {
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
 	NewSynonym *string `json:"new_synonym,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -7646,6 +8012,12 @@ func (options *UpdateSynonymOptions) SetNewSynonym(newSynonym string) *UpdateSyn
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *UpdateSynonymOptions) SetIncludeAudit(includeAudit bool) *UpdateSynonymOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *UpdateSynonymOptions) SetHeaders(param map[string]string) *UpdateSynonymOptions {
 	options.Headers = param
@@ -7683,8 +8055,20 @@ type UpdateValueOptions struct {
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
 	NewPatterns []string `json:"new_patterns,omitempty"`
+
+	// Whether the new data is to be appended to the existing data in the entity value. If **append**=`false`, elements
+	// included in the new data completely replace the corresponding existing elements, including all subelements. For
+	// example, if the new data for the entity value includes **synonyms** and **append**=`false`, all existing synonyms
+	// for the entity value are discarded and replaced with the new synonyms.
+	//
+	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
+	// data collide with existing elements, the update request fails.
+	Append *bool `json:"append,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -7754,6 +8138,18 @@ func (options *UpdateValueOptions) SetNewPatterns(newPatterns []string) *UpdateV
 	return options
 }
 
+// SetAppend : Allow user to set Append
+func (options *UpdateValueOptions) SetAppend(append bool) *UpdateValueOptions {
+	options.Append = core.BoolPtr(append)
+	return options
+}
+
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *UpdateValueOptions) SetIncludeAudit(includeAudit bool) *UpdateValueOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *UpdateValueOptions) SetHeaders(param map[string]string) *UpdateValueOptions {
 	options.Headers = param
@@ -7799,14 +8195,17 @@ type UpdateWorkspaceOptions struct {
 
 	Webhooks []Webhook `json:"webhooks,omitempty"`
 
-	// Whether the new data is to be appended to the existing data in the workspace. If **append**=`false`, elements
-	// included in the new data completely replace the corresponding existing elements, including all subelements. For
-	// example, if the new data includes **entities** and **append**=`false`, all existing entities in the workspace are
-	// discarded and replaced with the new entities.
+	// Whether the new data is to be appended to the existing data in the object. If **append**=`false`, elements included
+	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
+	// the new data for a workspace includes **entities** and **append**=`false`, all existing entities in the workspace
+	// are discarded and replaced with the new entities.
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
 	Append *bool `json:"append,omitempty"`
+
+	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
+	IncludeAudit *bool `json:"include_audit,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -7897,6 +8296,12 @@ func (options *UpdateWorkspaceOptions) SetAppend(append bool) *UpdateWorkspaceOp
 	return options
 }
 
+// SetIncludeAudit : Allow user to set IncludeAudit
+func (options *UpdateWorkspaceOptions) SetIncludeAudit(includeAudit bool) *UpdateWorkspaceOptions {
+	options.IncludeAudit = core.BoolPtr(includeAudit)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *UpdateWorkspaceOptions) SetHeaders(param map[string]string) *UpdateWorkspaceOptions {
 	options.Headers = param
@@ -7925,7 +8330,7 @@ type Value struct {
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
-	// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
 	Patterns []string `json:"patterns,omitempty"`
 
 	// The timestamp for creation of the object.
@@ -8080,6 +8485,9 @@ type WorkspaceSystemSettings struct {
 	// For internal use only.
 	HumanAgentAssist map[string]interface{} `json:"human_agent_assist,omitempty"`
 
+	// Workspace settings related to the behavior of system entities.
+	SystemEntities *WorkspaceSystemSettingsSystemEntities `json:"system_entities,omitempty"`
+
 	// Workspace settings related to detection of irrelevant input.
 	OffTopic *WorkspaceSystemSettingsOffTopic `json:"off_topic,omitempty"`
 }
@@ -8126,6 +8534,13 @@ const (
 type WorkspaceSystemSettingsOffTopic struct {
 
 	// Whether enhanced irrelevance detection is enabled for the workspace.
+	Enabled *bool `json:"enabled,omitempty"`
+}
+
+// WorkspaceSystemSettingsSystemEntities : Workspace settings related to the behavior of system entities.
+type WorkspaceSystemSettingsSystemEntities struct {
+
+	// Whether the new system entities are enabled for the workspace.
 	Enabled *bool `json:"enabled,omitempty"`
 }
 

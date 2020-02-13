@@ -30,7 +30,7 @@ import (
 // predefined classes to example texts so that the service can apply those classes to new inputs.
 //
 // Version: 1.0
-// See: https://cloud.ibm.com/docs/services/natural-language-classifier/
+// See: https://cloud.ibm.com/docs/natural-language-classifier/
 type NaturalLanguageClassifierV1 struct {
 	Service *core.BaseService
 }
@@ -615,7 +615,7 @@ type CreateClassifierOptions struct {
 
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
-	// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier?topic=natural-language-classifier-using-your-data).
+	// preparation](https://cloud.ibm.com/docs/natural-language-classifier?topic=natural-language-classifier-using-your-data).
 	TrainingData io.ReadCloser `json:"training_data" validate:"required"`
 
 	// Allows users to set headers to be GDPR compliant

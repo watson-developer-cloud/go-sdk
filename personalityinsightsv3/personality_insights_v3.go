@@ -33,17 +33,15 @@ import (
 // personality characteristics. The service can infer consumption preferences based on the results of its analysis and,
 // for JSON content that is timestamped, can report temporal behavior.
 // * For information about the meaning of the models that the service uses to describe personality characteristics, see
-// [Personality
-// models](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-models#models).
+// [Personality models](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-models#models).
 // * For information about the meaning of the consumption preferences, see [Consumption
-// preferences](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-preferences#preferences).
-//
+// preferences](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-preferences#preferences).
 //
 // **Note:** Request logging is disabled for the Personality Insights service. Regardless of whether you set the
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
 // Version: 3.4.4
-// See: https://cloud.ibm.com/docs/services/personality-insights/
+// See: https://cloud.ibm.com/docs/personality-insights/
 type PersonalityInsightsV3 struct {
 	Service *core.BaseService
 	Version string
@@ -122,10 +120,9 @@ func (personalityInsights *PersonalityInsightsV3) DisableSSLVerification() {
 // English, Japanese, Korean, or Spanish. It can return its results in a variety of languages.
 //
 // **See also:**
-// * [Requesting a
-// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#input)
+// * [Requesting a profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#input)
 // * [Providing sufficient
-// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient)
+// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient)
 //
 // ### Content types
 //
@@ -139,7 +136,7 @@ func (personalityInsights *PersonalityInsightsV3) DisableSSLVerification() {
 // encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
 //
 // **See also:** [Specifying request and response
-// formats](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#formats)
+// formats](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#formats)
 //
 // ### Accept types
 //
@@ -149,9 +146,9 @@ func (personalityInsights *PersonalityInsightsV3) DisableSSLVerification() {
 //
 // **See also:**
 // * [Understanding a JSON
-// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-output#output)
+// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-output#output)
 // * [Understanding a CSV
-// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-outputCSV#outputCSV).
+// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-outputCSV#outputCSV).
 func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (result *Profile, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(profileOptions, "profileOptions cannot be nil")
 	if err != nil {
@@ -230,10 +227,9 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 // English, Japanese, Korean, or Spanish. It can return its results in a variety of languages.
 //
 // **See also:**
-// * [Requesting a
-// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#input)
+// * [Requesting a profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#input)
 // * [Providing sufficient
-// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient)
+// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient)
 //
 // ### Content types
 //
@@ -247,7 +243,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 // encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
 //
 // **See also:** [Specifying request and response
-// formats](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#formats)
+// formats](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#formats)
 //
 // ### Accept types
 //
@@ -257,9 +253,9 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 //
 // **See also:**
 // * [Understanding a JSON
-// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-output#output)
+// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-output#output)
 // * [Understanding a CSV
-// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-outputCSV#outputCSV).
+// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-outputCSV#outputCSV).
 func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(profileOptions, "profileOptions cannot be nil")
 	if err != nil {
@@ -526,14 +522,14 @@ type ProfileOptions struct {
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
 	// [Providing sufficient
-	// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient). For
-	// JSON input, provide an object of type `Content`.
+	// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For JSON input,
+	// provide an object of type `Content`.
 	Content *Content `json:"content,omitempty"`
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
 	// [Providing sufficient
-	// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient). For
-	// JSON input, provide an object of type `Content`.
+	// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For JSON input,
+	// provide an object of type `Content`.
 	Body *string `json:"body,omitempty"`
 
 	// The type of the input. For more information, see **Content types** in the method description.
