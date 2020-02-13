@@ -1,3 +1,14 @@
+# [1.4.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.3.2...v1.4.0) (2020-02-13)
+
+
+### Features
+
+* **assistantv1:** New param `IncludeAudit` following options ([23c7652](https://github.com/watson-developer-cloud/go-sdk/commit/23c765204e81cdfcf3a36073b6615aa0e8c44244))
+* **assistantv1:** New params `Interpretation` and `Role` in `RuntimeEntity` ([9d375d7](https://github.com/watson-developer-cloud/go-sdk/commit/9d375d7550b555242b17fbaf945220245a628716))
+* **assistantv2:** New params `Interpretation`, `Alternatives` and `Role` in `RuntimeEntity` ([e82ca09](https://github.com/watson-developer-cloud/go-sdk/commit/e82ca093e8285801b2066fe7e89459a7cd5a5147))
+* **assistantv2:** New params `Locale` and `ReferenceTime` in `MessageContextGlobalSystem` ([bcd5e9a](https://github.com/watson-developer-cloud/go-sdk/commit/bcd5e9a65c6b402aef5f2b00afd7e2f5403c3eff))
+* **vr4:** New object operations ([3f87c56](https://github.com/watson-developer-cloud/go-sdk/commit/3f87c560e1f8b04f95d1bcae9769789ed6c0e45a))
+
 ## [1.3.2](https://github.com/watson-developer-cloud/go-sdk/compare/v1.3.1...v1.3.2) (2020-01-24)
 
 
