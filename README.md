@@ -40,7 +40,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 Get SDK package:
 ```bash
-go get -u github.com/watson-developer-cloud/go-sdk@v1.3.2
+go get -u github.com/watson-developer-cloud/go-sdk@v1.4.0
 ```
 
 Note: For the latest tag release, look into [examples][examples] folder for basic and advanced examples.
