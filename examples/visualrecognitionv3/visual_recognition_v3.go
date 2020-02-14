@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v3/core"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
 )
 

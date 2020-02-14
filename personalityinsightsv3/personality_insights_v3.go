@@ -19,7 +19,7 @@ package personalityinsightsv3
 
 import (
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v3/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 )

@@ -18,7 +18,7 @@ package toneanalyzerv3_test
 
 import (
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v3/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"

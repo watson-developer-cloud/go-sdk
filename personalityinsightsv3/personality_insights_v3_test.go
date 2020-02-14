@@ -24,7 +24,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	core "github.com/IBM/go-sdk-core/core"
+	core "github.com/IBM/go-sdk-core/v3/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
