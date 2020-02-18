@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/watson-developer-cloud/go-sdk/compare/v1.4.0...v1.4.1) (2020-02-18)
+
+
+### Bug Fixes
+
+* use go-sdk-core v2.1.1 ([d250f84](https://github.com/watson-developer-cloud/go-sdk/commit/d250f8480c2de3084f0c950c8cf7cc0fe25aba14))
+
 # [1.4.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.3.2...v1.4.0) (2020-02-13)
 
 
