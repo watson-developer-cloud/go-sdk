@@ -403,6 +403,10 @@ Run a specific test suite:
 go test ./assistantv1
 ```
 
+## Questions
+
+If you have issues with the APIs or have a question about the Watson services, see [Stack Overflow](https://stackoverflow.com/questions/tagged/ibm-watson+go).
+
 ## Migrating
 * To move from `v0.11.0` to `v1.0.0`, refer to the [MIGRATION-V1](https://github.com/watson-developer-cloud/go-sdk/blob/master/MIGRATION-V1.md)
 
