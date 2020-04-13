@@ -5,7 +5,8 @@ credentials.txt
 *.coverprofile
 node_modules/
 .project
-.env
+*.env
+*.log
 
 # ignore vendor/
 vendor/
@@ -13,3 +14,5 @@ vendor/
 # ignore detect secrets files
 .pre-commit-config.yaml
 .secrets.baseline
+.openapi-generator-ignore
+.openapi-generator/
