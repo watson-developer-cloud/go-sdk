@@ -251,8 +251,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				pwd, _ := os.Getwd()
-				file, err := os.Open(pwd + "/../resources/language_translator_model.tmx")
+				file, err := os.Open("../resources/language_translator_model.tmx")
 				Expect(err).To(BeNil())
 				defer file.Close()
 
@@ -442,10 +441,10 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				pwd, _ := os.Getwd()
-				file, err := os.Open(pwd + "/../resources/hello_world.txt")
+				file, err := os.Open("../resources/hello_world.txt")
 				Expect(err).To(BeNil())
 				defer file.Close()
+
 				translateDocumentOptions := testService.NewTranslateDocumentOptions(file, filename)
 				result, response, operationErr = testService.TranslateDocument(translateDocumentOptions)
 				Expect(operationErr).To(BeNil())
