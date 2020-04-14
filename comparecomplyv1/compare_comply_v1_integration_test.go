@@ -47,9 +47,9 @@ func TestLoadConfig(t *testing.T) {
 	err := godotenv.Load(configFile)
 	if err != nil {
 		t.Skip(skipMessage)
+	} else {
+		configLoaded = true
 	}
-
-	configLoaded = true
 }
 
 func TestConstructService(t *testing.T) {
