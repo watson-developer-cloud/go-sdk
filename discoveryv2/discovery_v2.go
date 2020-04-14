@@ -32,7 +32,7 @@ import (
 // query language to eliminate the need for manual filtering of results.
 //
 // Version: 2.0
-// See: https://cloud.ibm.com/docs/services/discovery-data/
+// See: https://cloud.ibm.com/docs/discovery-data/
 type DiscoveryV2 struct {
 	Service *core.BaseService
 	Version string
@@ -157,7 +157,7 @@ func (discovery *DiscoveryV2) ListCollections(listCollectionsOptions *ListCollec
 
 // Query : Query a project
 // By using this method, you can construct queries. For details, see the [Discovery
-// documentation](https://cloud.ibm.com/docs/services/discovery-data?topic=discovery-data-query-concepts).
+// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-query-concepts).
 func (discovery *DiscoveryV2) Query(queryOptions *QueryOptions) (result *QueryResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(queryOptions, "queryOptions cannot be nil")
 	if err != nil {
@@ -2755,6 +2755,9 @@ type QueryHistogramAggregation struct {
 	// The size of the sections the results are split into.
 	Interval *int64 `json:"interval" validate:"required"`
 
+	// Identifier specified in the query request of this aggregation.
+	Name *string `json:"name,omitempty"`
+
 	// Array of numeric intervals.
 	Results []QueryHistogramAggregationResult `json:"results,omitempty"`
 }
@@ -2782,6 +2785,9 @@ type QueryTermAggregation struct {
 	// The number of top values returned.
 	Count *int64 `json:"count,omitempty"`
 
+	// Identifier specified in the query request of this aggregation.
+	Name *string `json:"name,omitempty"`
+
 	// Array of top values for the field.
 	Results []QueryTermAggregationResult `json:"results,omitempty"`
 }
@@ -2795,6 +2801,9 @@ type QueryTimesliceAggregation struct {
 	// The date interval value. Valid values are seconds, minutes, hours, days, weeks, and years.
 	Interval *string `json:"interval" validate:"required"`
 
+	// Identifier specified in the query request of this aggregation.
+	Name *string `json:"name,omitempty"`
+
 	// Array of aggregation results.
 	Results []QueryTimesliceAggregationResult `json:"results,omitempty"`
 }
@@ -2804,6 +2813,9 @@ type QueryTopHitsAggregation struct {
 
 	// The number of documents to return.
 	Size *int64 `json:"size" validate:"required"`
+
+	// Identifier specified in the query request of this aggregation.
+	Name *string `json:"name,omitempty"`
 
 	Hits *QueryTopHitsAggregationResult `json:"hits,omitempty"`
 }
