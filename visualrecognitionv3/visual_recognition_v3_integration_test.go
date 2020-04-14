@@ -3,7 +3,7 @@
 package visualrecognitionv3_test
 
 /**
- * (C) Copyright IBM Corp. 2018, 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,30 +30,46 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *visualrecognitionv3.VisualRecognitionV3
-var serviceErr error
 
-func init() {
-	err := godotenv.Load("../.env")
-
-	if err == nil {
-		service, serviceErr = visualrecognitionv3.
-			NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				Version: "2018-03-19",
-			})
-
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
+func shouldSkipTest(t *testing.T) {
+	if !configLoaded {
+		t.Skip(skipMessage)
 	}
 }
 
-func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	} else {
+		configLoaded = true
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = visualrecognitionv3.NewVisualRecognitionV3(
+		&visualrecognitionv3.VisualRecognitionV3Options{
+			Version:     "2018-03-19",
+			ServiceName: "visual_recognition",
+		})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+
+	if err == nil {
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
 	}
 }
 
@@ -61,8 +77,7 @@ func TestClassify(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Classify
-	pwd, _ := os.Getwd()
-	imageFile, imageFileErr := os.Open(pwd + "/../resources/kitty.jpg")
+	imageFile, imageFileErr := os.Open("../resources/kitty.jpg")
 	assert.Nil(t, imageFileErr)
 	defer imageFile.Close()
 
@@ -80,14 +95,12 @@ func TestClassify(t *testing.T) {
 func TestClassifiers(t *testing.T) {
 	shouldSkipTest(t)
 
-	pwd, _ := os.Getwd()
-
 	// Create classifier
-	carsFile, carsFileErr := os.Open(pwd + "/../resources/cars.zip")
+	carsFile, carsFileErr := os.Open("../resources/cars.zip")
 	assert.Nil(t, carsFileErr)
 	defer carsFile.Close()
 
-	trucksFile, trucksFileErr := os.Open(pwd + "/../resources/trucks.zip")
+	trucksFile, trucksFileErr := os.Open("../resources/trucks.zip")
 	assert.Nil(t, trucksFileErr)
 	defer trucksFile.Close()
 
