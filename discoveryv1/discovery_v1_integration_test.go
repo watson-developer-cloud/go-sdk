@@ -30,34 +30,52 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/discoveryv1"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *discoveryv1.DiscoveryV1
-var serviceErr error
 var environmentID *string
 var configurationID *string
 var collectionID *string
 
-func init() {
-	err := godotenv.Load("../.env")
-
-	if err == nil {
-		service, serviceErr = discoveryv1.
-			NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: "2018-03-05",
-			})
-		environmentID = core.StringPtr(os.Getenv("DISCOVERY_ENVIRONMENT_ID"))
-
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
+func shouldSkipTest(t *testing.T) {
+	if !configLoaded {
+		t.Skip(skipMessage)
 	}
 }
 
-func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	}
+
+	s := os.Getenv("DISCOVERY_ENVIRONMENT_ID")
+	assert.NotEmpty(t, s)
+	if s != "" {
+		configLoaded = true
+		environmentID = &s
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+		Version: "2019-04-30",
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+
+	if err == nil {
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
 	}
 }
 
@@ -69,10 +87,10 @@ func TestEnvironment(t *testing.T) {
 		&discoveryv1.ListEnvironmentsOptions{},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, listEnvironments)
 
 	t.Skip("Skip rest of environment API tests")
+
 	// Create environment
 	createEnvironment, _, responseErr := service.CreateEnvironment(
 		&discoveryv1.CreateEnvironmentOptions{
@@ -80,9 +98,7 @@ func TestEnvironment(t *testing.T) {
 			Description: core.StringPtr("My environment"),
 		},
 	)
-
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, createEnvironment)
 
 	var newsEnvironmentId *string
@@ -107,7 +123,6 @@ func TestEnvironment(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, getEnvironment)
 
 	// Update environment
@@ -134,7 +149,6 @@ func TestConfiguration(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, createConfiguration)
 
 	// List Configuraion
@@ -144,7 +158,6 @@ func TestConfiguration(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, listConfiguration)
 
 	// Get configuration
@@ -155,7 +168,6 @@ func TestConfiguration(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, getConfiguration)
 
 	// Update configuration
@@ -167,7 +179,6 @@ func TestConfiguration(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, updateConfiguration)
 
 	configurationID = createConfiguration.ConfigurationID
@@ -185,7 +196,6 @@ func TestCollection(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, createCollection)
 
 	// List collection
@@ -195,7 +205,6 @@ func TestCollection(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, listCollection)
 
 	// Get collection
@@ -206,7 +215,6 @@ func TestCollection(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, getCollection)
 
 	// Update collection
@@ -220,7 +228,6 @@ func TestCollection(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, updateCollection)
 
 	// List collection fields
@@ -231,7 +238,6 @@ func TestCollection(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, listCollectionFields)
 
 	// List fields
@@ -242,7 +248,6 @@ func TestCollection(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, listFields)
 
 	collectionID = createCollection.CollectionID
@@ -264,7 +269,6 @@ func TestDocument(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, addDocument)
 
 	// Get document
@@ -276,7 +280,6 @@ func TestDocument(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, getDocument)
 
 	// Update document
@@ -292,7 +295,6 @@ func TestDocument(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, updateDocument)
 
 	// Delete document
@@ -319,7 +321,6 @@ func TestQuery(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, query)
 }
 
@@ -336,7 +337,6 @@ func TestQueryWithTimesliceAggregation(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, query)
 }
 
@@ -353,7 +353,6 @@ func TestTokenizationDictionary(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, testCollection)
 
 	// create tokenization dictionary
@@ -371,7 +370,6 @@ func TestTokenizationDictionary(t *testing.T) {
 			},
 		},
 	)
-
 	assert.NotNil(t, createTokenizationDictionary)
 
 	// get tokenization dictionary status
@@ -381,11 +379,10 @@ func TestTokenizationDictionary(t *testing.T) {
 			CollectionID:  testCollection.CollectionID,
 		},
 	)
-
 	assert.NotNil(t, getTokenizationDictionaryStatus)
 
 	// delete tokenization dictionary
-	_, responseErr = service.DeleteTokenizationDictionary(
+	_, _ = service.DeleteTokenizationDictionary(
 		&discoveryv1.DeleteTokenizationDictionaryOptions{
 			EnvironmentID: environmentID,
 			CollectionID:  testCollection.CollectionID,
@@ -411,7 +408,6 @@ func TestStopwordOperations(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, stopwordsListStatus)
 
 	// Delete stopword list
@@ -435,7 +431,6 @@ func TestGatewayConfiguration(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, createGateway)
 
 	// Get gateway
@@ -446,7 +441,6 @@ func TestGatewayConfiguration(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, getGateway)
 
 	// List gateways
@@ -456,7 +450,6 @@ func TestGatewayConfiguration(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, listGateways)
 
 	// Delete gateway
@@ -467,7 +460,6 @@ func TestGatewayConfiguration(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, deleteGateway)
 }
 
@@ -481,7 +473,6 @@ func TestDeleteOperations(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, listCollection)
 
 	for _, collection := range listCollection.Collections {
@@ -502,7 +493,6 @@ func TestDeleteOperations(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, listConfigurations)
 
 	for _, configuration := range listConfigurations.Configurations {
