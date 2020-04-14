@@ -149,8 +149,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				pwd, _ := os.Getwd()
-				file, err := os.Open(pwd + "/../resources/output.wav")
+				file, err := os.Open("../resources/output.wav")
 				if err != nil {
 					panic(err)
 				}
@@ -283,8 +282,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				pwd, _ := os.Getwd()
-				file, err := os.Open(pwd + "/../resources/output.wav")
+				file, err := os.Open("../resources/output.wav")
 				if err != nil {
 					panic(err)
 				}
@@ -767,8 +765,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		bearerToken := "0ui9876453"
 		customizationID := "exampleString"
 		corpusName := "exampleString"
-		pwd, _ := os.Getwd()
-		corpusFile, corpusErr := os.Open(pwd + "/../resources/corpus-short-1.txt")
+		corpusFile, corpusErr := os.Open("../resources/corpus-short-1.txt")
 		if corpusErr != nil {
 			panic(corpusErr)
 		}
@@ -1161,8 +1158,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		bearerToken := "0ui9876453"
 		customizationID := "exampleString"
 		grammarName := "exampleString"
-		pwd, _ := os.Getwd()
-		grammarFile, grammarFileErr := os.Open(pwd + "/../resources/confirm-grammar.xml")
+		grammarFile, grammarFileErr := os.Open("../resources/confirm-grammar.xml")
 		if grammarFileErr != nil {
 			panic(grammarFileErr)
 		}
@@ -1635,8 +1631,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		bearerToken := "0ui9876453"
 		customizationID := "exampleString"
 		audioName := "exampleString"
-		pwd, _ := os.Getwd()
-		audioResource, audioResourceErr := os.Open(pwd + "/../resources/audio_example.mp3")
+		audioResource, audioResourceErr := os.Open("../resources/audio_example.mp3")
 		if audioResourceErr != nil {
 			panic(audioResourceErr)
 		}

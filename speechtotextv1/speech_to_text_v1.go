@@ -41,8 +41,9 @@ import (
 // characteristics of your audio. For language model customization, the service also supports grammars. A grammar is a
 // formal language specification that lets you restrict the phrases that the service can recognize.
 //
-// Language model customization is generally available for production use with most supported languages. Acoustic model
-// customization is beta functionality that is available for all supported languages.
+// Language model customization and acoustic model customization are generally available for production use with all
+// language models that are generally available. Grammars are beta functionality for all language models that support
+// language model customization.
 //
 // Version: 1.0.0
 // See: https://cloud.ibm.com/docs/speech-to-text/
@@ -383,6 +384,12 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	}
 	if recognizeOptions.SplitTranscriptAtPhraseEnd != nil {
 		builder.AddQuery("split_transcript_at_phrase_end", fmt.Sprint(*recognizeOptions.SplitTranscriptAtPhraseEnd))
+	}
+	if recognizeOptions.SpeechDetectorSensitivity != nil {
+		builder.AddQuery("speech_detector_sensitivity", fmt.Sprint(*recognizeOptions.SpeechDetectorSensitivity))
+	}
+	if recognizeOptions.BackgroundAudioSuppression != nil {
+		builder.AddQuery("background_audio_suppression", fmt.Sprint(*recognizeOptions.BackgroundAudioSuppression))
 	}
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio)
@@ -725,6 +732,12 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 	}
 	if createJobOptions.SplitTranscriptAtPhraseEnd != nil {
 		builder.AddQuery("split_transcript_at_phrase_end", fmt.Sprint(*createJobOptions.SplitTranscriptAtPhraseEnd))
+	}
+	if createJobOptions.SpeechDetectorSensitivity != nil {
+		builder.AddQuery("speech_detector_sensitivity", fmt.Sprint(*createJobOptions.SpeechDetectorSensitivity))
+	}
+	if createJobOptions.BackgroundAudioSuppression != nil {
+		builder.AddQuery("background_audio_suppression", fmt.Sprint(*createJobOptions.BackgroundAudioSuppression))
 	}
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio)
@@ -1388,16 +1401,17 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 // the better the service's recognition accuracy.
 //
 // The call returns an HTTP 201 response code if the corpus is valid. The service then asynchronously processes the
-// contents of the corpus and automatically extracts new words that it finds. This can take on the order of a minute or
-// two to complete depending on the total number of words and the number of new words in the corpus, as well as the
+// contents of the corpus and automatically extracts new words that it finds. This operation can take on the order of
+// minutes to complete depending on the total number of words and the number of new words in the corpus, as well as the
 // current load on the service. You cannot submit requests to add additional resources to the custom model or to train
 // the model until the service's analysis of the corpus for the current request completes. Use the **List a corpus**
 // method to check the status of the analysis.
 //
 // The service auto-populates the model's words resource with words from the corpus that are not found in its base
-// vocabulary. These are referred to as out-of-vocabulary (OOV) words. You can use the **List custom words** method to
-// examine the words resource. You can use other words method to eliminate typos and modify how words are pronounced as
-// needed.
+// vocabulary. These words are referred to as out-of-vocabulary (OOV) words. After adding a corpus, you must validate
+// the words resource to ensure that each OOV word's definition is complete and valid. You can use the **List custom
+// words** method to examine the words resource. You can use other words method to eliminate typos and modify how words
+// are pronounced as needed.
 //
 // To add a corpus file that has the same name as an existing corpus, set the `allow_overwrite` parameter to `true`;
 // otherwise, the request fails. Overwriting an existing corpus causes the service to process the corpus text file and
@@ -1410,9 +1424,11 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 // includes words that the service extracts from corpora and grammars, and words that you add directly.
 //
 // **See also:**
-// * [Working with corpora](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#workingCorpora)
 // * [Add a corpus to the custom language
-// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#addCorpus).
+// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#addCorpus)
+// * [Working with corpora](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#workingCorpora)
+// * [Validating a words
+// resource](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#validateModel).
 func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addCorpusOptions, "addCorpusOptions cannot be nil")
 	if err != nil {
@@ -1643,7 +1659,9 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 // * The `sounds_like` field provides an array of one or more pronunciations for the word. Use the parameter to specify
 // how the word can be pronounced by users. Use the parameter for words that are difficult to pronounce, foreign words,
 // acronyms, and so on. For example, you might specify that the word `IEEE` can sound like `i triple e`. You can specify
-// a maximum of five sounds-like pronunciations for a word.
+// a maximum of five sounds-like pronunciations for a word. If you omit the `sounds_like` field, the service attempts to
+// set the field to its pronunciation of the word. It cannot generate a pronunciation for all words, so you must review
+// the word's definition to ensure that it is complete and valid.
 // * The `display_as` field provides a different way of spelling the word in a transcript. Use the parameter when you
 // want the word to appear different from its usual representation or from its spelling in training data. For example,
 // you might indicate that the word `IBM(trademark)` is to be displayed as `IBM&trade;`.
@@ -1666,10 +1684,12 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 // methods to correct errors, eliminate typos, and modify how words are pronounced as needed.
 //
 // **See also:**
+// * [Add words to the custom language
+// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#addWords)
 // * [Working with custom
 // words](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#workingWords)
-// * [Add words to the custom language
-// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#addWords).
+// * [Validating a words
+// resource](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#validateModel).
 func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil")
 	if err != nil {
@@ -1736,7 +1756,9 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 // * The `sounds_like` field provides an array of one or more pronunciations for the word. Use the parameter to specify
 // how the word can be pronounced by users. Use the parameter for words that are difficult to pronounce, foreign words,
 // acronyms, and so on. For example, you might specify that the word `IEEE` can sound like `i triple e`. You can specify
-// a maximum of five sounds-like pronunciations for a word.
+// a maximum of five sounds-like pronunciations for a word. If you omit the `sounds_like` field, the service attempts to
+// set the field to its pronunciation of the word. It cannot generate a pronunciation for all words, so you must review
+// the word's definition to ensure that it is complete and valid.
 // * The `display_as` field provides a different way of spelling the word in a transcript. Use the parameter when you
 // want the word to appear different from its usual representation or from its spelling in training data. For example,
 // you might indicate that the word `IBM(trademark)` is to be displayed as `IBM&trade;`.
@@ -1746,10 +1768,12 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 // resource. Use the **List a custom word** method to review the word that you add.
 //
 // **See also:**
+// * [Add words to the custom language
+// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#addWords)
 // * [Working with custom
 // words](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#workingWords)
-// * [Add words to the custom language
-// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#addWords).
+// * [Validating a words
+// resource](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#validateModel).
 func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil")
 	if err != nil {
@@ -1969,10 +1993,11 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 // you train the model for the new data by using the **Train a custom language model** method.
 //
 // The call returns an HTTP 201 response code if the grammar is valid. The service then asynchronously processes the
-// contents of the grammar and automatically extracts new words that it finds. This can take a few seconds to complete
-// depending on the size and complexity of the grammar, as well as the current load on the service. You cannot submit
-// requests to add additional resources to the custom model or to train the model until the service's analysis of the
-// grammar for the current request completes. Use the **Get a grammar** method to check the status of the analysis.
+// contents of the grammar and automatically extracts new words that it finds. This operation can take a few seconds or
+// minutes to complete depending on the size and complexity of the grammar, as well as the current load on the service.
+// You cannot submit requests to add additional resources to the custom model or to train the model until the service's
+// analysis of the grammar for the current request completes. Use the **Get a grammar** method to check the status of
+// the analysis.
 //
 // The service populates the model's words resource with any word that is recognized by the grammar that is not found in
 // the model's base vocabulary. These are referred to as out-of-vocabulary (OOV) words. You can use the **List custom
@@ -2387,7 +2412,7 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // The training method is asynchronous. It can take on the order of minutes or hours to complete depending on the total
 // amount of audio data on which the custom acoustic model is being trained and the current load on the service.
 // Typically, training a custom acoustic model takes approximately two to four times the length of its audio data. The
-// range of time depends on the model being trained and the nature of the audio, such as whether the audio is clean or
+// actual time depends on the model being trained and the nature of the audio, such as whether the audio is clean or
 // noisy. The method returns an HTTP 200 response code to indicate that the training process has begun.
 //
 // You can monitor the status of the training by using the **Get a custom acoustic model** method to poll the model's
@@ -2399,8 +2424,9 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // You can use the optional `custom_language_model_id` parameter to specify the GUID of a separately created custom
 // language model that is to be used during training. Train with a custom language model if you have verbatim
 // transcriptions of the audio files that you have added to the custom model or you have either corpora (text files) or
-// a list of words that are relevant to the contents of the audio files. Both of the custom models must be based on the
-// same version of the same base model for training to succeed.
+// a list of words that are relevant to the contents of the audio files. For training to succeed, both of the custom
+// models must be based on the same version of the same base model, and the custom language model must be fully trained
+// and available.
 //
 // **See also:**
 // * [Train the custom acoustic
@@ -2414,6 +2440,8 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // * The service is currently handling another request for the custom model, such as another training request or a
 // request to add audio resources to the model.
 // * The custom model contains less than 10 minutes or more than 200 hours of audio data.
+// * You passed a custom language model with the `custom_language_model_id` query parameter that is not in the available
+// state. A custom language model must be fully trained and available to be used to train a custom acoustic model.
 // * You passed an incompatible custom language model with the `custom_language_model_id` query parameter. Both custom
 // models must be based on the same version of the same base model.
 // * The custom model contains one or more invalid audio resources. You can correct the invalid audio resources or set
@@ -2662,11 +2690,12 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 // has the same name as an existing audio resource, set the `allow_overwrite` parameter to `true`; otherwise, the
 // request fails.
 //
-// The method is asynchronous. It can take several seconds to complete depending on the duration of the audio and, in
-// the case of an archive file, the total number of audio files being processed. The service returns a 201 response code
-// if the audio is valid. It then asynchronously analyzes the contents of the audio file or files and automatically
-// extracts information about the audio such as its length, sampling rate, and encoding. You cannot submit requests to
-// train or upgrade the model until the service's analysis of all audio resources for current requests completes.
+// The method is asynchronous. It can take several seconds or minutes to complete depending on the duration of the audio
+// and, in the case of an archive file, the total number of audio files being processed. The service returns a 201
+// response code if the audio is valid. It then asynchronously analyzes the contents of the audio file or files and
+// automatically extracts information about the audio such as its length, sampling rate, and encoding. You cannot submit
+// requests to train or upgrade the model until the service's analysis of all audio resources for current requests
+// completes.
 //
 // To determine the status of the service's analysis of the audio, use the **Get an audio resource** method to poll the
 // status of the audio. The method accepts the customization ID of the custom model and the name of the audio resource,
@@ -3974,9 +4003,14 @@ type CreateJobOptions struct {
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
-	// also specify a keywords threshold. You can spot a maximum of 1000 keywords. Omit the parameter or specify an empty
-	// array if you do not need to spot keywords. See [Keyword
-	// spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#keyword_spotting).
+	// also specify a keywords threshold. Omit the parameter or specify an empty array if you do not need to spot keywords.
+	//
+	//
+	// You can spot a maximum of 1000 keywords with a single request. A single keyword can have a maximum length of 1024
+	// characters, though the maximum effective length for double-byte languages might be shorter. Keywords are
+	// case-insensitive.
+	//
+	// See [Keyword spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#keyword_spotting).
 	Keywords []string `json:"keywords,omitempty"`
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
@@ -4026,9 +4060,9 @@ type CreateJobOptions struct {
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
 	// the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
 	//
-	// **Note:** Applies to US English, Japanese, and Spanish (both broadband and narrowband models) and UK English
-	// (narrowband model) transcription only. To determine whether a language model supports speaker labels, you can also
-	// use the **Get a model** method and check that the attribute `speaker_labels` is set to `true`.
+	// **Note:** Applies to US English, German, Japanese, Korean, and Spanish (both broadband and narrowband models) and UK
+	// English (narrowband model) transcription only. To determine whether a language model supports speaker labels, you
+	// can also use the **Get a model** method and check that the attribute `speaker_labels` is set to `true`.
 	//
 	// See [Speaker labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
@@ -4110,6 +4144,31 @@ type CreateJobOptions struct {
 	// See [Split transcript at phrase
 	// end](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#split_transcript).
 	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
+
+	// The sensitivity of speech activity detection that the service is to perform. Use the parameter to suppress word
+	// insertions from music, coughing, and other non-speech events. The service biases the audio it passes for speech
+	// recognition by evaluating the input audio against prior models of speech and non-speech activity.
+	//
+	// Specify a value between 0.0 and 1.0:
+	// * 0.0 suppresses all audio (no speech is transcribed).
+	// * 0.5 (the default) provides a reasonable compromise for the level of sensitivity.
+	// * 1.0 suppresses no audio (speech detection sensitivity is disabled).
+	//
+	// The values increase on a monotonic curve. See [Speech Activity
+	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
+	SpeechDetectorSensitivity *float32 `json:"speech_detector_sensitivity,omitempty"`
+
+	// The level to which the service is to suppress background audio based on its volume to prevent it from being
+	// transcribed as speech. Use the parameter to suppress side conversations or background noise.
+	//
+	// Specify a value in the range of 0.0 to 1.0:
+	// * 0.0 (the default) provides no suppression (background audio suppression is disabled).
+	// * 0.5 provides a reasonable level of audio suppression for general usage.
+	// * 1.0 suppresses all audio (no audio is transcribed).
+	//
+	// The values increase on a monotonic curve. See [Speech Activity
+	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
+	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -4359,6 +4418,18 @@ func (options *CreateJobOptions) SetSplitTranscriptAtPhraseEnd(splitTranscriptAt
 	return options
 }
 
+// SetSpeechDetectorSensitivity : Allow user to set SpeechDetectorSensitivity
+func (options *CreateJobOptions) SetSpeechDetectorSensitivity(speechDetectorSensitivity float32) *CreateJobOptions {
+	options.SpeechDetectorSensitivity = core.Float32Ptr(speechDetectorSensitivity)
+	return options
+}
+
+// SetBackgroundAudioSuppression : Allow user to set BackgroundAudioSuppression
+func (options *CreateJobOptions) SetBackgroundAudioSuppression(backgroundAudioSuppression float32) *CreateJobOptions {
+	options.BackgroundAudioSuppression = core.Float32Ptr(backgroundAudioSuppression)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateJobOptions) SetHeaders(param map[string]string) *CreateJobOptions {
 	options.Headers = param
@@ -4436,10 +4507,14 @@ const (
 	CreateLanguageModelOptions_BaseModelName_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
 	CreateLanguageModelOptions_BaseModelName_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
 	CreateLanguageModelOptions_BaseModelName_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_ItItBroadbandmodel           = "it-IT_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
 	CreateLanguageModelOptions_BaseModelName_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
 	CreateLanguageModelOptions_BaseModelName_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
 	CreateLanguageModelOptions_BaseModelName_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
 	CreateLanguageModelOptions_BaseModelName_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
+	CreateLanguageModelOptions_BaseModelName_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
+	CreateLanguageModelOptions_BaseModelName_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
 	CreateLanguageModelOptions_BaseModelName_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
 	CreateLanguageModelOptions_BaseModelName_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
 )
@@ -5669,9 +5744,14 @@ type RecognizeOptions struct {
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
-	// also specify a keywords threshold. You can spot a maximum of 1000 keywords. Omit the parameter or specify an empty
-	// array if you do not need to spot keywords. See [Keyword
-	// spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#keyword_spotting).
+	// also specify a keywords threshold. Omit the parameter or specify an empty array if you do not need to spot keywords.
+	//
+	//
+	// You can spot a maximum of 1000 keywords with a single request. A single keyword can have a maximum length of 1024
+	// characters, though the maximum effective length for double-byte languages might be shorter. Keywords are
+	// case-insensitive.
+	//
+	// See [Keyword spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#keyword_spotting).
 	Keywords []string `json:"keywords,omitempty"`
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
@@ -5721,9 +5801,9 @@ type RecognizeOptions struct {
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
 	// the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
 	//
-	// **Note:** Applies to US English, Japanese, and Spanish (both broadband and narrowband models) and UK English
-	// (narrowband model) transcription only. To determine whether a language model supports speaker labels, you can also
-	// use the **Get a model** method and check that the attribute `speaker_labels` is set to `true`.
+	// **Note:** Applies to US English, German, Japanese, Korean, and Spanish (both broadband and narrowband models) and UK
+	// English (narrowband model) transcription only. To determine whether a language model supports speaker labels, you
+	// can also use the **Get a model** method and check that the attribute `speaker_labels` is set to `true`.
 	//
 	// See [Speaker labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
@@ -5784,6 +5864,31 @@ type RecognizeOptions struct {
 	// See [Split transcript at phrase
 	// end](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#split_transcript).
 	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
+
+	// The sensitivity of speech activity detection that the service is to perform. Use the parameter to suppress word
+	// insertions from music, coughing, and other non-speech events. The service biases the audio it passes for speech
+	// recognition by evaluating the input audio against prior models of speech and non-speech activity.
+	//
+	// Specify a value between 0.0 and 1.0:
+	// * 0.0 suppresses all audio (no speech is transcribed).
+	// * 0.5 (the default) provides a reasonable compromise for the level of sensitivity.
+	// * 1.0 suppresses no audio (speech detection sensitivity is disabled).
+	//
+	// The values increase on a monotonic curve. See [Speech Activity
+	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
+	SpeechDetectorSensitivity *float32 `json:"speech_detector_sensitivity,omitempty"`
+
+	// The level to which the service is to suppress background audio based on its volume to prevent it from being
+	// transcribed as speech. Use the parameter to suppress side conversations or background noise.
+	//
+	// Specify a value in the range of 0.0 to 1.0:
+	// * 0.0 (the default) provides no suppression (background audio suppression is disabled).
+	// * 0.5 provides a reasonable level of audio suppression for general usage.
+	// * 1.0 suppresses all audio (no audio is transcribed).
+	//
+	// The values increase on a monotonic curve. See [Speech Activity
+	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
+	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
@@ -5971,6 +6076,18 @@ func (options *RecognizeOptions) SetEndOfPhraseSilenceTime(endOfPhraseSilenceTim
 // SetSplitTranscriptAtPhraseEnd : Allow user to set SplitTranscriptAtPhraseEnd
 func (options *RecognizeOptions) SetSplitTranscriptAtPhraseEnd(splitTranscriptAtPhraseEnd bool) *RecognizeOptions {
 	options.SplitTranscriptAtPhraseEnd = core.BoolPtr(splitTranscriptAtPhraseEnd)
+	return options
+}
+
+// SetSpeechDetectorSensitivity : Allow user to set SpeechDetectorSensitivity
+func (options *RecognizeOptions) SetSpeechDetectorSensitivity(speechDetectorSensitivity float32) *RecognizeOptions {
+	options.SpeechDetectorSensitivity = core.Float32Ptr(speechDetectorSensitivity)
+	return options
+}
+
+// SetBackgroundAudioSuppression : Allow user to set BackgroundAudioSuppression
+func (options *RecognizeOptions) SetBackgroundAudioSuppression(backgroundAudioSuppression float32) *RecognizeOptions {
+	options.BackgroundAudioSuppression = core.Float32Ptr(backgroundAudioSuppression)
 	return options
 }
 
@@ -6285,8 +6402,8 @@ type TrainAcousticModelOptions struct {
 	// The customization ID (GUID) of a custom language model that is to be used during training of the custom acoustic
 	// model. Specify a custom language model that has been trained with verbatim transcriptions of the audio resources or
 	// that contains words that are relevant to the contents of the audio resources. The custom language model must be
-	// based on the same version of the same base model as the custom acoustic model. The credentials specified with the
-	// request must own both custom models.
+	// based on the same version of the same base model as the custom acoustic model, and the custom language model must be
+	// fully trained and available. The credentials specified with the request must own both custom models.
 	CustomLanguageModelID *string `json:"custom_language_model_id,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -6458,7 +6575,8 @@ type UpgradeAcousticModelOptions struct {
 
 	// If the custom acoustic model was trained with a custom language model, the customization ID (GUID) of that custom
 	// language model. The custom language model must be upgraded before the custom acoustic model can be upgraded. The
-	// credentials specified with the request must own both custom models.
+	// custom language model must be fully trained and available. The credentials specified with the request must own both
+	// custom models.
 	CustomLanguageModelID *string `json:"custom_language_model_id,omitempty"`
 
 	// If `true`, forces the upgrade of a custom acoustic model for which no input data has been modified since it was last
