@@ -22,7 +22,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/IBM/go-sdk-core/core"
@@ -31,45 +30,60 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *personalityinsightsv3.PersonalityInsightsV3
-var serviceErr error
 
-func init() {
-	err := godotenv.Load("../.env")
-
-	if err == nil {
-		service, serviceErr = personalityinsightsv3.
-			NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-				Version: "2017-10-13",
-			})
-
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
+func shouldSkipTest(t *testing.T) {
+	if !configLoaded {
+		t.Skip(skipMessage)
 	}
 }
 
-func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	} else {
+		configLoaded = true
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = personalityinsightsv3.NewPersonalityInsightsV3(
+		&personalityinsightsv3.PersonalityInsightsV3Options{
+			Version: "2017-10-13",
+		})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+
+	if err == nil {
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
 	}
 }
 
 func TestProfile(t *testing.T) {
 	shouldSkipTest(t)
 
-	pwd, _ := os.Getwd()
-	file, fileErr := ioutil.ReadFile(pwd + "/../resources/personality-v3.json")
-	assert.Nil(t, fileErr)
+	file, err := ioutil.ReadFile("../resources/personality-v3.json")
+	assert.Nil(t, err)
 
 	// Unmarshal JSON into Content struct
 	content := new(personalityinsightsv3.Content)
-	json.Unmarshal(file, content)
+	err = json.Unmarshal(file, content)
+	assert.Nil(t, err)
 
-	profile, _, responseErr := service.Profile(
+	profile, response, responseErr := service.Profile(
 		&personalityinsightsv3.ProfileOptions{
 			Content:                content,
 			ContentType:            core.StringPtr("application/json"),
@@ -78,5 +92,6 @@ func TestProfile(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
+	assert.NotNil(t, response)
 	assert.NotNil(t, profile)
 }

@@ -1,5 +1,3 @@
-package personalityinsightsv3_test
-
 /**
  * (C) Copyright IBM Corp. 2018, 2020.
  *
@@ -16,10 +14,9 @@ package personalityinsightsv3_test
  * limitations under the License.
  */
 
+package personalityinsightsv3_test
+
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -30,35 +27,33 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 )
 
-var _ = Describe("PersonalityInsightsV3", func() {
-	Describe("Profile(profileOptions *ProfileOptions)", func() {
+var _ = Describe(`PersonalityInsightsV3`, func() {
+	Describe(`Profile(profileOptions *ProfileOptions)`, func() {
 		profilePath := "/v3/profile"
 		version := "exampleString"
-		username := "user1"
-		password := "pass1"
-		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-		Context("Successfully - Get profile", func() {
+		bearerToken := "0ui9876453"
+		Context(`Successfully - Get profile`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(profilePath + "?version=" + version))
+				// Verify the contents of the request
 				Expect(req.URL.Path).To(Equal(profilePath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				res.WriteHeader(201)
-				fmt.Fprint(res, serializeJSON(createProfileResult()))
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"processed_language": "fake_ProcessedLanguage", "word_count": 9, "personality": [], "needs": [], "values": [], "warnings": []}`)
 			}))
-			It("Succeed to call Profile", func() {
+			It(`Succeed to call Profile`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:     testServer.URL,
 					Version: version,
-					Authenticator: &core.BasicAuthenticator{
-						Username: username,
-						Password: password,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
 					},
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -91,39 +86,35 @@ var _ = Describe("PersonalityInsightsV3", func() {
 				Expect(returnValueErr).To(BeNil())
 				Expect(returnValue).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-				Expect(result).To(Equal(createProfileResult()))
 			})
 		})
 	})
-	Describe("ProfileAsCsv(profileOptions *ProfileOptions)", func() {
+	Describe(`ProfileAsCsv(profileOptions *ProfileOptions)`, func() {
 		profileAsCsvPath := "/v3/profile"
 		version := "exampleString"
-		username := "user1"
-		password := "pass1"
-		encodedBasicAuth := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
-		expectedCsvString := "field1,field2,field3,field4"
-		Context("Successfully - Get profile as csv", func() {
+		bearerToken := "0ui9876453"
+		Context(`Successfully - Get profile as csv`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
-				Expect(req.URL.String()).To(Equal(profileAsCsvPath + "?version=" + version))
+				// Verify the contents of the request
 				Expect(req.URL.Path).To(Equal(profileAsCsvPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
 				Expect(req.Method).To(Equal("POST"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
-				Expect(req.Header["Authorization"][0]).To(Equal("Basic " + encodedBasicAuth))
-				res.Header().Set("Content-type", "text/plain")
-				res.WriteHeader(201)
-				fmt.Fprint(res, expectedCsvString)
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `Contents of response byte-stream...`)
 			}))
-			It("Succeed to call ProfileAsCsv", func() {
+			It(`Succeed to call ProfileAsCsv`, func() {
 				defer testServer.Close()
 
 				testService, testServiceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:     testServer.URL,
 					Version: version,
-					Authenticator: &core.BasicAuthenticator{
-						Username: username,
-						Password: password,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
 					},
 				})
 				Expect(testServiceErr).To(BeNil())
@@ -145,42 +136,26 @@ var _ = Describe("PersonalityInsightsV3", func() {
 			})
 		})
 	})
+	Describe("Model constructor tests", func() {
+		Context("with a sample service", func() {
+			version := "1970-01-01"
+			testService, _ := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+				URL:           "http://personalityinsightsv3modelgenerator.com",
+				Version:       version,
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewContent successfully", func() {
+				contentItems := []personalityinsightsv3.ContentItem{}
+				model, err := testService.NewContent(contentItems)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It("should call NewContentItem successfully", func() {
+				content := "exampleString"
+				model, err := testService.NewContentItem(content)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+		})
+	})
 })
-
-func serializeJSON(object interface{}) string {
-	buff := new(bytes.Buffer)
-	if err := json.NewEncoder(buff).Encode(object); err != nil {
-		return "SERIALIZATION ERROR!!!"
-	}
-	return buff.String()
-}
-
-func createProfileResult() *personalityinsightsv3.Profile {
-	personalityTrait := &personalityinsightsv3.Trait{
-		TraitID:  core.StringPtr("personality"),
-		Name:     core.StringPtr("trait1"),
-		Category: core.StringPtr("category1"),
-	}
-	needsTrait := &personalityinsightsv3.Trait{
-		TraitID:  core.StringPtr("needs"),
-		Name:     core.StringPtr("trait2"),
-		Category: core.StringPtr("category2"),
-	}
-	valuesTrait := &personalityinsightsv3.Trait{
-		TraitID:  core.StringPtr("values"),
-		Name:     core.StringPtr("trait3"),
-		Category: core.StringPtr("category3"),
-	}
-	warning := &personalityinsightsv3.Warning{
-		WarningID: core.StringPtr("warning1"),
-		Message:   core.StringPtr("You messed up!"),
-	}
-	return &personalityinsightsv3.Profile{
-		ProcessedLanguage: core.StringPtr("English"),
-		WordCount:         core.Int64Ptr(38),
-		Personality:       []personalityinsightsv3.Trait{*personalityTrait},
-		Needs:             []personalityinsightsv3.Trait{*needsTrait},
-		Values:            []personalityinsightsv3.Trait{*valuesTrait},
-		Warnings:          []personalityinsightsv3.Warning{*warning},
-	}
-}
