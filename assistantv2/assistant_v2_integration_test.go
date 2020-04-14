@@ -3,7 +3,7 @@
 package assistantv2_test
 
 /**
- * (C) Copyright IBM Corp. 2018, 2019.
+ * (C) Copyright IBM Corp. 2018, 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,30 +29,50 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/assistantv2"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *assistantv2.AssistantV2
-var serviceErr error
+var assistantId string
 
-func init() {
-	err := godotenv.Load("../.env")
-
-	if err == nil {
-		service, serviceErr = assistantv2.
-			NewAssistantV2(&assistantv2.AssistantV2Options{
-				Version: "2017-04-21",
-			})
-
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
+func shouldSkipTest(t *testing.T) {
+	if !configLoaded {
+		t.Skip(skipMessage)
 	}
 }
 
-func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	}
+
+	assistantId = os.Getenv("ASSISTANT_ASSISTANT_ID")
+	assert.NotEmpty(t, assistantId)
+	if assistantId != "" {
+		configLoaded = true
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+		Version:     "2020-04-01",
+		ServiceName: "assistant",
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+
+	if err == nil {
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
 	}
 }
 
@@ -62,17 +82,16 @@ func TestSession(t *testing.T) {
 	// Create session
 	createSession, _, responseErr := service.CreateSession(
 		&assistantv2.CreateSessionOptions{
-			AssistantID: core.StringPtr(os.Getenv("ASSISTANT_ID")),
+			AssistantID: core.StringPtr(assistantId),
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, createSession)
 
 	// Message
 	message, _, responseErr := service.Message(
 		&assistantv2.MessageOptions{
-			AssistantID: core.StringPtr(os.Getenv("ASSISTANT_ID")),
+			AssistantID: core.StringPtr(assistantId),
 			SessionID:   createSession.SessionID,
 			Input: &assistantv2.MessageInput{
 				Text: core.StringPtr("Whats the weather like?"),
@@ -94,13 +113,12 @@ func TestSession(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
-
 	assert.NotNil(t, message)
 
 	// Delete session
 	_, responseErr = service.DeleteSession(
 		&assistantv2.DeleteSessionOptions{
-			AssistantID: core.StringPtr(os.Getenv("ASSISTANT_ID")),
+			AssistantID: core.StringPtr(assistantId),
 			SessionID:   createSession.SessionID,
 		},
 	)
