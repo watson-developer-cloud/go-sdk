@@ -49,7 +49,7 @@ func TestLoadConfig(t *testing.T) {
 		t.Skip(skipMessage)
 	}
 
-	assistantId = os.Getenv("ASSISTANT_ASSISTANT_ID")
+	assistantId = os.Getenv("ASSISTANT_ID")
 	assert.NotEmpty(t, assistantId)
 	if assistantId != "" {
 		configLoaded = true
