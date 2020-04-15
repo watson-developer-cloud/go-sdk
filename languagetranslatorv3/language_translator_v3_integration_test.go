@@ -79,6 +79,7 @@ func TestModels(t *testing.T) {
 		&languagetranslatorv3.ListModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
+	assert.NotNil(t, response)
 	assert.NotNil(t, listModels)
 
 	// Create model
