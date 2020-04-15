@@ -1,5 +1,8 @@
-# Watson Developer Cloud Go SDK
+# Watson Developer Cloud Go SDK v1.4.1
 [![Build Status](https://travis-ci.org/watson-developer-cloud/go-sdk.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/go-sdk)
+[![Release](https://img.shields.io/github/v/release/watson-developer-cloud/go-sdk)](https://github.com/watson-developer-cloud/go-sdk/releases/latest)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/watson-developer-cloud/go-sdk)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![wdc-community.slack.com](https://wdc-slack-inviter.mybluemix.net/badge.svg)](http://wdc-slack-inviter.mybluemix.net/)
 
@@ -113,7 +116,7 @@ You supply either an IAM service **API key** or an **access token**:
 
 * Use the API key to have the SDK manage the lifecycle of the access token. The SDK requests an access token, ensures that the access token is valid, and refreshes it if necessary.
 
-* Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://cloud.ibm.com/docs/services/watson?topic=watson-iam#iam).
+* Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://cloud.ibm.com/docs/watson?topic=watson-iam#iam).
 
 **Supplying the IAM API key**
 
