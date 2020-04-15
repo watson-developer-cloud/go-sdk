@@ -13,16 +13,14 @@ env:
     - GO111MODULE=on
 
 before_install:
-- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && openssl aes-256-cbc -K $encrypted_099bfdf6000a_key
-  -iv $encrypted_099bfdf6000a_iv -in .env.enc -out .env -d || true'
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && openssl aes-256-cbc -K $encrypted_3c84dcdc6bbe_key -iv $encrypted_3c84dcdc6bbe_iv -in .env.enc -out .env -d || true'
 - nvm install 12
 - npm install -g npm@6.x
 - sudo apt-get update
 - sudo apt-get install python
 
 install:
-- if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd
-  ../; fi
+- if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then cd appscan; make asoc-tool; cd ../; fi
 - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.21.0
 
 before_script:
@@ -46,5 +44,4 @@ before_deploy:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: npx semantic-release --repository-url https://${GH_TOKEN}@github.com/watson-developer-cloud/go-sdk
-    --debug
+  script: npx semantic-release --repository-url https://${GH_TOKEN}@github.com/watson-developer-cloud/go-sdk --debug
