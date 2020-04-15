@@ -2298,7 +2298,7 @@ type UpdateObjectMetadata struct {
 	Object *string `json:"object" validate:"required"`
 
 	// Number of bounding boxes in the collection with the updated object name.
-	Count *int64 `json:"count" validate:"required"`
+	Count *int64 `json:"count,omitempty"`
 }
 
 // NewUpdateObjectMetadata : Instantiate UpdateObjectMetadata (Generic Model Constructor)

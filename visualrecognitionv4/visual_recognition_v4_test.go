@@ -322,8 +322,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"images":[]}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call AddImages`, func() {
 				defer testServer.Close()
@@ -369,8 +369,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
-				fmt.Fprintf(res, `{"images": []}`)
 				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"images": []}`)
 			}))
 			It(`Succeed to call ListImages`, func() {
 				defer testServer.Close()
@@ -512,8 +512,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.WriteHeader(200)
-				pwd, _ := os.Getwd()
-				myImage, err := os.Open(pwd + "/../resources/my-giraffe.jpeg")
+				myImage, err := os.Open("../resources/my-giraffe.jpeg")
 				if err != nil {
 					panic(err)
 				}
@@ -808,7 +807,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"objects": []}`)
+				fmt.Fprintf(res, `{}`)
 			}))
 			It(`Succeed to call AddImageTrainingData`, func() {
 				defer testServer.Close()
