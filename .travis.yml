@@ -29,9 +29,9 @@ before_script:
 script:
 # This step is required since we use a go module
 - go mod download
-- golangci-lint run -v
+- golangci-lint run
 - go test `go list ./... | grep -v examples`
-- go test `go list ./... | grep -v core` -v -tags=integration
+- go test `go list ./... | grep -v examples` -tags=integration
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi
 
 before_deploy:
