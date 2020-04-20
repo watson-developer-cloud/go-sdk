@@ -28,7 +28,6 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
 )
 
-
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool

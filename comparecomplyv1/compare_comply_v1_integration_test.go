@@ -242,7 +242,7 @@ func TestBatch(t *testing.T) {
 	assert.NotNil(t, listBatches)
 
 	t.Skip()
-	
+
 	// Create batch
 	inputCredentialsFile, inputCredentialsFileErr := os.Open("../resources/cloud-object-storage-credentials-input.json")
 	if inputCredentialsFileErr != nil {
