@@ -546,30 +546,7 @@ type MessageContextSkill struct {
 	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
 
 	// System context data used by the skill.
-	System *MessageContextSkillSystem `json:"system,omitempty"`
-}
-
-// MessageContextSkillSystem : System context data used by the skill.
-type MessageContextSkillSystem map[string]interface{}
-
-// SetState : Allow user to set State
-func (this *MessageContextSkillSystem) SetState(State *string) {
-	(*this)["state"] = State
-}
-
-// GetState : Allow user to get State
-func (this *MessageContextSkillSystem) GetState() *string {
-	return (*this)["state"].(*string)
-}
-
-// SetProperty : Allow user to set arbitrary property
-func (this *MessageContextSkillSystem) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
-}
-
-// GetProperty : Allow user to get arbitrary property
-func (this *MessageContextSkillSystem) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+	System map[string]interface{} `json:"system,omitempty"`
 }
 
 // MessageContextSkills : Information specific to particular skills used by the Assistant.
