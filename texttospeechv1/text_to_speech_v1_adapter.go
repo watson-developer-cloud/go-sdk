@@ -63,7 +63,7 @@ type SynthesizeUsingWebsocketOptions struct {
 	// Timings specifies that the service is to return word timing information for all strings of the
 	// input text. The service returns the start and end time of each string of the input. Specify words as the lone element
 	// of the array to request word timings. Specify an empty array or omit the parameter to receive no word timings. For
-	// more information, see [Obtaining word timings](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-timing#timing).
+	// more information, see [Obtaining word timings](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-timing#timing).
 	// Not supported for Japanese input text.
 	Timings []string `json:"action,omitempty"`
 }
