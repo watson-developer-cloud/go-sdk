@@ -1,3 +1,19 @@
+# [1.5.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.4.1...v1.5.0) (2020-04-24)
+
+
+### Features
+
+* **assistantv1:** re-generate service ([d17439a](https://github.com/watson-developer-cloud/go-sdk/commit/d17439a132ccaa18f2f7bb7cb447b36aa5cc6eab))
+* **assistantv2:** re-generate service ([660c05a](https://github.com/watson-developer-cloud/go-sdk/commit/660c05a734cb11282c5c2a730a82f4898e2cbbec))
+* **comparecomplyv1:** re-generate service ([dbb8cf6](https://github.com/watson-developer-cloud/go-sdk/commit/dbb8cf6ca0bec65399530f3c7dafa8217096ecb2))
+* **discoveryv1:** re-generate service ([1c7cfdf](https://github.com/watson-developer-cloud/go-sdk/commit/1c7cfdfc8de3b6a14518ccacc61a98f19bf31b02))
+* **discoveryv2:** re-generate service ([b912d2b](https://github.com/watson-developer-cloud/go-sdk/commit/b912d2bc0009c3972cf140d603a45cb9ec7893a3))
+* **languagetranslatorv3:** re-generate service ([c36f8da](https://github.com/watson-developer-cloud/go-sdk/commit/c36f8daf017e57bf359e534f007bbe1e6541ceef))
+* **naturallanguageunderstandingv1:** re-generate service ([24804cb](https://github.com/watson-developer-cloud/go-sdk/commit/24804cbb0d4152399823052d1df94b0cf4cbe343))
+* **speechtotextv1:** re-generate service ([4475b24](https://github.com/watson-developer-cloud/go-sdk/commit/4475b249ea7dbc542e17cde90d366e52063d5083))
+* **texttospeechv1:** re-generate service ([fe1231c](https://github.com/watson-developer-cloud/go-sdk/commit/fe1231cf4b44019c7f9b23917047e3f79378e169))
+* **visualrecognitionv4:** re-generate service ([6e42648](https://github.com/watson-developer-cloud/go-sdk/commit/6e42648954c00c0442a757611a0184c8302c4869))
+
 ## [1.4.1](https://github.com/watson-developer-cloud/go-sdk/compare/v1.4.0...v1.4.1) (2020-02-18)
 
 
