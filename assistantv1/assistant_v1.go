@@ -946,7 +946,7 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 // CreateExample : Create user input example
 // Add a new user input example to an intent.
 //
-// If you want to add multiple exaples with a single API call, consider using the **[Update intent](#update-intent)**
+// If you want to add multiple examples with a single API call, consider using the **[Update intent](#update-intent)**
 // method instead.
 //
 // This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
@@ -3338,7 +3338,8 @@ type CreateDialogNodeOptions struct {
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	UserLabel *string `json:"user_label,omitempty"`
 
-	// Whether the dialog node should be excluded from disambiguation suggestions.
+	// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when **type**=`standard` or
+	// `frame`.
 	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
@@ -4612,7 +4613,8 @@ type DialogNode struct {
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	UserLabel *string `json:"user_label,omitempty"`
 
-	// Whether the dialog node should be excluded from disambiguation suggestions.
+	// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when **type**=`standard` or
+	// `frame`.
 	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
 
 	// For internal use only.
@@ -4893,8 +4895,8 @@ type DialogNodeOutputGeneric struct {
 
 	// The text of the search query. This can be either a natural-language query or a query that uses the Discovery query
 	// language syntax, depending on the value of the **query_type** property. For more information, see the [Discovery
-	// service documentation](https://cloud.ibm.com/docs/services/discovery/query-operators.html#query-operators). Required
-	// when **response_type**=`search_skill`.
+	// service documentation](https://cloud.ibm.com/docs/discovery/query-operators.html#query-operators). Required when
+	// **response_type**=`search_skill`.
 	Query *string `json:"query,omitempty"`
 
 	// The type of the search query. Required when **response_type**=`search_skill`.
@@ -4902,7 +4904,7 @@ type DialogNodeOutputGeneric struct {
 
 	// An optional filter that narrows the set of documents to be searched. For more information, see the [Discovery
 	// service documentation]([Discovery service
-	// documentation](https://cloud.ibm.com/docs/services/discovery/query-parameters.html#filter).
+	// documentation](https://cloud.ibm.com/docs/discovery/query-parameters.html#filter).
 	Filter *string `json:"filter,omitempty"`
 
 	// The version of the Discovery service API to use for the query.
@@ -5148,11 +5150,11 @@ type DialogSuggestionResponseGeneric struct {
 	// A message to be sent to the human agent who will be taking over the conversation.
 	MessageToHumanAgent *string `json:"message_to_human_agent,omitempty"`
 
-	// A label identifying the topic of the conversation, derived from the **user_label** property of the relevant node.
+	// A label identifying the topic of the conversation, derived from the **title** property of the relevant node.
 	Topic *string `json:"topic,omitempty"`
 
 	// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated using the
-	// value of the dialog node's **user_label** property.
+	// value of the dialog node's **title** property.
 	DialogNode *string `json:"dialog_node,omitempty"`
 }
 
@@ -7036,6 +7038,13 @@ type RuntimeEntity struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-beta-system-entities).
 	Interpretation *RuntimeEntityInterpretation `json:"interpretation,omitempty"`
 
+	// An array of possible alternative values that the user might have intended instead of the value returned in the
+	// **value** property. This property is returned only for `@sys-time` and `@sys-date` entities when the user's input is
+	// ambiguous.
+	//
+	// This property is included only if the new system entities are enabled for the workspace.
+	Alternatives []RuntimeEntityAlternative `json:"alternatives,omitempty"`
+
 	// An object describing the role played by a system entity that is specifies the beginning or end of a range recognized
 	// in the user input. This property is included only if the new system entities are enabled for the workspace.
 	Role *RuntimeEntityRole `json:"role,omitempty"`
@@ -7050,6 +7059,16 @@ func (assistant *AssistantV1) NewRuntimeEntity(entity string, location []int64, 
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
+}
+
+// RuntimeEntityAlternative : An alternative value for the recognized entity.
+type RuntimeEntityAlternative struct {
+
+	// The entity value that was recognized in the user input.
+	Value *string `json:"value,omitempty"`
+
+	// A decimal percentage that represents Watson's confidence in the recognized entity.
+	Confidence *float64 `json:"confidence,omitempty"`
 }
 
 // RuntimeEntityInterpretation : RuntimeEntityInterpretation struct
@@ -7242,11 +7261,11 @@ type RuntimeResponseGeneric struct {
 	// A message to be sent to the human agent who will be taking over the conversation.
 	MessageToHumanAgent *string `json:"message_to_human_agent,omitempty"`
 
-	// A label identifying the topic of the conversation, derived from the **user_label** property of the relevant node.
+	// A label identifying the topic of the conversation, derived from the **title** property of the relevant node.
 	Topic *string `json:"topic,omitempty"`
 
 	// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated using the
-	// value of the dialog node's **user_label** property.
+	// value of the dialog node's **title** property.
 	DialogNode *string `json:"dialog_node,omitempty"`
 
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
@@ -7460,7 +7479,8 @@ type UpdateDialogNodeOptions struct {
 	// A label that can be displayed externally to describe the purpose of the node to users.
 	NewUserLabel *string `json:"new_user_label,omitempty"`
 
-	// Whether the dialog node should be excluded from disambiguation suggestions.
+	// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when **type**=`standard` or
+	// `frame`.
 	NewDisambiguationOptOut *bool `json:"new_disambiguation_opt_out,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.

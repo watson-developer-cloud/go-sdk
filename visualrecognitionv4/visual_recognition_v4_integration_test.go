@@ -29,30 +29,51 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv4"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *visualrecognitionv4.VisualRecognitionV4
-var serviceErr error
+var collectionID string
 
-func init() {
-	err := godotenv.Load("../.env")
-
-	if err == nil {
-		service, serviceErr = visualrecognitionv4.
-			NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				Version: "2019-02-11",
-			})
-
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
+func shouldSkipTest(t *testing.T) {
+	if !configLoaded {
+		t.Skip(skipMessage)
 	}
 }
 
-func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	}
+
+	collectionID = os.Getenv("VISUAL_RECOGNITION_COLLECTION_ID")
+	assert.NotEmpty(t, collectionID)
+	if collectionID != "" {
+		configLoaded = true
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = visualrecognitionv4.
+		NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+			Version:     "2019-02-11",
+			ServiceName: "visual_recognition",
+		})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+
+	if err == nil {
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
 	}
 }
 
@@ -113,12 +134,11 @@ func TestImages(t *testing.T) {
 	assert.NotNil(t, collection)
 	collectionId := collection.CollectionID
 
-	pwd, _ := os.Getwd()
-	kittyFile, err := os.Open(pwd + "/../resources/kitty.jpg")
+	kittyFile, err := os.Open("../resources/kitty.jpg")
 	assert.Nil(t, err)
 	defer kittyFile.Close()
 
-	giraffeFile, err := os.Open(pwd + "/../resources/my-giraffe.jpeg")
+	giraffeFile, err := os.Open("../resources/my-giraffe.jpeg")
 	assert.Nil(t, err)
 	defer giraffeFile.Close()
 	addImages, _, responseErr := service.AddImages(
@@ -185,14 +205,13 @@ func TestImages(t *testing.T) {
 func TestAnalyze(t *testing.T) {
 	shouldSkipTest(t)
 
-	pwd, _ := os.Getwd()
-	giraffeFile, err := os.Open(pwd + "/../resources/my-giraffe.jpeg")
+	giraffeFile, err := os.Open("../resources/my-giraffe.jpeg")
 	assert.Nil(t, err)
 	defer giraffeFile.Close()
 
 	analyzeResult, _, responseErr := service.Analyze(
 		&visualrecognitionv4.AnalyzeOptions{
-			CollectionIds: []string{os.Getenv("VISUAL_RECOGNITION_COLLECTION_ID")},
+			CollectionIds: []string{collectionID},
 			Features:      []string{visualrecognitionv4.AnalyzeOptions_Features_Objects},
 			ImagesFile: []visualrecognitionv4.FileWithMetadata{
 				visualrecognitionv4.FileWithMetadata{
@@ -219,8 +238,7 @@ func TestTraining(t *testing.T) {
 	assert.NotNil(t, collection)
 	collectionId := collection.CollectionID
 
-	pwd, _ := os.Getwd()
-	giraffeFile, err := os.Open(pwd + "/../resources/South_Africa_Luca_Galuzzi_2004.jpeg")
+	giraffeFile, err := os.Open("../resources/South_Africa_Luca_Galuzzi_2004.jpeg")
 	assert.Nil(t, err)
 	defer giraffeFile.Close()
 	addImages, _, responseErr := service.AddImages(
@@ -293,11 +311,11 @@ func TestTraining(t *testing.T) {
 	assert.Nil(t, responseErr)
 	assert.NotNil(t, train)
 
-	trainingUsage, _, trainingUsageErr := service.GetTrainingUsage(
+	trainingUsage, response, trainingUsageErr := service.GetTrainingUsage(
 		&visualrecognitionv4.GetTrainingUsageOptions{},
 	)
-	core.PrettyPrint(trainingUsage, "r")
 	assert.Nil(t, trainingUsageErr)
+	assert.NotNil(t, response)
 	assert.NotNil(t, trainingUsage)
 
 	_, responseErr = service.DeleteObject(

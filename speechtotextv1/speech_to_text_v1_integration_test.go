@@ -31,30 +31,46 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *speechtotextv1.SpeechToTextV1
-var serviceErr error
 var languageModel *speechtotextv1.LanguageModel
 
-func init() {
-	err := godotenv.Load("../.env")
+func shouldSkipTest(t *testing.T) {
+	if !configLoaded {
+		t.Skip(skipMessage)
+	}
+}
+
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	} else {
+		configLoaded = true
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
 
 	if err == nil {
-		service, serviceErr = speechtotextv1.
-			NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
+	}
+}
 
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
-	}
-}
-func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
-	}
-}
 func TestModel(t *testing.T) {
 	shouldSkipTest(t)
 
@@ -78,12 +94,11 @@ func TestModel(t *testing.T) {
 func TestRecognize(t *testing.T) {
 	shouldSkipTest(t)
 
-	pwd, _ := os.Getwd()
 	files := [1]string{"audio_example.mp3"}
 	for _, fileName := range files {
 		var audio io.ReadCloser
 		var audioErr error
-		audio, audioErr = os.Open(pwd + "/../resources/" + fileName)
+		audio, audioErr = os.Open("../resources/" + fileName)
 		assert.Nil(t, audioErr)
 
 		recognize, _, responseErr := service.Recognize(
@@ -163,8 +178,7 @@ func TestCorpora(t *testing.T) {
 		t.Skip("Skipping the rest of the corpora tests")
 	}
 
-	pwd, _ := os.Getwd()
-	corpusFile, corpusFileErr := os.Open(pwd + "/../resources/corpus-short-1.txt")
+	corpusFile, corpusFileErr := os.Open("../resources/corpus-short-1.txt")
 	if corpusFileErr != nil {
 		panic(corpusFileErr)
 	}

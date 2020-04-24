@@ -28,39 +28,55 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1
-var serviceErr error
-
-func init() {
-	err := godotenv.Load("../.env")
-
-	if err == nil {
-		service, serviceErr = naturallanguageunderstandingv1.
-			NewNaturalLanguageUnderstandingV1(&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
-				Version: "2018-03-16",
-			})
-
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
-	}
-}
 
 func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
+	if !configLoaded {
+		t.Skip(skipMessage)
 	}
 }
+
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	} else {
+		configLoaded = true
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = naturallanguageunderstandingv1.NewNaturalLanguageUnderstandingV1(
+		&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
+			Version: "2019-07-12",
+		})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+
+	if err == nil {
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
+	}
+}
+
 func TestAnalyze(t *testing.T) {
 	shouldSkipTest(t)
 
 	text := `IBM is an American multinational technology company
 					 headquartered in Armonk, New York, United States
 					with operations in over 170 countries.`
-	analyze, _, responseErr := service.Analyze(
+	analyze, response, responseErr := service.Analyze(
 		&naturallanguageunderstandingv1.AnalyzeOptions{
 			Text: &text,
 			Features: &naturallanguageunderstandingv1.Features{
@@ -74,6 +90,7 @@ func TestAnalyze(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
+	assert.NotNil(t, response)
 	assert.NotNil(t, analyze)
 }
 
@@ -81,9 +98,10 @@ func TestListModels(t *testing.T) {
 	shouldSkipTest(t)
 
 	// list models
-	listModels, _, responseErr := service.ListModels(
+	listModels, response, responseErr := service.ListModels(
 		&naturallanguageunderstandingv1.ListModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
+	assert.NotNil(t, response)
 	assert.NotNil(t, listModels)
 }

@@ -545,7 +545,7 @@ type MessageContextSkill struct {
 	// Arbitrary variables that can be read and written by a particular skill.
 	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
 
-	// For internal use only.
+	// System context data used by the skill.
 	System map[string]interface{} `json:"system,omitempty"`
 }
 
@@ -598,8 +598,9 @@ const (
 // MessageInputOptions : Optional properties that control how the assistant responds.
 type MessageInputOptions struct {
 
-	// Whether to return additional diagnostic information. Set to `true` to return additional information under the
-	// `output.debug` key.
+	// Whether to return additional diagnostic information. Set to `true` to return additional information in the
+	// `output.debug` property. If you also specify **return_context**=`true`, the returned skill context includes the
+	// `system.state` property.
 	Debug *bool `json:"debug,omitempty"`
 
 	// Whether to restart dialog processing at the root of the dialog, regardless of any previously visited nodes.
@@ -609,9 +610,15 @@ type MessageInputOptions struct {
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
 	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
-	// Whether to return session context with the response. If you specify `true`, the response will include the `context`
-	// property.
+	// Whether to return session context with the response. If you specify `true`, the response includes the `context`
+	// property. If you also specify **debug**=`true`, the returned skill context includes the `system.state` property.
 	ReturnContext *bool `json:"return_context,omitempty"`
+
+	// Whether to return session context, including full conversation state. If you specify `true`, the response includes
+	// the `context` property, and the skill context includes the `system.state` property.
+	//
+	// **Note:** If **export**=`true`, the context is returned regardless of the value of **return_context**.
+	Export *bool `json:"export,omitempty"`
 }
 
 // MessageOptions : The Message options.
@@ -732,8 +739,8 @@ type MessageResponse struct {
 	// Assistant output to be rendered or processed by the client.
 	Output *MessageOutput `json:"output" validate:"required"`
 
-	// State information for the conversation. The context is stored by the assistant on a per-session basis. You can use
-	// this property to access context variables.
+	// Context data for the conversation. The context is stored by the assistant on a per-session basis. You can use this
+	// property to access context variables.
 	//
 	// **Note:** The context is included in message responses only if **return_context**=`true` in the message request.
 	Context *MessageContext `json:"context,omitempty"`

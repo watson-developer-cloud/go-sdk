@@ -30,38 +30,51 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/comparecomplyv1"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *comparecomplyv1.CompareComplyV1
-var serviceErr error
 
-func init() {
-	err := godotenv.Load("../.env")
-
-	if err == nil {
-		service, serviceErr = comparecomplyv1.
-			NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				Version: "2018-10-15",
-			})
-
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
+func shouldSkipTest(t *testing.T) {
+	if !configLoaded {
+		t.Skip(skipMessage)
 	}
 }
 
-func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	} else {
+		configLoaded = true
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
+		Version: "2018-10-15",
+	})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+
+	if err == nil {
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
 	}
 }
 
 func TestConvertToHTML(t *testing.T) {
 	shouldSkipTest(t)
 
-	pwd, _ := os.Getwd()
-	testPDF, testPDFErr := os.Open(pwd + "/../resources/contract_A.pdf")
+	testPDF, testPDFErr := os.Open("../resources/contract_A.pdf")
 	if testPDFErr != nil {
 		fmt.Println(testPDFErr)
 	}
@@ -79,8 +92,7 @@ func TestConvertToHTML(t *testing.T) {
 func TestClassifyElements(t *testing.T) {
 	shouldSkipTest(t)
 
-	pwd, _ := os.Getwd()
-	testPDF, testPDFErr := os.Open(pwd + "/../resources/contract_A.pdf")
+	testPDF, testPDFErr := os.Open("../resources/contract_A.pdf")
 	if testPDFErr != nil {
 		fmt.Println(testPDFErr)
 	}
@@ -98,8 +110,7 @@ func TestClassifyElements(t *testing.T) {
 func TestExtractTables(t *testing.T) {
 	shouldSkipTest(t)
 
-	pwd, _ := os.Getwd()
-	file, fileErr := os.Open(pwd + "/../resources/sample-tables.png")
+	file, fileErr := os.Open("../resources/sample-tables.png")
 	if fileErr != nil {
 		fmt.Println(fileErr)
 	}
@@ -117,13 +128,12 @@ func TestExtractTables(t *testing.T) {
 func TestCompareDocuments(t *testing.T) {
 	shouldSkipTest(t)
 
-	pwd, _ := os.Getwd()
-	file1, file1Err := os.Open(pwd + "/../resources/contract_A.pdf")
+	file1, file1Err := os.Open("../resources/contract_A.pdf")
 	if file1Err != nil {
 		fmt.Println(file1Err)
 	}
 
-	file2, file2Err := os.Open(pwd + "/../resources/contract_B.pdf")
+	file2, file2Err := os.Open("../resources/contract_B.pdf")
 	if file2Err != nil {
 		fmt.Println(file2Err)
 	}
@@ -144,7 +154,7 @@ func TestFeedback(t *testing.T) {
 	shouldSkipTest(t)
 
 	// Add feedback
-	t.Skip()
+	// t.Skip()
 	addFeedback, _, responseErr := service.AddFeedback(
 		&comparecomplyv1.AddFeedbackOptions{
 			UserID:  core.StringPtr("wonder woman"),
@@ -232,14 +242,14 @@ func TestBatch(t *testing.T) {
 	assert.NotNil(t, listBatches)
 
 	t.Skip()
+
 	// Create batch
-	pwd, _ := os.Getwd()
-	inputCredentialsFile, inputCredentialsFileErr := os.Open(pwd + "/../resources/cloud-object-storage-credentials-input.json")
+	inputCredentialsFile, inputCredentialsFileErr := os.Open("../resources/cloud-object-storage-credentials-input.json")
 	if inputCredentialsFileErr != nil {
 		fmt.Println(inputCredentialsFileErr)
 	}
 
-	outputCredentialsFile, outputCredentialsFileErr := os.Open(pwd + "/../resources/cloud-object-storage-credentials-output.json")
+	outputCredentialsFile, outputCredentialsFileErr := os.Open("../resources/cloud-object-storage-credentials-output.json")
 	if outputCredentialsFileErr != nil {
 		fmt.Println(outputCredentialsFileErr)
 	}

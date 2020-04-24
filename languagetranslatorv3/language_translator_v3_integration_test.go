@@ -29,30 +29,45 @@ import (
 	"github.com/watson-developer-cloud/go-sdk/languagetranslatorv3"
 )
 
+const skipMessage = "External configuration could not be loaded, skipping..."
+
+var configLoaded bool
+var configFile = "../.env"
+
 var service *languagetranslatorv3.LanguageTranslatorV3
-var serviceErr error
 
-func init() {
-	err := godotenv.Load("../.env")
-
-	if err == nil {
-		service, serviceErr = languagetranslatorv3.
-			NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Version: "2019-06-03",
-			})
-
-		if serviceErr == nil {
-			customHeaders := http.Header{}
-			customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
-			customHeaders.Add("X-Watson-Test", "1")
-			service.Service.SetDefaultHeaders(customHeaders)
-		}
+func shouldSkipTest(t *testing.T) {
+	if !configLoaded {
+		t.Skip(skipMessage)
 	}
 }
 
-func shouldSkipTest(t *testing.T) {
-	if service == nil {
-		t.Skip("Skipping test as service credentials are missing")
+func TestLoadConfig(t *testing.T) {
+	err := godotenv.Load(configFile)
+	if err != nil {
+		t.Skip(skipMessage)
+	} else {
+		configLoaded = true
+	}
+}
+
+func TestConstructService(t *testing.T) {
+	shouldSkipTest(t)
+
+	var err error
+
+	service, err = languagetranslatorv3.NewLanguageTranslatorV3(
+		&languagetranslatorv3.LanguageTranslatorV3Options{
+			Version: "2020-04-01",
+		})
+	assert.Nil(t, err)
+	assert.NotNil(t, service)
+
+	if err == nil {
+		customHeaders := http.Header{}
+		customHeaders.Add("X-Watson-Learning-Opt-Out", "1")
+		customHeaders.Add("X-Watson-Test", "1")
+		service.Service.SetDefaultHeaders(customHeaders)
 	}
 }
 
@@ -60,15 +75,15 @@ func TestModels(t *testing.T) {
 	shouldSkipTest(t)
 
 	// List models
-	listModels, _, responseErr := service.ListModels(
+	listModels, response, responseErr := service.ListModels(
 		&languagetranslatorv3.ListModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
+	assert.NotNil(t, response)
 	assert.NotNil(t, listModels)
 
 	// Create model
-	pwd, _ := os.Getwd()
-	glossary, glossaryErr := os.Open(pwd + "/../resources/glossary.tmx")
+	glossary, glossaryErr := os.Open("../resources/glossary.tmx")
 	assert.Nil(t, glossaryErr)
 
 	createModel, _, responseErr := service.CreateModel(

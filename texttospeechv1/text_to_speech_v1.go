@@ -39,7 +39,7 @@ import (
 // translations for words. A sounds-like translation consists of one or more words that, when combined, sound like the
 // word. A phonetic translation is based on the SSML phoneme format for representing a word. You can specify a phonetic
 // translation in standard International Phonetic Alphabet (IPA) representation or in the proprietary IBM Symbolic
-// Phonetic Representation (SPR).
+// Phonetic Representation (SPR). The Arabic, Chinese, Dutch, and Korean languages support only IPA.
 //
 // Version: 1.0.0
 // See: https://cloud.ibm.com/docs/text-to-speech/
@@ -344,8 +344,7 @@ func (textToSpeech *TextToSpeechV1) Synthesize(synthesizeOptions *SynthesizeOpti
 // can also request the pronunciation for a specific voice to see the default translation for the language of that voice
 // or for a specific custom voice model to see the translation for that voice model.
 //
-// **Note:** This method is currently a beta release. The method does not support the Arabic, Chinese, and Dutch
-// languages.
+// **Note:** This method is currently a beta release.
 //
 // **See also:** [Querying a word from a
 // language](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
@@ -412,8 +411,7 @@ func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *Ge
 // the language and a description for the new model. The model is owned by the instance of the service whose credentials
 // are used to create it.
 //
-// **Note:** This method is currently a beta release. The service does not support voice model customization for the
-// Arabic, Chinese, and Dutch languages.
+// **Note:** This method is currently a beta release.
 //
 // **See also:** [Creating a custom
 // model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
@@ -1089,8 +1087,9 @@ type AddWordOptions struct {
 	Word *string `json:"word" validate:"required"`
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
-	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. A sounds-like
-	// is one or more words that, when combined, sound like the word.
+	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. The Arabic,
+	// Chinese, Dutch, and Korean languages support only IPA. A sounds-like is one or more words that, when combined, sound
+	// like the word.
 	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
@@ -1218,7 +1217,9 @@ type CreateVoiceModelOptions struct {
 	// The name of the new custom voice model.
 	Name *string `json:"name" validate:"required"`
 
-	// The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
+	// The language of the new custom voice model. You create a custom voice model for a specific language, not for a
+	// specific voice. A custom model can be used with any voice, standard or neural, for its specified language. Omit the
+	// parameter to use the the default language, `en-US`.
 	Language *string `json:"language,omitempty"`
 
 	// A description of the new custom voice model. Specifying a description is recommended.
@@ -1229,8 +1230,11 @@ type CreateVoiceModelOptions struct {
 }
 
 // Constants associated with the CreateVoiceModelOptions.Language property.
-// The language of the new custom voice model. Omit the parameter to use the the default language, `en-US`.
+// The language of the new custom voice model. You create a custom voice model for a specific language, not for a
+// specific voice. A custom model can be used with any voice, standard or neural, for its specified language. Omit the
+// parameter to use the the default language, `en-US`.
 const (
+	CreateVoiceModelOptions_Language_ArAr = "ar-AR"
 	CreateVoiceModelOptions_Language_DeDe = "de-DE"
 	CreateVoiceModelOptions_Language_EnGb = "en-GB"
 	CreateVoiceModelOptions_Language_EnUs = "en-US"
@@ -1240,7 +1244,10 @@ const (
 	CreateVoiceModelOptions_Language_FrFr = "fr-FR"
 	CreateVoiceModelOptions_Language_ItIt = "it-IT"
 	CreateVoiceModelOptions_Language_JaJp = "ja-JP"
+	CreateVoiceModelOptions_Language_KoKr = "ko-KR"
+	CreateVoiceModelOptions_Language_NlNl = "nl-NL"
 	CreateVoiceModelOptions_Language_PtBr = "pt-BR"
+	CreateVoiceModelOptions_Language_ZhCn = "zh-CN"
 )
 
 // NewCreateVoiceModelOptions : Instantiate CreateVoiceModelOptions
@@ -1383,8 +1390,8 @@ type GetPronunciationOptions struct {
 	// (for example, `en-US`) return the same translation.
 	Voice *string `json:"voice,omitempty"`
 
-	// The phoneme format in which to return the pronunciation. Omit the parameter to obtain the pronunciation in the
-	// default format.
+	// The phoneme format in which to return the pronunciation. The Arabic, Chinese, Dutch, and Korean languages support
+	// only IPA. Omit the parameter to obtain the pronunciation in the default format.
 	Format *string `json:"format,omitempty"`
 
 	// The customization ID (GUID) of a custom voice model for which the pronunciation is to be returned. The language of a
@@ -1402,18 +1409,24 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
+	GetPronunciationOptions_Voice_ArArOmarvoice        = "ar-AR_OmarVoice"
 	GetPronunciationOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
 	GetPronunciationOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
 	GetPronunciationOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	GetPronunciationOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetPronunciationOptions_Voice_DeDeErikav3voice     = "de-DE_ErikaV3Voice"
 	GetPronunciationOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	GetPronunciationOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
 	GetPronunciationOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
 	GetPronunciationOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	GetPronunciationOptions_Voice_EnUsEmilyv3voice     = "en-US_EmilyV3Voice"
+	GetPronunciationOptions_Voice_EnUsHenryv3voice     = "en-US_HenryV3Voice"
+	GetPronunciationOptions_Voice_EnUsKevinv3voice     = "en-US_KevinV3Voice"
 	GetPronunciationOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
 	GetPronunciationOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
 	GetPronunciationOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
 	GetPronunciationOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetPronunciationOptions_Voice_EnUsOliviav3voice    = "en-US_OliviaV3Voice"
 	GetPronunciationOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
 	GetPronunciationOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
 	GetPronunciationOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
@@ -1428,13 +1441,20 @@ const (
 	GetPronunciationOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
 	GetPronunciationOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
 	GetPronunciationOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetPronunciationOptions_Voice_KoKrYoungmivoice     = "ko-KR_YoungmiVoice"
+	GetPronunciationOptions_Voice_KoKrYunavoice        = "ko-KR_YunaVoice"
+	GetPronunciationOptions_Voice_NlNlEmmavoice        = "nl-NL_EmmaVoice"
+	GetPronunciationOptions_Voice_NlNlLiamvoice        = "nl-NL_LiamVoice"
 	GetPronunciationOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
 	GetPronunciationOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
+	GetPronunciationOptions_Voice_ZhCnLinavoice        = "zh-CN_LiNaVoice"
+	GetPronunciationOptions_Voice_ZhCnWangweivoice     = "zh-CN_WangWeiVoice"
+	GetPronunciationOptions_Voice_ZhCnZhangjingvoice   = "zh-CN_ZhangJingVoice"
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
-// The phoneme format in which to return the pronunciation. Omit the parameter to obtain the pronunciation in the
-// default format.
+// The phoneme format in which to return the pronunciation. The Arabic, Chinese, Dutch, and Korean languages support
+// only IPA. Omit the parameter to obtain the pronunciation in the default format.
 const (
 	GetPronunciationOptions_Format_Ibm = "ibm"
 	GetPronunciationOptions_Format_Ipa = "ipa"
@@ -1525,18 +1545,24 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
+	GetVoiceOptions_Voice_ArArOmarvoice        = "ar-AR_OmarVoice"
 	GetVoiceOptions_Voice_DeDeBirgitv3voice    = "de-DE_BirgitV3Voice"
 	GetVoiceOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
 	GetVoiceOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	GetVoiceOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	GetVoiceOptions_Voice_DeDeErikav3voice     = "de-DE_ErikaV3Voice"
 	GetVoiceOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	GetVoiceOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
 	GetVoiceOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
 	GetVoiceOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	GetVoiceOptions_Voice_EnUsEmilyv3voice     = "en-US_EmilyV3Voice"
+	GetVoiceOptions_Voice_EnUsHenryv3voice     = "en-US_HenryV3Voice"
+	GetVoiceOptions_Voice_EnUsKevinv3voice     = "en-US_KevinV3Voice"
 	GetVoiceOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
 	GetVoiceOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
 	GetVoiceOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
 	GetVoiceOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	GetVoiceOptions_Voice_EnUsOliviav3voice    = "en-US_OliviaV3Voice"
 	GetVoiceOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
 	GetVoiceOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
 	GetVoiceOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
@@ -1551,8 +1577,15 @@ const (
 	GetVoiceOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
 	GetVoiceOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
 	GetVoiceOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	GetVoiceOptions_Voice_KoKrYoungmivoice     = "ko-KR_YoungmiVoice"
+	GetVoiceOptions_Voice_KoKrYunavoice        = "ko-KR_YunaVoice"
+	GetVoiceOptions_Voice_NlNlEmmavoice        = "nl-NL_EmmaVoice"
+	GetVoiceOptions_Voice_NlNlLiamvoice        = "nl-NL_LiamVoice"
 	GetVoiceOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
 	GetVoiceOptions_Voice_PtBrIsabelavoice     = "pt-BR_IsabelaVoice"
+	GetVoiceOptions_Voice_ZhCnLinavoice        = "zh-CN_LiNaVoice"
+	GetVoiceOptions_Voice_ZhCnWangweivoice     = "zh-CN_WangWeiVoice"
+	GetVoiceOptions_Voice_ZhCnZhangjingvoice   = "zh-CN_ZhangJingVoice"
 )
 
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
@@ -1635,6 +1668,7 @@ type ListVoiceModelsOptions struct {
 // The language for which custom voice models that are owned by the requesting credentials are to be returned. Omit the
 // parameter to see all custom voice models that are owned by the requester.
 const (
+	ListVoiceModelsOptions_Language_ArAr = "ar-AR"
 	ListVoiceModelsOptions_Language_DeDe = "de-DE"
 	ListVoiceModelsOptions_Language_EnGb = "en-GB"
 	ListVoiceModelsOptions_Language_EnUs = "en-US"
@@ -1644,7 +1678,10 @@ const (
 	ListVoiceModelsOptions_Language_FrFr = "fr-FR"
 	ListVoiceModelsOptions_Language_ItIt = "it-IT"
 	ListVoiceModelsOptions_Language_JaJp = "ja-JP"
+	ListVoiceModelsOptions_Language_KoKr = "ko-KR"
+	ListVoiceModelsOptions_Language_NlNl = "nl-NL"
 	ListVoiceModelsOptions_Language_PtBr = "pt-BR"
+	ListVoiceModelsOptions_Language_ZhCn = "zh-CN"
 )
 
 // NewListVoiceModelsOptions : Instantiate ListVoiceModelsOptions
@@ -1746,9 +1783,9 @@ type SynthesizeOptions struct {
 	Voice *string `json:"voice,omitempty"`
 
 	// The customization ID (GUID) of a custom voice model to use for the synthesis. If a custom voice model is specified,
-	// it is guaranteed to work only if it matches the language of the indicated voice. You must make the request with
-	// credentials for the instance of the service that owns the custom model. Omit the parameter to use the specified
-	// voice with no customization.
+	// it works only if it matches the language of the indicated voice. You must make the request with credentials for the
+	// instance of the service that owns the custom model. Omit the parameter to use the specified voice with no
+	// customization.
 	CustomizationID *string `json:"customization_id,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1763,14 +1800,19 @@ const (
 	SynthesizeOptions_Voice_DeDeBirgitvoice      = "de-DE_BirgitVoice"
 	SynthesizeOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	SynthesizeOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
+	SynthesizeOptions_Voice_DeDeErikav3voice     = "de-DE_ErikaV3Voice"
 	SynthesizeOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	SynthesizeOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
 	SynthesizeOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
 	SynthesizeOptions_Voice_EnUsAllisonvoice     = "en-US_AllisonVoice"
+	SynthesizeOptions_Voice_EnUsEmilyv3voice     = "en-US_EmilyV3Voice"
+	SynthesizeOptions_Voice_EnUsHenryv3voice     = "en-US_HenryV3Voice"
+	SynthesizeOptions_Voice_EnUsKevinv3voice     = "en-US_KevinV3Voice"
 	SynthesizeOptions_Voice_EnUsLisav3voice      = "en-US_LisaV3Voice"
 	SynthesizeOptions_Voice_EnUsLisavoice        = "en-US_LisaVoice"
 	SynthesizeOptions_Voice_EnUsMichaelv3voice   = "en-US_MichaelV3Voice"
 	SynthesizeOptions_Voice_EnUsMichaelvoice     = "en-US_MichaelVoice"
+	SynthesizeOptions_Voice_EnUsOliviav3voice    = "en-US_OliviaV3Voice"
 	SynthesizeOptions_Voice_EsEsEnriquev3voice   = "es-ES_EnriqueV3Voice"
 	SynthesizeOptions_Voice_EsEsEnriquevoice     = "es-ES_EnriqueVoice"
 	SynthesizeOptions_Voice_EsEsLaurav3voice     = "es-ES_LauraV3Voice"
@@ -1785,6 +1827,8 @@ const (
 	SynthesizeOptions_Voice_ItItFrancescavoice   = "it-IT_FrancescaVoice"
 	SynthesizeOptions_Voice_JaJpEmiv3voice       = "ja-JP_EmiV3Voice"
 	SynthesizeOptions_Voice_JaJpEmivoice         = "ja-JP_EmiVoice"
+	SynthesizeOptions_Voice_KoKrYoungmivoice     = "ko-KR_YoungmiVoice"
+	SynthesizeOptions_Voice_KoKrYunavoice        = "ko-KR_YunaVoice"
 	SynthesizeOptions_Voice_NlNlEmmavoice        = "nl-NL_EmmaVoice"
 	SynthesizeOptions_Voice_NlNlLiamvoice        = "nl-NL_LiamVoice"
 	SynthesizeOptions_Voice_PtBrIsabelav3voice   = "pt-BR_IsabelaV3Voice"
@@ -1835,8 +1879,9 @@ func (options *SynthesizeOptions) SetHeaders(param map[string]string) *Synthesiz
 type Translation struct {
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
-	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. A sounds-like
-	// is one or more words that, when combined, sound like the word.
+	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. The Arabic,
+	// Chinese, Dutch, and Korean languages support only IPA. A sounds-like is one or more words that, when combined, sound
+	// like the word.
 	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
@@ -2022,12 +2067,13 @@ type Voices struct {
 // Word : Information about a word for the custom voice model.
 type Word struct {
 
-	// The word for the custom voice model.
+	// The word for the custom voice model. The maximum length of a word is 49 characters.
 	Word *string `json:"word" validate:"required"`
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
-	// representing the phonetic string of a word either as an IPA or IBM SPR translation. A sounds-like translation
-	// consists of one or more words that, when combined, sound like the word.
+	// representing the phonetic string of a word either as an IPA or IBM SPR translation. The Arabic, Chinese, Dutch, and
+	// Korean languages support only IPA. A sounds-like translation consists of one or more words that, when combined,
+	// sound like the word. The maximum length of a translation is 499 characters.
 	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for

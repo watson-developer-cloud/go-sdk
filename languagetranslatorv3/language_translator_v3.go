@@ -31,7 +31,7 @@ import (
 // with your customers in their own language, and more.
 //
 // Version: 3.0.0
-// See: https://cloud.ibm.com/docs/services/language-translator/
+// See: https://cloud.ibm.com/docs/language-translator/
 type LanguageTranslatorV3 struct {
 	Service *core.BaseService
 	Version string
@@ -105,7 +105,8 @@ func (languageTranslator *LanguageTranslatorV3) DisableSSLVerification() {
 }
 
 // Translate : Translate
-// Translates the input text from the source language to the target language.
+// Translates the input text from the source language to the target language. A target language or translation model ID
+// is required. The service attempts to detect the language of the source text if it is not specified.
 func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *TranslateOptions) (result *TranslationResult, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(translateOptions, "translateOptions cannot be nil")
 	if err != nil {
@@ -926,6 +927,10 @@ type DocumentStatus struct {
 	// Translation source language code.
 	Source *string `json:"source" validate:"required"`
 
+	// A score between 0 and 1 indicating the confidence of source language detection. A higher value indicates greater
+	// confidence. This is returned only when the service automatically detects the source language.
+	DetectedLanguageConfidence *float64 `json:"detected_language_confidence,omitempty"`
+
 	// Translation target language code.
 	Target *string `json:"target" validate:"required"`
 
@@ -1205,7 +1210,7 @@ type TranslateDocumentOptions struct {
 	// The contents of the source file to translate.
 	//
 	// [Supported file
-	// types](https://cloud.ibm.com/docs/services/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
+	// types](https://cloud.ibm.com/docs/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
 	//
 	// Maximum file size: **20 MB**.
 	File io.ReadCloser `json:"file" validate:"required"`
@@ -1216,13 +1221,15 @@ type TranslateDocumentOptions struct {
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The model to use for translation. `model_id` or both `source` and `target` are required.
+	// The model to use for translation. For example, `en-de` selects the IBM provided base model for English to German
+	// translation. A model ID overrides the source and target parameters and is required if you use a custom model. If no
+	// model ID is specified, you must specify a target language.
 	ModelID *string `json:"model_id,omitempty"`
 
 	// Language code that specifies the language of the source document.
 	Source *string `json:"source,omitempty"`
 
-	// Language code that specifies the target language for translation.
+	// Language code that specifies the target language for translation. Required if model ID is not specified.
 	Target *string `json:"target,omitempty"`
 
 	// To use a previously submitted document as the source for a new translation, enter the `document_id` of the document.
@@ -1294,13 +1301,15 @@ type TranslateOptions struct {
 	// Input text in UTF-8 encoding. Multiple entries will result in multiple translations in the response.
 	Text []string `json:"text" validate:"required"`
 
-	// A globally unique string that identifies the underlying model that is used for translation.
+	// The model to use for translation. For example, `en-de` selects the IBM provided base model for English to German
+	// translation. A model ID overrides the source and target parameters and is required if you use a custom model. If no
+	// model ID is specified, you must specify a target language.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// Translation source language code.
+	// Language code that specifies the language of the source document.
 	Source *string `json:"source,omitempty"`
 
-	// Translation target language code.
+	// Language code that specifies the target language for translation. Required if model ID is not specified.
 	Target *string `json:"target,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1419,6 +1428,13 @@ type TranslationResult struct {
 
 	// Number of characters in the input text.
 	CharacterCount *int64 `json:"character_count" validate:"required"`
+
+	// The language code of the source text if the source language was automatically detected.
+	DetectedLanguage *string `json:"detected_language,omitempty"`
+
+	// A score between 0 and 1 indicating the confidence of source language detection. A higher value indicates greater
+	// confidence. This is returned only when the service automatically detects the source language.
+	DetectedLanguageConfidence *float64 `json:"detected_language_confidence,omitempty"`
 
 	// List of translation output in UTF-8, corresponding to the input text entries.
 	Translations []Translation `json:"translations" validate:"required"`

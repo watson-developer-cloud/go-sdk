@@ -29,7 +29,7 @@ import (
 // aspects of the documents.
 //
 // Version: 1.0
-// See: https://cloud.ibm.com/docs/services/compare-comply?topic=compare-comply-about
+// See: https://cloud.ibm.com/docs/compare-comply?topic=compare-comply-about
 type CompareComplyV1 struct {
 	Service *core.BaseService
 	Version string
@@ -613,9 +613,9 @@ func (compareComply *CompareComplyV1) DeleteFeedback(deleteFeedbackOptions *Dele
 // Run Compare and Comply methods over a collection of input documents.
 //
 // **Important:** Batch processing requires the use of the [IBM Cloud Object Storage
-// service](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-about#about-ibm-cloud-object-storage).
+// service](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-about#about-ibm-cloud-object-storage).
 // The use of IBM Cloud Object Storage with Compare and Comply is discussed at [Using batch
-// processing](https://cloud.ibm.com/docs/services/compare-comply?topic=compare-comply-batching#before-you-batch).
+// processing](https://cloud.ibm.com/docs/compare-comply?topic=compare-comply-batching#before-you-batch).
 func (compareComply *CompareComplyV1) CreateBatch(createBatchOptions *CreateBatchOptions) (result *BatchStatus, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createBatchOptions, "createBatchOptions cannot be nil")
 	if err != nil {

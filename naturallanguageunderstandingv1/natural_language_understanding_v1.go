@@ -30,11 +30,11 @@ import (
 // unwanted content.
 //
 // You can create [custom
-// models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+// models](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
 // with Watson Knowledge Studio to detect custom entities and relations in Natural Language Understanding.
 //
 // Version: 1.0
-// See: https://cloud.ibm.com/docs/services/natural-language-understanding/
+// See: https://cloud.ibm.com/docs/natural-language-understanding/
 type NaturalLanguageUnderstandingV1 struct {
 	Service *core.BaseService
 	Version string
@@ -122,7 +122,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DisableSSLVe
 //
 // If a language for the input text is not specified with the `language` parameter, the service [automatically detects
 // the
-// language](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-detectable-languages).
+// language](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-detectable-languages).
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(analyzeOptions *AnalyzeOptions) (result *AnalysisResults, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(analyzeOptions, "analyzeOptions cannot be nil")
 	if err != nil {
@@ -210,7 +210,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) Analyze(anal
 
 // ListModels : List models
 // Lists Watson Knowledge Studio [custom entities and relations
-// models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+// models](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
 // that are deployed to your Natural Language Understanding service.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModels(listModelsOptions *ListModelsOptions) (result *ListModelsResults, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listModelsOptions, "listModelsOptions")
@@ -400,12 +400,12 @@ type AnalyzeOptions struct {
 	URL *string `json:"url,omitempty"`
 
 	// Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning, see the [Analyzing
-	// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages)
+	// webpages](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages)
 	// documentation.
 	Clean *bool `json:"clean,omitempty"`
 
 	// An [XPath
-	// query](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages#xpath)
+	// query](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages#xpath)
 	// to perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text before it is
 	// analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
 	Xpath *string `json:"xpath,omitempty"`
@@ -418,7 +418,7 @@ type AnalyzeOptions struct {
 
 	// ISO 639-1 code that specifies the language of your text. This overrides automatic language detection. Language
 	// support differs depending on the features you include in your analysis. See [Language
-	// support](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-language-support)
+	// support](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-language-support)
 	// for more information.
 	Language *string `json:"language,omitempty"`
 
@@ -522,7 +522,7 @@ type CategoriesOptions struct {
 	Limit *int64 `json:"limit,omitempty"`
 
 	// Enter a [custom
-	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
 	// ID to override the standard categories model.
 	//
 	// The custom categories experimental feature will be retired on 19 December 2019. On that date, deployed custom
@@ -544,7 +544,7 @@ type CategoriesResult struct {
 
 	// The path to the category through the 5-level taxonomy hierarchy. For the complete list of categories, see the
 	// [Categories
-	// hierarchy](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy)
+	// hierarchy](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy)
 	// documentation.
 	Label *string `json:"label,omitempty"`
 
@@ -697,7 +697,7 @@ type EmotionScores struct {
 }
 
 // EntitiesOptions : Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-entity-types).
+// subtypes](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-entity-types).
 //
 // Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 // Arabic, Chinese, and Dutch are supported only through custom models.
@@ -710,7 +710,7 @@ type EntitiesOptions struct {
 	Mentions *bool `json:"mentions,omitempty"`
 
 	// Enter a [custom
-	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
 	// ID to override the standard entity detection model.
 	Model *string `json:"model,omitempty"`
 
@@ -793,7 +793,7 @@ type Features struct {
 	Emotion *EmotionOptions `json:"emotion,omitempty"`
 
 	// Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-	// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-entity-types).
+	// subtypes](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-entity-types).
 	//
 	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
 	// Arabic, Chinese, and Dutch are supported only through custom models.
@@ -810,7 +810,7 @@ type Features struct {
 
 	// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 	// might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-	// types](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-relations).
+	// types](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-relations).
 	//
 	// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
 	// Portuguese custom models are also supported.
@@ -960,14 +960,14 @@ type RelationEntity struct {
 
 // RelationsOptions : Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 // might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-// types](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-relations).
+// types](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-relations).
 //
 // Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
 // Portuguese custom models are also supported.
 type RelationsOptions struct {
 
 	// Enter a [custom
-	// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
 	// ID to override the default model.
 	Model *string `json:"model,omitempty"`
 }
