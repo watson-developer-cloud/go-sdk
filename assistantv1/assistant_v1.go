@@ -4895,7 +4895,7 @@ type DialogNodeOutputGeneric struct {
 
 	// The text of the search query. This can be either a natural-language query or a query that uses the Discovery query
 	// language syntax, depending on the value of the **query_type** property. For more information, see the [Discovery
-	// service documentation](https://cloud.ibm.com/docs/discovery/query-operators.html#query-operators). Required when
+	// service documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-operators#query-operators). Required when
 	// **response_type**=`search_skill`.
 	Query *string `json:"query,omitempty"`
 
@@ -4904,7 +4904,7 @@ type DialogNodeOutputGeneric struct {
 
 	// An optional filter that narrows the set of documents to be searched. For more information, see the [Discovery
 	// service documentation]([Discovery service
-	// documentation](https://cloud.ibm.com/docs/discovery/query-parameters.html#filter).
+	// documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-parameters#filter).
 	Filter *string `json:"filter,omitempty"`
 
 	// The version of the Discovery service API to use for the query.
