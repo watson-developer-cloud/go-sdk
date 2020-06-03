@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,14 @@ package assistantv1_test
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/assistantv1"
-	"net/http"
-	"net/http/httptest"
-	"strings"
 )
 
 var _ = Describe(`AssistantV1`, func() {
