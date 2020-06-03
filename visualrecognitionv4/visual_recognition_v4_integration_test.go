@@ -333,3 +333,19 @@ func TestTraining(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 }
+
+func TestGetModel(t *testing.T) {
+	shouldSkipTest(t)
+
+	result, response, err := service.GetModelFile(
+		&visualrecognitionv4.GetModelFileOptions{
+			CollectionID: core.StringPtr(collectionID),
+			Feature:      core.StringPtr("objects"),
+			ModelFormat:  core.StringPtr("rscnn"),
+		},
+	)
+
+	assert.Nil(t, err)
+	assert.NotNil(t, result)
+	assert.NotNil(t, response)
+}

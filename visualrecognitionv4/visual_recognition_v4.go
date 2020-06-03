@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -447,6 +447,64 @@ func (visualRecognition *VisualRecognitionV4) DeleteCollection(deleteCollectionO
 	}
 
 	response, err = visualRecognition.Service.Request(request, nil)
+
+	return
+}
+
+// GetModelFile : Get a model
+// Download a model that you can deploy to detect objects in images. The collection must include a generated model,
+// which is indicated in the response for the collection details as `"rscnn_ready": true`. If the value is `false`,
+// train or retrain the collection to generate the model.
+//
+// Currently, the model format is specific to Android apps. For more information about how to deploy the model to your
+// app, see the [Watson Visual Recognition on Android](https://github.com/matt-ny/rscnn) project in GitHub.
+func (visualRecognition *VisualRecognitionV4) GetModelFile(getModelFileOptions *GetModelFileOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getModelFileOptions, "getModelFileOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getModelFileOptions, "getModelFileOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v4/collections", "model"}
+	pathParameters := []string{*getModelFileOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getModelFileOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("watson_vision_combined", "V4", "GetModelFile")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/octet-stream")
+
+	builder.AddQuery("feature", fmt.Sprint(*getModelFileOptions.Feature))
+	builder.AddQuery("model_format", fmt.Sprint(*getModelFileOptions.ModelFormat))
+	builder.AddQuery("version", visualRecognition.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = visualRecognition.Service.Request(request, new(io.ReadCloser))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(io.ReadCloser)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
 
 	return
 }
@@ -1772,6 +1830,67 @@ func (options *GetJpegImageOptions) SetHeaders(param map[string]string) *GetJpeg
 	return options
 }
 
+// GetModelFileOptions : The GetModelFile options.
+type GetModelFileOptions struct {
+
+	// The identifier of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// The feature for the model.
+	Feature *string `json:"feature" validate:"required"`
+
+	// The format of the returned model.
+	ModelFormat *string `json:"model_format" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// Constants associated with the GetModelFileOptions.Feature property.
+// The feature for the model.
+const (
+	GetModelFileOptions_Feature_Objects = "objects"
+)
+
+// Constants associated with the GetModelFileOptions.ModelFormat property.
+// The format of the returned model.
+const (
+	GetModelFileOptions_ModelFormat_Rscnn = "rscnn"
+)
+
+// NewGetModelFileOptions : Instantiate GetModelFileOptions
+func (visualRecognition *VisualRecognitionV4) NewGetModelFileOptions(collectionID string, feature string, modelFormat string) *GetModelFileOptions {
+	return &GetModelFileOptions{
+		CollectionID: core.StringPtr(collectionID),
+		Feature:      core.StringPtr(feature),
+		ModelFormat:  core.StringPtr(modelFormat),
+	}
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetModelFileOptions) SetCollectionID(collectionID string) *GetModelFileOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetFeature : Allow user to set Feature
+func (options *GetModelFileOptions) SetFeature(feature string) *GetModelFileOptions {
+	options.Feature = core.StringPtr(feature)
+	return options
+}
+
+// SetModelFormat : Allow user to set ModelFormat
+func (options *GetModelFileOptions) SetModelFormat(modelFormat string) *GetModelFileOptions {
+	options.ModelFormat = core.StringPtr(modelFormat)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetModelFileOptions) SetHeaders(param map[string]string) *GetModelFileOptions {
+	options.Headers = param
+	return options
+}
+
 // GetObjectMetadataOptions : The GetObjectMetadata options.
 type GetObjectMetadataOptions struct {
 
@@ -1884,6 +2003,7 @@ type ImageDetails struct {
 	// Height and width of an image.
 	Dimensions *ImageDimensions `json:"dimensions,omitempty"`
 
+	// Details about the errors.
 	Errors []Error `json:"errors,omitempty"`
 
 	// Training data for all objects.
@@ -2109,18 +2229,22 @@ type ObjectTrainingStatus struct {
 	// Whether the most recent training failed.
 	LatestFailed *bool `json:"latest_failed" validate:"required"`
 
+	// Whether the model can be downloaded after the training status is `ready`.
+	RscnnReady *bool `json:"rscnn_ready" validate:"required"`
+
 	// Details about the training. If training is in progress, includes information about the status. If training is not in
 	// progress, includes a success message or information about why training failed.
 	Description *string `json:"description" validate:"required"`
 }
 
 // NewObjectTrainingStatus : Instantiate ObjectTrainingStatus (Generic Model Constructor)
-func (visualRecognition *VisualRecognitionV4) NewObjectTrainingStatus(ready bool, inProgress bool, dataChanged bool, latestFailed bool, description string) (model *ObjectTrainingStatus, err error) {
+func (visualRecognition *VisualRecognitionV4) NewObjectTrainingStatus(ready bool, inProgress bool, dataChanged bool, latestFailed bool, rscnnReady bool, description string) (model *ObjectTrainingStatus, err error) {
 	model = &ObjectTrainingStatus{
 		Ready:        core.BoolPtr(ready),
 		InProgress:   core.BoolPtr(inProgress),
 		DataChanged:  core.BoolPtr(dataChanged),
 		LatestFailed: core.BoolPtr(latestFailed),
+		RscnnReady:   core.BoolPtr(rscnnReady),
 		Description:  core.StringPtr(description),
 	}
 	err = core.ValidateStruct(model, "required parameters")
