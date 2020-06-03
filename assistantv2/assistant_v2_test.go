@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,14 @@ package assistantv2_test
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/assistantv2"
-	"net/http"
-	"net/http/httptest"
-	"strings"
 )
 
 var _ = Describe(`AssistantV2`, func() {
@@ -128,7 +129,7 @@ var _ = Describe(`AssistantV2`, func() {
 		sessionID := "exampleString"
 		messagePath = strings.Replace(messagePath, "{assistant_id}", assistantID, 1)
 		messagePath = strings.Replace(messagePath, "{session_id}", sessionID, 1)
-		Context(`Successfully - Send user input to assistant`, func() {
+		Context(`Successfully - Send user input to assistant (stateful)`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
@@ -163,6 +164,53 @@ var _ = Describe(`AssistantV2`, func() {
 
 				messageOptions := testService.NewMessageOptions(assistantID, sessionID)
 				result, response, operationErr = testService.Message(messageOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`MessageStateless(messageStatelessOptions *MessageStatelessOptions)`, func() {
+		messageStatelessPath := "/v2/assistants/{assistant_id}/message"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		assistantID := "exampleString"
+		messageStatelessPath = strings.Replace(messageStatelessPath, "{assistant_id}", assistantID, 1)
+		Context(`Successfully - Send user input to assistant (stateless)`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(messageStatelessPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"output": {}, "context": {}}`)
+			}))
+			It(`Succeed to call MessageStateless`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.MessageStateless(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				messageStatelessOptions := testService.NewMessageStatelessOptions(assistantID)
+				result, response, operationErr = testService.MessageStateless(messageStatelessOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
