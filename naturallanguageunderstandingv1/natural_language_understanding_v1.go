@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -926,6 +926,9 @@ type Model struct {
 	WorkspaceID *string `json:"workspace_id,omitempty"`
 
 	// The model version, if it was manually provided in Watson Knowledge Studio.
+	ModelVersion *string `json:"model_version,omitempty"`
+
+	// (Deprecated — use `model_version`) The model version, if it was manually provided in Watson Knowledge Studio.
 	Version *string `json:"version,omitempty"`
 
 	// The description of the version, if it was manually provided in Watson Knowledge Studio.
