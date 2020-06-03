@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,10 @@ package visualrecognitionv3
 
 import (
 	"fmt"
-	"io"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
 )
 
 // VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
@@ -156,10 +154,14 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		builder.AddFormData("threshold", "", "", fmt.Sprint(*classifyOptions.Threshold))
 	}
 	if classifyOptions.Owners != nil {
-		builder.AddFormData("owners", "", "", strings.Join(classifyOptions.Owners, ","))
+		for _, item := range classifyOptions.Owners {
+			builder.AddFormData("owners", "", "", fmt.Sprint(item))
+		}
 	}
 	if classifyOptions.ClassifierIds != nil {
-		builder.AddFormData("classifier_ids", "", "", strings.Join(classifyOptions.ClassifierIds, ","))
+		for _, item := range classifyOptions.ClassifierIds {
+			builder.AddFormData("classifier_ids", "", "", fmt.Sprint(item))
+		}
 	}
 
 	request, err := builder.Build()

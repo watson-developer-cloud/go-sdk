@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights

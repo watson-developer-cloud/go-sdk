@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,6 +118,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 	Describe(`Recognize(recognizeOptions *RecognizeOptions)`, func() {
 		recognizePath := "/v1/recognize"
 		bearerToken := "0ui9876453"
+		audio := new(os.File)
 		Context(`Successfully - Recognize audio`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
@@ -149,12 +150,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				file, err := os.Open("../resources/output.wav")
-				if err != nil {
-					panic(err)
-				}
-				recognizeOptions := testService.
-					NewRecognizeOptions(file)
+				recognizeOptions := testService.NewRecognizeOptions(audio)
 				result, response, operationErr = testService.Recognize(recognizeOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -251,6 +247,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 	Describe(`CreateJob(createJobOptions *CreateJobOptions)`, func() {
 		createJobPath := "/v1/recognitions"
 		bearerToken := "0ui9876453"
+		audio := new(os.File)
 		Context(`Successfully - Create a job`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
@@ -282,13 +279,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				file, err := os.Open("../resources/output.wav")
-				if err != nil {
-					panic(err)
-				}
-				createJobOptions := testService.
-					NewCreateJobOptions(file).
-					SetContentType("audio/wav")
+				createJobOptions := testService.NewCreateJobOptions(audio)
 				result, response, operationErr = testService.CreateJob(createJobOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -765,10 +756,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		bearerToken := "0ui9876453"
 		customizationID := "exampleString"
 		corpusName := "exampleString"
-		corpusFile, corpusErr := os.Open("../resources/corpus-short-1.txt")
-		if corpusErr != nil {
-			panic(corpusErr)
-		}
+		corpusFile := new(os.File)
 		addCorpusPath = strings.Replace(addCorpusPath, "{customization_id}", customizationID, 1)
 		addCorpusPath = strings.Replace(addCorpusPath, "{corpus_name}", corpusName, 1)
 		Context(`Successfully - Add a corpus`, func() {
@@ -1158,10 +1146,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		bearerToken := "0ui9876453"
 		customizationID := "exampleString"
 		grammarName := "exampleString"
-		grammarFile, grammarFileErr := os.Open("../resources/confirm-grammar.xml")
-		if grammarFileErr != nil {
-			panic(grammarFileErr)
-		}
+		grammarFile := new(os.File)
 		contentType := "exampleString"
 		addGrammarPath = strings.Replace(addGrammarPath, "{customization_id}", customizationID, 1)
 		addGrammarPath = strings.Replace(addGrammarPath, "{grammar_name}", grammarName, 1)
@@ -1631,10 +1616,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		bearerToken := "0ui9876453"
 		customizationID := "exampleString"
 		audioName := "exampleString"
-		audioResource, audioResourceErr := os.Open("../resources/audio_example.mp3")
-		if audioResourceErr != nil {
-			panic(audioResourceErr)
-		}
+		audioResource := new(os.File)
 		addAudioPath = strings.Replace(addAudioPath, "{customization_id}", customizationID, 1)
 		addAudioPath = strings.Replace(addAudioPath, "{audio_name}", audioName, 1)
 		Context(`Successfully - Add an audio resource`, func() {

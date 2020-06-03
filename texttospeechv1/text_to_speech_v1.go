@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package texttospeechv1
 
 import (
 	"fmt"
-	"io"
-
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
@@ -30,16 +28,16 @@ import (
 // least one male or female voice, sometimes both, for each language. The audio is streamed back to the client with
 // minimal delay.
 //
-// For speech synthesis, the service supports a synchronous HTTP Representational State Transfer (REST) interface. It
-// also supports a WebSocket interface that provides both plain text and SSML input, including the SSML &lt;mark&gt;
-// element and word timings. SSML is an XML-based markup language that provides text annotation for speech-synthesis
-// applications.
+// For speech synthesis, the service supports a synchronous HTTP Representational State Transfer (REST) interface and a
+// WebSocket interface. Both interfaces support plain text and SSML input. SSML is an XML-based markup language that
+// provides text annotation for speech-synthesis applications. The WebSocket interface also supports the SSML
+// <code>&lt;mark&gt;</code> element and word timings.
 //
-// The service also offers a customization interface. You can use the interface to define sounds-like or phonetic
-// translations for words. A sounds-like translation consists of one or more words that, when combined, sound like the
-// word. A phonetic translation is based on the SSML phoneme format for representing a word. You can specify a phonetic
-// translation in standard International Phonetic Alphabet (IPA) representation or in the proprietary IBM Symbolic
-// Phonetic Representation (SPR). The Arabic, Chinese, Dutch, and Korean languages support only IPA.
+// The service offers a customization interface that you can use to define sounds-like or phonetic translations for
+// words. A sounds-like translation consists of one or more words that, when combined, sound like the word. A phonetic
+// translation is based on the SSML phoneme format for representing a word. You can specify a phonetic translation in
+// standard International Phonetic Alphabet (IPA) representation or in the proprietary IBM Symbolic Phonetic
+// Representation (SPR). The Arabic, Chinese, Dutch, and Korean languages support only IPA.
 //
 // Version: 1.0.0
 // See: https://cloud.ibm.com/docs/text-to-speech/

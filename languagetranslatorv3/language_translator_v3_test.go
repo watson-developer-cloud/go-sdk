@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -251,12 +251,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				file, err := os.Open("../resources/language_translator_model.tmx")
-				Expect(err).To(BeNil())
-				defer file.Close()
-
-				createModelOptions := testService.NewCreateModelOptions(baseModelID).
-					SetForcedGlossary(file)
+				createModelOptions := testService.NewCreateModelOptions(baseModelID)
 				result, response, operationErr = testService.CreateModel(createModelOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -407,6 +402,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		translateDocumentPath := "/v3/documents"
 		version := "exampleString"
 		bearerToken := "0ui9876453"
+		file := new(os.File)
 		filename := "exampleString"
 		Context(`Successfully - Translate document`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
@@ -440,10 +436,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
-
-				file, err := os.Open("../resources/hello_world.txt")
-				Expect(err).To(BeNil())
-				defer file.Close()
 
 				translateDocumentOptions := testService.NewTranslateDocumentOptions(file, filename)
 				result, response, operationErr = testService.TranslateDocument(translateDocumentOptions)

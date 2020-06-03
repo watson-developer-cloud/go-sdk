@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,13 @@ package discoveryv2_test
 
 import (
 	"fmt"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/discoveryv2"
+	"net/http"
+	"net/http/httptest"
+	"strings"
 )
 
 var _ = Describe(`DiscoveryV2`, func() {
@@ -321,11 +319,6 @@ var _ = Describe(`DiscoveryV2`, func() {
 		bearerToken := "0ui9876453"
 		projectID := "exampleString"
 		collectionID := "exampleString"
-		pwd, _ := os.Getwd()
-		file, fileErr := os.Open(pwd + "/../resources/simple.html")
-		if fileErr != nil {
-			panic(fileErr)
-		}
 		addDocumentPath = strings.Replace(addDocumentPath, "{project_id}", projectID, 1)
 		addDocumentPath = strings.Replace(addDocumentPath, "{collection_id}", collectionID, 1)
 		Context(`Successfully - Add a document`, func() {
@@ -362,7 +355,6 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(result).To(BeNil())
 
 				addDocumentOptions := testService.NewAddDocumentOptions(projectID, collectionID)
-				addDocumentOptions.File = file
 				result, response, operationErr = testService.AddDocument(addDocumentOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -377,11 +369,6 @@ var _ = Describe(`DiscoveryV2`, func() {
 		projectID := "exampleString"
 		collectionID := "exampleString"
 		documentID := "exampleString"
-		pwd, _ := os.Getwd()
-		file, fileErr := os.Open(pwd + "/../resources/simple.html")
-		if fileErr != nil {
-			panic(fileErr)
-		}
 		updateDocumentPath = strings.Replace(updateDocumentPath, "{project_id}", projectID, 1)
 		updateDocumentPath = strings.Replace(updateDocumentPath, "{collection_id}", collectionID, 1)
 		updateDocumentPath = strings.Replace(updateDocumentPath, "{document_id}", documentID, 1)
@@ -419,7 +406,6 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(result).To(BeNil())
 
 				updateDocumentOptions := testService.NewUpdateDocumentOptions(projectID, collectionID, documentID)
-				updateDocumentOptions.File = file
 				result, response, operationErr = testService.UpdateDocument(updateDocumentOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())

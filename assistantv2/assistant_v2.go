@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,8 +199,9 @@ func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionO
 	return
 }
 
-// Message : Send user input to assistant
-// Send user input to an assistant and receive a response.
+// Message : Send user input to assistant (stateful)
+// Send user input to an assistant and receive a response, with conversation state (including context data) stored by
+// Watson Assistant for the duration of the session.
 //
 // There is no rate limit for this operation.
 func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (result *MessageResponse, response *core.DetailedResponse, err error) {
@@ -256,6 +257,72 @@ func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (result *M
 	if err == nil {
 		var ok bool
 		result, ok = response.Result.(*MessageResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// MessageStateless : Send user input to assistant (stateless)
+// Send user input to an assistant and receive a response, with conversation state (including context data) managed by
+// your application.
+//
+// There is no rate limit for this operation.
+func (assistant *AssistantV2) MessageStateless(messageStatelessOptions *MessageStatelessOptions) (result *MessageResponseStateless, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(messageStatelessOptions, "messageStatelessOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(messageStatelessOptions, "messageStatelessOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/assistants", "message"}
+	pathParameters := []string{*messageStatelessOptions.AssistantID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range messageStatelessOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V2", "MessageStateless")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", assistant.Version)
+
+	body := make(map[string]interface{})
+	if messageStatelessOptions.Input != nil {
+		body["input"] = messageStatelessOptions.Input
+	}
+	if messageStatelessOptions.Context != nil {
+		body["context"] = messageStatelessOptions.Context
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = assistant.Service.Request(request, new(MessageResponseStateless))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*MessageResponseStateless)
 		if !ok {
 			err = fmt.Errorf("An error occurred while processing the operation response.")
 		}
@@ -462,21 +529,34 @@ type DialogSuggestionValue struct {
 // MessageContext : MessageContext struct
 type MessageContext struct {
 
-	// Information that is shared by all skills used by the Assistant.
+	// Session context data that is shared by all skills used by the Assistant.
 	Global *MessageContextGlobal `json:"global,omitempty"`
 
-	// Information specific to particular skills used by the Assistant.
+	// Information specific to particular skills used by the assistant.
 	//
-	// **Note:** Currently, only a single property named `main skill` is supported. This object contains variables that
-	// apply to the dialog skill used by the assistant.
+	// **Note:** Currently, only a single child property is supported, containing variables that apply to the dialog skill
+	// used by the assistant.
 	Skills *MessageContextSkills `json:"skills,omitempty"`
 }
 
-// MessageContextGlobal : Information that is shared by all skills used by the Assistant.
+// MessageContextGlobal : Session context data that is shared by all skills used by the Assistant.
 type MessageContextGlobal struct {
 
 	// Built-in system properties that apply to all skills used by the assistant.
 	System *MessageContextGlobalSystem `json:"system,omitempty"`
+
+	// The session ID.
+	SessionID *string `json:"session_id,omitempty"`
+}
+
+// MessageContextGlobalStateless : Session context data that is shared by all skills used by the Assistant.
+type MessageContextGlobalStateless struct {
+
+	// Built-in system properties that apply to all skills used by the assistant.
+	System *MessageContextGlobalSystem `json:"system,omitempty"`
+
+	// The unique identifier of the session.
+	SessionID *string `json:"session_id,omitempty"`
 }
 
 // MessageContextGlobalSystem : Built-in system properties that apply to all skills used by the assistant.
@@ -539,20 +619,44 @@ const (
 	MessageContextGlobalSystem_Locale_ZhTw = "zh-tw"
 )
 
-// MessageContextSkill : Contains information specific to a particular skill used by the Assistant.
+// MessageContextSkill : Contains information specific to a particular skill used by the Assistant. The property name must be the same as the
+// name of the skill (for example, `main skill`).
 type MessageContextSkill struct {
 
 	// Arbitrary variables that can be read and written by a particular skill.
 	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
 
 	// System context data used by the skill.
-	System map[string]interface{} `json:"system,omitempty"`
+	System *MessageContextSkillSystem `json:"system,omitempty"`
 }
 
-// MessageContextSkills : Information specific to particular skills used by the Assistant.
+// MessageContextSkillSystem : System context data used by the skill.
+type MessageContextSkillSystem map[string]interface{}
+
+// SetState : Allow user to set State
+func (this *MessageContextSkillSystem) SetState(State *string) {
+	(*this)["state"] = State
+}
+
+// GetState : Allow user to get State
+func (this *MessageContextSkillSystem) GetState() *string {
+	return (*this)["state"].(*string)
+}
+
+// SetProperty : Allow user to set arbitrary property
+func (this *MessageContextSkillSystem) SetProperty(Key string, Value *interface{}) {
+	(*this)[Key] = Value
+}
+
+// GetProperty : Allow user to get arbitrary property
+func (this *MessageContextSkillSystem) GetProperty(Key string) *interface{} {
+	return (*this)[Key].(*interface{})
+}
+
+// MessageContextSkills : Information specific to particular skills used by the assistant.
 //
-// **Note:** Currently, only a single property named `main skill` is supported. This object contains variables that
-// apply to the dialog skill used by the assistant.
+// **Note:** Currently, only a single child property is supported, containing variables that apply to the dialog skill
+// used by the assistant.
 type MessageContextSkills map[string]interface{}
 
 // SetProperty : Allow user to set arbitrary property
@@ -565,6 +669,19 @@ func (this *MessageContextSkills) GetProperty(Key string) *MessageContextSkill {
 	return (*this)[Key].(*MessageContextSkill)
 }
 
+// MessageContextStateless : MessageContextStateless struct
+type MessageContextStateless struct {
+
+	// Session context data that is shared by all skills used by the Assistant.
+	Global *MessageContextGlobalStateless `json:"global,omitempty"`
+
+	// Information specific to particular skills used by the assistant.
+	//
+	// **Note:** Currently, only a single child property is supported, containing variables that apply to the dialog skill
+	// used by the assistant.
+	Skills *MessageContextSkills `json:"skills,omitempty"`
+}
+
 // MessageInput : An input object that includes the input text.
 type MessageInput struct {
 
@@ -573,9 +690,6 @@ type MessageInput struct {
 
 	// The text of the user input. This string cannot contain carriage return, newline, or tab characters.
 	Text *string `json:"text,omitempty"`
-
-	// Optional properties that control how the assistant responds.
-	Options *MessageInputOptions `json:"options,omitempty"`
 
 	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
 	// intents rather than trying to recognize intents in the new input.
@@ -587,6 +701,9 @@ type MessageInput struct {
 
 	// For internal use only.
 	SuggestionID *string `json:"suggestion_id,omitempty"`
+
+	// Optional properties that control how the assistant responds.
+	Options *MessageInputOptions `json:"options,omitempty"`
 }
 
 // Constants associated with the MessageInput.MessageType property.
@@ -598,17 +715,21 @@ const (
 // MessageInputOptions : Optional properties that control how the assistant responds.
 type MessageInputOptions struct {
 
-	// Whether to return additional diagnostic information. Set to `true` to return additional information in the
-	// `output.debug` property. If you also specify **return_context**=`true`, the returned skill context includes the
-	// `system.state` property.
-	Debug *bool `json:"debug,omitempty"`
-
 	// Whether to restart dialog processing at the root of the dialog, regardless of any previously visited nodes.
 	// **Note:** This does not affect `turn_count` or any other context variables.
 	Restart *bool `json:"restart,omitempty"`
 
 	// Whether to return more than one intent. Set to `true` to return all matching intents.
 	AlternateIntents *bool `json:"alternate_intents,omitempty"`
+
+	// Spelling correction options for the message. Any options specified on an individual message override the settings
+	// configured for the skill.
+	Spelling *MessageInputOptionsSpelling `json:"spelling,omitempty"`
+
+	// Whether to return additional diagnostic information. Set to `true` to return additional information in the
+	// `output.debug` property. If you also specify **return_context**=`true`, the returned skill context includes the
+	// `system.state` property.
+	Debug *bool `json:"debug,omitempty"`
 
 	// Whether to return session context with the response. If you specify `true`, the response includes the `context`
 	// property. If you also specify **debug**=`true`, the returned skill context includes the `system.state` property.
@@ -620,6 +741,73 @@ type MessageInputOptions struct {
 	// **Note:** If **export**=`true`, the context is returned regardless of the value of **return_context**.
 	Export *bool `json:"export,omitempty"`
 }
+
+// MessageInputOptionsSpelling : Spelling correction options for the message. Any options specified on an individual message override the settings
+// configured for the skill.
+type MessageInputOptionsSpelling struct {
+
+	// Whether to use spelling correction when processing the input. If spelling correction is used and **auto_correct** is
+	// `true`, any spelling corrections are automatically applied to the user input. If **auto_correct** is `false`, any
+	// suggested corrections are returned in the **output.spelling** property.
+	//
+	// This property overrides the value of the **spelling_suggestions** property in the workspace settings for the skill.
+	Suggestions *bool `json:"suggestions,omitempty"`
+
+	// Whether to use autocorrection when processing the input. If this property is `true`, any corrections are
+	// automatically applied to the user input, and the original text is returned in the **output.spelling** property of
+	// the message response. This property overrides the value of the **spelling_auto_correct** property in the workspace
+	// settings for the skill.
+	AutoCorrect *bool `json:"auto_correct,omitempty"`
+}
+
+// MessageInputOptionsStateless : Optional properties that control how the assistant responds.
+type MessageInputOptionsStateless struct {
+
+	// Whether to restart dialog processing at the root of the dialog, regardless of any previously visited nodes.
+	// **Note:** This does not affect `turn_count` or any other context variables.
+	Restart *bool `json:"restart,omitempty"`
+
+	// Whether to return more than one intent. Set to `true` to return all matching intents.
+	AlternateIntents *bool `json:"alternate_intents,omitempty"`
+
+	// Spelling correction options for the message. Any options specified on an individual message override the settings
+	// configured for the skill.
+	Spelling *MessageInputOptionsSpelling `json:"spelling,omitempty"`
+
+	// Whether to return additional diagnostic information. Set to `true` to return additional information in the
+	// `output.debug` property.
+	Debug *bool `json:"debug,omitempty"`
+}
+
+// MessageInputStateless : An input object that includes the input text.
+type MessageInputStateless struct {
+
+	// The type of user input. Currently, only text input is supported.
+	MessageType *string `json:"message_type,omitempty"`
+
+	// The text of the user input. This string cannot contain carriage return, newline, or tab characters.
+	Text *string `json:"text,omitempty"`
+
+	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
+	// intents rather than trying to recognize intents in the new input.
+	Intents []RuntimeIntent `json:"intents,omitempty"`
+
+	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
+	// entities rather than detecting entities in the new input.
+	Entities []RuntimeEntity `json:"entities,omitempty"`
+
+	// For internal use only.
+	SuggestionID *string `json:"suggestion_id,omitempty"`
+
+	// Optional properties that control how the assistant responds.
+	Options *MessageInputOptionsStateless `json:"options,omitempty"`
+}
+
+// Constants associated with the MessageInputStateless.MessageType property.
+// The type of user input. Currently, only text input is supported.
+const (
+	MessageInputStateless_MessageType_Text = "text"
+)
 
 // MessageOptions : The Message options.
 type MessageOptions struct {
@@ -637,8 +825,10 @@ type MessageOptions struct {
 	// An input object that includes the input text.
 	Input *MessageInput `json:"input,omitempty"`
 
-	// State information for the conversation. The context is stored by the assistant on a per-session basis. You can use
-	// this property to set or modify context variables, which can also be accessed by dialog nodes.
+	// Context data for the conversation. You can use this property to set or modify context variables, which can also be
+	// accessed by dialog nodes. The context is stored by the assistant on a per-session basis.
+	//
+	// **Note:** The total size of the context data stored for a stateful session cannot exceed 100KB.
 	Context *MessageContext `json:"context,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -705,6 +895,9 @@ type MessageOutput struct {
 	// An object containing any custom properties included in the response. This object includes any arbitrary properties
 	// defined in the dialog JSON editor as part of the dialog node output.
 	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
+
+	// Properties describing any spelling corrections in the user input that was received.
+	Spelling *MessageOutputSpelling `json:"spelling,omitempty"`
 }
 
 // MessageOutputDebug : Additional detailed information about a message response and how it was generated.
@@ -733,17 +926,99 @@ const (
 	MessageOutputDebug_BranchExitedReason_Fallback  = "fallback"
 )
 
+// MessageOutputSpelling : Properties describing any spelling corrections in the user input that was received.
+type MessageOutputSpelling struct {
+
+	// The user input text that was used to generate the response. If spelling autocorrection is enabled, this text
+	// reflects any spelling corrections that were applied.
+	Text *string `json:"text,omitempty"`
+
+	// The original user input text. This property is returned only if autocorrection is enabled and the user input was
+	// corrected.
+	OriginalText *string `json:"original_text,omitempty"`
+
+	// Any suggested corrections of the input text. This property is returned only if spelling correction is enabled and
+	// autocorrection is disabled.
+	SuggestedText *string `json:"suggested_text,omitempty"`
+}
+
 // MessageResponse : A response from the Watson Assistant service.
 type MessageResponse struct {
 
 	// Assistant output to be rendered or processed by the client.
 	Output *MessageOutput `json:"output" validate:"required"`
 
-	// Context data for the conversation. The context is stored by the assistant on a per-session basis. You can use this
-	// property to access context variables.
+	// Context data for the conversation. You can use this property to access context variables. The context is stored by
+	// the assistant on a per-session basis.
 	//
 	// **Note:** The context is included in message responses only if **return_context**=`true` in the message request.
 	Context *MessageContext `json:"context,omitempty"`
+}
+
+// MessageResponseStateless : A stateless response from the Watson Assistant service.
+type MessageResponseStateless struct {
+
+	// Assistant output to be rendered or processed by the client.
+	Output *MessageOutput `json:"output" validate:"required"`
+
+	// Context data for the conversation. You can use this property to access context variables. The context is not stored
+	// by the assistant; to maintain session state, include the context from the response in the next message.
+	Context *MessageContextStateless `json:"context" validate:"required"`
+}
+
+// MessageStatelessOptions : The MessageStateless options.
+type MessageStatelessOptions struct {
+
+	// Unique identifier of the assistant. To find the assistant ID in the Watson Assistant user interface, open the
+	// assistant settings and click **API Details**. For information about creating assistants, see the
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
+	//
+	// **Note:** Currently, the v2 API does not support creating assistants.
+	AssistantID *string `json:"assistant_id" validate:"required"`
+
+	// An input object that includes the input text.
+	Input *MessageInputStateless `json:"input,omitempty"`
+
+	// Context data for the conversation. You can use this property to set or modify context variables, which can also be
+	// accessed by dialog nodes. The context is not stored by the assistant. To maintain session state, include the context
+	// from the previous response.
+	//
+	// **Note:** The total size of the context data for a stateless session cannot exceed 250KB.
+	Context *MessageContextStateless `json:"context,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewMessageStatelessOptions : Instantiate MessageStatelessOptions
+func (assistant *AssistantV2) NewMessageStatelessOptions(assistantID string) *MessageStatelessOptions {
+	return &MessageStatelessOptions{
+		AssistantID: core.StringPtr(assistantID),
+	}
+}
+
+// SetAssistantID : Allow user to set AssistantID
+func (options *MessageStatelessOptions) SetAssistantID(assistantID string) *MessageStatelessOptions {
+	options.AssistantID = core.StringPtr(assistantID)
+	return options
+}
+
+// SetInput : Allow user to set Input
+func (options *MessageStatelessOptions) SetInput(input *MessageInputStateless) *MessageStatelessOptions {
+	options.Input = input
+	return options
+}
+
+// SetContext : Allow user to set Context
+func (options *MessageStatelessOptions) SetContext(context *MessageContextStateless) *MessageStatelessOptions {
+	options.Context = context
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *MessageStatelessOptions) SetHeaders(param map[string]string) *MessageStatelessOptions {
+	options.Headers = param
+	return options
 }
 
 // RuntimeEntity : The entity value that was recognized in the user input.
@@ -1060,11 +1335,13 @@ type SearchResult struct {
 	// The URL of the original data object in its native data source.
 	URL *string `json:"url,omitempty"`
 
-	// An object containing segments of text from search results with query-matching text highlighted using HTML <em> tags.
+	// An object containing segments of text from search results with query-matching text highlighted using HTML `<em>`
+	// tags.
 	Highlight *SearchResultHighlight `json:"highlight,omitempty"`
 }
 
-// SearchResultHighlight : An object containing segments of text from search results with query-matching text highlighted using HTML <em> tags.
+// SearchResultHighlight : An object containing segments of text from search results with query-matching text highlighted using HTML `<em>`
+// tags.
 type SearchResultHighlight map[string]interface{}
 
 // SetBody : Allow user to set Body

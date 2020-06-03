@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -589,6 +589,9 @@ func (discovery *DiscoveryV2) AddDocument(addDocumentOptions *AddDocumentOptions
 //
 // **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
 // a collection that connects to an external source such as Microsoft SharePoint.
+//
+// **Note:** If an uploaded document is segmented, all segments will be overwritten, even if the updated version of the
+// document has fewer segments.
 func (discovery *DiscoveryV2) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil")
 	if err != nil {
@@ -658,6 +661,9 @@ func (discovery *DiscoveryV2) UpdateDocument(updateDocumentOptions *UpdateDocume
 //
 // **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
 // a collection that connects to an external source such as Microsoft SharePoint.
+//
+// **Note:** Segments of an uploaded document cannot be deleted individually. Delete all segments by deleting using the
+// `parent_document_id` of a segment result.
 func (discovery *DiscoveryV2) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (result *DeleteDocumentResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil")
 	if err != nil {

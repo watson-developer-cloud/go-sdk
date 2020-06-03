@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2309,7 +2309,7 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 			It("should call NewRuntimeIntent successfully", func() {
 				intent := "exampleString"
-				confidence := float64(1234)
+				confidence := 1234
 				model, err := testService.NewRuntimeIntent(intent, confidence)
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())

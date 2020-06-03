@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,12 @@ package personalityinsightsv3_test
 
 import (
 	"fmt"
-	"net/http"
-	"net/http/httptest"
-
-	core "github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
+	"net/http"
+	"net/http/httptest"
 )
 
 var _ = Describe(`PersonalityInsightsV3`, func() {
@@ -60,31 +59,15 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, _, returnValueErr := testService.Profile(nil)
-				Expect(returnValueErr).NotTo(BeNil())
+				result, response, operationErr := testService.Profile(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
 
-				// First test with invalid (incomplete) input
-				content := new(personalityinsightsv3.Content)
-				profileOptions := testService.
-					NewProfileOptions().
-					SetContent(content).
-					SetContentType("text/plain")
-				_, returnValue, returnValueErr := testService.Profile(profileOptions)
-				Expect(returnValueErr).ToNot(BeNil())
-				Expect(returnValue).To(BeNil())
-
-				// Next, initialize content properly and retest
-				contentItem := new(personalityinsightsv3.ContentItem)
-				theContent := "theContent"
-				contentItem.Content = &theContent
-				content.ContentItems = []personalityinsightsv3.ContentItem{*contentItem}
-				profileOptions = testService.
-					NewProfileOptions().
-					SetContent(content).
-					SetContentType("application/json")
-				result, returnValue, returnValueErr := testService.Profile(profileOptions)
-				Expect(returnValueErr).To(BeNil())
-				Expect(returnValue).ToNot(BeNil())
+				profileOptions := testService.NewProfileOptions()
+				result, response, operationErr = testService.Profile(profileOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 			})
 		})
@@ -121,18 +104,16 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				Expect(testService).ToNot(BeNil())
 
 				// Pass empty options
-				_, _, returnValueErr := testService.ProfileAsCsv(nil)
-				Expect(returnValueErr).NotTo(BeNil())
+				result, response, operationErr := testService.ProfileAsCsv(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
 
-				profileAsCsvOptions := testService.
-					NewProfileOptions().
-					SetBody("html").
-					SetContentType("text/html")
-				result, returnValue, returnValueErr := testService.ProfileAsCsv(profileAsCsvOptions)
-				Expect(returnValueErr).To(BeNil())
-				Expect(returnValue).ToNot(BeNil())
+				profileAsCsvOptions := testService.NewProfileAsCsvOptions()
+				result, response, operationErr = testService.ProfileAsCsv(profileAsCsvOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-				result.Close()
 			})
 		})
 	})

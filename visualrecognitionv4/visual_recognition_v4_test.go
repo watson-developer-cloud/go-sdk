@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,14 @@ package visualrecognitionv4_test
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv4"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"strings"
 )
 
 var _ = Describe(`VisualRecognitionV4`, func() {
@@ -94,7 +92,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake_Description"}}}`)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "rscnn_ready": true, "description": "fake_Description"}}}`)
 			}))
 			It(`Succeed to call CreateCollection`, func() {
 				defer testServer.Close()
@@ -186,7 +184,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake_Description"}}}`)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "rscnn_ready": true, "description": "fake_Description"}}}`)
 			}))
 			It(`Succeed to call GetCollection`, func() {
 				defer testServer.Close()
@@ -233,7 +231,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake_Description"}}}`)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "rscnn_ready": true, "description": "fake_Description"}}}`)
 			}))
 			It(`Succeed to call UpdateCollection`, func() {
 				defer testServer.Close()
@@ -305,6 +303,59 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			})
 		})
 	})
+	Describe(`GetModelFile(getModelFileOptions *GetModelFileOptions)`, func() {
+		getModelFilePath := "/v4/collections/{collection_id}/model"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		collectionID := "exampleString"
+		feature := "exampleString"
+		modelFormat := "exampleString"
+		getModelFilePath = strings.Replace(getModelFilePath, "{collection_id}", collectionID, 1)
+		Context(`Successfully - Get a model`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getModelFilePath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				Expect(req.URL.Query()["feature"]).To(Equal([]string{feature}))
+
+				Expect(req.URL.Query()["model_format"]).To(Equal([]string{modelFormat}))
+
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `Contents of response byte-stream...`)
+			}))
+			It(`Succeed to call GetModelFile`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetModelFile(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getModelFileOptions := testService.NewGetModelFileOptions(collectionID, feature, modelFormat)
+				result, response, operationErr = testService.GetModelFile(getModelFileOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 	Describe(`AddImages(addImagesOptions *AddImagesOptions)`, func() {
 		addImagesPath := "/v4/collections/{collection_id}/images"
 		version := "exampleString"
@@ -344,7 +395,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				addImagesOptions := testService.NewAddImagesOptions(collectionID).SetImageURL([]string{"bogus"})
+				addImagesOptions := testService.NewAddImagesOptions(collectionID)
 				result, response, operationErr = testService.AddImages(addImagesOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -511,16 +562,9 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Method).To(Equal("GET"))
 				Expect(req.Header["Authorization"]).ToNot(BeNil())
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(200)
-				myImage, err := os.Open("../resources/my-giraffe.jpeg")
-				if err != nil {
-					panic(err)
-				}
-				bytes, err := ioutil.ReadAll(myImage)
-				if err != nil {
-					panic(err)
-				}
-				_, _ = res.Write(bytes)
+				fmt.Fprintf(res, `Contents of response byte-stream...`)
 			}))
 			It(`Succeed to call GetJpegImage`, func() {
 				defer testServer.Close()
@@ -617,7 +661,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(200)
-				fmt.Fprintf(res, `{"object": "fake_Object", "count": 5}`)
+				fmt.Fprintf(res, `{"object": "fake_Object"}`)
 			}))
 			It(`Succeed to call UpdateObjectMetadata`, func() {
 				defer testServer.Close()
@@ -758,7 +802,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
 				res.Header().Set("Content-type", "application/json")
 				res.WriteHeader(202)
-				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "description": "fake_Description"}}}`)
+				fmt.Fprintf(res, `{"collection_id": "fake_CollectionID", "name": "fake_Name", "description": "fake_Description", "created": "2017-05-16T13:56:54.957Z", "updated": "2017-05-16T13:56:54.957Z", "image_count": 10, "training_status": {"objects": {"ready": false, "in_progress": true, "data_changed": false, "latest_failed": true, "rscnn_ready": true, "description": "fake_Description"}}}`)
 			}))
 			It(`Succeed to call Train`, func() {
 				defer testServer.Close()
@@ -953,21 +997,21 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				inProgress := true
 				dataChanged := true
 				latestFailed := true
+				rscnnReady := true
 				description := "exampleString"
-				model, err := testService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, description)
+				model, err := testService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, rscnnReady, description)
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It("should call NewTrainingStatus successfully", func() {
-				objects := &visualrecognitionv4.ObjectTrainingStatus{Ready: core.BoolPtr(true), InProgress: core.BoolPtr(true), DataChanged: core.BoolPtr(true), LatestFailed: core.BoolPtr(true), Description: core.StringPtr("exampleString")}
+				objects := &visualrecognitionv4.ObjectTrainingStatus{Ready: core.BoolPtr(true), InProgress: core.BoolPtr(true), DataChanged: core.BoolPtr(true), LatestFailed: core.BoolPtr(true), RscnnReady: core.BoolPtr(true), Description: core.StringPtr("exampleString")}
 				model, err := testService.NewTrainingStatus(objects)
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It("should call NewUpdateObjectMetadata successfully", func() {
 				object := "exampleString"
-				count := int64(1234)
-				model, err := testService.NewUpdateObjectMetadata(object, count)
+				model, err := testService.NewUpdateObjectMetadata(object)
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,6 +122,8 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 	Describe(`CreateClassifier(createClassifierOptions *CreateClassifierOptions)`, func() {
 		createClassifierPath := "/v1/classifiers"
 		bearerToken := "0ui9876453"
+		trainingMetadata := new(os.File)
+		trainingData := new(os.File)
 		Context(`Successfully - Create classifier`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
@@ -153,16 +155,7 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				pwd, _ := os.Getwd()
-				metadata, metadataErr := os.Open(pwd + "/../resources/weather_training_metadata.json")
-				if metadataErr != nil {
-					fmt.Println(metadataErr)
-				}
-				data, dataErr := os.Open(pwd + "/../resources/weather_training_data.csv")
-				if dataErr != nil {
-					fmt.Println(dataErr)
-				}
-				createClassifierOptions := testService.NewCreateClassifierOptions(metadata, data)
+				createClassifierOptions := testService.NewCreateClassifierOptions(trainingMetadata, trainingData)
 				result, response, operationErr = testService.CreateClassifier(createClassifierOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())

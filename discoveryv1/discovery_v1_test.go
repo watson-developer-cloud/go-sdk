@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1186,11 +1186,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		bearerToken := "0ui9876453"
 		environmentID := "exampleString"
 		collectionID := "exampleString"
-		pwd, _ := os.Getwd()
-		stopwordFile, stopwordsFileErr := os.Open(pwd + "/../resources/stopwords.txt")
-		if stopwordsFileErr != nil {
-			panic(stopwordsFileErr)
-		}
+		stopwordFile := new(os.File)
 		stopwordFilename := "exampleString"
 		createStopwordListPath = strings.Replace(createStopwordListPath, "{environment_id}", environmentID, 1)
 		createStopwordListPath = strings.Replace(createStopwordListPath, "{collection_id}", collectionID, 1)
@@ -1321,8 +1317,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				addDocumentOptions := testService.NewAddDocumentOptions(environmentID, collectionID).
-					SetMetadata("Name:John Smith")
+				addDocumentOptions := testService.NewAddDocumentOptions(environmentID, collectionID)
 				result, response, operationErr = testService.AddDocument(addDocumentOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -1424,8 +1419,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
 
-				updateDocumentOptions := testService.NewUpdateDocumentOptions(environmentID, collectionID, documentID).
-					SetMetadata("Name:John Smith")
+				updateDocumentOptions := testService.NewUpdateDocumentOptions(environmentID, collectionID, documentID)
 				result, response, operationErr = testService.UpdateDocument(updateDocumentOptions)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
