@@ -1,3 +1,13 @@
+# [1.6.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.5.0...v1.6.0) (2020-06-04)
+
+
+### Features
+
+* **assistantv1:** add generated code ([c66028b](https://github.com/watson-developer-cloud/go-sdk/commit/c66028b586368d28e0d83e21bf2d02f9118b49ed))
+* **assistantv2:** add MessageStateless operation ([0ec503a](https://github.com/watson-developer-cloud/go-sdk/commit/0ec503ad1b86368f0b7b13879ff5b4412b846b05))
+* **naturallanguageunderstandingv1:** generate new model definition ([85b7cdb](https://github.com/watson-developer-cloud/go-sdk/commit/85b7cdb37ce9ebf0e703360d5a74f221c3c9d1b6))
+* **visualrecognitionv4:** generated code ([685fdfb](https://github.com/watson-developer-cloud/go-sdk/commit/685fdfb8f4a2aad1aaa981200c34bdaef8f87dba))
+
 # [1.5.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.4.1...v1.5.0) (2020-04-24)
 
 
