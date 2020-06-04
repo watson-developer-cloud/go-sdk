@@ -124,3 +124,20 @@ func TestSession(t *testing.T) {
 	)
 	assert.Nil(t, responseErr)
 }
+
+func TestMessageStateless(t *testing.T) {
+	shouldSkipTest(t)
+
+	message, _, responseErr := service.MessageStateless(
+		&assistantv2.MessageStatelessOptions{
+			AssistantID: core.StringPtr(assistantId),
+			Input: &assistantv2.MessageInputStateless{
+				MessageType: core.StringPtr("text"),
+				Text:        core.StringPtr("Hello, this is test."),
+			},
+		},
+	)
+
+	assert.Nil(t, responseErr)
+	assert.NotNil(t, message)
+}

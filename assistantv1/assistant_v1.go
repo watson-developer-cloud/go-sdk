@@ -4895,8 +4895,8 @@ type DialogNodeOutputGeneric struct {
 
 	// The text of the search query. This can be either a natural-language query or a query that uses the Discovery query
 	// language syntax, depending on the value of the **query_type** property. For more information, see the [Discovery
-	// service documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-operators#query-operators). Required when
-	// **response_type**=`search_skill`.
+	// service documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-operators#query-operators).
+	// Required when **response_type**=`search_skill`.
 	Query *string `json:"query,omitempty"`
 
 	// The type of the search query. Required when **response_type**=`search_skill`.
@@ -6763,6 +6763,46 @@ func (this *MessageInput) GetText() *string {
 	return (*this)["text"].(*string)
 }
 
+// SetSpellingSuggestions : Allow user to set SpellingSuggestions
+func (this *MessageInput) SetSpellingSuggestions(SpellingSuggestions *bool) {
+	(*this)["spelling_suggestions"] = SpellingSuggestions
+}
+
+// GetSpellingSuggestions : Allow user to get SpellingSuggestions
+func (this *MessageInput) GetSpellingSuggestions() *bool {
+	return (*this)["spelling_suggestions"].(*bool)
+}
+
+// SetSpellingAutoCorrect : Allow user to set SpellingAutoCorrect
+func (this *MessageInput) SetSpellingAutoCorrect(SpellingAutoCorrect *bool) {
+	(*this)["spelling_auto_correct"] = SpellingAutoCorrect
+}
+
+// GetSpellingAutoCorrect : Allow user to get SpellingAutoCorrect
+func (this *MessageInput) GetSpellingAutoCorrect() *bool {
+	return (*this)["spelling_auto_correct"].(*bool)
+}
+
+// SetSuggestedText : Allow user to set SuggestedText
+func (this *MessageInput) SetSuggestedText(SuggestedText *string) {
+	(*this)["suggested_text"] = SuggestedText
+}
+
+// GetSuggestedText : Allow user to get SuggestedText
+func (this *MessageInput) GetSuggestedText() *string {
+	return (*this)["suggested_text"].(*string)
+}
+
+// SetOriginalText : Allow user to set OriginalText
+func (this *MessageInput) SetOriginalText(OriginalText *string) {
+	(*this)["original_text"] = OriginalText
+}
+
+// GetOriginalText : Allow user to get OriginalText
+func (this *MessageInput) GetOriginalText() *string {
+	return (*this)["original_text"].(*string)
+}
+
 // SetProperty : Allow user to set arbitrary property
 func (this *MessageInput) SetProperty(Key string, Value *interface{}) {
 	(*this)[Key] = Value
@@ -8504,6 +8544,15 @@ type WorkspaceSystemSettings struct {
 
 	// For internal use only.
 	HumanAgentAssist map[string]interface{} `json:"human_agent_assist,omitempty"`
+
+	// Whether spelling correction is enabled for the workspace.
+	SpellingSuggestions *bool `json:"spelling_suggestions,omitempty"`
+
+	// Whether autocorrection is enabled for the workspace. If spelling correction is enabled and this property is `false`,
+	// any suggested corrections are returned in the **suggested_text** property of the message response. If this property
+	// is `true`, any corrections are automatically applied to the user input, and the original text is returned in the
+	// **original_text** property of the message response.
+	SpellingAutoCorrect *bool `json:"spelling_auto_correct,omitempty"`
 
 	// Workspace settings related to the behavior of system entities.
 	SystemEntities *WorkspaceSystemSettingsSystemEntities `json:"system_entities,omitempty"`

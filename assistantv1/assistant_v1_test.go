@@ -18,13 +18,14 @@ package assistantv1_test
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/watson-developer-cloud/go-sdk/assistantv1"
-	"net/http"
-	"net/http/httptest"
-	"strings"
 )
 
 var _ = Describe(`AssistantV1`, func() {

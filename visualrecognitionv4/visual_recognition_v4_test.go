@@ -836,6 +836,59 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			})
 		})
 	})
+	Describe(`GetModelFile(getModelFileOptions *GetModelFileOptions)`, func() {
+		getModelFilePath := "/v4/collections/{collection_id}/model"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		collectionID := "exampleString"
+		feature := "exampleString"
+		modelFormat := "exampleString"
+		getModelFilePath = strings.Replace(getModelFilePath, "{collection_id}", collectionID, 1)
+		Context(`Successfully - Get a model`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getModelFilePath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				Expect(req.URL.Query()["feature"]).To(Equal([]string{feature}))
+
+				Expect(req.URL.Query()["model_format"]).To(Equal([]string{modelFormat}))
+
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `Contents of response byte-stream...`)
+			}))
+			It(`Succeed to call GetModelFile`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetModelFile(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getModelFileOptions := testService.NewGetModelFileOptions(collectionID, feature, modelFormat)
+				result, response, operationErr = testService.GetModelFile(getModelFileOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 	Describe(`GetTrainingUsage(getTrainingUsageOptions *GetTrainingUsageOptions)`, func() {
 		getTrainingUsagePath := "/v4/training_usage"
 		version := "exampleString"
@@ -953,13 +1006,14 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				inProgress := true
 				dataChanged := true
 				latestFailed := true
+				rsCnnReady := false
 				description := "exampleString"
-				model, err := testService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, description)
+				model, err := testService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, rsCnnReady, description)
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It("should call NewTrainingStatus successfully", func() {
-				objects := &visualrecognitionv4.ObjectTrainingStatus{Ready: core.BoolPtr(true), InProgress: core.BoolPtr(true), DataChanged: core.BoolPtr(true), LatestFailed: core.BoolPtr(true), Description: core.StringPtr("exampleString")}
+				objects := &visualrecognitionv4.ObjectTrainingStatus{Ready: core.BoolPtr(true), InProgress: core.BoolPtr(true), DataChanged: core.BoolPtr(true), LatestFailed: core.BoolPtr(true), Description: core.StringPtr("exampleString"), RscnnReady: core.BoolPtr(false)}
 				model, err := testService.NewTrainingStatus(objects)
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
