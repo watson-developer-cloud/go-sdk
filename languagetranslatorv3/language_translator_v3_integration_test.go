@@ -88,8 +88,8 @@ func TestModels(t *testing.T) {
 
 	createModel, _, responseErr := service.CreateModel(
 		&languagetranslatorv3.CreateModelOptions{
-			BaseModelID:    core.StringPtr("en-es"),
-			Name:           core.StringPtr("custom-en-es"),
+			BaseModelID:    core.StringPtr("en-fr"),
+			Name:           core.StringPtr("custom-en-fr"),
 			ForcedGlossary: glossary,
 		},
 	)
@@ -191,4 +191,15 @@ func TestDocumentTranslation(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
+}
+
+func TestListLanguages(t *testing.T) {
+	shouldSkipTest(t)
+
+	listLanguages, _, listErr := service.ListLanguages(
+		&languagetranslatorv3.ListLanguagesOptions{},
+	)
+
+	assert.NotNil(t, listLanguages)
+	assert.Nil(t, listErr)
 }

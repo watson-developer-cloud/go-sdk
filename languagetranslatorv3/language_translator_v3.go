@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import (
 )
 
 // LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The
-// service offers multiple IBM provided translation models that you can customize based on your unique terminology and
+// service offers multiple IBM-provided translation models that you can customize based on your unique terminology and
 // language. Use Language Translator to take news from across the globe and present it in your language, communicate
 // with your customers in their own language, and more.
 //
@@ -38,7 +38,7 @@ type LanguageTranslatorV3 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://gateway.watsonplatform.net/language-translator/api"
+const DefaultServiceURL = "https://api.us-south.language-translator.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "language_translator"
@@ -104,9 +104,58 @@ func (languageTranslator *LanguageTranslatorV3) DisableSSLVerification() {
 	languageTranslator.Service.DisableSSLVerification()
 }
 
+// ListLanguages : List supported languages
+// Lists all supported languages. The method returns an array of supported languages with information about each
+// language. Languages are listed in alphabetical order by language code (for example, `af`, `ar`).
+func (languageTranslator *LanguageTranslatorV3) ListLanguages(listLanguagesOptions *ListLanguagesOptions) (result *Languages, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listLanguagesOptions, "listLanguagesOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v3/languages"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range listLanguagesOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("language_translator", "V3", "ListLanguages")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", languageTranslator.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = languageTranslator.Service.Request(request, new(Languages))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Languages)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
 // Translate : Translate
-// Translates the input text from the source language to the target language. A target language or translation model ID
-// is required. The service attempts to detect the language of the source text if it is not specified.
+// Translates the input text from the source language to the target language. Specify a model ID that indicates the
+// source and target languages, or specify the source and target languages individually. You can omit the source
+// language to have the service attempt to detect the language from the input text. If you omit the source language, the
+// request must contain sufficient input text for the service to identify the source language.
 func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *TranslateOptions) (result *TranslationResult, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(translateOptions, "translateOptions cannot be nil")
 	if err != nil {
@@ -334,18 +383,62 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 }
 
 // CreateModel : Create model
-// Uploads Translation Memory eXchange (TMX) files to customize a translation model.
+// Uploads training files to customize a translation model. You can customize a model with a forced glossary or with a
+// parallel corpus:
+// * Use a *forced glossary* to force certain terms and phrases to be translated in a specific way. You can upload only
+// a single forced glossary file for a model. The size of a forced glossary file for a custom model is limited to 10 MB.
+// * Use a *parallel corpus* when you want your custom model to learn from general translation patterns in parallel
+// sentences in your samples. What your model learns from a parallel corpus can improve translation results for input
+// text that the model has not been trained on. You can upload multiple parallel corpora files with a request. To
+// successfully train with parallel corpora, the corpora files must contain a cumulative total of at least 5000 parallel
+// sentences. The cumulative size of all uploaded corpus files for a custom model is limited to 250 MB.
 //
-// You can either customize a model with a forced glossary or with a corpus that contains parallel sentences. To create
-// a model that is customized with a parallel corpus <b>and</b> a forced glossary, proceed in two steps: customize with
-// a parallel corpus first and then customize the resulting model with a glossary. Depending on the type of
-// customization and the size of the uploaded corpora, training can range from minutes for a glossary to several hours
-// for a large parallel corpus. You can upload a single forced glossary file and this file must be less than <b>10
-// MB</b>. You can upload multiple parallel corpora tmx files. The cumulative file size of all uploaded files is limited
-// to <b>250 MB</b>. To successfully train with a parallel corpus you must have at least <b>5,000 parallel sentences</b>
-// in your corpus.
+// Depending on the type of customization and the size of the uploaded files, training time can range from minutes for a
+// glossary to several hours for a large parallel corpus. To create a model that is customized with a parallel corpus
+// and a forced glossary, customize the model with a parallel corpus first and then customize the resulting model with a
+// forced glossary.
 //
-// You can have a <b>maximum of 10 custom models per language pair</b>.
+// You can create a maximum of 10 custom models per language pair. For more information about customizing a translation
+// model, including the formatting and character restrictions for data files, see [Customizing your
+// model](https://cloud.ibm.com/docs/language-translator?topic=language-translator-customizing).
+//
+// #### Supported file formats
+//
+//  You can provide your training data for customization in the following document formats:
+// * **TMX** (`.tmx`) - Translation Memory eXchange (TMX) is an XML specification for the exchange of translation
+// memories.
+// * **XLIFF** (`.xliff`) - XML Localization Interchange File Format (XLIFF) is an XML specification for the exchange of
+// translation memories.
+// * **CSV** (`.csv`) - Comma-separated values (CSV) file with two columns for aligned sentences and phrases. The first
+// row contains the language code.
+// * **TSV** (`.tsv` or `.tab`) - Tab-separated values (TSV) file with two columns for aligned sentences and phrases.
+// The first row contains the language code.
+// * **JSON** (`.json`) - Custom JSON format for specifying aligned sentences and phrases.
+// * **Microsoft Excel** (`.xls` or `.xlsx`) - Excel file with the first two columns for aligned sentences and phrases.
+// The first row contains the language code.
+//
+// You must encode all text data in UTF-8 format. For more information, see [Supported document formats for training
+// data](https://cloud.ibm.com/docs/language-translator?topic=language-translator-customizing#supported-document-formats-for-training-data).
+//
+//
+// #### Specifying file formats
+//
+//  You can indicate the format of a file by including the file extension with the file name. Use the file extensions
+// shown in **Supported file formats**.
+//
+// Alternatively, you can omit the file extension and specify one of the following `content-type` specifications for the
+// file:
+// * **TMX** - `application/x-tmx+xml`
+// * **XLIFF** - `application/xliff+xml`
+// * **CSV** - `text/csv`
+// * **TSV** - `text/tab-separated-values`
+// * **JSON** - `application/json`
+// * **Microsoft Excel** - `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+//
+// For example, with `curl`, use the following `content-type` specification to indicate the format of a CSV file named
+// **glossary**:
+//
+// `--form "forced_glossary=@glossary;type=text/csv"`.
 func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *CreateModelOptions) (result *TranslationModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createModelOptions, "createModelOptions cannot be nil")
 	if err != nil {
@@ -464,7 +557,7 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 
 // GetModel : Get model details
 // Gets information about a translation model, including training status for custom models. Use this API call to poll
-// the status of your customization request. A successfully completed training will have a status of `available`.
+// the status of your customization request. A successfully completed training has a status of `available`.
 func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetModelOptions) (result *TranslationModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getModelOptions, "getModelOptions cannot be nil")
 	if err != nil {
@@ -773,23 +866,34 @@ func (languageTranslator *LanguageTranslatorV3) GetTranslatedDocument(getTransla
 // CreateModelOptions : The CreateModel options.
 type CreateModelOptions struct {
 
-	// The model ID of the model to use as the base for customization. To see available models, use the `List models`
-	// method. Usually all IBM provided models are customizable. In addition, all your models that have been created via
-	// parallel corpus customization, can be further customized with a forced glossary.
+	// The ID of the translation model to use as the base for customization. To see available models and IDs, use the `List
+	// models` method. Most models that are provided with the service are customizable. In addition, all models that you
+	// create with parallel corpora customization can be further customized with a forced glossary.
 	BaseModelID *string `json:"base_model_id" validate:"required"`
 
-	// A TMX file with your customizations. The customizations in the file completely overwrite the domain translaton data,
-	// including high frequency or high confidence phrase translations. You can upload only one glossary with a file size
-	// less than 10 MB per call. A forced glossary should contain single words or short phrases.
+	// A file with forced glossary terms for the source and target languages. The customizations in the file completely
+	// overwrite the domain translation data, including high frequency or high confidence phrase translations.
+	//
+	// You can upload only one glossary file for a custom model, and the glossary can have a maximum size of 10 MB. A
+	// forced glossary must contain single words or short phrases. For more information, see **Supported file formats** in
+	// the method description.
+	//
+	// *With `curl`, use `--form forced_glossary=@{filename}`.*.
 	ForcedGlossary io.ReadCloser `json:"forced_glossary,omitempty"`
 
-	// A TMX file with parallel sentences for source and target language. You can upload multiple parallel_corpus files in
-	// one request. All uploaded parallel_corpus files combined, your parallel corpus must contain at least 5,000 parallel
-	// sentences to train successfully.
+	// A file with parallel sentences for the source and target languages. You can upload multiple parallel corpus files in
+	// one request by repeating the parameter. All uploaded parallel corpus files combined must contain at least 5000
+	// parallel sentences to train successfully. You can provide a maximum of 500,000 parallel sentences across all
+	// corpora.
+	//
+	// A single entry in a corpus file can contain a maximum of 80 words. All corpora files for a custom model can have a
+	// cumulative maximum size of 250 MB. For more information, see **Supported file formats** in the method description.
+	//
+	// *With `curl`, use `--form parallel_corpus=@{filename}`.*.
 	ParallelCorpus io.ReadCloser `json:"parallel_corpus,omitempty"`
 
 	// An optional model name that you can use to identify the model. Valid characters are letters, numbers, dashes,
-	// underscores, spaces and apostrophes. The maximum length is 32 characters.
+	// underscores, spaces, and apostrophes. The maximum length of the name is 32 characters.
 	Name *string `json:"name,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1121,6 +1225,48 @@ func (options *IdentifyOptions) SetHeaders(param map[string]string) *IdentifyOpt
 	return options
 }
 
+// Language : Response payload for languages.
+type Language struct {
+
+	// The language code for the language (for example, `af`).
+	Language *string `json:"language,omitempty"`
+
+	// The name of the language in English (for example, `Afrikaans`).
+	LanguageName *string `json:"language_name,omitempty"`
+
+	// The native name of the language (for example, `Afrikaans`).
+	NativeLanguageName *string `json:"native_language_name,omitempty"`
+
+	// The country code for the language (for example, `ZA` for South Africa).
+	CountryCode *string `json:"country_code,omitempty"`
+
+	// Indicates whether words of the language are separated by whitespace: `true` if the words are separated; `false`
+	// otherwise.
+	WordsSeparated *bool `json:"words_separated,omitempty"`
+
+	// Indicates the direction of the language: `right_to_left` or `left_to_right`.
+	Direction *string `json:"direction,omitempty"`
+
+	// Indicates whether the language can be used as the source for translation: `true` if the language can be used as the
+	// source; `false` otherwise.
+	SupportedAsSource *bool `json:"supported_as_source,omitempty"`
+
+	// Indicates whether the language can be used as the target for translation: `true` if the language can be used as the
+	// target; `false` otherwise.
+	SupportedAsTarget *bool `json:"supported_as_target,omitempty"`
+
+	// Indicates whether the language supports automatic detection: `true` if the language can be detected automatically;
+	// `false` otherwise.
+	Identifiable *bool `json:"identifiable,omitempty"`
+}
+
+// Languages : The response type for listing supported languages.
+type Languages struct {
+
+	// An array of supported languages with information about each language.
+	Languages []Language `json:"languages" validate:"required"`
+}
+
 // ListDocumentsOptions : The ListDocuments options.
 type ListDocumentsOptions struct {
 
@@ -1157,6 +1303,24 @@ func (options *ListIdentifiableLanguagesOptions) SetHeaders(param map[string]str
 	return options
 }
 
+// ListLanguagesOptions : The ListLanguages options.
+type ListLanguagesOptions struct {
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewListLanguagesOptions : Instantiate ListLanguagesOptions
+func (languageTranslator *LanguageTranslatorV3) NewListLanguagesOptions() *ListLanguagesOptions {
+	return &ListLanguagesOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListLanguagesOptions) SetHeaders(param map[string]string) *ListLanguagesOptions {
+	options.Headers = param
+	return options
+}
+
 // ListModelsOptions : The ListModels options.
 type ListModelsOptions struct {
 
@@ -1166,9 +1330,9 @@ type ListModelsOptions struct {
 	// Specify a language code to filter results by target language.
 	Target *string `json:"target,omitempty"`
 
-	// If the default parameter isn't specified, the service will return all models (default and non-default) for each
-	// language pair. To return only default models, set this to `true`. To return only non-default models, set this to
-	// `false`. There is exactly one default model per language pair, the IBM provided base model.
+	// If the `default` parameter isn't specified, the service returns all models (default and non-default) for each
+	// language pair. To return only default models, set this parameter to `true`. To return only non-default models, set
+	// this parameter to `false`. There is exactly one default model, the IBM-provided base model, per language pair.
 	Default *bool `json:"default,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
@@ -1221,12 +1385,14 @@ type TranslateDocumentOptions struct {
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The model to use for translation. For example, `en-de` selects the IBM provided base model for English to German
-	// translation. A model ID overrides the source and target parameters and is required if you use a custom model. If no
-	// model ID is specified, you must specify a target language.
+	// The model to use for translation. For example, `en-de` selects the IBM-provided base model for English-to-German
+	// translation. A model ID overrides the `source` and `target` parameters and is required if you use a custom model. If
+	// no model ID is specified, you must specify at least a target language.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// Language code that specifies the language of the source document.
+	// Language code that specifies the language of the source document. If omitted, the service derives the source
+	// language from the input text. The input must contain sufficient text for the service to identify the language
+	// reliably.
 	Source *string `json:"source,omitempty"`
 
 	// Language code that specifies the target language for translation. Required if model ID is not specified.
@@ -1298,15 +1464,16 @@ func (options *TranslateDocumentOptions) SetHeaders(param map[string]string) *Tr
 // TranslateOptions : The Translate options.
 type TranslateOptions struct {
 
-	// Input text in UTF-8 encoding. Multiple entries will result in multiple translations in the response.
+	// Input text in UTF-8 encoding. Multiple entries result in multiple translations in the response.
 	Text []string `json:"text" validate:"required"`
 
-	// The model to use for translation. For example, `en-de` selects the IBM provided base model for English to German
-	// translation. A model ID overrides the source and target parameters and is required if you use a custom model. If no
-	// model ID is specified, you must specify a target language.
+	// The model to use for translation. For example, `en-de` selects the IBM-provided base model for English-to-German
+	// translation. A model ID overrides the `source` and `target` parameters and is required if you use a custom model. If
+	// no model ID is specified, you must specify at least a target language.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// Language code that specifies the language of the source document.
+	// Language code that specifies the language of the input text. If omitted, the service derives the source language
+	// from the input text. The input must contain sufficient text for the service to identify the language reliably.
 	Source *string `json:"source,omitempty"`
 
 	// Language code that specifies the target language for translation. Required if model ID is not specified.

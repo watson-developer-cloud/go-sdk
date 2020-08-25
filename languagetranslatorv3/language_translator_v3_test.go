@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,51 @@ import (
 )
 
 var _ = Describe(`LanguageTranslatorV3`, func() {
+	Describe(`ListLanguages(listLanguagesOptions *ListLanguagesOptions)`, func() {
+		listLanguagesPath := "/v3/languages"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		Context(`Successfully - List supported languages`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(listLanguagesPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"languages": []}`)
+			}))
+			It(`Succeed to call ListLanguages`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.ListLanguages(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				listLanguagesOptions := testService.NewListLanguagesOptions()
+				result, response, operationErr = testService.ListLanguages(listLanguagesOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
 	Describe(`Translate(translateOptions *TranslateOptions)`, func() {
 		translatePath := "/v3/translate"
 		version := "exampleString"
