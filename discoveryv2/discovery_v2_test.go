@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +74,197 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`CreateCollection(createCollectionOptions *CreateCollectionOptions)`, func() {
+		createCollectionPath := "/v2/projects/{project_id}/collections"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		name := "exampleString"
+		createCollectionPath = strings.Replace(createCollectionPath, "{project_id}", projectID, 1)
+		Context(`Successfully - Create a collection`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(createCollectionPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"name": "fake_Name"}`)
+			}))
+			It(`Succeed to call CreateCollection`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.CreateCollection(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				createCollectionOptions := testService.NewCreateCollectionOptions(projectID, name)
+				result, response, operationErr = testService.CreateCollection(createCollectionOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`GetCollection(getCollectionOptions *GetCollectionOptions)`, func() {
+		getCollectionPath := "/v2/projects/{project_id}/collections/{collection_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		collectionID := "exampleString"
+		getCollectionPath = strings.Replace(getCollectionPath, "{project_id}", projectID, 1)
+		getCollectionPath = strings.Replace(getCollectionPath, "{collection_id}", collectionID, 1)
+		Context(`Successfully - Get collection`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getCollectionPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"name": "fake_Name"}`)
+			}))
+			It(`Succeed to call GetCollection`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetCollection(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getCollectionOptions := testService.NewGetCollectionOptions(projectID, collectionID)
+				result, response, operationErr = testService.GetCollection(getCollectionOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`UpdateCollection(updateCollectionOptions *UpdateCollectionOptions)`, func() {
+		updateCollectionPath := "/v2/projects/{project_id}/collections/{collection_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		collectionID := "exampleString"
+		updateCollectionPath = strings.Replace(updateCollectionPath, "{project_id}", projectID, 1)
+		updateCollectionPath = strings.Replace(updateCollectionPath, "{collection_id}", collectionID, 1)
+		Context(`Successfully - Update a collection`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(updateCollectionPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"name": "fake_Name"}`)
+			}))
+			It(`Succeed to call UpdateCollection`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.UpdateCollection(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				updateCollectionOptions := testService.NewUpdateCollectionOptions(projectID, collectionID)
+				result, response, operationErr = testService.UpdateCollection(updateCollectionOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions)`, func() {
+		deleteCollectionPath := "/v2/projects/{project_id}/collections/{collection_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		collectionID := "exampleString"
+		deleteCollectionPath = strings.Replace(deleteCollectionPath, "{project_id}", projectID, 1)
+		deleteCollectionPath = strings.Replace(deleteCollectionPath, "{collection_id}", collectionID, 1)
+		Context(`Successfully - Delete a collection`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(deleteCollectionPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.WriteHeader(204)
+			}))
+			It(`Succeed to call DeleteCollection`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				response, operationErr := testService.DeleteCollection(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				deleteCollectionOptions := testService.NewDeleteCollectionOptions(projectID, collectionID)
+				response, operationErr = testService.DeleteCollection(deleteCollectionOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 			})
 		})
 	})
@@ -274,7 +465,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 		bearerToken := "0ui9876453"
 		projectID := "exampleString"
 		getComponentSettingsPath = strings.Replace(getComponentSettingsPath, "{project_id}", projectID, 1)
-		Context(`Successfully - Configuration settings for components`, func() {
+		Context(`Successfully - List component settings`, func() {
 			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 				defer GinkgoRecover()
 
@@ -717,6 +908,518 @@ var _ = Describe(`DiscoveryV2`, func() {
 			})
 		})
 	})
+	Describe(`ListEnrichments(listEnrichmentsOptions *ListEnrichmentsOptions)`, func() {
+		listEnrichmentsPath := "/v2/projects/{project_id}/enrichments"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		listEnrichmentsPath = strings.Replace(listEnrichmentsPath, "{project_id}", projectID, 1)
+		Context(`Successfully - List Enrichments`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(listEnrichmentsPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call ListEnrichments`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.ListEnrichments(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				listEnrichmentsOptions := testService.NewListEnrichmentsOptions(projectID)
+				result, response, operationErr = testService.ListEnrichments(listEnrichmentsOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`CreateEnrichment(createEnrichmentOptions *CreateEnrichmentOptions)`, func() {
+		createEnrichmentPath := "/v2/projects/{project_id}/enrichments"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		enrichment := new(discoveryv2.CreateEnrichment)
+		createEnrichmentPath = strings.Replace(createEnrichmentPath, "{project_id}", projectID, 1)
+		Context(`Successfully - Create an enrichment`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(createEnrichmentPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(201)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call CreateEnrichment`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.CreateEnrichment(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				createEnrichmentOptions := testService.NewCreateEnrichmentOptions(projectID, enrichment)
+				result, response, operationErr = testService.CreateEnrichment(createEnrichmentOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`GetEnrichment(getEnrichmentOptions *GetEnrichmentOptions)`, func() {
+		getEnrichmentPath := "/v2/projects/{project_id}/enrichments/{enrichment_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		enrichmentID := "exampleString"
+		getEnrichmentPath = strings.Replace(getEnrichmentPath, "{project_id}", projectID, 1)
+		getEnrichmentPath = strings.Replace(getEnrichmentPath, "{enrichment_id}", enrichmentID, 1)
+		Context(`Successfully - Get enrichment`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getEnrichmentPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call GetEnrichment`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetEnrichment(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getEnrichmentOptions := testService.NewGetEnrichmentOptions(projectID, enrichmentID)
+				result, response, operationErr = testService.GetEnrichment(getEnrichmentOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`UpdateEnrichment(updateEnrichmentOptions *UpdateEnrichmentOptions)`, func() {
+		updateEnrichmentPath := "/v2/projects/{project_id}/enrichments/{enrichment_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		enrichmentID := "exampleString"
+		name := "exampleString"
+		updateEnrichmentPath = strings.Replace(updateEnrichmentPath, "{project_id}", projectID, 1)
+		updateEnrichmentPath = strings.Replace(updateEnrichmentPath, "{enrichment_id}", enrichmentID, 1)
+		Context(`Successfully - Update an enrichment`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(updateEnrichmentPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call UpdateEnrichment`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.UpdateEnrichment(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				updateEnrichmentOptions := testService.NewUpdateEnrichmentOptions(projectID, enrichmentID, name)
+				result, response, operationErr = testService.UpdateEnrichment(updateEnrichmentOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`DeleteEnrichment(deleteEnrichmentOptions *DeleteEnrichmentOptions)`, func() {
+		deleteEnrichmentPath := "/v2/projects/{project_id}/enrichments/{enrichment_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		enrichmentID := "exampleString"
+		deleteEnrichmentPath = strings.Replace(deleteEnrichmentPath, "{project_id}", projectID, 1)
+		deleteEnrichmentPath = strings.Replace(deleteEnrichmentPath, "{enrichment_id}", enrichmentID, 1)
+		Context(`Successfully - Delete an enrichment`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(deleteEnrichmentPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.WriteHeader(204)
+			}))
+			It(`Succeed to call DeleteEnrichment`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				response, operationErr := testService.DeleteEnrichment(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				deleteEnrichmentOptions := testService.NewDeleteEnrichmentOptions(projectID, enrichmentID)
+				response, operationErr = testService.DeleteEnrichment(deleteEnrichmentOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`ListProjects(listProjectsOptions *ListProjectsOptions)`, func() {
+		listProjectsPath := "/v2/projects"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		Context(`Successfully - List projects`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(listProjectsPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call ListProjects`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.ListProjects(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				listProjectsOptions := testService.NewListProjectsOptions()
+				result, response, operationErr = testService.ListProjects(listProjectsOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`CreateProject(createProjectOptions *CreateProjectOptions)`, func() {
+		createProjectPath := "/v2/projects"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		name := "exampleString"
+		typeVar := "exampleString"
+		Context(`Successfully - Create a Project`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(createProjectPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call CreateProject`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.CreateProject(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				createProjectOptions := testService.NewCreateProjectOptions(name, typeVar)
+				result, response, operationErr = testService.CreateProject(createProjectOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`GetProject(getProjectOptions *GetProjectOptions)`, func() {
+		getProjectPath := "/v2/projects/{project_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		getProjectPath = strings.Replace(getProjectPath, "{project_id}", projectID, 1)
+		Context(`Successfully - Get project`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(getProjectPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call GetProject`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.GetProject(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				getProjectOptions := testService.NewGetProjectOptions(projectID)
+				result, response, operationErr = testService.GetProject(getProjectOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`UpdateProject(updateProjectOptions *UpdateProjectOptions)`, func() {
+		updateProjectPath := "/v2/projects/{project_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		updateProjectPath = strings.Replace(updateProjectPath, "{project_id}", projectID, 1)
+		Context(`Successfully - Update a project`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(updateProjectPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("POST"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{}`)
+			}))
+			It(`Succeed to call UpdateProject`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.UpdateProject(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				updateProjectOptions := testService.NewUpdateProjectOptions(projectID)
+				result, response, operationErr = testService.UpdateProject(updateProjectOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`DeleteProject(deleteProjectOptions *DeleteProjectOptions)`, func() {
+		deleteProjectPath := "/v2/projects/{project_id}"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		projectID := "exampleString"
+		deleteProjectPath = strings.Replace(deleteProjectPath, "{project_id}", projectID, 1)
+		Context(`Successfully - Delete a project`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(deleteProjectPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.WriteHeader(204)
+			}))
+			It(`Succeed to call DeleteProject`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				response, operationErr := testService.DeleteProject(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				deleteProjectOptions := testService.NewDeleteProjectOptions(projectID)
+				response, operationErr = testService.DeleteProject(deleteProjectOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)`, func() {
+		deleteUserDataPath := "/v2/user_data"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		customerID := "exampleString"
+		Context(`Successfully - Delete labeled data`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(deleteUserDataPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				Expect(req.URL.Query()["customer_id"]).To(Equal([]string{customerID}))
+
+				res.WriteHeader(200)
+			}))
+			It(`Succeed to call DeleteUserData`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				response, operationErr := testService.DeleteUserData(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				deleteUserDataOptions := testService.NewDeleteUserDataOptions(customerID)
+				response, operationErr = testService.DeleteUserData(deleteUserDataOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+		})
+	})
 	Describe("Model constructor tests", func() {
 		Context("with a sample service", func() {
 			version := "1970-01-01"
@@ -724,6 +1427,12 @@ var _ = Describe(`DiscoveryV2`, func() {
 				URL:           "http://discoveryv2modelgenerator.com",
 				Version:       version,
 				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It("should call NewCollectionDetails successfully", func() {
+				name := "exampleString"
+				model, err := testService.NewCollectionDetails(name)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 			It("should call NewTrainingExample successfully", func() {
 				documentID := "exampleString"
