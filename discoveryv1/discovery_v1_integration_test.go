@@ -66,7 +66,7 @@ func TestConstructService(t *testing.T) {
 	var err error
 
 	service, err = discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-		Version: "2019-04-30",
+		Version: "2020-08-23",
 	})
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
