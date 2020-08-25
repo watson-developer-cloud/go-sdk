@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ type NaturalLanguageUnderstandingV1 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://gateway.watsonplatform.net/natural-language-understanding/api"
+const DefaultServiceURL = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "natural-language-understanding"
@@ -118,7 +118,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DisableSSLVe
 // - Relations
 // - Semantic roles
 // - Sentiment
-// - Syntax (Experimental).
+// - Syntax.
 //
 // If a language for the input text is not specified with the `language` parameter, the service [automatically detects
 // the
@@ -399,9 +399,8 @@ type AnalyzeOptions struct {
 	// The webpage to analyze. One of the `text`, `html`, or `url` parameters is required.
 	URL *string `json:"url,omitempty"`
 
-	// Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning, see the [Analyzing
-	// webpages](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages)
-	// documentation.
+	// Set this to `false` to disable webpage cleaning. For more information about webpage cleaning, see [Analyzing
+	// webpages](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages).
 	Clean *bool `json:"clean,omitempty"`
 
 	// An [XPath
@@ -417,9 +416,8 @@ type AnalyzeOptions struct {
 	ReturnAnalyzedText *bool `json:"return_analyzed_text,omitempty"`
 
 	// ISO 639-1 code that specifies the language of your text. This overrides automatic language detection. Language
-	// support differs depending on the features you include in your analysis. See [Language
-	// support](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-language-support)
-	// for more information.
+	// support differs depending on the features you include in your analysis. For more information, see [Language
+	// support](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-language-support).
 	Language *string `json:"language,omitempty"`
 
 	// Sets the maximum number of characters that are processed by the service.
@@ -542,10 +540,9 @@ type CategoriesRelevantText struct {
 // CategoriesResult : A categorization of the analyzed text.
 type CategoriesResult struct {
 
-	// The path to the category through the 5-level taxonomy hierarchy. For the complete list of categories, see the
+	// The path to the category through the 5-level taxonomy hierarchy. For more information about the categories, see
 	// [Categories
-	// hierarchy](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy)
-	// documentation.
+	// hierarchy](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy).
 	Label *string `json:"label,omitempty"`
 
 	// Confidence score for the category classification. Higher values indicate greater confidence.
@@ -696,7 +693,8 @@ type EmotionScores struct {
 	Sadness *float64 `json:"sadness,omitempty"`
 }
 
-// EntitiesOptions : Identifies people, cities, organizations, and other entities in the content. See [Entity types and
+// EntitiesOptions : Identifies people, cities, organizations, and other entities in the content. For more information, see [Entity types
+// and
 // subtypes](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-entity-types).
 //
 // Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
@@ -792,7 +790,8 @@ type Features struct {
 	// Supported languages: English.
 	Emotion *EmotionOptions `json:"emotion,omitempty"`
 
-	// Identifies people, cities, organizations, and other entities in the content. See [Entity types and
+	// Identifies people, cities, organizations, and other entities in the content. For more information, see [Entity types
+	// and
 	// subtypes](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-entity-types).
 	//
 	// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
@@ -809,7 +808,7 @@ type Features struct {
 	Metadata *MetadataOptions `json:"metadata,omitempty"`
 
 	// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
-	// might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
+	// might connect the entities "Nobel Prize" and "Albert Einstein". For more information, see [Relation
 	// types](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-relations).
 	//
 	// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
@@ -916,7 +915,7 @@ type Model struct {
 	// Unique model ID.
 	ModelID *string `json:"model_id,omitempty"`
 
-	// ISO 639-1 code indicating the language of the model.
+	// ISO 639-1 code that indicates the language of the model.
 	Language *string `json:"language,omitempty"`
 
 	// Model description.
@@ -937,6 +936,17 @@ type Model struct {
 	// A dateTime indicating when the model was created.
 	Created *strfmt.DateTime `json:"created,omitempty"`
 }
+
+// Constants associated with the Model.Status property.
+// When the status is `available`, the model is ready to use.
+const (
+	Model_Status_Available = "available"
+	Model_Status_Deleted   = "deleted"
+	Model_Status_Deploying = "deploying"
+	Model_Status_Error     = "error"
+	Model_Status_Starting  = "starting"
+	Model_Status_Training  = "training"
+)
 
 // RelationArgument : RelationArgument struct
 type RelationArgument struct {
@@ -962,7 +972,7 @@ type RelationEntity struct {
 }
 
 // RelationsOptions : Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
-// might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
+// might connect the entities "Nobel Prize" and "Albert Einstein". For more information, see [Relation
 // types](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-relations).
 //
 // Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
@@ -1170,7 +1180,7 @@ type TokenResult struct {
 	// The token as it appears in the analyzed text.
 	Text *string `json:"text,omitempty"`
 
-	// The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
+	// The part of speech of the token. For more information about the values, see [Universal Dependencies POS
 	// tags](https://universaldependencies.org/u/pos/).
 	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 
@@ -1182,7 +1192,7 @@ type TokenResult struct {
 }
 
 // Constants associated with the TokenResult.PartOfSpeech property.
-// The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
+// The part of speech of the token. For more information about the values, see [Universal Dependencies POS
 // tags](https://universaldependencies.org/u/pos/).
 const (
 	TokenResult_PartOfSpeech_Adj   = "ADJ"

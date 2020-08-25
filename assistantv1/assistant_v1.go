@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ type AssistantV1 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
+const DefaultServiceURL = "https://api.us-south.assistant.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "conversation"
@@ -109,8 +109,6 @@ func (assistant *AssistantV1) DisableSSLVerification() {
 // **Important:** This method has been superseded by the new v2 runtime API. The v2 API offers significant advantages,
 // including ease of deployment, automatic state management, versioning, and search capabilities. For more information,
 // see the [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-api-overview).
-//
-// There is no rate limit for this operation.
 func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (result *MessageResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(messageOptions, "messageOptions cannot be nil")
 	if err != nil {
@@ -190,8 +188,6 @@ func (assistant *AssistantV1) Message(messageOptions *MessageOptions) (result *M
 
 // ListWorkspaces : List workspaces
 // List the workspaces associated with a Watson Assistant service instance.
-//
-// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) (result *WorkspaceCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listWorkspacesOptions, "listWorkspacesOptions")
 	if err != nil {
@@ -252,8 +248,6 @@ func (assistant *AssistantV1) ListWorkspaces(listWorkspacesOptions *ListWorkspac
 // CreateWorkspace : Create workspace
 // Create a workspace based on component objects. You must provide workspace components defining the content of the new
 // workspace.
-//
-// This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions) (result *Workspace, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(createWorkspaceOptions, "createWorkspaceOptions")
 	if err != nil {
@@ -344,9 +338,6 @@ func (assistant *AssistantV1) CreateWorkspace(createWorkspaceOptions *CreateWork
 
 // GetWorkspace : Get information about a workspace
 // Get information about a workspace, optionally including all workspace content.
-//
-// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
-// is 20 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions) (result *Workspace, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getWorkspaceOptions, "getWorkspaceOptions cannot be nil")
 	if err != nil {
@@ -408,8 +399,6 @@ func (assistant *AssistantV1) GetWorkspace(getWorkspaceOptions *GetWorkspaceOpti
 // UpdateWorkspace : Update workspace
 // Update an existing workspace with new or modified data. You must provide component objects defining the content of
 // the updated workspace.
-//
-// This operation is limited to 30 request per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions) (result *Workspace, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateWorkspaceOptions, "updateWorkspaceOptions cannot be nil")
 	if err != nil {
@@ -507,8 +496,6 @@ func (assistant *AssistantV1) UpdateWorkspace(updateWorkspaceOptions *UpdateWork
 
 // DeleteWorkspace : Delete workspace
 // Delete a workspace from the service instance.
-//
-// This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteWorkspaceOptions, "deleteWorkspaceOptions cannot be nil")
 	if err != nil {
@@ -552,9 +539,6 @@ func (assistant *AssistantV1) DeleteWorkspace(deleteWorkspaceOptions *DeleteWork
 
 // ListIntents : List intents
 // List the intents for a workspace.
-//
-// With **export**=`false`, this operation is limited to 2000 requests per 30 minutes. With **export**=`true`, the limit
-// is 400 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions) (result *IntentCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listIntentsOptions, "listIntentsOptions cannot be nil")
 	if err != nil {
@@ -624,8 +608,6 @@ func (assistant *AssistantV1) ListIntents(listIntentsOptions *ListIntentsOptions
 //
 // If you want to create multiple intents with a single API call, consider using the **[Update
 // workspace](#update-workspace)** method instead.
-//
-// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOptions) (result *Intent, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createIntentOptions, "createIntentOptions cannot be nil")
 	if err != nil {
@@ -696,9 +678,6 @@ func (assistant *AssistantV1) CreateIntent(createIntentOptions *CreateIntentOpti
 
 // GetIntent : Get intent
 // Get information about an intent, optionally including all intent content.
-//
-// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
-// is 400 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (result *Intent, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getIntentOptions, "getIntentOptions cannot be nil")
 	if err != nil {
@@ -760,8 +739,6 @@ func (assistant *AssistantV1) GetIntent(getIntentOptions *GetIntentOptions) (res
 //
 // If you want to update multiple intents with a single API call, consider using the **[Update
 // workspace](#update-workspace)** method instead.
-//
-// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOptions) (result *Intent, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateIntentOptions, "updateIntentOptions cannot be nil")
 	if err != nil {
@@ -835,8 +812,6 @@ func (assistant *AssistantV1) UpdateIntent(updateIntentOptions *UpdateIntentOpti
 
 // DeleteIntent : Delete intent
 // Delete an intent from a workspace.
-//
-// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteIntentOptions, "deleteIntentOptions cannot be nil")
 	if err != nil {
@@ -880,8 +855,6 @@ func (assistant *AssistantV1) DeleteIntent(deleteIntentOptions *DeleteIntentOpti
 
 // ListExamples : List user input examples
 // List the user input examples for an intent, optionally including contextual entity mentions.
-//
-// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOptions) (result *ExampleCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listExamplesOptions, "listExamplesOptions cannot be nil")
 	if err != nil {
@@ -948,8 +921,6 @@ func (assistant *AssistantV1) ListExamples(listExamplesOptions *ListExamplesOpti
 //
 // If you want to add multiple examples with a single API call, consider using the **[Update intent](#update-intent)**
 // method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleOptions) (result *Example, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createExampleOptions, "createExampleOptions cannot be nil")
 	if err != nil {
@@ -1017,8 +988,6 @@ func (assistant *AssistantV1) CreateExample(createExampleOptions *CreateExampleO
 
 // GetExample : Get user input example
 // Get information about a user input example.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (result *Example, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getExampleOptions, "getExampleOptions cannot be nil")
 	if err != nil {
@@ -1076,8 +1045,6 @@ func (assistant *AssistantV1) GetExample(getExampleOptions *GetExampleOptions) (
 //
 // If you want to update multiple examples with a single API call, consider using the **[Update
 // intent](#update-intent)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleOptions) (result *Example, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateExampleOptions, "updateExampleOptions cannot be nil")
 	if err != nil {
@@ -1145,8 +1112,6 @@ func (assistant *AssistantV1) UpdateExample(updateExampleOptions *UpdateExampleO
 
 // DeleteExample : Delete user input example
 // Delete a user input example from an intent.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteExampleOptions, "deleteExampleOptions cannot be nil")
 	if err != nil {
@@ -1190,8 +1155,6 @@ func (assistant *AssistantV1) DeleteExample(deleteExampleOptions *DeleteExampleO
 
 // ListCounterexamples : List counterexamples
 // List the counterexamples for a workspace. Counterexamples are examples that have been marked as irrelevant input.
-//
-// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *ListCounterexamplesOptions) (result *CounterexampleCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listCounterexamplesOptions, "listCounterexamplesOptions cannot be nil")
 	if err != nil {
@@ -1258,8 +1221,6 @@ func (assistant *AssistantV1) ListCounterexamples(listCounterexamplesOptions *Li
 //
 // If you want to add multiple counterexamples with a single API call, consider using the **[Update
 // workspace](#update-workspace)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) (result *Counterexample, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createCounterexampleOptions, "createCounterexampleOptions cannot be nil")
 	if err != nil {
@@ -1324,8 +1285,6 @@ func (assistant *AssistantV1) CreateCounterexample(createCounterexampleOptions *
 
 // GetCounterexample : Get counterexample
 // Get information about a counterexample. Counterexamples are examples that have been marked as irrelevant input.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) (result *Counterexample, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getCounterexampleOptions, "getCounterexampleOptions cannot be nil")
 	if err != nil {
@@ -1380,11 +1339,6 @@ func (assistant *AssistantV1) GetCounterexample(getCounterexampleOptions *GetCou
 
 // UpdateCounterexample : Update counterexample
 // Update the text of a counterexample. Counterexamples are examples that have been marked as irrelevant input.
-//
-// If you want to update multiple counterexamples with a single API call, consider using the **[Update
-// workspace](#update-workspace)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions) (result *Counterexample, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateCounterexampleOptions, "updateCounterexampleOptions cannot be nil")
 	if err != nil {
@@ -1449,8 +1403,6 @@ func (assistant *AssistantV1) UpdateCounterexample(updateCounterexampleOptions *
 
 // DeleteCounterexample : Delete counterexample
 // Delete a counterexample from a workspace. Counterexamples are examples that have been marked as irrelevant input.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteCounterexampleOptions, "deleteCounterexampleOptions cannot be nil")
 	if err != nil {
@@ -1494,9 +1446,6 @@ func (assistant *AssistantV1) DeleteCounterexample(deleteCounterexampleOptions *
 
 // ListEntities : List entities
 // List the entities for a workspace.
-//
-// With **export**=`false`, this operation is limited to 1000 requests per 30 minutes. With **export**=`true`, the limit
-// is 200 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOptions) (result *EntityCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listEntitiesOptions, "listEntitiesOptions cannot be nil")
 	if err != nil {
@@ -1566,8 +1515,6 @@ func (assistant *AssistantV1) ListEntities(listEntitiesOptions *ListEntitiesOpti
 //
 // If you want to create multiple entities with a single API call, consider using the **[Update
 // workspace](#update-workspace)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOptions) (result *Entity, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createEntityOptions, "createEntityOptions cannot be nil")
 	if err != nil {
@@ -1644,9 +1591,6 @@ func (assistant *AssistantV1) CreateEntity(createEntityOptions *CreateEntityOpti
 
 // GetEntity : Get entity
 // Get information about an entity, optionally including all entity content.
-//
-// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`, the limit
-// is 200 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (result *Entity, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getEntityOptions, "getEntityOptions cannot be nil")
 	if err != nil {
@@ -1708,8 +1652,6 @@ func (assistant *AssistantV1) GetEntity(getEntityOptions *GetEntityOptions) (res
 //
 // If you want to update multiple entities with a single API call, consider using the **[Update
 // workspace](#update-workspace)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOptions) (result *Entity, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateEntityOptions, "updateEntityOptions cannot be nil")
 	if err != nil {
@@ -1789,8 +1731,6 @@ func (assistant *AssistantV1) UpdateEntity(updateEntityOptions *UpdateEntityOpti
 
 // DeleteEntity : Delete entity
 // Delete an entity from a workspace, or disable a system entity.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteEntityOptions, "deleteEntityOptions cannot be nil")
 	if err != nil {
@@ -1835,8 +1775,6 @@ func (assistant *AssistantV1) DeleteEntity(deleteEntityOptions *DeleteEntityOpti
 // ListMentions : List entity mentions
 // List mentions for a contextual entity. An entity mention is an occurrence of a contextual entity in the context of an
 // intent user input example.
-//
-// This operation is limited to 200 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOptions) (result *EntityMentionCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listMentionsOptions, "listMentionsOptions cannot be nil")
 	if err != nil {
@@ -1894,8 +1832,6 @@ func (assistant *AssistantV1) ListMentions(listMentionsOptions *ListMentionsOpti
 
 // ListValues : List entity values
 // List the values for an entity.
-//
-// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (result *ValueCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listValuesOptions, "listValuesOptions cannot be nil")
 	if err != nil {
@@ -1965,8 +1901,6 @@ func (assistant *AssistantV1) ListValues(listValuesOptions *ListValuesOptions) (
 //
 // If you want to create multiple entity values with a single API call, consider using the **[Update
 // entity](#update-entity)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions) (result *Value, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createValueOptions, "createValueOptions cannot be nil")
 	if err != nil {
@@ -2043,8 +1977,6 @@ func (assistant *AssistantV1) CreateValue(createValueOptions *CreateValueOptions
 
 // GetValue : Get entity value
 // Get information about an entity value.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (result *Value, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getValueOptions, "getValueOptions cannot be nil")
 	if err != nil {
@@ -2106,8 +2038,6 @@ func (assistant *AssistantV1) GetValue(getValueOptions *GetValueOptions) (result
 //
 // If you want to update multiple entity values with a single API call, consider using the **[Update
 // entity](#update-entity)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions) (result *Value, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateValueOptions, "updateValueOptions cannot be nil")
 	if err != nil {
@@ -2187,8 +2117,6 @@ func (assistant *AssistantV1) UpdateValue(updateValueOptions *UpdateValueOptions
 
 // DeleteValue : Delete entity value
 // Delete a value from an entity.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteValueOptions, "deleteValueOptions cannot be nil")
 	if err != nil {
@@ -2232,8 +2160,6 @@ func (assistant *AssistantV1) DeleteValue(deleteValueOptions *DeleteValueOptions
 
 // ListSynonyms : List entity value synonyms
 // List the synonyms for an entity value.
-//
-// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOptions) (result *SynonymCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listSynonymsOptions, "listSynonymsOptions cannot be nil")
 	if err != nil {
@@ -2300,8 +2226,6 @@ func (assistant *AssistantV1) ListSynonyms(listSynonymsOptions *ListSynonymsOpti
 //
 // If you want to create multiple synonyms with a single API call, consider using the **[Update
 // entity](#update-entity)** or **[Update entity value](#update-entity-value)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymOptions) (result *Synonym, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createSynonymOptions, "createSynonymOptions cannot be nil")
 	if err != nil {
@@ -2366,8 +2290,6 @@ func (assistant *AssistantV1) CreateSynonym(createSynonymOptions *CreateSynonymO
 
 // GetSynonym : Get entity value synonym
 // Get information about a synonym of an entity value.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (result *Synonym, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getSynonymOptions, "getSynonymOptions cannot be nil")
 	if err != nil {
@@ -2425,8 +2347,6 @@ func (assistant *AssistantV1) GetSynonym(getSynonymOptions *GetSynonymOptions) (
 //
 // If you want to update multiple synonyms with a single API call, consider using the **[Update
 // entity](#update-entity)** or **[Update entity value](#update-entity-value)** method instead.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions) (result *Synonym, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateSynonymOptions, "updateSynonymOptions cannot be nil")
 	if err != nil {
@@ -2491,8 +2411,6 @@ func (assistant *AssistantV1) UpdateSynonym(updateSynonymOptions *UpdateSynonymO
 
 // DeleteSynonym : Delete entity value synonym
 // Delete a synonym from an entity value.
-//
-// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteSynonymOptions, "deleteSynonymOptions cannot be nil")
 	if err != nil {
@@ -2536,8 +2454,6 @@ func (assistant *AssistantV1) DeleteSynonym(deleteSynonymOptions *DeleteSynonymO
 
 // ListDialogNodes : List dialog nodes
 // List the dialog nodes for a workspace.
-//
-// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) (result *DialogNodeCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listDialogNodesOptions, "listDialogNodesOptions cannot be nil")
 	if err != nil {
@@ -2604,8 +2520,6 @@ func (assistant *AssistantV1) ListDialogNodes(listDialogNodesOptions *ListDialog
 //
 // If you want to create multiple dialog nodes with a single API call, consider using the **[Update
 // workspace](#update-workspace)** method instead.
-//
-// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions) (result *DialogNode, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createDialogNodeOptions, "createDialogNodeOptions cannot be nil")
 	if err != nil {
@@ -2724,8 +2638,6 @@ func (assistant *AssistantV1) CreateDialogNode(createDialogNodeOptions *CreateDi
 
 // GetDialogNode : Get dialog node
 // Get information about a dialog node.
-//
-// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeOptions) (result *DialogNode, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getDialogNodeOptions, "getDialogNodeOptions cannot be nil")
 	if err != nil {
@@ -2783,8 +2695,6 @@ func (assistant *AssistantV1) GetDialogNode(getDialogNodeOptions *GetDialogNodeO
 //
 // If you want to update multiple dialog nodes with a single API call, consider using the **[Update
 // workspace](#update-workspace)** method instead.
-//
-// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions) (result *DialogNode, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateDialogNodeOptions, "updateDialogNodeOptions cannot be nil")
 	if err != nil {
@@ -2903,8 +2813,6 @@ func (assistant *AssistantV1) UpdateDialogNode(updateDialogNodeOptions *UpdateDi
 
 // DeleteDialogNode : Delete dialog node
 // Delete a dialog node from a workspace.
-//
-// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteDialogNodeOptions, "deleteDialogNodeOptions cannot be nil")
 	if err != nil {
@@ -2948,9 +2856,6 @@ func (assistant *AssistantV1) DeleteDialogNode(deleteDialogNodeOptions *DeleteDi
 
 // ListLogs : List log events in a workspace
 // List the events from the log of a specific workspace.
-//
-// If **cursor** is not specified, this operation is limited to 40 requests per 30 minutes. If **cursor** is specified,
-// the limit is 120 requests per minute. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (result *LogCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listLogsOptions, "listLogsOptions cannot be nil")
 	if err != nil {
@@ -3014,9 +2919,6 @@ func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (result
 
 // ListAllLogs : List log events in all workspaces
 // List the events from the logs of all workspaces in the service instance.
-//
-// If **cursor** is not specified, this operation is limited to 40 requests per 30 minutes. If **cursor** is specified,
-// the limit is 120 requests per minute. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions) (result *LogCollection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listAllLogsOptions, "listAllLogsOptions cannot be nil")
 	if err != nil {
@@ -3083,8 +2985,6 @@ func (assistant *AssistantV1) ListAllLogs(listAllLogsOptions *ListAllLogsOptions
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
 // security](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security).
-//
-// This operation is limited to 4 requests per minute. For more information, see **Rate limiting**.
 func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
 	if err != nil {
@@ -4852,8 +4752,7 @@ type DialogNodeOutputGeneric struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
 	//
-	// **Note:** The **search_skill** response type is available only for Plus and Premium users, and is used only by the
-	// v2 runtime API.
+	// **Note:** The **search_skill** response type is used only by the v2 runtime API.
 	ResponseType *string `json:"response_type" validate:"required"`
 
 	// A list of one or more objects defining text responses. Required when **response_type**=`text`.
@@ -4915,8 +4814,7 @@ type DialogNodeOutputGeneric struct {
 // The type of response returned by the dialog node. The specified response type must be supported by the client
 // application or channel.
 //
-// **Note:** The **search_skill** response type is available only for Plus and Premium users, and is used only by the v2
-// runtime API.
+// **Note:** The **search_skill** response type is used only by the v2 runtime API.
 const (
 	DialogNodeOutputGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
 	DialogNodeOutputGeneric_ResponseType_Image          = "image"
@@ -5118,9 +5016,7 @@ type DialogSuggestionResponseGeneric struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
 	//
-	// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Plus
-	// and Premium users. The **search_skill** response type is available only for Plus and Premium users, and is used only
-	// by the v2 runtime API.
+	// **Note:** The **search_skill** response type is is used only by the v2 runtime API.
 	ResponseType *string `json:"response_type" validate:"required"`
 
 	// The text of the response.
@@ -5162,9 +5058,7 @@ type DialogSuggestionResponseGeneric struct {
 // The type of response returned by the dialog node. The specified response type must be supported by the client
 // application or channel.
 //
-// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Plus
-// and Premium users. The **search_skill** response type is available only for Plus and Premium users, and is used only
-// by the v2 runtime API.
+// **Note:** The **search_skill** response type is is used only by the v2 runtime API.
 const (
 	DialogSuggestionResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
 	DialogSuggestionResponseGeneric_ResponseType_Image          = "image"
@@ -7269,9 +7163,6 @@ type RuntimeResponseGeneric struct {
 
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
-	//
-	// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Plus
-	// and Premium users.
 	ResponseType *string `json:"response_type" validate:"required"`
 
 	// The text of the response.
@@ -7309,18 +7200,12 @@ type RuntimeResponseGeneric struct {
 	DialogNode *string `json:"dialog_node,omitempty"`
 
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
-	//
-	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Plus and
-	// Premium users.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 }
 
 // Constants associated with the RuntimeResponseGeneric.ResponseType property.
 // The type of response returned by the dialog node. The specified response type must be supported by the client
 // application or channel.
-//
-// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Plus
-// and Premium users.
 const (
 	RuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
 	RuntimeResponseGeneric_ResponseType_Image          = "image"
@@ -8538,8 +8423,6 @@ type WorkspaceSystemSettings struct {
 	Tooling *WorkspaceSystemSettingsTooling `json:"tooling,omitempty"`
 
 	// Workspace settings related to the disambiguation feature.
-	//
-	// **Note:** This feature is available only to Plus and Premium users.
 	Disambiguation *WorkspaceSystemSettingsDisambiguation `json:"disambiguation,omitempty"`
 
 	// For internal use only.
@@ -8562,8 +8445,6 @@ type WorkspaceSystemSettings struct {
 }
 
 // WorkspaceSystemSettingsDisambiguation : Workspace settings related to the disambiguation feature.
-//
-// **Note:** This feature is available only to Plus and Premium users.
 type WorkspaceSystemSettingsDisambiguation struct {
 
 	// The text of the introductory prompt that accompanies disambiguation options presented to the user.
