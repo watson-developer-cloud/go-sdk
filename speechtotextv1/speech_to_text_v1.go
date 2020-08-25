@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,17 @@ package speechtotextv1
 
 import (
 	"fmt"
-	"io"
-	"strings"
-
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
+	"strings"
 )
 
-// SpeechToTextV1 : The IBM&reg; Speech to Text service provides APIs that use IBM's speech-recognition capabilities to
-// produce transcripts of spoken audio. The service can transcribe speech from various languages and audio formats. In
-// addition to basic transcription, the service can produce detailed information about many different aspects of the
-// audio. For most languages, the service supports two sampling rates, broadband and narrowband. It returns all JSON
-// response content in the UTF-8 character set.
+// SpeechToTextV1 : The IBM Watson&trade; Speech to Text service provides APIs that use IBM's speech-recognition
+// capabilities to produce transcripts of spoken audio. The service can transcribe speech from various languages and
+// audio formats. In addition to basic transcription, the service can produce detailed information about many different
+// aspects of the audio. For most languages, the service supports two sampling rates, broadband and narrowband. It
+// returns all JSON response content in the UTF-8 character set.
 //
 // For speech recognition, the service supports synchronous and asynchronous HTTP Representational State Transfer (REST)
 // interfaces. It also supports a WebSocket interface that provides a full-duplex, low-latency communication channel:
@@ -52,7 +51,7 @@ type SpeechToTextV1 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://stream.watsonplatform.net/speech-to-text/api"
+const DefaultServiceURL = "https://api.us-south.speech-to-text.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "speech_to_text"
@@ -118,7 +117,8 @@ func (speechToText *SpeechToTextV1) DisableSSLVerification() {
 
 // ListModels : List models
 // Lists all language models that are available for use with the service. The information includes the name of the model
-// and its minimum sampling rate in Hertz, among other things.
+// and its minimum sampling rate in Hertz, among other things. The ordering of the list of models can change from call
+// to call; do not rely on an alphabetized or static list of models.
 //
 // **See also:** [Languages and models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOptions) (result *SpeechModels, response *core.DetailedResponse, err error) {
@@ -416,7 +416,7 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 
 // RegisterCallback : Register a callback
 // Registers a callback URL with the service for use with subsequent asynchronous recognition requests. The service
-// attempts to register, or white-list, the callback URL if it is not already registered by sending a `GET` request to
+// attempts to register, or allowlist, the callback URL if it is not already registered by sending a `GET` request to
 // the callback URL. The service passes a random alphanumeric challenge string via the `challenge_string` parameter of
 // the request. The request includes an `Accept` header that specifies `text/plain` as the required response type.
 //
@@ -427,9 +427,9 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 //
 // The service sends only a single `GET` request to the callback URL. If the service does not receive a reply with a
 // response code of 200 and a body that echoes the challenge string sent by the service within five seconds, it does not
-// white-list the URL; it instead sends status code 400 in response to the **Register a callback** request. If the
-// requested callback URL is already white-listed, the service responds to the initial registration request with
-// response code 200.
+// allowlist the URL; it instead sends status code 400 in response to the **Register a callback** request. If the
+// requested callback URL is already allowlisted, the service responds to the initial registration request with response
+// code 200.
 //
 // If you specify a user secret with the request, the service uses it as a key to calculate an HMAC-SHA1 signature of
 // the challenge string in its response to the `POST` request. It sends this signature in the `X-Callback-Signature`
@@ -495,7 +495,7 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 }
 
 // UnregisterCallback : Unregister a callback
-// Unregisters a callback URL that was previously white-listed with a **Register a callback** request for use with the
+// Unregisters a callback URL that was previously allowlisted with a **Register a callback** request for use with the
 // asynchronous interface. Once unregistered, the URL can no longer be used with asynchronous recognition requests.
 //
 // **See also:** [Unregistering a callback
@@ -2935,9 +2935,13 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 // Deletes all data that is associated with a specified customer ID. The method deletes all data for the customer ID,
 // regardless of the method by which the information was added. The method has no effect if no data is associated with
 // the customer ID. You must issue the request with credentials for the same instance of the service that was used to
-// associate the customer ID with the data.
+// associate the customer ID with the data. You associate a customer ID with data by passing the `X-Watson-Metadata`
+// header with a request that passes the data.
 //
-// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
+// **Note:** If you delete an instance of the service from the service console, all data associated with that service
+// instance is automatically deleted. This includes all custom language models, corpora, grammars, and words; all custom
+// acoustic models and audio resources; all registered endpoints for the asynchronous HTTP interface; and all data
+// related to speech recognition requests.
 //
 // **See also:** [Information
 // security](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-information-security#information-security).
@@ -3922,7 +3926,7 @@ type CreateJobOptions struct {
 	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 	Model *string `json:"model,omitempty"`
 
-	// A URL to which callback notifications are to be sent. The URL must already be successfully white-listed by using the
+	// A URL to which callback notifications are to be sent. The URL must already be successfully allowlisted by using the
 	// **Register a callback** method. You can include the same callback URL with any number of job creation requests. Omit
 	// the parameter to poll the service for job completion and results.
 	//
@@ -4060,9 +4064,8 @@ type CreateJobOptions struct {
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
 	// the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
 	//
-	// **Note:** Applies to US English, German, Japanese, Korean, and Spanish (both broadband and narrowband models) and UK
-	// English (narrowband model) transcription only. To determine whether a language model supports speaker labels, you
-	// can also use the **Get a model** method and check that the attribute `speaker_labels` is set to `true`.
+	// **Note:** Applies to US English, Australian English, German, Japanese, Korean, and Spanish (both broadband and
+	// narrowband models) and UK English (narrowband model) transcription only.
 	//
 	// See [Speaker labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
@@ -4181,6 +4184,8 @@ const (
 	CreateJobOptions_Model_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
 	CreateJobOptions_Model_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
 	CreateJobOptions_Model_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
+	CreateJobOptions_Model_EnAuBroadbandmodel           = "en-AU_BroadbandModel"
+	CreateJobOptions_Model_EnAuNarrowbandmodel          = "en-AU_NarrowbandModel"
 	CreateJobOptions_Model_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
 	CreateJobOptions_Model_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
 	CreateJobOptions_Model_EnUsBroadbandmodel           = "en-US_BroadbandModel"
@@ -5062,6 +5067,8 @@ const (
 	GetModelOptions_ModelID_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
 	GetModelOptions_ModelID_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
 	GetModelOptions_ModelID_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
+	GetModelOptions_ModelID_EnAuBroadbandmodel           = "en-AU_BroadbandModel"
+	GetModelOptions_ModelID_EnAuNarrowbandmodel          = "en-AU_NarrowbandModel"
 	GetModelOptions_ModelID_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
 	GetModelOptions_ModelID_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
 	GetModelOptions_ModelID_EnUsBroadbandmodel           = "en-US_BroadbandModel"
@@ -5320,14 +5327,40 @@ type LanguageModels struct {
 // ListAcousticModelsOptions : The ListAcousticModels options.
 type ListAcousticModelsOptions struct {
 
-	// The identifier of the language for which custom language or custom acoustic models are to be returned (for example,
-	// `en-US`). Omit the parameter to see all custom language or custom acoustic models that are owned by the requesting
-	// credentials.
+	// The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
+	// parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
+	// **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese) languages are not available for
+	// language model customization.
 	Language *string `json:"language,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListAcousticModelsOptions.Language property.
+// The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
+// parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
+// **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese) languages are not available for
+// language model customization.
+const (
+	ListAcousticModelsOptions_Language_ArAr = "ar-AR"
+	ListAcousticModelsOptions_Language_DeDe = "de-DE"
+	ListAcousticModelsOptions_Language_EnGb = "en-GB"
+	ListAcousticModelsOptions_Language_EnUs = "en-US"
+	ListAcousticModelsOptions_Language_EsAr = "es-AR"
+	ListAcousticModelsOptions_Language_EsCl = "es-CL"
+	ListAcousticModelsOptions_Language_EsCo = "es-CO"
+	ListAcousticModelsOptions_Language_EsEs = "es-ES"
+	ListAcousticModelsOptions_Language_EsMx = "es-MX"
+	ListAcousticModelsOptions_Language_EsPe = "es-PE"
+	ListAcousticModelsOptions_Language_FrFr = "fr-FR"
+	ListAcousticModelsOptions_Language_ItIt = "it-IT"
+	ListAcousticModelsOptions_Language_JaJp = "ja-JP"
+	ListAcousticModelsOptions_Language_KoKr = "ko-KR"
+	ListAcousticModelsOptions_Language_NlNl = "nl-NL"
+	ListAcousticModelsOptions_Language_PtBr = "pt-BR"
+	ListAcousticModelsOptions_Language_ZhCn = "zh-CN"
+)
 
 // NewListAcousticModelsOptions : Instantiate ListAcousticModelsOptions
 func (speechToText *SpeechToTextV1) NewListAcousticModelsOptions() *ListAcousticModelsOptions {
@@ -5439,14 +5472,40 @@ func (options *ListGrammarsOptions) SetHeaders(param map[string]string) *ListGra
 // ListLanguageModelsOptions : The ListLanguageModels options.
 type ListLanguageModelsOptions struct {
 
-	// The identifier of the language for which custom language or custom acoustic models are to be returned (for example,
-	// `en-US`). Omit the parameter to see all custom language or custom acoustic models that are owned by the requesting
-	// credentials.
+	// The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
+	// parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
+	// **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese) languages are not available for
+	// language model customization.
 	Language *string `json:"language,omitempty"`
 
 	// Allows users to set headers to be GDPR compliant
 	Headers map[string]string
 }
+
+// Constants associated with the ListLanguageModelsOptions.Language property.
+// The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
+// parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
+// **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese) languages are not available for
+// language model customization.
+const (
+	ListLanguageModelsOptions_Language_ArAr = "ar-AR"
+	ListLanguageModelsOptions_Language_DeDe = "de-DE"
+	ListLanguageModelsOptions_Language_EnGb = "en-GB"
+	ListLanguageModelsOptions_Language_EnUs = "en-US"
+	ListLanguageModelsOptions_Language_EsAr = "es-AR"
+	ListLanguageModelsOptions_Language_EsCl = "es-CL"
+	ListLanguageModelsOptions_Language_EsCo = "es-CO"
+	ListLanguageModelsOptions_Language_EsEs = "es-ES"
+	ListLanguageModelsOptions_Language_EsMx = "es-MX"
+	ListLanguageModelsOptions_Language_EsPe = "es-PE"
+	ListLanguageModelsOptions_Language_FrFr = "fr-FR"
+	ListLanguageModelsOptions_Language_ItIt = "it-IT"
+	ListLanguageModelsOptions_Language_JaJp = "ja-JP"
+	ListLanguageModelsOptions_Language_KoKr = "ko-KR"
+	ListLanguageModelsOptions_Language_NlNl = "nl-NL"
+	ListLanguageModelsOptions_Language_PtBr = "pt-BR"
+	ListLanguageModelsOptions_Language_ZhCn = "zh-CN"
+)
 
 // NewListLanguageModelsOptions : Instantiate ListLanguageModelsOptions
 func (speechToText *SpeechToTextV1) NewListLanguageModelsOptions() *ListLanguageModelsOptions {
@@ -5801,9 +5860,8 @@ type RecognizeOptions struct {
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
 	// the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
 	//
-	// **Note:** Applies to US English, German, Japanese, Korean, and Spanish (both broadband and narrowband models) and UK
-	// English (narrowband model) transcription only. To determine whether a language model supports speaker labels, you
-	// can also use the **Get a model** method and check that the attribute `speaker_labels` is set to `true`.
+	// **Note:** Applies to US English, Australian English, German, Japanese, Korean, and Spanish (both broadband and
+	// narrowband models) and UK English (narrowband model) transcription only.
 	//
 	// See [Speaker labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#speaker_labels).
 	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
@@ -5901,6 +5959,8 @@ const (
 	RecognizeOptions_Model_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
 	RecognizeOptions_Model_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
 	RecognizeOptions_Model_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
+	RecognizeOptions_Model_EnAuBroadbandmodel           = "en-AU_BroadbandModel"
+	RecognizeOptions_Model_EnAuNarrowbandmodel          = "en-AU_NarrowbandModel"
 	RecognizeOptions_Model_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
 	RecognizeOptions_Model_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
 	RecognizeOptions_Model_EnUsBroadbandmodel           = "en-US_BroadbandModel"
@@ -6100,7 +6160,7 @@ func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeO
 // RegisterCallbackOptions : The RegisterCallback options.
 type RegisterCallbackOptions struct {
 
-	// An HTTP or HTTPS URL to which callback notifications are to be sent. To be white-listed, the URL must successfully
+	// An HTTP or HTTPS URL to which callback notifications are to be sent. To be allowlisted, the URL must successfully
 	// echo the challenge string during URL verification. During verification, the client can also check the signature that
 	// the service sends in the `X-Callback-Signature` header to verify the origin of the request.
 	CallbackURL *string `json:"callback_url" validate:"required"`
@@ -6144,8 +6204,8 @@ func (options *RegisterCallbackOptions) SetHeaders(param map[string]string) *Reg
 type RegisterStatus struct {
 
 	// The current status of the job:
-	// * `created`: The service successfully white-listed the callback URL as a result of the call.
-	// * `already created`: The URL was already white-listed.
+	// * `created`: The service successfully allowlisted the callback URL as a result of the call.
+	// * `already created`: The URL was already allowlisted.
 	Status *string `json:"status" validate:"required"`
 
 	// The callback URL that is successfully registered.
@@ -6154,8 +6214,8 @@ type RegisterStatus struct {
 
 // Constants associated with the RegisterStatus.Status property.
 // The current status of the job:
-// * `created`: The service successfully white-listed the callback URL as a result of the call.
-// * `already created`: The URL was already white-listed.
+// * `created`: The service successfully allowlisted the callback URL as a result of the call.
+// * `already created`: The URL was already allowlisted.
 const (
 	RegisterStatus_Status_AlreadyCreated = "already created"
 	RegisterStatus_Status_Created        = "created"
@@ -6389,6 +6449,10 @@ type SupportedFeatures struct {
 	CustomLanguageModel *bool `json:"custom_language_model" validate:"required"`
 
 	// Indicates whether the `speaker_labels` parameter can be used with the language model.
+	//
+	// **Note:** The field returns `true` for all models. However, speaker labels are supported only for US English,
+	// Australian English, German, Japanese, Korean, and Spanish (both broadband and narrowband models) and UK English
+	// (narrowband model only). Speaker labels are not supported for any other models.
 	SpeakerLabels *bool `json:"speaker_labels" validate:"required"`
 }
 
