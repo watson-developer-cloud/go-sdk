@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ type AssistantV2 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://gateway.watsonplatform.net/assistant/api"
+const DefaultServiceURL = "https://api.us-south.assistant.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "conversation"
@@ -203,8 +203,6 @@ func (assistant *AssistantV2) DeleteSession(deleteSessionOptions *DeleteSessionO
 // Message : Send user input to assistant (stateful)
 // Send user input to an assistant and receive a response, with conversation state (including context data) stored by
 // Watson Assistant for the duration of the session.
-//
-// There is no rate limit for this operation.
 func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (result *MessageResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(messageOptions, "messageOptions cannot be nil")
 	if err != nil {
@@ -269,8 +267,6 @@ func (assistant *AssistantV2) Message(messageOptions *MessageOptions) (result *M
 // MessageStateless : Send user input to assistant (stateless)
 // Send user input to an assistant and receive a response, with conversation state (including context data) managed by
 // your application.
-//
-// There is no rate limit for this operation.
 func (assistant *AssistantV2) MessageStateless(messageStatelessOptions *MessageStatelessOptions) (result *MessageResponseStateless, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(messageStatelessOptions, "messageStatelessOptions cannot be nil")
 	if err != nil {
@@ -328,6 +324,123 @@ func (assistant *AssistantV2) MessageStateless(messageStatelessOptions *MessageS
 			err = fmt.Errorf("An error occurred while processing the operation response.")
 		}
 	}
+
+	return
+}
+
+// ListLogs : List log events for an assistant
+// List the events from the log of an assistant.
+//
+// This method is available only with Premium plans.
+func (assistant *AssistantV2) ListLogs(listLogsOptions *ListLogsOptions) (result *LogCollection, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listLogsOptions, "listLogsOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(listLogsOptions, "listLogsOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/assistants", "logs"}
+	pathParameters := []string{*listLogsOptions.AssistantID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range listLogsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V2", "ListLogs")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	if listLogsOptions.Sort != nil {
+		builder.AddQuery("sort", fmt.Sprint(*listLogsOptions.Sort))
+	}
+	if listLogsOptions.Filter != nil {
+		builder.AddQuery("filter", fmt.Sprint(*listLogsOptions.Filter))
+	}
+	if listLogsOptions.PageLimit != nil {
+		builder.AddQuery("page_limit", fmt.Sprint(*listLogsOptions.PageLimit))
+	}
+	if listLogsOptions.Cursor != nil {
+		builder.AddQuery("cursor", fmt.Sprint(*listLogsOptions.Cursor))
+	}
+	builder.AddQuery("version", assistant.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = assistant.Service.Request(request, new(LogCollection))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*LogCollection)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// DeleteUserData : Delete labeled data
+// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
+// customer ID.
+//
+// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
+// more information about personal data and customer IDs, see [Information
+// security](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security).
+//
+// This operation is limited to 4 requests per minute. For more information, see **Rate limiting**.
+func (assistant *AssistantV2) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/user_data"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	_, err = builder.ConstructHTTPURL(assistant.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteUserDataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V2", "DeleteUserData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
+	builder.AddQuery("version", assistant.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = assistant.Service.Request(request, nil)
 
 	return
 }
@@ -427,6 +540,35 @@ func (options *DeleteSessionOptions) SetHeaders(param map[string]string) *Delete
 	return options
 }
 
+// DeleteUserDataOptions : The DeleteUserData options.
+type DeleteUserDataOptions struct {
+
+	// The customer ID for which all data is to be deleted.
+	CustomerID *string `json:"customer_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
+func (assistant *AssistantV2) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+	return &DeleteUserDataOptions{
+		CustomerID: core.StringPtr(customerID),
+	}
+}
+
+// SetCustomerID : Allow user to set CustomerID
+func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	options.CustomerID = core.StringPtr(customerID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *DeleteUserDataOptions {
+	options.Headers = param
+	return options
+}
+
 // DialogLogMessage : Dialog log message details.
 type DialogLogMessage struct {
 
@@ -506,8 +648,8 @@ type DialogNodesVisited struct {
 // DialogSuggestion : DialogSuggestion struct
 type DialogSuggestion struct {
 
-	// The user-facing label for the disambiguation option. This label is taken from the **title** or **user_label**
-	// property of the corresponding dialog node, depending on the disambiguation options.
+	// The user-facing label for the suggestion. This label is taken from the **title** or **user_label** property of the
+	// corresponding dialog node, depending on the disambiguation options.
 	Label *string `json:"label" validate:"required"`
 
 	// An object defining the message input to be sent to the assistant if the user selects the corresponding
@@ -525,6 +667,137 @@ type DialogSuggestionValue struct {
 
 	// An input object that includes the input text.
 	Input *MessageInput `json:"input,omitempty"`
+}
+
+// ListLogsOptions : The ListLogs options.
+type ListLogsOptions struct {
+
+	// Unique identifier of the assistant. To find the assistant ID in the Watson Assistant user interface, open the
+	// assistant settings and click **API Details**. For information about creating assistants, see the
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
+	//
+	// **Note:** Currently, the v2 API does not support creating assistants.
+	AssistantID *string `json:"assistant_id" validate:"required"`
+
+	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
+	// parameter value with a minus sign (`-`).
+	Sort *string `json:"sort,omitempty"`
+
+	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
+	Filter *string `json:"filter,omitempty"`
+
+	// The number of records to return in each page of results.
+	PageLimit *int64 `json:"page_limit,omitempty"`
+
+	// A token identifying the page of results to retrieve.
+	Cursor *string `json:"cursor,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewListLogsOptions : Instantiate ListLogsOptions
+func (assistant *AssistantV2) NewListLogsOptions(assistantID string) *ListLogsOptions {
+	return &ListLogsOptions{
+		AssistantID: core.StringPtr(assistantID),
+	}
+}
+
+// SetAssistantID : Allow user to set AssistantID
+func (options *ListLogsOptions) SetAssistantID(assistantID string) *ListLogsOptions {
+	options.AssistantID = core.StringPtr(assistantID)
+	return options
+}
+
+// SetSort : Allow user to set Sort
+func (options *ListLogsOptions) SetSort(sort string) *ListLogsOptions {
+	options.Sort = core.StringPtr(sort)
+	return options
+}
+
+// SetFilter : Allow user to set Filter
+func (options *ListLogsOptions) SetFilter(filter string) *ListLogsOptions {
+	options.Filter = core.StringPtr(filter)
+	return options
+}
+
+// SetPageLimit : Allow user to set PageLimit
+func (options *ListLogsOptions) SetPageLimit(pageLimit int64) *ListLogsOptions {
+	options.PageLimit = core.Int64Ptr(pageLimit)
+	return options
+}
+
+// SetCursor : Allow user to set Cursor
+func (options *ListLogsOptions) SetCursor(cursor string) *ListLogsOptions {
+	options.Cursor = core.StringPtr(cursor)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListLogsOptions) SetHeaders(param map[string]string) *ListLogsOptions {
+	options.Headers = param
+	return options
+}
+
+// Log : Log struct
+type Log struct {
+
+	// A unique identifier for the logged event.
+	LogID *string `json:"log_id" validate:"required"`
+
+	// A stateful message request formatted for the Watson Assistant service.
+	Request *MessageRequest `json:"request" validate:"required"`
+
+	// A response from the Watson Assistant service.
+	Response *MessageResponse `json:"response" validate:"required"`
+
+	// Unique identifier of the assistant.
+	AssistantID *string `json:"assistant_id" validate:"required"`
+
+	// The ID of the session the message was part of.
+	SessionID *string `json:"session_id" validate:"required"`
+
+	// The unique identifier of the skill that responded to the message.
+	SkillID *string `json:"skill_id" validate:"required"`
+
+	// The name of the snapshot (dialog skill version) that responded to the message (for example, `draft`).
+	Snapshot *string `json:"snapshot" validate:"required"`
+
+	// The timestamp for receipt of the message.
+	RequestTimestamp *string `json:"request_timestamp" validate:"required"`
+
+	// The timestamp for the system response to the message.
+	ResponseTimestamp *string `json:"response_timestamp" validate:"required"`
+
+	// The language of the assistant to which the message request was made.
+	Language *string `json:"language" validate:"required"`
+
+	// The customer ID specified for the message, if any.
+	CustomerID *string `json:"customer_id,omitempty"`
+}
+
+// LogCollection : LogCollection struct
+type LogCollection struct {
+
+	// An array of objects describing log events.
+	Logs []Log `json:"logs" validate:"required"`
+
+	// The pagination data for the returned objects.
+	Pagination *LogPagination `json:"pagination" validate:"required"`
+}
+
+// LogPagination : The pagination data for the returned objects.
+type LogPagination struct {
+
+	// The URL that will return the next page of results, if any.
+	NextURL *string `json:"next_url,omitempty"`
+
+	// Reserved for future use.
+	Matched *int64 `json:"matched,omitempty"`
+
+	// A token identifying the next page of results.
+	NextCursor *string `json:"next_cursor,omitempty"`
 }
 
 // MessageContext : MessageContext struct
@@ -943,6 +1216,19 @@ type MessageOutputSpelling struct {
 	SuggestedText *string `json:"suggested_text,omitempty"`
 }
 
+// MessageRequest : A stateful message request formatted for the Watson Assistant service.
+type MessageRequest struct {
+
+	// An input object that includes the input text.
+	Input *MessageInput `json:"input,omitempty"`
+
+	// Context data for the conversation. You can use this property to set or modify context variables, which can also be
+	// accessed by dialog nodes. The context is stored by the assistant on a per-session basis.
+	//
+	// **Note:** The total size of the context data stored for a stateful session cannot exceed 100KB.
+	Context *MessageContext `json:"context,omitempty"`
+}
+
 // MessageResponse : A response from the Watson Assistant service.
 type MessageResponse struct {
 
@@ -953,6 +1239,7 @@ type MessageResponse struct {
 	// the assistant on a per-session basis.
 	//
 	// **Note:** The context is included in message responses only if **return_context**=`true` in the message request.
+	// Full context is always included in logs.
 	Context *MessageContext `json:"context,omitempty"`
 }
 
@@ -1242,9 +1529,6 @@ type RuntimeResponseGeneric struct {
 
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
-	//
-	// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for
-	// Premium users.
 	ResponseType *string `json:"response_type" validate:"required"`
 
 	// The text of the response.
@@ -1278,9 +1562,6 @@ type RuntimeResponseGeneric struct {
 	Topic *string `json:"topic,omitempty"`
 
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
-	//
-	// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for Premium
-	// users.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 
 	// The title or introductory text to show before the response. This text is defined in the search skill configuration.
@@ -1293,9 +1574,6 @@ type RuntimeResponseGeneric struct {
 // Constants associated with the RuntimeResponseGeneric.ResponseType property.
 // The type of response returned by the dialog node. The specified response type must be supported by the client
 // application or channel.
-//
-// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available for Premium
-// users.
 const (
 	RuntimeResponseGeneric_ResponseType_ConnectToAgent = "connect_to_agent"
 	RuntimeResponseGeneric_ResponseType_Image          = "image"
@@ -1318,8 +1596,7 @@ type SearchResult struct {
 
 	// The unique identifier of the document in the Discovery service collection.
 	//
-	// This property is included in responses from search skills, which are a beta feature available only to Plus or
-	// Premium plan users.
+	// This property is included in responses from search skills, which are available only to Plus or Premium plan users.
 	ID *string `json:"id" validate:"required"`
 
 	// An object containing search result metadata from the Discovery service.
