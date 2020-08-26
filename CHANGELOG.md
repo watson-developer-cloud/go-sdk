@@ -1,3 +1,21 @@
+# [1.7.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.6.0...v1.7.0) (2020-08-26)
+
+
+### Features
+
+* **assistantv2:** add ListLogs and DeleteUserData operations ([ae4ecaf](https://github.com/watson-developer-cloud/go-sdk/commit/ae4ecafcb597fd646e4355a1496f685285276d7e))
+* **default url:** update default url for services ([a63b102](https://github.com/watson-developer-cloud/go-sdk/commit/a63b102243708da5d024e6f4a30106457a73a1cb))
+* **discoveryv2:** add Collection and Enrichment operations ([b6cea64](https://github.com/watson-developer-cloud/go-sdk/commit/b6cea64e29d4e1612ff5ceb1ebdc7aa37e19d53c))
+* **languagetranslatorv3:** add ListLanguages operation ([fec7d7d](https://github.com/watson-developer-cloud/go-sdk/commit/fec7d7dcd73a95d24c81520e4b99d4975abd7664))
+* **speechtotextv1:** update language constants for custom model operations ([27c2c66](https://github.com/watson-developer-cloud/go-sdk/commit/27c2c66f73070c64bb649fe12cdc2afd098016ff))
+* **texttospeechv1:** update voice constants ([5eceaa0](https://github.com/watson-developer-cloud/go-sdk/commit/5eceaa0f9cdd62db9cb057791198047fb1f0147b))
+* **visualrecognitionv4:** update service url and tests ([6d411e7](https://github.com/watson-developer-cloud/go-sdk/commit/6d411e7e83bdd4af70cc82094b3f670dc89805be))
+
+
+### Reverts
+
+* **visualrecognitionv4:** readd count to the metadata object ([38eed59](https://github.com/watson-developer-cloud/go-sdk/commit/38eed599b88376e1bb86be7b38e7a90eaaff7101))
+
 # [1.6.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.5.0...v1.6.0) (2020-06-04)
 
 
