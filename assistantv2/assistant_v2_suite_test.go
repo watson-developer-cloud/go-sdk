@@ -17,10 +17,9 @@
 package assistantv2_test
 
 import (
-	"testing"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"testing"
 )
 
 func TestAssistantV2(t *testing.T) {

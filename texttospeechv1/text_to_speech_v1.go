@@ -25,10 +25,10 @@ import (
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
-// TextToSpeechV1 : The IBM&reg; Text to Speech service provides APIs that use IBM's speech-synthesis capabilities to
-// synthesize text into natural-sounding speech in a variety of languages, dialects, and voices. The service supports at
-// least one male or female voice, sometimes both, for each language. The audio is streamed back to the client with
-// minimal delay.
+// TextToSpeechV1 : The IBM Watson&trade; Text to Speech service provides APIs that use IBM's speech-synthesis
+// capabilities to synthesize text into natural-sounding speech in a variety of languages, dialects, and voices. The
+// service supports at least one male or female voice, sometimes both, for each language. The audio is streamed back to
+// the client with minimal delay.
 //
 // For speech synthesis, the service supports a synchronous HTTP Representational State Transfer (REST) interface and a
 // WebSocket interface. Both interfaces support plain text and SSML input. SSML is an XML-based markup language that
@@ -48,7 +48,7 @@ type TextToSpeechV1 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://stream.watsonplatform.net/text-to-speech/api"
+const DefaultServiceURL = "https://api.us-south.text-to-speech.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "text_to_speech"
@@ -114,7 +114,8 @@ func (textToSpeech *TextToSpeechV1) DisableSSLVerification() {
 
 // ListVoices : List voices
 // Lists all voices available for use with the service. The information includes the name, language, gender, and other
-// details about the voice. To see information about a specific voice, use the **Get a voice** method.
+// details about the voice. The ordering of the list of voices can change from call to call; do not rely on an
+// alphabetized or static list of voices. To see information about a specific voice, use the **Get a voice** method.
 //
 // **See also:** [Listing all available
 // voices](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoices).
@@ -1030,9 +1031,12 @@ func (textToSpeech *TextToSpeechV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 // Deletes all data that is associated with a specified customer ID. The method deletes all data for the customer ID,
 // regardless of the method by which the information was added. The method has no effect if no data is associated with
 // the customer ID. You must issue the request with credentials for the same instance of the service that was used to
-// associate the customer ID with the data.
+// associate the customer ID with the data. You associate a customer ID with data by passing the `X-Watson-Metadata`
+// header with a request that passes the data.
 //
-// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes the data.
+// **Note:** If you delete an instance of the service from the service console, all data associated with that service
+// instance is automatically deleted. This includes all custom voice models and word/translation pairs, and all data
+// related to speech synthesis requests.
 //
 // **See also:** [Information
 // security](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-information-security#information-security).
@@ -1415,6 +1419,8 @@ const (
 	GetPronunciationOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	GetPronunciationOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
 	GetPronunciationOptions_Voice_DeDeErikav3voice     = "de-DE_ErikaV3Voice"
+	GetPronunciationOptions_Voice_EnGbCharlottev3voice = "en-GB_CharlotteV3Voice"
+	GetPronunciationOptions_Voice_EnGbJamesv3voice     = "en-GB_JamesV3Voice"
 	GetPronunciationOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	GetPronunciationOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
 	GetPronunciationOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
@@ -1435,6 +1441,7 @@ const (
 	GetPronunciationOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
 	GetPronunciationOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
 	GetPronunciationOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetPronunciationOptions_Voice_FrFrNicolasv3voice   = "fr-FR_NicolasV3Voice"
 	GetPronunciationOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
 	GetPronunciationOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	GetPronunciationOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
@@ -1551,6 +1558,8 @@ const (
 	GetVoiceOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	GetVoiceOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
 	GetVoiceOptions_Voice_DeDeErikav3voice     = "de-DE_ErikaV3Voice"
+	GetVoiceOptions_Voice_EnGbCharlottev3voice = "en-GB_CharlotteV3Voice"
+	GetVoiceOptions_Voice_EnGbJamesv3voice     = "en-GB_JamesV3Voice"
 	GetVoiceOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	GetVoiceOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
 	GetVoiceOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
@@ -1571,6 +1580,7 @@ const (
 	GetVoiceOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
 	GetVoiceOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
 	GetVoiceOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	GetVoiceOptions_Voice_FrFrNicolasv3voice   = "fr-FR_NicolasV3Voice"
 	GetVoiceOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
 	GetVoiceOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	GetVoiceOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"
@@ -1801,6 +1811,8 @@ const (
 	SynthesizeOptions_Voice_DeDeDieterv3voice    = "de-DE_DieterV3Voice"
 	SynthesizeOptions_Voice_DeDeDietervoice      = "de-DE_DieterVoice"
 	SynthesizeOptions_Voice_DeDeErikav3voice     = "de-DE_ErikaV3Voice"
+	SynthesizeOptions_Voice_EnGbCharlottev3voice = "en-GB_CharlotteV3Voice"
+	SynthesizeOptions_Voice_EnGbJamesv3voice     = "en-GB_JamesV3Voice"
 	SynthesizeOptions_Voice_EnGbKatev3voice      = "en-GB_KateV3Voice"
 	SynthesizeOptions_Voice_EnGbKatevoice        = "en-GB_KateVoice"
 	SynthesizeOptions_Voice_EnUsAllisonv3voice   = "en-US_AllisonV3Voice"
@@ -1821,6 +1833,7 @@ const (
 	SynthesizeOptions_Voice_EsLaSofiavoice       = "es-LA_SofiaVoice"
 	SynthesizeOptions_Voice_EsUsSofiav3voice     = "es-US_SofiaV3Voice"
 	SynthesizeOptions_Voice_EsUsSofiavoice       = "es-US_SofiaVoice"
+	SynthesizeOptions_Voice_FrFrNicolasv3voice   = "fr-FR_NicolasV3Voice"
 	SynthesizeOptions_Voice_FrFrReneev3voice     = "fr-FR_ReneeV3Voice"
 	SynthesizeOptions_Voice_FrFrReneevoice       = "fr-FR_ReneeVoice"
 	SynthesizeOptions_Voice_ItItFrancescav3voice = "it-IT_FrancescaV3Voice"

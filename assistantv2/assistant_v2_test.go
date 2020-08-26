@@ -217,6 +217,97 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 		})
 	})
+	Describe(`ListLogs(listLogsOptions *ListLogsOptions)`, func() {
+		listLogsPath := "/v2/assistants/{assistant_id}/logs"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		assistantID := "exampleString"
+		listLogsPath = strings.Replace(listLogsPath, "{assistant_id}", assistantID, 1)
+		Context(`Successfully - List log events for an assistant`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(listLogsPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("GET"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				res.Header().Set("Content-type", "application/json")
+				res.WriteHeader(200)
+				fmt.Fprintf(res, `{"logs": [], "pagination": {}}`)
+			}))
+			It(`Succeed to call ListLogs`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				result, response, operationErr := testService.ListLogs(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				listLogsOptions := testService.NewListLogsOptions(assistantID)
+				result, response, operationErr = testService.ListLogs(listLogsOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+		})
+	})
+	Describe(`DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)`, func() {
+		deleteUserDataPath := "/v2/user_data"
+		version := "exampleString"
+		bearerToken := "0ui9876453"
+		customerID := "exampleString"
+		Context(`Successfully - Delete labeled data`, func() {
+			testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+				defer GinkgoRecover()
+
+				// Verify the contents of the request
+				Expect(req.URL.Path).To(Equal(deleteUserDataPath))
+				Expect(req.URL.Query()["version"]).To(Equal([]string{version}))
+				Expect(req.Method).To(Equal("DELETE"))
+				Expect(req.Header["Authorization"]).ToNot(BeNil())
+				Expect(req.Header["Authorization"][0]).To(Equal("Bearer " + bearerToken))
+				Expect(req.URL.Query()["customer_id"]).To(Equal([]string{customerID}))
+
+				res.WriteHeader(202)
+			}))
+			It(`Succeed to call DeleteUserData`, func() {
+				defer testServer.Close()
+
+				testService, testServiceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:     testServer.URL,
+					Version: version,
+					Authenticator: &core.BearerTokenAuthenticator{
+						BearerToken: bearerToken,
+					},
+				})
+				Expect(testServiceErr).To(BeNil())
+				Expect(testService).ToNot(BeNil())
+
+				// Pass empty options
+				response, operationErr := testService.DeleteUserData(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				deleteUserDataOptions := testService.NewDeleteUserDataOptions(customerID)
+				response, operationErr = testService.DeleteUserData(deleteUserDataOptions)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+		})
+	})
 	Describe("Model constructor tests", func() {
 		Context("with a sample service", func() {
 			version := "1970-01-01"

@@ -42,7 +42,7 @@ type DiscoveryV1 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://gateway.watsonplatform.net/discovery/api"
+const DefaultServiceURL = "https://api.us-south.discovery.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "discovery"

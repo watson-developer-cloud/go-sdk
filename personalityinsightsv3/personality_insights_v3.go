@@ -19,9 +19,10 @@ package personalityinsightsv3
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/IBM/go-sdk-core/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
 )
 
 // PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights
@@ -48,7 +49,7 @@ type PersonalityInsightsV3 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://gateway.watsonplatform.net/personality-insights/api"
+const DefaultServiceURL = "https://api.us-south.personality-insights.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "personality_insights"

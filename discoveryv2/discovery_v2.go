@@ -19,17 +19,18 @@ package discoveryv2
 
 import (
 	"fmt"
+	"io"
+	"strings"
+
 	"github.com/IBM/go-sdk-core/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
-	"io"
-	"strings"
 )
 
-// DiscoveryV2 : IBM Watson&trade; Discovery for IBM Cloud Pak for Data is a cognitive search and content analytics
-// engine that you can add to applications to identify patterns, trends and actionable insights to drive better
-// decision-making. Securely unify structured and unstructured data with pre-enriched content, and use a simplified
-// query language to eliminate the need for manual filtering of results.
+// DiscoveryV2 : IBM Watson&trade; Discovery is a cognitive search and content analytics engine that you can add to
+// applications to identify patterns, trends and actionable insights to drive better decision-making. Securely unify
+// structured and unstructured data with pre-enriched content, and use a simplified query language to eliminate the need
+// for manual filtering of results.
 //
 // Version: 2.0
 // See: https://cloud.ibm.com/docs/discovery-data/
@@ -39,7 +40,7 @@ type DiscoveryV2 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = ""
+const DefaultServiceURL = "https://api.us-south.discovery.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "discovery"
@@ -155,9 +156,241 @@ func (discovery *DiscoveryV2) ListCollections(listCollectionsOptions *ListCollec
 	return
 }
 
+// CreateCollection : Create a collection
+// Create a new collection in the specified project.
+func (discovery *DiscoveryV2) CreateCollection(createCollectionOptions *CreateCollectionOptions) (result *CollectionDetails, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createCollectionOptions, "createCollectionOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(createCollectionOptions, "createCollectionOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "collections"}
+	pathParameters := []string{*createCollectionOptions.ProjectID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range createCollectionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "CreateCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	body := make(map[string]interface{})
+	if createCollectionOptions.Name != nil {
+		body["name"] = createCollectionOptions.Name
+	}
+	if createCollectionOptions.Description != nil {
+		body["description"] = createCollectionOptions.Description
+	}
+	if createCollectionOptions.Language != nil {
+		body["language"] = createCollectionOptions.Language
+	}
+	if createCollectionOptions.Enrichments != nil {
+		body["enrichments"] = createCollectionOptions.Enrichments
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(CollectionDetails))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*CollectionDetails)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// GetCollection : Get collection
+// Get details about the specified collection.
+func (discovery *DiscoveryV2) GetCollection(getCollectionOptions *GetCollectionOptions) (result *CollectionDetails, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getCollectionOptions, "getCollectionOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getCollectionOptions, "getCollectionOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "collections"}
+	pathParameters := []string{*getCollectionOptions.ProjectID, *getCollectionOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getCollectionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "GetCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(CollectionDetails))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*CollectionDetails)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// UpdateCollection : Update a collection
+// Updates the specified collection's name, description, and enrichments.
+func (discovery *DiscoveryV2) UpdateCollection(updateCollectionOptions *UpdateCollectionOptions) (result *CollectionDetails, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateCollectionOptions, "updateCollectionOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(updateCollectionOptions, "updateCollectionOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "collections"}
+	pathParameters := []string{*updateCollectionOptions.ProjectID, *updateCollectionOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range updateCollectionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "UpdateCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	body := make(map[string]interface{})
+	if updateCollectionOptions.Name != nil {
+		body["name"] = updateCollectionOptions.Name
+	}
+	if updateCollectionOptions.Description != nil {
+		body["description"] = updateCollectionOptions.Description
+	}
+	if updateCollectionOptions.Enrichments != nil {
+		body["enrichments"] = updateCollectionOptions.Enrichments
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(CollectionDetails))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*CollectionDetails)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// DeleteCollection : Delete a collection
+// Deletes the specified collection from the project. All documents stored in the specified collection and not shared is
+// also deleted.
+func (discovery *DiscoveryV2) DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteCollectionOptions, "deleteCollectionOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteCollectionOptions, "deleteCollectionOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "collections"}
+	pathParameters := []string{*deleteCollectionOptions.ProjectID, *deleteCollectionOptions.CollectionID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteCollectionOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "DeleteCollection")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, nil)
+
+	return
+}
+
 // Query : Query a project
 // By using this method, you can construct queries. For details, see the [Discovery
-// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-query-concepts).
+// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-query-concepts). The default query
+// parameters are defined by the settings for this project, see the [Discovery
+// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-project-defaults) for an overview of
+// the standard default settings, and see [the Projects API documentation](#create-project) for details about how to set
+// custom default query settings.
 func (discovery *DiscoveryV2) Query(queryOptions *QueryOptions) (result *QueryResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(queryOptions, "queryOptions cannot be nil")
 	if err != nil {
@@ -437,7 +670,7 @@ func (discovery *DiscoveryV2) ListFields(listFieldsOptions *ListFieldsOptions) (
 	return
 }
 
-// GetComponentSettings : Configuration settings for components
+// GetComponentSettings : List component settings
 // Returns default configuration settings for components.
 func (discovery *DiscoveryV2) GetComponentSettings(getComponentSettingsOptions *GetComponentSettingsOptions) (result *ComponentSettingsResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getComponentSettingsOptions, "getComponentSettingsOptions cannot be nil")
@@ -589,6 +822,9 @@ func (discovery *DiscoveryV2) AddDocument(addDocumentOptions *AddDocumentOptions
 //
 // **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
 // a collection that connects to an external source such as Microsoft SharePoint.
+//
+// **Note:** If an uploaded document is segmented, all segments will be overwritten, even if the updated version of the
+// document has fewer segments.
 func (discovery *DiscoveryV2) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil")
 	if err != nil {
@@ -658,6 +894,9 @@ func (discovery *DiscoveryV2) UpdateDocument(updateDocumentOptions *UpdateDocume
 //
 // **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
 // a collection that connects to an external source such as Microsoft SharePoint.
+//
+// **Note:** Segments of an uploaded document cannot be deleted individually. Delete all segments by deleting using the
+// `parent_document_id` of a segment result.
 func (discovery *DiscoveryV2) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (result *DeleteDocumentResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil")
 	if err != nil {
@@ -983,6 +1222,589 @@ func (discovery *DiscoveryV2) UpdateTrainingQuery(updateTrainingQueryOptions *Up
 	return
 }
 
+// ListEnrichments : List Enrichments
+// List the enrichments available to this project.
+func (discovery *DiscoveryV2) ListEnrichments(listEnrichmentsOptions *ListEnrichmentsOptions) (result *Enrichments, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(listEnrichmentsOptions, "listEnrichmentsOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(listEnrichmentsOptions, "listEnrichmentsOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "enrichments"}
+	pathParameters := []string{*listEnrichmentsOptions.ProjectID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range listEnrichmentsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "ListEnrichments")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(Enrichments))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Enrichments)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// CreateEnrichment : Create an enrichment
+// Create an enrichment for use with the specified project/.
+func (discovery *DiscoveryV2) CreateEnrichment(createEnrichmentOptions *CreateEnrichmentOptions) (result *Enrichment, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createEnrichmentOptions, "createEnrichmentOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(createEnrichmentOptions, "createEnrichmentOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "enrichments"}
+	pathParameters := []string{*createEnrichmentOptions.ProjectID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range createEnrichmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "CreateEnrichment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	if createEnrichmentOptions.File != nil {
+		builder.AddFormData("file", "filename",
+			"application/octet-stream", createEnrichmentOptions.File)
+	}
+
+	if createEnrichmentOptions.Enrichment != nil {
+		builder.AddFormData("enrichment", "enrichment", "application/json", createEnrichmentOptions.Enrichment)
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(Enrichment))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Enrichment)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// GetEnrichment : Get enrichment
+// Get details about a specific enrichment.
+func (discovery *DiscoveryV2) GetEnrichment(getEnrichmentOptions *GetEnrichmentOptions) (result *Enrichment, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getEnrichmentOptions, "getEnrichmentOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getEnrichmentOptions, "getEnrichmentOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "enrichments"}
+	pathParameters := []string{*getEnrichmentOptions.ProjectID, *getEnrichmentOptions.EnrichmentID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getEnrichmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "GetEnrichment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(Enrichment))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Enrichment)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// UpdateEnrichment : Update an enrichment
+// Updates an existing enrichment's name and description.
+func (discovery *DiscoveryV2) UpdateEnrichment(updateEnrichmentOptions *UpdateEnrichmentOptions) (result *Enrichment, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateEnrichmentOptions, "updateEnrichmentOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(updateEnrichmentOptions, "updateEnrichmentOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "enrichments"}
+	pathParameters := []string{*updateEnrichmentOptions.ProjectID, *updateEnrichmentOptions.EnrichmentID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range updateEnrichmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "UpdateEnrichment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	body := make(map[string]interface{})
+	if updateEnrichmentOptions.Name != nil {
+		body["name"] = updateEnrichmentOptions.Name
+	}
+	if updateEnrichmentOptions.Description != nil {
+		body["description"] = updateEnrichmentOptions.Description
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(Enrichment))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*Enrichment)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// DeleteEnrichment : Delete an enrichment
+// Deletes an existing enrichment from the specified project.
+//
+// **Note:** Only enrichments that have been manually created can be deleted.
+func (discovery *DiscoveryV2) DeleteEnrichment(deleteEnrichmentOptions *DeleteEnrichmentOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteEnrichmentOptions, "deleteEnrichmentOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteEnrichmentOptions, "deleteEnrichmentOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects", "enrichments"}
+	pathParameters := []string{*deleteEnrichmentOptions.ProjectID, *deleteEnrichmentOptions.EnrichmentID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteEnrichmentOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "DeleteEnrichment")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, nil)
+
+	return
+}
+
+// ListProjects : List projects
+// Lists existing projects for this instance.
+func (discovery *DiscoveryV2) ListProjects(listProjectsOptions *ListProjectsOptions) (result *ListProjectsResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listProjectsOptions, "listProjectsOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range listProjectsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "ListProjects")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(ListProjectsResponse))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ListProjectsResponse)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// CreateProject : Create a Project
+// Create a new project for this instance.
+func (discovery *DiscoveryV2) CreateProject(createProjectOptions *CreateProjectOptions) (result *ProjectDetails, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createProjectOptions, "createProjectOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(createProjectOptions, "createProjectOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.POST)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range createProjectOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "CreateProject")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	body := make(map[string]interface{})
+	if createProjectOptions.Name != nil {
+		body["name"] = createProjectOptions.Name
+	}
+	if createProjectOptions.Type != nil {
+		body["type"] = createProjectOptions.Type
+	}
+	if createProjectOptions.DefaultQueryParameters != nil {
+		body["default_query_parameters"] = createProjectOptions.DefaultQueryParameters
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(ProjectDetails))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ProjectDetails)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// GetProject : Get project
+// Get details on the specified project.
+func (discovery *DiscoveryV2) GetProject(getProjectOptions *GetProjectOptions) (result *ProjectDetails, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getProjectOptions, "getProjectOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getProjectOptions, "getProjectOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects"}
+	pathParameters := []string{*getProjectOptions.ProjectID}
+
+	builder := core.NewRequestBuilder(core.GET)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getProjectOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "GetProject")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(ProjectDetails))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ProjectDetails)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// UpdateProject : Update a project
+// Update the specified project's name.
+func (discovery *DiscoveryV2) UpdateProject(updateProjectOptions *UpdateProjectOptions) (result *ProjectDetails, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateProjectOptions, "updateProjectOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(updateProjectOptions, "updateProjectOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects"}
+	pathParameters := []string{*updateProjectOptions.ProjectID}
+
+	builder := core.NewRequestBuilder(core.POST)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range updateProjectOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "UpdateProject")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	builder.AddQuery("version", discovery.Version)
+
+	body := make(map[string]interface{})
+	if updateProjectOptions.Name != nil {
+		body["name"] = updateProjectOptions.Name
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, new(ProjectDetails))
+	if err == nil {
+		var ok bool
+		result, ok = response.Result.(*ProjectDetails)
+		if !ok {
+			err = fmt.Errorf("An error occurred while processing the operation response.")
+		}
+	}
+
+	return
+}
+
+// DeleteProject : Delete a project
+// Deletes the specified project.
+//
+// **Important:** Deleting a project deletes everything that is part of the specified project, including all
+// collections.
+func (discovery *DiscoveryV2) DeleteProject(deleteProjectOptions *DeleteProjectOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteProjectOptions, "deleteProjectOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteProjectOptions, "deleteProjectOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/projects"}
+	pathParameters := []string{*deleteProjectOptions.ProjectID}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteProjectOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "DeleteProject")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, nil)
+
+	return
+}
+
+// DeleteUserData : Delete labeled data
+// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the
+// customer ID.
+//
+// You associate a customer ID with data by passing the **X-Watson-Metadata** header with a request that passes data.
+// For more information about personal data and customer IDs, see [Information
+// security](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-information-security#information-security).
+//
+// **Note:** This method is only supported on IBM Cloud instances of Discovery.
+func (discovery *DiscoveryV2) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteUserDataOptions, "deleteUserDataOptions")
+	if err != nil {
+		return
+	}
+
+	pathSegments := []string{"v2/user_data"}
+	pathParameters := []string{}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteUserDataOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("discovery", "V2", "DeleteUserData")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
+	builder.AddQuery("version", discovery.Version)
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	response, err = discovery.Service.Request(request, nil)
+
+	return
+}
+
 // AddDocumentOptions : The AddDocument options.
 type AddDocumentOptions struct {
 
@@ -1003,7 +1825,10 @@ type AddDocumentOptions struct {
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
+	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected.
+	//
+	//
+	// Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
@@ -1083,6 +1908,47 @@ type Collection struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// CollectionDetails : A collection for storing documents.
+type CollectionDetails struct {
+
+	// The unique identifier of the collection.
+	CollectionID *string `json:"collection_id,omitempty"`
+
+	// The name of the collection.
+	Name *string `json:"name" validate:"required"`
+
+	// A description of the collection.
+	Description *string `json:"description,omitempty"`
+
+	// The date that the collection was created.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// The language of the collection.
+	Language *string `json:"language,omitempty"`
+
+	// An array of enrichments that are applied to this collection.
+	Enrichments []CollectionEnrichment `json:"enrichments,omitempty"`
+}
+
+// NewCollectionDetails : Instantiate CollectionDetails (Generic Model Constructor)
+func (discovery *DiscoveryV2) NewCollectionDetails(name string) (model *CollectionDetails, err error) {
+	model = &CollectionDetails{
+		Name: core.StringPtr(name),
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
+// CollectionEnrichment : An object describing an Enrichment for a collection.
+type CollectionEnrichment struct {
+
+	// The unique identifier of this enrichment.
+	EnrichmentID *string `json:"enrichment_id,omitempty"`
+
+	// An array of field names that the enrichment is applied to.
+	Fields []string `json:"fields,omitempty"`
+}
+
 // Completions : An object containing an array of autocompletion suggestions.
 type Completions struct {
 
@@ -1142,7 +2008,7 @@ type ComponentSettingsFieldsShownTitle struct {
 	Field *string `json:"field,omitempty"`
 }
 
-// ComponentSettingsResponse : A response containing the default component settings.
+// ComponentSettingsResponse : The default component settings for this project.
 type ComponentSettingsResponse struct {
 
 	// Fields shown in the results section of the UI.
@@ -1159,6 +2025,203 @@ type ComponentSettingsResponse struct {
 
 	// a list of component setting aggregations.
 	Aggregations []ComponentSettingsAggregation `json:"aggregations,omitempty"`
+}
+
+// CreateCollectionOptions : The CreateCollection options.
+type CreateCollectionOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// The name of the collection.
+	Name *string `json:"name" validate:"required"`
+
+	// A description of the collection.
+	Description *string `json:"description,omitempty"`
+
+	// The language of the collection.
+	Language *string `json:"language,omitempty"`
+
+	// An array of enrichments that are applied to this collection.
+	Enrichments []CollectionEnrichment `json:"enrichments,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewCreateCollectionOptions : Instantiate CreateCollectionOptions
+func (discovery *DiscoveryV2) NewCreateCollectionOptions(projectID string, name string) *CreateCollectionOptions {
+	return &CreateCollectionOptions{
+		ProjectID: core.StringPtr(projectID),
+		Name:      core.StringPtr(name),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *CreateCollectionOptions) SetProjectID(projectID string) *CreateCollectionOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *CreateCollectionOptions) SetName(name string) *CreateCollectionOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetLanguage : Allow user to set Language
+func (options *CreateCollectionOptions) SetLanguage(language string) *CreateCollectionOptions {
+	options.Language = core.StringPtr(language)
+	return options
+}
+
+// SetEnrichments : Allow user to set Enrichments
+func (options *CreateCollectionOptions) SetEnrichments(enrichments []CollectionEnrichment) *CreateCollectionOptions {
+	options.Enrichments = enrichments
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *CreateCollectionOptions {
+	options.Headers = param
+	return options
+}
+
+// CreateEnrichment : Information about a specific enrichment.
+type CreateEnrichment struct {
+
+	// The human readable name for this enrichment.
+	Name *string `json:"name,omitempty"`
+
+	// The description of this enrichment.
+	Description *string `json:"description,omitempty"`
+
+	// The type of this enrichment.
+	Type *string `json:"type,omitempty"`
+
+	// A object containing options for the current enrichment.
+	Options *EnrichmentOptions `json:"options,omitempty"`
+}
+
+// Constants associated with the CreateEnrichment.Type property.
+// The type of this enrichment.
+const (
+	CreateEnrichment_Type_Dictionary                 = "dictionary"
+	CreateEnrichment_Type_RegularExpression          = "regular_expression"
+	CreateEnrichment_Type_RuleBased                  = "rule_based"
+	CreateEnrichment_Type_UimaAnnotator              = "uima_annotator"
+	CreateEnrichment_Type_WatsonKnowledgeStudioModel = "watson_knowledge_studio_model"
+)
+
+// CreateEnrichmentOptions : The CreateEnrichment options.
+type CreateEnrichmentOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// Information about a specific enrichment.
+	Enrichment *CreateEnrichment `json:"enrichment" validate:"required"`
+
+	// The enrichment file to upload.
+	File io.ReadCloser `json:"file,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewCreateEnrichmentOptions : Instantiate CreateEnrichmentOptions
+func (discovery *DiscoveryV2) NewCreateEnrichmentOptions(projectID string, enrichment *CreateEnrichment) *CreateEnrichmentOptions {
+	return &CreateEnrichmentOptions{
+		ProjectID:  core.StringPtr(projectID),
+		Enrichment: enrichment,
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *CreateEnrichmentOptions) SetProjectID(projectID string) *CreateEnrichmentOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetEnrichment : Allow user to set Enrichment
+func (options *CreateEnrichmentOptions) SetEnrichment(enrichment *CreateEnrichment) *CreateEnrichmentOptions {
+	options.Enrichment = enrichment
+	return options
+}
+
+// SetFile : Allow user to set File
+func (options *CreateEnrichmentOptions) SetFile(file io.ReadCloser) *CreateEnrichmentOptions {
+	options.File = file
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateEnrichmentOptions) SetHeaders(param map[string]string) *CreateEnrichmentOptions {
+	options.Headers = param
+	return options
+}
+
+// CreateProjectOptions : The CreateProject options.
+type CreateProjectOptions struct {
+
+	// The human readable name of this project.
+	Name *string `json:"name" validate:"required"`
+
+	// The project type of this project.
+	Type *string `json:"type" validate:"required"`
+
+	// Default query parameters for this project.
+	DefaultQueryParameters *DefaultQueryParams `json:"default_query_parameters,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// Constants associated with the CreateProjectOptions.Type property.
+// The project type of this project.
+const (
+	CreateProjectOptions_Type_AnswerRetrieval   = "answer_retrieval"
+	CreateProjectOptions_Type_ContentMining     = "content_mining"
+	CreateProjectOptions_Type_DocumentRetrieval = "document_retrieval"
+	CreateProjectOptions_Type_Other             = "other"
+)
+
+// NewCreateProjectOptions : Instantiate CreateProjectOptions
+func (discovery *DiscoveryV2) NewCreateProjectOptions(name string, typeVar string) *CreateProjectOptions {
+	return &CreateProjectOptions{
+		Name: core.StringPtr(name),
+		Type: core.StringPtr(typeVar),
+	}
+}
+
+// SetName : Allow user to set Name
+func (options *CreateProjectOptions) SetName(name string) *CreateProjectOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetType : Allow user to set Type
+func (options *CreateProjectOptions) SetType(typeVar string) *CreateProjectOptions {
+	options.Type = core.StringPtr(typeVar)
+	return options
+}
+
+// SetDefaultQueryParameters : Allow user to set DefaultQueryParameters
+func (options *CreateProjectOptions) SetDefaultQueryParameters(defaultQueryParameters *DefaultQueryParams) *CreateProjectOptions {
+	options.DefaultQueryParameters = defaultQueryParameters
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateProjectOptions) SetHeaders(param map[string]string) *CreateProjectOptions {
+	options.Headers = param
+	return options
 }
 
 // CreateTrainingQueryOptions : The CreateTrainingQuery options.
@@ -1215,6 +2278,125 @@ func (options *CreateTrainingQueryOptions) SetFilter(filter string) *CreateTrain
 
 // SetHeaders : Allow user to set Headers
 func (options *CreateTrainingQueryOptions) SetHeaders(param map[string]string) *CreateTrainingQueryOptions {
+	options.Headers = param
+	return options
+}
+
+// DefaultQueryParams : Default query parameters for this project.
+type DefaultQueryParams struct {
+
+	// An array of collection identifiers to query. If empty or omitted all collections in the project are queried.
+	CollectionIds []string `json:"collection_ids,omitempty"`
+
+	// Default settings configuration for passage search options.
+	Passages *DefaultQueryParamsPassages `json:"passages,omitempty"`
+
+	// Default project query settings for table results.
+	TableResults *DefaultQueryParamsTableResults `json:"table_results,omitempty"`
+
+	// A string representing the default aggregation query for the project.
+	Aggregation *string `json:"aggregation,omitempty"`
+
+	// Object containing suggested refinement settings.
+	SuggestedRefinements *DefaultQueryParamsSuggestedRefinements `json:"suggested_refinements,omitempty"`
+
+	// When `true`, a spelling suggestions for the query are retuned by default.
+	SpellingSuggestions *bool `json:"spelling_suggestions,omitempty"`
+
+	// When `true`, a highlights for the query are retuned by default.
+	Highlight *bool `json:"highlight,omitempty"`
+
+	// The number of document results returned by default.
+	Count *int64 `json:"count,omitempty"`
+
+	// A comma separated list of document fields to sort results by default.
+	Sort *string `json:"sort,omitempty"`
+
+	// An array of field names to return in document results if present by default.
+	Return []string `json:"return,omitempty"`
+}
+
+// DefaultQueryParamsPassages : Default settings configuration for passage search options.
+type DefaultQueryParamsPassages struct {
+
+	// When `true`, a passage search is performed by default.
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// The number of passages to return.
+	Count *int64 `json:"count,omitempty"`
+
+	// An array of field names to perfom the passage search on.
+	Fields []string `json:"fields,omitempty"`
+
+	// The approximate number of characters that each returned passage will contain.
+	Characters *int64 `json:"characters,omitempty"`
+
+	// When `true` the number of passages that can be returned from a single document is restricted to the
+	// *max_per_document* value.
+	PerDocument *bool `json:"per_document,omitempty"`
+
+	// The default maximum number of passages that can be taken from a single document as the result of a passage query.
+	MaxPerDocument *int64 `json:"max_per_document,omitempty"`
+}
+
+// DefaultQueryParamsSuggestedRefinements : Object containing suggested refinement settings.
+type DefaultQueryParamsSuggestedRefinements struct {
+
+	// When `true`, a suggested refinements for the query are retuned by default.
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// The number of suggested refinements to return by default.
+	Count *int64 `json:"count,omitempty"`
+}
+
+// DefaultQueryParamsTableResults : Default project query settings for table results.
+type DefaultQueryParamsTableResults struct {
+
+	// When `true`, a table results for the query are retuned by default.
+	Enabled *bool `json:"enabled,omitempty"`
+
+	// The number of table results to return by default.
+	Count *int64 `json:"count,omitempty"`
+
+	// The number of table results to include in each result document.
+	PerDocument *int64 `json:"per_document,omitempty"`
+}
+
+// DeleteCollectionOptions : The DeleteCollection options.
+type DeleteCollectionOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteCollectionOptions : Instantiate DeleteCollectionOptions
+func (discovery *DiscoveryV2) NewDeleteCollectionOptions(projectID string, collectionID string) *DeleteCollectionOptions {
+	return &DeleteCollectionOptions{
+		ProjectID:    core.StringPtr(projectID),
+		CollectionID: core.StringPtr(collectionID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *DeleteCollectionOptions) SetProjectID(projectID string) *DeleteCollectionOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *DeleteCollectionOptions) SetCollectionID(collectionID string) *DeleteCollectionOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteCollectionOptions) SetHeaders(param map[string]string) *DeleteCollectionOptions {
 	options.Headers = param
 	return options
 }
@@ -1294,6 +2476,74 @@ const (
 	DeleteDocumentResponse_Status_Deleted = "deleted"
 )
 
+// DeleteEnrichmentOptions : The DeleteEnrichment options.
+type DeleteEnrichmentOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// The ID of the enrichment.
+	EnrichmentID *string `json:"enrichment_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteEnrichmentOptions : Instantiate DeleteEnrichmentOptions
+func (discovery *DiscoveryV2) NewDeleteEnrichmentOptions(projectID string, enrichmentID string) *DeleteEnrichmentOptions {
+	return &DeleteEnrichmentOptions{
+		ProjectID:    core.StringPtr(projectID),
+		EnrichmentID: core.StringPtr(enrichmentID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *DeleteEnrichmentOptions) SetProjectID(projectID string) *DeleteEnrichmentOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetEnrichmentID : Allow user to set EnrichmentID
+func (options *DeleteEnrichmentOptions) SetEnrichmentID(enrichmentID string) *DeleteEnrichmentOptions {
+	options.EnrichmentID = core.StringPtr(enrichmentID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteEnrichmentOptions) SetHeaders(param map[string]string) *DeleteEnrichmentOptions {
+	options.Headers = param
+	return options
+}
+
+// DeleteProjectOptions : The DeleteProject options.
+type DeleteProjectOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteProjectOptions : Instantiate DeleteProjectOptions
+func (discovery *DiscoveryV2) NewDeleteProjectOptions(projectID string) *DeleteProjectOptions {
+	return &DeleteProjectOptions{
+		ProjectID: core.StringPtr(projectID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *DeleteProjectOptions) SetProjectID(projectID string) *DeleteProjectOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteProjectOptions) SetHeaders(param map[string]string) *DeleteProjectOptions {
+	options.Headers = param
+	return options
+}
+
 // DeleteTrainingQueriesOptions : The DeleteTrainingQueries options.
 type DeleteTrainingQueriesOptions struct {
 
@@ -1319,6 +2569,35 @@ func (options *DeleteTrainingQueriesOptions) SetProjectID(projectID string) *Del
 
 // SetHeaders : Allow user to set Headers
 func (options *DeleteTrainingQueriesOptions) SetHeaders(param map[string]string) *DeleteTrainingQueriesOptions {
+	options.Headers = param
+	return options
+}
+
+// DeleteUserDataOptions : The DeleteUserData options.
+type DeleteUserDataOptions struct {
+
+	// The customer ID for which all data is to be deleted.
+	CustomerID *string `json:"customer_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
+func (discovery *DiscoveryV2) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+	return &DeleteUserDataOptions{
+		CustomerID: core.StringPtr(customerID),
+	}
+}
+
+// SetCustomerID : Allow user to set CustomerID
+func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	options.CustomerID = core.StringPtr(customerID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *DeleteUserDataOptions {
 	options.Headers = param
 	return options
 }
@@ -1354,6 +2633,64 @@ type DocumentAttribute struct {
 	// The numeric location of the identified element in the document, represented with two integers labeled `begin` and
 	// `end`.
 	Location *TableElementLocation `json:"location,omitempty"`
+}
+
+// Enrichment : Information about a specific enrichment.
+type Enrichment struct {
+
+	// The unique identifier of this enrichment.
+	EnrichmentID *string `json:"enrichment_id,omitempty"`
+
+	// The human readable name for this enrichment.
+	Name *string `json:"name,omitempty"`
+
+	// The description of this enrichment.
+	Description *string `json:"description,omitempty"`
+
+	// The type of this enrichment.
+	Type *string `json:"type,omitempty"`
+
+	// A object containing options for the current enrichment.
+	Options *EnrichmentOptions `json:"options,omitempty"`
+}
+
+// Constants associated with the Enrichment.Type property.
+// The type of this enrichment.
+const (
+	Enrichment_Type_Dictionary                   = "dictionary"
+	Enrichment_Type_NaturalLanguageUnderstanding = "natural_language_understanding"
+	Enrichment_Type_PartOfSpeech                 = "part_of_speech"
+	Enrichment_Type_RegularExpression            = "regular_expression"
+	Enrichment_Type_RuleBased                    = "rule_based"
+	Enrichment_Type_Sentiment                    = "sentiment"
+	Enrichment_Type_UimaAnnotator                = "uima_annotator"
+	Enrichment_Type_WatsonKnowledgeStudioModel   = "watson_knowledge_studio_model"
+)
+
+// EnrichmentOptions : A object containing options for the current enrichment.
+type EnrichmentOptions struct {
+
+	// An array of supported languages for this enrichment.
+	Languages []string `json:"languages,omitempty"`
+
+	// The type of entity. Required when creating `dictionary` and `regular_expression` **type** enrichment. Not valid when
+	// creating any other type of enrichment.
+	EntityType *string `json:"entity_type,omitempty"`
+
+	// The regular expression to apply for this enrichment. Required only when the **type** of enrichment being created is
+	// a `regular_expression`. Not valid when creating any other type of enrichment.
+	RegularExpression *string `json:"regular_expression,omitempty"`
+
+	// The name of the result document field that this enrichment creates. Required only when the enrichment **type** is
+	// `rule_based`. Not valid when creating any other type of enrichment.
+	ResultField *string `json:"result_field,omitempty"`
+}
+
+// Enrichments : An object containing an array of enrichment definitions.
+type Enrichments struct {
+
+	// An array of enrichment definitions.
+	Enrichments []Enrichment `json:"enrichments,omitempty"`
 }
 
 // Field : Object containing field details.
@@ -1453,6 +2790,45 @@ func (options *GetAutocompletionOptions) SetHeaders(param map[string]string) *Ge
 	return options
 }
 
+// GetCollectionOptions : The GetCollection options.
+type GetCollectionOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetCollectionOptions : Instantiate GetCollectionOptions
+func (discovery *DiscoveryV2) NewGetCollectionOptions(projectID string, collectionID string) *GetCollectionOptions {
+	return &GetCollectionOptions{
+		ProjectID:    core.StringPtr(projectID),
+		CollectionID: core.StringPtr(collectionID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *GetCollectionOptions) SetProjectID(projectID string) *GetCollectionOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *GetCollectionOptions) SetCollectionID(collectionID string) *GetCollectionOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCollectionOptions {
+	options.Headers = param
+	return options
+}
+
 // GetComponentSettingsOptions : The GetComponentSettings options.
 type GetComponentSettingsOptions struct {
 
@@ -1478,6 +2854,74 @@ func (options *GetComponentSettingsOptions) SetProjectID(projectID string) *GetC
 
 // SetHeaders : Allow user to set Headers
 func (options *GetComponentSettingsOptions) SetHeaders(param map[string]string) *GetComponentSettingsOptions {
+	options.Headers = param
+	return options
+}
+
+// GetEnrichmentOptions : The GetEnrichment options.
+type GetEnrichmentOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// The ID of the enrichment.
+	EnrichmentID *string `json:"enrichment_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetEnrichmentOptions : Instantiate GetEnrichmentOptions
+func (discovery *DiscoveryV2) NewGetEnrichmentOptions(projectID string, enrichmentID string) *GetEnrichmentOptions {
+	return &GetEnrichmentOptions{
+		ProjectID:    core.StringPtr(projectID),
+		EnrichmentID: core.StringPtr(enrichmentID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *GetEnrichmentOptions) SetProjectID(projectID string) *GetEnrichmentOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetEnrichmentID : Allow user to set EnrichmentID
+func (options *GetEnrichmentOptions) SetEnrichmentID(enrichmentID string) *GetEnrichmentOptions {
+	options.EnrichmentID = core.StringPtr(enrichmentID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetEnrichmentOptions) SetHeaders(param map[string]string) *GetEnrichmentOptions {
+	options.Headers = param
+	return options
+}
+
+// GetProjectOptions : The GetProject options.
+type GetProjectOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewGetProjectOptions : Instantiate GetProjectOptions
+func (discovery *DiscoveryV2) NewGetProjectOptions(projectID string) *GetProjectOptions {
+	return &GetProjectOptions{
+		ProjectID: core.StringPtr(projectID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *GetProjectOptions) SetProjectID(projectID string) *GetProjectOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetProjectOptions) SetHeaders(param map[string]string) *GetProjectOptions {
 	options.Headers = param
 	return options
 }
@@ -1557,6 +3001,35 @@ type ListCollectionsResponse struct {
 	Collections []Collection `json:"collections,omitempty"`
 }
 
+// ListEnrichmentsOptions : The ListEnrichments options.
+type ListEnrichmentsOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewListEnrichmentsOptions : Instantiate ListEnrichmentsOptions
+func (discovery *DiscoveryV2) NewListEnrichmentsOptions(projectID string) *ListEnrichmentsOptions {
+	return &ListEnrichmentsOptions{
+		ProjectID: core.StringPtr(projectID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *ListEnrichmentsOptions) SetProjectID(projectID string) *ListEnrichmentsOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListEnrichmentsOptions) SetHeaders(param map[string]string) *ListEnrichmentsOptions {
+	options.Headers = param
+	return options
+}
+
 // ListFieldsOptions : The ListFields options.
 type ListFieldsOptions struct {
 
@@ -1609,6 +3082,31 @@ type ListFieldsResponse struct {
 
 	// An array containing information about each field in the collections.
 	Fields []Field `json:"fields,omitempty"`
+}
+
+// ListProjectsOptions : The ListProjects options.
+type ListProjectsOptions struct {
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewListProjectsOptions : Instantiate ListProjectsOptions
+func (discovery *DiscoveryV2) NewListProjectsOptions() *ListProjectsOptions {
+	return &ListProjectsOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListProjectsOptions) SetHeaders(param map[string]string) *ListProjectsOptions {
+	options.Headers = param
+	return options
+}
+
+// ListProjectsResponse : A list of projects in this instance.
+type ListProjectsResponse struct {
+
+	// An array of project details.
+	Projects []ProjectListDetails `json:"projects,omitempty"`
 }
 
 // ListTrainingQueriesOptions : The ListTrainingQueries options.
@@ -1682,12 +3180,126 @@ const (
 	Notice_Severity_Warning = "warning"
 )
 
+// ProjectDetails : Detailed information about the specified project.
+type ProjectDetails struct {
+
+	// The unique identifier of this project.
+	ProjectID *string `json:"project_id,omitempty"`
+
+	// The human readable name of this project.
+	Name *string `json:"name,omitempty"`
+
+	// The project type of this project.
+	Type *string `json:"type,omitempty"`
+
+	// Relevancy training status information for this project.
+	RelevancyTrainingStatus *ProjectListDetailsRelevancyTrainingStatus `json:"relevancy_training_status,omitempty"`
+
+	// The number of collections configured in this project.
+	CollectionCount *int64 `json:"collection_count,omitempty"`
+
+	// Default query parameters for this project.
+	DefaultQueryParameters *DefaultQueryParams `json:"default_query_parameters,omitempty"`
+}
+
+// Constants associated with the ProjectDetails.Type property.
+// The project type of this project.
+const (
+	ProjectDetails_Type_AnswerRetrieval   = "answer_retrieval"
+	ProjectDetails_Type_ContentMining     = "content_mining"
+	ProjectDetails_Type_DocumentRetrieval = "document_retrieval"
+	ProjectDetails_Type_Other             = "other"
+)
+
+// ProjectListDetails : Details about a specific project.
+type ProjectListDetails struct {
+
+	// The unique identifier of this project.
+	ProjectID *string `json:"project_id,omitempty"`
+
+	// The human readable name of this project.
+	Name *string `json:"name,omitempty"`
+
+	// The project type of this project.
+	Type *string `json:"type,omitempty"`
+
+	// Relevancy training status information for this project.
+	RelevancyTrainingStatus *ProjectListDetailsRelevancyTrainingStatus `json:"relevancy_training_status,omitempty"`
+
+	// The number of collections configured in this project.
+	CollectionCount *int64 `json:"collection_count,omitempty"`
+}
+
+// Constants associated with the ProjectListDetails.Type property.
+// The project type of this project.
+const (
+	ProjectListDetails_Type_AnswerRetrieval   = "answer_retrieval"
+	ProjectListDetails_Type_ContentMining     = "content_mining"
+	ProjectListDetails_Type_DocumentRetrieval = "document_retrieval"
+	ProjectListDetails_Type_Other             = "other"
+)
+
+// ProjectListDetailsRelevancyTrainingStatus : Relevancy training status information for this project.
+type ProjectListDetailsRelevancyTrainingStatus struct {
+
+	// When the training data was updated.
+	DataUpdated *string `json:"data_updated,omitempty"`
+
+	// The total number of examples.
+	TotalExamples *int64 `json:"total_examples,omitempty"`
+
+	// When `true`, sufficent label diversity is present to allow training for this project.
+	SufficientLabelDiversity *bool `json:"sufficient_label_diversity,omitempty"`
+
+	// When `true`, the relevancy training is in processing.
+	Processing *bool `json:"processing,omitempty"`
+
+	// When `true`, the minimum number of examples required to train has been met.
+	MinimumExamplesAdded *bool `json:"minimum_examples_added,omitempty"`
+
+	// The time that the most recent successful training occured.
+	SuccessfullyTrained *string `json:"successfully_trained,omitempty"`
+
+	// When `true`, relevancy training is available when querying collections in the project.
+	Available *bool `json:"available,omitempty"`
+
+	// The number of notices generated during the relevancy training.
+	Notices *int64 `json:"notices,omitempty"`
+
+	// When `true`, the minimum number of queries required to train has been met.
+	MinimumQueriesAdded *bool `json:"minimum_queries_added,omitempty"`
+}
+
 // QueryAggregation : An abstract aggregation type produced by Discovery to analyze the input provided.
 type QueryAggregation struct {
 
 	// The type of aggregation command used. Options include: term, histogram, timeslice, nested, filter, min, max, sum,
 	// average, unique_count, and top_hits.
 	Type *string `json:"type" validate:"required"`
+}
+
+// QueryGroupByAggregationResult : Top value result for the term aggregation.
+type QueryGroupByAggregationResult struct {
+
+	// Value of the field with a non-zero frequency in the document set.
+	Key *string `json:"key" validate:"required"`
+
+	// Number of documents containing the 'key'.
+	MatchingResults *int64 `json:"matching_results" validate:"required"`
+
+	// The relevancy for this group.
+	Relevancy *float64 `json:"relevancy,omitempty"`
+
+	// The number of documents which have the group as the value of specified field in the whole set of documents in this
+	// collection. Returned only when the `relevancy` parameter is set to `true`.
+	TotalMatchingDocuments *int64 `json:"total_matching_documents,omitempty"`
+
+	// The estimated number of documents which would match the query and also meet the condition. Returned only when the
+	// `relevancy` parameter is set to `true`.
+	EstimatedMatchingDocuments *int64 `json:"estimated_matching_documents,omitempty"`
+
+	// An array of sub aggregations.
+	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 }
 
 // QueryHistogramAggregationResult : Histogram numeric interval result.
@@ -1720,7 +3332,7 @@ type QueryLargePassages struct {
 	Fields []string `json:"fields,omitempty"`
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
-	// default is `10`. The maximum is `100`.
+	// maximum is `100`.
 	Count *int64 `json:"count,omitempty"`
 
 	// The approximate number of characters that any one passage will have.
@@ -1733,7 +3345,7 @@ type QueryLargeSuggestedRefinements struct {
 	// Whether to perform suggested refinements.
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// Maximum number of suggested refinements texts to be returned. The default is `10`. The maximum is `100`.
+	// Maximum number of suggested refinements texts to be returned. The maximum is `100`.
 	Count *int64 `json:"count,omitempty"`
 }
 
@@ -2157,6 +3769,17 @@ type QueryTermAggregationResult struct {
 	// Number of documents containing the 'key'.
 	MatchingResults *int64 `json:"matching_results" validate:"required"`
 
+	// The relevancy for this term.
+	Relevancy *float64 `json:"relevancy,omitempty"`
+
+	// The number of documents which have the term as the value of specified field in the whole set of documents in this
+	// collection. Returned only when the `relevancy` parameter is set to `true`.
+	TotalMatchingDocuments *int64 `json:"total_matching_documents,omitempty"`
+
+	// The estimated number of documents which would match the query and also meet the condition. Returned only when the
+	// `relevancy` parameter is set to `true`.
+	EstimatedMatchingDocuments *int64 `json:"estimated_matching_documents,omitempty"`
+
 	// An array of sub aggregations.
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
 }
@@ -2553,6 +4176,72 @@ type TrainingQuerySet struct {
 	Queries []TrainingQuery `json:"queries,omitempty"`
 }
 
+// UpdateCollectionOptions : The UpdateCollection options.
+type UpdateCollectionOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// The ID of the collection.
+	CollectionID *string `json:"collection_id" validate:"required"`
+
+	// The name of the collection.
+	Name *string `json:"name,omitempty"`
+
+	// A description of the collection.
+	Description *string `json:"description,omitempty"`
+
+	// An array of enrichments that are applied to this collection.
+	Enrichments []CollectionEnrichment `json:"enrichments,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewUpdateCollectionOptions : Instantiate UpdateCollectionOptions
+func (discovery *DiscoveryV2) NewUpdateCollectionOptions(projectID string, collectionID string) *UpdateCollectionOptions {
+	return &UpdateCollectionOptions{
+		ProjectID:    core.StringPtr(projectID),
+		CollectionID: core.StringPtr(collectionID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *UpdateCollectionOptions) SetProjectID(projectID string) *UpdateCollectionOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetCollectionID : Allow user to set CollectionID
+func (options *UpdateCollectionOptions) SetCollectionID(collectionID string) *UpdateCollectionOptions {
+	options.CollectionID = core.StringPtr(collectionID)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetEnrichments : Allow user to set Enrichments
+func (options *UpdateCollectionOptions) SetEnrichments(enrichments []CollectionEnrichment) *UpdateCollectionOptions {
+	options.Enrichments = enrichments
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *UpdateCollectionOptions {
+	options.Headers = param
+	return options
+}
+
 // UpdateDocumentOptions : The UpdateDocument options.
 type UpdateDocumentOptions struct {
 
@@ -2576,7 +4265,10 @@ type UpdateDocumentOptions struct {
 	// The content type of file.
 	FileContentType *string `json:"file_content_type,omitempty"`
 
-	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
+	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected.
+	//
+	//
+	// Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
@@ -2649,6 +4341,102 @@ func (options *UpdateDocumentOptions) SetXWatsonDiscoveryForce(xWatsonDiscoveryF
 
 // SetHeaders : Allow user to set Headers
 func (options *UpdateDocumentOptions) SetHeaders(param map[string]string) *UpdateDocumentOptions {
+	options.Headers = param
+	return options
+}
+
+// UpdateEnrichmentOptions : The UpdateEnrichment options.
+type UpdateEnrichmentOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// The ID of the enrichment.
+	EnrichmentID *string `json:"enrichment_id" validate:"required"`
+
+	// A new name for the enrichment.
+	Name *string `json:"name" validate:"required"`
+
+	// A new description for the enrichment.
+	Description *string `json:"description,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewUpdateEnrichmentOptions : Instantiate UpdateEnrichmentOptions
+func (discovery *DiscoveryV2) NewUpdateEnrichmentOptions(projectID string, enrichmentID string, name string) *UpdateEnrichmentOptions {
+	return &UpdateEnrichmentOptions{
+		ProjectID:    core.StringPtr(projectID),
+		EnrichmentID: core.StringPtr(enrichmentID),
+		Name:         core.StringPtr(name),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *UpdateEnrichmentOptions) SetProjectID(projectID string) *UpdateEnrichmentOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetEnrichmentID : Allow user to set EnrichmentID
+func (options *UpdateEnrichmentOptions) SetEnrichmentID(enrichmentID string) *UpdateEnrichmentOptions {
+	options.EnrichmentID = core.StringPtr(enrichmentID)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateEnrichmentOptions) SetName(name string) *UpdateEnrichmentOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *UpdateEnrichmentOptions) SetDescription(description string) *UpdateEnrichmentOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateEnrichmentOptions) SetHeaders(param map[string]string) *UpdateEnrichmentOptions {
+	options.Headers = param
+	return options
+}
+
+// UpdateProjectOptions : The UpdateProject options.
+type UpdateProjectOptions struct {
+
+	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
+	ProjectID *string `json:"project_id" validate:"required"`
+
+	// The new name to give this project.
+	Name *string `json:"name,omitempty"`
+
+	// Allows users to set headers to be GDPR compliant
+	Headers map[string]string
+}
+
+// NewUpdateProjectOptions : Instantiate UpdateProjectOptions
+func (discovery *DiscoveryV2) NewUpdateProjectOptions(projectID string) *UpdateProjectOptions {
+	return &UpdateProjectOptions{
+		ProjectID: core.StringPtr(projectID),
+	}
+}
+
+// SetProjectID : Allow user to set ProjectID
+func (options *UpdateProjectOptions) SetProjectID(projectID string) *UpdateProjectOptions {
+	options.ProjectID = core.StringPtr(projectID)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateProjectOptions) SetName(name string) *UpdateProjectOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateProjectOptions) SetHeaders(param map[string]string) *UpdateProjectOptions {
 	options.Headers = param
 	return options
 }
@@ -2743,6 +4531,13 @@ type QueryFilterAggregation struct {
 
 	// An array of sub aggregations.
 	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
+}
+
+// QueryGroupByAggregation : Returns the top values for the field specified.
+type QueryGroupByAggregation struct {
+
+	// Array of top values for the field.
+	Results []QueryGroupByAggregationResult `json:"results,omitempty"`
 }
 
 // QueryHistogramAggregation : Numeric interval segments to categorize documents by using field values from a single numeric field to describe the

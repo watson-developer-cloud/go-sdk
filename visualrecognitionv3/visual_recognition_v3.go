@@ -39,7 +39,7 @@ type VisualRecognitionV3 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://gateway.watsonplatform.net/visual-recognition/api"
+const DefaultServiceURL = "https://api.us-south.visual-recognition.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "watson_vision_combined"

@@ -36,7 +36,7 @@ type NaturalLanguageClassifierV1 struct {
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
-const DefaultServiceURL = "https://gateway.watsonplatform.net/natural-language-classifier/api"
+const DefaultServiceURL = "https://api.us-south.natural-language-classifier.watson.cloud.ibm.com"
 
 // DefaultServiceName is the default key used to find external configuration information.
 const DefaultServiceName = "natural_language_classifier"

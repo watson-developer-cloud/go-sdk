@@ -141,3 +141,13 @@ func TestMessageStateless(t *testing.T) {
 	assert.Nil(t, responseErr)
 	assert.NotNil(t, message)
 }
+
+func TestListLogs(t *testing.T) {
+	t.Skip("endpoint only available on premium instance")
+
+	options := service.NewListLogsOptions(assistantId)
+	logs, _, responseErr := service.ListLogs(options)
+
+	assert.Nil(t, responseErr)
+	assert.NotNil(t, logs)
+}
