@@ -2429,6 +2429,7 @@ type UpdateObjectMetadata struct {
 func (visualRecognition *VisualRecognitionV4) NewUpdateObjectMetadata(object string, count int64) (model *UpdateObjectMetadata, err error) {
 	model = &UpdateObjectMetadata{
 		Object: core.StringPtr(object),
+		Count: core.Int64Ptr(count),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
