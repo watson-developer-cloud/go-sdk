@@ -81,7 +81,7 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1,
 		}
 	}
 
-	baseService, err := core.NewBaseService(serviceOptions)
+	baseService, err := core.NewBaseService(serviceOptions,options.ServiceName)
 	if err != nil {
 		return
 	}
