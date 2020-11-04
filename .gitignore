@@ -16,3 +16,6 @@ vendor/
 .secrets.baseline
 .openapi-generator-ignore
 .openapi-generator/
+
+# VSCode config
+.vscode/
