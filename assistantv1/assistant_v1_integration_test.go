@@ -23,7 +23,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/assistantv1"
@@ -62,7 +62,7 @@ func TestConstructService(t *testing.T) {
 	var err error
 
 	service, err = assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-		Version:     "2020-04-01",
+		Version:     core.StringPtr("2020-04-01"),
 		ServiceName: "assistant",
 	})
 	assert.Nil(t, err)
@@ -134,10 +134,10 @@ func TestEntity(t *testing.T) {
 			WorkspaceID: core.StringPtr(workspaceId),
 			Entity:      core.StringPtr("coffee"),
 			Values: []assistantv1.CreateValue{
-				assistantv1.CreateValue{
+				{
 					Value: core.StringPtr("expresso"),
 				},
-				assistantv1.CreateValue{
+				{
 					Value: core.StringPtr("latte"),
 				},
 			},
@@ -458,6 +458,15 @@ func TestDialogNodes(t *testing.T) {
 
 	assert.NotNil(t, listDialogNodes)
 
+	// Create output type to be passed in as interface{} type
+	outputNode := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeText)
+	outputNode.ResponseType = core.StringPtr("text")
+	outputNode.Values = []assistantv1.DialogNodeOutputTextValuesElement{
+		{
+			Text: core.StringPtr("Hi! How can I help you?"),
+		},
+	}
+
 	// Create dialog node
 	createDialog, _, responseErr := service.CreateDialogNode(
 		&assistantv1.CreateDialogNodeOptions{
@@ -465,16 +474,7 @@ func TestDialogNodes(t *testing.T) {
 			DialogNode:  core.StringPtr("greeting"),
 			Conditions:  core.StringPtr("#hello"),
 			Output: &assistantv1.DialogNodeOutput{
-				"generic": []assistantv1.DialogNodeOutputGeneric{
-					assistantv1.DialogNodeOutputGeneric{
-						ResponseType: core.StringPtr(assistantv1.DialogNodeOutputGeneric_ResponseType_Text),
-						Values: []assistantv1.DialogNodeOutputTextValuesElement{
-							assistantv1.DialogNodeOutputTextValuesElement{
-								Text: core.StringPtr("Hi! How can I help you?"),
-							},
-						},
-					},
-				},
+				Generic: []assistantv1.DialogNodeOutputGenericIntf{outputNode},
 			},
 			Title:                core.StringPtr("Greeting"),
 			DisambiguationOptOut: core.BoolPtr(true),
@@ -535,7 +535,7 @@ func TestWorkspaces(t *testing.T) {
 			Name:        core.StringPtr("API test"),
 			Description: core.StringPtr("Example workspace created via SDK"),
 			Webhooks: []assistantv1.Webhook{
-				assistantv1.Webhook{
+				{
 					URL:  core.StringPtr("https://test-webhook"),
 					Name: core.StringPtr("Dwight Schrute"),
 				},
@@ -584,7 +584,7 @@ func TestMessage(t *testing.T) {
 		&assistantv1.MessageOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
 			Input: &assistantv1.MessageInput{
-				"text": "Hello World",
+				Text: core.StringPtr("Hello World"),
 			},
 		},
 	)
@@ -602,14 +602,7 @@ func TestLogs(t *testing.T) {
 			WorkspaceID: core.StringPtr(workspaceId),
 		},
 	)
-	//	if responseErr != nil {
-	//		var result map[string]interface{}
-	//		decodeErr := json.NewDecoder(bytes.NewReader(detailedResponse.RawResult)).Decode(&result)
-	//		assert.Nil(t, decodeErr)
-	//		mapBytes, _ := json.MarshalIndent(result, "", "    ")
-	//		writeErr := ioutil.WriteFile("listLogs.json", mapBytes, 0644)
-	//		assert.Nil(t, writeErr)
-	//	}
+
 	assert.Nil(t, responseErr)
 	assert.NotNil(t, response)
 	assert.NotNil(t, listLogs)
