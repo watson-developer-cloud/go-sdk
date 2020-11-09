@@ -14,6 +14,8 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 * [Before you begin](#before-you-begin)
 * [Installation](#installation)
+* [Preview of 2.0.0 release](#preview-release-for-version-2.0.0)
+* [Personality Insights Deprecation](#personality-insights-deprecation)
 * [Discovery v2 only on CP4D](#discovery-v2-only-on-cp4d)
 * [Running in IBM Cloud](#running-in-ibm-cloud)
 * [Authentication](#authentication)
@@ -47,6 +49,24 @@ go get -u github.com/watson-developer-cloud/go-sdk@v1.7.0
 ```
 
 Note: For the latest tag release, look into [examples][examples] folder for basic and advanced examples.
+
+## Preview release for version `2.0.0`
+
+We have a preview release available for the upcoming version `2.0.0`. This introduces a number of breaking changes to the SDK, and adds some convenient new features for all packages in the SDK. See `Migrating-V2` at the root of the SDK for details on what is changing.
+
+If you want to try out the new version before it is released, you can add it as a dependency by targeting the branch directly in your `go.mod`. The easier way to do this is by running this command:
+
+```sh
+go get github.com/watson-developer-cloud/go-sdk@d9f1822acb067e28aaab3751e001d88b42de9b47
+```
+
+If you decide to preview the new release, and have any feedback or comments they are greatly appreciated!
+
+## Personality Insights Deprecation
+
+IBM® will begin sunsetting IBM Watson™ Personality Insights on 1 December 2020. For a period of one year from this date, you will still be able to use Watson Personality Insights. However, as of 1 December 2021, the offering will no longer be available.
+
+As an alternative, we encourage you to consider migrating to IBM Watson™ Natural Language Understanding, a service on IBM Cloud® that uses deep learning to extract data and insights from text such as keywords, categories, sentiment, emotion, and syntax to provide insights for your business or industry.
 
 ## Discovery v2 only on CP4D
 Discovery v2 is only available on Cloud Pak for Data.
