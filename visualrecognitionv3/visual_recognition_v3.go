@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,43 @@
  * limitations under the License.
  */
 
+/*
+ * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ */
+
 // Package visualrecognitionv3 : Operations and models for the VisualRecognitionV3 service
 package visualrecognitionv3
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"io"
-	"strings"
+	"net/http"
+	"reflect"
+	"time"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
-// VisualRecognitionV3 : The IBM Watson&trade; Visual Recognition service uses deep learning algorithms to identify
-// scenes and objects in images that you upload to the service. You can create and train a custom classifier to identify
-// subjects that suit your needs.
+// VisualRecognitionV3 : IBM Watson&trade; Visual Recognition is discontinued. Existing instances are supported until 1
+// December 2021, but as of 7 January 2021, you can't create instances. Any instance that is provisioned on 1 December
+// 2021 will be deleted.
+// {: deprecated}
+//
+// The IBM Watson Visual Recognition service uses deep learning algorithms to identify scenes and objects in images that
+// you upload to the service. You can create and train a custom classifier to identify subjects that suit your needs.
 //
 // Version: 3.0
-// See: https://cloud.ibm.com/docs/visual-recognition/
+// See: https://cloud.ibm.com/docs/visual-recognition
 type VisualRecognitionV3 struct {
 	Service *core.BaseService
-	Version string
+
+	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2018-03-19`.
+	Version *string
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
@@ -49,7 +64,10 @@ type VisualRecognitionV3Options struct {
 	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
-	Version       string
+
+	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2018-03-19`.
+	Version *string `validate:"required"`
 }
 
 // NewVisualRecognitionV3 : constructs an instance of VisualRecognitionV3 with passed in options.
@@ -68,6 +86,11 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (service *Visua
 		if err != nil {
 			return
 		}
+	}
+
+	err = core.ValidateStruct(options, "options")
+	if err != nil {
+		return
 	}
 
 	baseService, err := core.NewBaseService(serviceOptions)
@@ -95,9 +118,55 @@ func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (service *Visua
 	return
 }
 
+// GetServiceURLForRegion returns the service URL to be used for the specified region
+func GetServiceURLForRegion(region string) (string, error) {
+	return "", fmt.Errorf("service does not support regional URLs")
+}
+
+// Clone makes a copy of "visualRecognition" suitable for processing requests.
+func (visualRecognition *VisualRecognitionV3) Clone() *VisualRecognitionV3 {
+	if core.IsNil(visualRecognition) {
+		return nil
+	}
+	clone := *visualRecognition
+	clone.Service = visualRecognition.Service.Clone()
+	return &clone
+}
+
 // SetServiceURL sets the service URL
 func (visualRecognition *VisualRecognitionV3) SetServiceURL(url string) error {
 	return visualRecognition.Service.SetServiceURL(url)
+}
+
+// GetServiceURL returns the service URL
+func (visualRecognition *VisualRecognitionV3) GetServiceURL() string {
+	return visualRecognition.Service.GetServiceURL()
+}
+
+// SetDefaultHeaders sets HTTP headers to be sent in every request
+func (visualRecognition *VisualRecognitionV3) SetDefaultHeaders(headers http.Header) {
+	visualRecognition.Service.SetDefaultHeaders(headers)
+}
+
+// SetEnableGzipCompression sets the service's EnableGzipCompression field
+func (visualRecognition *VisualRecognitionV3) SetEnableGzipCompression(enableGzip bool) {
+	visualRecognition.Service.SetEnableGzipCompression(enableGzip)
+}
+
+// GetEnableGzipCompression returns the service's EnableGzipCompression field
+func (visualRecognition *VisualRecognitionV3) GetEnableGzipCompression() bool {
+	return visualRecognition.Service.GetEnableGzipCompression()
+}
+
+// EnableRetries enables automatic retries for requests invoked for this service instance.
+// If either parameter is specified as 0, then a default value is used instead.
+func (visualRecognition *VisualRecognitionV3) EnableRetries(maxRetries int, maxRetryInterval time.Duration) {
+	visualRecognition.Service.EnableRetries(maxRetries, maxRetryInterval)
+}
+
+// DisableRetries disables automatic retries for requests invoked for this service instance.
+func (visualRecognition *VisualRecognitionV3) DisableRetries() {
+	visualRecognition.Service.DisableRetries()
 }
 
 // DisableSSLVerification bypasses verification of the server's SSL certificate
@@ -108,6 +177,11 @@ func (visualRecognition *VisualRecognitionV3) DisableSSLVerification() {
 // Classify : Classify images
 // Classify images with built-in or custom classifiers.
 func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *ClassifyOptions) (result *ClassifiedImages, response *core.DetailedResponse, err error) {
+	return visualRecognition.ClassifyWithContext(context.Background(), classifyOptions)
+}
+
+// ClassifyWithContext is an alternate form of the Classify method which supports a Context parameter
+func (visualRecognition *VisualRecognitionV3) ClassifyWithContext(ctx context.Context, classifyOptions *ClassifyOptions) (result *ClassifiedImages, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(classifyOptions, "classifyOptions cannot be nil")
 	if err != nil {
 		return
@@ -117,15 +191,14 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		return
 	}
 	if (classifyOptions.ImagesFile == nil) && (classifyOptions.URL == nil) && (classifyOptions.Threshold == nil) && (classifyOptions.Owners == nil) && (classifyOptions.ClassifierIds == nil) {
-		err = fmt.Errorf("At least one of imagesFile, url, threshold, owners, or classifierIds must be supplied")
+		err = fmt.Errorf("at least one of imagesFile, url, threshold, owners, or classifierIds must be supplied")
 		return
 	}
 
-	pathSegments := []string{"v3/classify"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = visualRecognition.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(visualRecognition.Service.Options.URL, `/v3/classify`, nil)
 	if err != nil {
 		return
 	}
@@ -138,12 +211,12 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	if classifyOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*classifyOptions.AcceptLanguage))
 	}
-	builder.AddQuery("version", visualRecognition.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*visualRecognition.Version))
 
 	if classifyOptions.ImagesFile != nil {
 		builder.AddFormData("images_file", core.StringNilMapper(classifyOptions.ImagesFilename),
@@ -156,10 +229,14 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		builder.AddFormData("threshold", "", "", fmt.Sprint(*classifyOptions.Threshold))
 	}
 	if classifyOptions.Owners != nil {
-		builder.AddFormData("owners", "", "", strings.Join(classifyOptions.Owners, ","))
+		for _, item := range classifyOptions.Owners {
+			builder.AddFormData("owners", "", "", fmt.Sprint(item))
+		}
 	}
 	if classifyOptions.ClassifierIds != nil {
-		builder.AddFormData("classifier_ids", "", "", strings.Join(classifyOptions.ClassifierIds, ","))
+		for _, item := range classifyOptions.ClassifierIds {
+			builder.AddFormData("classifier_ids", "", "", fmt.Sprint(item))
+		}
 	}
 
 	request, err := builder.Build()
@@ -167,14 +244,16 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 		return
 	}
 
-	response, err = visualRecognition.Service.Request(request, new(ClassifiedImages))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*ClassifiedImages)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = visualRecognition.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifiedImages)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -193,6 +272,11 @@ func (visualRecognition *VisualRecognitionV3) Classify(classifyOptions *Classify
 // - Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier and class
 // names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
 func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierOptions *CreateClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
+	return visualRecognition.CreateClassifierWithContext(context.Background(), createClassifierOptions)
+}
+
+// CreateClassifierWithContext is an alternate form of the CreateClassifier method which supports a Context parameter
+func (visualRecognition *VisualRecognitionV3) CreateClassifierWithContext(ctx context.Context, createClassifierOptions *CreateClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createClassifierOptions, "createClassifierOptions cannot be nil")
 	if err != nil {
 		return
@@ -202,11 +286,10 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 		return
 	}
 
-	pathSegments := []string{"v3/classifiers"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = visualRecognition.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(visualRecognition.Service.Options.URL, `/v3/classifiers`, nil)
 	if err != nil {
 		return
 	}
@@ -219,9 +302,9 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*visualRecognition.Version))
 
 	builder.AddFormData("name", "", "", fmt.Sprint(*createClassifierOptions.Name))
 	for key, value := range createClassifierOptions.PositiveExamples {
@@ -238,30 +321,36 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifier(createClassifierO
 		return
 	}
 
-	response, err = visualRecognition.Service.Request(request, new(Classifier))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Classifier)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = visualRecognition.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // ListClassifiers : Retrieve a list of classifiers
 func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOptions *ListClassifiersOptions) (result *Classifiers, response *core.DetailedResponse, err error) {
+	return visualRecognition.ListClassifiersWithContext(context.Background(), listClassifiersOptions)
+}
+
+// ListClassifiersWithContext is an alternate form of the ListClassifiers method which supports a Context parameter
+func (visualRecognition *VisualRecognitionV3) ListClassifiersWithContext(ctx context.Context, listClassifiersOptions *ListClassifiersOptions) (result *Classifiers, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listClassifiersOptions, "listClassifiersOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v3/classifiers"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = visualRecognition.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(visualRecognition.Service.Options.URL, `/v3/classifiers`, nil)
 	if err != nil {
 		return
 	}
@@ -274,27 +363,28 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*visualRecognition.Version))
 	if listClassifiersOptions.Verbose != nil {
 		builder.AddQuery("verbose", fmt.Sprint(*listClassifiersOptions.Verbose))
 	}
-	builder.AddQuery("version", visualRecognition.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = visualRecognition.Service.Request(request, new(Classifiers))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Classifiers)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = visualRecognition.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifiers)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -302,6 +392,11 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiers(listClassifiersOpt
 // GetClassifier : Retrieve classifier details
 // Retrieve information about a custom classifier.
 func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions *GetClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
+	return visualRecognition.GetClassifierWithContext(context.Background(), getClassifierOptions)
+}
+
+// GetClassifierWithContext is an alternate form of the GetClassifier method which supports a Context parameter
+func (visualRecognition *VisualRecognitionV3) GetClassifierWithContext(ctx context.Context, getClassifierOptions *GetClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getClassifierOptions, "getClassifierOptions cannot be nil")
 	if err != nil {
 		return
@@ -311,11 +406,14 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 		return
 	}
 
-	pathSegments := []string{"v3/classifiers"}
-	pathParameters := []string{*getClassifierOptions.ClassifierID}
+	pathParamsMap := map[string]string{
+		"classifier_id": *getClassifierOptions.ClassifierID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = visualRecognition.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(visualRecognition.Service.Options.URL, `/v3/classifiers/{classifier_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -328,23 +426,25 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*visualRecognition.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = visualRecognition.Service.Request(request, new(Classifier))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Classifier)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = visualRecognition.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -367,6 +467,11 @@ func (visualRecognition *VisualRecognitionV3) GetClassifier(getClassifierOptions
 // parallel, the last request overwrites the previous requests. The `retrained` property shows the last time the
 // classifier retraining finished.
 func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierOptions *UpdateClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
+	return visualRecognition.UpdateClassifierWithContext(context.Background(), updateClassifierOptions)
+}
+
+// UpdateClassifierWithContext is an alternate form of the UpdateClassifier method which supports a Context parameter
+func (visualRecognition *VisualRecognitionV3) UpdateClassifierWithContext(ctx context.Context, updateClassifierOptions *UpdateClassifierOptions) (result *Classifier, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateClassifierOptions, "updateClassifierOptions cannot be nil")
 	if err != nil {
 		return
@@ -376,15 +481,18 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 		return
 	}
 	if (updateClassifierOptions.PositiveExamples == nil) && (updateClassifierOptions.NegativeExamples == nil) {
-		err = fmt.Errorf("At least one of positiveExamples or negativeExamples must be supplied")
+		err = fmt.Errorf("at least one of positiveExamples or negativeExamples must be supplied")
 		return
 	}
 
-	pathSegments := []string{"v3/classifiers"}
-	pathParameters := []string{*updateClassifierOptions.ClassifierID}
+	pathParamsMap := map[string]string{
+		"classifier_id": *updateClassifierOptions.ClassifierID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = visualRecognition.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(visualRecognition.Service.Options.URL, `/v3/classifiers/{classifier_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -397,9 +505,9 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*visualRecognition.Version))
 
 	for key, value := range updateClassifierOptions.PositiveExamples {
 		partName := fmt.Sprintf("%s_positive_examples", key)
@@ -415,20 +523,27 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifier(updateClassifierO
 		return
 	}
 
-	response, err = visualRecognition.Service.Request(request, new(Classifier))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Classifier)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = visualRecognition.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // DeleteClassifier : Delete a classifier
 func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions) (response *core.DetailedResponse, err error) {
+	return visualRecognition.DeleteClassifierWithContext(context.Background(), deleteClassifierOptions)
+}
+
+// DeleteClassifierWithContext is an alternate form of the DeleteClassifier method which supports a Context parameter
+func (visualRecognition *VisualRecognitionV3) DeleteClassifierWithContext(ctx context.Context, deleteClassifierOptions *DeleteClassifierOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteClassifierOptions, "deleteClassifierOptions cannot be nil")
 	if err != nil {
 		return
@@ -438,11 +553,14 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 		return
 	}
 
-	pathSegments := []string{"v3/classifiers"}
-	pathParameters := []string{*deleteClassifierOptions.ClassifierID}
+	pathParamsMap := map[string]string{
+		"classifier_id": *deleteClassifierOptions.ClassifierID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = visualRecognition.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(visualRecognition.Service.Options.URL, `/v3/classifiers/{classifier_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -455,9 +573,9 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", visualRecognition.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*visualRecognition.Version))
 
 	request, err := builder.Build()
 	if err != nil {
@@ -473,6 +591,11 @@ func (visualRecognition *VisualRecognitionV3) DeleteClassifier(deleteClassifierO
 // Download a Core ML model file (.mlmodel) of a custom classifier that returns <tt>"core_ml_enabled": true</tt> in the
 // classifier details.
 func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptions *GetCoreMlModelOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
+	return visualRecognition.GetCoreMlModelWithContext(context.Background(), getCoreMlModelOptions)
+}
+
+// GetCoreMlModelWithContext is an alternate form of the GetCoreMlModel method which supports a Context parameter
+func (visualRecognition *VisualRecognitionV3) GetCoreMlModelWithContext(ctx context.Context, getCoreMlModelOptions *GetCoreMlModelOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getCoreMlModelOptions, "getCoreMlModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -482,11 +605,14 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 		return
 	}
 
-	pathSegments := []string{"v3/classifiers", "core_ml_model"}
-	pathParameters := []string{*getCoreMlModelOptions.ClassifierID}
+	pathParamsMap := map[string]string{
+		"classifier_id": *getCoreMlModelOptions.ClassifierID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = visualRecognition.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(visualRecognition.Service.Options.URL, `/v3/classifiers/{classifier_id}/core_ml_model`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -499,23 +625,16 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/octet-stream")
-	builder.AddQuery("version", visualRecognition.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*visualRecognition.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = visualRecognition.Service.Request(request, new(io.ReadCloser))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(io.ReadCloser)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
-	}
+	response, err = visualRecognition.Service.Request(request, &result)
 
 	return
 }
@@ -528,6 +647,11 @@ func (visualRecognition *VisualRecognitionV3) GetCoreMlModel(getCoreMlModelOptio
 // more information about personal data and customer IDs, see [Information
 // security](https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-information-security).
 func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	return visualRecognition.DeleteUserDataWithContext(context.Background(), deleteUserDataOptions)
+}
+
+// DeleteUserDataWithContext is an alternate form of the DeleteUserData method which supports a Context parameter
+func (visualRecognition *VisualRecognitionV3) DeleteUserDataWithContext(ctx context.Context, deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
 	if err != nil {
 		return
@@ -537,11 +661,10 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 		return
 	}
 
-	pathSegments := []string{"v3/user_data"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(visualRecognition.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = visualRecognition.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(visualRecognition.Service.Options.URL, `/v3/user_data`, nil)
 	if err != nil {
 		return
 	}
@@ -554,11 +677,10 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*visualRecognition.Version))
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
-	builder.AddQuery("version", visualRecognition.Version)
 
 	request, err := builder.Build()
 	if err != nil {
@@ -572,14 +694,23 @@ func (visualRecognition *VisualRecognitionV3) DeleteUserData(deleteUserDataOptio
 
 // Class : A category within a classifier.
 type Class struct {
-
 	// The name of the class.
 	Class *string `json:"class" validate:"required"`
 }
 
+// UnmarshalClass unmarshals an instance of Class from the specified map of raw messages.
+func UnmarshalClass(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Class)
+	err = core.UnmarshalPrimitive(m, "class", &obj.Class)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ClassResult : Result of a class within a classifier.
 type ClassResult struct {
-
 	// Name of the class.
 	//
 	// Class names are translated in the language defined by the **Accept-Language** request header for the build-in
@@ -597,9 +728,27 @@ type ClassResult struct {
 	TypeHierarchy *string `json:"type_hierarchy,omitempty"`
 }
 
+// UnmarshalClassResult unmarshals an instance of ClassResult from the specified map of raw messages.
+func UnmarshalClassResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ClassResult)
+	err = core.UnmarshalPrimitive(m, "class", &obj.Class)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "score", &obj.Score)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "type_hierarchy", &obj.TypeHierarchy)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ClassifiedImage : Results for one image.
 type ClassifiedImage struct {
-
 	// Source of the image before any redirects. Not returned when the image is uploaded.
 	SourceURL *string `json:"source_url,omitempty"`
 
@@ -617,9 +766,35 @@ type ClassifiedImage struct {
 	Classifiers []ClassifierResult `json:"classifiers" validate:"required"`
 }
 
+// UnmarshalClassifiedImage unmarshals an instance of ClassifiedImage from the specified map of raw messages.
+func UnmarshalClassifiedImage(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ClassifiedImage)
+	err = core.UnmarshalPrimitive(m, "source_url", &obj.SourceURL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "resolved_url", &obj.ResolvedURL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "image", &obj.Image)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "error", &obj.Error, UnmarshalErrorInfo)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "classifiers", &obj.Classifiers, UnmarshalClassifierResult)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ClassifiedImages : Results for all images.
 type ClassifiedImages struct {
-
 	// Number of custom classes identified in the images.
 	CustomClasses *int64 `json:"custom_classes,omitempty"`
 
@@ -635,9 +810,31 @@ type ClassifiedImages struct {
 	Warnings []WarningInfo `json:"warnings,omitempty"`
 }
 
+// UnmarshalClassifiedImages unmarshals an instance of ClassifiedImages from the specified map of raw messages.
+func UnmarshalClassifiedImages(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ClassifiedImages)
+	err = core.UnmarshalPrimitive(m, "custom_classes", &obj.CustomClasses)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "images_processed", &obj.ImagesProcessed)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "images", &obj.Images, UnmarshalClassifiedImage)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "warnings", &obj.Warnings, UnmarshalWarningInfo)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Classifier : Information about a classifier.
 type Classifier struct {
-
 	// ID of a classifier identified in the image.
 	ClassifierID *string `json:"classifier_id" validate:"required"`
 
@@ -674,15 +871,61 @@ type Classifier struct {
 // Constants associated with the Classifier.Status property.
 // Training status of classifier.
 const (
-	Classifier_Status_Failed     = "failed"
-	Classifier_Status_Ready      = "ready"
-	Classifier_Status_Retraining = "retraining"
-	Classifier_Status_Training   = "training"
+	ClassifierStatusFailedConst     = "failed"
+	ClassifierStatusReadyConst      = "ready"
+	ClassifierStatusRetrainingConst = "retraining"
+	ClassifierStatusTrainingConst   = "training"
 )
+
+// UnmarshalClassifier unmarshals an instance of Classifier from the specified map of raw messages.
+func UnmarshalClassifier(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Classifier)
+	err = core.UnmarshalPrimitive(m, "classifier_id", &obj.ClassifierID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "owner", &obj.Owner)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "core_ml_enabled", &obj.CoreMlEnabled)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "explanation", &obj.Explanation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "classes", &obj.Classes, UnmarshalClass)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "retrained", &obj.Retrained)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "updated", &obj.Updated)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // ClassifierResult : Classifier and score combination.
 type ClassifierResult struct {
-
 	// Name of the classifier.
 	Name *string `json:"name" validate:"required"`
 
@@ -693,16 +936,44 @@ type ClassifierResult struct {
 	Classes []ClassResult `json:"classes" validate:"required"`
 }
 
+// UnmarshalClassifierResult unmarshals an instance of ClassifierResult from the specified map of raw messages.
+func UnmarshalClassifierResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ClassifierResult)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "classifier_id", &obj.ClassifierID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "classes", &obj.Classes, UnmarshalClassResult)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Classifiers : A container for the list of classifiers.
 type Classifiers struct {
-
 	// List of classifiers.
 	Classifiers []Classifier `json:"classifiers" validate:"required"`
 }
 
+// UnmarshalClassifiers unmarshals an instance of Classifiers from the specified map of raw messages.
+func UnmarshalClassifiers(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Classifiers)
+	err = core.UnmarshalModel(m, "classifiers", &obj.Classifiers, UnmarshalClassifier)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ClassifyOptions : The Classify options.
 type ClassifyOptions struct {
-
 	// An image file (.gif, .jpg, .png, .tif) or .zip file with images. Maximum image size is 10 MB. Include no more than
 	// 20 images and limit the .zip file to 100 MB. Encode the image and .zip file names in UTF-8 if they contain non-ASCII
 	// characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters.
@@ -747,28 +1018,28 @@ type ClassifyOptions struct {
 	// The desired language of parts of the response. See the response for details.
 	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the ClassifyOptions.AcceptLanguage property.
 // The desired language of parts of the response. See the response for details.
 const (
-	ClassifyOptions_AcceptLanguage_Ar   = "ar"
-	ClassifyOptions_AcceptLanguage_De   = "de"
-	ClassifyOptions_AcceptLanguage_En   = "en"
-	ClassifyOptions_AcceptLanguage_Es   = "es"
-	ClassifyOptions_AcceptLanguage_Fr   = "fr"
-	ClassifyOptions_AcceptLanguage_It   = "it"
-	ClassifyOptions_AcceptLanguage_Ja   = "ja"
-	ClassifyOptions_AcceptLanguage_Ko   = "ko"
-	ClassifyOptions_AcceptLanguage_PtBr = "pt-br"
-	ClassifyOptions_AcceptLanguage_ZhCn = "zh-cn"
-	ClassifyOptions_AcceptLanguage_ZhTw = "zh-tw"
+	ClassifyOptionsAcceptLanguageArConst   = "ar"
+	ClassifyOptionsAcceptLanguageDeConst   = "de"
+	ClassifyOptionsAcceptLanguageEnConst   = "en"
+	ClassifyOptionsAcceptLanguageEsConst   = "es"
+	ClassifyOptionsAcceptLanguageFrConst   = "fr"
+	ClassifyOptionsAcceptLanguageItConst   = "it"
+	ClassifyOptionsAcceptLanguageJaConst   = "ja"
+	ClassifyOptionsAcceptLanguageKoConst   = "ko"
+	ClassifyOptionsAcceptLanguagePtBrConst = "pt-br"
+	ClassifyOptionsAcceptLanguageZhCnConst = "zh-cn"
+	ClassifyOptionsAcceptLanguageZhTwConst = "zh-tw"
 )
 
 // NewClassifyOptions : Instantiate ClassifyOptions
-func (visualRecognition *VisualRecognitionV3) NewClassifyOptions() *ClassifyOptions {
+func (*VisualRecognitionV3) NewClassifyOptions() *ClassifyOptions {
 	return &ClassifyOptions{}
 }
 
@@ -791,8 +1062,8 @@ func (options *ClassifyOptions) SetImagesFileContentType(imagesFileContentType s
 }
 
 // SetURL : Allow user to set URL
-func (options *ClassifyOptions) SetURL(URL string) *ClassifyOptions {
-	options.URL = core.StringPtr(URL)
+func (options *ClassifyOptions) SetURL(url string) *ClassifyOptions {
+	options.URL = core.StringPtr(url)
 	return options
 }
 
@@ -828,7 +1099,6 @@ func (options *ClassifyOptions) SetHeaders(param map[string]string) *ClassifyOpt
 
 // CreateClassifierOptions : The CreateClassifier options.
 type CreateClassifierOptions struct {
-
 	// The name of the new classifier. Encode special characters in UTF-8.
 	Name *string `json:"name" validate:"required"`
 
@@ -854,12 +1124,12 @@ type CreateClassifierOptions struct {
 	// The filename for negativeExamples.
 	NegativeExamplesFilename *string `json:"negative_examples_filename,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCreateClassifierOptions : Instantiate CreateClassifierOptions
-func (visualRecognition *VisualRecognitionV3) NewCreateClassifierOptions(name string) *CreateClassifierOptions {
+func (*VisualRecognitionV3) NewCreateClassifierOptions(name string) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
 		Name: core.StringPtr(name),
 	}
@@ -900,16 +1170,15 @@ func (options *CreateClassifierOptions) SetHeaders(param map[string]string) *Cre
 
 // DeleteClassifierOptions : The DeleteClassifier options.
 type DeleteClassifierOptions struct {
-
 	// The ID of the classifier.
-	ClassifierID *string `json:"classifier_id" validate:"required"`
+	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteClassifierOptions : Instantiate DeleteClassifierOptions
-func (visualRecognition *VisualRecognitionV3) NewDeleteClassifierOptions(classifierID string) *DeleteClassifierOptions {
+func (*VisualRecognitionV3) NewDeleteClassifierOptions(classifierID string) *DeleteClassifierOptions {
 	return &DeleteClassifierOptions{
 		ClassifierID: core.StringPtr(classifierID),
 	}
@@ -929,16 +1198,15 @@ func (options *DeleteClassifierOptions) SetHeaders(param map[string]string) *Del
 
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
-
 	// The customer ID for which all data is to be deleted.
 	CustomerID *string `json:"customer_id" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
-func (visualRecognition *VisualRecognitionV3) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+func (*VisualRecognitionV3) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
 	return &DeleteUserDataOptions{
 		CustomerID: core.StringPtr(customerID),
 	}
@@ -959,7 +1227,6 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 // ErrorInfo : Information about what might have caused a failure, such as an image that is too large. Not returned when there is no
 // error.
 type ErrorInfo struct {
-
 	// HTTP status code.
 	Code *int64 `json:"code" validate:"required"`
 
@@ -970,18 +1237,36 @@ type ErrorInfo struct {
 	ErrorID *string `json:"error_id" validate:"required"`
 }
 
+// UnmarshalErrorInfo unmarshals an instance of ErrorInfo from the specified map of raw messages.
+func UnmarshalErrorInfo(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ErrorInfo)
+	err = core.UnmarshalPrimitive(m, "code", &obj.Code)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "error_id", &obj.ErrorID)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // GetClassifierOptions : The GetClassifier options.
 type GetClassifierOptions struct {
-
 	// The ID of the classifier.
-	ClassifierID *string `json:"classifier_id" validate:"required"`
+	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetClassifierOptions : Instantiate GetClassifierOptions
-func (visualRecognition *VisualRecognitionV3) NewGetClassifierOptions(classifierID string) *GetClassifierOptions {
+func (*VisualRecognitionV3) NewGetClassifierOptions(classifierID string) *GetClassifierOptions {
 	return &GetClassifierOptions{
 		ClassifierID: core.StringPtr(classifierID),
 	}
@@ -1001,16 +1286,15 @@ func (options *GetClassifierOptions) SetHeaders(param map[string]string) *GetCla
 
 // GetCoreMlModelOptions : The GetCoreMlModel options.
 type GetCoreMlModelOptions struct {
-
 	// The ID of the classifier.
-	ClassifierID *string `json:"classifier_id" validate:"required"`
+	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetCoreMlModelOptions : Instantiate GetCoreMlModelOptions
-func (visualRecognition *VisualRecognitionV3) NewGetCoreMlModelOptions(classifierID string) *GetCoreMlModelOptions {
+func (*VisualRecognitionV3) NewGetCoreMlModelOptions(classifierID string) *GetCoreMlModelOptions {
 	return &GetCoreMlModelOptions{
 		ClassifierID: core.StringPtr(classifierID),
 	}
@@ -1030,16 +1314,15 @@ func (options *GetCoreMlModelOptions) SetHeaders(param map[string]string) *GetCo
 
 // ListClassifiersOptions : The ListClassifiers options.
 type ListClassifiersOptions struct {
-
 	// Specify `true` to return details about the classifiers. Omit this parameter to return a brief list of classifiers.
 	Verbose *bool `json:"verbose,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListClassifiersOptions : Instantiate ListClassifiersOptions
-func (visualRecognition *VisualRecognitionV3) NewListClassifiersOptions() *ListClassifiersOptions {
+func (*VisualRecognitionV3) NewListClassifiersOptions() *ListClassifiersOptions {
 	return &ListClassifiersOptions{}
 }
 
@@ -1057,9 +1340,8 @@ func (options *ListClassifiersOptions) SetHeaders(param map[string]string) *List
 
 // UpdateClassifierOptions : The UpdateClassifier options.
 type UpdateClassifierOptions struct {
-
 	// The ID of the classifier.
-	ClassifierID *string `json:"classifier_id" validate:"required"`
+	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
 
 	// A .zip file of images that depict the visual subject of a class in the classifier. The positive examples create or
 	// update classes in the classifier. You can include more than one positive example file in a call.
@@ -1083,12 +1365,12 @@ type UpdateClassifierOptions struct {
 	// The filename for negativeExamples.
 	NegativeExamplesFilename *string `json:"negative_examples_filename,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewUpdateClassifierOptions : Instantiate UpdateClassifierOptions
-func (visualRecognition *VisualRecognitionV3) NewUpdateClassifierOptions(classifierID string) *UpdateClassifierOptions {
+func (*VisualRecognitionV3) NewUpdateClassifierOptions(classifierID string) *UpdateClassifierOptions {
 	return &UpdateClassifierOptions{
 		ClassifierID: core.StringPtr(classifierID),
 	}
@@ -1129,10 +1411,24 @@ func (options *UpdateClassifierOptions) SetHeaders(param map[string]string) *Upd
 
 // WarningInfo : Information about something that went wrong.
 type WarningInfo struct {
-
 	// Codified warning string, such as `limit_reached`.
 	WarningID *string `json:"warning_id" validate:"required"`
 
 	// Information about the error.
 	Description *string `json:"description" validate:"required"`
+}
+
+// UnmarshalWarningInfo unmarshals an instance of WarningInfo from the specified map of raw messages.
+func UnmarshalWarningInfo(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(WarningInfo)
+	err = core.UnmarshalPrimitive(m, "warning_id", &obj.WarningID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
