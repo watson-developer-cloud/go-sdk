@@ -88,6 +88,9 @@ type PersonalityInsightsV3Options struct {
 
 // NewPersonalityInsightsV3 : constructs an instance of PersonalityInsightsV3 with passed in options.
 func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *PersonalityInsightsV3, err error) {
+	// Log deprecation warning
+	core.GetLogger().Log(core.LevelWarn, "", "On 1 December 2021, Personality Insights will no longer be available. Consider migrating to Watson Natural Language Understanding. For more information, see Personality Insights Deprecation.")
+
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
