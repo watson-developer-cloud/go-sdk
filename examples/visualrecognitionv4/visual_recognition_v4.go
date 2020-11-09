@@ -21,7 +21,7 @@ func main() {
 	if serviceErr != nil {
 		panic(serviceErr)
 	}
-	service.SetServiceURL("https://gateway.watsonplatform.net/visual-recognition/api")
+	service.SetServiceURL("https://api.us-south.visual-recognition.watson.cloud.ibm.com")
 
 	/* CREATE COLLLECTION */
 	collection, _, responseErr := service.CreateCollection(
