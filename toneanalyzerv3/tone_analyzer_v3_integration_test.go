@@ -22,7 +22,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
@@ -57,7 +57,7 @@ func TestConstructService(t *testing.T) {
 
 	service, err = toneanalyzerv3.NewToneAnalyzerV3(
 		&toneanalyzerv3.ToneAnalyzerV3Options{
-			Version: "2017-09-21",
+			Version: core.StringPtr("2017-09-21"),
 		})
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -90,19 +90,19 @@ func TestToneChat(t *testing.T) {
 	shouldSkipTest(t)
 
 	utterances := []toneanalyzerv3.Utterance{
-		toneanalyzerv3.Utterance{
+		{
 			Text: core.StringPtr("Hello, I'm having a problem with your product."),
 			User: core.StringPtr("customer"),
 		},
-		toneanalyzerv3.Utterance{
+		{
 			Text: core.StringPtr("OK, let me know what's going on, please."),
 			User: core.StringPtr("agent"),
 		},
-		toneanalyzerv3.Utterance{
+		{
 			Text: core.StringPtr("Well, nothing is working :("),
 			User: core.StringPtr("customer"),
 		},
-		toneanalyzerv3.Utterance{
+		{
 			Text: core.StringPtr("Sorry to hear that."),
 			User: core.StringPtr("agent"),
 		},
