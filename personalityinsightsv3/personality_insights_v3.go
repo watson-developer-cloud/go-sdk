@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 3.17.0-8d569e8f-20201030-142059
  */
- 
 
 // Package personalityinsightsv3 : Operations and models for the PersonalityInsightsV3 service
 package personalityinsightsv3
@@ -26,12 +25,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"net/http"
 	"reflect"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights
@@ -79,6 +79,9 @@ type PersonalityInsightsV3Options struct {
 
 // NewPersonalityInsightsV3 : constructs an instance of PersonalityInsightsV3 with passed in options.
 func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *PersonalityInsightsV3, err error) {
+	// Log deprecation warning
+	core.GetLogger().Log(core.LevelWarn, "", "On 1 December 2021, Personality Insights will no longer be available. Consider migrating to Watson Natural Language Understanding. For more information, see Personality Insights Deprecation.")
+
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
@@ -406,7 +409,6 @@ type Behavior struct {
 	Percentage *float64 `json:"percentage" validate:"required"`
 }
 
-
 // UnmarshalBehavior unmarshals an instance of Behavior from the specified map of raw messages.
 func UnmarshalBehavior(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Behavior)
@@ -449,7 +451,6 @@ type ConsumptionPreferences struct {
 	Score *float64 `json:"score" validate:"required"`
 }
 
-
 // UnmarshalConsumptionPreferences unmarshals an instance of ConsumptionPreferences from the specified map of raw messages.
 func UnmarshalConsumptionPreferences(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ConsumptionPreferences)
@@ -482,7 +483,6 @@ type ConsumptionPreferencesCategory struct {
 	ConsumptionPreferences []ConsumptionPreferences `json:"consumption_preferences" validate:"required"`
 }
 
-
 // UnmarshalConsumptionPreferencesCategory unmarshals an instance of ConsumptionPreferencesCategory from the specified map of raw messages.
 func UnmarshalConsumptionPreferencesCategory(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ConsumptionPreferencesCategory)
@@ -507,7 +507,6 @@ type Content struct {
 	// An array of `ContentItem` objects that provides the text that is to be analyzed.
 	ContentItems []ContentItem `json:"contentItems" validate:"required"`
 }
-
 
 // NewContent : Instantiate Content (Generic Model Constructor)
 func (*PersonalityInsightsV3) NewContent(contentItems []ContentItem) (model *Content, err error) {
@@ -573,7 +572,7 @@ type ContentItem struct {
 // The MIME type of the content. The default is plain text. The tags are stripped from HTML content before it is
 // analyzed; plain text is processed as submitted.
 const (
-	ContentItem_Contenttype_TextHTML = "text/html"
+	ContentItem_Contenttype_TextHTML  = "text/html"
 	ContentItem_Contenttype_TextPlain = "text/plain"
 )
 
@@ -591,7 +590,6 @@ const (
 	ContentItem_Language_Ja = "ja"
 	ContentItem_Language_Ko = "ko"
 )
-
 
 // NewContentItem : Instantiate ContentItem (Generic Model Constructor)
 func (*PersonalityInsightsV3) NewContentItem(content string) (model *ContentItem, err error) {
@@ -691,7 +689,6 @@ const (
 	Profile_ProcessedLanguage_Ja = "ja"
 	Profile_ProcessedLanguage_Ko = "ko"
 )
-
 
 // UnmarshalProfile unmarshals an instance of Profile from the specified map of raw messages.
 func UnmarshalProfile(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -808,14 +805,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input and
 // response content.
 const (
-	ProfileOptions_AcceptLanguage_Ar = "ar"
-	ProfileOptions_AcceptLanguage_De = "de"
-	ProfileOptions_AcceptLanguage_En = "en"
-	ProfileOptions_AcceptLanguage_Es = "es"
-	ProfileOptions_AcceptLanguage_Fr = "fr"
-	ProfileOptions_AcceptLanguage_It = "it"
-	ProfileOptions_AcceptLanguage_Ja = "ja"
-	ProfileOptions_AcceptLanguage_Ko = "ko"
+	ProfileOptions_AcceptLanguage_Ar   = "ar"
+	ProfileOptions_AcceptLanguage_De   = "de"
+	ProfileOptions_AcceptLanguage_En   = "en"
+	ProfileOptions_AcceptLanguage_Es   = "es"
+	ProfileOptions_AcceptLanguage_Fr   = "fr"
+	ProfileOptions_AcceptLanguage_It   = "it"
+	ProfileOptions_AcceptLanguage_Ja   = "ja"
+	ProfileOptions_AcceptLanguage_Ko   = "ko"
 	ProfileOptions_AcceptLanguage_PtBr = "pt-br"
 	ProfileOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ProfileOptions_AcceptLanguage_ZhTw = "zh-tw"
@@ -926,11 +923,10 @@ type Trait struct {
 // The category of the characteristic: `personality` for Big Five personality characteristics, `needs` for Needs, and
 // `values` for Values.
 const (
-	Trait_Category_Needs = "needs"
+	Trait_Category_Needs       = "needs"
 	Trait_Category_Personality = "personality"
-	Trait_Category_Values = "values"
+	Trait_Category_Values      = "values"
 )
-
 
 // UnmarshalTrait unmarshals an instance of Trait from the specified map of raw messages.
 func UnmarshalTrait(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -990,11 +986,10 @@ type Warning struct {
 // The identifier of the warning message.
 const (
 	Warning_WarningID_ContentTruncated = "CONTENT_TRUNCATED"
-	Warning_WarningID_JSONAsText = "JSON_AS_TEXT"
-	Warning_WarningID_PartialTextUsed = "PARTIAL_TEXT_USED"
+	Warning_WarningID_JSONAsText       = "JSON_AS_TEXT"
+	Warning_WarningID_PartialTextUsed  = "PARTIAL_TEXT_USED"
 	Warning_WarningID_WordCountMessage = "WORD_COUNT_MESSAGE"
 )
-
 
 // UnmarshalWarning unmarshals an instance of Warning from the specified map of raw messages.
 func UnmarshalWarning(m map[string]json.RawMessage, result interface{}) (err error) {
