@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
+/*
+ * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ */
+ 
+
 // Package speechtotextv1 : Operations and models for the SpeechToTextV1 service
 package speechtotextv1
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
+	"net/http"
+	"reflect"
 	"strings"
+	"time"
 )
 
 // SpeechToTextV1 : The IBM Watson&trade; Speech to Text service provides APIs that use IBM's speech-recognition
@@ -45,7 +55,7 @@ import (
 // language model customization.
 //
 // Version: 1.0.0
-// See: https://cloud.ibm.com/docs/speech-to-text/
+// See: https://cloud.ibm.com/docs/speech-to-text
 type SpeechToTextV1 struct {
 	Service *core.BaseService
 }
@@ -105,9 +115,55 @@ func NewSpeechToTextV1(options *SpeechToTextV1Options) (service *SpeechToTextV1,
 	return
 }
 
+// GetServiceURLForRegion returns the service URL to be used for the specified region
+func GetServiceURLForRegion(region string) (string, error) {
+	return "", fmt.Errorf("service does not support regional URLs")
+}
+
+// Clone makes a copy of "speechToText" suitable for processing requests.
+func (speechToText *SpeechToTextV1) Clone() *SpeechToTextV1 {
+	if core.IsNil(speechToText) {
+		return nil
+	}
+	clone := *speechToText
+	clone.Service = speechToText.Service.Clone()
+	return &clone
+}
+
 // SetServiceURL sets the service URL
 func (speechToText *SpeechToTextV1) SetServiceURL(url string) error {
 	return speechToText.Service.SetServiceURL(url)
+}
+
+// GetServiceURL returns the service URL
+func (speechToText *SpeechToTextV1) GetServiceURL() string {
+	return speechToText.Service.GetServiceURL()
+}
+
+// SetDefaultHeaders sets HTTP headers to be sent in every request
+func (speechToText *SpeechToTextV1) SetDefaultHeaders(headers http.Header) {
+	speechToText.Service.SetDefaultHeaders(headers)
+}
+
+// SetEnableGzipCompression sets the service's EnableGzipCompression field
+func (speechToText *SpeechToTextV1) SetEnableGzipCompression(enableGzip bool) {
+	speechToText.Service.SetEnableGzipCompression(enableGzip)
+}
+
+// GetEnableGzipCompression returns the service's EnableGzipCompression field
+func (speechToText *SpeechToTextV1) GetEnableGzipCompression() bool {
+	return speechToText.Service.GetEnableGzipCompression()
+}
+
+// EnableRetries enables automatic retries for requests invoked for this service instance.
+// If either parameter is specified as 0, then a default value is used instead.
+func (speechToText *SpeechToTextV1) EnableRetries(maxRetries int, maxRetryInterval time.Duration) {
+	speechToText.Service.EnableRetries(maxRetries, maxRetryInterval)
+}
+
+// DisableRetries disables automatic retries for requests invoked for this service instance.
+func (speechToText *SpeechToTextV1) DisableRetries() {
+	speechToText.Service.DisableRetries()
 }
 
 // DisableSSLVerification bypasses verification of the server's SSL certificate
@@ -122,16 +178,20 @@ func (speechToText *SpeechToTextV1) DisableSSLVerification() {
 //
 // **See also:** [Languages and models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOptions) (result *SpeechModels, response *core.DetailedResponse, err error) {
+	return speechToText.ListModelsWithContext(context.Background(), listModelsOptions)
+}
+
+// ListModelsWithContext is an alternate form of the ListModels method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ListModelsWithContext(ctx context.Context, listModelsOptions *ListModelsOptions) (result *SpeechModels, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listModelsOptions, "listModelsOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/models"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/models`, nil)
 	if err != nil {
 		return
 	}
@@ -144,7 +204,6 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -152,14 +211,16 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(SpeechModels))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*SpeechModels)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechModels)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -170,6 +231,11 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 //
 // **See also:** [Languages and models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (result *SpeechModel, response *core.DetailedResponse, err error) {
+	return speechToText.GetModelWithContext(context.Background(), getModelOptions)
+}
+
+// GetModelWithContext is an alternate form of the GetModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) GetModelWithContext(ctx context.Context, getModelOptions *GetModelOptions) (result *SpeechModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getModelOptions, "getModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -179,11 +245,14 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 		return
 	}
 
-	pathSegments := []string{"v1/models"}
-	pathParameters := []string{*getModelOptions.ModelID}
+	pathParamsMap := map[string]string{
+		"model_id": *getModelOptions.ModelID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/models/{model_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -196,7 +265,6 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -204,14 +272,16 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(SpeechModel))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*SpeechModel)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechModel)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -290,6 +360,11 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 // **See also:** [Making a multipart HTTP
 // request](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-http#HTTP-multi).
 func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions) (result *SpeechRecognitionResults, response *core.DetailedResponse, err error) {
+	return speechToText.RecognizeWithContext(context.Background(), recognizeOptions)
+}
+
+// RecognizeWithContext is an alternate form of the Recognize method which supports a Context parameter
+func (speechToText *SpeechToTextV1) RecognizeWithContext(ctx context.Context, recognizeOptions *RecognizeOptions) (result *SpeechRecognitionResults, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(recognizeOptions, "recognizeOptions cannot be nil")
 	if err != nil {
 		return
@@ -299,11 +374,10 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 		return
 	}
 
-	pathSegments := []string{"v1/recognize"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/recognize`, nil)
 	if err != nil {
 		return
 	}
@@ -316,7 +390,6 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	if recognizeOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*recognizeOptions.ContentType))
@@ -402,14 +475,16 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(SpeechRecognitionResults))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*SpeechRecognitionResults)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechRecognitionResults)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -443,6 +518,11 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 // **See also:** [Registering a callback
 // URL](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-async#register).
 func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *RegisterCallbackOptions) (result *RegisterStatus, response *core.DetailedResponse, err error) {
+	return speechToText.RegisterCallbackWithContext(context.Background(), registerCallbackOptions)
+}
+
+// RegisterCallbackWithContext is an alternate form of the RegisterCallback method which supports a Context parameter
+func (speechToText *SpeechToTextV1) RegisterCallbackWithContext(ctx context.Context, registerCallbackOptions *RegisterCallbackOptions) (result *RegisterStatus, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(registerCallbackOptions, "registerCallbackOptions cannot be nil")
 	if err != nil {
 		return
@@ -452,11 +532,10 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 		return
 	}
 
-	pathSegments := []string{"v1/register_callback"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/register_callback`, nil)
 	if err != nil {
 		return
 	}
@@ -469,7 +548,6 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	builder.AddQuery("callback_url", fmt.Sprint(*registerCallbackOptions.CallbackURL))
@@ -482,14 +560,16 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(RegisterStatus))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*RegisterStatus)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRegisterStatus)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -501,6 +581,11 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 // **See also:** [Unregistering a callback
 // URL](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-async#unregister).
 func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions *UnregisterCallbackOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.UnregisterCallbackWithContext(context.Background(), unregisterCallbackOptions)
+}
+
+// UnregisterCallbackWithContext is an alternate form of the UnregisterCallback method which supports a Context parameter
+func (speechToText *SpeechToTextV1) UnregisterCallbackWithContext(ctx context.Context, unregisterCallbackOptions *UnregisterCallbackOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(unregisterCallbackOptions, "unregisterCallbackOptions cannot be nil")
 	if err != nil {
 		return
@@ -510,11 +595,10 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 		return
 	}
 
-	pathSegments := []string{"v1/unregister_callback"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/unregister_callback`, nil)
 	if err != nil {
 		return
 	}
@@ -620,6 +704,11 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 //  **See also:** [Audio
 // formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats#audio-formats).
 func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions) (result *RecognitionJob, response *core.DetailedResponse, err error) {
+	return speechToText.CreateJobWithContext(context.Background(), createJobOptions)
+}
+
+// CreateJobWithContext is an alternate form of the CreateJob method which supports a Context parameter
+func (speechToText *SpeechToTextV1) CreateJobWithContext(ctx context.Context, createJobOptions *CreateJobOptions) (result *RecognitionJob, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createJobOptions, "createJobOptions cannot be nil")
 	if err != nil {
 		return
@@ -629,11 +718,10 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 		return
 	}
 
-	pathSegments := []string{"v1/recognitions"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/recognitions`, nil)
 	if err != nil {
 		return
 	}
@@ -646,7 +734,6 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	if createJobOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*createJobOptions.ContentType))
@@ -750,14 +837,16 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(RecognitionJob))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*RecognitionJob)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJob)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -772,16 +861,20 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 // **See also:** [Checking the status of the latest
 // jobs](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-async#jobs).
 func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions) (result *RecognitionJobs, response *core.DetailedResponse, err error) {
+	return speechToText.CheckJobsWithContext(context.Background(), checkJobsOptions)
+}
+
+// CheckJobsWithContext is an alternate form of the CheckJobs method which supports a Context parameter
+func (speechToText *SpeechToTextV1) CheckJobsWithContext(ctx context.Context, checkJobsOptions *CheckJobsOptions) (result *RecognitionJobs, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(checkJobsOptions, "checkJobsOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/recognitions"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/recognitions`, nil)
 	if err != nil {
 		return
 	}
@@ -794,7 +887,6 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -802,14 +894,16 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(RecognitionJobs))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*RecognitionJobs)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJobs)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -827,6 +921,11 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 // **See also:** [Checking the status and retrieving the results of a
 // job](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-async#job).
 func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (result *RecognitionJob, response *core.DetailedResponse, err error) {
+	return speechToText.CheckJobWithContext(context.Background(), checkJobOptions)
+}
+
+// CheckJobWithContext is an alternate form of the CheckJob method which supports a Context parameter
+func (speechToText *SpeechToTextV1) CheckJobWithContext(ctx context.Context, checkJobOptions *CheckJobOptions) (result *RecognitionJob, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(checkJobOptions, "checkJobOptions cannot be nil")
 	if err != nil {
 		return
@@ -836,11 +935,14 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 		return
 	}
 
-	pathSegments := []string{"v1/recognitions"}
-	pathParameters := []string{*checkJobOptions.ID}
+	pathParamsMap := map[string]string{
+		"id": *checkJobOptions.ID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/recognitions/{id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -853,7 +955,6 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -861,14 +962,16 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(RecognitionJob))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*RecognitionJob)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJob)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -880,6 +983,11 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 //
 // **See also:** [Deleting a job](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-async#delete-async).
 func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.DeleteJobWithContext(context.Background(), deleteJobOptions)
+}
+
+// DeleteJobWithContext is an alternate form of the DeleteJob method which supports a Context parameter
+func (speechToText *SpeechToTextV1) DeleteJobWithContext(ctx context.Context, deleteJobOptions *DeleteJobOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteJobOptions, "deleteJobOptions cannot be nil")
 	if err != nil {
 		return
@@ -889,11 +997,14 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 		return
 	}
 
-	pathSegments := []string{"v1/recognitions"}
-	pathParameters := []string{*deleteJobOptions.ID}
+	pathParamsMap := map[string]string{
+		"id": *deleteJobOptions.ID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/recognitions/{id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -929,6 +1040,11 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 // **See also:** [Create a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#createModel-language).
 func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptions *CreateLanguageModelOptions) (result *LanguageModel, response *core.DetailedResponse, err error) {
+	return speechToText.CreateLanguageModelWithContext(context.Background(), createLanguageModelOptions)
+}
+
+// CreateLanguageModelWithContext is an alternate form of the CreateLanguageModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) CreateLanguageModelWithContext(ctx context.Context, createLanguageModelOptions *CreateLanguageModelOptions) (result *LanguageModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createLanguageModelOptions, "createLanguageModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -938,11 +1054,10 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 		return
 	}
 
-	pathSegments := []string{"v1/customizations"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations`, nil)
 	if err != nil {
 		return
 	}
@@ -955,7 +1070,6 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -982,14 +1096,16 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(LanguageModel))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*LanguageModel)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModel)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1003,16 +1119,20 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 // **See also:** [Listing custom language
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageLanguageModels#listModels-language).
 func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions *ListLanguageModelsOptions) (result *LanguageModels, response *core.DetailedResponse, err error) {
+	return speechToText.ListLanguageModelsWithContext(context.Background(), listLanguageModelsOptions)
+}
+
+// ListLanguageModelsWithContext is an alternate form of the ListLanguageModels method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ListLanguageModelsWithContext(ctx context.Context, listLanguageModelsOptions *ListLanguageModelsOptions) (result *LanguageModels, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listLanguageModelsOptions, "listLanguageModelsOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/customizations"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations`, nil)
 	if err != nil {
 		return
 	}
@@ -1025,7 +1145,6 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	if listLanguageModelsOptions.Language != nil {
@@ -1037,14 +1156,16 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(LanguageModels))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*LanguageModels)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModels)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1056,6 +1177,11 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 // **See also:** [Listing custom language
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageLanguageModels#listModels-language).
 func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *GetLanguageModelOptions) (result *LanguageModel, response *core.DetailedResponse, err error) {
+	return speechToText.GetLanguageModelWithContext(context.Background(), getLanguageModelOptions)
+}
+
+// GetLanguageModelWithContext is an alternate form of the GetLanguageModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) GetLanguageModelWithContext(ctx context.Context, getLanguageModelOptions *GetLanguageModelOptions) (result *LanguageModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getLanguageModelOptions, "getLanguageModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -1065,11 +1191,14 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 		return
 	}
 
-	pathSegments := []string{"v1/customizations"}
-	pathParameters := []string{*getLanguageModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *getLanguageModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1082,7 +1211,6 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1090,14 +1218,16 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(LanguageModel))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*LanguageModel)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModel)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1110,6 +1240,11 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 // **See also:** [Deleting a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageLanguageModels#deleteModel-language).
 func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptions *DeleteLanguageModelOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.DeleteLanguageModelWithContext(context.Background(), deleteLanguageModelOptions)
+}
+
+// DeleteLanguageModelWithContext is an alternate form of the DeleteLanguageModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) DeleteLanguageModelWithContext(ctx context.Context, deleteLanguageModelOptions *DeleteLanguageModelOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteLanguageModelOptions, "deleteLanguageModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -1119,11 +1254,14 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 		return
 	}
 
-	pathSegments := []string{"v1/customizations"}
-	pathParameters := []string{*deleteLanguageModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *deleteLanguageModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1136,7 +1274,6 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1180,6 +1317,11 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 // exclude the invalid resources from the training. The model must contain at least one valid resource for training to
 // succeed.
 func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions *TrainLanguageModelOptions) (result *TrainingResponse, response *core.DetailedResponse, err error) {
+	return speechToText.TrainLanguageModelWithContext(context.Background(), trainLanguageModelOptions)
+}
+
+// TrainLanguageModelWithContext is an alternate form of the TrainLanguageModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) TrainLanguageModelWithContext(ctx context.Context, trainLanguageModelOptions *TrainLanguageModelOptions) (result *TrainingResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(trainLanguageModelOptions, "trainLanguageModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -1189,11 +1331,14 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "train"}
-	pathParameters := []string{*trainLanguageModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *trainLanguageModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/train`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1206,7 +1351,6 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	if trainLanguageModelOptions.WordTypeToAdd != nil {
@@ -1221,14 +1365,16 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(TrainingResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1242,6 +1388,11 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 // **See also:** [Resetting a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageLanguageModels#resetModel-language).
 func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions *ResetLanguageModelOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.ResetLanguageModelWithContext(context.Background(), resetLanguageModelOptions)
+}
+
+// ResetLanguageModelWithContext is an alternate form of the ResetLanguageModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ResetLanguageModelWithContext(ctx context.Context, resetLanguageModelOptions *ResetLanguageModelOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(resetLanguageModelOptions, "resetLanguageModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -1251,11 +1402,14 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "reset"}
-	pathParameters := []string{*resetLanguageModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *resetLanguageModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/reset`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1268,7 +1422,6 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1297,6 +1450,11 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 // **See also:** [Upgrading a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customUpgrade#upgradeLanguage).
 func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOptions *UpgradeLanguageModelOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.UpgradeLanguageModelWithContext(context.Background(), upgradeLanguageModelOptions)
+}
+
+// UpgradeLanguageModelWithContext is an alternate form of the UpgradeLanguageModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) UpgradeLanguageModelWithContext(ctx context.Context, upgradeLanguageModelOptions *UpgradeLanguageModelOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(upgradeLanguageModelOptions, "upgradeLanguageModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -1306,11 +1464,14 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "upgrade_model"}
-	pathParameters := []string{*upgradeLanguageModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *upgradeLanguageModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/upgrade_model`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1323,7 +1484,6 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1344,6 +1504,11 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 // **See also:** [Listing corpora for a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageCorpora#listCorpora).
 func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaOptions) (result *Corpora, response *core.DetailedResponse, err error) {
+	return speechToText.ListCorporaWithContext(context.Background(), listCorporaOptions)
+}
+
+// ListCorporaWithContext is an alternate form of the ListCorpora method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ListCorporaWithContext(ctx context.Context, listCorporaOptions *ListCorporaOptions) (result *Corpora, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listCorporaOptions, "listCorporaOptions cannot be nil")
 	if err != nil {
 		return
@@ -1353,11 +1518,14 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "corpora"}
-	pathParameters := []string{*listCorporaOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *listCorporaOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/corpora`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1370,7 +1538,6 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1378,14 +1545,16 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(Corpora))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Corpora)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCorpora)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1430,6 +1599,11 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 // * [Validating a words
 // resource](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#validateModel).
 func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.AddCorpusWithContext(context.Background(), addCorpusOptions)
+}
+
+// AddCorpusWithContext is an alternate form of the AddCorpus method which supports a Context parameter
+func (speechToText *SpeechToTextV1) AddCorpusWithContext(ctx context.Context, addCorpusOptions *AddCorpusOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addCorpusOptions, "addCorpusOptions cannot be nil")
 	if err != nil {
 		return
@@ -1439,11 +1613,15 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "corpora"}
-	pathParameters := []string{*addCorpusOptions.CustomizationID, *addCorpusOptions.CorpusName}
+	pathParamsMap := map[string]string{
+		"customization_id": *addCorpusOptions.CustomizationID,
+		"corpus_name": *addCorpusOptions.CorpusName,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/corpora/{corpus_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1456,7 +1634,6 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	if addCorpusOptions.AllowOverwrite != nil {
@@ -1484,6 +1661,11 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 // **See also:** [Listing corpora for a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageCorpora#listCorpora).
 func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions) (result *Corpus, response *core.DetailedResponse, err error) {
+	return speechToText.GetCorpusWithContext(context.Background(), getCorpusOptions)
+}
+
+// GetCorpusWithContext is an alternate form of the GetCorpus method which supports a Context parameter
+func (speechToText *SpeechToTextV1) GetCorpusWithContext(ctx context.Context, getCorpusOptions *GetCorpusOptions) (result *Corpus, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getCorpusOptions, "getCorpusOptions cannot be nil")
 	if err != nil {
 		return
@@ -1493,11 +1675,15 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "corpora"}
-	pathParameters := []string{*getCorpusOptions.CustomizationID, *getCorpusOptions.CorpusName}
+	pathParamsMap := map[string]string{
+		"customization_id": *getCorpusOptions.CustomizationID,
+		"corpus_name": *getCorpusOptions.CorpusName,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/corpora/{corpus_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1510,7 +1696,6 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1518,14 +1703,16 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(Corpus))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Corpus)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCorpus)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1540,6 +1727,11 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 // **See also:** [Deleting a corpus from a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageCorpora#deleteCorpus).
 func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorpusOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.DeleteCorpusWithContext(context.Background(), deleteCorpusOptions)
+}
+
+// DeleteCorpusWithContext is an alternate form of the DeleteCorpus method which supports a Context parameter
+func (speechToText *SpeechToTextV1) DeleteCorpusWithContext(ctx context.Context, deleteCorpusOptions *DeleteCorpusOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteCorpusOptions, "deleteCorpusOptions cannot be nil")
 	if err != nil {
 		return
@@ -1549,11 +1741,15 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "corpora"}
-	pathParameters := []string{*deleteCorpusOptions.CustomizationID, *deleteCorpusOptions.CorpusName}
+	pathParamsMap := map[string]string{
+		"customization_id": *deleteCorpusOptions.CustomizationID,
+		"corpus_name": *deleteCorpusOptions.CorpusName,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/corpora/{corpus_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1566,7 +1762,6 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1589,6 +1784,11 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 // **See also:** [Listing words from a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageWords#listWords).
 func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions) (result *Words, response *core.DetailedResponse, err error) {
+	return speechToText.ListWordsWithContext(context.Background(), listWordsOptions)
+}
+
+// ListWordsWithContext is an alternate form of the ListWords method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ListWordsWithContext(ctx context.Context, listWordsOptions *ListWordsOptions) (result *Words, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listWordsOptions, "listWordsOptions cannot be nil")
 	if err != nil {
 		return
@@ -1598,11 +1798,14 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "words"}
-	pathParameters := []string{*listWordsOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *listWordsOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/words`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1615,7 +1818,6 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	if listWordsOptions.WordType != nil {
@@ -1630,14 +1832,16 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(Words))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Words)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWords)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1691,6 +1895,11 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 // * [Validating a words
 // resource](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#validateModel).
 func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.AddWordsWithContext(context.Background(), addWordsOptions)
+}
+
+// AddWordsWithContext is an alternate form of the AddWords method which supports a Context parameter
+func (speechToText *SpeechToTextV1) AddWordsWithContext(ctx context.Context, addWordsOptions *AddWordsOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addWordsOptions, "addWordsOptions cannot be nil")
 	if err != nil {
 		return
@@ -1700,11 +1909,14 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "words"}
-	pathParameters := []string{*addWordsOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *addWordsOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/words`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1717,7 +1929,6 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -1775,6 +1986,11 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 // * [Validating a words
 // resource](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#validateModel).
 func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.AddWordWithContext(context.Background(), addWordOptions)
+}
+
+// AddWordWithContext is an alternate form of the AddWord method which supports a Context parameter
+func (speechToText *SpeechToTextV1) AddWordWithContext(ctx context.Context, addWordOptions *AddWordOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addWordOptions, "addWordOptions cannot be nil")
 	if err != nil {
 		return
@@ -1784,11 +2000,15 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (res
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "words"}
-	pathParameters := []string{*addWordOptions.CustomizationID, *addWordOptions.WordName}
+	pathParamsMap := map[string]string{
+		"customization_id": *addWordOptions.CustomizationID,
+		"word_name": *addWordOptions.WordName,
+	}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/words/{word_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1801,7 +2021,6 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (res
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -1837,6 +2056,11 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (res
 // **See also:** [Listing words from a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageWords#listWords).
 func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (result *Word, response *core.DetailedResponse, err error) {
+	return speechToText.GetWordWithContext(context.Background(), getWordOptions)
+}
+
+// GetWordWithContext is an alternate form of the GetWord method which supports a Context parameter
+func (speechToText *SpeechToTextV1) GetWordWithContext(ctx context.Context, getWordOptions *GetWordOptions) (result *Word, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getWordOptions, "getWordOptions cannot be nil")
 	if err != nil {
 		return
@@ -1846,11 +2070,15 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (res
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "words"}
-	pathParameters := []string{*getWordOptions.CustomizationID, *getWordOptions.WordName}
+	pathParamsMap := map[string]string{
+		"customization_id": *getWordOptions.CustomizationID,
+		"word_name": *getWordOptions.WordName,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/words/{word_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1863,7 +2091,6 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (res
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1871,14 +2098,16 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (res
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(Word))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Word)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWord)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1893,6 +2122,11 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (res
 // **See also:** [Deleting a word from a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageWords#deleteWord).
 func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.DeleteWordWithContext(context.Background(), deleteWordOptions)
+}
+
+// DeleteWordWithContext is an alternate form of the DeleteWord method which supports a Context parameter
+func (speechToText *SpeechToTextV1) DeleteWordWithContext(ctx context.Context, deleteWordOptions *DeleteWordOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteWordOptions, "deleteWordOptions cannot be nil")
 	if err != nil {
 		return
@@ -1902,11 +2136,15 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "words"}
-	pathParameters := []string{*deleteWordOptions.CustomizationID, *deleteWordOptions.WordName}
+	pathParamsMap := map[string]string{
+		"customization_id": *deleteWordOptions.CustomizationID,
+		"word_name": *deleteWordOptions.WordName,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/words/{word_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1919,7 +2157,6 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1940,6 +2177,11 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 // **See also:** [Listing grammars from a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageGrammars#listGrammars).
 func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGrammarsOptions) (result *Grammars, response *core.DetailedResponse, err error) {
+	return speechToText.ListGrammarsWithContext(context.Background(), listGrammarsOptions)
+}
+
+// ListGrammarsWithContext is an alternate form of the ListGrammars method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ListGrammarsWithContext(ctx context.Context, listGrammarsOptions *ListGrammarsOptions) (result *Grammars, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listGrammarsOptions, "listGrammarsOptions cannot be nil")
 	if err != nil {
 		return
@@ -1949,11 +2191,14 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "grammars"}
-	pathParameters := []string{*listGrammarsOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *listGrammarsOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/grammars`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1966,7 +2211,6 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -1974,14 +2218,16 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(Grammars))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Grammars)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGrammars)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2020,6 +2266,11 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 // * [Add a grammar to the custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-grammarAdd#addGrammar).
 func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.AddGrammarWithContext(context.Background(), addGrammarOptions)
+}
+
+// AddGrammarWithContext is an alternate form of the AddGrammar method which supports a Context parameter
+func (speechToText *SpeechToTextV1) AddGrammarWithContext(ctx context.Context, addGrammarOptions *AddGrammarOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addGrammarOptions, "addGrammarOptions cannot be nil")
 	if err != nil {
 		return
@@ -2029,11 +2280,15 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "grammars"}
-	pathParameters := []string{*addGrammarOptions.CustomizationID, *addGrammarOptions.GrammarName}
+	pathParamsMap := map[string]string{
+		"customization_id": *addGrammarOptions.CustomizationID,
+		"grammar_name": *addGrammarOptions.GrammarName,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/grammars/{grammar_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2046,7 +2301,6 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	if addGrammarOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*addGrammarOptions.ContentType))
@@ -2079,6 +2333,11 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 // **See also:** [Listing grammars from a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageGrammars#listGrammars).
 func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOptions) (result *Grammar, response *core.DetailedResponse, err error) {
+	return speechToText.GetGrammarWithContext(context.Background(), getGrammarOptions)
+}
+
+// GetGrammarWithContext is an alternate form of the GetGrammar method which supports a Context parameter
+func (speechToText *SpeechToTextV1) GetGrammarWithContext(ctx context.Context, getGrammarOptions *GetGrammarOptions) (result *Grammar, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getGrammarOptions, "getGrammarOptions cannot be nil")
 	if err != nil {
 		return
@@ -2088,11 +2347,15 @@ func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOpti
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "grammars"}
-	pathParameters := []string{*getGrammarOptions.CustomizationID, *getGrammarOptions.GrammarName}
+	pathParamsMap := map[string]string{
+		"customization_id": *getGrammarOptions.CustomizationID,
+		"grammar_name": *getGrammarOptions.GrammarName,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/grammars/{grammar_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2105,7 +2368,6 @@ func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOpti
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2113,14 +2375,16 @@ func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOpti
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(Grammar))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Grammar)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGrammar)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2135,6 +2399,11 @@ func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOpti
 // **See also:** [Deleting a grammar from a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageGrammars#deleteGrammar).
 func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGrammarOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.DeleteGrammarWithContext(context.Background(), deleteGrammarOptions)
+}
+
+// DeleteGrammarWithContext is an alternate form of the DeleteGrammar method which supports a Context parameter
+func (speechToText *SpeechToTextV1) DeleteGrammarWithContext(ctx context.Context, deleteGrammarOptions *DeleteGrammarOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteGrammarOptions, "deleteGrammarOptions cannot be nil")
 	if err != nil {
 		return
@@ -2144,11 +2413,15 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 		return
 	}
 
-	pathSegments := []string{"v1/customizations", "grammars"}
-	pathParameters := []string{*deleteGrammarOptions.CustomizationID, *deleteGrammarOptions.GrammarName}
+	pathParamsMap := map[string]string{
+		"customization_id": *deleteGrammarOptions.CustomizationID,
+		"grammar_name": *deleteGrammarOptions.GrammarName,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/customizations/{customization_id}/grammars/{grammar_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2161,7 +2434,6 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2186,6 +2458,11 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 // **See also:** [Create a custom acoustic
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-acoustic#createModel-acoustic).
 func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptions *CreateAcousticModelOptions) (result *AcousticModel, response *core.DetailedResponse, err error) {
+	return speechToText.CreateAcousticModelWithContext(context.Background(), createAcousticModelOptions)
+}
+
+// CreateAcousticModelWithContext is an alternate form of the CreateAcousticModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) CreateAcousticModelWithContext(ctx context.Context, createAcousticModelOptions *CreateAcousticModelOptions) (result *AcousticModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createAcousticModelOptions, "createAcousticModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -2195,11 +2472,10 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations`, nil)
 	if err != nil {
 		return
 	}
@@ -2212,7 +2488,6 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 
@@ -2236,14 +2511,16 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(AcousticModel))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*AcousticModel)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModel)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2257,16 +2534,20 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 // **See also:** [Listing custom acoustic
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageAcousticModels#listModels-acoustic).
 func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions *ListAcousticModelsOptions) (result *AcousticModels, response *core.DetailedResponse, err error) {
+	return speechToText.ListAcousticModelsWithContext(context.Background(), listAcousticModelsOptions)
+}
+
+// ListAcousticModelsWithContext is an alternate form of the ListAcousticModels method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ListAcousticModelsWithContext(ctx context.Context, listAcousticModelsOptions *ListAcousticModelsOptions) (result *AcousticModels, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listAcousticModelsOptions, "listAcousticModelsOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations`, nil)
 	if err != nil {
 		return
 	}
@@ -2279,7 +2560,6 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	if listAcousticModelsOptions.Language != nil {
@@ -2291,14 +2571,16 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(AcousticModels))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*AcousticModels)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModels)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2310,6 +2592,11 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 // **See also:** [Listing custom acoustic
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageAcousticModels#listModels-acoustic).
 func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *GetAcousticModelOptions) (result *AcousticModel, response *core.DetailedResponse, err error) {
+	return speechToText.GetAcousticModelWithContext(context.Background(), getAcousticModelOptions)
+}
+
+// GetAcousticModelWithContext is an alternate form of the GetAcousticModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) GetAcousticModelWithContext(ctx context.Context, getAcousticModelOptions *GetAcousticModelOptions) (result *AcousticModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getAcousticModelOptions, "getAcousticModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -2319,11 +2606,14 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations"}
-	pathParameters := []string{*getAcousticModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *getAcousticModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2336,7 +2626,6 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2344,14 +2633,16 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(AcousticModel))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*AcousticModel)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModel)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2364,6 +2655,11 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 // **See also:** [Deleting a custom acoustic
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageAcousticModels#deleteModel-acoustic).
 func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptions *DeleteAcousticModelOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.DeleteAcousticModelWithContext(context.Background(), deleteAcousticModelOptions)
+}
+
+// DeleteAcousticModelWithContext is an alternate form of the DeleteAcousticModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) DeleteAcousticModelWithContext(ctx context.Context, deleteAcousticModelOptions *DeleteAcousticModelOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteAcousticModelOptions, "deleteAcousticModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -2373,11 +2669,14 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations"}
-	pathParameters := []string{*deleteAcousticModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *deleteAcousticModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2390,7 +2689,6 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2409,11 +2707,11 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // data. The custom acoustic model does not reflect its changed data until you train it. You must use credentials for
 // the instance of the service that owns a model to train it.
 //
-// The training method is asynchronous. It can take on the order of minutes or hours to complete depending on the total
-// amount of audio data on which the custom acoustic model is being trained and the current load on the service.
-// Typically, training a custom acoustic model takes approximately two to four times the length of its audio data. The
-// actual time depends on the model being trained and the nature of the audio, such as whether the audio is clean or
-// noisy. The method returns an HTTP 200 response code to indicate that the training process has begun.
+// The training method is asynchronous. Training time depends on the cumulative amount of audio data that the custom
+// acoustic model contains and the current load on the service. When you train or retrain a model, the service uses all
+// of the model's audio data in the training. Training a custom acoustic model takes approximately as long as the length
+// of its cumulative audio data. For example, it takes approximately 2 hours to train a model that contains a total of 2
+// hours of audio. The method returns an HTTP 200 response code to indicate that the training process has begun.
 //
 // You can monitor the status of the training by using the **Get a custom acoustic model** method to poll the model's
 // status. Use a loop to check the status once a minute. The method returns an `AcousticModel` object that includes
@@ -2448,6 +2746,11 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 // the `strict` parameter to `false` to exclude the invalid resources from the training. The model must contain at least
 // one valid resource for training to succeed.
 func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions *TrainAcousticModelOptions) (result *TrainingResponse, response *core.DetailedResponse, err error) {
+	return speechToText.TrainAcousticModelWithContext(context.Background(), trainAcousticModelOptions)
+}
+
+// TrainAcousticModelWithContext is an alternate form of the TrainAcousticModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) TrainAcousticModelWithContext(ctx context.Context, trainAcousticModelOptions *TrainAcousticModelOptions) (result *TrainingResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(trainAcousticModelOptions, "trainAcousticModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -2457,11 +2760,14 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations", "train"}
-	pathParameters := []string{*trainAcousticModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *trainAcousticModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}/train`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2474,7 +2780,6 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	if trainAcousticModelOptions.CustomLanguageModelID != nil {
@@ -2486,14 +2791,16 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(TrainingResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2509,6 +2816,11 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 // **See also:** [Resetting a custom acoustic
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageAcousticModels#resetModel-acoustic).
 func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions *ResetAcousticModelOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.ResetAcousticModelWithContext(context.Background(), resetAcousticModelOptions)
+}
+
+// ResetAcousticModelWithContext is an alternate form of the ResetAcousticModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ResetAcousticModelWithContext(ctx context.Context, resetAcousticModelOptions *ResetAcousticModelOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(resetAcousticModelOptions, "resetAcousticModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -2518,11 +2830,14 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations", "reset"}
-	pathParameters := []string{*resetAcousticModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *resetAcousticModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}/reset`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2535,7 +2850,6 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2571,6 +2885,11 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 // **See also:** [Upgrading a custom acoustic
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customUpgrade#upgradeAcoustic).
 func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOptions *UpgradeAcousticModelOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.UpgradeAcousticModelWithContext(context.Background(), upgradeAcousticModelOptions)
+}
+
+// UpgradeAcousticModelWithContext is an alternate form of the UpgradeAcousticModel method which supports a Context parameter
+func (speechToText *SpeechToTextV1) UpgradeAcousticModelWithContext(ctx context.Context, upgradeAcousticModelOptions *UpgradeAcousticModelOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(upgradeAcousticModelOptions, "upgradeAcousticModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -2580,11 +2899,14 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations", "upgrade_model"}
-	pathParameters := []string{*upgradeAcousticModelOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *upgradeAcousticModelOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}/upgrade_model`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2597,7 +2919,6 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	if upgradeAcousticModelOptions.CustomLanguageModelID != nil {
@@ -2627,6 +2948,11 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 // **See also:** [Listing audio resources for a custom acoustic
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageAudio#listAudio).
 func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions) (result *AudioResources, response *core.DetailedResponse, err error) {
+	return speechToText.ListAudioWithContext(context.Background(), listAudioOptions)
+}
+
+// ListAudioWithContext is an alternate form of the ListAudio method which supports a Context parameter
+func (speechToText *SpeechToTextV1) ListAudioWithContext(ctx context.Context, listAudioOptions *ListAudioOptions) (result *AudioResources, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listAudioOptions, "listAudioOptions cannot be nil")
 	if err != nil {
 		return
@@ -2636,11 +2962,14 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations", "audio"}
-	pathParameters := []string{*listAudioOptions.CustomizationID}
+	pathParamsMap := map[string]string{
+		"customization_id": *listAudioOptions.CustomizationID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}/audio`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2653,7 +2982,6 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2661,14 +2989,16 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(AudioResources))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*AudioResources)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAudioResources)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2760,6 +3090,11 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 //  The name of an audio file that is contained in an archive-type resource can include a maximum of 128 characters.
 // This includes the file extension and all elements of the name (for example, slashes).
 func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.AddAudioWithContext(context.Background(), addAudioOptions)
+}
+
+// AddAudioWithContext is an alternate form of the AddAudio method which supports a Context parameter
+func (speechToText *SpeechToTextV1) AddAudioWithContext(ctx context.Context, addAudioOptions *AddAudioOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addAudioOptions, "addAudioOptions cannot be nil")
 	if err != nil {
 		return
@@ -2769,11 +3104,15 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations", "audio"}
-	pathParameters := []string{*addAudioOptions.CustomizationID, *addAudioOptions.AudioName}
+	pathParamsMap := map[string]string{
+		"customization_id": *addAudioOptions.CustomizationID,
+		"audio_name": *addAudioOptions.AudioName,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}/audio/{audio_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2786,7 +3125,6 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	if addAudioOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*addAudioOptions.ContentType))
@@ -2834,6 +3172,11 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 // **See also:** [Listing audio resources for a custom acoustic
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageAudio#listAudio).
 func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (result *AudioListing, response *core.DetailedResponse, err error) {
+	return speechToText.GetAudioWithContext(context.Background(), getAudioOptions)
+}
+
+// GetAudioWithContext is an alternate form of the GetAudio method which supports a Context parameter
+func (speechToText *SpeechToTextV1) GetAudioWithContext(ctx context.Context, getAudioOptions *GetAudioOptions) (result *AudioListing, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getAudioOptions, "getAudioOptions cannot be nil")
 	if err != nil {
 		return
@@ -2843,11 +3186,15 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations", "audio"}
-	pathParameters := []string{*getAudioOptions.CustomizationID, *getAudioOptions.AudioName}
+	pathParamsMap := map[string]string{
+		"customization_id": *getAudioOptions.CustomizationID,
+		"audio_name": *getAudioOptions.AudioName,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}/audio/{audio_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2860,7 +3207,6 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2868,14 +3214,16 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 		return
 	}
 
-	response, err = speechToText.Service.Request(request, new(AudioListing))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*AudioListing)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = speechToText.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAudioListing)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2892,6 +3240,11 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 // **See also:** [Deleting an audio resource from a custom acoustic
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageAudio#deleteAudio).
 func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.DeleteAudioWithContext(context.Background(), deleteAudioOptions)
+}
+
+// DeleteAudioWithContext is an alternate form of the DeleteAudio method which supports a Context parameter
+func (speechToText *SpeechToTextV1) DeleteAudioWithContext(ctx context.Context, deleteAudioOptions *DeleteAudioOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteAudioOptions, "deleteAudioOptions cannot be nil")
 	if err != nil {
 		return
@@ -2901,11 +3254,15 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 		return
 	}
 
-	pathSegments := []string{"v1/acoustic_customizations", "audio"}
-	pathParameters := []string{*deleteAudioOptions.CustomizationID, *deleteAudioOptions.AudioName}
+	pathParamsMap := map[string]string{
+		"customization_id": *deleteAudioOptions.CustomizationID,
+		"audio_name": *deleteAudioOptions.AudioName,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/acoustic_customizations/{customization_id}/audio/{audio_name}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2918,7 +3275,6 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
 	request, err := builder.Build()
@@ -2946,6 +3302,11 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 // **See also:** [Information
 // security](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-information-security#information-security).
 func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	return speechToText.DeleteUserDataWithContext(context.Background(), deleteUserDataOptions)
+}
+
+// DeleteUserDataWithContext is an alternate form of the DeleteUserData method which supports a Context parameter
+func (speechToText *SpeechToTextV1) DeleteUserDataWithContext(ctx context.Context, deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
 	if err != nil {
 		return
@@ -2955,11 +3316,10 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 		return
 	}
 
-	pathSegments := []string{"v1/user_data"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(speechToText.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = speechToText.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(speechToText.Service.Options.URL, `/v1/user_data`, nil)
 	if err != nil {
 		return
 	}
@@ -2987,7 +3347,6 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 
 // AcousticModel : Information about an existing custom acoustic model.
 type AcousticModel struct {
-
 	// The customization ID (GUID) of the custom acoustic model. The **Create a custom acoustic model** method returns only
 	// this field of the object; it does not return the other fields.
 	CustomizationID *string `json:"customization_id" validate:"required"`
@@ -3053,29 +3412,95 @@ type AcousticModel struct {
 // * `upgrading`: The model is currently being upgraded.
 // * `failed`: Training of the model failed.
 const (
-	AcousticModel_Status_Available = "available"
-	AcousticModel_Status_Failed    = "failed"
-	AcousticModel_Status_Pending   = "pending"
-	AcousticModel_Status_Ready     = "ready"
-	AcousticModel_Status_Training  = "training"
-	AcousticModel_Status_Upgrading = "upgrading"
+	AcousticModelStatusAvailableConst = "available"
+	AcousticModelStatusFailedConst = "failed"
+	AcousticModelStatusPendingConst = "pending"
+	AcousticModelStatusReadyConst = "ready"
+	AcousticModelStatusTrainingConst = "training"
+	AcousticModelStatusUpgradingConst = "upgrading"
 )
+
+
+// UnmarshalAcousticModel unmarshals an instance of AcousticModel from the specified map of raw messages.
+func UnmarshalAcousticModel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AcousticModel)
+	err = core.UnmarshalPrimitive(m, "customization_id", &obj.CustomizationID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "updated", &obj.Updated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "versions", &obj.Versions)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "owner", &obj.Owner)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "base_model_name", &obj.BaseModelName)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "progress", &obj.Progress)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "warnings", &obj.Warnings)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // AcousticModels : Information about existing custom acoustic models.
 type AcousticModels struct {
-
 	// An array of `AcousticModel` objects that provides information about each available custom acoustic model. The array
 	// is empty if the requesting credentials own no custom acoustic models (if no language is specified) or own no custom
 	// acoustic models for the specified language.
 	Customizations []AcousticModel `json:"customizations" validate:"required"`
 }
 
+
+// UnmarshalAcousticModels unmarshals an instance of AcousticModels from the specified map of raw messages.
+func UnmarshalAcousticModels(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AcousticModels)
+	err = core.UnmarshalModel(m, "customizations", &obj.Customizations, UnmarshalAcousticModel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // AddAudioOptions : The AddAudio options.
 type AddAudioOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the new audio resource for the custom acoustic model. Use a localized name that matches the language of
 	// the custom model and reflects the contents of the resource.
@@ -3085,7 +3510,7 @@ type AddAudioOptions struct {
 	// prevent the use of these characters. But because they must be URL-encoded wherever used, their use is strongly
 	// discouraged.)
 	// * Do not use the name of an audio resource that has already been added to the custom model.
-	AudioName *string `json:"audio_name" validate:"required"`
+	AudioName *string `json:"audio_name" validate:"required,ne="`
 
 	// The audio resource that is to be added to the custom acoustic model, an individual audio file or an archive file.
 	//
@@ -3118,7 +3543,7 @@ type AddAudioOptions struct {
 	// resource with the same name does not already exist.
 	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -3136,29 +3561,29 @@ type AddAudioOptions struct {
 //
 // **For an audio-type resource,** omit the header.
 const (
-	AddAudioOptions_ContainedContentType_AudioAlaw             = "audio/alaw"
-	AddAudioOptions_ContainedContentType_AudioBasic            = "audio/basic"
-	AddAudioOptions_ContainedContentType_AudioFlac             = "audio/flac"
-	AddAudioOptions_ContainedContentType_AudioG729             = "audio/g729"
-	AddAudioOptions_ContainedContentType_AudioL16              = "audio/l16"
-	AddAudioOptions_ContainedContentType_AudioMp3              = "audio/mp3"
-	AddAudioOptions_ContainedContentType_AudioMpeg             = "audio/mpeg"
-	AddAudioOptions_ContainedContentType_AudioMulaw            = "audio/mulaw"
-	AddAudioOptions_ContainedContentType_AudioOgg              = "audio/ogg"
-	AddAudioOptions_ContainedContentType_AudioOggCodecsOpus    = "audio/ogg;codecs=opus"
-	AddAudioOptions_ContainedContentType_AudioOggCodecsVorbis  = "audio/ogg;codecs=vorbis"
-	AddAudioOptions_ContainedContentType_AudioWav              = "audio/wav"
-	AddAudioOptions_ContainedContentType_AudioWebm             = "audio/webm"
-	AddAudioOptions_ContainedContentType_AudioWebmCodecsOpus   = "audio/webm;codecs=opus"
-	AddAudioOptions_ContainedContentType_AudioWebmCodecsVorbis = "audio/webm;codecs=vorbis"
+	AddAudioOptionsContainedContentTypeAudioAlawConst = "audio/alaw"
+	AddAudioOptionsContainedContentTypeAudioBasicConst = "audio/basic"
+	AddAudioOptionsContainedContentTypeAudioFlacConst = "audio/flac"
+	AddAudioOptionsContainedContentTypeAudioG729Const = "audio/g729"
+	AddAudioOptionsContainedContentTypeAudioL16Const = "audio/l16"
+	AddAudioOptionsContainedContentTypeAudioMp3Const = "audio/mp3"
+	AddAudioOptionsContainedContentTypeAudioMpegConst = "audio/mpeg"
+	AddAudioOptionsContainedContentTypeAudioMulawConst = "audio/mulaw"
+	AddAudioOptionsContainedContentTypeAudioOggConst = "audio/ogg"
+	AddAudioOptionsContainedContentTypeAudioOggCodecsOpusConst = "audio/ogg;codecs=opus"
+	AddAudioOptionsContainedContentTypeAudioOggCodecsVorbisConst = "audio/ogg;codecs=vorbis"
+	AddAudioOptionsContainedContentTypeAudioWavConst = "audio/wav"
+	AddAudioOptionsContainedContentTypeAudioWebmConst = "audio/webm"
+	AddAudioOptionsContainedContentTypeAudioWebmCodecsOpusConst = "audio/webm;codecs=opus"
+	AddAudioOptionsContainedContentTypeAudioWebmCodecsVorbisConst = "audio/webm;codecs=vorbis"
 )
 
 // NewAddAudioOptions : Instantiate AddAudioOptions
-func (speechToText *SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, audioResource io.ReadCloser) *AddAudioOptions {
+func (*SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, audioResource io.ReadCloser) *AddAudioOptions {
 	return &AddAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName:       core.StringPtr(audioName),
-		AudioResource:   audioResource,
+		AudioName: core.StringPtr(audioName),
+		AudioResource: audioResource,
 	}
 }
 
@@ -3206,10 +3631,9 @@ func (options *AddAudioOptions) SetHeaders(param map[string]string) *AddAudioOpt
 
 // AddCorpusOptions : The AddCorpus options.
 type AddCorpusOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the new corpus for the custom language model. Use a localized name that matches the language of the
 	// custom model and reflects the contents of the corpus.
@@ -3222,7 +3646,7 @@ type AddCorpusOptions struct {
 	// * Do not use the name `user`, which is reserved by the service to denote custom words that are added or modified by
 	// the user.
 	// * Do not use the name `base_lm` or `default_lm`. Both names are reserved for future use by the service.
-	CorpusName *string `json:"corpus_name" validate:"required"`
+	CorpusName *string `json:"corpus_name" validate:"required,ne="`
 
 	// A plain text file that contains the training data for the corpus. Encode the file in UTF-8 if it contains non-ASCII
 	// characters; the service assumes UTF-8 encoding if it encounters non-ASCII characters.
@@ -3239,16 +3663,16 @@ type AddCorpusOptions struct {
 	// already exist.
 	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewAddCorpusOptions : Instantiate AddCorpusOptions
-func (speechToText *SpeechToTextV1) NewAddCorpusOptions(customizationID string, corpusName string, corpusFile io.ReadCloser) *AddCorpusOptions {
+func (*SpeechToTextV1) NewAddCorpusOptions(customizationID string, corpusName string, corpusFile io.ReadCloser) *AddCorpusOptions {
 	return &AddCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName:      core.StringPtr(corpusName),
-		CorpusFile:      corpusFile,
+		CorpusName: core.StringPtr(corpusName),
+		CorpusFile: corpusFile,
 	}
 }
 
@@ -3284,10 +3708,9 @@ func (options *AddCorpusOptions) SetHeaders(param map[string]string) *AddCorpusO
 
 // AddGrammarOptions : The AddGrammar options.
 type AddGrammarOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the new grammar for the custom language model. Use a localized name that matches the language of the
 	// custom model and reflects the contents of the grammar.
@@ -3300,7 +3723,7 @@ type AddGrammarOptions struct {
 	// * Do not use the name `user`, which is reserved by the service to denote custom words that are added or modified by
 	// the user.
 	// * Do not use the name `base_lm` or `default_lm`. Both names are reserved for future use by the service.
-	GrammarName *string `json:"grammar_name" validate:"required"`
+	GrammarName *string `json:"grammar_name" validate:"required,ne="`
 
 	// A plain text file that contains the grammar in the format specified by the `Content-Type` header. Encode the file in
 	// UTF-8 (ASCII is a subset of UTF-8). Using any other encoding can lead to issues when compiling the grammar or to
@@ -3320,17 +3743,17 @@ type AddGrammarOptions struct {
 	// already exist.
 	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewAddGrammarOptions : Instantiate AddGrammarOptions
-func (speechToText *SpeechToTextV1) NewAddGrammarOptions(customizationID string, grammarName string, grammarFile io.ReadCloser, contentType string) *AddGrammarOptions {
+func (*SpeechToTextV1) NewAddGrammarOptions(customizationID string, grammarName string, grammarFile io.ReadCloser, contentType string) *AddGrammarOptions {
 	return &AddGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName:     core.StringPtr(grammarName),
-		GrammarFile:     grammarFile,
-		ContentType:     core.StringPtr(contentType),
+		GrammarName: core.StringPtr(grammarName),
+		GrammarFile: grammarFile,
+		ContentType: core.StringPtr(contentType),
 	}
 }
 
@@ -3372,16 +3795,15 @@ func (options *AddGrammarOptions) SetHeaders(param map[string]string) *AddGramma
 
 // AddWordOptions : The AddWord options.
 type AddWordOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The custom word that is to be added to or updated in the custom language model. Do not include spaces in the word.
 	// Use a `-` (dash) or `_` (underscore) to connect the tokens of compound words. URL-encode the word if it includes
 	// non-ASCII characters. For more information, see [Character
 	// encoding](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#charEncoding).
-	WordName *string `json:"word_name" validate:"required"`
+	WordName *string `json:"word_name" validate:"required,ne="`
 
 	// For the **Add custom words** method, you must specify the custom word that is to be added to or updated in the
 	// custom model. Do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of
@@ -3407,15 +3829,15 @@ type AddWordOptions struct {
 	// data.
 	DisplayAs *string `json:"display_as,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewAddWordOptions : Instantiate AddWordOptions
-func (speechToText *SpeechToTextV1) NewAddWordOptions(customizationID string, wordName string) *AddWordOptions {
+func (*SpeechToTextV1) NewAddWordOptions(customizationID string, wordName string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName:        core.StringPtr(wordName),
+		WordName: core.StringPtr(wordName),
 	}
 }
 
@@ -3457,24 +3879,23 @@ func (options *AddWordOptions) SetHeaders(param map[string]string) *AddWordOptio
 
 // AddWordsOptions : The AddWords options.
 type AddWordsOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// An array of `CustomWord` objects that provides information about each custom word that is to be added to or updated
 	// in the custom language model.
 	Words []CustomWord `json:"words" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewAddWordsOptions : Instantiate AddWordsOptions
-func (speechToText *SpeechToTextV1) NewAddWordsOptions(customizationID string, words []CustomWord) *AddWordsOptions {
+func (*SpeechToTextV1) NewAddWordsOptions(customizationID string, words []CustomWord) *AddWordsOptions {
 	return &AddWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Words:           words,
+		Words: words,
 	}
 }
 
@@ -3498,7 +3919,6 @@ func (options *AddWordsOptions) SetHeaders(param map[string]string) *AddWordsOpt
 
 // AudioDetails : Information about an audio resource from a custom acoustic model.
 type AudioDetails struct {
-
 	// The type of the audio resource:
 	// * `audio` for an individual audio file
 	// * `archive` for an archive (**.zip** or **.tar.gz**) file that contains audio files
@@ -3528,9 +3948,9 @@ type AudioDetails struct {
 // * `undetermined` for a resource that the service cannot validate (for example, if the user mistakenly passes a file
 // that does not contain audio, such as a JPEG file).
 const (
-	AudioDetails_Type_Archive      = "archive"
-	AudioDetails_Type_Audio        = "audio"
-	AudioDetails_Type_Undetermined = "undetermined"
+	AudioDetailsTypeArchiveConst = "archive"
+	AudioDetailsTypeAudioConst = "audio"
+	AudioDetailsTypeUndeterminedConst = "undetermined"
 )
 
 // Constants associated with the AudioDetails.Compression property.
@@ -3540,13 +3960,36 @@ const (
 //
 // Omitted for an audio-type resource.
 const (
-	AudioDetails_Compression_Gzip = "gzip"
-	AudioDetails_Compression_Zip  = "zip"
+	AudioDetailsCompressionGzipConst = "gzip"
+	AudioDetailsCompressionZipConst = "zip"
 )
+
+
+// UnmarshalAudioDetails unmarshals an instance of AudioDetails from the specified map of raw messages.
+func UnmarshalAudioDetails(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AudioDetails)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "codec", &obj.Codec)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "frequency", &obj.Frequency)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "compression", &obj.Compression)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // AudioListing : Information about an audio resource from a custom acoustic model.
 type AudioListing struct {
-
 	// **For an audio-type resource,**  the total seconds of audio in the resource. Omitted for an archive-type resource.
 	Duration *int64 `json:"duration,omitempty"`
 
@@ -3586,14 +4029,45 @@ type AudioListing struct {
 //
 // Omitted for an archive-type resource.
 const (
-	AudioListing_Status_BeingProcessed = "being_processed"
-	AudioListing_Status_Invalid        = "invalid"
-	AudioListing_Status_Ok             = "ok"
+	AudioListingStatusBeingProcessedConst = "being_processed"
+	AudioListingStatusInvalidConst = "invalid"
+	AudioListingStatusOkConst = "ok"
 )
+
+
+// UnmarshalAudioListing unmarshals an instance of AudioListing from the specified map of raw messages.
+func UnmarshalAudioListing(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AudioListing)
+	err = core.UnmarshalPrimitive(m, "duration", &obj.Duration)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "details", &obj.Details, UnmarshalAudioDetails)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "container", &obj.Container, UnmarshalAudioResource)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "audio", &obj.Audio, UnmarshalAudioResource)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // AudioMetrics : If audio metrics are requested, information about the signal characteristics of the input audio.
 type AudioMetrics struct {
-
 	// The interval in seconds (typically 0.1 seconds) at which the service calculated the audio metrics. In other words,
 	// how often the service calculated the metrics. A single unit in each histogram (see the `AudioMetricsHistogramBin`
 	// object) is calculated based on a `sampling_interval` length of audio.
@@ -3603,9 +4077,24 @@ type AudioMetrics struct {
 	Accumulated *AudioMetricsDetails `json:"accumulated" validate:"required"`
 }
 
+
+// UnmarshalAudioMetrics unmarshals an instance of AudioMetrics from the specified map of raw messages.
+func UnmarshalAudioMetrics(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AudioMetrics)
+	err = core.UnmarshalPrimitive(m, "sampling_interval", &obj.SamplingInterval)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "accumulated", &obj.Accumulated, UnmarshalAudioMetricsDetails)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // AudioMetricsDetails : Detailed information about the signal characteristics of the input audio.
 type AudioMetricsDetails struct {
-
 	// If `true`, indicates the end of the audio stream, meaning that transcription is complete. Currently, the field is
 	// always `true`. The service returns metrics just once per audio stream. The results provide aggregated audio metrics
 	// that pertain to the complete audio stream.
@@ -3651,11 +4140,54 @@ type AudioMetricsDetails struct {
 	NonSpeechLevel []AudioMetricsHistogramBin `json:"non_speech_level" validate:"required"`
 }
 
+
+// UnmarshalAudioMetricsDetails unmarshals an instance of AudioMetricsDetails from the specified map of raw messages.
+func UnmarshalAudioMetricsDetails(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AudioMetricsDetails)
+	err = core.UnmarshalPrimitive(m, "final", &obj.Final)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "end_time", &obj.EndTime)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "signal_to_noise_ratio", &obj.SignalToNoiseRatio)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "speech_ratio", &obj.SpeechRatio)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "high_frequency_loss", &obj.HighFrequencyLoss)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "direct_current_offset", &obj.DirectCurrentOffset, UnmarshalAudioMetricsHistogramBin)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "clipping_rate", &obj.ClippingRate, UnmarshalAudioMetricsHistogramBin)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "speech_level", &obj.SpeechLevel, UnmarshalAudioMetricsHistogramBin)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "non_speech_level", &obj.NonSpeechLevel, UnmarshalAudioMetricsHistogramBin)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // AudioMetricsHistogramBin : A bin with defined boundaries that indicates the number of values in a range of signal characteristics for a
 // histogram. The first and last bins of a histogram are the boundary bins. They cover the intervals between negative
 // infinity and the first boundary, and between the last boundary and positive infinity, respectively.
 type AudioMetricsHistogramBin struct {
-
 	// The lower boundary of the bin in the histogram.
 	Begin *float32 `json:"begin" validate:"required"`
 
@@ -3666,9 +4198,28 @@ type AudioMetricsHistogramBin struct {
 	Count *int64 `json:"count" validate:"required"`
 }
 
+
+// UnmarshalAudioMetricsHistogramBin unmarshals an instance of AudioMetricsHistogramBin from the specified map of raw messages.
+func UnmarshalAudioMetricsHistogramBin(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AudioMetricsHistogramBin)
+	err = core.UnmarshalPrimitive(m, "begin", &obj.Begin)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "end", &obj.End)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "count", &obj.Count)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // AudioResource : Information about an audio resource from a custom acoustic model.
 type AudioResource struct {
-
 	// The total seconds of audio in the audio resource.
 	Duration *int64 `json:"duration" validate:"required"`
 
@@ -3701,14 +4252,37 @@ type AudioResource struct {
 // sampling rate, or because it is corrupted). For an archive file, the entire archive is invalid if any of its audio
 // files are invalid.
 const (
-	AudioResource_Status_BeingProcessed = "being_processed"
-	AudioResource_Status_Invalid        = "invalid"
-	AudioResource_Status_Ok             = "ok"
+	AudioResourceStatusBeingProcessedConst = "being_processed"
+	AudioResourceStatusInvalidConst = "invalid"
+	AudioResourceStatusOkConst = "ok"
 )
+
+
+// UnmarshalAudioResource unmarshals an instance of AudioResource from the specified map of raw messages.
+func UnmarshalAudioResource(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AudioResource)
+	err = core.UnmarshalPrimitive(m, "duration", &obj.Duration)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "details", &obj.Details, UnmarshalAudioDetails)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // AudioResources : Information about the audio resources from a custom acoustic model.
 type AudioResources struct {
-
 	// The total minutes of accumulated audio summed over all of the valid audio resources for the custom acoustic model.
 	// You can use this value to determine whether the custom model has too little or too much audio to begin training.
 	TotalMinutesOfAudio *float64 `json:"total_minutes_of_audio" validate:"required"`
@@ -3718,27 +4292,42 @@ type AudioResources struct {
 	Audio []AudioResource `json:"audio" validate:"required"`
 }
 
+
+// UnmarshalAudioResources unmarshals an instance of AudioResources from the specified map of raw messages.
+func UnmarshalAudioResources(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AudioResources)
+	err = core.UnmarshalPrimitive(m, "total_minutes_of_audio", &obj.TotalMinutesOfAudio)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "audio", &obj.Audio, UnmarshalAudioResource)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // CheckJobOptions : The CheckJob options.
 type CheckJobOptions struct {
-
 	// The identifier of the asynchronous job that is to be used for the request. You must make the request with
 	// credentials for the instance of the service that owns the job.
-	ID *string `json:"id" validate:"required"`
+	ID *string `json:"id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCheckJobOptions : Instantiate CheckJobOptions
-func (speechToText *SpeechToTextV1) NewCheckJobOptions(ID string) *CheckJobOptions {
+func (*SpeechToTextV1) NewCheckJobOptions(id string) *CheckJobOptions {
 	return &CheckJobOptions{
-		ID: core.StringPtr(ID),
+		ID: core.StringPtr(id),
 	}
 }
 
 // SetID : Allow user to set ID
-func (options *CheckJobOptions) SetID(ID string) *CheckJobOptions {
-	options.ID = core.StringPtr(ID)
+func (options *CheckJobOptions) SetID(id string) *CheckJobOptions {
+	options.ID = core.StringPtr(id)
 	return options
 }
 
@@ -3751,12 +4340,12 @@ func (options *CheckJobOptions) SetHeaders(param map[string]string) *CheckJobOpt
 // CheckJobsOptions : The CheckJobs options.
 type CheckJobsOptions struct {
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCheckJobsOptions : Instantiate CheckJobsOptions
-func (speechToText *SpeechToTextV1) NewCheckJobsOptions() *CheckJobsOptions {
+func (*SpeechToTextV1) NewCheckJobsOptions() *CheckJobsOptions {
 	return &CheckJobsOptions{}
 }
 
@@ -3768,15 +4357,25 @@ func (options *CheckJobsOptions) SetHeaders(param map[string]string) *CheckJobsO
 
 // Corpora : Information about the corpora from a custom language model.
 type Corpora struct {
-
 	// An array of `Corpus` objects that provides information about the corpora for the custom model. The array is empty if
 	// the custom model has no corpora.
 	Corpora []Corpus `json:"corpora" validate:"required"`
 }
 
+
+// UnmarshalCorpora unmarshals an instance of Corpora from the specified map of raw messages.
+func UnmarshalCorpora(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Corpora)
+	err = core.UnmarshalModel(m, "corpora", &obj.Corpora, UnmarshalCorpus)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Corpus : Information about a corpus from a custom language model.
 type Corpus struct {
-
 	// The name of the corpus.
 	Name *string `json:"name" validate:"required"`
 
@@ -3809,14 +4408,41 @@ type Corpus struct {
 // * `undetermined`: The service encountered an error while processing the corpus. The `error` field describes the
 // failure.
 const (
-	Corpus_Status_Analyzed       = "analyzed"
-	Corpus_Status_BeingProcessed = "being_processed"
-	Corpus_Status_Undetermined   = "undetermined"
+	CorpusStatusAnalyzedConst = "analyzed"
+	CorpusStatusBeingProcessedConst = "being_processed"
+	CorpusStatusUndeterminedConst = "undetermined"
 )
+
+
+// UnmarshalCorpus unmarshals an instance of Corpus from the specified map of raw messages.
+func UnmarshalCorpus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Corpus)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "total_words", &obj.TotalWords)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "out_of_vocabulary_words", &obj.OutOfVocabularyWords)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "error", &obj.Error)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // CreateAcousticModelOptions : The CreateAcousticModel options.
 type CreateAcousticModelOptions struct {
-
 	// A user-defined name for the new custom acoustic model. Use a name that is unique among all custom acoustic models
 	// that you own. Use a localized name that matches the language of the custom model. Use a name that describes the
 	// acoustic environment of the custom model, such as `Mobile custom model` or `Noisy car custom model`.
@@ -3833,7 +4459,7 @@ type CreateAcousticModelOptions struct {
 	// model.
 	Description *string `json:"description,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -3844,46 +4470,50 @@ type CreateAcousticModelOptions struct {
 // To determine whether a base model supports acoustic model customization, refer to [Language support for
 // customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
-	CreateAcousticModelOptions_BaseModelName_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsArBroadbandmodel           = "es-AR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsArNarrowbandmodel          = "es-AR_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsClBroadbandmodel           = "es-CL_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsClNarrowbandmodel          = "es-CL_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsCoBroadbandmodel           = "es-CO_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsCoNarrowbandmodel          = "es-CO_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsMxBroadbandmodel           = "es-MX_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsMxNarrowbandmodel          = "es-MX_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsPeBroadbandmodel           = "es-PE_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_ItItBroadbandmodel           = "it-IT_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
-	CreateAcousticModelOptions_BaseModelName_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
-	CreateAcousticModelOptions_BaseModelName_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameArArBroadbandmodelConst = "ar-AR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnUsBroadbandmodelConst = "en-US_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsArBroadbandmodelConst = "es-AR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsClBroadbandmodelConst = "es-CL_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameItItBroadbandmodelConst = "it-IT_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNamePtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNamePtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameZhCnBroadbandmodelConst = "zh-CN_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameZhCnNarrowbandmodelConst = "zh-CN_NarrowbandModel"
 )
 
 // NewCreateAcousticModelOptions : Instantiate CreateAcousticModelOptions
-func (speechToText *SpeechToTextV1) NewCreateAcousticModelOptions(name string, baseModelName string) *CreateAcousticModelOptions {
+func (*SpeechToTextV1) NewCreateAcousticModelOptions(name string, baseModelName string) *CreateAcousticModelOptions {
 	return &CreateAcousticModelOptions{
-		Name:          core.StringPtr(name),
+		Name: core.StringPtr(name),
 		BaseModelName: core.StringPtr(baseModelName),
 	}
 }
@@ -3914,7 +4544,6 @@ func (options *CreateAcousticModelOptions) SetHeaders(param map[string]string) *
 
 // CreateJobOptions : The CreateJob options.
 type CreateJobOptions struct {
-
 	// The audio to transcribe.
 	Audio io.ReadCloser `json:"audio" validate:"required"`
 
@@ -4173,7 +4802,7 @@ type CreateJobOptions struct {
 	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
 	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -4181,42 +4810,44 @@ type CreateJobOptions struct {
 // The identifier of the model that is to be used for the recognition request. See [Languages and
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 const (
-	CreateJobOptions_Model_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
-	CreateJobOptions_Model_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	CreateJobOptions_Model_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	CreateJobOptions_Model_EnAuBroadbandmodel           = "en-AU_BroadbandModel"
-	CreateJobOptions_Model_EnAuNarrowbandmodel          = "en-AU_NarrowbandModel"
-	CreateJobOptions_Model_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	CreateJobOptions_Model_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	CreateJobOptions_Model_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	CreateJobOptions_Model_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
-	CreateJobOptions_Model_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	CreateJobOptions_Model_EsArBroadbandmodel           = "es-AR_BroadbandModel"
-	CreateJobOptions_Model_EsArNarrowbandmodel          = "es-AR_NarrowbandModel"
-	CreateJobOptions_Model_EsClBroadbandmodel           = "es-CL_BroadbandModel"
-	CreateJobOptions_Model_EsClNarrowbandmodel          = "es-CL_NarrowbandModel"
-	CreateJobOptions_Model_EsCoBroadbandmodel           = "es-CO_BroadbandModel"
-	CreateJobOptions_Model_EsCoNarrowbandmodel          = "es-CO_NarrowbandModel"
-	CreateJobOptions_Model_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	CreateJobOptions_Model_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	CreateJobOptions_Model_EsMxBroadbandmodel           = "es-MX_BroadbandModel"
-	CreateJobOptions_Model_EsMxNarrowbandmodel          = "es-MX_NarrowbandModel"
-	CreateJobOptions_Model_EsPeBroadbandmodel           = "es-PE_BroadbandModel"
-	CreateJobOptions_Model_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
-	CreateJobOptions_Model_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	CreateJobOptions_Model_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	CreateJobOptions_Model_ItItBroadbandmodel           = "it-IT_BroadbandModel"
-	CreateJobOptions_Model_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
-	CreateJobOptions_Model_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	CreateJobOptions_Model_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	CreateJobOptions_Model_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	CreateJobOptions_Model_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	CreateJobOptions_Model_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
-	CreateJobOptions_Model_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
-	CreateJobOptions_Model_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	CreateJobOptions_Model_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
-	CreateJobOptions_Model_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
-	CreateJobOptions_Model_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
+	CreateJobOptionsModelArArBroadbandmodelConst = "ar-AR_BroadbandModel"
+	CreateJobOptionsModelDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
+	CreateJobOptionsModelDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
+	CreateJobOptionsModelEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
+	CreateJobOptionsModelEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
+	CreateJobOptionsModelEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
+	CreateJobOptionsModelEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
+	CreateJobOptionsModelEnUsBroadbandmodelConst = "en-US_BroadbandModel"
+	CreateJobOptionsModelEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	CreateJobOptionsModelEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
+	CreateJobOptionsModelEsArBroadbandmodelConst = "es-AR_BroadbandModel"
+	CreateJobOptionsModelEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
+	CreateJobOptionsModelEsClBroadbandmodelConst = "es-CL_BroadbandModel"
+	CreateJobOptionsModelEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
+	CreateJobOptionsModelEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
+	CreateJobOptionsModelEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
+	CreateJobOptionsModelEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
+	CreateJobOptionsModelEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
+	CreateJobOptionsModelEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
+	CreateJobOptionsModelEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
+	CreateJobOptionsModelEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
+	CreateJobOptionsModelEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
+	CreateJobOptionsModelFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
+	CreateJobOptionsModelFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
+	CreateJobOptionsModelFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
+	CreateJobOptionsModelFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
+	CreateJobOptionsModelItItBroadbandmodelConst = "it-IT_BroadbandModel"
+	CreateJobOptionsModelItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
+	CreateJobOptionsModelJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
+	CreateJobOptionsModelJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
+	CreateJobOptionsModelKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
+	CreateJobOptionsModelKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
+	CreateJobOptionsModelNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
+	CreateJobOptionsModelNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
+	CreateJobOptionsModelPtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
+	CreateJobOptionsModelPtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
+	CreateJobOptionsModelZhCnBroadbandmodelConst = "zh-CN_BroadbandModel"
+	CreateJobOptionsModelZhCnNarrowbandmodelConst = "zh-CN_NarrowbandModel"
 )
 
 // Constants associated with the CreateJobOptions.Events property.
@@ -4236,14 +4867,14 @@ const (
 // If the job includes a callback URL, omit the parameter to subscribe to the default events: `recognitions.started`,
 // `recognitions.completed`, and `recognitions.failed`. If the job does not include a callback URL, omit the parameter.
 const (
-	CreateJobOptions_Events_RecognitionsCompleted            = "recognitions.completed"
-	CreateJobOptions_Events_RecognitionsCompletedWithResults = "recognitions.completed_with_results"
-	CreateJobOptions_Events_RecognitionsFailed               = "recognitions.failed"
-	CreateJobOptions_Events_RecognitionsStarted              = "recognitions.started"
+	CreateJobOptionsEventsRecognitionsCompletedConst = "recognitions.completed"
+	CreateJobOptionsEventsRecognitionsCompletedWithResultsConst = "recognitions.completed_with_results"
+	CreateJobOptionsEventsRecognitionsFailedConst = "recognitions.failed"
+	CreateJobOptionsEventsRecognitionsStartedConst = "recognitions.started"
 )
 
 // NewCreateJobOptions : Instantiate CreateJobOptions
-func (speechToText *SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser) *CreateJobOptions {
+func (*SpeechToTextV1) NewCreateJobOptions(audio io.ReadCloser) *CreateJobOptions {
 	return &CreateJobOptions{
 		Audio: audio,
 	}
@@ -4443,7 +5074,6 @@ func (options *CreateJobOptions) SetHeaders(param map[string]string) *CreateJobO
 
 // CreateLanguageModelOptions : The CreateLanguageModel options.
 type CreateLanguageModelOptions struct {
-
 	// A user-defined name for the new custom language model. Use a name that is unique among all custom language models
 	// that you own. Use a localized name that matches the language of the custom model. Use a name that describes the
 	// domain of the custom model, such as `Medical custom model` or `Legal custom model`.
@@ -4479,7 +5109,7 @@ type CreateLanguageModelOptions struct {
 	// model.
 	Description *string `json:"description,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -4491,43 +5121,47 @@ type CreateLanguageModelOptions struct {
 // that the attribute `custom_language_model` is set to `true`. You can also refer to [Language support for
 // customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
-	CreateLanguageModelOptions_BaseModelName_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsArBroadbandmodel           = "es-AR_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsArNarrowbandmodel          = "es-AR_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsClBroadbandmodel           = "es-CL_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsClNarrowbandmodel          = "es-CL_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsCoBroadbandmodel           = "es-CO_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsCoNarrowbandmodel          = "es-CO_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsMxBroadbandmodel           = "es-MX_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsMxNarrowbandmodel          = "es-MX_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsPeBroadbandmodel           = "es-PE_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_ItItBroadbandmodel           = "it-IT_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
-	CreateLanguageModelOptions_BaseModelName_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	CreateLanguageModelOptions_BaseModelName_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnUsBroadbandmodelConst = "en-US_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsArBroadbandmodelConst = "es-AR_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsClBroadbandmodelConst = "es-CL_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameItItBroadbandmodelConst = "it-IT_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNamePtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNamePtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
 )
 
 // NewCreateLanguageModelOptions : Instantiate CreateLanguageModelOptions
-func (speechToText *SpeechToTextV1) NewCreateLanguageModelOptions(name string, baseModelName string) *CreateLanguageModelOptions {
+func (*SpeechToTextV1) NewCreateLanguageModelOptions(name string, baseModelName string) *CreateLanguageModelOptions {
 	return &CreateLanguageModelOptions{
-		Name:          core.StringPtr(name),
+		Name: core.StringPtr(name),
 		BaseModelName: core.StringPtr(baseModelName),
 	}
 }
@@ -4564,7 +5198,6 @@ func (options *CreateLanguageModelOptions) SetHeaders(param map[string]string) *
 
 // CustomWord : Information about a word that is to be added to a custom language model.
 type CustomWord struct {
-
 	// For the **Add custom words** method, you must specify the custom word that is to be added to or updated in the
 	// custom model. Do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of
 	// compound words.
@@ -4590,19 +5223,38 @@ type CustomWord struct {
 	DisplayAs *string `json:"display_as,omitempty"`
 }
 
+
+// UnmarshalCustomWord unmarshals an instance of CustomWord from the specified map of raw messages.
+func UnmarshalCustomWord(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CustomWord)
+	err = core.UnmarshalPrimitive(m, "word", &obj.Word)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "sounds_like", &obj.SoundsLike)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "display_as", &obj.DisplayAs)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // DeleteAcousticModelOptions : The DeleteAcousticModel options.
 type DeleteAcousticModelOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteAcousticModelOptions : Instantiate DeleteAcousticModelOptions
-func (speechToText *SpeechToTextV1) NewDeleteAcousticModelOptions(customizationID string) *DeleteAcousticModelOptions {
+func (*SpeechToTextV1) NewDeleteAcousticModelOptions(customizationID string) *DeleteAcousticModelOptions {
 	return &DeleteAcousticModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -4622,23 +5274,22 @@ func (options *DeleteAcousticModelOptions) SetHeaders(param map[string]string) *
 
 // DeleteAudioOptions : The DeleteAudio options.
 type DeleteAudioOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the audio resource for the custom acoustic model.
-	AudioName *string `json:"audio_name" validate:"required"`
+	AudioName *string `json:"audio_name" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteAudioOptions : Instantiate DeleteAudioOptions
-func (speechToText *SpeechToTextV1) NewDeleteAudioOptions(customizationID string, audioName string) *DeleteAudioOptions {
+func (*SpeechToTextV1) NewDeleteAudioOptions(customizationID string, audioName string) *DeleteAudioOptions {
 	return &DeleteAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName:       core.StringPtr(audioName),
+		AudioName: core.StringPtr(audioName),
 	}
 }
 
@@ -4662,23 +5313,22 @@ func (options *DeleteAudioOptions) SetHeaders(param map[string]string) *DeleteAu
 
 // DeleteCorpusOptions : The DeleteCorpus options.
 type DeleteCorpusOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the corpus for the custom language model.
-	CorpusName *string `json:"corpus_name" validate:"required"`
+	CorpusName *string `json:"corpus_name" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteCorpusOptions : Instantiate DeleteCorpusOptions
-func (speechToText *SpeechToTextV1) NewDeleteCorpusOptions(customizationID string, corpusName string) *DeleteCorpusOptions {
+func (*SpeechToTextV1) NewDeleteCorpusOptions(customizationID string, corpusName string) *DeleteCorpusOptions {
 	return &DeleteCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName:      core.StringPtr(corpusName),
+		CorpusName: core.StringPtr(corpusName),
 	}
 }
 
@@ -4702,23 +5352,22 @@ func (options *DeleteCorpusOptions) SetHeaders(param map[string]string) *DeleteC
 
 // DeleteGrammarOptions : The DeleteGrammar options.
 type DeleteGrammarOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the grammar for the custom language model.
-	GrammarName *string `json:"grammar_name" validate:"required"`
+	GrammarName *string `json:"grammar_name" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteGrammarOptions : Instantiate DeleteGrammarOptions
-func (speechToText *SpeechToTextV1) NewDeleteGrammarOptions(customizationID string, grammarName string) *DeleteGrammarOptions {
+func (*SpeechToTextV1) NewDeleteGrammarOptions(customizationID string, grammarName string) *DeleteGrammarOptions {
 	return &DeleteGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName:     core.StringPtr(grammarName),
+		GrammarName: core.StringPtr(grammarName),
 	}
 }
 
@@ -4742,25 +5391,24 @@ func (options *DeleteGrammarOptions) SetHeaders(param map[string]string) *Delete
 
 // DeleteJobOptions : The DeleteJob options.
 type DeleteJobOptions struct {
-
 	// The identifier of the asynchronous job that is to be used for the request. You must make the request with
 	// credentials for the instance of the service that owns the job.
-	ID *string `json:"id" validate:"required"`
+	ID *string `json:"id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteJobOptions : Instantiate DeleteJobOptions
-func (speechToText *SpeechToTextV1) NewDeleteJobOptions(ID string) *DeleteJobOptions {
+func (*SpeechToTextV1) NewDeleteJobOptions(id string) *DeleteJobOptions {
 	return &DeleteJobOptions{
-		ID: core.StringPtr(ID),
+		ID: core.StringPtr(id),
 	}
 }
 
 // SetID : Allow user to set ID
-func (options *DeleteJobOptions) SetID(ID string) *DeleteJobOptions {
-	options.ID = core.StringPtr(ID)
+func (options *DeleteJobOptions) SetID(id string) *DeleteJobOptions {
+	options.ID = core.StringPtr(id)
 	return options
 }
 
@@ -4772,17 +5420,16 @@ func (options *DeleteJobOptions) SetHeaders(param map[string]string) *DeleteJobO
 
 // DeleteLanguageModelOptions : The DeleteLanguageModel options.
 type DeleteLanguageModelOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteLanguageModelOptions : Instantiate DeleteLanguageModelOptions
-func (speechToText *SpeechToTextV1) NewDeleteLanguageModelOptions(customizationID string) *DeleteLanguageModelOptions {
+func (*SpeechToTextV1) NewDeleteLanguageModelOptions(customizationID string) *DeleteLanguageModelOptions {
 	return &DeleteLanguageModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -4802,16 +5449,15 @@ func (options *DeleteLanguageModelOptions) SetHeaders(param map[string]string) *
 
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
-
 	// The customer ID for which all data is to be deleted.
 	CustomerID *string `json:"customer_id" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
-func (speechToText *SpeechToTextV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+func (*SpeechToTextV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
 	return &DeleteUserDataOptions{
 		CustomerID: core.StringPtr(customerID),
 	}
@@ -4831,25 +5477,24 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 
 // DeleteWordOptions : The DeleteWord options.
 type DeleteWordOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The custom word that is to be deleted from the custom language model. URL-encode the word if it includes non-ASCII
 	// characters. For more information, see [Character
 	// encoding](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#charEncoding).
-	WordName *string `json:"word_name" validate:"required"`
+	WordName *string `json:"word_name" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteWordOptions : Instantiate DeleteWordOptions
-func (speechToText *SpeechToTextV1) NewDeleteWordOptions(customizationID string, wordName string) *DeleteWordOptions {
+func (*SpeechToTextV1) NewDeleteWordOptions(customizationID string, wordName string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName:        core.StringPtr(wordName),
+		WordName: core.StringPtr(wordName),
 	}
 }
 
@@ -4873,17 +5518,16 @@ func (options *DeleteWordOptions) SetHeaders(param map[string]string) *DeleteWor
 
 // GetAcousticModelOptions : The GetAcousticModel options.
 type GetAcousticModelOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetAcousticModelOptions : Instantiate GetAcousticModelOptions
-func (speechToText *SpeechToTextV1) NewGetAcousticModelOptions(customizationID string) *GetAcousticModelOptions {
+func (*SpeechToTextV1) NewGetAcousticModelOptions(customizationID string) *GetAcousticModelOptions {
 	return &GetAcousticModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -4903,23 +5547,22 @@ func (options *GetAcousticModelOptions) SetHeaders(param map[string]string) *Get
 
 // GetAudioOptions : The GetAudio options.
 type GetAudioOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the audio resource for the custom acoustic model.
-	AudioName *string `json:"audio_name" validate:"required"`
+	AudioName *string `json:"audio_name" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetAudioOptions : Instantiate GetAudioOptions
-func (speechToText *SpeechToTextV1) NewGetAudioOptions(customizationID string, audioName string) *GetAudioOptions {
+func (*SpeechToTextV1) NewGetAudioOptions(customizationID string, audioName string) *GetAudioOptions {
 	return &GetAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName:       core.StringPtr(audioName),
+		AudioName: core.StringPtr(audioName),
 	}
 }
 
@@ -4943,23 +5586,22 @@ func (options *GetAudioOptions) SetHeaders(param map[string]string) *GetAudioOpt
 
 // GetCorpusOptions : The GetCorpus options.
 type GetCorpusOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the corpus for the custom language model.
-	CorpusName *string `json:"corpus_name" validate:"required"`
+	CorpusName *string `json:"corpus_name" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetCorpusOptions : Instantiate GetCorpusOptions
-func (speechToText *SpeechToTextV1) NewGetCorpusOptions(customizationID string, corpusName string) *GetCorpusOptions {
+func (*SpeechToTextV1) NewGetCorpusOptions(customizationID string, corpusName string) *GetCorpusOptions {
 	return &GetCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName:      core.StringPtr(corpusName),
+		CorpusName: core.StringPtr(corpusName),
 	}
 }
 
@@ -4983,23 +5625,22 @@ func (options *GetCorpusOptions) SetHeaders(param map[string]string) *GetCorpusO
 
 // GetGrammarOptions : The GetGrammar options.
 type GetGrammarOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The name of the grammar for the custom language model.
-	GrammarName *string `json:"grammar_name" validate:"required"`
+	GrammarName *string `json:"grammar_name" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetGrammarOptions : Instantiate GetGrammarOptions
-func (speechToText *SpeechToTextV1) NewGetGrammarOptions(customizationID string, grammarName string) *GetGrammarOptions {
+func (*SpeechToTextV1) NewGetGrammarOptions(customizationID string, grammarName string) *GetGrammarOptions {
 	return &GetGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName:     core.StringPtr(grammarName),
+		GrammarName: core.StringPtr(grammarName),
 	}
 }
 
@@ -5023,17 +5664,16 @@ func (options *GetGrammarOptions) SetHeaders(param map[string]string) *GetGramma
 
 // GetLanguageModelOptions : The GetLanguageModel options.
 type GetLanguageModelOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetLanguageModelOptions : Instantiate GetLanguageModelOptions
-func (speechToText *SpeechToTextV1) NewGetLanguageModelOptions(customizationID string) *GetLanguageModelOptions {
+func (*SpeechToTextV1) NewGetLanguageModelOptions(customizationID string) *GetLanguageModelOptions {
 	return &GetLanguageModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -5053,57 +5693,58 @@ func (options *GetLanguageModelOptions) SetHeaders(param map[string]string) *Get
 
 // GetModelOptions : The GetModel options.
 type GetModelOptions struct {
-
 	// The identifier of the model in the form of its name from the output of the **Get a model** method.
-	ModelID *string `json:"model_id" validate:"required"`
+	ModelID *string `json:"model_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the GetModelOptions.ModelID property.
 // The identifier of the model in the form of its name from the output of the **Get a model** method.
 const (
-	GetModelOptions_ModelID_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
-	GetModelOptions_ModelID_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	GetModelOptions_ModelID_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	GetModelOptions_ModelID_EnAuBroadbandmodel           = "en-AU_BroadbandModel"
-	GetModelOptions_ModelID_EnAuNarrowbandmodel          = "en-AU_NarrowbandModel"
-	GetModelOptions_ModelID_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	GetModelOptions_ModelID_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	GetModelOptions_ModelID_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	GetModelOptions_ModelID_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
-	GetModelOptions_ModelID_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	GetModelOptions_ModelID_EsArBroadbandmodel           = "es-AR_BroadbandModel"
-	GetModelOptions_ModelID_EsArNarrowbandmodel          = "es-AR_NarrowbandModel"
-	GetModelOptions_ModelID_EsClBroadbandmodel           = "es-CL_BroadbandModel"
-	GetModelOptions_ModelID_EsClNarrowbandmodel          = "es-CL_NarrowbandModel"
-	GetModelOptions_ModelID_EsCoBroadbandmodel           = "es-CO_BroadbandModel"
-	GetModelOptions_ModelID_EsCoNarrowbandmodel          = "es-CO_NarrowbandModel"
-	GetModelOptions_ModelID_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	GetModelOptions_ModelID_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	GetModelOptions_ModelID_EsMxBroadbandmodel           = "es-MX_BroadbandModel"
-	GetModelOptions_ModelID_EsMxNarrowbandmodel          = "es-MX_NarrowbandModel"
-	GetModelOptions_ModelID_EsPeBroadbandmodel           = "es-PE_BroadbandModel"
-	GetModelOptions_ModelID_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
-	GetModelOptions_ModelID_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	GetModelOptions_ModelID_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	GetModelOptions_ModelID_ItItBroadbandmodel           = "it-IT_BroadbandModel"
-	GetModelOptions_ModelID_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
-	GetModelOptions_ModelID_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	GetModelOptions_ModelID_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	GetModelOptions_ModelID_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	GetModelOptions_ModelID_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	GetModelOptions_ModelID_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
-	GetModelOptions_ModelID_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
-	GetModelOptions_ModelID_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	GetModelOptions_ModelID_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
-	GetModelOptions_ModelID_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
-	GetModelOptions_ModelID_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
+	GetModelOptionsModelIDArArBroadbandmodelConst = "ar-AR_BroadbandModel"
+	GetModelOptionsModelIDDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
+	GetModelOptionsModelIDDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
+	GetModelOptionsModelIDEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
+	GetModelOptionsModelIDEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
+	GetModelOptionsModelIDEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
+	GetModelOptionsModelIDEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
+	GetModelOptionsModelIDEnUsBroadbandmodelConst = "en-US_BroadbandModel"
+	GetModelOptionsModelIDEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	GetModelOptionsModelIDEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
+	GetModelOptionsModelIDEsArBroadbandmodelConst = "es-AR_BroadbandModel"
+	GetModelOptionsModelIDEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
+	GetModelOptionsModelIDEsClBroadbandmodelConst = "es-CL_BroadbandModel"
+	GetModelOptionsModelIDEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
+	GetModelOptionsModelIDEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
+	GetModelOptionsModelIDEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
+	GetModelOptionsModelIDEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
+	GetModelOptionsModelIDEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
+	GetModelOptionsModelIDEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
+	GetModelOptionsModelIDEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
+	GetModelOptionsModelIDEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
+	GetModelOptionsModelIDEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
+	GetModelOptionsModelIDFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
+	GetModelOptionsModelIDFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
+	GetModelOptionsModelIDFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
+	GetModelOptionsModelIDFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
+	GetModelOptionsModelIDItItBroadbandmodelConst = "it-IT_BroadbandModel"
+	GetModelOptionsModelIDItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
+	GetModelOptionsModelIDJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
+	GetModelOptionsModelIDJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
+	GetModelOptionsModelIDKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
+	GetModelOptionsModelIDKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
+	GetModelOptionsModelIDNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
+	GetModelOptionsModelIDNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
+	GetModelOptionsModelIDPtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
+	GetModelOptionsModelIDPtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
+	GetModelOptionsModelIDZhCnBroadbandmodelConst = "zh-CN_BroadbandModel"
+	GetModelOptionsModelIDZhCnNarrowbandmodelConst = "zh-CN_NarrowbandModel"
 )
 
 // NewGetModelOptions : Instantiate GetModelOptions
-func (speechToText *SpeechToTextV1) NewGetModelOptions(modelID string) *GetModelOptions {
+func (*SpeechToTextV1) NewGetModelOptions(modelID string) *GetModelOptions {
 	return &GetModelOptions{
 		ModelID: core.StringPtr(modelID),
 	}
@@ -5123,25 +5764,24 @@ func (options *GetModelOptions) SetHeaders(param map[string]string) *GetModelOpt
 
 // GetWordOptions : The GetWord options.
 type GetWordOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The custom word that is to be read from the custom language model. URL-encode the word if it includes non-ASCII
 	// characters. For more information, see [Character
 	// encoding](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#charEncoding).
-	WordName *string `json:"word_name" validate:"required"`
+	WordName *string `json:"word_name" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetWordOptions : Instantiate GetWordOptions
-func (speechToText *SpeechToTextV1) NewGetWordOptions(customizationID string, wordName string) *GetWordOptions {
+func (*SpeechToTextV1) NewGetWordOptions(customizationID string, wordName string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName:        core.StringPtr(wordName),
+		WordName: core.StringPtr(wordName),
 	}
 }
 
@@ -5165,7 +5805,6 @@ func (options *GetWordOptions) SetHeaders(param map[string]string) *GetWordOptio
 
 // Grammar : Information about a grammar from a custom language model.
 type Grammar struct {
-
 	// The name of the grammar.
 	Name *string `json:"name" validate:"required"`
 
@@ -5195,22 +5834,56 @@ type Grammar struct {
 // * `undetermined`: The service encountered an error while processing the grammar. The `error` field describes the
 // failure.
 const (
-	Grammar_Status_Analyzed       = "analyzed"
-	Grammar_Status_BeingProcessed = "being_processed"
-	Grammar_Status_Undetermined   = "undetermined"
+	GrammarStatusAnalyzedConst = "analyzed"
+	GrammarStatusBeingProcessedConst = "being_processed"
+	GrammarStatusUndeterminedConst = "undetermined"
 )
+
+
+// UnmarshalGrammar unmarshals an instance of Grammar from the specified map of raw messages.
+func UnmarshalGrammar(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Grammar)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "out_of_vocabulary_words", &obj.OutOfVocabularyWords)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "error", &obj.Error)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // Grammars : Information about the grammars from a custom language model.
 type Grammars struct {
-
 	// An array of `Grammar` objects that provides information about the grammars for the custom model. The array is empty
 	// if the custom model has no grammars.
 	Grammars []Grammar `json:"grammars" validate:"required"`
 }
 
+
+// UnmarshalGrammars unmarshals an instance of Grammars from the specified map of raw messages.
+func UnmarshalGrammars(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Grammars)
+	err = core.UnmarshalModel(m, "grammars", &obj.Grammars, UnmarshalGrammar)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // KeywordResult : Information about a match for a keyword from speech recognition results.
 type KeywordResult struct {
-
 	// A specified keyword normalized to the spoken phrase that matched in the audio input.
 	NormalizedText *string `json:"normalized_text" validate:"required"`
 
@@ -5224,9 +5897,32 @@ type KeywordResult struct {
 	Confidence *float64 `json:"confidence" validate:"required"`
 }
 
+
+// UnmarshalKeywordResult unmarshals an instance of KeywordResult from the specified map of raw messages.
+func UnmarshalKeywordResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(KeywordResult)
+	err = core.UnmarshalPrimitive(m, "normalized_text", &obj.NormalizedText)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "start_time", &obj.StartTime)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "end_time", &obj.EndTime)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // LanguageModel : Information about an existing custom language model.
 type LanguageModel struct {
-
 	// The customization ID (GUID) of the custom language model. The **Create a custom language model** method returns only
 	// this field of the object; it does not return the other fields.
 	CustomizationID *string `json:"customization_id" validate:"required"`
@@ -5307,63 +6003,141 @@ type LanguageModel struct {
 // * `upgrading`: The model is currently being upgraded.
 // * `failed`: Training of the model failed.
 const (
-	LanguageModel_Status_Available = "available"
-	LanguageModel_Status_Failed    = "failed"
-	LanguageModel_Status_Pending   = "pending"
-	LanguageModel_Status_Ready     = "ready"
-	LanguageModel_Status_Training  = "training"
-	LanguageModel_Status_Upgrading = "upgrading"
+	LanguageModelStatusAvailableConst = "available"
+	LanguageModelStatusFailedConst = "failed"
+	LanguageModelStatusPendingConst = "pending"
+	LanguageModelStatusReadyConst = "ready"
+	LanguageModelStatusTrainingConst = "training"
+	LanguageModelStatusUpgradingConst = "upgrading"
 )
+
+
+// UnmarshalLanguageModel unmarshals an instance of LanguageModel from the specified map of raw messages.
+func UnmarshalLanguageModel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LanguageModel)
+	err = core.UnmarshalPrimitive(m, "customization_id", &obj.CustomizationID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "updated", &obj.Updated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "dialect", &obj.Dialect)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "versions", &obj.Versions)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "owner", &obj.Owner)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "base_model_name", &obj.BaseModelName)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "progress", &obj.Progress)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "error", &obj.Error)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "warnings", &obj.Warnings)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // LanguageModels : Information about existing custom language models.
 type LanguageModels struct {
-
 	// An array of `LanguageModel` objects that provides information about each available custom language model. The array
 	// is empty if the requesting credentials own no custom language models (if no language is specified) or own no custom
 	// language models for the specified language.
 	Customizations []LanguageModel `json:"customizations" validate:"required"`
 }
 
+
+// UnmarshalLanguageModels unmarshals an instance of LanguageModels from the specified map of raw messages.
+func UnmarshalLanguageModels(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LanguageModels)
+	err = core.UnmarshalModel(m, "customizations", &obj.Customizations, UnmarshalLanguageModel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ListAcousticModelsOptions : The ListAcousticModels options.
 type ListAcousticModelsOptions struct {
-
 	// The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
 	// parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
-	// **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese) languages are not available for
-	// language model customization.
+	//
+	// To determine the languages for which customization is available, see [Language support for
+	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 	Language *string `json:"language,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the ListAcousticModelsOptions.Language property.
 // The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
 // parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
-// **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese) languages are not available for
-// language model customization.
+//
+// To determine the languages for which customization is available, see [Language support for
+// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
-	ListAcousticModelsOptions_Language_ArAr = "ar-AR"
-	ListAcousticModelsOptions_Language_DeDe = "de-DE"
-	ListAcousticModelsOptions_Language_EnGb = "en-GB"
-	ListAcousticModelsOptions_Language_EnUs = "en-US"
-	ListAcousticModelsOptions_Language_EsAr = "es-AR"
-	ListAcousticModelsOptions_Language_EsCl = "es-CL"
-	ListAcousticModelsOptions_Language_EsCo = "es-CO"
-	ListAcousticModelsOptions_Language_EsEs = "es-ES"
-	ListAcousticModelsOptions_Language_EsMx = "es-MX"
-	ListAcousticModelsOptions_Language_EsPe = "es-PE"
-	ListAcousticModelsOptions_Language_FrFr = "fr-FR"
-	ListAcousticModelsOptions_Language_ItIt = "it-IT"
-	ListAcousticModelsOptions_Language_JaJp = "ja-JP"
-	ListAcousticModelsOptions_Language_KoKr = "ko-KR"
-	ListAcousticModelsOptions_Language_NlNl = "nl-NL"
-	ListAcousticModelsOptions_Language_PtBr = "pt-BR"
-	ListAcousticModelsOptions_Language_ZhCn = "zh-CN"
+	ListAcousticModelsOptionsLanguageArArConst = "ar-AR"
+	ListAcousticModelsOptionsLanguageDeDeConst = "de-DE"
+	ListAcousticModelsOptionsLanguageEnAuConst = "en-AU"
+	ListAcousticModelsOptionsLanguageEnGbConst = "en-GB"
+	ListAcousticModelsOptionsLanguageEnUsConst = "en-US"
+	ListAcousticModelsOptionsLanguageEsArConst = "es-AR"
+	ListAcousticModelsOptionsLanguageEsClConst = "es-CL"
+	ListAcousticModelsOptionsLanguageEsCoConst = "es-CO"
+	ListAcousticModelsOptionsLanguageEsEsConst = "es-ES"
+	ListAcousticModelsOptionsLanguageEsMxConst = "es-MX"
+	ListAcousticModelsOptionsLanguageEsPeConst = "es-PE"
+	ListAcousticModelsOptionsLanguageFrCaConst = "fr-CA"
+	ListAcousticModelsOptionsLanguageFrFrConst = "fr-FR"
+	ListAcousticModelsOptionsLanguageItItConst = "it-IT"
+	ListAcousticModelsOptionsLanguageJaJpConst = "ja-JP"
+	ListAcousticModelsOptionsLanguageKoKrConst = "ko-KR"
+	ListAcousticModelsOptionsLanguageNlNlConst = "nl-NL"
+	ListAcousticModelsOptionsLanguagePtBrConst = "pt-BR"
+	ListAcousticModelsOptionsLanguageZhCnConst = "zh-CN"
 )
 
 // NewListAcousticModelsOptions : Instantiate ListAcousticModelsOptions
-func (speechToText *SpeechToTextV1) NewListAcousticModelsOptions() *ListAcousticModelsOptions {
+func (*SpeechToTextV1) NewListAcousticModelsOptions() *ListAcousticModelsOptions {
 	return &ListAcousticModelsOptions{}
 }
 
@@ -5381,17 +6155,16 @@ func (options *ListAcousticModelsOptions) SetHeaders(param map[string]string) *L
 
 // ListAudioOptions : The ListAudio options.
 type ListAudioOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListAudioOptions : Instantiate ListAudioOptions
-func (speechToText *SpeechToTextV1) NewListAudioOptions(customizationID string) *ListAudioOptions {
+func (*SpeechToTextV1) NewListAudioOptions(customizationID string) *ListAudioOptions {
 	return &ListAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -5411,17 +6184,16 @@ func (options *ListAudioOptions) SetHeaders(param map[string]string) *ListAudioO
 
 // ListCorporaOptions : The ListCorpora options.
 type ListCorporaOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListCorporaOptions : Instantiate ListCorporaOptions
-func (speechToText *SpeechToTextV1) NewListCorporaOptions(customizationID string) *ListCorporaOptions {
+func (*SpeechToTextV1) NewListCorporaOptions(customizationID string) *ListCorporaOptions {
 	return &ListCorporaOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -5441,17 +6213,16 @@ func (options *ListCorporaOptions) SetHeaders(param map[string]string) *ListCorp
 
 // ListGrammarsOptions : The ListGrammars options.
 type ListGrammarsOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListGrammarsOptions : Instantiate ListGrammarsOptions
-func (speechToText *SpeechToTextV1) NewListGrammarsOptions(customizationID string) *ListGrammarsOptions {
+func (*SpeechToTextV1) NewListGrammarsOptions(customizationID string) *ListGrammarsOptions {
 	return &ListGrammarsOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -5471,44 +6242,47 @@ func (options *ListGrammarsOptions) SetHeaders(param map[string]string) *ListGra
 
 // ListLanguageModelsOptions : The ListLanguageModels options.
 type ListLanguageModelsOptions struct {
-
 	// The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
 	// parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
-	// **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese) languages are not available for
-	// language model customization.
+	//
+	// To determine the languages for which customization is available, see [Language support for
+	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 	Language *string `json:"language,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the ListLanguageModelsOptions.Language property.
 // The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
 // parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
-// **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese) languages are not available for
-// language model customization.
+//
+// To determine the languages for which customization is available, see [Language support for
+// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
-	ListLanguageModelsOptions_Language_ArAr = "ar-AR"
-	ListLanguageModelsOptions_Language_DeDe = "de-DE"
-	ListLanguageModelsOptions_Language_EnGb = "en-GB"
-	ListLanguageModelsOptions_Language_EnUs = "en-US"
-	ListLanguageModelsOptions_Language_EsAr = "es-AR"
-	ListLanguageModelsOptions_Language_EsCl = "es-CL"
-	ListLanguageModelsOptions_Language_EsCo = "es-CO"
-	ListLanguageModelsOptions_Language_EsEs = "es-ES"
-	ListLanguageModelsOptions_Language_EsMx = "es-MX"
-	ListLanguageModelsOptions_Language_EsPe = "es-PE"
-	ListLanguageModelsOptions_Language_FrFr = "fr-FR"
-	ListLanguageModelsOptions_Language_ItIt = "it-IT"
-	ListLanguageModelsOptions_Language_JaJp = "ja-JP"
-	ListLanguageModelsOptions_Language_KoKr = "ko-KR"
-	ListLanguageModelsOptions_Language_NlNl = "nl-NL"
-	ListLanguageModelsOptions_Language_PtBr = "pt-BR"
-	ListLanguageModelsOptions_Language_ZhCn = "zh-CN"
+	ListLanguageModelsOptionsLanguageArArConst = "ar-AR"
+	ListLanguageModelsOptionsLanguageDeDeConst = "de-DE"
+	ListLanguageModelsOptionsLanguageEnAuConst = "en-AU"
+	ListLanguageModelsOptionsLanguageEnGbConst = "en-GB"
+	ListLanguageModelsOptionsLanguageEnUsConst = "en-US"
+	ListLanguageModelsOptionsLanguageEsArConst = "es-AR"
+	ListLanguageModelsOptionsLanguageEsClConst = "es-CL"
+	ListLanguageModelsOptionsLanguageEsCoConst = "es-CO"
+	ListLanguageModelsOptionsLanguageEsEsConst = "es-ES"
+	ListLanguageModelsOptionsLanguageEsMxConst = "es-MX"
+	ListLanguageModelsOptionsLanguageEsPeConst = "es-PE"
+	ListLanguageModelsOptionsLanguageFrCaConst = "fr-CA"
+	ListLanguageModelsOptionsLanguageFrFrConst = "fr-FR"
+	ListLanguageModelsOptionsLanguageItItConst = "it-IT"
+	ListLanguageModelsOptionsLanguageJaJpConst = "ja-JP"
+	ListLanguageModelsOptionsLanguageKoKrConst = "ko-KR"
+	ListLanguageModelsOptionsLanguageNlNlConst = "nl-NL"
+	ListLanguageModelsOptionsLanguagePtBrConst = "pt-BR"
+	ListLanguageModelsOptionsLanguageZhCnConst = "zh-CN"
 )
 
 // NewListLanguageModelsOptions : Instantiate ListLanguageModelsOptions
-func (speechToText *SpeechToTextV1) NewListLanguageModelsOptions() *ListLanguageModelsOptions {
+func (*SpeechToTextV1) NewListLanguageModelsOptions() *ListLanguageModelsOptions {
 	return &ListLanguageModelsOptions{}
 }
 
@@ -5527,12 +6301,12 @@ func (options *ListLanguageModelsOptions) SetHeaders(param map[string]string) *L
 // ListModelsOptions : The ListModels options.
 type ListModelsOptions struct {
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListModelsOptions : Instantiate ListModelsOptions
-func (speechToText *SpeechToTextV1) NewListModelsOptions() *ListModelsOptions {
+func (*SpeechToTextV1) NewListModelsOptions() *ListModelsOptions {
 	return &ListModelsOptions{}
 }
 
@@ -5544,10 +6318,9 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 
 // ListWordsOptions : The ListWords options.
 type ListWordsOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The type of words to be listed from the custom language model's words resource:
 	// * `all` (the default) shows all words.
@@ -5563,7 +6336,7 @@ type ListWordsOptions struct {
 	// ordered alphabetically. With the `curl` command, URL-encode the `+` symbol as `%2B`.
 	Sort *string `json:"sort,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -5574,10 +6347,10 @@ type ListWordsOptions struct {
 // * `corpora` shows only OOV that were extracted from corpora.
 // * `grammars` shows only OOV words that are recognized by grammars.
 const (
-	ListWordsOptions_WordType_All      = "all"
-	ListWordsOptions_WordType_Corpora  = "corpora"
-	ListWordsOptions_WordType_Grammars = "grammars"
-	ListWordsOptions_WordType_User     = "user"
+	ListWordsOptionsWordTypeAllConst = "all"
+	ListWordsOptionsWordTypeCorporaConst = "corpora"
+	ListWordsOptionsWordTypeGrammarsConst = "grammars"
+	ListWordsOptionsWordTypeUserConst = "user"
 )
 
 // Constants associated with the ListWordsOptions.Sort property.
@@ -5587,12 +6360,12 @@ const (
 // is numeric values, uppercase letters, and lowercase letters. For count ordering, values with the same count are
 // ordered alphabetically. With the `curl` command, URL-encode the `+` symbol as `%2B`.
 const (
-	ListWordsOptions_Sort_Alphabetical = "alphabetical"
-	ListWordsOptions_Sort_Count        = "count"
+	ListWordsOptionsSortAlphabeticalConst = "alphabetical"
+	ListWordsOptionsSortCountConst = "count"
 )
 
 // NewListWordsOptions : Instantiate ListWordsOptions
-func (speechToText *SpeechToTextV1) NewListWordsOptions(customizationID string) *ListWordsOptions {
+func (*SpeechToTextV1) NewListWordsOptions(customizationID string) *ListWordsOptions {
 	return &ListWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -5624,7 +6397,6 @@ func (options *ListWordsOptions) SetHeaders(param map[string]string) *ListWordsO
 
 // ProcessedAudio : Detailed timing information about the service's processing of the input audio.
 type ProcessedAudio struct {
-
 	// The seconds of audio that the service has received as of this response. The value of the field is greater than the
 	// values of the `transcription` and `speaker_labels` fields during speech recognition processing, since the service
 	// first has to receive the audio before it can begin to process it. The final value can also be greater than the value
@@ -5648,10 +6420,33 @@ type ProcessedAudio struct {
 	SpeakerLabels *float32 `json:"speaker_labels,omitempty"`
 }
 
+
+// UnmarshalProcessedAudio unmarshals an instance of ProcessedAudio from the specified map of raw messages.
+func UnmarshalProcessedAudio(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ProcessedAudio)
+	err = core.UnmarshalPrimitive(m, "received", &obj.Received)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "seen_by_engine", &obj.SeenByEngine)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "transcription", &obj.Transcription)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "speaker_labels", &obj.SpeakerLabels)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ProcessingMetrics : If processing metrics are requested, information about the service's processing of the input audio. Processing
 // metrics are not available with the synchronous **Recognize audio** method.
 type ProcessingMetrics struct {
-
 	// Detailed timing information about the service's processing of the input audio.
 	ProcessedAudio *ProcessedAudio `json:"processed_audio" validate:"required"`
 
@@ -5673,9 +6468,28 @@ type ProcessingMetrics struct {
 	Periodic *bool `json:"periodic" validate:"required"`
 }
 
+
+// UnmarshalProcessingMetrics unmarshals an instance of ProcessingMetrics from the specified map of raw messages.
+func UnmarshalProcessingMetrics(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ProcessingMetrics)
+	err = core.UnmarshalModel(m, "processed_audio", &obj.ProcessedAudio, UnmarshalProcessedAudio)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "wall_clock_since_first_byte_received", &obj.WallClockSinceFirstByteReceived)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "periodic", &obj.Periodic)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // RecognitionJob : Information about a current asynchronous speech recognition job.
 type RecognitionJob struct {
-
 	// The ID of the asynchronous job.
 	ID *string `json:"id" validate:"required"`
 
@@ -5729,23 +6543,73 @@ type RecognitionJob struct {
 // must retrieve the results by checking the individual job.
 // * `failed`: The job failed.
 const (
-	RecognitionJob_Status_Completed  = "completed"
-	RecognitionJob_Status_Failed     = "failed"
-	RecognitionJob_Status_Processing = "processing"
-	RecognitionJob_Status_Waiting    = "waiting"
+	RecognitionJobStatusCompletedConst = "completed"
+	RecognitionJobStatusFailedConst = "failed"
+	RecognitionJobStatusProcessingConst = "processing"
+	RecognitionJobStatusWaitingConst = "waiting"
 )
+
+
+// UnmarshalRecognitionJob unmarshals an instance of RecognitionJob from the specified map of raw messages.
+func UnmarshalRecognitionJob(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(RecognitionJob)
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "updated", &obj.Updated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "url", &obj.URL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_token", &obj.UserToken)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalSpeechRecognitionResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "warnings", &obj.Warnings)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // RecognitionJobs : Information about current asynchronous speech recognition jobs.
 type RecognitionJobs struct {
-
 	// An array of `RecognitionJob` objects that provides the status for each of the user's current jobs. The array is
 	// empty if the user has no current jobs.
 	Recognitions []RecognitionJob `json:"recognitions" validate:"required"`
 }
 
+
+// UnmarshalRecognitionJobs unmarshals an instance of RecognitionJobs from the specified map of raw messages.
+func UnmarshalRecognitionJobs(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(RecognitionJobs)
+	err = core.UnmarshalModel(m, "recognitions", &obj.Recognitions, UnmarshalRecognitionJob)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // RecognizeOptions : The Recognize options.
 type RecognizeOptions struct {
-
 	// The audio to transcribe.
 	Audio io.ReadCloser `json:"audio" validate:"required"`
 
@@ -5948,7 +6812,7 @@ type RecognizeOptions struct {
 	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
 	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -5956,46 +6820,48 @@ type RecognizeOptions struct {
 // The identifier of the model that is to be used for the recognition request. See [Languages and
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 const (
-	RecognizeOptions_Model_ArArBroadbandmodel           = "ar-AR_BroadbandModel"
-	RecognizeOptions_Model_DeDeBroadbandmodel           = "de-DE_BroadbandModel"
-	RecognizeOptions_Model_DeDeNarrowbandmodel          = "de-DE_NarrowbandModel"
-	RecognizeOptions_Model_EnAuBroadbandmodel           = "en-AU_BroadbandModel"
-	RecognizeOptions_Model_EnAuNarrowbandmodel          = "en-AU_NarrowbandModel"
-	RecognizeOptions_Model_EnGbBroadbandmodel           = "en-GB_BroadbandModel"
-	RecognizeOptions_Model_EnGbNarrowbandmodel          = "en-GB_NarrowbandModel"
-	RecognizeOptions_Model_EnUsBroadbandmodel           = "en-US_BroadbandModel"
-	RecognizeOptions_Model_EnUsNarrowbandmodel          = "en-US_NarrowbandModel"
-	RecognizeOptions_Model_EnUsShortformNarrowbandmodel = "en-US_ShortForm_NarrowbandModel"
-	RecognizeOptions_Model_EsArBroadbandmodel           = "es-AR_BroadbandModel"
-	RecognizeOptions_Model_EsArNarrowbandmodel          = "es-AR_NarrowbandModel"
-	RecognizeOptions_Model_EsClBroadbandmodel           = "es-CL_BroadbandModel"
-	RecognizeOptions_Model_EsClNarrowbandmodel          = "es-CL_NarrowbandModel"
-	RecognizeOptions_Model_EsCoBroadbandmodel           = "es-CO_BroadbandModel"
-	RecognizeOptions_Model_EsCoNarrowbandmodel          = "es-CO_NarrowbandModel"
-	RecognizeOptions_Model_EsEsBroadbandmodel           = "es-ES_BroadbandModel"
-	RecognizeOptions_Model_EsEsNarrowbandmodel          = "es-ES_NarrowbandModel"
-	RecognizeOptions_Model_EsMxBroadbandmodel           = "es-MX_BroadbandModel"
-	RecognizeOptions_Model_EsMxNarrowbandmodel          = "es-MX_NarrowbandModel"
-	RecognizeOptions_Model_EsPeBroadbandmodel           = "es-PE_BroadbandModel"
-	RecognizeOptions_Model_EsPeNarrowbandmodel          = "es-PE_NarrowbandModel"
-	RecognizeOptions_Model_FrFrBroadbandmodel           = "fr-FR_BroadbandModel"
-	RecognizeOptions_Model_FrFrNarrowbandmodel          = "fr-FR_NarrowbandModel"
-	RecognizeOptions_Model_ItItBroadbandmodel           = "it-IT_BroadbandModel"
-	RecognizeOptions_Model_ItItNarrowbandmodel          = "it-IT_NarrowbandModel"
-	RecognizeOptions_Model_JaJpBroadbandmodel           = "ja-JP_BroadbandModel"
-	RecognizeOptions_Model_JaJpNarrowbandmodel          = "ja-JP_NarrowbandModel"
-	RecognizeOptions_Model_KoKrBroadbandmodel           = "ko-KR_BroadbandModel"
-	RecognizeOptions_Model_KoKrNarrowbandmodel          = "ko-KR_NarrowbandModel"
-	RecognizeOptions_Model_NlNlBroadbandmodel           = "nl-NL_BroadbandModel"
-	RecognizeOptions_Model_NlNlNarrowbandmodel          = "nl-NL_NarrowbandModel"
-	RecognizeOptions_Model_PtBrBroadbandmodel           = "pt-BR_BroadbandModel"
-	RecognizeOptions_Model_PtBrNarrowbandmodel          = "pt-BR_NarrowbandModel"
-	RecognizeOptions_Model_ZhCnBroadbandmodel           = "zh-CN_BroadbandModel"
-	RecognizeOptions_Model_ZhCnNarrowbandmodel          = "zh-CN_NarrowbandModel"
+	RecognizeOptionsModelArArBroadbandmodelConst = "ar-AR_BroadbandModel"
+	RecognizeOptionsModelDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
+	RecognizeOptionsModelDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
+	RecognizeOptionsModelEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
+	RecognizeOptionsModelEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
+	RecognizeOptionsModelEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
+	RecognizeOptionsModelEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
+	RecognizeOptionsModelEnUsBroadbandmodelConst = "en-US_BroadbandModel"
+	RecognizeOptionsModelEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	RecognizeOptionsModelEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
+	RecognizeOptionsModelEsArBroadbandmodelConst = "es-AR_BroadbandModel"
+	RecognizeOptionsModelEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
+	RecognizeOptionsModelEsClBroadbandmodelConst = "es-CL_BroadbandModel"
+	RecognizeOptionsModelEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
+	RecognizeOptionsModelEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
+	RecognizeOptionsModelEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
+	RecognizeOptionsModelEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
+	RecognizeOptionsModelEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
+	RecognizeOptionsModelEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
+	RecognizeOptionsModelEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
+	RecognizeOptionsModelEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
+	RecognizeOptionsModelEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
+	RecognizeOptionsModelFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
+	RecognizeOptionsModelFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
+	RecognizeOptionsModelFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
+	RecognizeOptionsModelFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
+	RecognizeOptionsModelItItBroadbandmodelConst = "it-IT_BroadbandModel"
+	RecognizeOptionsModelItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
+	RecognizeOptionsModelJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
+	RecognizeOptionsModelJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
+	RecognizeOptionsModelKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
+	RecognizeOptionsModelKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
+	RecognizeOptionsModelNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
+	RecognizeOptionsModelNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
+	RecognizeOptionsModelPtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
+	RecognizeOptionsModelPtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
+	RecognizeOptionsModelZhCnBroadbandmodelConst = "zh-CN_BroadbandModel"
+	RecognizeOptionsModelZhCnNarrowbandmodelConst = "zh-CN_NarrowbandModel"
 )
 
 // NewRecognizeOptions : Instantiate RecognizeOptions
-func (speechToText *SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser) *RecognizeOptions {
+func (*SpeechToTextV1) NewRecognizeOptions(audio io.ReadCloser) *RecognizeOptions {
 	return &RecognizeOptions{
 		Audio: audio,
 	}
@@ -6159,7 +7025,6 @@ func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeO
 
 // RegisterCallbackOptions : The RegisterCallback options.
 type RegisterCallbackOptions struct {
-
 	// An HTTP or HTTPS URL to which callback notifications are to be sent. To be allowlisted, the URL must successfully
 	// echo the challenge string during URL verification. During verification, the client can also check the signature that
 	// the service sends in the `X-Callback-Signature` header to verify the origin of the request.
@@ -6171,12 +7036,12 @@ type RegisterCallbackOptions struct {
 	// parameter, the service does not send the header.
 	UserSecret *string `json:"user_secret,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewRegisterCallbackOptions : Instantiate RegisterCallbackOptions
-func (speechToText *SpeechToTextV1) NewRegisterCallbackOptions(callbackURL string) *RegisterCallbackOptions {
+func (*SpeechToTextV1) NewRegisterCallbackOptions(callbackURL string) *RegisterCallbackOptions {
 	return &RegisterCallbackOptions{
 		CallbackURL: core.StringPtr(callbackURL),
 	}
@@ -6202,7 +7067,6 @@ func (options *RegisterCallbackOptions) SetHeaders(param map[string]string) *Reg
 
 // RegisterStatus : Information about a request to register a callback for asynchronous speech recognition.
 type RegisterStatus struct {
-
 	// The current status of the job:
 	// * `created`: The service successfully allowlisted the callback URL as a result of the call.
 	// * `already created`: The URL was already allowlisted.
@@ -6217,23 +7081,38 @@ type RegisterStatus struct {
 // * `created`: The service successfully allowlisted the callback URL as a result of the call.
 // * `already created`: The URL was already allowlisted.
 const (
-	RegisterStatus_Status_AlreadyCreated = "already created"
-	RegisterStatus_Status_Created        = "created"
+	RegisterStatusStatusAlreadyCreatedConst = "already created"
+	RegisterStatusStatusCreatedConst = "created"
 )
+
+
+// UnmarshalRegisterStatus unmarshals an instance of RegisterStatus from the specified map of raw messages.
+func UnmarshalRegisterStatus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(RegisterStatus)
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "url", &obj.URL)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // ResetAcousticModelOptions : The ResetAcousticModel options.
 type ResetAcousticModelOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewResetAcousticModelOptions : Instantiate ResetAcousticModelOptions
-func (speechToText *SpeechToTextV1) NewResetAcousticModelOptions(customizationID string) *ResetAcousticModelOptions {
+func (*SpeechToTextV1) NewResetAcousticModelOptions(customizationID string) *ResetAcousticModelOptions {
 	return &ResetAcousticModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -6253,17 +7132,16 @@ func (options *ResetAcousticModelOptions) SetHeaders(param map[string]string) *R
 
 // ResetLanguageModelOptions : The ResetLanguageModel options.
 type ResetLanguageModelOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewResetLanguageModelOptions : Instantiate ResetLanguageModelOptions
-func (speechToText *SpeechToTextV1) NewResetLanguageModelOptions(customizationID string) *ResetLanguageModelOptions {
+func (*SpeechToTextV1) NewResetLanguageModelOptions(customizationID string) *ResetLanguageModelOptions {
 	return &ResetLanguageModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -6283,7 +7161,6 @@ func (options *ResetLanguageModelOptions) SetHeaders(param map[string]string) *R
 
 // SpeakerLabelsResult : Information about the speakers from speech recognition results.
 type SpeakerLabelsResult struct {
-
 	// The start time of a word from the transcript. The value matches the start time of a word from the `timestamps`
 	// array.
 	From *float32 `json:"from" validate:"required"`
@@ -6305,9 +7182,36 @@ type SpeakerLabelsResult struct {
 	Final *bool `json:"final" validate:"required"`
 }
 
+
+// UnmarshalSpeakerLabelsResult unmarshals an instance of SpeakerLabelsResult from the specified map of raw messages.
+func UnmarshalSpeakerLabelsResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SpeakerLabelsResult)
+	err = core.UnmarshalPrimitive(m, "from", &obj.From)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "to", &obj.To)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "speaker", &obj.Speaker)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "final", &obj.Final)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SpeechModel : Information about an available language model.
 type SpeechModel struct {
-
 	// The name of the model for use as an identifier in calls to the service (for example, `en-US_BroadbandModel`).
 	Name *string `json:"name" validate:"required"`
 
@@ -6327,16 +7231,58 @@ type SpeechModel struct {
 	Description *string `json:"description" validate:"required"`
 }
 
+
+// UnmarshalSpeechModel unmarshals an instance of SpeechModel from the specified map of raw messages.
+func UnmarshalSpeechModel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SpeechModel)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "rate", &obj.Rate)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "url", &obj.URL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "supported_features", &obj.SupportedFeatures, UnmarshalSupportedFeatures)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SpeechModels : Information about the available language models.
 type SpeechModels struct {
-
 	// An array of `SpeechModel` objects that provides information about each available model.
 	Models []SpeechModel `json:"models" validate:"required"`
 }
 
+
+// UnmarshalSpeechModels unmarshals an instance of SpeechModels from the specified map of raw messages.
+func UnmarshalSpeechModels(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SpeechModels)
+	err = core.UnmarshalModel(m, "models", &obj.Models, UnmarshalSpeechModel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SpeechRecognitionAlternative : An alternative transcript from speech recognition results.
 type SpeechRecognitionAlternative struct {
-
 	// A transcription of the audio.
 	Transcript *string `json:"transcript" validate:"required"`
 
@@ -6347,17 +7293,40 @@ type SpeechRecognitionAlternative struct {
 	// Time alignments for each word from the transcript as a list of lists. Each inner list consists of three elements:
 	// the word followed by its start and end time in seconds, for example: `[["hello",0.0,1.2],["world",1.2,2.5]]`.
 	// Timestamps are returned only for the best alternative.
-	Timestamps []interface{} `json:"timestamps,omitempty"`
+	Timestamps []string `json:"timestamps,omitempty"`
 
 	// A confidence score for each word of the transcript as a list of lists. Each inner list consists of two elements: the
 	// word and its confidence score in the range of 0.0 to 1.0, for example: `[["hello",0.95],["world",0.866]]`.
 	// Confidence scores are returned only for the best alternative and only with results marked as final.
-	WordConfidence []interface{} `json:"word_confidence,omitempty"`
+	WordConfidence []string `json:"word_confidence,omitempty"`
+}
+
+
+// UnmarshalSpeechRecognitionAlternative unmarshals an instance of SpeechRecognitionAlternative from the specified map of raw messages.
+func UnmarshalSpeechRecognitionAlternative(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SpeechRecognitionAlternative)
+	err = core.UnmarshalPrimitive(m, "transcript", &obj.Transcript)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "timestamps", &obj.Timestamps)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "word_confidence", &obj.WordConfidence)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
 
 // SpeechRecognitionResult : Component results for a speech recognition request.
 type SpeechRecognitionResult struct {
-
 	// An indication of whether the transcription results are final. If `true`, the results for this utterance are not
 	// updated further; no additional results are sent for a `result_index` once its results are indicated as final.
 	Final *bool `json:"final" validate:"required"`
@@ -6395,15 +7364,42 @@ type SpeechRecognitionResult struct {
 // the transcript to avoid excessive memory use.
 // * `silence` - A pause or silence that is at least as long as the pause interval.
 const (
-	SpeechRecognitionResult_EndOfUtterance_EndOfData = "end_of_data"
-	SpeechRecognitionResult_EndOfUtterance_FullStop  = "full_stop"
-	SpeechRecognitionResult_EndOfUtterance_Reset     = "reset"
-	SpeechRecognitionResult_EndOfUtterance_Silence   = "silence"
+	SpeechRecognitionResultEndOfUtteranceEndOfDataConst = "end_of_data"
+	SpeechRecognitionResultEndOfUtteranceFullStopConst = "full_stop"
+	SpeechRecognitionResultEndOfUtteranceResetConst = "reset"
+	SpeechRecognitionResultEndOfUtteranceSilenceConst = "silence"
 )
+
+
+// UnmarshalSpeechRecognitionResult unmarshals an instance of SpeechRecognitionResult from the specified map of raw messages.
+func UnmarshalSpeechRecognitionResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SpeechRecognitionResult)
+	err = core.UnmarshalPrimitive(m, "final", &obj.Final)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "alternatives", &obj.Alternatives, UnmarshalSpeechRecognitionAlternative)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "keywords_result", &obj.KeywordsResult, UnmarshalKeywordResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "word_alternatives", &obj.WordAlternatives, UnmarshalWordAlternativeResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "end_of_utterance", &obj.EndOfUtterance)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // SpeechRecognitionResults : The complete results for a speech recognition request.
 type SpeechRecognitionResults struct {
-
 	// An array of `SpeechRecognitionResult` objects that can include interim and final results (interim results are
 	// returned only if supported by the method). Final results are guaranteed not to change; interim results might be
 	// replaced by further interim results and final results. The service periodically sends updates to the results list;
@@ -6441,9 +7437,40 @@ type SpeechRecognitionResults struct {
 	Warnings []string `json:"warnings,omitempty"`
 }
 
+
+// UnmarshalSpeechRecognitionResults unmarshals an instance of SpeechRecognitionResults from the specified map of raw messages.
+func UnmarshalSpeechRecognitionResults(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SpeechRecognitionResults)
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalSpeechRecognitionResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "result_index", &obj.ResultIndex)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "speaker_labels", &obj.SpeakerLabels, UnmarshalSpeakerLabelsResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "processing_metrics", &obj.ProcessingMetrics, UnmarshalProcessingMetrics)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "audio_metrics", &obj.AudioMetrics, UnmarshalAudioMetrics)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "warnings", &obj.Warnings)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SupportedFeatures : Additional service features that are supported with the model.
 type SupportedFeatures struct {
-
 	// Indicates whether the customization interface can be used to create a custom language model based on the language
 	// model.
 	CustomLanguageModel *bool `json:"custom_language_model" validate:"required"`
@@ -6456,12 +7483,27 @@ type SupportedFeatures struct {
 	SpeakerLabels *bool `json:"speaker_labels" validate:"required"`
 }
 
+
+// UnmarshalSupportedFeatures unmarshals an instance of SupportedFeatures from the specified map of raw messages.
+func UnmarshalSupportedFeatures(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SupportedFeatures)
+	err = core.UnmarshalPrimitive(m, "custom_language_model", &obj.CustomLanguageModel)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "speaker_labels", &obj.SpeakerLabels)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TrainAcousticModelOptions : The TrainAcousticModel options.
 type TrainAcousticModelOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The customization ID (GUID) of a custom language model that is to be used during training of the custom acoustic
 	// model. Specify a custom language model that has been trained with verbatim transcriptions of the audio resources or
@@ -6470,12 +7512,12 @@ type TrainAcousticModelOptions struct {
 	// fully trained and available. The credentials specified with the request must own both custom models.
 	CustomLanguageModelID *string `json:"custom_language_model_id,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewTrainAcousticModelOptions : Instantiate TrainAcousticModelOptions
-func (speechToText *SpeechToTextV1) NewTrainAcousticModelOptions(customizationID string) *TrainAcousticModelOptions {
+func (*SpeechToTextV1) NewTrainAcousticModelOptions(customizationID string) *TrainAcousticModelOptions {
 	return &TrainAcousticModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -6501,10 +7543,9 @@ func (options *TrainAcousticModelOptions) SetHeaders(param map[string]string) *T
 
 // TrainLanguageModelOptions : The TrainLanguageModel options.
 type TrainLanguageModelOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// The type of words from the custom language model's words resource on which to train the model:
 	// * `all` (the default) trains the model on all new words, regardless of whether they were extracted from corpora or
@@ -6525,7 +7566,7 @@ type TrainLanguageModelOptions struct {
 	// recognition request by specifying a customization weight for that request.
 	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -6536,12 +7577,12 @@ type TrainLanguageModelOptions struct {
 // * `user` trains the model only on new words that were added or modified by the user directly. The model is not
 // trained on new words extracted from corpora or grammars.
 const (
-	TrainLanguageModelOptions_WordTypeToAdd_All  = "all"
-	TrainLanguageModelOptions_WordTypeToAdd_User = "user"
+	TrainLanguageModelOptionsWordTypeToAddAllConst = "all"
+	TrainLanguageModelOptionsWordTypeToAddUserConst = "user"
 )
 
 // NewTrainLanguageModelOptions : Instantiate TrainLanguageModelOptions
-func (speechToText *SpeechToTextV1) NewTrainLanguageModelOptions(customizationID string) *TrainLanguageModelOptions {
+func (*SpeechToTextV1) NewTrainLanguageModelOptions(customizationID string) *TrainLanguageModelOptions {
 	return &TrainLanguageModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -6573,16 +7614,26 @@ func (options *TrainLanguageModelOptions) SetHeaders(param map[string]string) *T
 
 // TrainingResponse : The response from training of a custom language or custom acoustic model.
 type TrainingResponse struct {
-
 	// An array of `TrainingWarning` objects that lists any invalid resources contained in the custom model. For custom
 	// language models, invalid resources are grouped and identified by type of resource. The method can return warnings
 	// only if the `strict` parameter is set to `false`.
 	Warnings []TrainingWarning `json:"warnings,omitempty"`
 }
 
+
+// UnmarshalTrainingResponse unmarshals an instance of TrainingResponse from the specified map of raw messages.
+func UnmarshalTrainingResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TrainingResponse)
+	err = core.UnmarshalModel(m, "warnings", &obj.Warnings, UnmarshalTrainingWarning)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TrainingWarning : A warning from training of a custom language or custom acoustic model.
 type TrainingWarning struct {
-
 	// An identifier for the type of invalid resources listed in the `description` field.
 	Code *string `json:"code" validate:"required"`
 
@@ -6595,24 +7646,39 @@ type TrainingWarning struct {
 // Constants associated with the TrainingWarning.Code property.
 // An identifier for the type of invalid resources listed in the `description` field.
 const (
-	TrainingWarning_Code_InvalidAudioFiles   = "invalid_audio_files"
-	TrainingWarning_Code_InvalidCorpusFiles  = "invalid_corpus_files"
-	TrainingWarning_Code_InvalidGrammarFiles = "invalid_grammar_files"
-	TrainingWarning_Code_InvalidWords        = "invalid_words"
+	TrainingWarningCodeInvalidAudioFilesConst = "invalid_audio_files"
+	TrainingWarningCodeInvalidCorpusFilesConst = "invalid_corpus_files"
+	TrainingWarningCodeInvalidGrammarFilesConst = "invalid_grammar_files"
+	TrainingWarningCodeInvalidWordsConst = "invalid_words"
 )
+
+
+// UnmarshalTrainingWarning unmarshals an instance of TrainingWarning from the specified map of raw messages.
+func UnmarshalTrainingWarning(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TrainingWarning)
+	err = core.UnmarshalPrimitive(m, "code", &obj.Code)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "message", &obj.Message)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // UnregisterCallbackOptions : The UnregisterCallback options.
 type UnregisterCallbackOptions struct {
-
 	// The callback URL that is to be unregistered.
 	CallbackURL *string `json:"callback_url" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewUnregisterCallbackOptions : Instantiate UnregisterCallbackOptions
-func (speechToText *SpeechToTextV1) NewUnregisterCallbackOptions(callbackURL string) *UnregisterCallbackOptions {
+func (*SpeechToTextV1) NewUnregisterCallbackOptions(callbackURL string) *UnregisterCallbackOptions {
 	return &UnregisterCallbackOptions{
 		CallbackURL: core.StringPtr(callbackURL),
 	}
@@ -6632,10 +7698,9 @@ func (options *UnregisterCallbackOptions) SetHeaders(param map[string]string) *U
 
 // UpgradeAcousticModelOptions : The UpgradeAcousticModel options.
 type UpgradeAcousticModelOptions struct {
-
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
 	// If the custom acoustic model was trained with a custom language model, the customization ID (GUID) of that custom
 	// language model. The custom language model must be upgraded before the custom acoustic model can be upgraded. The
@@ -6650,12 +7715,12 @@ type UpgradeAcousticModelOptions struct {
 	// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customUpgrade#upgradeAcoustic).
 	Force *bool `json:"force,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewUpgradeAcousticModelOptions : Instantiate UpgradeAcousticModelOptions
-func (speechToText *SpeechToTextV1) NewUpgradeAcousticModelOptions(customizationID string) *UpgradeAcousticModelOptions {
+func (*SpeechToTextV1) NewUpgradeAcousticModelOptions(customizationID string) *UpgradeAcousticModelOptions {
 	return &UpgradeAcousticModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -6687,17 +7752,16 @@ func (options *UpgradeAcousticModelOptions) SetHeaders(param map[string]string) 
 
 // UpgradeLanguageModelOptions : The UpgradeLanguageModel options.
 type UpgradeLanguageModelOptions struct {
-
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required"`
+	CustomizationID *string `json:"customization_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewUpgradeLanguageModelOptions : Instantiate UpgradeLanguageModelOptions
-func (speechToText *SpeechToTextV1) NewUpgradeLanguageModelOptions(customizationID string) *UpgradeLanguageModelOptions {
+func (*SpeechToTextV1) NewUpgradeLanguageModelOptions(customizationID string) *UpgradeLanguageModelOptions {
 	return &UpgradeLanguageModelOptions{
 		CustomizationID: core.StringPtr(customizationID),
 	}
@@ -6717,7 +7781,6 @@ func (options *UpgradeLanguageModelOptions) SetHeaders(param map[string]string) 
 
 // Word : Information about a word from a custom language model.
 type Word struct {
-
 	// A word from the custom model's words resource. The spelling of the word is used to train the model.
 	Word *string `json:"word" validate:"required"`
 
@@ -6746,9 +7809,40 @@ type Word struct {
 	Error []WordError `json:"error,omitempty"`
 }
 
+
+// UnmarshalWord unmarshals an instance of Word from the specified map of raw messages.
+func UnmarshalWord(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Word)
+	err = core.UnmarshalPrimitive(m, "word", &obj.Word)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "sounds_like", &obj.SoundsLike)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "display_as", &obj.DisplayAs)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "count", &obj.Count)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "source", &obj.Source)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "error", &obj.Error, UnmarshalWordError)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // WordAlternativeResult : An alternative hypothesis for a word from speech recognition results.
 type WordAlternativeResult struct {
-
 	// A confidence score for the word alternative hypothesis in the range of 0.0 to 1.0.
 	Confidence *float64 `json:"confidence" validate:"required"`
 
@@ -6756,9 +7850,24 @@ type WordAlternativeResult struct {
 	Word *string `json:"word" validate:"required"`
 }
 
+
+// UnmarshalWordAlternativeResult unmarshals an instance of WordAlternativeResult from the specified map of raw messages.
+func UnmarshalWordAlternativeResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(WordAlternativeResult)
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "word", &obj.Word)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // WordAlternativeResults : Information about alternative hypotheses for words from speech recognition results.
 type WordAlternativeResults struct {
-
 	// The start time in seconds of the word from the input audio that corresponds to the word alternatives.
 	StartTime *float64 `json:"start_time" validate:"required"`
 
@@ -6769,9 +7878,28 @@ type WordAlternativeResults struct {
 	Alternatives []WordAlternativeResult `json:"alternatives" validate:"required"`
 }
 
+
+// UnmarshalWordAlternativeResults unmarshals an instance of WordAlternativeResults from the specified map of raw messages.
+func UnmarshalWordAlternativeResults(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(WordAlternativeResults)
+	err = core.UnmarshalPrimitive(m, "start_time", &obj.StartTime)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "end_time", &obj.EndTime)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "alternatives", &obj.Alternatives, UnmarshalWordAlternativeResult)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // WordError : An error associated with a word from a custom language model.
 type WordError struct {
-
 	// A key-value pair that describes an error associated with the definition of a word in the words resource. The pair
 	// has the format `"element": "message"`, where `element` is the aspect of the definition that caused the problem and
 	// `message` describes the problem. The following example describes a problem with one of the word's sounds-like
@@ -6780,10 +7908,33 @@ type WordError struct {
 	Element *string `json:"element" validate:"required"`
 }
 
+
+// UnmarshalWordError unmarshals an instance of WordError from the specified map of raw messages.
+func UnmarshalWordError(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(WordError)
+	err = core.UnmarshalPrimitive(m, "element", &obj.Element)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Words : Information about the words from a custom language model.
 type Words struct {
-
 	// An array of `Word` objects that provides information about each word in the custom model's words resource. The array
 	// is empty if the custom model has no words.
 	Words []Word `json:"words" validate:"required"`
+}
+
+
+// UnmarshalWords unmarshals an instance of Words from the specified map of raw messages.
+func UnmarshalWords(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Words)
+	err = core.UnmarshalModel(m, "words", &obj.Words, UnmarshalWord)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
