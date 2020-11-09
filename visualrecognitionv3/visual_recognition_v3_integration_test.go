@@ -24,7 +24,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
@@ -59,7 +59,7 @@ func TestConstructService(t *testing.T) {
 
 	service, err = visualrecognitionv3.NewVisualRecognitionV3(
 		&visualrecognitionv3.VisualRecognitionV3Options{
-			Version:     "2018-03-19",
+			Version:     core.StringPtr("2018-03-19"),
 			ServiceName: "visual_recognition",
 		})
 	assert.Nil(t, err)
