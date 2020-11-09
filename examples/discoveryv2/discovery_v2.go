@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 
 	discovery "github.com/watson-developer-cloud/go-sdk/discoveryv2"
 )
@@ -20,7 +20,7 @@ func main() {
 	}
 	service, serviceErr := discovery.NewDiscoveryV2(&discovery.DiscoveryV2Options{
 		URL:           "<your service url>",
-		Version:       "2019-11-22",
+		Version:       core.StringPtr("2019-11-22"),
 		Authenticator: authenticator,
 	})
 	service.DisableSSLVerification()
@@ -94,7 +94,7 @@ func main() {
 		ProjectID:            core.StringPtr(PROJECT_ID),
 		NaturalLanguageQuery: core.StringPtr("How is the weather today?"),
 		Examples: []discovery.TrainingExample{
-			discovery.TrainingExample{
+			{
 				DocumentID:   documentID,
 				CollectionID: core.StringPtr(COLLECTION_ID),
 				Relevance:    core.Int64Ptr(1),

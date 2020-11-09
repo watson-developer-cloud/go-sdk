@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	assistant "github.com/watson-developer-cloud/go-sdk/assistantv1"
 )
 
@@ -14,7 +14,7 @@ func main() {
 	}
 	service, serviceErr := assistant.NewAssistantV1(&assistant.AssistantV1Options{
 		URL:           "YOUR SERVICE URL",
-		Version:       "2018-07-10",
+		Version:       core.StringPtr("2018-07-10"),
 		Authenticator: authenticator,
 	})
 
@@ -89,8 +89,9 @@ func main() {
 	fmt.Println(response)
 
 	// 	/* MESSAGE */
-	input := &assistant.MessageInput{}
-	input.SetText(core.StringPtr("Hello, how are you?"))
+	input := &assistant.MessageInput{
+		Text: core.StringPtr("Hello, how are you?"),
+	}
 
 	messageOptions := service.NewMessageOptions(*workspaceID).
 		SetInput(input)
@@ -108,7 +109,7 @@ func main() {
 	// To continue with the same assistant, pass in the context from the previous call
 	context := messageResult.Context
 
-	input.SetText(core.StringPtr("What's the weather right now?"))
+	input.Text = core.StringPtr("What's the weather right now?")
 	messageOptions.SetContext(context).
 		SetInput(input)
 

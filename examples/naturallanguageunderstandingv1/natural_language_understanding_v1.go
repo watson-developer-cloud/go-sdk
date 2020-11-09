@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	nlu "github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
 )
 
@@ -17,7 +17,7 @@ func main() {
 	service, serviceErr := nlu.
 		NewNaturalLanguageUnderstandingV1(&nlu.NaturalLanguageUnderstandingV1Options{
 			URL:           "YOUR SERVICE URL",
-			Version:       "2017-02-27",
+			Version:       core.StringPtr("2017-02-27"),
 			Authenticator: authenticator,
 		})
 
