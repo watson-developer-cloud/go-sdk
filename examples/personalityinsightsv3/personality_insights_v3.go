@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 )
 
@@ -19,7 +19,7 @@ func main() {
 	service, serviceErr := personalityinsightsv3.
 		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 			URL:           "YOUR SERVICE URL",
-			Version:       "2017-10-13",
+			Version:       core.StringPtr("2017-10-13"),
 			Authenticator: authenticator,
 		})
 

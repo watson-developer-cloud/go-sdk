@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv4"
 )
 
@@ -11,7 +11,7 @@ func main() {
 	// Instantiate the Watson Visual Recognition service
 	service, serviceErr := visualrecognitionv4.
 		NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-			Version: "2019-02-11",
+			Version: core.StringPtr("2019-02-11"),
 			Authenticator: &core.IamAuthenticator{
 				ApiKey: "YOUR APIKEY",
 			},
@@ -45,7 +45,7 @@ func main() {
 		&visualrecognitionv4.AddImagesOptions{
 			CollectionID: collectionId,
 			ImagesFile: []visualrecognitionv4.FileWithMetadata{
-				visualrecognitionv4.FileWithMetadata{
+				{
 					Data:     giraffeFile,
 					Filename: core.StringPtr("hello giraffe"),
 				},
@@ -60,7 +60,7 @@ func main() {
 			CollectionID: collectionId,
 			ImageID:      addImages.Images[0].ImageID,
 			Objects: []visualrecognitionv4.TrainingDataObject{
-				visualrecognitionv4.TrainingDataObject{
+				{
 					Object: core.StringPtr("giraffe training data"),
 					Location: &visualrecognitionv4.Location{
 						Top:    core.Int64Ptr(64),
@@ -101,7 +101,7 @@ func main() {
 			CollectionIds: []string{*collectionId},
 			Features:      []string{visualrecognitionv4.AnalyzeOptions_Features_Objects},
 			ImagesFile: []visualrecognitionv4.FileWithMetadata{
-				visualrecognitionv4.FileWithMetadata{
+				{
 					Data:     imageFile,
 					Filename: core.StringPtr("random name"),
 				},
