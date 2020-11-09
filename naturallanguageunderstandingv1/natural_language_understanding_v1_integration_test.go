@@ -22,7 +22,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
@@ -57,7 +57,7 @@ func TestConstructService(t *testing.T) {
 
 	service, err = naturallanguageunderstandingv1.NewNaturalLanguageUnderstandingV1(
 		&naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1Options{
-			Version: "2019-07-12",
+			Version: core.StringPtr("2019-07-12"),
 		})
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
