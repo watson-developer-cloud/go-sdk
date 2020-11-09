@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
+/*
+ * IBM OpenAPI SDK Code Generator Version: 3.17.0-8d569e8f-20201030-142059
+ */
+ 
+
 // Package languagetranslatorv3 : Operations and models for the LanguageTranslatorV3 service
 package languagetranslatorv3
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
+	"net/http"
+	"reflect"
+	"time"
 )
 
 // LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The
@@ -31,10 +41,13 @@ import (
 // with your customers in their own language, and more.
 //
 // Version: 3.0.0
-// See: https://cloud.ibm.com/docs/language-translator/
+// See: https://cloud.ibm.com/docs/language-translator
 type LanguageTranslatorV3 struct {
 	Service *core.BaseService
-	Version string
+
+	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2018-05-01`.
+	Version *string
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
@@ -48,7 +61,10 @@ type LanguageTranslatorV3Options struct {
 	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
-	Version       string
+
+	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2018-05-01`.
+	Version *string `validate:"required"`
 }
 
 // NewLanguageTranslatorV3 : constructs an instance of LanguageTranslatorV3 with passed in options.
@@ -67,6 +83,11 @@ func NewLanguageTranslatorV3(options *LanguageTranslatorV3Options) (service *Lan
 		if err != nil {
 			return
 		}
+	}
+
+	err = core.ValidateStruct(options, "options")
+	if err != nil {
+		return
 	}
 
 	baseService, err := core.NewBaseService(serviceOptions)
@@ -99,25 +120,63 @@ func (languageTranslator *LanguageTranslatorV3) SetServiceURL(url string) error 
 	return languageTranslator.Service.SetServiceURL(url)
 }
 
+// GetServiceURL returns the service URL
+func (languageTranslator *LanguageTranslatorV3) GetServiceURL() string {
+	return languageTranslator.Service.GetServiceURL()
+}
+
+// SetDefaultHeaders sets HTTP headers to be sent in every request
+func (languageTranslator *LanguageTranslatorV3) SetDefaultHeaders(headers http.Header) {
+	languageTranslator.Service.SetDefaultHeaders(headers)
+}
+
+// SetEnableGzipCompression sets the service's EnableGzipCompression field
+func (languageTranslator *LanguageTranslatorV3) SetEnableGzipCompression(enableGzip bool) {
+	languageTranslator.Service.SetEnableGzipCompression(enableGzip)
+}
+
+// GetEnableGzipCompression returns the service's EnableGzipCompression field
+func (languageTranslator *LanguageTranslatorV3) GetEnableGzipCompression() bool {
+	return languageTranslator.Service.GetEnableGzipCompression()
+}
+
+// EnableRetries enables automatic retries for requests invoked for this service instance.
+// If either parameter is specified as 0, then a default value is used instead.
+func (languageTranslator *LanguageTranslatorV3) EnableRetries(maxRetries int, maxRetryInterval time.Duration) {
+	languageTranslator.Service.EnableRetries(maxRetries, maxRetryInterval)
+}
+
+// DisableRetries disables automatic retries for requests invoked for this service instance.
+func (languageTranslator *LanguageTranslatorV3) DisableRetries() {
+	languageTranslator.Service.DisableRetries()
+}
+
 // DisableSSLVerification bypasses verification of the server's SSL certificate
 func (languageTranslator *LanguageTranslatorV3) DisableSSLVerification() {
 	languageTranslator.Service.DisableSSLVerification()
 }
 
 // ListLanguages : List supported languages
-// Lists all supported languages. The method returns an array of supported languages with information about each
-// language. Languages are listed in alphabetical order by language code (for example, `af`, `ar`).
+// Lists all supported languages for translation. The method returns an array of supported languages with information
+// about each language. Languages are listed in alphabetical order by language code (for example, `af`, `ar`). In
+// addition to basic information about each language, the response indicates whether the language is
+// `supported_as_source` for translation and `supported_as_target` for translation. It also lists whether the language
+// is `identifiable`.
 func (languageTranslator *LanguageTranslatorV3) ListLanguages(listLanguagesOptions *ListLanguagesOptions) (result *Languages, response *core.DetailedResponse, err error) {
+	return languageTranslator.ListLanguagesWithContext(context.Background(), listLanguagesOptions)
+}
+
+// ListLanguagesWithContext is an alternate form of the ListLanguages method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) ListLanguagesWithContext(ctx context.Context, listLanguagesOptions *ListLanguagesOptions) (result *Languages, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listLanguagesOptions, "listLanguagesOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v3/languages"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/languages`, nil)
 	if err != nil {
 		return
 	}
@@ -130,23 +189,25 @@ func (languageTranslator *LanguageTranslatorV3) ListLanguages(listLanguagesOptio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(Languages))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Languages)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguages)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -156,7 +217,15 @@ func (languageTranslator *LanguageTranslatorV3) ListLanguages(listLanguagesOptio
 // source and target languages, or specify the source and target languages individually. You can omit the source
 // language to have the service attempt to detect the language from the input text. If you omit the source language, the
 // request must contain sufficient input text for the service to identify the source language.
+//
+// You can translate a maximum of 50 KB (51,200 bytes) of text with a single request. All input text must be encoded in
+// UTF-8 format.
 func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *TranslateOptions) (result *TranslationResult, response *core.DetailedResponse, err error) {
+	return languageTranslator.TranslateWithContext(context.Background(), translateOptions)
+}
+
+// TranslateWithContext is an alternate form of the Translate method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) TranslateWithContext(ctx context.Context, translateOptions *TranslateOptions) (result *TranslationResult, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(translateOptions, "translateOptions cannot be nil")
 	if err != nil {
 		return
@@ -166,11 +235,10 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 		return
 	}
 
-	pathSegments := []string{"v3/translate"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/translate`, nil)
 	if err != nil {
 		return
 	}
@@ -183,10 +251,10 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	body := make(map[string]interface{})
 	if translateOptions.Text != nil {
@@ -211,14 +279,16 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(TranslationResult))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TranslationResult)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationResult)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -227,16 +297,20 @@ func (languageTranslator *LanguageTranslatorV3) Translate(translateOptions *Tran
 // Lists the languages that the service can identify. Returns the language code (for example, `en` for English or `es`
 // for Spanish) and name of each language.
 func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions) (result *IdentifiableLanguages, response *core.DetailedResponse, err error) {
+	return languageTranslator.ListIdentifiableLanguagesWithContext(context.Background(), listIdentifiableLanguagesOptions)
+}
+
+// ListIdentifiableLanguagesWithContext is an alternate form of the ListIdentifiableLanguages method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguagesWithContext(ctx context.Context, listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions) (result *IdentifiableLanguages, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listIdentifiableLanguagesOptions, "listIdentifiableLanguagesOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v3/identifiable_languages"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/identifiable_languages`, nil)
 	if err != nil {
 		return
 	}
@@ -249,23 +323,25 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listId
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(IdentifiableLanguages))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*IdentifiableLanguages)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIdentifiableLanguages)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -273,6 +349,11 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguages(listId
 // Identify : Identify language
 // Identifies the language of the input text.
 func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *IdentifyOptions) (result *IdentifiedLanguages, response *core.DetailedResponse, err error) {
+	return languageTranslator.IdentifyWithContext(context.Background(), identifyOptions)
+}
+
+// IdentifyWithContext is an alternate form of the Identify method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) IdentifyWithContext(ctx context.Context, identifyOptions *IdentifyOptions) (result *IdentifiedLanguages, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(identifyOptions, "identifyOptions cannot be nil")
 	if err != nil {
 		return
@@ -282,11 +363,10 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 		return
 	}
 
-	pathSegments := []string{"v3/identify"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/identify`, nil)
 	if err != nil {
 		return
 	}
@@ -299,10 +379,10 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "text/plain")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	_, err = builder.SetBodyContent("text/plain", nil, nil, identifyOptions.Text)
 	if err != nil {
@@ -314,14 +394,16 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(IdentifiedLanguages))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*IdentifiedLanguages)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIdentifiedLanguages)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -329,16 +411,20 @@ func (languageTranslator *LanguageTranslatorV3) Identify(identifyOptions *Identi
 // ListModels : List models
 // Lists available translation models.
 func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *ListModelsOptions) (result *TranslationModels, response *core.DetailedResponse, err error) {
+	return languageTranslator.ListModelsWithContext(context.Background(), listModelsOptions)
+}
+
+// ListModelsWithContext is an alternate form of the ListModels method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) ListModelsWithContext(ctx context.Context, listModelsOptions *ListModelsOptions) (result *TranslationModels, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listModelsOptions, "listModelsOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v3/models"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/models`, nil)
 	if err != nil {
 		return
 	}
@@ -351,9 +437,9 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 	if listModelsOptions.Source != nil {
 		builder.AddQuery("source", fmt.Sprint(*listModelsOptions.Source))
 	}
@@ -363,21 +449,22 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 	if listModelsOptions.Default != nil {
 		builder.AddQuery("default", fmt.Sprint(*listModelsOptions.Default))
 	}
-	builder.AddQuery("version", languageTranslator.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(TranslationModels))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TranslationModels)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModels)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -410,9 +497,11 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 // * **XLIFF** (`.xliff`) - XML Localization Interchange File Format (XLIFF) is an XML specification for the exchange of
 // translation memories.
 // * **CSV** (`.csv`) - Comma-separated values (CSV) file with two columns for aligned sentences and phrases. The first
-// row contains the language code.
+// row must have two language codes. The first column is for the source language code, and the second column is for the
+// target language code.
 // * **TSV** (`.tsv` or `.tab`) - Tab-separated values (TSV) file with two columns for aligned sentences and phrases.
-// The first row contains the language code.
+// The first row must have two language codes. The first column is for the source language code, and the second column
+// is for the target language code.
 // * **JSON** (`.json`) - Custom JSON format for specifying aligned sentences and phrases.
 // * **Microsoft Excel** (`.xls` or `.xlsx`) - Excel file with the first two columns for aligned sentences and phrases.
 // The first row contains the language code.
@@ -440,6 +529,11 @@ func (languageTranslator *LanguageTranslatorV3) ListModels(listModelsOptions *Li
 //
 // `--form "forced_glossary=@glossary;type=text/csv"`.
 func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *CreateModelOptions) (result *TranslationModel, response *core.DetailedResponse, err error) {
+	return languageTranslator.CreateModelWithContext(context.Background(), createModelOptions)
+}
+
+// CreateModelWithContext is an alternate form of the CreateModel method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) CreateModelWithContext(ctx context.Context, createModelOptions *CreateModelOptions) (result *TranslationModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createModelOptions, "createModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -449,15 +543,14 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 		return
 	}
 	if (createModelOptions.ForcedGlossary == nil) && (createModelOptions.ParallelCorpus == nil) {
-		err = fmt.Errorf("At least one of forcedGlossary or parallelCorpus must be supplied")
+		err = fmt.Errorf("at least one of forcedGlossary or parallelCorpus must be supplied")
 		return
 	}
 
-	pathSegments := []string{"v3/models"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/models`, nil)
 	if err != nil {
 		return
 	}
@@ -470,14 +563,13 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 	builder.AddQuery("base_model_id", fmt.Sprint(*createModelOptions.BaseModelID))
 	if createModelOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*createModelOptions.Name))
 	}
-	builder.AddQuery("version", languageTranslator.Version)
 
 	if createModelOptions.ForcedGlossary != nil {
 		builder.AddFormData("forced_glossary", "filename",
@@ -493,14 +585,16 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(TranslationModel))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TranslationModel)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModel)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -508,6 +602,11 @@ func (languageTranslator *LanguageTranslatorV3) CreateModel(createModelOptions *
 // DeleteModel : Delete model
 // Deletes a custom translation model.
 func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *DeleteModelOptions) (result *DeleteModelResult, response *core.DetailedResponse, err error) {
+	return languageTranslator.DeleteModelWithContext(context.Background(), deleteModelOptions)
+}
+
+// DeleteModelWithContext is an alternate form of the DeleteModel method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) DeleteModelWithContext(ctx context.Context, deleteModelOptions *DeleteModelOptions) (result *DeleteModelResult, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteModelOptions, "deleteModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -517,11 +616,14 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 		return
 	}
 
-	pathSegments := []string{"v3/models"}
-	pathParameters := []string{*deleteModelOptions.ModelID}
+	pathParamsMap := map[string]string{
+		"model_id": *deleteModelOptions.ModelID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/models/{model_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -534,23 +636,25 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(DeleteModelResult))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DeleteModelResult)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteModelResult)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -559,6 +663,11 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModel(deleteModelOptions *
 // Gets information about a translation model, including training status for custom models. Use this API call to poll
 // the status of your customization request. A successfully completed training has a status of `available`.
 func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetModelOptions) (result *TranslationModel, response *core.DetailedResponse, err error) {
+	return languageTranslator.GetModelWithContext(context.Background(), getModelOptions)
+}
+
+// GetModelWithContext is an alternate form of the GetModel method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) GetModelWithContext(ctx context.Context, getModelOptions *GetModelOptions) (result *TranslationModel, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getModelOptions, "getModelOptions cannot be nil")
 	if err != nil {
 		return
@@ -568,11 +677,14 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetMod
 		return
 	}
 
-	pathSegments := []string{"v3/models"}
-	pathParameters := []string{*getModelOptions.ModelID}
+	pathParamsMap := map[string]string{
+		"model_id": *getModelOptions.ModelID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/models/{model_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -585,23 +697,25 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetMod
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(TranslationModel))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TranslationModel)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModel)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -609,16 +723,20 @@ func (languageTranslator *LanguageTranslatorV3) GetModel(getModelOptions *GetMod
 // ListDocuments : List documents
 // Lists documents that have been submitted for translation.
 func (languageTranslator *LanguageTranslatorV3) ListDocuments(listDocumentsOptions *ListDocumentsOptions) (result *DocumentList, response *core.DetailedResponse, err error) {
+	return languageTranslator.ListDocumentsWithContext(context.Background(), listDocumentsOptions)
+}
+
+// ListDocumentsWithContext is an alternate form of the ListDocuments method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) ListDocumentsWithContext(ctx context.Context, listDocumentsOptions *ListDocumentsOptions) (result *DocumentList, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listDocumentsOptions, "listDocumentsOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v3/documents"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/documents`, nil)
 	if err != nil {
 		return
 	}
@@ -631,31 +749,40 @@ func (languageTranslator *LanguageTranslatorV3) ListDocuments(listDocumentsOptio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(DocumentList))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DocumentList)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentList)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // TranslateDocument : Translate document
 // Submit a document for translation. You can submit the document contents in the `file` parameter, or you can reference
-// a previously submitted document by document ID.
+// a previously submitted document by document ID. The maximum file size for document translation is
+// * 20 MB for service instances on the Standard, Advanced, and Premium plans
+// * 2 MB for service instances on the Lite plan.
 func (languageTranslator *LanguageTranslatorV3) TranslateDocument(translateDocumentOptions *TranslateDocumentOptions) (result *DocumentStatus, response *core.DetailedResponse, err error) {
+	return languageTranslator.TranslateDocumentWithContext(context.Background(), translateDocumentOptions)
+}
+
+// TranslateDocumentWithContext is an alternate form of the TranslateDocument method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) TranslateDocumentWithContext(ctx context.Context, translateDocumentOptions *TranslateDocumentOptions) (result *DocumentStatus, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(translateDocumentOptions, "translateDocumentOptions cannot be nil")
 	if err != nil {
 		return
@@ -665,11 +792,10 @@ func (languageTranslator *LanguageTranslatorV3) TranslateDocument(translateDocum
 		return
 	}
 
-	pathSegments := []string{"v3/documents"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/documents`, nil)
 	if err != nil {
 		return
 	}
@@ -682,9 +808,9 @@ func (languageTranslator *LanguageTranslatorV3) TranslateDocument(translateDocum
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	builder.AddFormData("file", core.StringNilMapper(translateDocumentOptions.Filename),
 		core.StringNilMapper(translateDocumentOptions.FileContentType), translateDocumentOptions.File)
@@ -706,14 +832,16 @@ func (languageTranslator *LanguageTranslatorV3) TranslateDocument(translateDocum
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(DocumentStatus))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DocumentStatus)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -721,6 +849,11 @@ func (languageTranslator *LanguageTranslatorV3) TranslateDocument(translateDocum
 // GetDocumentStatus : Get document status
 // Gets the translation status of a document.
 func (languageTranslator *LanguageTranslatorV3) GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) (result *DocumentStatus, response *core.DetailedResponse, err error) {
+	return languageTranslator.GetDocumentStatusWithContext(context.Background(), getDocumentStatusOptions)
+}
+
+// GetDocumentStatusWithContext is an alternate form of the GetDocumentStatus method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) GetDocumentStatusWithContext(ctx context.Context, getDocumentStatusOptions *GetDocumentStatusOptions) (result *DocumentStatus, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getDocumentStatusOptions, "getDocumentStatusOptions cannot be nil")
 	if err != nil {
 		return
@@ -730,11 +863,14 @@ func (languageTranslator *LanguageTranslatorV3) GetDocumentStatus(getDocumentSta
 		return
 	}
 
-	pathSegments := []string{"v3/documents"}
-	pathParameters := []string{*getDocumentStatusOptions.DocumentID}
+	pathParamsMap := map[string]string{
+		"document_id": *getDocumentStatusOptions.DocumentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/documents/{document_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -747,23 +883,25 @@ func (languageTranslator *LanguageTranslatorV3) GetDocumentStatus(getDocumentSta
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(DocumentStatus))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DocumentStatus)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = languageTranslator.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -771,6 +909,11 @@ func (languageTranslator *LanguageTranslatorV3) GetDocumentStatus(getDocumentSta
 // DeleteDocument : Delete document
 // Deletes a document.
 func (languageTranslator *LanguageTranslatorV3) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (response *core.DetailedResponse, err error) {
+	return languageTranslator.DeleteDocumentWithContext(context.Background(), deleteDocumentOptions)
+}
+
+// DeleteDocumentWithContext is an alternate form of the DeleteDocument method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) DeleteDocumentWithContext(ctx context.Context, deleteDocumentOptions *DeleteDocumentOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil")
 	if err != nil {
 		return
@@ -780,11 +923,14 @@ func (languageTranslator *LanguageTranslatorV3) DeleteDocument(deleteDocumentOpt
 		return
 	}
 
-	pathSegments := []string{"v3/documents"}
-	pathParameters := []string{*deleteDocumentOptions.DocumentID}
+	pathParamsMap := map[string]string{
+		"document_id": *deleteDocumentOptions.DocumentID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/documents/{document_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -798,7 +944,7 @@ func (languageTranslator *LanguageTranslatorV3) DeleteDocument(deleteDocumentOpt
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", languageTranslator.Version)
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	request, err := builder.Build()
 	if err != nil {
@@ -813,6 +959,11 @@ func (languageTranslator *LanguageTranslatorV3) DeleteDocument(deleteDocumentOpt
 // GetTranslatedDocument : Get translated document
 // Gets the translated document associated with the given document ID.
 func (languageTranslator *LanguageTranslatorV3) GetTranslatedDocument(getTranslatedDocumentOptions *GetTranslatedDocumentOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
+	return languageTranslator.GetTranslatedDocumentWithContext(context.Background(), getTranslatedDocumentOptions)
+}
+
+// GetTranslatedDocumentWithContext is an alternate form of the GetTranslatedDocument method which supports a Context parameter
+func (languageTranslator *LanguageTranslatorV3) GetTranslatedDocumentWithContext(ctx context.Context, getTranslatedDocumentOptions *GetTranslatedDocumentOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getTranslatedDocumentOptions, "getTranslatedDocumentOptions cannot be nil")
 	if err != nil {
 		return
@@ -822,11 +973,14 @@ func (languageTranslator *LanguageTranslatorV3) GetTranslatedDocument(getTransla
 		return
 	}
 
-	pathSegments := []string{"v3/documents", "translated_document"}
-	pathParameters := []string{*getTranslatedDocumentOptions.DocumentID}
+	pathParamsMap := map[string]string{
+		"document_id": *getTranslatedDocumentOptions.DocumentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(languageTranslator.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = languageTranslator.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(languageTranslator.Service.Options.URL, `/v3/documents/{document_id}/translated_document`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -839,33 +993,25 @@ func (languageTranslator *LanguageTranslatorV3) GetTranslatedDocument(getTransla
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/powerpoint")
 	if getTranslatedDocumentOptions.Accept != nil {
 		builder.AddHeader("Accept", fmt.Sprint(*getTranslatedDocumentOptions.Accept))
 	}
-	builder.AddQuery("version", languageTranslator.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*languageTranslator.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = languageTranslator.Service.Request(request, new(io.ReadCloser))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(io.ReadCloser)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
-	}
+	response, err = languageTranslator.Service.Request(request, &result)
 
 	return
 }
 
 // CreateModelOptions : The CreateModel options.
 type CreateModelOptions struct {
-
 	// The ID of the translation model to use as the base for customization. To see available models and IDs, use the `List
 	// models` method. Most models that are provided with the service are customizable. In addition, all models that you
 	// create with parallel corpora customization can be further customized with a forced glossary.
@@ -896,12 +1042,12 @@ type CreateModelOptions struct {
 	// underscores, spaces, and apostrophes. The maximum length of the name is 32 characters.
 	Name *string `json:"name,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCreateModelOptions : Instantiate CreateModelOptions
-func (languageTranslator *LanguageTranslatorV3) NewCreateModelOptions(baseModelID string) *CreateModelOptions {
+func (*LanguageTranslatorV3) NewCreateModelOptions(baseModelID string) *CreateModelOptions {
 	return &CreateModelOptions{
 		BaseModelID: core.StringPtr(baseModelID),
 	}
@@ -939,16 +1085,15 @@ func (options *CreateModelOptions) SetHeaders(param map[string]string) *CreateMo
 
 // DeleteDocumentOptions : The DeleteDocument options.
 type DeleteDocumentOptions struct {
-
 	// Document ID of the document to delete.
-	DocumentID *string `json:"document_id" validate:"required"`
+	DocumentID *string `json:"document_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteDocumentOptions : Instantiate DeleteDocumentOptions
-func (languageTranslator *LanguageTranslatorV3) NewDeleteDocumentOptions(documentID string) *DeleteDocumentOptions {
+func (*LanguageTranslatorV3) NewDeleteDocumentOptions(documentID string) *DeleteDocumentOptions {
 	return &DeleteDocumentOptions{
 		DocumentID: core.StringPtr(documentID),
 	}
@@ -968,16 +1113,15 @@ func (options *DeleteDocumentOptions) SetHeaders(param map[string]string) *Delet
 
 // DeleteModelOptions : The DeleteModel options.
 type DeleteModelOptions struct {
-
 	// Model ID of the model to delete.
-	ModelID *string `json:"model_id" validate:"required"`
+	ModelID *string `json:"model_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteModelOptions : Instantiate DeleteModelOptions
-func (languageTranslator *LanguageTranslatorV3) NewDeleteModelOptions(modelID string) *DeleteModelOptions {
+func (*LanguageTranslatorV3) NewDeleteModelOptions(modelID string) *DeleteModelOptions {
 	return &DeleteModelOptions{
 		ModelID: core.StringPtr(modelID),
 	}
@@ -997,21 +1141,42 @@ func (options *DeleteModelOptions) SetHeaders(param map[string]string) *DeleteMo
 
 // DeleteModelResult : DeleteModelResult struct
 type DeleteModelResult struct {
-
 	// "OK" indicates that the model was successfully deleted.
 	Status *string `json:"status" validate:"required"`
 }
 
+
+// UnmarshalDeleteModelResult unmarshals an instance of DeleteModelResult from the specified map of raw messages.
+func UnmarshalDeleteModelResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DeleteModelResult)
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // DocumentList : DocumentList struct
 type DocumentList struct {
-
 	// An array of all previously submitted documents.
 	Documents []DocumentStatus `json:"documents" validate:"required"`
 }
 
+
+// UnmarshalDocumentList unmarshals an instance of DocumentList from the specified map of raw messages.
+func UnmarshalDocumentList(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DocumentList)
+	err = core.UnmarshalModel(m, "documents", &obj.Documents, UnmarshalDocumentStatus)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // DocumentStatus : Document information, including translation status.
 type DocumentStatus struct {
-
 	// System generated ID identifying a document being translated using one specific translation model.
 	DocumentID *string `json:"document_id" validate:"required"`
 
@@ -1054,23 +1219,78 @@ type DocumentStatus struct {
 // Constants associated with the DocumentStatus.Status property.
 // The status of the translation job associated with a submitted document.
 const (
-	DocumentStatus_Status_Available  = "available"
-	DocumentStatus_Status_Failed     = "failed"
+	DocumentStatus_Status_Available = "available"
+	DocumentStatus_Status_Failed = "failed"
 	DocumentStatus_Status_Processing = "processing"
 )
 
+
+// UnmarshalDocumentStatus unmarshals an instance of DocumentStatus from the specified map of raw messages.
+func UnmarshalDocumentStatus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DocumentStatus)
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "filename", &obj.Filename)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model_id", &obj.ModelID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "base_model_id", &obj.BaseModelID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "source", &obj.Source)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "detected_language_confidence", &obj.DetectedLanguageConfidence)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "target", &obj.Target)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "completed", &obj.Completed)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "word_count", &obj.WordCount)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "character_count", &obj.CharacterCount)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // GetDocumentStatusOptions : The GetDocumentStatus options.
 type GetDocumentStatusOptions struct {
-
 	// The document ID of the document.
-	DocumentID *string `json:"document_id" validate:"required"`
+	DocumentID *string `json:"document_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetDocumentStatusOptions : Instantiate GetDocumentStatusOptions
-func (languageTranslator *LanguageTranslatorV3) NewGetDocumentStatusOptions(documentID string) *GetDocumentStatusOptions {
+func (*LanguageTranslatorV3) NewGetDocumentStatusOptions(documentID string) *GetDocumentStatusOptions {
 	return &GetDocumentStatusOptions{
 		DocumentID: core.StringPtr(documentID),
 	}
@@ -1090,16 +1310,15 @@ func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *Ge
 
 // GetModelOptions : The GetModel options.
 type GetModelOptions struct {
-
 	// Model ID of the model to get.
-	ModelID *string `json:"model_id" validate:"required"`
+	ModelID *string `json:"model_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetModelOptions : Instantiate GetModelOptions
-func (languageTranslator *LanguageTranslatorV3) NewGetModelOptions(modelID string) *GetModelOptions {
+func (*LanguageTranslatorV3) NewGetModelOptions(modelID string) *GetModelOptions {
 	return &GetModelOptions{
 		ModelID: core.StringPtr(modelID),
 	}
@@ -1119,9 +1338,8 @@ func (options *GetModelOptions) SetHeaders(param map[string]string) *GetModelOpt
 
 // GetTranslatedDocumentOptions : The GetTranslatedDocument options.
 type GetTranslatedDocumentOptions struct {
-
 	// The document ID of the document that was submitted for translation.
-	DocumentID *string `json:"document_id" validate:"required"`
+	DocumentID *string `json:"document_id" validate:"required,ne="`
 
 	// The type of the response: application/powerpoint, application/mspowerpoint, application/x-rtf, application/json,
 	// application/xml, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
@@ -1133,12 +1351,12 @@ type GetTranslatedDocumentOptions struct {
 	// example, 'text/html;charset=utf-8'.
 	Accept *string `json:"Accept,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetTranslatedDocumentOptions : Instantiate GetTranslatedDocumentOptions
-func (languageTranslator *LanguageTranslatorV3) NewGetTranslatedDocumentOptions(documentID string) *GetTranslatedDocumentOptions {
+func (*LanguageTranslatorV3) NewGetTranslatedDocumentOptions(documentID string) *GetTranslatedDocumentOptions {
 	return &GetTranslatedDocumentOptions{
 		DocumentID: core.StringPtr(documentID),
 	}
@@ -1164,7 +1382,6 @@ func (options *GetTranslatedDocumentOptions) SetHeaders(param map[string]string)
 
 // IdentifiableLanguage : IdentifiableLanguage struct
 type IdentifiableLanguage struct {
-
 	// The language code for an identifiable language.
 	Language *string `json:"language" validate:"required"`
 
@@ -1172,16 +1389,42 @@ type IdentifiableLanguage struct {
 	Name *string `json:"name" validate:"required"`
 }
 
+
+// UnmarshalIdentifiableLanguage unmarshals an instance of IdentifiableLanguage from the specified map of raw messages.
+func UnmarshalIdentifiableLanguage(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(IdentifiableLanguage)
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // IdentifiableLanguages : IdentifiableLanguages struct
 type IdentifiableLanguages struct {
-
 	// A list of all languages that the service can identify.
 	Languages []IdentifiableLanguage `json:"languages" validate:"required"`
 }
 
+
+// UnmarshalIdentifiableLanguages unmarshals an instance of IdentifiableLanguages from the specified map of raw messages.
+func UnmarshalIdentifiableLanguages(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(IdentifiableLanguages)
+	err = core.UnmarshalModel(m, "languages", &obj.Languages, UnmarshalIdentifiableLanguage)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // IdentifiedLanguage : IdentifiedLanguage struct
 type IdentifiedLanguage struct {
-
 	// The language code for an identified language.
 	Language *string `json:"language" validate:"required"`
 
@@ -1189,25 +1432,51 @@ type IdentifiedLanguage struct {
 	Confidence *float64 `json:"confidence" validate:"required"`
 }
 
+
+// UnmarshalIdentifiedLanguage unmarshals an instance of IdentifiedLanguage from the specified map of raw messages.
+func UnmarshalIdentifiedLanguage(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(IdentifiedLanguage)
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // IdentifiedLanguages : IdentifiedLanguages struct
 type IdentifiedLanguages struct {
-
 	// A ranking of identified languages with confidence scores.
 	Languages []IdentifiedLanguage `json:"languages" validate:"required"`
 }
 
+
+// UnmarshalIdentifiedLanguages unmarshals an instance of IdentifiedLanguages from the specified map of raw messages.
+func UnmarshalIdentifiedLanguages(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(IdentifiedLanguages)
+	err = core.UnmarshalModel(m, "languages", &obj.Languages, UnmarshalIdentifiedLanguage)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // IdentifyOptions : The Identify options.
 type IdentifyOptions struct {
-
 	// Input text in UTF-8 format.
 	Text *string `json:"text" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewIdentifyOptions : Instantiate IdentifyOptions
-func (languageTranslator *LanguageTranslatorV3) NewIdentifyOptions(text string) *IdentifyOptions {
+func (*LanguageTranslatorV3) NewIdentifyOptions(text string) *IdentifyOptions {
 	return &IdentifyOptions{
 		Text: core.StringPtr(text),
 	}
@@ -1227,7 +1496,6 @@ func (options *IdentifyOptions) SetHeaders(param map[string]string) *IdentifyOpt
 
 // Language : Response payload for languages.
 type Language struct {
-
 	// The language code for the language (for example, `af`).
 	Language *string `json:"language,omitempty"`
 
@@ -1260,22 +1528,77 @@ type Language struct {
 	Identifiable *bool `json:"identifiable,omitempty"`
 }
 
+
+// UnmarshalLanguage unmarshals an instance of Language from the specified map of raw messages.
+func UnmarshalLanguage(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Language)
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language_name", &obj.LanguageName)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "native_language_name", &obj.NativeLanguageName)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "country_code", &obj.CountryCode)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "words_separated", &obj.WordsSeparated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "direction", &obj.Direction)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "supported_as_source", &obj.SupportedAsSource)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "supported_as_target", &obj.SupportedAsTarget)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "identifiable", &obj.Identifiable)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Languages : The response type for listing supported languages.
 type Languages struct {
-
 	// An array of supported languages with information about each language.
 	Languages []Language `json:"languages" validate:"required"`
+}
+
+
+// UnmarshalLanguages unmarshals an instance of Languages from the specified map of raw messages.
+func UnmarshalLanguages(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Languages)
+	err = core.UnmarshalModel(m, "languages", &obj.Languages, UnmarshalLanguage)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
 
 // ListDocumentsOptions : The ListDocuments options.
 type ListDocumentsOptions struct {
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListDocumentsOptions : Instantiate ListDocumentsOptions
-func (languageTranslator *LanguageTranslatorV3) NewListDocumentsOptions() *ListDocumentsOptions {
+func (*LanguageTranslatorV3) NewListDocumentsOptions() *ListDocumentsOptions {
 	return &ListDocumentsOptions{}
 }
 
@@ -1288,12 +1611,12 @@ func (options *ListDocumentsOptions) SetHeaders(param map[string]string) *ListDo
 // ListIdentifiableLanguagesOptions : The ListIdentifiableLanguages options.
 type ListIdentifiableLanguagesOptions struct {
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListIdentifiableLanguagesOptions : Instantiate ListIdentifiableLanguagesOptions
-func (languageTranslator *LanguageTranslatorV3) NewListIdentifiableLanguagesOptions() *ListIdentifiableLanguagesOptions {
+func (*LanguageTranslatorV3) NewListIdentifiableLanguagesOptions() *ListIdentifiableLanguagesOptions {
 	return &ListIdentifiableLanguagesOptions{}
 }
 
@@ -1306,12 +1629,12 @@ func (options *ListIdentifiableLanguagesOptions) SetHeaders(param map[string]str
 // ListLanguagesOptions : The ListLanguages options.
 type ListLanguagesOptions struct {
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListLanguagesOptions : Instantiate ListLanguagesOptions
-func (languageTranslator *LanguageTranslatorV3) NewListLanguagesOptions() *ListLanguagesOptions {
+func (*LanguageTranslatorV3) NewListLanguagesOptions() *ListLanguagesOptions {
 	return &ListLanguagesOptions{}
 }
 
@@ -1323,7 +1646,6 @@ func (options *ListLanguagesOptions) SetHeaders(param map[string]string) *ListLa
 
 // ListModelsOptions : The ListModels options.
 type ListModelsOptions struct {
-
 	// Specify a language code to filter results by source language.
 	Source *string `json:"source,omitempty"`
 
@@ -1335,12 +1657,12 @@ type ListModelsOptions struct {
 	// this parameter to `false`. There is exactly one default model, the IBM-provided base model, per language pair.
 	Default *bool `json:"default,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListModelsOptions : Instantiate ListModelsOptions
-func (languageTranslator *LanguageTranslatorV3) NewListModelsOptions() *ListModelsOptions {
+func (*LanguageTranslatorV3) NewListModelsOptions() *ListModelsOptions {
 	return &ListModelsOptions{}
 }
 
@@ -1370,13 +1692,10 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 
 // TranslateDocumentOptions : The TranslateDocument options.
 type TranslateDocumentOptions struct {
-
-	// The contents of the source file to translate.
-	//
-	// [Supported file
-	// types](https://cloud.ibm.com/docs/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
-	//
-	// Maximum file size: **20 MB**.
+	// The contents of the source file to translate. The maximum file size for document translation is 20 MB for service
+	// instances on the Standard, Advanced, and Premium plans, and 2 MB for service instances on the Lite plan. For more
+	// information, see [Supported file formats
+	// (Beta)](https://cloud.ibm.com/docs/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats).
 	File io.ReadCloser `json:"file" validate:"required"`
 
 	// The filename for file.
@@ -1401,14 +1720,14 @@ type TranslateDocumentOptions struct {
 	// To use a previously submitted document as the source for a new translation, enter the `document_id` of the document.
 	DocumentID *string `json:"document_id,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewTranslateDocumentOptions : Instantiate TranslateDocumentOptions
-func (languageTranslator *LanguageTranslatorV3) NewTranslateDocumentOptions(file io.ReadCloser, filename string) *TranslateDocumentOptions {
+func (*LanguageTranslatorV3) NewTranslateDocumentOptions(file io.ReadCloser, filename string) *TranslateDocumentOptions {
 	return &TranslateDocumentOptions{
-		File:     file,
+		File: file,
 		Filename: core.StringPtr(filename),
 	}
 }
@@ -1463,8 +1782,8 @@ func (options *TranslateDocumentOptions) SetHeaders(param map[string]string) *Tr
 
 // TranslateOptions : The Translate options.
 type TranslateOptions struct {
-
-	// Input text in UTF-8 encoding. Multiple entries result in multiple translations in the response.
+	// Input text in UTF-8 encoding. Submit a maximum of 50 KB (51,200 bytes) of text with a single request. Multiple
+	// elements result in multiple translations in the response.
 	Text []string `json:"text" validate:"required"`
 
 	// The model to use for translation. For example, `en-de` selects the IBM-provided base model for English-to-German
@@ -1479,12 +1798,12 @@ type TranslateOptions struct {
 	// Language code that specifies the target language for translation. Required if model ID is not specified.
 	Target *string `json:"target,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewTranslateOptions : Instantiate TranslateOptions
-func (languageTranslator *LanguageTranslatorV3) NewTranslateOptions(text []string) *TranslateOptions {
+func (*LanguageTranslatorV3) NewTranslateOptions(text []string) *TranslateOptions {
 	return &TranslateOptions{
 		Text: text,
 	}
@@ -1522,14 +1841,24 @@ func (options *TranslateOptions) SetHeaders(param map[string]string) *TranslateO
 
 // Translation : Translation struct
 type Translation struct {
-
 	// Translation output in UTF-8.
 	Translation *string `json:"translation" validate:"required"`
 }
 
+
+// UnmarshalTranslation unmarshals an instance of Translation from the specified map of raw messages.
+func UnmarshalTranslation(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Translation)
+	err = core.UnmarshalPrimitive(m, "translation", &obj.Translation)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TranslationModel : Response payload for models.
 type TranslationModel struct {
-
 	// A globally unique string that identifies the underlying model that is used for translation.
 	ModelID *string `json:"model_id" validate:"required"`
 
@@ -1568,28 +1897,86 @@ type TranslationModel struct {
 // Constants associated with the TranslationModel.Status property.
 // Availability of a model.
 const (
-	TranslationModel_Status_Available   = "available"
-	TranslationModel_Status_Deleted     = "deleted"
+	TranslationModel_Status_Available = "available"
+	TranslationModel_Status_Deleted = "deleted"
 	TranslationModel_Status_Dispatching = "dispatching"
-	TranslationModel_Status_Error       = "error"
-	TranslationModel_Status_Publishing  = "publishing"
-	TranslationModel_Status_Queued      = "queued"
-	TranslationModel_Status_Trained     = "trained"
-	TranslationModel_Status_Training    = "training"
-	TranslationModel_Status_Uploaded    = "uploaded"
-	TranslationModel_Status_Uploading   = "uploading"
+	TranslationModel_Status_Error = "error"
+	TranslationModel_Status_Publishing = "publishing"
+	TranslationModel_Status_Queued = "queued"
+	TranslationModel_Status_Trained = "trained"
+	TranslationModel_Status_Training = "training"
+	TranslationModel_Status_Uploaded = "uploaded"
+	TranslationModel_Status_Uploading = "uploading"
 )
+
+
+// UnmarshalTranslationModel unmarshals an instance of TranslationModel from the specified map of raw messages.
+func UnmarshalTranslationModel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TranslationModel)
+	err = core.UnmarshalPrimitive(m, "model_id", &obj.ModelID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "source", &obj.Source)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "target", &obj.Target)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "base_model_id", &obj.BaseModelID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "domain", &obj.Domain)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "customizable", &obj.Customizable)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "default_model", &obj.DefaultModel)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "owner", &obj.Owner)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // TranslationModels : The response type for listing existing translation models.
 type TranslationModels struct {
-
 	// An array of available models.
 	Models []TranslationModel `json:"models" validate:"required"`
 }
 
+
+// UnmarshalTranslationModels unmarshals an instance of TranslationModels from the specified map of raw messages.
+func UnmarshalTranslationModels(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TranslationModels)
+	err = core.UnmarshalModel(m, "models", &obj.Models, UnmarshalTranslationModel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TranslationResult : TranslationResult struct
 type TranslationResult struct {
-
 	// An estimate of the number of words in the input text.
 	WordCount *int64 `json:"word_count" validate:"required"`
 
@@ -1605,4 +1992,32 @@ type TranslationResult struct {
 
 	// List of translation output in UTF-8, corresponding to the input text entries.
 	Translations []Translation `json:"translations" validate:"required"`
+}
+
+
+// UnmarshalTranslationResult unmarshals an instance of TranslationResult from the specified map of raw messages.
+func UnmarshalTranslationResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TranslationResult)
+	err = core.UnmarshalPrimitive(m, "word_count", &obj.WordCount)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "character_count", &obj.CharacterCount)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "detected_language", &obj.DetectedLanguage)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "detected_language_confidence", &obj.DetectedLanguageConfidence)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "translations", &obj.Translations, UnmarshalTranslation)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
