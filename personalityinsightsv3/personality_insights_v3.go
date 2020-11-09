@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
+/*
+ * IBM OpenAPI SDK Code Generator Version: 3.17.0-8d569e8f-20201030-142059
+ */
+ 
+
 // Package personalityinsightsv3 : Operations and models for the PersonalityInsightsV3 service
 package personalityinsightsv3
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
-	"io"
-
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"io"
+	"net/http"
+	"reflect"
+	"time"
 )
 
 // PersonalityInsightsV3 : The IBM Watson&trade; Personality Insights service enables applications to derive insights
@@ -42,10 +51,13 @@ import (
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
 // Version: 3.4.4
-// See: https://cloud.ibm.com/docs/personality-insights/
+// See: https://cloud.ibm.com/docs/personality-insights
 type PersonalityInsightsV3 struct {
 	Service *core.BaseService
-	Version string
+
+	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2017-10-13`.
+	Version *string
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
@@ -59,7 +71,10 @@ type PersonalityInsightsV3Options struct {
 	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
-	Version       string
+
+	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2017-10-13`.
+	Version *string `validate:"required"`
 }
 
 // NewPersonalityInsightsV3 : constructs an instance of PersonalityInsightsV3 with passed in options.
@@ -78,6 +93,11 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *P
 		if err != nil {
 			return
 		}
+	}
+
+	err = core.ValidateStruct(options, "options")
+	if err != nil {
+		return
 	}
 
 	baseService, err := core.NewBaseService(serviceOptions)
@@ -108,6 +128,37 @@ func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *P
 // SetServiceURL sets the service URL
 func (personalityInsights *PersonalityInsightsV3) SetServiceURL(url string) error {
 	return personalityInsights.Service.SetServiceURL(url)
+}
+
+// GetServiceURL returns the service URL
+func (personalityInsights *PersonalityInsightsV3) GetServiceURL() string {
+	return personalityInsights.Service.GetServiceURL()
+}
+
+// SetDefaultHeaders sets HTTP headers to be sent in every request
+func (personalityInsights *PersonalityInsightsV3) SetDefaultHeaders(headers http.Header) {
+	personalityInsights.Service.SetDefaultHeaders(headers)
+}
+
+// SetEnableGzipCompression sets the service's EnableGzipCompression field
+func (personalityInsights *PersonalityInsightsV3) SetEnableGzipCompression(enableGzip bool) {
+	personalityInsights.Service.SetEnableGzipCompression(enableGzip)
+}
+
+// GetEnableGzipCompression returns the service's EnableGzipCompression field
+func (personalityInsights *PersonalityInsightsV3) GetEnableGzipCompression() bool {
+	return personalityInsights.Service.GetEnableGzipCompression()
+}
+
+// EnableRetries enables automatic retries for requests invoked for this service instance.
+// If either parameter is specified as 0, then a default value is used instead.
+func (personalityInsights *PersonalityInsightsV3) EnableRetries(maxRetries int, maxRetryInterval time.Duration) {
+	personalityInsights.Service.EnableRetries(maxRetries, maxRetryInterval)
+}
+
+// DisableRetries disables automatic retries for requests invoked for this service instance.
+func (personalityInsights *PersonalityInsightsV3) DisableRetries() {
+	personalityInsights.Service.DisableRetries()
 }
 
 // DisableSSLVerification bypasses verification of the server's SSL certificate
@@ -151,6 +202,11 @@ func (personalityInsights *PersonalityInsightsV3) DisableSSLVerification() {
 // * [Understanding a CSV
 // profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-outputCSV#outputCSV).
 func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *ProfileOptions) (result *Profile, response *core.DetailedResponse, err error) {
+	return personalityInsights.ProfileWithContext(context.Background(), profileOptions)
+}
+
+// ProfileWithContext is an alternate form of the Profile method which supports a Context parameter
+func (personalityInsights *PersonalityInsightsV3) ProfileWithContext(ctx context.Context, profileOptions *ProfileOptions) (result *Profile, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(profileOptions, "profileOptions cannot be nil")
 	if err != nil {
 		return
@@ -160,11 +216,14 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 		return
 	}
 
-	pathSegments := []string{"v3/profile"}
-	pathParameters := []string{}
+	if profileOptions.Content != nil && profileOptions.ContentType == nil {
+		profileOptions.SetContentType("application/json")
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(personalityInsights.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = personalityInsights.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(personalityInsights.Service.Options.URL, `/v3/profile`, nil)
 	if err != nil {
 		return
 	}
@@ -177,7 +236,6 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	if profileOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
@@ -189,6 +247,7 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 		builder.AddHeader("Accept-Language", fmt.Sprint(*profileOptions.AcceptLanguage))
 	}
 
+	builder.AddQuery("version", fmt.Sprint(*personalityInsights.Version))
 	if profileOptions.RawScores != nil {
 		builder.AddQuery("raw_scores", fmt.Sprint(*profileOptions.RawScores))
 	}
@@ -198,7 +257,6 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 	if profileOptions.ConsumptionPreferences != nil {
 		builder.AddQuery("consumption_preferences", fmt.Sprint(*profileOptions.ConsumptionPreferences))
 	}
-	builder.AddQuery("version", personalityInsights.Version)
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body)
 	if err != nil {
@@ -210,14 +268,16 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 		return
 	}
 
-	response, err = personalityInsights.Service.Request(request, new(Profile))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Profile)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = personalityInsights.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalProfile)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -258,6 +318,11 @@ func (personalityInsights *PersonalityInsightsV3) Profile(profileOptions *Profil
 // * [Understanding a CSV
 // profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-outputCSV#outputCSV).
 func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *ProfileOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
+	return personalityInsights.ProfileAsCsvWithContext(context.Background(), profileOptions)
+}
+
+// ProfileAsCsvWithContext is an alternate form of the ProfileAsCsv method which supports a Context parameter
+func (personalityInsights *PersonalityInsightsV3) ProfileAsCsvWithContext(ctx context.Context, profileOptions *ProfileOptions) (result io.ReadCloser, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(profileOptions, "profileOptions cannot be nil")
 	if err != nil {
 		return
@@ -267,11 +332,14 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 		return
 	}
 
-	pathSegments := []string{"v3/profile"}
-	pathParameters := []string{}
+	if profileOptions.Content != nil && profileOptions.ContentType == nil {
+		profileOptions.SetContentType("application/json")
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(personalityInsights.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = personalityInsights.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(personalityInsights.Service.Options.URL, `/v3/profile`, nil)
 	if err != nil {
 		return
 	}
@@ -284,7 +352,6 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "text/csv")
 	if profileOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*profileOptions.ContentType))
@@ -296,6 +363,7 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 		builder.AddHeader("Accept-Language", fmt.Sprint(*profileOptions.AcceptLanguage))
 	}
 
+	builder.AddQuery("version", fmt.Sprint(*personalityInsights.Version))
 	if profileOptions.RawScores != nil {
 		builder.AddQuery("raw_scores", fmt.Sprint(*profileOptions.RawScores))
 	}
@@ -305,7 +373,6 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 	if profileOptions.ConsumptionPreferences != nil {
 		builder.AddQuery("consumption_preferences", fmt.Sprint(*profileOptions.ConsumptionPreferences))
 	}
-	builder.AddQuery("version", personalityInsights.Version)
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(profileOptions.ContentType), profileOptions.Content, nil, profileOptions.Body)
 	if err != nil {
@@ -317,21 +384,13 @@ func (personalityInsights *PersonalityInsightsV3) ProfileAsCsv(profileOptions *P
 		return
 	}
 
-	response, err = personalityInsights.Service.Request(request, new(io.ReadCloser))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(io.ReadCloser)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
-	}
+	response, err = personalityInsights.Service.Request(request, &result)
 
 	return
 }
 
 // Behavior : The temporal behavior for the input content.
 type Behavior struct {
-
 	// The unique, non-localized identifier of the characteristic to which the results pertain. IDs have the form
 	// `behavior_{value}`.
 	TraitID *string `json:"trait_id" validate:"required"`
@@ -347,9 +406,32 @@ type Behavior struct {
 	Percentage *float64 `json:"percentage" validate:"required"`
 }
 
+
+// UnmarshalBehavior unmarshals an instance of Behavior from the specified map of raw messages.
+func UnmarshalBehavior(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Behavior)
+	err = core.UnmarshalPrimitive(m, "trait_id", &obj.TraitID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "category", &obj.Category)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "percentage", &obj.Percentage)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ConsumptionPreferences : A consumption preference that the service inferred from the input content.
 type ConsumptionPreferences struct {
-
 	// The unique, non-localized identifier of the consumption preference to which the results pertain. IDs have the form
 	// `consumption_preferences_{preference}`.
 	ConsumptionPreferenceID *string `json:"consumption_preference_id" validate:"required"`
@@ -367,9 +449,28 @@ type ConsumptionPreferences struct {
 	Score *float64 `json:"score" validate:"required"`
 }
 
+
+// UnmarshalConsumptionPreferences unmarshals an instance of ConsumptionPreferences from the specified map of raw messages.
+func UnmarshalConsumptionPreferences(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ConsumptionPreferences)
+	err = core.UnmarshalPrimitive(m, "consumption_preference_id", &obj.ConsumptionPreferenceID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "score", &obj.Score)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ConsumptionPreferencesCategory : The consumption preferences that the service inferred from the input content.
 type ConsumptionPreferencesCategory struct {
-
 	// The unique, non-localized identifier of the consumption preferences category to which the results pertain. IDs have
 	// the form `consumption_preferences_{category}`.
 	ConsumptionPreferenceCategoryID *string `json:"consumption_preference_category_id" validate:"required"`
@@ -381,15 +482,35 @@ type ConsumptionPreferencesCategory struct {
 	ConsumptionPreferences []ConsumptionPreferences `json:"consumption_preferences" validate:"required"`
 }
 
+
+// UnmarshalConsumptionPreferencesCategory unmarshals an instance of ConsumptionPreferencesCategory from the specified map of raw messages.
+func UnmarshalConsumptionPreferencesCategory(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ConsumptionPreferencesCategory)
+	err = core.UnmarshalPrimitive(m, "consumption_preference_category_id", &obj.ConsumptionPreferenceCategoryID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "consumption_preferences", &obj.ConsumptionPreferences, UnmarshalConsumptionPreferences)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Content : The full input content that the service is to analyze.
 type Content struct {
-
 	// An array of `ContentItem` objects that provides the text that is to be analyzed.
 	ContentItems []ContentItem `json:"contentItems" validate:"required"`
 }
 
+
 // NewContent : Instantiate Content (Generic Model Constructor)
-func (personalityInsights *PersonalityInsightsV3) NewContent(contentItems []ContentItem) (model *Content, err error) {
+func (*PersonalityInsightsV3) NewContent(contentItems []ContentItem) (model *Content, err error) {
 	model = &Content{
 		ContentItems: contentItems,
 	}
@@ -397,9 +518,19 @@ func (personalityInsights *PersonalityInsightsV3) NewContent(contentItems []Cont
 	return
 }
 
+// UnmarshalContent unmarshals an instance of Content from the specified map of raw messages.
+func UnmarshalContent(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Content)
+	err = core.UnmarshalModel(m, "contentItems", &obj.ContentItems, UnmarshalContentItem)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ContentItem : An input content item that the service is to analyze.
 type ContentItem struct {
-
 	// The content that is to be analyzed. The service supports up to 20 MB of content for all `ContentItem` objects
 	// combined.
 	Content *string `json:"content" validate:"required"`
@@ -442,7 +573,7 @@ type ContentItem struct {
 // The MIME type of the content. The default is plain text. The tags are stripped from HTML content before it is
 // analyzed; plain text is processed as submitted.
 const (
-	ContentItem_Contenttype_TextHTML  = "text/html"
+	ContentItem_Contenttype_TextHTML = "text/html"
 	ContentItem_Contenttype_TextPlain = "text/plain"
 )
 
@@ -461,8 +592,9 @@ const (
 	ContentItem_Language_Ko = "ko"
 )
 
+
 // NewContentItem : Instantiate ContentItem (Generic Model Constructor)
-func (personalityInsights *PersonalityInsightsV3) NewContentItem(content string) (model *ContentItem, err error) {
+func (*PersonalityInsightsV3) NewContentItem(content string) (model *ContentItem, err error) {
 	model = &ContentItem{
 		Content: core.StringPtr(content),
 	}
@@ -470,9 +602,51 @@ func (personalityInsights *PersonalityInsightsV3) NewContentItem(content string)
 	return
 }
 
+// UnmarshalContentItem unmarshals an instance of ContentItem from the specified map of raw messages.
+func UnmarshalContentItem(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ContentItem)
+	err = core.UnmarshalPrimitive(m, "content", &obj.Content)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "updated", &obj.Updated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "contenttype", &obj.Contenttype)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "parentid", &obj.Parentid)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "reply", &obj.Reply)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "forward", &obj.Forward)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Profile : The personality profile that the service generated for the input content.
 type Profile struct {
-
 	// The language model that was used to process the input.
 	ProcessedLanguage *string `json:"processed_language" validate:"required"`
 
@@ -518,9 +692,52 @@ const (
 	Profile_ProcessedLanguage_Ko = "ko"
 )
 
+
+// UnmarshalProfile unmarshals an instance of Profile from the specified map of raw messages.
+func UnmarshalProfile(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Profile)
+	err = core.UnmarshalPrimitive(m, "processed_language", &obj.ProcessedLanguage)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "word_count", &obj.WordCount)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "word_count_message", &obj.WordCountMessage)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "personality", &obj.Personality, UnmarshalTrait)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "needs", &obj.Needs, UnmarshalTrait)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "values", &obj.Values, UnmarshalTrait)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "behavior", &obj.Behavior, UnmarshalBehavior)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "consumption_preferences", &obj.ConsumptionPreferences, UnmarshalConsumptionPreferencesCategory)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "warnings", &obj.Warnings, UnmarshalWarning)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ProfileOptions : The Profile options.
 type ProfileOptions struct {
-
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
 	// [Providing sufficient
 	// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For JSON input,
@@ -564,7 +781,7 @@ type ProfileOptions struct {
 	// returned.
 	ConsumptionPreferences *bool `json:"consumption_preferences,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -591,21 +808,21 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input and
 // response content.
 const (
-	ProfileOptions_AcceptLanguage_Ar   = "ar"
-	ProfileOptions_AcceptLanguage_De   = "de"
-	ProfileOptions_AcceptLanguage_En   = "en"
-	ProfileOptions_AcceptLanguage_Es   = "es"
-	ProfileOptions_AcceptLanguage_Fr   = "fr"
-	ProfileOptions_AcceptLanguage_It   = "it"
-	ProfileOptions_AcceptLanguage_Ja   = "ja"
-	ProfileOptions_AcceptLanguage_Ko   = "ko"
+	ProfileOptions_AcceptLanguage_Ar = "ar"
+	ProfileOptions_AcceptLanguage_De = "de"
+	ProfileOptions_AcceptLanguage_En = "en"
+	ProfileOptions_AcceptLanguage_Es = "es"
+	ProfileOptions_AcceptLanguage_Fr = "fr"
+	ProfileOptions_AcceptLanguage_It = "it"
+	ProfileOptions_AcceptLanguage_Ja = "ja"
+	ProfileOptions_AcceptLanguage_Ko = "ko"
 	ProfileOptions_AcceptLanguage_PtBr = "pt-br"
 	ProfileOptions_AcceptLanguage_ZhCn = "zh-cn"
 	ProfileOptions_AcceptLanguage_ZhTw = "zh-tw"
 )
 
 // NewProfileOptions : Instantiate ProfileOptions
-func (personalityInsights *PersonalityInsightsV3) NewProfileOptions() *ProfileOptions {
+func (*PersonalityInsightsV3) NewProfileOptions() *ProfileOptions {
 	return &ProfileOptions{}
 }
 
@@ -665,7 +882,6 @@ func (options *ProfileOptions) SetHeaders(param map[string]string) *ProfileOptio
 
 // Trait : The characteristics that the service inferred from the input content.
 type Trait struct {
-
 	// The unique, non-localized identifier of the characteristic to which the results pertain. IDs have the form
 	// * `big5_{characteristic}` for Big Five personality dimensions
 	// * `facet_{characteristic}` for Big Five personality facets
@@ -710,14 +926,49 @@ type Trait struct {
 // The category of the characteristic: `personality` for Big Five personality characteristics, `needs` for Needs, and
 // `values` for Values.
 const (
-	Trait_Category_Needs       = "needs"
+	Trait_Category_Needs = "needs"
 	Trait_Category_Personality = "personality"
-	Trait_Category_Values      = "values"
+	Trait_Category_Values = "values"
 )
+
+
+// UnmarshalTrait unmarshals an instance of Trait from the specified map of raw messages.
+func UnmarshalTrait(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Trait)
+	err = core.UnmarshalPrimitive(m, "trait_id", &obj.TraitID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "category", &obj.Category)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "percentile", &obj.Percentile)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "raw_score", &obj.RawScore)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "significant", &obj.Significant)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "children", &obj.Children, UnmarshalTrait)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // Warning : A warning message that is associated with the input content.
 type Warning struct {
-
 	// The identifier of the warning message.
 	WarningID *string `json:"warning_id" validate:"required"`
 
@@ -739,7 +990,23 @@ type Warning struct {
 // The identifier of the warning message.
 const (
 	Warning_WarningID_ContentTruncated = "CONTENT_TRUNCATED"
-	Warning_WarningID_JSONAsText       = "JSON_AS_TEXT"
-	Warning_WarningID_PartialTextUsed  = "PARTIAL_TEXT_USED"
+	Warning_WarningID_JSONAsText = "JSON_AS_TEXT"
+	Warning_WarningID_PartialTextUsed = "PARTIAL_TEXT_USED"
 	Warning_WarningID_WordCountMessage = "WORD_COUNT_MESSAGE"
 )
+
+
+// UnmarshalWarning unmarshals an instance of Warning from the specified map of raw messages.
+func UnmarshalWarning(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Warning)
+	err = core.UnmarshalPrimitive(m, "warning_id", &obj.WarningID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "message", &obj.Message)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
