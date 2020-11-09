@@ -24,7 +24,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
@@ -59,7 +59,7 @@ func TestConstructService(t *testing.T) {
 
 	service, err = personalityinsightsv3.NewPersonalityInsightsV3(
 		&personalityinsightsv3.PersonalityInsightsV3Options{
-			Version: "2017-10-13",
+			Version: core.StringPtr("2017-10-13"),
 		})
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
