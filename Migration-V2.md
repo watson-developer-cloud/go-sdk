@@ -25,7 +25,7 @@ service, err = assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 
 ### Breaking Changes to model setter functions
 
-In the `1.x` branch of the SDK, setter methods were provided for almost all model structs for dealing with data from the service. Version `2.0.0` makes significant breaking changesin how setters are handled for these structs.
+In the `1.x` version of the SDK, setter methods were provided for almost all model structs for dealing with data from the service. Version `2.0.0` makes significant breaking changes in how setters are handled for these structs.
 
 Specifically, now the only structs that have setters for their properties are structs with the naming convention `{ServiceOperation}Options`. These are called `Options Models` and are typically the top level struct that is passed into a function. These structs have setter methods exposed that allow the individual properties within them to be set.
 
