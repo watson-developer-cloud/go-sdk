@@ -39,23 +39,19 @@ Version `2.0.0` of the Go SDK now adds alternate versions to all service functio
 
 Internally, the Go SDK uses these functions for all operations, but the regular function provides the background context as a default.
 
-### Enabling `gzip` compression
-
-All service structs now expose a function `GetEnableGzipCompression()` and `SetEnableGzipCompression(enableGzip bool)`. These methods allow you to enable `gzip` compression within the service methods.
-
 ### Automatic Retries
 
-All service structs will now automatically retry HTTP methods in the event of an error.
+All service structs can be configured to retry HTTP methods in the event of an error.
 
 You can customize the retry logic to suit your purposes. The function `EnableRetries(maxRetries int, mayTretryInterval time.Duration)` allows you to configure the retry strategy that you would like to enable for the functions called by the service.
 
-Optionally, you can disable retries by using the `DisableRetries()` method exposed on the service struct.
+You can also disable retries by using the `DisableRetries()` method exposed on the service struct.
 
 ## Service specific changes
 
 ### assistantv1
 
-- In the `Message()` function, the MessageInput{}'s `Text` property is now a `*string`. This can be constructed via the `core.StringPtr("{message}")` convenience method.
+- In the `Message()` function, the MessageInput{}'s `Text` property is now a `*string`.
 
 ### assistantv2
 
