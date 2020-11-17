@@ -35,7 +35,7 @@ If your code editor calls out that a setter method you are using has been remove
 
 ### Providing custom `Context` to functions
 
-Version `2.0.0` of the Go SDK now adds alternate versions to all service functions, named `{function}WithContext`. This function calls the expected service function, but accepts a `Context` as the first parameter. This allows you to provide a context that you would like the function to execute in.
+Version `2.0.0` of the Go SDK now includes an alternate version of each operation belonging to the service, named `<operation>WithContext`. This alternate function allows you to pass in a `context.Context` parameter while invoking the operation.  The `context.Context` parameter can be used to specify a timeout, or cancel an in-flight request.  Details about `context.Context` can be found [here](https://golang.org/pkg/context).
 
 Internally, the Go SDK uses these functions for all operations, but the regular function provides the background context as a default.
 
