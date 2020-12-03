@@ -66,7 +66,7 @@ We have a preview release available for the upcoming version `2.0.0`. This intro
 If you want to try out the new version before it is released, you can add it as a dependency by targeting the branch directly in your `go.mod`. The easier way to do this is by running this command:
 
 ```sh
-go get github.com/watson-developer-cloud/go-sdk@370ac3c724f9e1d32c2d75122989e0049405b0fb
+go get github.com/watson-developer-cloud/go-sdk@c2fbbe350edbc8f9a6ce6325d4c7880c3c1c538d
 ```
 
 If you decide to preview the new release, and have any feedback or comments they are greatly appreciated!
