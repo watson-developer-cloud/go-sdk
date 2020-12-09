@@ -24,7 +24,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/comparecomplyv1"
@@ -58,7 +58,7 @@ func TestConstructService(t *testing.T) {
 	var err error
 
 	service, err = comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-		Version: "2018-10-15",
+		Version: core.StringPtr("2018-10-15"),
 	})
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -173,7 +173,7 @@ func TestFeedback(t *testing.T) {
 				Text: core.StringPtr("1. IBM will provide a Senior Managing Consultant / expert resource, for up to 80 hours, to assist Florida Power & Light (FPL) with the creation of an IT infrastructure unit cost model for existing infrastructure."),
 				OriginalLabels: &comparecomplyv1.OriginalLabelsIn{
 					Types: []comparecomplyv1.TypeLabel{
-						comparecomplyv1.TypeLabel{
+						{
 							Label: &comparecomplyv1.Label{
 								Nature: core.StringPtr("Obligation"),
 								Party:  core.StringPtr("IBM"),
@@ -182,20 +182,20 @@ func TestFeedback(t *testing.T) {
 						},
 					},
 					Categories: []comparecomplyv1.Category{
-						comparecomplyv1.Category{
-							Label: core.StringPtr(comparecomplyv1.Category_Label_Amendments),
+						{
+							Label: core.StringPtr(comparecomplyv1.CategoryLabelAmendmentsConst),
 						},
 					},
 				},
 				UpdatedLabels: &comparecomplyv1.UpdatedLabelsIn{
 					Types: []comparecomplyv1.TypeLabel{
-						comparecomplyv1.TypeLabel{
+						{
 							Label: &comparecomplyv1.Label{
 								Nature: core.StringPtr("Obligation"),
 								Party:  core.StringPtr("IBM"),
 							},
 						},
-						comparecomplyv1.TypeLabel{
+						{
 							Label: &comparecomplyv1.Label{
 								Nature: core.StringPtr("Disclaimer"),
 								Party:  core.StringPtr("Buyer"),
@@ -203,7 +203,7 @@ func TestFeedback(t *testing.T) {
 						},
 					},
 					Categories: []comparecomplyv1.Category{
-						comparecomplyv1.Category{
+						{
 							Label: core.StringPtr("Responsibilities"),
 						},
 					},

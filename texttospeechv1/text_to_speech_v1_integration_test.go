@@ -22,7 +22,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/texttospeechv1"
@@ -82,7 +82,7 @@ func TestVoice(t *testing.T) {
 	// Get voice
 	voice, _, responseErr := service.GetVoice(
 		&texttospeechv1.GetVoiceOptions{
-			Voice: core.StringPtr(texttospeechv1.GetVoiceOptions_Voice_EnUsAllisonvoice),
+			Voice: core.StringPtr(texttospeechv1.GetVoiceOptionsVoiceEnUsAllisonvoiceConst),
 		},
 	)
 	assert.NotNil(t, voice)
@@ -96,7 +96,7 @@ func TestSynthesize(t *testing.T) {
 		&texttospeechv1.SynthesizeOptions{
 			Text:   core.StringPtr("Hello world"),
 			Accept: core.StringPtr("audio/wav"),
-			Voice:  core.StringPtr(texttospeechv1.SynthesizeOptions_Voice_EnUsAllisonvoice),
+			Voice:  core.StringPtr(texttospeechv1.SynthesizeOptionsVoiceEnUsAllisonvoiceConst),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -158,7 +158,7 @@ func TestPronunciation(t *testing.T) {
 	pronunciation, _, responseErr := service.GetPronunciation(
 		&texttospeechv1.GetPronunciationOptions{
 			Text:   core.StringPtr("IEEE"),
-			Voice:  core.StringPtr(texttospeechv1.GetPronunciationOptions_Voice_EnUsAllisonvoice),
+			Voice:  core.StringPtr(texttospeechv1.GetPronunciationOptionsVoiceEnUsAllisonvoiceConst),
 			Format: core.StringPtr("ibm"),
 		},
 	)
@@ -170,10 +170,10 @@ func TestVoiceModel(t *testing.T) {
 	shouldSkipTest(t)
 
 	// create voice model
-	createVoiceModel, _, responseErr := service.CreateVoiceModel(
-		&texttospeechv1.CreateVoiceModelOptions{
+	createVoiceModel, _, responseErr := service.CreateCustomModel(
+		&texttospeechv1.CreateCustomModelOptions{
 			Name:        core.StringPtr("First model for GO"),
-			Language:    core.StringPtr(texttospeechv1.CreateVoiceModelOptions_Language_EnUs),
+			Language:    core.StringPtr(texttospeechv1.CreateCustomModelOptionsLanguageEnUsConst),
 			Description: core.StringPtr("First custom voice model"),
 		},
 	)
@@ -181,24 +181,24 @@ func TestVoiceModel(t *testing.T) {
 	assert.NotNil(t, createVoiceModel)
 
 	// List voice models
-	listVoiceModels, _, responseErr := service.ListVoiceModels(
-		&texttospeechv1.ListVoiceModelsOptions{},
+	listVoiceModels, _, responseErr := service.ListCustomModels(
+		&texttospeechv1.ListCustomModelsOptions{},
 	)
 	assert.Nil(t, responseErr)
 	assert.NotNil(t, listVoiceModels)
 
 	// Update voice model
-	_, responseErr = service.UpdateVoiceModel(
-		&texttospeechv1.UpdateVoiceModelOptions{
+	_, responseErr = service.UpdateCustomModel(
+		&texttospeechv1.UpdateCustomModelOptions{
 			CustomizationID: createVoiceModel.CustomizationID,
 			Name:            core.StringPtr("First Model Update for GO"),
 			Description:     core.StringPtr("First custom voice model update"),
 			Words: []texttospeechv1.Word{
-				texttospeechv1.Word{
+				{
 					Word:        core.StringPtr("NCAA"),
 					Translation: core.StringPtr("N C double A"),
 				},
-				texttospeechv1.Word{
+				{
 					Word:        core.StringPtr("iPhone"),
 					Translation: core.StringPtr("I phone"),
 				},
@@ -208,8 +208,8 @@ func TestVoiceModel(t *testing.T) {
 	assert.Nil(t, responseErr)
 
 	// Get voice model
-	getVoiceModel, _, responseErr := service.GetVoiceModel(
-		&texttospeechv1.GetVoiceModelOptions{
+	getVoiceModel, _, responseErr := service.GetCustomModel(
+		&texttospeechv1.GetCustomModelOptions{
 			CustomizationID: createVoiceModel.CustomizationID,
 		},
 	)
@@ -236,11 +236,11 @@ func TestWords(t *testing.T) {
 		&texttospeechv1.AddWordsOptions{
 			CustomizationID: customizationID,
 			Words: []texttospeechv1.Word{
-				texttospeechv1.Word{
+				{
 					Word:        core.StringPtr("EEE"),
 					Translation: core.StringPtr("<phoneme alphabet=\"ibm\" ph=\"tr1Ipxl.1i\"></phoneme>"),
 				},
-				texttospeechv1.Word{
+				{
 					Word:        core.StringPtr("IEEE"),
 					Translation: core.StringPtr("<phoneme alphabet=\"ibm\" ph=\"1Y.tr1Ipxl.1i\"></phoneme>"),
 				},
@@ -279,8 +279,8 @@ func TestWords(t *testing.T) {
 	assert.Nil(t, responseErr)
 
 	// Delete voice model
-	_, responseErr = service.DeleteVoiceModel(
-		&texttospeechv1.DeleteVoiceModelOptions{
+	_, responseErr = service.DeleteCustomModel(
+		&texttospeechv1.DeleteCustomModelOptions{
 			CustomizationID: customizationID,
 		},
 	)

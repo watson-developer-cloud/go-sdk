@@ -17,10 +17,9 @@
 package discoveryv2_test
 
 import (
-	"testing"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"testing"
 )
 
 func TestDiscoveryV2(t *testing.T) {

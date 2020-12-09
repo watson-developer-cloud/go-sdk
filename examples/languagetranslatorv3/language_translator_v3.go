@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	languagetranslator "github.com/watson-developer-cloud/go-sdk/languagetranslatorv3"
 )
 
@@ -16,7 +16,7 @@ func main() {
 	service, serviceErr := languagetranslator.
 		NewLanguageTranslatorV3(&languagetranslator.LanguageTranslatorV3Options{
 			URL:           "YOUR SERVICE URL",
-			Version:       "2018-02-16",
+			Version:       core.StringPtr("2018-02-16"),
 			Authenticator: authenticator,
 		})
 

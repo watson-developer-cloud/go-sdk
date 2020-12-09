@@ -25,7 +25,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
@@ -134,7 +134,7 @@ func TestLanguageModel(t *testing.T) {
 	createLanguageModel, _, responseErr := service.CreateLanguageModel(
 		&speechtotextv1.CreateLanguageModelOptions{
 			Name:          core.StringPtr("First example language model for GO"),
-			BaseModelName: core.StringPtr(speechtotextv1.CreateLanguageModelOptions_BaseModelName_EnUsBroadbandmodel),
+			BaseModelName: core.StringPtr(speechtotextv1.CreateLanguageModelOptionsBaseModelNameEnUsBroadbandmodelConst),
 			Description:   core.StringPtr("First custom language model example"),
 		},
 	)
@@ -232,12 +232,12 @@ func TestWords(t *testing.T) {
 		&speechtotextv1.AddWordsOptions{
 			CustomizationID: languageModel.CustomizationID,
 			Words: []speechtotextv1.CustomWord{
-				speechtotextv1.CustomWord{
+				{
 					Word:       core.StringPtr("HHonors"),
 					SoundsLike: []string{"hilton honors", "H. honors"},
 					DisplayAs:  core.StringPtr("HHonors"),
 				},
-				speechtotextv1.CustomWord{
+				{
 					Word:       core.StringPtr("IEEE"),
 					SoundsLike: []string{"I. triple E."},
 				},
@@ -284,7 +284,7 @@ func TestAcousticModel(t *testing.T) {
 	createAcousticModel, _, responseErr := service.CreateAcousticModel(
 		&speechtotextv1.CreateAcousticModelOptions{
 			Name:          core.StringPtr("First example acoustic model for GO"),
-			BaseModelName: core.StringPtr(speechtotextv1.CreateAcousticModelOptions_BaseModelName_EnUsBroadbandmodel),
+			BaseModelName: core.StringPtr(speechtotextv1.CreateAcousticModelOptionsBaseModelNameEnUsBroadbandmodelConst),
 			Description:   core.StringPtr("First custom acoustic model example"),
 		},
 	)

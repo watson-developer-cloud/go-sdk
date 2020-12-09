@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
+/*
+ * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ */
+
 // Package toneanalyzerv3 : Operations and models for the ToneAnalyzerV3 service
 package toneanalyzerv3
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	common "github.com/watson-developer-cloud/go-sdk/common"
+	"net/http"
+	"reflect"
 	"strings"
+	"time"
 )
 
 // ToneAnalyzerV3 : The IBM Watson&trade; Tone Analyzer service uses linguistic analysis to detect emotional and
@@ -34,10 +43,13 @@ import (
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
 // Version: 3.5.3
-// See: https://cloud.ibm.com/docs/tone-analyzer/
+// See: https://cloud.ibm.com/docs/tone-analyzer
 type ToneAnalyzerV3 struct {
 	Service *core.BaseService
-	Version string
+
+	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2017-09-21`.
+	Version *string
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
@@ -51,7 +63,10 @@ type ToneAnalyzerV3Options struct {
 	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
-	Version       string
+
+	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2017-09-21`.
+	Version *string `validate:"required"`
 }
 
 // NewToneAnalyzerV3 : constructs an instance of ToneAnalyzerV3 with passed in options.
@@ -70,6 +85,11 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (service *ToneAnalyzerV3,
 		if err != nil {
 			return
 		}
+	}
+
+	err = core.ValidateStruct(options, "options")
+	if err != nil {
+		return
 	}
 
 	baseService, err := core.NewBaseService(serviceOptions)
@@ -97,9 +117,55 @@ func NewToneAnalyzerV3(options *ToneAnalyzerV3Options) (service *ToneAnalyzerV3,
 	return
 }
 
+// GetServiceURLForRegion returns the service URL to be used for the specified region
+func GetServiceURLForRegion(region string) (string, error) {
+	return "", fmt.Errorf("service does not support regional URLs")
+}
+
+// Clone makes a copy of "toneAnalyzer" suitable for processing requests.
+func (toneAnalyzer *ToneAnalyzerV3) Clone() *ToneAnalyzerV3 {
+	if core.IsNil(toneAnalyzer) {
+		return nil
+	}
+	clone := *toneAnalyzer
+	clone.Service = toneAnalyzer.Service.Clone()
+	return &clone
+}
+
 // SetServiceURL sets the service URL
 func (toneAnalyzer *ToneAnalyzerV3) SetServiceURL(url string) error {
 	return toneAnalyzer.Service.SetServiceURL(url)
+}
+
+// GetServiceURL returns the service URL
+func (toneAnalyzer *ToneAnalyzerV3) GetServiceURL() string {
+	return toneAnalyzer.Service.GetServiceURL()
+}
+
+// SetDefaultHeaders sets HTTP headers to be sent in every request
+func (toneAnalyzer *ToneAnalyzerV3) SetDefaultHeaders(headers http.Header) {
+	toneAnalyzer.Service.SetDefaultHeaders(headers)
+}
+
+// SetEnableGzipCompression sets the service's EnableGzipCompression field
+func (toneAnalyzer *ToneAnalyzerV3) SetEnableGzipCompression(enableGzip bool) {
+	toneAnalyzer.Service.SetEnableGzipCompression(enableGzip)
+}
+
+// GetEnableGzipCompression returns the service's EnableGzipCompression field
+func (toneAnalyzer *ToneAnalyzerV3) GetEnableGzipCompression() bool {
+	return toneAnalyzer.Service.GetEnableGzipCompression()
+}
+
+// EnableRetries enables automatic retries for requests invoked for this service instance.
+// If either parameter is specified as 0, then a default value is used instead.
+func (toneAnalyzer *ToneAnalyzerV3) EnableRetries(maxRetries int, maxRetryInterval time.Duration) {
+	toneAnalyzer.Service.EnableRetries(maxRetries, maxRetryInterval)
+}
+
+// DisableRetries disables automatic retries for requests invoked for this service instance.
+func (toneAnalyzer *ToneAnalyzerV3) DisableRetries() {
+	toneAnalyzer.Service.DisableRetries()
 }
 
 // DisableSSLVerification bypasses verification of the server's SSL certificate
@@ -125,6 +191,11 @@ func (toneAnalyzer *ToneAnalyzerV3) DisableSSLVerification() {
 // **See also:** [Using the general-purpose
 // endpoint](https://cloud.ibm.com/docs/tone-analyzer?topic=tone-analyzer-utgpe#utgpe).
 func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *ToneAnalysis, response *core.DetailedResponse, err error) {
+	return toneAnalyzer.ToneWithContext(context.Background(), toneOptions)
+}
+
+// ToneWithContext is an alternate form of the Tone method which supports a Context parameter
+func (toneAnalyzer *ToneAnalyzerV3) ToneWithContext(ctx context.Context, toneOptions *ToneOptions) (result *ToneAnalysis, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(toneOptions, "toneOptions cannot be nil")
 	if err != nil {
 		return
@@ -134,11 +205,14 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *Tone
 		return
 	}
 
-	pathSegments := []string{"v3/tone"}
-	pathParameters := []string{}
+	if toneOptions.ToneInput != nil && toneOptions.ContentType == nil {
+		toneOptions.SetContentType("application/json")
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(toneAnalyzer.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = toneAnalyzer.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(toneAnalyzer.Service.Options.URL, `/v3/tone`, nil)
 	if err != nil {
 		return
 	}
@@ -151,7 +225,6 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *Tone
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	if toneOptions.ContentType != nil {
 		builder.AddHeader("Content-Type", fmt.Sprint(*toneOptions.ContentType))
@@ -163,13 +236,13 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *Tone
 		builder.AddHeader("Accept-Language", fmt.Sprint(*toneOptions.AcceptLanguage))
 	}
 
+	builder.AddQuery("version", fmt.Sprint(*toneAnalyzer.Version))
 	if toneOptions.Sentences != nil {
 		builder.AddQuery("sentences", fmt.Sprint(*toneOptions.Sentences))
 	}
 	if toneOptions.Tones != nil {
 		builder.AddQuery("tones", strings.Join(toneOptions.Tones, ","))
 	}
-	builder.AddQuery("version", toneAnalyzer.Version)
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(toneOptions.ContentType), toneOptions.ToneInput, nil, toneOptions.Body)
 	if err != nil {
@@ -181,14 +254,16 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *Tone
 		return
 	}
 
-	response, err = toneAnalyzer.Service.Request(request, new(ToneAnalysis))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*ToneAnalysis)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = toneAnalyzer.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalToneAnalysis)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -206,6 +281,11 @@ func (toneAnalyzer *ToneAnalyzerV3) Tone(toneOptions *ToneOptions) (result *Tone
 // **See also:** [Using the customer-engagement
 // endpoint](https://cloud.ibm.com/docs/tone-analyzer?topic=tone-analyzer-utco#utco).
 func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (result *UtteranceAnalyses, response *core.DetailedResponse, err error) {
+	return toneAnalyzer.ToneChatWithContext(context.Background(), toneChatOptions)
+}
+
+// ToneChatWithContext is an alternate form of the ToneChat method which supports a Context parameter
+func (toneAnalyzer *ToneAnalyzerV3) ToneChatWithContext(ctx context.Context, toneChatOptions *ToneChatOptions) (result *UtteranceAnalyses, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(toneChatOptions, "toneChatOptions cannot be nil")
 	if err != nil {
 		return
@@ -215,11 +295,10 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 		return
 	}
 
-	pathSegments := []string{"v3/tone_chat"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(toneAnalyzer.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = toneAnalyzer.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(toneAnalyzer.Service.Options.URL, `/v3/tone_chat`, nil)
 	if err != nil {
 		return
 	}
@@ -232,7 +311,6 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	if toneChatOptions.ContentLanguage != nil {
@@ -241,7 +319,8 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 	if toneChatOptions.AcceptLanguage != nil {
 		builder.AddHeader("Accept-Language", fmt.Sprint(*toneChatOptions.AcceptLanguage))
 	}
-	builder.AddQuery("version", toneAnalyzer.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*toneAnalyzer.Version))
 
 	body := make(map[string]interface{})
 	if toneChatOptions.Utterances != nil {
@@ -257,21 +336,22 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChat(toneChatOptions *ToneChatOptions) (
 		return
 	}
 
-	response, err = toneAnalyzer.Service.Request(request, new(UtteranceAnalyses))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*UtteranceAnalyses)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = toneAnalyzer.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalUtteranceAnalyses)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // DocumentAnalysis : The results of the analysis for the full input content.
 type DocumentAnalysis struct {
-
 	// **`2017-09-21`:** An array of `ToneScore` objects that provides the results of the analysis for each qualifying tone
 	// of the document. The array includes results for any tone whose score is at least 0.5. The array is empty if no tone
 	// has a score that meets this threshold. **`2016-05-19`:** Not returned.
@@ -288,9 +368,27 @@ type DocumentAnalysis struct {
 	Warning *string `json:"warning,omitempty"`
 }
 
+// UnmarshalDocumentAnalysis unmarshals an instance of DocumentAnalysis from the specified map of raw messages.
+func UnmarshalDocumentAnalysis(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DocumentAnalysis)
+	err = core.UnmarshalModel(m, "tones", &obj.Tones, UnmarshalToneScore)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "tone_categories", &obj.ToneCategories, UnmarshalToneCategory)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "warning", &obj.Warning)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SentenceAnalysis : The results of the analysis for the individual sentences of the input content.
 type SentenceAnalysis struct {
-
 	// The unique identifier of a sentence of the input content. The first sentence has ID 0, and the ID of each subsequent
 	// sentence is incremented by one.
 	SentenceID *int64 `json:"sentence_id" validate:"required"`
@@ -317,9 +415,39 @@ type SentenceAnalysis struct {
 	InputTo *int64 `json:"input_to,omitempty"`
 }
 
+// UnmarshalSentenceAnalysis unmarshals an instance of SentenceAnalysis from the specified map of raw messages.
+func UnmarshalSentenceAnalysis(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SentenceAnalysis)
+	err = core.UnmarshalPrimitive(m, "sentence_id", &obj.SentenceID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "text", &obj.Text)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "tones", &obj.Tones, UnmarshalToneScore)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "tone_categories", &obj.ToneCategories, UnmarshalToneCategory)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "input_from", &obj.InputFrom)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "input_to", &obj.InputTo)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ToneAnalysis : The tone analysis results for the input from the general-purpose endpoint.
 type ToneAnalysis struct {
-
 	// The results of the analysis for the full input content.
 	DocumentTone *DocumentAnalysis `json:"document_tone" validate:"required"`
 
@@ -329,9 +457,23 @@ type ToneAnalysis struct {
 	SentencesTone []SentenceAnalysis `json:"sentences_tone,omitempty"`
 }
 
+// UnmarshalToneAnalysis unmarshals an instance of ToneAnalysis from the specified map of raw messages.
+func UnmarshalToneAnalysis(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ToneAnalysis)
+	err = core.UnmarshalModel(m, "document_tone", &obj.DocumentTone, UnmarshalDocumentAnalysis)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "sentences_tone", &obj.SentencesTone, UnmarshalSentenceAnalysis)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ToneCategory : The category for a tone from the input content.
 type ToneCategory struct {
-
 	// An array of `ToneScore` objects that provides the results for the tones of the category.
 	Tones []ToneScore `json:"tones" validate:"required"`
 
@@ -343,9 +485,27 @@ type ToneCategory struct {
 	CategoryName *string `json:"category_name" validate:"required"`
 }
 
+// UnmarshalToneCategory unmarshals an instance of ToneCategory from the specified map of raw messages.
+func UnmarshalToneCategory(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ToneCategory)
+	err = core.UnmarshalModel(m, "tones", &obj.Tones, UnmarshalToneScore)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "category_id", &obj.CategoryID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "category_name", &obj.CategoryName)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ToneChatOptions : The ToneChat options.
 type ToneChatOptions struct {
-
 	// An array of `Utterance` objects that provides the input content that the service is to analyze.
 	Utterances []Utterance `json:"utterances" validate:"required"`
 
@@ -362,7 +522,7 @@ type ToneChatOptions struct {
 	// **Accept-Language**.
 	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -374,8 +534,8 @@ type ToneChatOptions struct {
 // * **`2017-09-21`:** Accepts `en` or `fr`.
 // * **`2016-05-19`:** Accepts only `en`.
 const (
-	ToneChatOptions_ContentLanguage_En = "en"
-	ToneChatOptions_ContentLanguage_Fr = "fr"
+	ToneChatOptionsContentLanguageEnConst = "en"
+	ToneChatOptionsContentLanguageFrConst = "fr"
 )
 
 // Constants associated with the ToneChatOptions.AcceptLanguage property.
@@ -383,21 +543,21 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneChatOptions_AcceptLanguage_Ar   = "ar"
-	ToneChatOptions_AcceptLanguage_De   = "de"
-	ToneChatOptions_AcceptLanguage_En   = "en"
-	ToneChatOptions_AcceptLanguage_Es   = "es"
-	ToneChatOptions_AcceptLanguage_Fr   = "fr"
-	ToneChatOptions_AcceptLanguage_It   = "it"
-	ToneChatOptions_AcceptLanguage_Ja   = "ja"
-	ToneChatOptions_AcceptLanguage_Ko   = "ko"
-	ToneChatOptions_AcceptLanguage_PtBr = "pt-br"
-	ToneChatOptions_AcceptLanguage_ZhCn = "zh-cn"
-	ToneChatOptions_AcceptLanguage_ZhTw = "zh-tw"
+	ToneChatOptionsAcceptLanguageArConst   = "ar"
+	ToneChatOptionsAcceptLanguageDeConst   = "de"
+	ToneChatOptionsAcceptLanguageEnConst   = "en"
+	ToneChatOptionsAcceptLanguageEsConst   = "es"
+	ToneChatOptionsAcceptLanguageFrConst   = "fr"
+	ToneChatOptionsAcceptLanguageItConst   = "it"
+	ToneChatOptionsAcceptLanguageJaConst   = "ja"
+	ToneChatOptionsAcceptLanguageKoConst   = "ko"
+	ToneChatOptionsAcceptLanguagePtBrConst = "pt-br"
+	ToneChatOptionsAcceptLanguageZhCnConst = "zh-cn"
+	ToneChatOptionsAcceptLanguageZhTwConst = "zh-tw"
 )
 
 // NewToneChatOptions : Instantiate ToneChatOptions
-func (toneAnalyzer *ToneAnalyzerV3) NewToneChatOptions(utterances []Utterance) *ToneChatOptions {
+func (*ToneAnalyzerV3) NewToneChatOptions(utterances []Utterance) *ToneChatOptions {
 	return &ToneChatOptions{
 		Utterances: utterances,
 	}
@@ -429,7 +589,6 @@ func (options *ToneChatOptions) SetHeaders(param map[string]string) *ToneChatOpt
 
 // ToneChatScore : The score for an utterance from the input content.
 type ToneChatScore struct {
-
 	// The score for the tone in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone
 	// is perceived in the utterance.
 	Score *float64 `json:"score" validate:"required"`
@@ -446,24 +605,42 @@ type ToneChatScore struct {
 // The unique, non-localized identifier of the tone for the results. The service returns results only for tones whose
 // scores meet a minimum threshold of 0.5.
 const (
-	ToneChatScore_ToneID_Excited     = "excited"
-	ToneChatScore_ToneID_Frustrated  = "frustrated"
-	ToneChatScore_ToneID_Impolite    = "impolite"
-	ToneChatScore_ToneID_Polite      = "polite"
-	ToneChatScore_ToneID_Sad         = "sad"
-	ToneChatScore_ToneID_Satisfied   = "satisfied"
-	ToneChatScore_ToneID_Sympathetic = "sympathetic"
+	ToneChatScoreToneIDExcitedConst     = "excited"
+	ToneChatScoreToneIDFrustratedConst  = "frustrated"
+	ToneChatScoreToneIDImpoliteConst    = "impolite"
+	ToneChatScoreToneIDPoliteConst      = "polite"
+	ToneChatScoreToneIDSadConst         = "sad"
+	ToneChatScoreToneIDSatisfiedConst   = "satisfied"
+	ToneChatScoreToneIDSympatheticConst = "sympathetic"
 )
+
+// UnmarshalToneChatScore unmarshals an instance of ToneChatScore from the specified map of raw messages.
+func UnmarshalToneChatScore(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ToneChatScore)
+	err = core.UnmarshalPrimitive(m, "score", &obj.Score)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "tone_id", &obj.ToneID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "tone_name", &obj.ToneName)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // ToneInput : Input for the general-purpose endpoint.
 type ToneInput struct {
-
 	// The input content that the service is to analyze.
 	Text *string `json:"text" validate:"required"`
 }
 
 // NewToneInput : Instantiate ToneInput (Generic Model Constructor)
-func (toneAnalyzer *ToneAnalyzerV3) NewToneInput(text string) (model *ToneInput, err error) {
+func (*ToneAnalyzerV3) NewToneInput(text string) (model *ToneInput, err error) {
 	model = &ToneInput{
 		Text: core.StringPtr(text),
 	}
@@ -471,9 +648,19 @@ func (toneAnalyzer *ToneAnalyzerV3) NewToneInput(text string) (model *ToneInput,
 	return
 }
 
+// UnmarshalToneInput unmarshals an instance of ToneInput from the specified map of raw messages.
+func UnmarshalToneInput(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ToneInput)
+	err = core.UnmarshalPrimitive(m, "text", &obj.Text)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ToneOptions : The Tone options.
 type ToneOptions struct {
-
 	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type
 	// `ToneInput`.
 	ToneInput *ToneInput `json:"tone_input,omitempty"`
@@ -511,15 +698,15 @@ type ToneOptions struct {
 	// **Accept-Language**.
 	AcceptLanguage *string `json:"Accept-Language,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the ToneOptions.Tone property.
 const (
-	ToneOptions_Tone_Emotion  = "emotion"
-	ToneOptions_Tone_Language = "language"
-	ToneOptions_Tone_Social   = "social"
+	ToneOptionsToneEmotionConst  = "emotion"
+	ToneOptionsToneLanguageConst = "language"
+	ToneOptionsToneSocialConst   = "social"
 )
 
 // Constants associated with the ToneOptions.ContentLanguage property.
@@ -530,8 +717,8 @@ const (
 // * **`2017-09-21`:** Accepts `en` or `fr`.
 // * **`2016-05-19`:** Accepts only `en`.
 const (
-	ToneOptions_ContentLanguage_En = "en"
-	ToneOptions_ContentLanguage_Fr = "fr"
+	ToneOptionsContentLanguageEnConst = "en"
+	ToneOptionsContentLanguageFrConst = "fr"
 )
 
 // Constants associated with the ToneOptions.AcceptLanguage property.
@@ -539,21 +726,21 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneOptions_AcceptLanguage_Ar   = "ar"
-	ToneOptions_AcceptLanguage_De   = "de"
-	ToneOptions_AcceptLanguage_En   = "en"
-	ToneOptions_AcceptLanguage_Es   = "es"
-	ToneOptions_AcceptLanguage_Fr   = "fr"
-	ToneOptions_AcceptLanguage_It   = "it"
-	ToneOptions_AcceptLanguage_Ja   = "ja"
-	ToneOptions_AcceptLanguage_Ko   = "ko"
-	ToneOptions_AcceptLanguage_PtBr = "pt-br"
-	ToneOptions_AcceptLanguage_ZhCn = "zh-cn"
-	ToneOptions_AcceptLanguage_ZhTw = "zh-tw"
+	ToneOptionsAcceptLanguageArConst   = "ar"
+	ToneOptionsAcceptLanguageDeConst   = "de"
+	ToneOptionsAcceptLanguageEnConst   = "en"
+	ToneOptionsAcceptLanguageEsConst   = "es"
+	ToneOptionsAcceptLanguageFrConst   = "fr"
+	ToneOptionsAcceptLanguageItConst   = "it"
+	ToneOptionsAcceptLanguageJaConst   = "ja"
+	ToneOptionsAcceptLanguageKoConst   = "ko"
+	ToneOptionsAcceptLanguagePtBrConst = "pt-br"
+	ToneOptionsAcceptLanguageZhCnConst = "zh-cn"
+	ToneOptionsAcceptLanguageZhTwConst = "zh-tw"
 )
 
 // NewToneOptions : Instantiate ToneOptions
-func (toneAnalyzer *ToneAnalyzerV3) NewToneOptions() *ToneOptions {
+func (*ToneAnalyzerV3) NewToneOptions() *ToneOptions {
 	return &ToneOptions{}
 }
 
@@ -607,7 +794,6 @@ func (options *ToneOptions) SetHeaders(param map[string]string) *ToneOptions {
 
 // ToneScore : The score for a tone from the input content.
 type ToneScore struct {
-
 	// The score for the tone.
 	// * **`2017-09-21`:** The score that is returned lies in the range of 0.5 to 1. A score greater than 0.75 indicates a
 	// high likelihood that the tone is perceived in the content.
@@ -631,9 +817,27 @@ type ToneScore struct {
 	ToneName *string `json:"tone_name" validate:"required"`
 }
 
+// UnmarshalToneScore unmarshals an instance of ToneScore from the specified map of raw messages.
+func UnmarshalToneScore(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ToneScore)
+	err = core.UnmarshalPrimitive(m, "score", &obj.Score)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "tone_id", &obj.ToneID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "tone_name", &obj.ToneName)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Utterance : An utterance for the input of the general-purpose endpoint.
 type Utterance struct {
-
 	// An utterance contributed by a user in the conversation that is to be analyzed. The utterance can contain multiple
 	// sentences.
 	Text *string `json:"text" validate:"required"`
@@ -643,7 +847,7 @@ type Utterance struct {
 }
 
 // NewUtterance : Instantiate Utterance (Generic Model Constructor)
-func (toneAnalyzer *ToneAnalyzerV3) NewUtterance(text string) (model *Utterance, err error) {
+func (*ToneAnalyzerV3) NewUtterance(text string) (model *Utterance, err error) {
 	model = &Utterance{
 		Text: core.StringPtr(text),
 	}
@@ -651,9 +855,23 @@ func (toneAnalyzer *ToneAnalyzerV3) NewUtterance(text string) (model *Utterance,
 	return
 }
 
+// UnmarshalUtterance unmarshals an instance of Utterance from the specified map of raw messages.
+func UnmarshalUtterance(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Utterance)
+	err = core.UnmarshalPrimitive(m, "text", &obj.Text)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user", &obj.User)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // UtteranceAnalyses : The results of the analysis for the utterances of the input content.
 type UtteranceAnalyses struct {
-
 	// An array of `UtteranceAnalysis` objects that provides the results for each utterance of the input.
 	UtterancesTone []UtteranceAnalysis `json:"utterances_tone" validate:"required"`
 
@@ -662,9 +880,23 @@ type UtteranceAnalyses struct {
 	Warning *string `json:"warning,omitempty"`
 }
 
+// UnmarshalUtteranceAnalyses unmarshals an instance of UtteranceAnalyses from the specified map of raw messages.
+func UnmarshalUtteranceAnalyses(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(UtteranceAnalyses)
+	err = core.UnmarshalModel(m, "utterances_tone", &obj.UtterancesTone, UnmarshalUtteranceAnalysis)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "warning", &obj.Warning)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // UtteranceAnalysis : The results of the analysis for an utterance of the input content.
 type UtteranceAnalysis struct {
-
 	// The unique identifier of the utterance. The first utterance has ID 0, and the ID of each subsequent utterance is
 	// incremented by one.
 	UtteranceID *int64 `json:"utterance_id" validate:"required"`
@@ -680,4 +912,27 @@ type UtteranceAnalysis struct {
 	// **`2017-09-21`:** An error message if the utterance contains more than 500 characters. The service does not analyze
 	// the utterance. **`2016-05-19`:** Not returned.
 	Error *string `json:"error,omitempty"`
+}
+
+// UnmarshalUtteranceAnalysis unmarshals an instance of UtteranceAnalysis from the specified map of raw messages.
+func UnmarshalUtteranceAnalysis(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(UtteranceAnalysis)
+	err = core.UnmarshalPrimitive(m, "utterance_id", &obj.UtteranceID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "utterance_text", &obj.UtteranceText)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "tones", &obj.Tones, UnmarshalToneChatScore)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "error", &obj.Error)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }

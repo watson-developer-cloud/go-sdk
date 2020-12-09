@@ -23,7 +23,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/discoveryv2"
@@ -83,7 +83,7 @@ func TestConstructService(t *testing.T) {
 	var err error
 
 	service, err = discoveryv2.NewDiscoveryV2(&discoveryv2.DiscoveryV2Options{
-		Version: "2020-08-23",
+		Version: core.StringPtr("2020-08-23"),
 		URL:     *serviceURL,
 		Authenticator: &core.IamAuthenticator{
 			ApiKey: *APIKey,
@@ -191,10 +191,10 @@ func TestDocument(t *testing.T) {
 
 	updateDocument, _, responseErr := service.UpdateDocument(
 		&discoveryv2.UpdateDocumentOptions{
-			ProjectID:    projectID,
-			CollectionID: collectionID,
-			DocumentID:   addDocument.DocumentID,
-			File:         fileInfo,
+			ProjectID:       projectID,
+			CollectionID:    collectionID,
+			DocumentID:      addDocument.DocumentID,
+			File:            fileInfo,
 			Filename:        core.StringPtr("test_file"),
 			FileContentType: core.StringPtr("application/html"),
 		},

@@ -23,7 +23,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv4"
@@ -63,7 +63,7 @@ func TestConstructService(t *testing.T) {
 
 	service, err = visualrecognitionv4.
 		NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-			Version:     "2019-02-11",
+			Version:     core.StringPtr("2019-02-11"),
 			ServiceName: "visual_recognition",
 		})
 	assert.Nil(t, err)
@@ -145,11 +145,11 @@ func TestImages(t *testing.T) {
 		&visualrecognitionv4.AddImagesOptions{
 			CollectionID: collectionId,
 			ImagesFile: []visualrecognitionv4.FileWithMetadata{
-				visualrecognitionv4.FileWithMetadata{
+				{
 					Data:     kittyFile,
 					Filename: core.StringPtr("hello kitty"),
 				},
-				visualrecognitionv4.FileWithMetadata{
+				{
 					Data:     giraffeFile,
 					Filename: core.StringPtr("hello giraffe"),
 				},
@@ -212,9 +212,9 @@ func TestAnalyze(t *testing.T) {
 	analyzeResult, _, responseErr := service.Analyze(
 		&visualrecognitionv4.AnalyzeOptions{
 			CollectionIds: []string{collectionID},
-			Features:      []string{visualrecognitionv4.AnalyzeOptions_Features_Objects},
+			Features:      []string{visualrecognitionv4.AnalyzeOptionsFeaturesObjectsConst},
 			ImagesFile: []visualrecognitionv4.FileWithMetadata{
-				visualrecognitionv4.FileWithMetadata{
+				{
 					Data:     giraffeFile,
 					Filename: core.StringPtr("my giraffe"),
 				},
@@ -245,7 +245,7 @@ func TestTraining(t *testing.T) {
 		&visualrecognitionv4.AddImagesOptions{
 			CollectionID: collectionId,
 			ImagesFile: []visualrecognitionv4.FileWithMetadata{
-				visualrecognitionv4.FileWithMetadata{
+				{
 					Data:     giraffeFile,
 					Filename: core.StringPtr("hello giraffe"),
 				},
@@ -260,7 +260,7 @@ func TestTraining(t *testing.T) {
 			CollectionID: collectionId,
 			ImageID:      addImages.Images[0].ImageID,
 			Objects: []visualrecognitionv4.TrainingDataObject{
-				visualrecognitionv4.TrainingDataObject{
+				{
 					Object: core.StringPtr("giraffe training data"),
 					Location: &visualrecognitionv4.Location{
 						Top:    core.Int64Ptr(64),

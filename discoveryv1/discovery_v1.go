@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
+/*
+ * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ */
+
 // Package discoveryv1 : Operations and models for the DiscoveryV1 service
 package discoveryv1
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
-	"strconv"
+	"net/http"
+	"reflect"
 	"strings"
+	"time"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/common"
 )
@@ -35,10 +42,13 @@ import (
 // for manual filtering of results.
 //
 // Version: 1.0
-// See: https://console.bluemix.net/docs/discovery/
+// See: https://cloud.ibm.com/docs/discovery
 type DiscoveryV1 struct {
 	Service *core.BaseService
-	Version string
+
+	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2019-04-30`.
+	Version *string
 }
 
 // DefaultServiceURL is the default URL to make service requests to.
@@ -52,7 +62,10 @@ type DiscoveryV1Options struct {
 	ServiceName   string
 	URL           string
 	Authenticator core.Authenticator
-	Version       string
+
+	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
+	// `2019-04-30`.
+	Version *string `validate:"required"`
 }
 
 // NewDiscoveryV1 : constructs an instance of DiscoveryV1 with passed in options.
@@ -71,6 +84,11 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err erro
 		if err != nil {
 			return
 		}
+	}
+
+	err = core.ValidateStruct(options, "options")
+	if err != nil {
+		return
 	}
 
 	baseService, err := core.NewBaseService(serviceOptions)
@@ -98,9 +116,55 @@ func NewDiscoveryV1(options *DiscoveryV1Options) (service *DiscoveryV1, err erro
 	return
 }
 
+// GetServiceURLForRegion returns the service URL to be used for the specified region
+func GetServiceURLForRegion(region string) (string, error) {
+	return "", fmt.Errorf("service does not support regional URLs")
+}
+
+// Clone makes a copy of "discovery" suitable for processing requests.
+func (discovery *DiscoveryV1) Clone() *DiscoveryV1 {
+	if core.IsNil(discovery) {
+		return nil
+	}
+	clone := *discovery
+	clone.Service = discovery.Service.Clone()
+	return &clone
+}
+
 // SetServiceURL sets the service URL
 func (discovery *DiscoveryV1) SetServiceURL(url string) error {
 	return discovery.Service.SetServiceURL(url)
+}
+
+// GetServiceURL returns the service URL
+func (discovery *DiscoveryV1) GetServiceURL() string {
+	return discovery.Service.GetServiceURL()
+}
+
+// SetDefaultHeaders sets HTTP headers to be sent in every request
+func (discovery *DiscoveryV1) SetDefaultHeaders(headers http.Header) {
+	discovery.Service.SetDefaultHeaders(headers)
+}
+
+// SetEnableGzipCompression sets the service's EnableGzipCompression field
+func (discovery *DiscoveryV1) SetEnableGzipCompression(enableGzip bool) {
+	discovery.Service.SetEnableGzipCompression(enableGzip)
+}
+
+// GetEnableGzipCompression returns the service's EnableGzipCompression field
+func (discovery *DiscoveryV1) GetEnableGzipCompression() bool {
+	return discovery.Service.GetEnableGzipCompression()
+}
+
+// EnableRetries enables automatic retries for requests invoked for this service instance.
+// If either parameter is specified as 0, then a default value is used instead.
+func (discovery *DiscoveryV1) EnableRetries(maxRetries int, maxRetryInterval time.Duration) {
+	discovery.Service.EnableRetries(maxRetries, maxRetryInterval)
+}
+
+// DisableRetries disables automatic retries for requests invoked for this service instance.
+func (discovery *DiscoveryV1) DisableRetries() {
+	discovery.Service.DisableRetries()
 }
 
 // DisableSSLVerification bypasses verification of the server's SSL certificate
@@ -114,6 +178,11 @@ func (discovery *DiscoveryV1) DisableSSLVerification() {
 // **Note**: You can create only one environment for private data per service instance. An attempt to create another
 // environment results in an error.
 func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *CreateEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
+	return discovery.CreateEnvironmentWithContext(context.Background(), createEnvironmentOptions)
+}
+
+// CreateEnvironmentWithContext is an alternate form of the CreateEnvironment method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateEnvironmentWithContext(ctx context.Context, createEnvironmentOptions *CreateEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createEnvironmentOptions, "createEnvironmentOptions cannot be nil")
 	if err != nil {
 		return
@@ -123,11 +192,10 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 		return
 	}
 
-	pathSegments := []string{"v1/environments"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments`, nil)
 	if err != nil {
 		return
 	}
@@ -140,10 +208,10 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createEnvironmentOptions.Name != nil {
@@ -165,14 +233,16 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Environment))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Environment)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -180,16 +250,20 @@ func (discovery *DiscoveryV1) CreateEnvironment(createEnvironmentOptions *Create
 // ListEnvironments : List environments
 // List existing environments for the service instance.
 func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvironmentsOptions) (result *ListEnvironmentsResponse, response *core.DetailedResponse, err error) {
+	return discovery.ListEnvironmentsWithContext(context.Background(), listEnvironmentsOptions)
+}
+
+// ListEnvironmentsWithContext is an alternate form of the ListEnvironments method which supports a Context parameter
+func (discovery *DiscoveryV1) ListEnvironmentsWithContext(ctx context.Context, listEnvironmentsOptions *ListEnvironmentsOptions) (result *ListEnvironmentsResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listEnvironmentsOptions, "listEnvironmentsOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/environments"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments`, nil)
 	if err != nil {
 		return
 	}
@@ -202,33 +276,39 @@ func (discovery *DiscoveryV1) ListEnvironments(listEnvironmentsOptions *ListEnvi
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if listEnvironmentsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listEnvironmentsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(ListEnvironmentsResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*ListEnvironmentsResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListEnvironmentsResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // GetEnvironment : Get environment info
 func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
+	return discovery.GetEnvironmentWithContext(context.Background(), getEnvironmentOptions)
+}
+
+// GetEnvironmentWithContext is an alternate form of the GetEnvironment method which supports a Context parameter
+func (discovery *DiscoveryV1) GetEnvironmentWithContext(ctx context.Context, getEnvironmentOptions *GetEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getEnvironmentOptions, "getEnvironmentOptions cannot be nil")
 	if err != nil {
 		return
@@ -238,11 +318,14 @@ func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironme
 		return
 	}
 
-	pathSegments := []string{"v1/environments"}
-	pathParameters := []string{*getEnvironmentOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getEnvironmentOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -255,23 +338,25 @@ func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironme
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Environment))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Environment)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -280,6 +365,11 @@ func (discovery *DiscoveryV1) GetEnvironment(getEnvironmentOptions *GetEnvironme
 // Updates an environment. The environment's **name** and  **description** parameters can be changed. You must specify a
 // **name** for the environment.
 func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *UpdateEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
+	return discovery.UpdateEnvironmentWithContext(context.Background(), updateEnvironmentOptions)
+}
+
+// UpdateEnvironmentWithContext is an alternate form of the UpdateEnvironment method which supports a Context parameter
+func (discovery *DiscoveryV1) UpdateEnvironmentWithContext(ctx context.Context, updateEnvironmentOptions *UpdateEnvironmentOptions) (result *Environment, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateEnvironmentOptions, "updateEnvironmentOptions cannot be nil")
 	if err != nil {
 		return
@@ -289,11 +379,14 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 		return
 	}
 
-	pathSegments := []string{"v1/environments"}
-	pathParameters := []string{*updateEnvironmentOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *updateEnvironmentOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -306,10 +399,10 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if updateEnvironmentOptions.Name != nil {
@@ -331,20 +424,27 @@ func (discovery *DiscoveryV1) UpdateEnvironment(updateEnvironmentOptions *Update
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Environment))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Environment)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // DeleteEnvironment : Delete environment
 func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *DeleteEnvironmentOptions) (result *DeleteEnvironmentResponse, response *core.DetailedResponse, err error) {
+	return discovery.DeleteEnvironmentWithContext(context.Background(), deleteEnvironmentOptions)
+}
+
+// DeleteEnvironmentWithContext is an alternate form of the DeleteEnvironment method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteEnvironmentWithContext(ctx context.Context, deleteEnvironmentOptions *DeleteEnvironmentOptions) (result *DeleteEnvironmentResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteEnvironmentOptions, "deleteEnvironmentOptions cannot be nil")
 	if err != nil {
 		return
@@ -354,11 +454,14 @@ func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *Delete
 		return
 	}
 
-	pathSegments := []string{"v1/environments"}
-	pathParameters := []string{*deleteEnvironmentOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteEnvironmentOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -371,23 +474,25 @@ func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *Delete
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(DeleteEnvironmentResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DeleteEnvironmentResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteEnvironmentResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -395,6 +500,11 @@ func (discovery *DiscoveryV1) DeleteEnvironment(deleteEnvironmentOptions *Delete
 // ListFields : List fields across collections
 // Gets a list of the unique fields (and their types) stored in the indexes of the specified collections.
 func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (result *ListCollectionFieldsResponse, response *core.DetailedResponse, err error) {
+	return discovery.ListFieldsWithContext(context.Background(), listFieldsOptions)
+}
+
+// ListFieldsWithContext is an alternate form of the ListFields method which supports a Context parameter
+func (discovery *DiscoveryV1) ListFieldsWithContext(ctx context.Context, listFieldsOptions *ListFieldsOptions) (result *ListCollectionFieldsResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listFieldsOptions, "listFieldsOptions cannot be nil")
 	if err != nil {
 		return
@@ -404,11 +514,14 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "fields"}
-	pathParameters := []string{*listFieldsOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listFieldsOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/fields`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -421,25 +534,26 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	builder.AddQuery("collection_ids", strings.Join(listFieldsOptions.CollectionIds, ","))
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(ListCollectionFieldsResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*ListCollectionFieldsResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionFieldsResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -455,6 +569,11 @@ func (discovery *DiscoveryV1) ListFields(listFieldsOptions *ListFieldsOptions) (
 // This makes it easier to use newer configuration files with older versions of the API and the service. It also makes
 // it possible for the tooling to add additional metadata and information to the configuration.
 func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *CreateConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
+	return discovery.CreateConfigurationWithContext(context.Background(), createConfigurationOptions)
+}
+
+// CreateConfigurationWithContext is an alternate form of the CreateConfiguration method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateConfigurationWithContext(ctx context.Context, createConfigurationOptions *CreateConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createConfigurationOptions, "createConfigurationOptions cannot be nil")
 	if err != nil {
 		return
@@ -464,11 +583,14 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "configurations"}
-	pathParameters := []string{*createConfigurationOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *createConfigurationOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/configurations`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -481,10 +603,10 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createConfigurationOptions.Name != nil {
@@ -515,14 +637,16 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Configuration))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Configuration)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -530,6 +654,11 @@ func (discovery *DiscoveryV1) CreateConfiguration(createConfigurationOptions *Cr
 // ListConfigurations : List configurations
 // Lists existing configurations for the service instance.
 func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *ListConfigurationsOptions) (result *ListConfigurationsResponse, response *core.DetailedResponse, err error) {
+	return discovery.ListConfigurationsWithContext(context.Background(), listConfigurationsOptions)
+}
+
+// ListConfigurationsWithContext is an alternate form of the ListConfigurations method which supports a Context parameter
+func (discovery *DiscoveryV1) ListConfigurationsWithContext(ctx context.Context, listConfigurationsOptions *ListConfigurationsOptions) (result *ListConfigurationsResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listConfigurationsOptions, "listConfigurationsOptions cannot be nil")
 	if err != nil {
 		return
@@ -539,11 +668,14 @@ func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *List
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "configurations"}
-	pathParameters := []string{*listConfigurationsOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listConfigurationsOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/configurations`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -556,33 +688,39 @@ func (discovery *DiscoveryV1) ListConfigurations(listConfigurationsOptions *List
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if listConfigurationsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listConfigurationsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(ListConfigurationsResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*ListConfigurationsResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListConfigurationsResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // GetConfiguration : Get configuration details
 func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
+	return discovery.GetConfigurationWithContext(context.Background(), getConfigurationOptions)
+}
+
+// GetConfigurationWithContext is an alternate form of the GetConfiguration method which supports a Context parameter
+func (discovery *DiscoveryV1) GetConfigurationWithContext(ctx context.Context, getConfigurationOptions *GetConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getConfigurationOptions, "getConfigurationOptions cannot be nil")
 	if err != nil {
 		return
@@ -592,11 +730,15 @@ func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfi
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "configurations"}
-	pathParameters := []string{*getConfigurationOptions.EnvironmentID, *getConfigurationOptions.ConfigurationID}
+	pathParamsMap := map[string]string{
+		"environment_id":   *getConfigurationOptions.EnvironmentID,
+		"configuration_id": *getConfigurationOptions.ConfigurationID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/configurations/{configuration_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -609,23 +751,25 @@ func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfi
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Configuration))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Configuration)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -639,6 +783,11 @@ func (discovery *DiscoveryV1) GetConfiguration(getConfigurationOptions *GetConfi
 //   * Documents are processed with a snapshot of the configuration as it was at the time the document was submitted to
 // be ingested. This means that already submitted documents will not see any updates made to the configuration.
 func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *UpdateConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
+	return discovery.UpdateConfigurationWithContext(context.Background(), updateConfigurationOptions)
+}
+
+// UpdateConfigurationWithContext is an alternate form of the UpdateConfiguration method which supports a Context parameter
+func (discovery *DiscoveryV1) UpdateConfigurationWithContext(ctx context.Context, updateConfigurationOptions *UpdateConfigurationOptions) (result *Configuration, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateConfigurationOptions, "updateConfigurationOptions cannot be nil")
 	if err != nil {
 		return
@@ -648,11 +797,15 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "configurations"}
-	pathParameters := []string{*updateConfigurationOptions.EnvironmentID, *updateConfigurationOptions.ConfigurationID}
+	pathParamsMap := map[string]string{
+		"environment_id":   *updateConfigurationOptions.EnvironmentID,
+		"configuration_id": *updateConfigurationOptions.ConfigurationID,
+	}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/configurations/{configuration_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -665,10 +818,10 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if updateConfigurationOptions.Name != nil {
@@ -699,14 +852,16 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Configuration))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Configuration)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -717,6 +872,11 @@ func (discovery *DiscoveryV1) UpdateConfiguration(updateConfigurationOptions *Up
 // continue to use the deleted configuration. Documents are always processed with a snapshot of the configuration as it
 // existed at the time the document was submitted.
 func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *DeleteConfigurationOptions) (result *DeleteConfigurationResponse, response *core.DetailedResponse, err error) {
+	return discovery.DeleteConfigurationWithContext(context.Background(), deleteConfigurationOptions)
+}
+
+// DeleteConfigurationWithContext is an alternate form of the DeleteConfiguration method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteConfigurationWithContext(ctx context.Context, deleteConfigurationOptions *DeleteConfigurationOptions) (result *DeleteConfigurationResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteConfigurationOptions, "deleteConfigurationOptions cannot be nil")
 	if err != nil {
 		return
@@ -726,11 +886,15 @@ func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *De
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "configurations"}
-	pathParameters := []string{*deleteConfigurationOptions.EnvironmentID, *deleteConfigurationOptions.ConfigurationID}
+	pathParamsMap := map[string]string{
+		"environment_id":   *deleteConfigurationOptions.EnvironmentID,
+		"configuration_id": *deleteConfigurationOptions.ConfigurationID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/configurations/{configuration_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -743,29 +907,36 @@ func (discovery *DiscoveryV1) DeleteConfiguration(deleteConfigurationOptions *De
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(DeleteConfigurationResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DeleteConfigurationResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteConfigurationResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // CreateCollection : Create a collection
 func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
+	return discovery.CreateCollectionWithContext(context.Background(), createCollectionOptions)
+}
+
+// CreateCollectionWithContext is an alternate form of the CreateCollection method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateCollectionWithContext(ctx context.Context, createCollectionOptions *CreateCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createCollectionOptions, "createCollectionOptions cannot be nil")
 	if err != nil {
 		return
@@ -775,11 +946,14 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections"}
-	pathParameters := []string{*createCollectionOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *createCollectionOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -792,10 +966,10 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createCollectionOptions.Name != nil {
@@ -820,14 +994,16 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Collection))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Collection)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -835,6 +1011,11 @@ func (discovery *DiscoveryV1) CreateCollection(createCollectionOptions *CreateCo
 // ListCollections : List collections
 // Lists existing collections for the service instance.
 func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollectionsOptions) (result *ListCollectionsResponse, response *core.DetailedResponse, err error) {
+	return discovery.ListCollectionsWithContext(context.Background(), listCollectionsOptions)
+}
+
+// ListCollectionsWithContext is an alternate form of the ListCollections method which supports a Context parameter
+func (discovery *DiscoveryV1) ListCollectionsWithContext(ctx context.Context, listCollectionsOptions *ListCollectionsOptions) (result *ListCollectionsResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listCollectionsOptions, "listCollectionsOptions cannot be nil")
 	if err != nil {
 		return
@@ -844,11 +1025,14 @@ func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollec
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections"}
-	pathParameters := []string{*listCollectionsOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listCollectionsOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -861,33 +1045,39 @@ func (discovery *DiscoveryV1) ListCollections(listCollectionsOptions *ListCollec
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if listCollectionsOptions.Name != nil {
 		builder.AddQuery("name", fmt.Sprint(*listCollectionsOptions.Name))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(ListCollectionsResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*ListCollectionsResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionsResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // GetCollection : Get collection details
 func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
+	return discovery.GetCollectionWithContext(context.Background(), getCollectionOptions)
+}
+
+// GetCollectionWithContext is an alternate form of the GetCollection method which supports a Context parameter
+func (discovery *DiscoveryV1) GetCollectionWithContext(ctx context.Context, getCollectionOptions *GetCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getCollectionOptions, "getCollectionOptions cannot be nil")
 	if err != nil {
 		return
@@ -897,11 +1087,15 @@ func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionO
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections"}
-	pathParameters := []string{*getCollectionOptions.EnvironmentID, *getCollectionOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getCollectionOptions.EnvironmentID,
+		"collection_id":  *getCollectionOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -914,29 +1108,36 @@ func (discovery *DiscoveryV1) GetCollection(getCollectionOptions *GetCollectionO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Collection))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Collection)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // UpdateCollection : Update a collection
 func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
+	return discovery.UpdateCollectionWithContext(context.Background(), updateCollectionOptions)
+}
+
+// UpdateCollectionWithContext is an alternate form of the UpdateCollection method which supports a Context parameter
+func (discovery *DiscoveryV1) UpdateCollectionWithContext(ctx context.Context, updateCollectionOptions *UpdateCollectionOptions) (result *Collection, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateCollectionOptions, "updateCollectionOptions cannot be nil")
 	if err != nil {
 		return
@@ -946,11 +1147,15 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections"}
-	pathParameters := []string{*updateCollectionOptions.EnvironmentID, *updateCollectionOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *updateCollectionOptions.EnvironmentID,
+		"collection_id":  *updateCollectionOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -963,10 +1168,10 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if updateCollectionOptions.Name != nil {
@@ -988,20 +1193,27 @@ func (discovery *DiscoveryV1) UpdateCollection(updateCollectionOptions *UpdateCo
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Collection))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Collection)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // DeleteCollection : Delete a collection
 func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions) (result *DeleteCollectionResponse, response *core.DetailedResponse, err error) {
+	return discovery.DeleteCollectionWithContext(context.Background(), deleteCollectionOptions)
+}
+
+// DeleteCollectionWithContext is an alternate form of the DeleteCollection method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteCollectionWithContext(ctx context.Context, deleteCollectionOptions *DeleteCollectionOptions) (result *DeleteCollectionResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteCollectionOptions, "deleteCollectionOptions cannot be nil")
 	if err != nil {
 		return
@@ -1011,11 +1223,15 @@ func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCo
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections"}
-	pathParameters := []string{*deleteCollectionOptions.EnvironmentID, *deleteCollectionOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteCollectionOptions.EnvironmentID,
+		"collection_id":  *deleteCollectionOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1028,23 +1244,25 @@ func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCo
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(DeleteCollectionResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DeleteCollectionResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteCollectionResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1052,6 +1270,11 @@ func (discovery *DiscoveryV1) DeleteCollection(deleteCollectionOptions *DeleteCo
 // ListCollectionFields : List collection fields
 // Gets a list of the unique fields (and their types) stored in the index.
 func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *ListCollectionFieldsOptions) (result *ListCollectionFieldsResponse, response *core.DetailedResponse, err error) {
+	return discovery.ListCollectionFieldsWithContext(context.Background(), listCollectionFieldsOptions)
+}
+
+// ListCollectionFieldsWithContext is an alternate form of the ListCollectionFields method which supports a Context parameter
+func (discovery *DiscoveryV1) ListCollectionFieldsWithContext(ctx context.Context, listCollectionFieldsOptions *ListCollectionFieldsOptions) (result *ListCollectionFieldsResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listCollectionFieldsOptions, "listCollectionFieldsOptions cannot be nil")
 	if err != nil {
 		return
@@ -1061,11 +1284,15 @@ func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "fields"}
-	pathParameters := []string{*listCollectionFieldsOptions.EnvironmentID, *listCollectionFieldsOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listCollectionFieldsOptions.EnvironmentID,
+		"collection_id":  *listCollectionFieldsOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/fields`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1078,23 +1305,25 @@ func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(ListCollectionFieldsResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*ListCollectionFieldsResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionFieldsResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1103,6 +1332,11 @@ func (discovery *DiscoveryV1) ListCollectionFields(listCollectionFieldsOptions *
 // Returns the current expansion list for the specified collection. If an expansion list is not specified, an object
 // with empty expansion arrays is returned.
 func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansionsOptions) (result *Expansions, response *core.DetailedResponse, err error) {
+	return discovery.ListExpansionsWithContext(context.Background(), listExpansionsOptions)
+}
+
+// ListExpansionsWithContext is an alternate form of the ListExpansions method which supports a Context parameter
+func (discovery *DiscoveryV1) ListExpansionsWithContext(ctx context.Context, listExpansionsOptions *ListExpansionsOptions) (result *Expansions, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listExpansionsOptions, "listExpansionsOptions cannot be nil")
 	if err != nil {
 		return
@@ -1112,11 +1346,15 @@ func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansio
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "expansions"}
-	pathParameters := []string{*listExpansionsOptions.EnvironmentID, *listExpansionsOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listExpansionsOptions.EnvironmentID,
+		"collection_id":  *listExpansionsOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/expansions`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1129,23 +1367,25 @@ func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansio
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Expansions))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Expansions)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExpansions)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1154,6 +1394,11 @@ func (discovery *DiscoveryV1) ListExpansions(listExpansionsOptions *ListExpansio
 // Create or replace the Expansion list for this collection. The maximum number of expanded terms per collection is
 // `500`. The current expansion list is replaced with the uploaded content.
 func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateExpansionsOptions) (result *Expansions, response *core.DetailedResponse, err error) {
+	return discovery.CreateExpansionsWithContext(context.Background(), createExpansionsOptions)
+}
+
+// CreateExpansionsWithContext is an alternate form of the CreateExpansions method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateExpansionsWithContext(ctx context.Context, createExpansionsOptions *CreateExpansionsOptions) (result *Expansions, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createExpansionsOptions, "createExpansionsOptions cannot be nil")
 	if err != nil {
 		return
@@ -1163,11 +1408,15 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "expansions"}
-	pathParameters := []string{*createExpansionsOptions.EnvironmentID, *createExpansionsOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *createExpansionsOptions.EnvironmentID,
+		"collection_id":  *createExpansionsOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/expansions`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1180,10 +1429,10 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createExpansionsOptions.Expansions != nil {
@@ -1199,14 +1448,16 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Expansions))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Expansions)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExpansions)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1215,6 +1466,11 @@ func (discovery *DiscoveryV1) CreateExpansions(createExpansionsOptions *CreateEx
 // Remove the expansion information for this collection. The expansion list must be deleted to disable query expansion
 // for a collection.
 func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteExpansionsOptions) (response *core.DetailedResponse, err error) {
+	return discovery.DeleteExpansionsWithContext(context.Background(), deleteExpansionsOptions)
+}
+
+// DeleteExpansionsWithContext is an alternate form of the DeleteExpansions method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteExpansionsWithContext(ctx context.Context, deleteExpansionsOptions *DeleteExpansionsOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteExpansionsOptions, "deleteExpansionsOptions cannot be nil")
 	if err != nil {
 		return
@@ -1224,11 +1480,15 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "expansions"}
-	pathParameters := []string{*deleteExpansionsOptions.EnvironmentID, *deleteExpansionsOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteExpansionsOptions.EnvironmentID,
+		"collection_id":  *deleteExpansionsOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/expansions`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1242,7 +1502,7 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Version)
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
@@ -1257,6 +1517,11 @@ func (discovery *DiscoveryV1) DeleteExpansions(deleteExpansionsOptions *DeleteEx
 // GetTokenizationDictionaryStatus : Get tokenization dictionary status
 // Returns the current status of the tokenization dictionary for the specified collection.
 func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
+	return discovery.GetTokenizationDictionaryStatusWithContext(context.Background(), getTokenizationDictionaryStatusOptions)
+}
+
+// GetTokenizationDictionaryStatusWithContext is an alternate form of the GetTokenizationDictionaryStatus method which supports a Context parameter
+func (discovery *DiscoveryV1) GetTokenizationDictionaryStatusWithContext(ctx context.Context, getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getTokenizationDictionaryStatusOptions, "getTokenizationDictionaryStatusOptions cannot be nil")
 	if err != nil {
 		return
@@ -1266,11 +1531,15 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDic
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
-	pathParameters := []string{*getTokenizationDictionaryStatusOptions.EnvironmentID, *getTokenizationDictionaryStatusOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getTokenizationDictionaryStatusOptions.EnvironmentID,
+		"collection_id":  *getTokenizationDictionaryStatusOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/word_lists/tokenization_dictionary`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1283,23 +1552,25 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDic
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TokenDictStatusResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TokenDictStatusResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1307,6 +1578,11 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatus(getTokenizationDic
 // CreateTokenizationDictionary : Create tokenization dictionary
 // Upload a custom tokenization dictionary to use with the specified collection.
 func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
+	return discovery.CreateTokenizationDictionaryWithContext(context.Background(), createTokenizationDictionaryOptions)
+}
+
+// CreateTokenizationDictionaryWithContext is an alternate form of the CreateTokenizationDictionary method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateTokenizationDictionaryWithContext(ctx context.Context, createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createTokenizationDictionaryOptions, "createTokenizationDictionaryOptions cannot be nil")
 	if err != nil {
 		return
@@ -1316,11 +1592,15 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
-	pathParameters := []string{*createTokenizationDictionaryOptions.EnvironmentID, *createTokenizationDictionaryOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *createTokenizationDictionaryOptions.EnvironmentID,
+		"collection_id":  *createTokenizationDictionaryOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/word_lists/tokenization_dictionary`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1333,10 +1613,10 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createTokenizationDictionaryOptions.TokenizationRules != nil {
@@ -1352,14 +1632,16 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TokenDictStatusResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TokenDictStatusResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1367,6 +1649,11 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionary(createTokenizationDic
 // DeleteTokenizationDictionary : Delete tokenization dictionary
 // Delete the tokenization dictionary from the collection.
 func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDictionaryOptions *DeleteTokenizationDictionaryOptions) (response *core.DetailedResponse, err error) {
+	return discovery.DeleteTokenizationDictionaryWithContext(context.Background(), deleteTokenizationDictionaryOptions)
+}
+
+// DeleteTokenizationDictionaryWithContext is an alternate form of the DeleteTokenizationDictionary method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteTokenizationDictionaryWithContext(ctx context.Context, deleteTokenizationDictionaryOptions *DeleteTokenizationDictionaryOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteTokenizationDictionaryOptions, "deleteTokenizationDictionaryOptions cannot be nil")
 	if err != nil {
 		return
@@ -1376,11 +1663,15 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDic
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "word_lists/tokenization_dictionary"}
-	pathParameters := []string{*deleteTokenizationDictionaryOptions.EnvironmentID, *deleteTokenizationDictionaryOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteTokenizationDictionaryOptions.EnvironmentID,
+		"collection_id":  *deleteTokenizationDictionaryOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/word_lists/tokenization_dictionary`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1394,7 +1685,7 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDic
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Version)
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
@@ -1409,6 +1700,11 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionary(deleteTokenizationDic
 // GetStopwordListStatus : Get stopword list status
 // Returns the current status of the stopword list for the specified collection.
 func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions *GetStopwordListStatusOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
+	return discovery.GetStopwordListStatusWithContext(context.Background(), getStopwordListStatusOptions)
+}
+
+// GetStopwordListStatusWithContext is an alternate form of the GetStopwordListStatus method which supports a Context parameter
+func (discovery *DiscoveryV1) GetStopwordListStatusWithContext(ctx context.Context, getStopwordListStatusOptions *GetStopwordListStatusOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getStopwordListStatusOptions, "getStopwordListStatusOptions cannot be nil")
 	if err != nil {
 		return
@@ -1418,11 +1714,15 @@ func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
-	pathParameters := []string{*getStopwordListStatusOptions.EnvironmentID, *getStopwordListStatusOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getStopwordListStatusOptions.EnvironmentID,
+		"collection_id":  *getStopwordListStatusOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/word_lists/stopwords`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1435,23 +1735,25 @@ func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TokenDictStatusResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TokenDictStatusResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1459,6 +1761,11 @@ func (discovery *DiscoveryV1) GetStopwordListStatus(getStopwordListStatusOptions
 // CreateStopwordList : Create stopword list
 // Upload a custom stopword list to use with the specified collection.
 func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *CreateStopwordListOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
+	return discovery.CreateStopwordListWithContext(context.Background(), createStopwordListOptions)
+}
+
+// CreateStopwordListWithContext is an alternate form of the CreateStopwordList method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateStopwordListWithContext(ctx context.Context, createStopwordListOptions *CreateStopwordListOptions) (result *TokenDictStatusResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createStopwordListOptions, "createStopwordListOptions cannot be nil")
 	if err != nil {
 		return
@@ -1468,11 +1775,15 @@ func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *Crea
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
-	pathParameters := []string{*createStopwordListOptions.EnvironmentID, *createStopwordListOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *createStopwordListOptions.EnvironmentID,
+		"collection_id":  *createStopwordListOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/word_lists/stopwords`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1485,9 +1796,9 @@ func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *Crea
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	builder.AddFormData("stopword_file", core.StringNilMapper(createStopwordListOptions.StopwordFilename),
 		"application/octet-stream", createStopwordListOptions.StopwordFile)
@@ -1497,14 +1808,16 @@ func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *Crea
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TokenDictStatusResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TokenDictStatusResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1513,6 +1826,11 @@ func (discovery *DiscoveryV1) CreateStopwordList(createStopwordListOptions *Crea
 // Delete a custom stopword list from the collection. After a custom stopword list is deleted, the default list is used
 // for the collection.
 func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *DeleteStopwordListOptions) (response *core.DetailedResponse, err error) {
+	return discovery.DeleteStopwordListWithContext(context.Background(), deleteStopwordListOptions)
+}
+
+// DeleteStopwordListWithContext is an alternate form of the DeleteStopwordList method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteStopwordListWithContext(ctx context.Context, deleteStopwordListOptions *DeleteStopwordListOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteStopwordListOptions, "deleteStopwordListOptions cannot be nil")
 	if err != nil {
 		return
@@ -1522,11 +1840,15 @@ func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *Dele
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "word_lists/stopwords"}
-	pathParameters := []string{*deleteStopwordListOptions.EnvironmentID, *deleteStopwordListOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteStopwordListOptions.EnvironmentID,
+		"collection_id":  *deleteStopwordListOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/word_lists/stopwords`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1540,7 +1862,7 @@ func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *Dele
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Version)
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
@@ -1576,6 +1898,11 @@ func (discovery *DiscoveryV1) DeleteStopwordList(deleteStopwordListOptions *Dele
 //  **Note:** Documents can be added with a specific **document_id** by using the
 // **_/v1/environments/{environment_id}/collections/{collection_id}/documents** method.
 func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
+	return discovery.AddDocumentWithContext(context.Background(), addDocumentOptions)
+}
+
+// AddDocumentWithContext is an alternate form of the AddDocument method which supports a Context parameter
+func (discovery *DiscoveryV1) AddDocumentWithContext(ctx context.Context, addDocumentOptions *AddDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addDocumentOptions, "addDocumentOptions cannot be nil")
 	if err != nil {
 		return
@@ -1585,15 +1912,19 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 		return
 	}
 	if (addDocumentOptions.File == nil) && (addDocumentOptions.Metadata == nil) {
-		err = fmt.Errorf("At least one of file or metadata must be supplied")
+		err = fmt.Errorf("at least one of file or metadata must be supplied")
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "documents"}
-	pathParameters := []string{*addDocumentOptions.EnvironmentID, *addDocumentOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *addDocumentOptions.EnvironmentID,
+		"collection_id":  *addDocumentOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/documents`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1606,9 +1937,9 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	if addDocumentOptions.File != nil {
 		builder.AddFormData("file", core.StringNilMapper(addDocumentOptions.Filename),
@@ -1623,14 +1954,16 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(DocumentAccepted))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DocumentAccepted)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentAccepted)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1640,6 +1973,11 @@ func (discovery *DiscoveryV1) AddDocument(addDocumentOptions *AddDocumentOptions
 // Instead, it returns only the document's processing status and any notices (warnings or errors) that were generated
 // when the document was ingested. Use the query API to retrieve the actual document content.
 func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) (result *DocumentStatus, response *core.DetailedResponse, err error) {
+	return discovery.GetDocumentStatusWithContext(context.Background(), getDocumentStatusOptions)
+}
+
+// GetDocumentStatusWithContext is an alternate form of the GetDocumentStatus method which supports a Context parameter
+func (discovery *DiscoveryV1) GetDocumentStatusWithContext(ctx context.Context, getDocumentStatusOptions *GetDocumentStatusOptions) (result *DocumentStatus, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getDocumentStatusOptions, "getDocumentStatusOptions cannot be nil")
 	if err != nil {
 		return
@@ -1649,11 +1987,16 @@ func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDoc
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "documents"}
-	pathParameters := []string{*getDocumentStatusOptions.EnvironmentID, *getDocumentStatusOptions.CollectionID, *getDocumentStatusOptions.DocumentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getDocumentStatusOptions.EnvironmentID,
+		"collection_id":  *getDocumentStatusOptions.CollectionID,
+		"document_id":    *getDocumentStatusOptions.DocumentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1666,23 +2009,25 @@ func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDoc
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(DocumentStatus))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DocumentStatus)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1694,6 +2039,11 @@ func (discovery *DiscoveryV1) GetDocumentStatus(getDocumentStatusOptions *GetDoc
 // **Note:** When uploading a new document with this method it automatically replaces any document stored with the same
 // **document_id** if it exists.
 func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
+	return discovery.UpdateDocumentWithContext(context.Background(), updateDocumentOptions)
+}
+
+// UpdateDocumentWithContext is an alternate form of the UpdateDocument method which supports a Context parameter
+func (discovery *DiscoveryV1) UpdateDocumentWithContext(ctx context.Context, updateDocumentOptions *UpdateDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateDocumentOptions, "updateDocumentOptions cannot be nil")
 	if err != nil {
 		return
@@ -1703,15 +2053,20 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 		return
 	}
 	if (updateDocumentOptions.File == nil) && (updateDocumentOptions.Metadata == nil) {
-		err = fmt.Errorf("At least one of file or metadata must be supplied")
+		err = fmt.Errorf("at least one of file or metadata must be supplied")
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "documents"}
-	pathParameters := []string{*updateDocumentOptions.EnvironmentID, *updateDocumentOptions.CollectionID, *updateDocumentOptions.DocumentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *updateDocumentOptions.EnvironmentID,
+		"collection_id":  *updateDocumentOptions.CollectionID,
+		"document_id":    *updateDocumentOptions.DocumentID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1724,9 +2079,9 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	if updateDocumentOptions.File != nil {
 		builder.AddFormData("file", core.StringNilMapper(updateDocumentOptions.Filename),
@@ -1741,14 +2096,16 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(DocumentAccepted))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DocumentAccepted)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentAccepted)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1757,6 +2114,11 @@ func (discovery *DiscoveryV1) UpdateDocument(updateDocumentOptions *UpdateDocume
 // If the given document ID is invalid, or if the document is not found, then the a success response is returned (HTTP
 // status code `200`) with the status set to 'deleted'.
 func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) (result *DeleteDocumentResponse, response *core.DetailedResponse, err error) {
+	return discovery.DeleteDocumentWithContext(context.Background(), deleteDocumentOptions)
+}
+
+// DeleteDocumentWithContext is an alternate form of the DeleteDocument method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteDocumentWithContext(ctx context.Context, deleteDocumentOptions *DeleteDocumentOptions) (result *DeleteDocumentResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteDocumentOptions, "deleteDocumentOptions cannot be nil")
 	if err != nil {
 		return
@@ -1766,11 +2128,16 @@ func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocume
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "documents"}
-	pathParameters := []string{*deleteDocumentOptions.EnvironmentID, *deleteDocumentOptions.CollectionID, *deleteDocumentOptions.DocumentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteDocumentOptions.EnvironmentID,
+		"collection_id":  *deleteDocumentOptions.CollectionID,
+		"document_id":    *deleteDocumentOptions.DocumentID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/documents/{document_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1783,23 +2150,25 @@ func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocume
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(DeleteDocumentResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DeleteDocumentResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteDocumentResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1808,6 +2177,11 @@ func (discovery *DiscoveryV1) DeleteDocument(deleteDocumentOptions *DeleteDocume
 // By using this method, you can construct long queries. For details, see the [Discovery
 // documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-concepts#query-concepts).
 func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (result *QueryResponse, response *core.DetailedResponse, err error) {
+	return discovery.QueryWithContext(context.Background(), queryOptions)
+}
+
+// QueryWithContext is an alternate form of the Query method which supports a Context parameter
+func (discovery *DiscoveryV1) QueryWithContext(ctx context.Context, queryOptions *QueryOptions) (result *QueryResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(queryOptions, "queryOptions cannot be nil")
 	if err != nil {
 		return
@@ -1817,11 +2191,15 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (result *QueryRe
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "query"}
-	pathParameters := []string{*queryOptions.EnvironmentID, *queryOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *queryOptions.EnvironmentID,
+		"collection_id":  *queryOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/query`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1834,13 +2212,13 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (result *QueryRe
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	if queryOptions.XWatsonLoggingOptOut != nil {
 		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*queryOptions.XWatsonLoggingOptOut))
 	}
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if queryOptions.Filter != nil {
@@ -1913,14 +2291,16 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (result *QueryRe
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(QueryResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*QueryResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -1931,6 +2311,11 @@ func (discovery *DiscoveryV1) Query(queryOptions *QueryOptions) (result *QueryRe
 // documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-concepts#query-concepts) for more details
 // on the query language.
 func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOptions) (result *QueryNoticesResponse, response *core.DetailedResponse, err error) {
+	return discovery.QueryNoticesWithContext(context.Background(), queryNoticesOptions)
+}
+
+// QueryNoticesWithContext is an alternate form of the QueryNotices method which supports a Context parameter
+func (discovery *DiscoveryV1) QueryNoticesWithContext(ctx context.Context, queryNoticesOptions *QueryNoticesOptions) (result *QueryNoticesResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(queryNoticesOptions, "queryNoticesOptions cannot be nil")
 	if err != nil {
 		return
@@ -1940,11 +2325,15 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "notices"}
-	pathParameters := []string{*queryNoticesOptions.EnvironmentID, *queryNoticesOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *queryNoticesOptions.EnvironmentID,
+		"collection_id":  *queryNoticesOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/notices`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -1957,9 +2346,9 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if queryNoticesOptions.Filter != nil {
 		builder.AddQuery("filter", fmt.Sprint(*queryNoticesOptions.Filter))
 	}
@@ -2011,21 +2400,22 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 	if queryNoticesOptions.SimilarFields != nil {
 		builder.AddQuery("similar.fields", strings.Join(queryNoticesOptions.SimilarFields, ","))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(QueryNoticesResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*QueryNoticesResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryNoticesResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2034,6 +2424,11 @@ func (discovery *DiscoveryV1) QueryNotices(queryNoticesOptions *QueryNoticesOpti
 // By using this method, you can construct long queries that search multiple collection. For details, see the [Discovery
 // documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-concepts#query-concepts).
 func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQueryOptions) (result *QueryResponse, response *core.DetailedResponse, err error) {
+	return discovery.FederatedQueryWithContext(context.Background(), federatedQueryOptions)
+}
+
+// FederatedQueryWithContext is an alternate form of the FederatedQuery method which supports a Context parameter
+func (discovery *DiscoveryV1) FederatedQueryWithContext(ctx context.Context, federatedQueryOptions *FederatedQueryOptions) (result *QueryResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(federatedQueryOptions, "federatedQueryOptions cannot be nil")
 	if err != nil {
 		return
@@ -2043,11 +2438,14 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "query"}
-	pathParameters := []string{*federatedQueryOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *federatedQueryOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/query`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2060,13 +2458,13 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
 	if federatedQueryOptions.XWatsonLoggingOptOut != nil {
 		builder.AddHeader("X-Watson-Logging-Opt-Out", fmt.Sprint(*federatedQueryOptions.XWatsonLoggingOptOut))
 	}
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if federatedQueryOptions.CollectionIds != nil {
@@ -2139,14 +2537,16 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(QueryResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*QueryResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2157,6 +2557,11 @@ func (discovery *DiscoveryV1) FederatedQuery(federatedQueryOptions *FederatedQue
 // documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-concepts#query-concepts) for more details
 // on the query language.
 func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions *FederatedQueryNoticesOptions) (result *QueryNoticesResponse, response *core.DetailedResponse, err error) {
+	return discovery.FederatedQueryNoticesWithContext(context.Background(), federatedQueryNoticesOptions)
+}
+
+// FederatedQueryNoticesWithContext is an alternate form of the FederatedQueryNotices method which supports a Context parameter
+func (discovery *DiscoveryV1) FederatedQueryNoticesWithContext(ctx context.Context, federatedQueryNoticesOptions *FederatedQueryNoticesOptions) (result *QueryNoticesResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(federatedQueryNoticesOptions, "federatedQueryNoticesOptions cannot be nil")
 	if err != nil {
 		return
@@ -2166,11 +2571,14 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "notices"}
-	pathParameters := []string{*federatedQueryNoticesOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *federatedQueryNoticesOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/notices`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2183,9 +2591,9 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	builder.AddQuery("collection_ids", strings.Join(federatedQueryNoticesOptions.CollectionIds, ","))
 	if federatedQueryNoticesOptions.Filter != nil {
 		builder.AddQuery("filter", fmt.Sprint(*federatedQueryNoticesOptions.Filter))
@@ -2226,21 +2634,22 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 	if federatedQueryNoticesOptions.SimilarFields != nil {
 		builder.AddQuery("similar.fields", strings.Join(federatedQueryNoticesOptions.SimilarFields, ","))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(QueryNoticesResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*QueryNoticesResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryNoticesResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2249,6 +2658,11 @@ func (discovery *DiscoveryV1) FederatedQueryNotices(federatedQueryNoticesOptions
 // Returns completion query suggestions for the specified prefix.  /n/n **Important:** this method is only valid when
 // using the Cloud Pak version of Discovery.
 func (discovery *DiscoveryV1) GetAutocompletion(getAutocompletionOptions *GetAutocompletionOptions) (result *Completions, response *core.DetailedResponse, err error) {
+	return discovery.GetAutocompletionWithContext(context.Background(), getAutocompletionOptions)
+}
+
+// GetAutocompletionWithContext is an alternate form of the GetAutocompletion method which supports a Context parameter
+func (discovery *DiscoveryV1) GetAutocompletionWithContext(ctx context.Context, getAutocompletionOptions *GetAutocompletionOptions) (result *Completions, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getAutocompletionOptions, "getAutocompletionOptions cannot be nil")
 	if err != nil {
 		return
@@ -2258,11 +2672,15 @@ func (discovery *DiscoveryV1) GetAutocompletion(getAutocompletionOptions *GetAut
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "autocompletion"}
-	pathParameters := []string{*getAutocompletionOptions.EnvironmentID, *getAutocompletionOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getAutocompletionOptions.EnvironmentID,
+		"collection_id":  *getAutocompletionOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/autocompletion`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2275,9 +2693,9 @@ func (discovery *DiscoveryV1) GetAutocompletion(getAutocompletionOptions *GetAut
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	builder.AddQuery("prefix", fmt.Sprint(*getAutocompletionOptions.Prefix))
 	if getAutocompletionOptions.Field != nil {
 		builder.AddQuery("field", fmt.Sprint(*getAutocompletionOptions.Field))
@@ -2285,21 +2703,22 @@ func (discovery *DiscoveryV1) GetAutocompletion(getAutocompletionOptions *GetAut
 	if getAutocompletionOptions.Count != nil {
 		builder.AddQuery("count", fmt.Sprint(*getAutocompletionOptions.Count))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Completions))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Completions)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCompletions)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2307,6 +2726,11 @@ func (discovery *DiscoveryV1) GetAutocompletion(getAutocompletionOptions *GetAut
 // ListTrainingData : List training data
 // Lists the training data for the specified collection.
 func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions) (result *TrainingDataSet, response *core.DetailedResponse, err error) {
+	return discovery.ListTrainingDataWithContext(context.Background(), listTrainingDataOptions)
+}
+
+// ListTrainingDataWithContext is an alternate form of the ListTrainingData method which supports a Context parameter
+func (discovery *DiscoveryV1) ListTrainingDataWithContext(ctx context.Context, listTrainingDataOptions *ListTrainingDataOptions) (result *TrainingDataSet, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listTrainingDataOptions, "listTrainingDataOptions cannot be nil")
 	if err != nil {
 		return
@@ -2316,11 +2740,15 @@ func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrai
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data"}
-	pathParameters := []string{*listTrainingDataOptions.EnvironmentID, *listTrainingDataOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listTrainingDataOptions.EnvironmentID,
+		"collection_id":  *listTrainingDataOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2333,23 +2761,25 @@ func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrai
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TrainingDataSet))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingDataSet)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingDataSet)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2357,6 +2787,11 @@ func (discovery *DiscoveryV1) ListTrainingData(listTrainingDataOptions *ListTrai
 // AddTrainingData : Add query to training data
 // Adds a query to the training data for this collection. The query can contain a filter and natural language query.
 func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainingDataOptions) (result *TrainingQuery, response *core.DetailedResponse, err error) {
+	return discovery.AddTrainingDataWithContext(context.Background(), addTrainingDataOptions)
+}
+
+// AddTrainingDataWithContext is an alternate form of the AddTrainingData method which supports a Context parameter
+func (discovery *DiscoveryV1) AddTrainingDataWithContext(ctx context.Context, addTrainingDataOptions *AddTrainingDataOptions) (result *TrainingQuery, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(addTrainingDataOptions, "addTrainingDataOptions cannot be nil")
 	if err != nil {
 		return
@@ -2366,11 +2801,15 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data"}
-	pathParameters := []string{*addTrainingDataOptions.EnvironmentID, *addTrainingDataOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *addTrainingDataOptions.EnvironmentID,
+		"collection_id":  *addTrainingDataOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2383,10 +2822,10 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if addTrainingDataOptions.NaturalLanguageQuery != nil {
@@ -2408,14 +2847,16 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TrainingQuery))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingQuery)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingQuery)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2423,6 +2864,11 @@ func (discovery *DiscoveryV1) AddTrainingData(addTrainingDataOptions *AddTrainin
 // DeleteAllTrainingData : Delete all training data
 // Deletes all training data from a collection.
 func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions *DeleteAllTrainingDataOptions) (response *core.DetailedResponse, err error) {
+	return discovery.DeleteAllTrainingDataWithContext(context.Background(), deleteAllTrainingDataOptions)
+}
+
+// DeleteAllTrainingDataWithContext is an alternate form of the DeleteAllTrainingData method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteAllTrainingDataWithContext(ctx context.Context, deleteAllTrainingDataOptions *DeleteAllTrainingDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteAllTrainingDataOptions, "deleteAllTrainingDataOptions cannot be nil")
 	if err != nil {
 		return
@@ -2432,11 +2878,15 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data"}
-	pathParameters := []string{*deleteAllTrainingDataOptions.EnvironmentID, *deleteAllTrainingDataOptions.CollectionID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteAllTrainingDataOptions.EnvironmentID,
+		"collection_id":  *deleteAllTrainingDataOptions.CollectionID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2450,7 +2900,7 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Version)
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
@@ -2465,6 +2915,11 @@ func (discovery *DiscoveryV1) DeleteAllTrainingData(deleteAllTrainingDataOptions
 // GetTrainingData : Get details about a query
 // Gets details for a specific training data query, including the query string and all examples.
 func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainingDataOptions) (result *TrainingQuery, response *core.DetailedResponse, err error) {
+	return discovery.GetTrainingDataWithContext(context.Background(), getTrainingDataOptions)
+}
+
+// GetTrainingDataWithContext is an alternate form of the GetTrainingData method which supports a Context parameter
+func (discovery *DiscoveryV1) GetTrainingDataWithContext(ctx context.Context, getTrainingDataOptions *GetTrainingDataOptions) (result *TrainingQuery, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getTrainingDataOptions, "getTrainingDataOptions cannot be nil")
 	if err != nil {
 		return
@@ -2474,11 +2929,16 @@ func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainin
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data"}
-	pathParameters := []string{*getTrainingDataOptions.EnvironmentID, *getTrainingDataOptions.CollectionID, *getTrainingDataOptions.QueryID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getTrainingDataOptions.EnvironmentID,
+		"collection_id":  *getTrainingDataOptions.CollectionID,
+		"query_id":       *getTrainingDataOptions.QueryID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2491,23 +2951,25 @@ func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainin
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TrainingQuery))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingQuery)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingQuery)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2515,6 +2977,11 @@ func (discovery *DiscoveryV1) GetTrainingData(getTrainingDataOptions *GetTrainin
 // DeleteTrainingData : Delete a training data query
 // Removes the training data query and all associated examples from the training data set.
 func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *DeleteTrainingDataOptions) (response *core.DetailedResponse, err error) {
+	return discovery.DeleteTrainingDataWithContext(context.Background(), deleteTrainingDataOptions)
+}
+
+// DeleteTrainingDataWithContext is an alternate form of the DeleteTrainingData method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteTrainingDataWithContext(ctx context.Context, deleteTrainingDataOptions *DeleteTrainingDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteTrainingDataOptions, "deleteTrainingDataOptions cannot be nil")
 	if err != nil {
 		return
@@ -2524,11 +2991,16 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data"}
-	pathParameters := []string{*deleteTrainingDataOptions.EnvironmentID, *deleteTrainingDataOptions.CollectionID, *deleteTrainingDataOptions.QueryID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteTrainingDataOptions.EnvironmentID,
+		"collection_id":  *deleteTrainingDataOptions.CollectionID,
+		"query_id":       *deleteTrainingDataOptions.QueryID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2542,7 +3014,7 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Version)
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
@@ -2557,6 +3029,11 @@ func (discovery *DiscoveryV1) DeleteTrainingData(deleteTrainingDataOptions *Dele
 // ListTrainingExamples : List examples for a training data query
 // List all examples for this training data query.
 func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *ListTrainingExamplesOptions) (result *TrainingExampleList, response *core.DetailedResponse, err error) {
+	return discovery.ListTrainingExamplesWithContext(context.Background(), listTrainingExamplesOptions)
+}
+
+// ListTrainingExamplesWithContext is an alternate form of the ListTrainingExamples method which supports a Context parameter
+func (discovery *DiscoveryV1) ListTrainingExamplesWithContext(ctx context.Context, listTrainingExamplesOptions *ListTrainingExamplesOptions) (result *TrainingExampleList, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listTrainingExamplesOptions, "listTrainingExamplesOptions cannot be nil")
 	if err != nil {
 		return
@@ -2566,11 +3043,16 @@ func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
-	pathParameters := []string{*listTrainingExamplesOptions.EnvironmentID, *listTrainingExamplesOptions.CollectionID, *listTrainingExamplesOptions.QueryID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listTrainingExamplesOptions.EnvironmentID,
+		"collection_id":  *listTrainingExamplesOptions.CollectionID,
+		"query_id":       *listTrainingExamplesOptions.QueryID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2583,23 +3065,25 @@ func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TrainingExampleList))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingExampleList)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExampleList)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2607,6 +3091,11 @@ func (discovery *DiscoveryV1) ListTrainingExamples(listTrainingExamplesOptions *
 // CreateTrainingExample : Add example to training data query
 // Adds a example to this training data query.
 func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions *CreateTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
+	return discovery.CreateTrainingExampleWithContext(context.Background(), createTrainingExampleOptions)
+}
+
+// CreateTrainingExampleWithContext is an alternate form of the CreateTrainingExample method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateTrainingExampleWithContext(ctx context.Context, createTrainingExampleOptions *CreateTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createTrainingExampleOptions, "createTrainingExampleOptions cannot be nil")
 	if err != nil {
 		return
@@ -2616,11 +3105,16 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
-	pathParameters := []string{*createTrainingExampleOptions.EnvironmentID, *createTrainingExampleOptions.CollectionID, *createTrainingExampleOptions.QueryID}
+	pathParamsMap := map[string]string{
+		"environment_id": *createTrainingExampleOptions.EnvironmentID,
+		"collection_id":  *createTrainingExampleOptions.CollectionID,
+		"query_id":       *createTrainingExampleOptions.QueryID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2633,10 +3127,10 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createTrainingExampleOptions.DocumentID != nil {
@@ -2658,14 +3152,16 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TrainingExample))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingExample)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2673,6 +3169,11 @@ func (discovery *DiscoveryV1) CreateTrainingExample(createTrainingExampleOptions
 // DeleteTrainingExample : Delete example for training data query
 // Deletes the example document with the given ID from the training data query.
 func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions *DeleteTrainingExampleOptions) (response *core.DetailedResponse, err error) {
+	return discovery.DeleteTrainingExampleWithContext(context.Background(), deleteTrainingExampleOptions)
+}
+
+// DeleteTrainingExampleWithContext is an alternate form of the DeleteTrainingExample method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteTrainingExampleWithContext(ctx context.Context, deleteTrainingExampleOptions *DeleteTrainingExampleOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteTrainingExampleOptions, "deleteTrainingExampleOptions cannot be nil")
 	if err != nil {
 		return
@@ -2682,11 +3183,17 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
-	pathParameters := []string{*deleteTrainingExampleOptions.EnvironmentID, *deleteTrainingExampleOptions.CollectionID, *deleteTrainingExampleOptions.QueryID, *deleteTrainingExampleOptions.ExampleID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteTrainingExampleOptions.EnvironmentID,
+		"collection_id":  *deleteTrainingExampleOptions.CollectionID,
+		"query_id":       *deleteTrainingExampleOptions.QueryID,
+		"example_id":     *deleteTrainingExampleOptions.ExampleID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2700,7 +3207,7 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 		builder.AddHeader(headerName, headerValue)
 	}
 
-	builder.AddQuery("version", discovery.Version)
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
@@ -2715,6 +3222,11 @@ func (discovery *DiscoveryV1) DeleteTrainingExample(deleteTrainingExampleOptions
 // UpdateTrainingExample : Change label or cross reference for example
 // Changes the label or cross reference query for this training data example.
 func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions *UpdateTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
+	return discovery.UpdateTrainingExampleWithContext(context.Background(), updateTrainingExampleOptions)
+}
+
+// UpdateTrainingExampleWithContext is an alternate form of the UpdateTrainingExample method which supports a Context parameter
+func (discovery *DiscoveryV1) UpdateTrainingExampleWithContext(ctx context.Context, updateTrainingExampleOptions *UpdateTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateTrainingExampleOptions, "updateTrainingExampleOptions cannot be nil")
 	if err != nil {
 		return
@@ -2724,11 +3236,17 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
-	pathParameters := []string{*updateTrainingExampleOptions.EnvironmentID, *updateTrainingExampleOptions.CollectionID, *updateTrainingExampleOptions.QueryID, *updateTrainingExampleOptions.ExampleID}
+	pathParamsMap := map[string]string{
+		"environment_id": *updateTrainingExampleOptions.EnvironmentID,
+		"collection_id":  *updateTrainingExampleOptions.CollectionID,
+		"query_id":       *updateTrainingExampleOptions.QueryID,
+		"example_id":     *updateTrainingExampleOptions.ExampleID,
+	}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2741,10 +3259,10 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if updateTrainingExampleOptions.CrossReference != nil {
@@ -2763,14 +3281,16 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TrainingExample))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingExample)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2778,6 +3298,11 @@ func (discovery *DiscoveryV1) UpdateTrainingExample(updateTrainingExampleOptions
 // GetTrainingExample : Get details for training data example
 // Gets the details for this training example.
 func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
+	return discovery.GetTrainingExampleWithContext(context.Background(), getTrainingExampleOptions)
+}
+
+// GetTrainingExampleWithContext is an alternate form of the GetTrainingExample method which supports a Context parameter
+func (discovery *DiscoveryV1) GetTrainingExampleWithContext(ctx context.Context, getTrainingExampleOptions *GetTrainingExampleOptions) (result *TrainingExample, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getTrainingExampleOptions, "getTrainingExampleOptions cannot be nil")
 	if err != nil {
 		return
@@ -2787,11 +3312,17 @@ func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetT
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "collections", "training_data", "examples"}
-	pathParameters := []string{*getTrainingExampleOptions.EnvironmentID, *getTrainingExampleOptions.CollectionID, *getTrainingExampleOptions.QueryID, *getTrainingExampleOptions.ExampleID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getTrainingExampleOptions.EnvironmentID,
+		"collection_id":  *getTrainingExampleOptions.CollectionID,
+		"query_id":       *getTrainingExampleOptions.QueryID,
+		"example_id":     *getTrainingExampleOptions.ExampleID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/collections/{collection_id}/training_data/{query_id}/examples/{example_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -2804,23 +3335,25 @@ func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetT
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(TrainingExample))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*TrainingExample)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2833,6 +3366,11 @@ func (discovery *DiscoveryV1) GetTrainingExample(getTrainingExampleOptions *GetT
 // For more information about personal data and customer IDs, see [Information
 // security](https://cloud.ibm.com/docs/discovery?topic=discovery-information-security#information-security).
 func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
+	return discovery.DeleteUserDataWithContext(context.Background(), deleteUserDataOptions)
+}
+
+// DeleteUserDataWithContext is an alternate form of the DeleteUserData method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteUserDataWithContext(ctx context.Context, deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteUserDataOptions, "deleteUserDataOptions cannot be nil")
 	if err != nil {
 		return
@@ -2842,11 +3380,10 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 		return
 	}
 
-	pathSegments := []string{"v1/user_data"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/user_data`, nil)
 	if err != nil {
 		return
 	}
@@ -2860,8 +3397,8 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 		builder.AddHeader(headerName, headerValue)
 	}
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
@@ -2877,6 +3414,11 @@ func (discovery *DiscoveryV1) DeleteUserData(deleteUserDataOptions *DeleteUserDa
 // The **Events** API can be used to create log entries that are associated with specific queries. For example, you can
 // record which documents in the results set were "clicked" by a user and when that click occurred.
 func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions) (result *CreateEventResponse, response *core.DetailedResponse, err error) {
+	return discovery.CreateEventWithContext(context.Background(), createEventOptions)
+}
+
+// CreateEventWithContext is an alternate form of the CreateEvent method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateEventWithContext(ctx context.Context, createEventOptions *CreateEventOptions) (result *CreateEventResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createEventOptions, "createEventOptions cannot be nil")
 	if err != nil {
 		return
@@ -2886,11 +3428,10 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 		return
 	}
 
-	pathSegments := []string{"v1/events"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/events`, nil)
 	if err != nil {
 		return
 	}
@@ -2903,10 +3444,10 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createEventOptions.Type != nil {
@@ -2925,14 +3466,16 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(CreateEventResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*CreateEventResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCreateEventResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -2941,16 +3484,20 @@ func (discovery *DiscoveryV1) CreateEvent(createEventOptions *CreateEventOptions
 // Searches the query and event log to find query sessions that match the specified criteria. Searching the **logs**
 // endpoint uses the standard Discovery query syntax for the parameters that are supported.
 func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (result *LogQueryResponse, response *core.DetailedResponse, err error) {
+	return discovery.QueryLogWithContext(context.Background(), queryLogOptions)
+}
+
+// QueryLogWithContext is an alternate form of the QueryLog method which supports a Context parameter
+func (discovery *DiscoveryV1) QueryLogWithContext(ctx context.Context, queryLogOptions *QueryLogOptions) (result *LogQueryResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(queryLogOptions, "queryLogOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/logs"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/logs`, nil)
 	if err != nil {
 		return
 	}
@@ -2963,9 +3510,9 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (result
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if queryLogOptions.Filter != nil {
 		builder.AddQuery("filter", fmt.Sprint(*queryLogOptions.Filter))
 	}
@@ -2981,21 +3528,22 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (result
 	if queryLogOptions.Sort != nil {
 		builder.AddQuery("sort", strings.Join(queryLogOptions.Sort, ","))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(LogQueryResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*LogQueryResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogQueryResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3003,16 +3551,20 @@ func (discovery *DiscoveryV1) QueryLog(queryLogOptions *QueryLogOptions) (result
 // GetMetricsQuery : Number of queries over time
 // Total number of queries using the **natural_language_query** parameter over a specific time window.
 func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetricsQueryOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
+	return discovery.GetMetricsQueryWithContext(context.Background(), getMetricsQueryOptions)
+}
+
+// GetMetricsQueryWithContext is an alternate form of the GetMetricsQuery method which supports a Context parameter
+func (discovery *DiscoveryV1) GetMetricsQueryWithContext(ctx context.Context, getMetricsQueryOptions *GetMetricsQueryOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(getMetricsQueryOptions, "getMetricsQueryOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/metrics/number_of_queries"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/metrics/number_of_queries`, nil)
 	if err != nil {
 		return
 	}
@@ -3025,9 +3577,9 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if getMetricsQueryOptions.StartTime != nil {
 		builder.AddQuery("start_time", fmt.Sprint(*getMetricsQueryOptions.StartTime))
 	}
@@ -3037,21 +3589,22 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 	if getMetricsQueryOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(MetricResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*MetricResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3061,16 +3614,20 @@ func (discovery *DiscoveryV1) GetMetricsQuery(getMetricsQueryOptions *GetMetrics
 // specified time window. This metric requires having integrated event tracking in your application using the **Events**
 // API.
 func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *GetMetricsQueryEventOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
+	return discovery.GetMetricsQueryEventWithContext(context.Background(), getMetricsQueryEventOptions)
+}
+
+// GetMetricsQueryEventWithContext is an alternate form of the GetMetricsQueryEvent method which supports a Context parameter
+func (discovery *DiscoveryV1) GetMetricsQueryEventWithContext(ctx context.Context, getMetricsQueryEventOptions *GetMetricsQueryEventOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(getMetricsQueryEventOptions, "getMetricsQueryEventOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/metrics/number_of_queries_with_event"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/metrics/number_of_queries_with_event`, nil)
 	if err != nil {
 		return
 	}
@@ -3083,9 +3640,9 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if getMetricsQueryEventOptions.StartTime != nil {
 		builder.AddQuery("start_time", fmt.Sprint(*getMetricsQueryEventOptions.StartTime))
 	}
@@ -3095,21 +3652,22 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 	if getMetricsQueryEventOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryEventOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(MetricResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*MetricResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3118,16 +3676,20 @@ func (discovery *DiscoveryV1) GetMetricsQueryEvent(getMetricsQueryEventOptions *
 // Total number of queries using the **natural_language_query** parameter that have no results returned over a specified
 // time window.
 func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsOptions *GetMetricsQueryNoResultsOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
+	return discovery.GetMetricsQueryNoResultsWithContext(context.Background(), getMetricsQueryNoResultsOptions)
+}
+
+// GetMetricsQueryNoResultsWithContext is an alternate form of the GetMetricsQueryNoResults method which supports a Context parameter
+func (discovery *DiscoveryV1) GetMetricsQueryNoResultsWithContext(ctx context.Context, getMetricsQueryNoResultsOptions *GetMetricsQueryNoResultsOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(getMetricsQueryNoResultsOptions, "getMetricsQueryNoResultsOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/metrics/number_of_queries_with_no_search_results"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/metrics/number_of_queries_with_no_search_results`, nil)
 	if err != nil {
 		return
 	}
@@ -3140,9 +3702,9 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if getMetricsQueryNoResultsOptions.StartTime != nil {
 		builder.AddQuery("start_time", fmt.Sprint(*getMetricsQueryNoResultsOptions.StartTime))
 	}
@@ -3152,21 +3714,22 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 	if getMetricsQueryNoResultsOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsQueryNoResultsOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(MetricResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*MetricResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3176,16 +3739,20 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResults(getMetricsQueryNoResultsO
 // a specified time window.  This metric requires having integrated event tracking in your application using the
 // **Events** API.
 func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *GetMetricsEventRateOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
+	return discovery.GetMetricsEventRateWithContext(context.Background(), getMetricsEventRateOptions)
+}
+
+// GetMetricsEventRateWithContext is an alternate form of the GetMetricsEventRate method which supports a Context parameter
+func (discovery *DiscoveryV1) GetMetricsEventRateWithContext(ctx context.Context, getMetricsEventRateOptions *GetMetricsEventRateOptions) (result *MetricResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(getMetricsEventRateOptions, "getMetricsEventRateOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/metrics/event_rate"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/metrics/event_rate`, nil)
 	if err != nil {
 		return
 	}
@@ -3198,9 +3765,9 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if getMetricsEventRateOptions.StartTime != nil {
 		builder.AddQuery("start_time", fmt.Sprint(*getMetricsEventRateOptions.StartTime))
 	}
@@ -3210,21 +3777,22 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 	if getMetricsEventRateOptions.ResultType != nil {
 		builder.AddQuery("result_type", fmt.Sprint(*getMetricsEventRateOptions.ResultType))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(MetricResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*MetricResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3234,16 +3802,20 @@ func (discovery *DiscoveryV1) GetMetricsEventRate(getMetricsEventRateOptions *Ge
 // event rate within the recording period (queries and events are stored for 30 days). A query token is an individual
 // word or unigram within the query string.
 func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions) (result *MetricTokenResponse, response *core.DetailedResponse, err error) {
+	return discovery.GetMetricsQueryTokenEventWithContext(context.Background(), getMetricsQueryTokenEventOptions)
+}
+
+// GetMetricsQueryTokenEventWithContext is an alternate form of the GetMetricsQueryTokenEvent method which supports a Context parameter
+func (discovery *DiscoveryV1) GetMetricsQueryTokenEventWithContext(ctx context.Context, getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions) (result *MetricTokenResponse, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(getMetricsQueryTokenEventOptions, "getMetricsQueryTokenEventOptions")
 	if err != nil {
 		return
 	}
 
-	pathSegments := []string{"v1/metrics/top_query_tokens_with_event_rate"}
-	pathParameters := []string{}
-
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/metrics/top_query_tokens_with_event_rate`, nil)
 	if err != nil {
 		return
 	}
@@ -3256,27 +3828,28 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEven
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 	if getMetricsQueryTokenEventOptions.Count != nil {
 		builder.AddQuery("count", fmt.Sprint(*getMetricsQueryTokenEventOptions.Count))
 	}
-	builder.AddQuery("version", discovery.Version)
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(MetricTokenResponse))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*MetricTokenResponse)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricTokenResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3286,6 +3859,11 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEvent(getMetricsQueryTokenEven
 //
 //  **Note:**  All credentials are sent over an encrypted connection and encrypted at rest.
 func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCredentialsOptions) (result *CredentialsList, response *core.DetailedResponse, err error) {
+	return discovery.ListCredentialsWithContext(context.Background(), listCredentialsOptions)
+}
+
+// ListCredentialsWithContext is an alternate form of the ListCredentials method which supports a Context parameter
+func (discovery *DiscoveryV1) ListCredentialsWithContext(ctx context.Context, listCredentialsOptions *ListCredentialsOptions) (result *CredentialsList, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listCredentialsOptions, "listCredentialsOptions cannot be nil")
 	if err != nil {
 		return
@@ -3295,11 +3873,14 @@ func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCreden
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "credentials"}
-	pathParameters := []string{*listCredentialsOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listCredentialsOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/credentials`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3312,23 +3893,25 @@ func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCreden
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(CredentialsList))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*CredentialsList)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentialsList)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3339,6 +3922,11 @@ func (discovery *DiscoveryV1) ListCredentials(listCredentialsOptions *ListCreden
 //
 // **Note:** All credentials are sent over an encrypted connection and encrypted at rest.
 func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *CreateCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
+	return discovery.CreateCredentialsWithContext(context.Background(), createCredentialsOptions)
+}
+
+// CreateCredentialsWithContext is an alternate form of the CreateCredentials method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateCredentialsWithContext(ctx context.Context, createCredentialsOptions *CreateCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createCredentialsOptions, "createCredentialsOptions cannot be nil")
 	if err != nil {
 		return
@@ -3348,11 +3936,14 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "credentials"}
-	pathParameters := []string{*createCredentialsOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *createCredentialsOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/credentials`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3365,10 +3956,10 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createCredentialsOptions.SourceType != nil {
@@ -3390,14 +3981,16 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Credentials))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Credentials)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3408,6 +4001,11 @@ func (discovery *DiscoveryV1) CreateCredentials(createCredentialsOptions *Create
 //  **Note:** Secure credential information such as a password or SSH key is never returned and must be obtained from
 // the source system.
 func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
+	return discovery.GetCredentialsWithContext(context.Background(), getCredentialsOptions)
+}
+
+// GetCredentialsWithContext is an alternate form of the GetCredentials method which supports a Context parameter
+func (discovery *DiscoveryV1) GetCredentialsWithContext(ctx context.Context, getCredentialsOptions *GetCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getCredentialsOptions, "getCredentialsOptions cannot be nil")
 	if err != nil {
 		return
@@ -3417,11 +4015,15 @@ func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentia
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "credentials"}
-	pathParameters := []string{*getCredentialsOptions.EnvironmentID, *getCredentialsOptions.CredentialID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getCredentialsOptions.EnvironmentID,
+		"credential_id":  *getCredentialsOptions.CredentialID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/credentials/{credential_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3434,23 +4036,25 @@ func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentia
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Credentials))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Credentials)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3460,6 +4064,11 @@ func (discovery *DiscoveryV1) GetCredentials(getCredentialsOptions *GetCredentia
 //
 // **Note:** All credentials are sent over an encrypted connection and encrypted at rest.
 func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *UpdateCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
+	return discovery.UpdateCredentialsWithContext(context.Background(), updateCredentialsOptions)
+}
+
+// UpdateCredentialsWithContext is an alternate form of the UpdateCredentials method which supports a Context parameter
+func (discovery *DiscoveryV1) UpdateCredentialsWithContext(ctx context.Context, updateCredentialsOptions *UpdateCredentialsOptions) (result *Credentials, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(updateCredentialsOptions, "updateCredentialsOptions cannot be nil")
 	if err != nil {
 		return
@@ -3469,11 +4078,15 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "credentials"}
-	pathParameters := []string{*updateCredentialsOptions.EnvironmentID, *updateCredentialsOptions.CredentialID}
+	pathParamsMap := map[string]string{
+		"environment_id": *updateCredentialsOptions.EnvironmentID,
+		"credential_id":  *updateCredentialsOptions.CredentialID,
+	}
 
 	builder := core.NewRequestBuilder(core.PUT)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/credentials/{credential_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3486,10 +4099,10 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if updateCredentialsOptions.SourceType != nil {
@@ -3511,14 +4124,16 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Credentials))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Credentials)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3526,6 +4141,11 @@ func (discovery *DiscoveryV1) UpdateCredentials(updateCredentialsOptions *Update
 // DeleteCredentials : Delete credentials
 // Deletes a set of stored credentials from your Discovery instance.
 func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *DeleteCredentialsOptions) (result *DeleteCredentials, response *core.DetailedResponse, err error) {
+	return discovery.DeleteCredentialsWithContext(context.Background(), deleteCredentialsOptions)
+}
+
+// DeleteCredentialsWithContext is an alternate form of the DeleteCredentials method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteCredentialsWithContext(ctx context.Context, deleteCredentialsOptions *DeleteCredentialsOptions) (result *DeleteCredentials, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteCredentialsOptions, "deleteCredentialsOptions cannot be nil")
 	if err != nil {
 		return
@@ -3535,11 +4155,15 @@ func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *Delete
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "credentials"}
-	pathParameters := []string{*deleteCredentialsOptions.EnvironmentID, *deleteCredentialsOptions.CredentialID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteCredentialsOptions.EnvironmentID,
+		"credential_id":  *deleteCredentialsOptions.CredentialID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/credentials/{credential_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3552,23 +4176,25 @@ func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *Delete
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(DeleteCredentials))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*DeleteCredentials)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteCredentials)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3576,6 +4202,11 @@ func (discovery *DiscoveryV1) DeleteCredentials(deleteCredentialsOptions *Delete
 // ListGateways : List Gateways
 // List the currently configured gateways.
 func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOptions) (result *GatewayList, response *core.DetailedResponse, err error) {
+	return discovery.ListGatewaysWithContext(context.Background(), listGatewaysOptions)
+}
+
+// ListGatewaysWithContext is an alternate form of the ListGateways method which supports a Context parameter
+func (discovery *DiscoveryV1) ListGatewaysWithContext(ctx context.Context, listGatewaysOptions *ListGatewaysOptions) (result *GatewayList, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(listGatewaysOptions, "listGatewaysOptions cannot be nil")
 	if err != nil {
 		return
@@ -3585,11 +4216,14 @@ func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOpti
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "gateways"}
-	pathParameters := []string{*listGatewaysOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *listGatewaysOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/gateways`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3602,23 +4236,25 @@ func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOpti
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(GatewayList))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*GatewayList)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGatewayList)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3626,6 +4262,11 @@ func (discovery *DiscoveryV1) ListGateways(listGatewaysOptions *ListGatewaysOpti
 // CreateGateway : Create Gateway
 // Create a gateway configuration to use with a remotely installed gateway.
 func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayOptions) (result *Gateway, response *core.DetailedResponse, err error) {
+	return discovery.CreateGatewayWithContext(context.Background(), createGatewayOptions)
+}
+
+// CreateGatewayWithContext is an alternate form of the CreateGateway method which supports a Context parameter
+func (discovery *DiscoveryV1) CreateGatewayWithContext(ctx context.Context, createGatewayOptions *CreateGatewayOptions) (result *Gateway, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(createGatewayOptions, "createGatewayOptions cannot be nil")
 	if err != nil {
 		return
@@ -3635,11 +4276,14 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "gateways"}
-	pathParameters := []string{*createGatewayOptions.EnvironmentID}
+	pathParamsMap := map[string]string{
+		"environment_id": *createGatewayOptions.EnvironmentID,
+	}
 
 	builder := core.NewRequestBuilder(core.POST)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/gateways`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3652,10 +4296,10 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
 	builder.AddHeader("Content-Type", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	body := make(map[string]interface{})
 	if createGatewayOptions.Name != nil {
@@ -3671,14 +4315,16 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Gateway))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Gateway)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGateway)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3686,6 +4332,11 @@ func (discovery *DiscoveryV1) CreateGateway(createGatewayOptions *CreateGatewayO
 // GetGateway : List Gateway Details
 // List information about the specified gateway.
 func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (result *Gateway, response *core.DetailedResponse, err error) {
+	return discovery.GetGatewayWithContext(context.Background(), getGatewayOptions)
+}
+
+// GetGatewayWithContext is an alternate form of the GetGateway method which supports a Context parameter
+func (discovery *DiscoveryV1) GetGatewayWithContext(ctx context.Context, getGatewayOptions *GetGatewayOptions) (result *Gateway, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(getGatewayOptions, "getGatewayOptions cannot be nil")
 	if err != nil {
 		return
@@ -3695,11 +4346,15 @@ func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "gateways"}
-	pathParameters := []string{*getGatewayOptions.EnvironmentID, *getGatewayOptions.GatewayID}
+	pathParamsMap := map[string]string{
+		"environment_id": *getGatewayOptions.EnvironmentID,
+		"gateway_id":     *getGatewayOptions.GatewayID,
+	}
 
 	builder := core.NewRequestBuilder(core.GET)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/gateways/{gateway_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3712,23 +4367,25 @@ func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(Gateway))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*Gateway)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGateway)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
@@ -3736,6 +4393,11 @@ func (discovery *DiscoveryV1) GetGateway(getGatewayOptions *GetGatewayOptions) (
 // DeleteGateway : Delete Gateway
 // Delete the specified gateway configuration.
 func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayOptions) (result *GatewayDelete, response *core.DetailedResponse, err error) {
+	return discovery.DeleteGatewayWithContext(context.Background(), deleteGatewayOptions)
+}
+
+// DeleteGatewayWithContext is an alternate form of the DeleteGateway method which supports a Context parameter
+func (discovery *DiscoveryV1) DeleteGatewayWithContext(ctx context.Context, deleteGatewayOptions *DeleteGatewayOptions) (result *GatewayDelete, response *core.DetailedResponse, err error) {
 	err = core.ValidateNotNil(deleteGatewayOptions, "deleteGatewayOptions cannot be nil")
 	if err != nil {
 		return
@@ -3745,11 +4407,15 @@ func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayO
 		return
 	}
 
-	pathSegments := []string{"v1/environments", "gateways"}
-	pathParameters := []string{*deleteGatewayOptions.EnvironmentID, *deleteGatewayOptions.GatewayID}
+	pathParamsMap := map[string]string{
+		"environment_id": *deleteGatewayOptions.EnvironmentID,
+		"gateway_id":     *deleteGatewayOptions.GatewayID,
+	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
-	_, err = builder.ConstructHTTPURL(discovery.Service.Options.URL, pathSegments, pathParameters)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = discovery.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(discovery.Service.Options.URL, `/v1/environments/{environment_id}/gateways/{gateway_id}`, pathParamsMap)
 	if err != nil {
 		return
 	}
@@ -3762,35 +4428,36 @@ func (discovery *DiscoveryV1) DeleteGateway(deleteGatewayOptions *DeleteGatewayO
 	for headerName, headerValue := range sdkHeaders {
 		builder.AddHeader(headerName, headerValue)
 	}
-
 	builder.AddHeader("Accept", "application/json")
-	builder.AddQuery("version", discovery.Version)
+
+	builder.AddQuery("version", fmt.Sprint(*discovery.Version))
 
 	request, err := builder.Build()
 	if err != nil {
 		return
 	}
 
-	response, err = discovery.Service.Request(request, new(GatewayDelete))
-	if err == nil {
-		var ok bool
-		result, ok = response.Result.(*GatewayDelete)
-		if !ok {
-			err = fmt.Errorf("An error occurred while processing the operation response.")
-		}
+	var rawResponse map[string]json.RawMessage
+	response, err = discovery.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
 	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGatewayDelete)
+	if err != nil {
+		return
+	}
+	response.Result = result
 
 	return
 }
 
 // AddDocumentOptions : The AddDocument options.
 type AddDocumentOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
 	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
@@ -3809,12 +4476,12 @@ type AddDocumentOptions struct {
 	// } ```.
 	Metadata *string `json:"metadata,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewAddDocumentOptions : Instantiate AddDocumentOptions
-func (discovery *DiscoveryV1) NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
+func (*DiscoveryV1) NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
 	return &AddDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -3865,12 +4532,11 @@ func (options *AddDocumentOptions) SetHeaders(param map[string]string) *AddDocum
 
 // AddTrainingDataOptions : The AddTrainingData options.
 type AddTrainingDataOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The natural text query for the new training query.
 	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
@@ -3881,12 +4547,12 @@ type AddTrainingDataOptions struct {
 	// Array of training examples.
 	Examples []TrainingExample `json:"examples,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewAddTrainingDataOptions : Instantiate AddTrainingDataOptions
-func (discovery *DiscoveryV1) NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
+func (*DiscoveryV1) NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
 	return &AddTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -3929,48 +4595,8 @@ func (options *AddTrainingDataOptions) SetHeaders(param map[string]string) *AddT
 	return options
 }
 
-func (n *AggregationResult) UnmarshalJSON(bytes []byte) error {
-	var rawStrings map[string]*json.RawMessage
-
-	if err := json.Unmarshal(bytes, &rawStrings); err != nil {
-		return err
-	}
-
-	if value, ok := rawStrings["key_as_string"]; ok {
-		var keyAsString string
-		if err := json.Unmarshal(*value, &keyAsString); err != nil {
-			return nil
-		}
-		n.Key = &keyAsString
-	}
-	if value, ok := rawStrings["key"]; ok && n.Key == nil {
-		var key int64
-		if err := json.Unmarshal(*value, &key); err != nil {
-			return nil
-		}
-		keyAsString := strconv.FormatInt(key, 10)
-		n.Key = &keyAsString
-	}
-	if value, ok := rawStrings["matching_results"]; ok {
-		var matchingResults int64
-		if err := json.Unmarshal(*value, &matchingResults); err != nil {
-			return nil
-		}
-		n.MatchingResults = &matchingResults
-	}
-	if value, ok := rawStrings["aggregations"]; ok {
-		var aggregations []QueryAggregation
-		if err := json.Unmarshal(*value, &aggregations); err != nil {
-			return nil
-		}
-		n.Aggregations = aggregations
-	}
-	return nil
-}
-
 // AggregationResult : Aggregation results for the specified query.
 type AggregationResult struct {
-
 	// Key that matched the aggregation type.
 	Key *string `json:"key,omitempty"`
 
@@ -3978,12 +4604,33 @@ type AggregationResult struct {
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	// Aggregations returned in the case of chained aggregations.
-	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
+}
+
+// UnmarshalAggregationResult unmarshals an instance of AggregationResult from the specified map of raw messages.
+func UnmarshalAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AggregationResult)
+	err = core.UnmarshalPrimitive(m, "key", &obj.Key)
+	if err != nil {
+		err = core.UnmarshalPrimitive(m, "key_as_string", &obj.Key)
+		if err != nil {
+			return
+		}
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
 
 // Collection : A collection for storing documents.
 type Collection struct {
-
 	// The unique identifier of the collection.
 	CollectionID *string `json:"collection_id,omitempty"`
 
@@ -4028,28 +4675,106 @@ type Collection struct {
 // Constants associated with the Collection.Status property.
 // The status of the collection.
 const (
-	Collection_Status_Active      = "active"
-	Collection_Status_Maintenance = "maintenance"
-	Collection_Status_Pending     = "pending"
+	CollectionStatusActiveConst      = "active"
+	CollectionStatusMaintenanceConst = "maintenance"
+	CollectionStatusPendingConst     = "pending"
 )
+
+// UnmarshalCollection unmarshals an instance of Collection from the specified map of raw messages.
+func UnmarshalCollection(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Collection)
+	err = core.UnmarshalPrimitive(m, "collection_id", &obj.CollectionID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "updated", &obj.Updated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "configuration_id", &obj.ConfigurationID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "document_counts", &obj.DocumentCounts, UnmarshalDocumentCounts)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "disk_usage", &obj.DiskUsage, UnmarshalCollectionDiskUsage)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "training_status", &obj.TrainingStatus, UnmarshalTrainingStatus)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "crawl_status", &obj.CrawlStatus, UnmarshalCollectionCrawlStatus)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "smart_document_understanding", &obj.SmartDocumentUnderstanding, UnmarshalSduStatus)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // CollectionCrawlStatus : Object containing information about the crawl status of this collection.
 type CollectionCrawlStatus struct {
-
 	// Object containing source crawl status information.
 	SourceCrawl *SourceStatus `json:"source_crawl,omitempty"`
 }
 
+// UnmarshalCollectionCrawlStatus unmarshals an instance of CollectionCrawlStatus from the specified map of raw messages.
+func UnmarshalCollectionCrawlStatus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CollectionCrawlStatus)
+	err = core.UnmarshalModel(m, "source_crawl", &obj.SourceCrawl, UnmarshalSourceStatus)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // CollectionDiskUsage : Summary of the disk usage statistics for this collection.
 type CollectionDiskUsage struct {
-
 	// Number of bytes used by the collection.
 	UsedBytes *int64 `json:"used_bytes,omitempty"`
 }
 
+// UnmarshalCollectionDiskUsage unmarshals an instance of CollectionDiskUsage from the specified map of raw messages.
+func UnmarshalCollectionDiskUsage(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CollectionDiskUsage)
+	err = core.UnmarshalPrimitive(m, "used_bytes", &obj.UsedBytes)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // CollectionUsage : Summary of the collection usage in the environment.
 type CollectionUsage struct {
-
 	// Number of active collections in the environment.
 	Available *int64 `json:"available,omitempty"`
 
@@ -4057,16 +4782,40 @@ type CollectionUsage struct {
 	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
 }
 
+// UnmarshalCollectionUsage unmarshals an instance of CollectionUsage from the specified map of raw messages.
+func UnmarshalCollectionUsage(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CollectionUsage)
+	err = core.UnmarshalPrimitive(m, "available", &obj.Available)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "maximum_allowed", &obj.MaximumAllowed)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Completions : An object containing an array of autocompletion suggestions.
 type Completions struct {
-
 	// Array of autcomplete suggestion based on the provided prefix.
 	Completions []string `json:"completions,omitempty"`
 }
 
+// UnmarshalCompletions unmarshals an instance of Completions from the specified map of raw messages.
+func UnmarshalCompletions(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Completions)
+	err = core.UnmarshalPrimitive(m, "completions", &obj.Completions)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Configuration : A custom configuration for the environment.
 type Configuration struct {
-
 	// The unique identifier of the configuration.
 	ConfigurationID *string `json:"configuration_id,omitempty"`
 
@@ -4097,7 +4846,7 @@ type Configuration struct {
 }
 
 // NewConfiguration : Instantiate Configuration (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewConfiguration(name string) (model *Configuration, err error) {
+func (*DiscoveryV1) NewConfiguration(name string) (model *Configuration, err error) {
 	model = &Configuration{
 		Name: core.StringPtr(name),
 	}
@@ -4105,11 +4854,53 @@ func (discovery *DiscoveryV1) NewConfiguration(name string) (model *Configuratio
 	return
 }
 
+// UnmarshalConfiguration unmarshals an instance of Configuration from the specified map of raw messages.
+func UnmarshalConfiguration(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Configuration)
+	err = core.UnmarshalPrimitive(m, "configuration_id", &obj.ConfigurationID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "updated", &obj.Updated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "conversions", &obj.Conversions, UnmarshalConversions)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "enrichments", &obj.Enrichments, UnmarshalEnrichment)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "normalizations", &obj.Normalizations, UnmarshalNormalizationOperation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "source", &obj.Source, UnmarshalSource)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Conversions : Document conversion settings.
 type Conversions struct {
-
 	// A list of PDF conversion settings.
-	Pdf *PdfSettings `json:"pdf,omitempty"`
+	PDF *PDFSettings `json:"pdf,omitempty"`
 
 	// A list of Word conversion settings.
 	Word *WordSettings `json:"word,omitempty"`
@@ -4130,11 +4921,41 @@ type Conversions struct {
 	ImageTextRecognition *bool `json:"image_text_recognition,omitempty"`
 }
 
+// UnmarshalConversions unmarshals an instance of Conversions from the specified map of raw messages.
+func UnmarshalConversions(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Conversions)
+	err = core.UnmarshalModel(m, "pdf", &obj.PDF, UnmarshalPDFSettings)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "word", &obj.Word, UnmarshalWordSettings)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "html", &obj.HTML, UnmarshalHTMLSettings)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "segment", &obj.Segment, UnmarshalSegmentSettings)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "json_normalizations", &obj.JSONNormalizations, UnmarshalNormalizationOperation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "image_text_recognition", &obj.ImageTextRecognition)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // CreateCollectionOptions : The CreateCollection options.
 type CreateCollectionOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The name of the collection to be created.
 	Name *string `json:"name" validate:"required"`
@@ -4148,28 +4969,28 @@ type CreateCollectionOptions struct {
 	// The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
 	Language *string `json:"language,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the CreateCollectionOptions.Language property.
 // The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
 const (
-	CreateCollectionOptions_Language_Ar   = "ar"
-	CreateCollectionOptions_Language_De   = "de"
-	CreateCollectionOptions_Language_En   = "en"
-	CreateCollectionOptions_Language_Es   = "es"
-	CreateCollectionOptions_Language_Fr   = "fr"
-	CreateCollectionOptions_Language_It   = "it"
-	CreateCollectionOptions_Language_Ja   = "ja"
-	CreateCollectionOptions_Language_Ko   = "ko"
-	CreateCollectionOptions_Language_Nl   = "nl"
-	CreateCollectionOptions_Language_Pt   = "pt"
-	CreateCollectionOptions_Language_ZhCn = "zh-CN"
+	CreateCollectionOptionsLanguageArConst   = "ar"
+	CreateCollectionOptionsLanguageDeConst   = "de"
+	CreateCollectionOptionsLanguageEnConst   = "en"
+	CreateCollectionOptionsLanguageEsConst   = "es"
+	CreateCollectionOptionsLanguageFrConst   = "fr"
+	CreateCollectionOptionsLanguageItConst   = "it"
+	CreateCollectionOptionsLanguageJaConst   = "ja"
+	CreateCollectionOptionsLanguageKoConst   = "ko"
+	CreateCollectionOptionsLanguageNlConst   = "nl"
+	CreateCollectionOptionsLanguagePtConst   = "pt"
+	CreateCollectionOptionsLanguageZhCnConst = "zh-CN"
 )
 
 // NewCreateCollectionOptions : Instantiate CreateCollectionOptions
-func (discovery *DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
+func (*DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
 	return &CreateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		Name:          core.StringPtr(name),
@@ -4214,9 +5035,8 @@ func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *Cre
 
 // CreateConfigurationOptions : The CreateConfiguration options.
 type CreateConfigurationOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The name of the configuration.
 	Name *string `json:"name" validate:"required"`
@@ -4237,12 +5057,12 @@ type CreateConfigurationOptions struct {
 	// Object containing source parameters for the configuration.
 	Source *Source `json:"source,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCreateConfigurationOptions : Instantiate CreateConfigurationOptions
-func (discovery *DiscoveryV1) NewCreateConfigurationOptions(environmentID string, name string) *CreateConfigurationOptions {
+func (*DiscoveryV1) NewCreateConfigurationOptions(environmentID string, name string) *CreateConfigurationOptions {
 	return &CreateConfigurationOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		Name:          core.StringPtr(name),
@@ -4299,9 +5119,8 @@ func (options *CreateConfigurationOptions) SetHeaders(param map[string]string) *
 
 // CreateCredentialsOptions : The CreateCredentials options.
 type CreateCredentialsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The source that this credentials object connects to.
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
@@ -4321,7 +5140,7 @@ type CreateCredentialsOptions struct {
 	// has expired) and must be corrected before they can be used with a collection.
 	Status *string `json:"status,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -4333,11 +5152,11 @@ type CreateCredentialsOptions struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	CreateCredentialsOptions_SourceType_Box                = "box"
-	CreateCredentialsOptions_SourceType_CloudObjectStorage = "cloud_object_storage"
-	CreateCredentialsOptions_SourceType_Salesforce         = "salesforce"
-	CreateCredentialsOptions_SourceType_Sharepoint         = "sharepoint"
-	CreateCredentialsOptions_SourceType_WebCrawl           = "web_crawl"
+	CreateCredentialsOptionsSourceTypeBoxConst                = "box"
+	CreateCredentialsOptionsSourceTypeCloudObjectStorageConst = "cloud_object_storage"
+	CreateCredentialsOptionsSourceTypeSalesforceConst         = "salesforce"
+	CreateCredentialsOptionsSourceTypeSharepointConst         = "sharepoint"
+	CreateCredentialsOptionsSourceTypeWebCrawlConst           = "web_crawl"
 )
 
 // Constants associated with the CreateCredentialsOptions.Status property.
@@ -4345,12 +5164,12 @@ const (
 // the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided has
 // expired) and must be corrected before they can be used with a collection.
 const (
-	CreateCredentialsOptions_Status_Connected = "connected"
-	CreateCredentialsOptions_Status_Invalid   = "invalid"
+	CreateCredentialsOptionsStatusConnectedConst = "connected"
+	CreateCredentialsOptionsStatusInvalidConst   = "invalid"
 )
 
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
-func (discovery *DiscoveryV1) NewCreateCredentialsOptions(environmentID string) *CreateCredentialsOptions {
+func (*DiscoveryV1) NewCreateCredentialsOptions(environmentID string) *CreateCredentialsOptions {
 	return &CreateCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -4388,7 +5207,6 @@ func (options *CreateCredentialsOptions) SetHeaders(param map[string]string) *Cr
 
 // CreateEnvironmentOptions : The CreateEnvironment options.
 type CreateEnvironmentOptions struct {
-
 	// Name that identifies the environment.
 	Name *string `json:"name" validate:"required"`
 
@@ -4399,7 +5217,7 @@ type CreateEnvironmentOptions struct {
 	// default is `S`.
 	Size *string `json:"size,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -4407,20 +5225,20 @@ type CreateEnvironmentOptions struct {
 // Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the default
 // is `S`.
 const (
-	CreateEnvironmentOptions_Size_L    = "L"
-	CreateEnvironmentOptions_Size_Lt   = "LT"
-	CreateEnvironmentOptions_Size_M    = "M"
-	CreateEnvironmentOptions_Size_Ml   = "ML"
-	CreateEnvironmentOptions_Size_Ms   = "MS"
-	CreateEnvironmentOptions_Size_S    = "S"
-	CreateEnvironmentOptions_Size_Xl   = "XL"
-	CreateEnvironmentOptions_Size_Xs   = "XS"
-	CreateEnvironmentOptions_Size_Xxl  = "XXL"
-	CreateEnvironmentOptions_Size_Xxxl = "XXXL"
+	CreateEnvironmentOptionsSizeLConst    = "L"
+	CreateEnvironmentOptionsSizeLtConst   = "LT"
+	CreateEnvironmentOptionsSizeMConst    = "M"
+	CreateEnvironmentOptionsSizeMlConst   = "ML"
+	CreateEnvironmentOptionsSizeMsConst   = "MS"
+	CreateEnvironmentOptionsSizeSConst    = "S"
+	CreateEnvironmentOptionsSizeXlConst   = "XL"
+	CreateEnvironmentOptionsSizeXsConst   = "XS"
+	CreateEnvironmentOptionsSizeXxlConst  = "XXL"
+	CreateEnvironmentOptionsSizeXxxlConst = "XXXL"
 )
 
 // NewCreateEnvironmentOptions : Instantiate CreateEnvironmentOptions
-func (discovery *DiscoveryV1) NewCreateEnvironmentOptions(name string) *CreateEnvironmentOptions {
+func (*DiscoveryV1) NewCreateEnvironmentOptions(name string) *CreateEnvironmentOptions {
 	return &CreateEnvironmentOptions{
 		Name: core.StringPtr(name),
 	}
@@ -4452,25 +5270,24 @@ func (options *CreateEnvironmentOptions) SetHeaders(param map[string]string) *Cr
 
 // CreateEventOptions : The CreateEvent options.
 type CreateEventOptions struct {
-
 	// The event type to be created.
 	Type *string `json:"type" validate:"required"`
 
 	// Query event data object.
 	Data *EventData `json:"data" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the CreateEventOptions.Type property.
 // The event type to be created.
 const (
-	CreateEventOptions_Type_Click = "click"
+	CreateEventOptionsTypeClickConst = "click"
 )
 
 // NewCreateEventOptions : Instantiate CreateEventOptions
-func (discovery *DiscoveryV1) NewCreateEventOptions(typeVar string, data *EventData) *CreateEventOptions {
+func (*DiscoveryV1) NewCreateEventOptions(typeVar string, data *EventData) *CreateEventOptions {
 	return &CreateEventOptions{
 		Type: core.StringPtr(typeVar),
 		Data: data,
@@ -4497,7 +5314,6 @@ func (options *CreateEventOptions) SetHeaders(param map[string]string) *CreateEv
 
 // CreateEventResponse : An object defining the event being created.
 type CreateEventResponse struct {
-
 	// The event type that was created.
 	Type *string `json:"type,omitempty"`
 
@@ -4508,17 +5324,31 @@ type CreateEventResponse struct {
 // Constants associated with the CreateEventResponse.Type property.
 // The event type that was created.
 const (
-	CreateEventResponse_Type_Click = "click"
+	CreateEventResponseTypeClickConst = "click"
 )
+
+// UnmarshalCreateEventResponse unmarshals an instance of CreateEventResponse from the specified map of raw messages.
+func UnmarshalCreateEventResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CreateEventResponse)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "data", &obj.Data, UnmarshalEventData)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // CreateExpansionsOptions : The CreateExpansions options.
 type CreateExpansionsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// An array of query expansion definitions.
 	//
@@ -4535,12 +5365,12 @@ type CreateExpansionsOptions struct {
 	// **expanded_terms** array.
 	Expansions []Expansion `json:"expansions" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCreateExpansionsOptions : Instantiate CreateExpansionsOptions
-func (discovery *DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string, expansions []Expansion) *CreateExpansionsOptions {
+func (*DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string, expansions []Expansion) *CreateExpansionsOptions {
 	return &CreateExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -4574,19 +5404,18 @@ func (options *CreateExpansionsOptions) SetHeaders(param map[string]string) *Cre
 
 // CreateGatewayOptions : The CreateGateway options.
 type CreateGatewayOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// User-defined name.
 	Name *string `json:"name,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCreateGatewayOptions : Instantiate CreateGatewayOptions
-func (discovery *DiscoveryV1) NewCreateGatewayOptions(environmentID string) *CreateGatewayOptions {
+func (*DiscoveryV1) NewCreateGatewayOptions(environmentID string) *CreateGatewayOptions {
 	return &CreateGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -4612,12 +5441,11 @@ func (options *CreateGatewayOptions) SetHeaders(param map[string]string) *Create
 
 // CreateStopwordListOptions : The CreateStopwordList options.
 type CreateStopwordListOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The content of the stopword list to ingest.
 	StopwordFile io.ReadCloser `json:"stopword_file" validate:"required"`
@@ -4625,12 +5453,12 @@ type CreateStopwordListOptions struct {
 	// The filename for stopwordFile.
 	StopwordFilename *string `json:"stopword_filename" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCreateStopwordListOptions : Instantiate CreateStopwordListOptions
-func (discovery *DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectionID string, stopwordFile io.ReadCloser, stopwordFilename string) *CreateStopwordListOptions {
+func (*DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectionID string, stopwordFile io.ReadCloser, stopwordFilename string) *CreateStopwordListOptions {
 	return &CreateStopwordListOptions{
 		EnvironmentID:    core.StringPtr(environmentID),
 		CollectionID:     core.StringPtr(collectionID),
@@ -4671,23 +5499,22 @@ func (options *CreateStopwordListOptions) SetHeaders(param map[string]string) *C
 
 // CreateTokenizationDictionaryOptions : The CreateTokenizationDictionary options.
 type CreateTokenizationDictionaryOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// An array of tokenization rules. Each rule contains, the original `text` string, component `tokens`, any alternate
 	// character set `readings`, and which `part_of_speech` the text is from.
 	TokenizationRules []TokenDictRule `json:"tokenization_rules,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCreateTokenizationDictionaryOptions : Instantiate CreateTokenizationDictionaryOptions
-func (discovery *DiscoveryV1) NewCreateTokenizationDictionaryOptions(environmentID string, collectionID string) *CreateTokenizationDictionaryOptions {
+func (*DiscoveryV1) NewCreateTokenizationDictionaryOptions(environmentID string, collectionID string) *CreateTokenizationDictionaryOptions {
 	return &CreateTokenizationDictionaryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -4720,15 +5547,14 @@ func (options *CreateTokenizationDictionaryOptions) SetHeaders(param map[string]
 
 // CreateTrainingExampleOptions : The CreateTrainingExample options.
 type CreateTrainingExampleOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required"`
+	QueryID *string `json:"query_id" validate:"required,ne="`
 
 	// The document ID associated with this training example.
 	DocumentID *string `json:"document_id,omitempty"`
@@ -4739,12 +5565,12 @@ type CreateTrainingExampleOptions struct {
 	// The relevance of the training example.
 	Relevance *int64 `json:"relevance,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewCreateTrainingExampleOptions : Instantiate CreateTrainingExampleOptions
-func (discovery *DiscoveryV1) NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
+func (*DiscoveryV1) NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
 	return &CreateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -4798,7 +5624,6 @@ func (options *CreateTrainingExampleOptions) SetHeaders(param map[string]string)
 //
 // Obtain credentials for your source from the administrator of the source.
 type CredentialDetails struct {
-
 	// The authentication method for this credentials definition. The  **credential_type** specified must be supported by
 	// the **source_type**. The following combinations are possible:
 	//
@@ -4906,24 +5731,106 @@ type CredentialDetails struct {
 // -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`
 // -  "source_type": "cloud_object_storage"` - valid `credential_type`s: `aws4_hmac`.
 const (
-	CredentialDetails_CredentialType_Aws4Hmac         = "aws4_hmac"
-	CredentialDetails_CredentialType_Basic            = "basic"
-	CredentialDetails_CredentialType_Noauth           = "noauth"
-	CredentialDetails_CredentialType_NtlmV1           = "ntlm_v1"
-	CredentialDetails_CredentialType_Oauth2           = "oauth2"
-	CredentialDetails_CredentialType_Saml             = "saml"
-	CredentialDetails_CredentialType_UsernamePassword = "username_password"
+	CredentialDetailsCredentialTypeAws4HmacConst         = "aws4_hmac"
+	CredentialDetailsCredentialTypeBasicConst            = "basic"
+	CredentialDetailsCredentialTypeNoauthConst           = "noauth"
+	CredentialDetailsCredentialTypeNtlmV1Const           = "ntlm_v1"
+	CredentialDetailsCredentialTypeOauth2Const           = "oauth2"
+	CredentialDetailsCredentialTypeSamlConst             = "saml"
+	CredentialDetailsCredentialTypeUsernamePasswordConst = "username_password"
 )
 
 // Constants associated with the CredentialDetails.SourceVersion property.
 // The type of Sharepoint repository to connect to. Only valid, and required, with a **source_type** of `sharepoint`.
 const (
-	CredentialDetails_SourceVersion_Online = "online"
+	CredentialDetailsSourceVersionOnlineConst = "online"
 )
+
+// UnmarshalCredentialDetails unmarshals an instance of CredentialDetails from the specified map of raw messages.
+func UnmarshalCredentialDetails(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CredentialDetails)
+	err = core.UnmarshalPrimitive(m, "credential_type", &obj.CredentialType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "client_id", &obj.ClientID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "enterprise_id", &obj.EnterpriseID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "url", &obj.URL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "username", &obj.Username)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "organization_url", &obj.OrganizationURL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "site_collection.path", &obj.SiteCollectionPath)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "client_secret", &obj.ClientSecret)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "public_key_id", &obj.PublicKeyID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "private_key", &obj.PrivateKey)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "passphrase", &obj.Passphrase)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "password", &obj.Password)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "gateway_id", &obj.GatewayID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "source_version", &obj.SourceVersion)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "web_application_url", &obj.WebApplicationURL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "domain", &obj.Domain)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "endpoint", &obj.Endpoint)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "access_key_id", &obj.AccessKeyID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "secret_access_key", &obj.SecretAccessKey)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // Credentials : Object containing credential information.
 type Credentials struct {
-
 	// Unique identifier for this set of credentials.
 	CredentialID *string `json:"credential_id,omitempty"`
 
@@ -4954,11 +5861,11 @@ type Credentials struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	Credentials_SourceType_Box                = "box"
-	Credentials_SourceType_CloudObjectStorage = "cloud_object_storage"
-	Credentials_SourceType_Salesforce         = "salesforce"
-	Credentials_SourceType_Sharepoint         = "sharepoint"
-	Credentials_SourceType_WebCrawl           = "web_crawl"
+	CredentialsSourceTypeBoxConst                = "box"
+	CredentialsSourceTypeCloudObjectStorageConst = "cloud_object_storage"
+	CredentialsSourceTypeSalesforceConst         = "salesforce"
+	CredentialsSourceTypeSharepointConst         = "sharepoint"
+	CredentialsSourceTypeWebCrawlConst           = "web_crawl"
 )
 
 // Constants associated with the Credentials.Status property.
@@ -4966,32 +5873,64 @@ const (
 // the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided has
 // expired) and must be corrected before they can be used with a collection.
 const (
-	Credentials_Status_Connected = "connected"
-	Credentials_Status_Invalid   = "invalid"
+	CredentialsStatusConnectedConst = "connected"
+	CredentialsStatusInvalidConst   = "invalid"
 )
+
+// UnmarshalCredentials unmarshals an instance of Credentials from the specified map of raw messages.
+func UnmarshalCredentials(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Credentials)
+	err = core.UnmarshalPrimitive(m, "credential_id", &obj.CredentialID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "source_type", &obj.SourceType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "credential_details", &obj.CredentialDetails, UnmarshalCredentialDetails)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // CredentialsList : Object containing array of credential definitions.
 type CredentialsList struct {
-
 	// An array of credential definitions that were created for this instance.
 	Credentials []Credentials `json:"credentials,omitempty"`
 }
 
+// UnmarshalCredentialsList unmarshals an instance of CredentialsList from the specified map of raw messages.
+func UnmarshalCredentialsList(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CredentialsList)
+	err = core.UnmarshalModel(m, "credentials", &obj.Credentials, UnmarshalCredentials)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // DeleteAllTrainingDataOptions : The DeleteAllTrainingData options.
 type DeleteAllTrainingDataOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteAllTrainingDataOptions : Instantiate DeleteAllTrainingDataOptions
-func (discovery *DiscoveryV1) NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
+func (*DiscoveryV1) NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
 	return &DeleteAllTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -5018,19 +5957,18 @@ func (options *DeleteAllTrainingDataOptions) SetHeaders(param map[string]string)
 
 // DeleteCollectionOptions : The DeleteCollection options.
 type DeleteCollectionOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteCollectionOptions : Instantiate DeleteCollectionOptions
-func (discovery *DiscoveryV1) NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
+func (*DiscoveryV1) NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
 	return &DeleteCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -5057,7 +5995,6 @@ func (options *DeleteCollectionOptions) SetHeaders(param map[string]string) *Del
 
 // DeleteCollectionResponse : Response object returned when deleting a colleciton.
 type DeleteCollectionResponse struct {
-
 	// The unique identifier of the collection that is being deleted.
 	CollectionID *string `json:"collection_id" validate:"required"`
 
@@ -5068,24 +6005,38 @@ type DeleteCollectionResponse struct {
 // Constants associated with the DeleteCollectionResponse.Status property.
 // The status of the collection. The status of a successful deletion operation is `deleted`.
 const (
-	DeleteCollectionResponse_Status_Deleted = "deleted"
+	DeleteCollectionResponseStatusDeletedConst = "deleted"
 )
+
+// UnmarshalDeleteCollectionResponse unmarshals an instance of DeleteCollectionResponse from the specified map of raw messages.
+func UnmarshalDeleteCollectionResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DeleteCollectionResponse)
+	err = core.UnmarshalPrimitive(m, "collection_id", &obj.CollectionID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // DeleteConfigurationOptions : The DeleteConfiguration options.
 type DeleteConfigurationOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `json:"configuration_id" validate:"required"`
+	ConfigurationID *string `json:"configuration_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteConfigurationOptions : Instantiate DeleteConfigurationOptions
-func (discovery *DiscoveryV1) NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
+func (*DiscoveryV1) NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
 	return &DeleteConfigurationOptions{
 		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
@@ -5112,7 +6063,6 @@ func (options *DeleteConfigurationOptions) SetHeaders(param map[string]string) *
 
 // DeleteConfigurationResponse : Information returned when a configuration is deleted.
 type DeleteConfigurationResponse struct {
-
 	// The unique identifier for the configuration.
 	ConfigurationID *string `json:"configuration_id" validate:"required"`
 
@@ -5126,12 +6076,30 @@ type DeleteConfigurationResponse struct {
 // Constants associated with the DeleteConfigurationResponse.Status property.
 // Status of the configuration. A deleted configuration has the status deleted.
 const (
-	DeleteConfigurationResponse_Status_Deleted = "deleted"
+	DeleteConfigurationResponseStatusDeletedConst = "deleted"
 )
+
+// UnmarshalDeleteConfigurationResponse unmarshals an instance of DeleteConfigurationResponse from the specified map of raw messages.
+func UnmarshalDeleteConfigurationResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DeleteConfigurationResponse)
+	err = core.UnmarshalPrimitive(m, "configuration_id", &obj.ConfigurationID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "notices", &obj.Notices, UnmarshalNotice)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // DeleteCredentials : Object returned after credentials are deleted.
 type DeleteCredentials struct {
-
 	// The unique identifier of the credentials that have been deleted.
 	CredentialID *string `json:"credential_id,omitempty"`
 
@@ -5142,24 +6110,38 @@ type DeleteCredentials struct {
 // Constants associated with the DeleteCredentials.Status property.
 // The status of the deletion request.
 const (
-	DeleteCredentials_Status_Deleted = "deleted"
+	DeleteCredentialsStatusDeletedConst = "deleted"
 )
+
+// UnmarshalDeleteCredentials unmarshals an instance of DeleteCredentials from the specified map of raw messages.
+func UnmarshalDeleteCredentials(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DeleteCredentials)
+	err = core.UnmarshalPrimitive(m, "credential_id", &obj.CredentialID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // DeleteCredentialsOptions : The DeleteCredentials options.
 type DeleteCredentialsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `json:"credential_id" validate:"required"`
+	CredentialID *string `json:"credential_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteCredentialsOptions : Instantiate DeleteCredentialsOptions
-func (discovery *DiscoveryV1) NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
+func (*DiscoveryV1) NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
 	return &DeleteCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CredentialID:  core.StringPtr(credentialID),
@@ -5186,22 +6168,21 @@ func (options *DeleteCredentialsOptions) SetHeaders(param map[string]string) *De
 
 // DeleteDocumentOptions : The DeleteDocument options.
 type DeleteDocumentOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `json:"document_id" validate:"required"`
+	DocumentID *string `json:"document_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteDocumentOptions : Instantiate DeleteDocumentOptions
-func (discovery *DiscoveryV1) NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
+func (*DiscoveryV1) NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
 	return &DeleteDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -5235,7 +6216,6 @@ func (options *DeleteDocumentOptions) SetHeaders(param map[string]string) *Delet
 
 // DeleteDocumentResponse : Information returned when a document is deleted.
 type DeleteDocumentResponse struct {
-
 	// The unique identifier of the document.
 	DocumentID *string `json:"document_id,omitempty"`
 
@@ -5246,21 +6226,35 @@ type DeleteDocumentResponse struct {
 // Constants associated with the DeleteDocumentResponse.Status property.
 // Status of the document. A deleted document has the status deleted.
 const (
-	DeleteDocumentResponse_Status_Deleted = "deleted"
+	DeleteDocumentResponseStatusDeletedConst = "deleted"
 )
+
+// UnmarshalDeleteDocumentResponse unmarshals an instance of DeleteDocumentResponse from the specified map of raw messages.
+func UnmarshalDeleteDocumentResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DeleteDocumentResponse)
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // DeleteEnvironmentOptions : The DeleteEnvironment options.
 type DeleteEnvironmentOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteEnvironmentOptions : Instantiate DeleteEnvironmentOptions
-func (discovery *DiscoveryV1) NewDeleteEnvironmentOptions(environmentID string) *DeleteEnvironmentOptions {
+func (*DiscoveryV1) NewDeleteEnvironmentOptions(environmentID string) *DeleteEnvironmentOptions {
 	return &DeleteEnvironmentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -5280,7 +6274,6 @@ func (options *DeleteEnvironmentOptions) SetHeaders(param map[string]string) *De
 
 // DeleteEnvironmentResponse : Response object returned when deleting an environment.
 type DeleteEnvironmentResponse struct {
-
 	// The unique identifier for the environment.
 	EnvironmentID *string `json:"environment_id" validate:"required"`
 
@@ -5291,24 +6284,38 @@ type DeleteEnvironmentResponse struct {
 // Constants associated with the DeleteEnvironmentResponse.Status property.
 // Status of the environment.
 const (
-	DeleteEnvironmentResponse_Status_Deleted = "deleted"
+	DeleteEnvironmentResponseStatusDeletedConst = "deleted"
 )
+
+// UnmarshalDeleteEnvironmentResponse unmarshals an instance of DeleteEnvironmentResponse from the specified map of raw messages.
+func UnmarshalDeleteEnvironmentResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DeleteEnvironmentResponse)
+	err = core.UnmarshalPrimitive(m, "environment_id", &obj.EnvironmentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // DeleteExpansionsOptions : The DeleteExpansions options.
 type DeleteExpansionsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteExpansionsOptions : Instantiate DeleteExpansionsOptions
-func (discovery *DiscoveryV1) NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
+func (*DiscoveryV1) NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
 	return &DeleteExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -5335,19 +6342,18 @@ func (options *DeleteExpansionsOptions) SetHeaders(param map[string]string) *Del
 
 // DeleteGatewayOptions : The DeleteGateway options.
 type DeleteGatewayOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The requested gateway ID.
-	GatewayID *string `json:"gateway_id" validate:"required"`
+	GatewayID *string `json:"gateway_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteGatewayOptions : Instantiate DeleteGatewayOptions
-func (discovery *DiscoveryV1) NewDeleteGatewayOptions(environmentID string, gatewayID string) *DeleteGatewayOptions {
+func (*DiscoveryV1) NewDeleteGatewayOptions(environmentID string, gatewayID string) *DeleteGatewayOptions {
 	return &DeleteGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		GatewayID:     core.StringPtr(gatewayID),
@@ -5374,19 +6380,18 @@ func (options *DeleteGatewayOptions) SetHeaders(param map[string]string) *Delete
 
 // DeleteStopwordListOptions : The DeleteStopwordList options.
 type DeleteStopwordListOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteStopwordListOptions : Instantiate DeleteStopwordListOptions
-func (discovery *DiscoveryV1) NewDeleteStopwordListOptions(environmentID string, collectionID string) *DeleteStopwordListOptions {
+func (*DiscoveryV1) NewDeleteStopwordListOptions(environmentID string, collectionID string) *DeleteStopwordListOptions {
 	return &DeleteStopwordListOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -5413,19 +6418,18 @@ func (options *DeleteStopwordListOptions) SetHeaders(param map[string]string) *D
 
 // DeleteTokenizationDictionaryOptions : The DeleteTokenizationDictionary options.
 type DeleteTokenizationDictionaryOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteTokenizationDictionaryOptions : Instantiate DeleteTokenizationDictionaryOptions
-func (discovery *DiscoveryV1) NewDeleteTokenizationDictionaryOptions(environmentID string, collectionID string) *DeleteTokenizationDictionaryOptions {
+func (*DiscoveryV1) NewDeleteTokenizationDictionaryOptions(environmentID string, collectionID string) *DeleteTokenizationDictionaryOptions {
 	return &DeleteTokenizationDictionaryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -5452,22 +6456,21 @@ func (options *DeleteTokenizationDictionaryOptions) SetHeaders(param map[string]
 
 // DeleteTrainingDataOptions : The DeleteTrainingData options.
 type DeleteTrainingDataOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required"`
+	QueryID *string `json:"query_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteTrainingDataOptions : Instantiate DeleteTrainingDataOptions
-func (discovery *DiscoveryV1) NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
+func (*DiscoveryV1) NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
 	return &DeleteTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -5501,25 +6504,24 @@ func (options *DeleteTrainingDataOptions) SetHeaders(param map[string]string) *D
 
 // DeleteTrainingExampleOptions : The DeleteTrainingExample options.
 type DeleteTrainingExampleOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required"`
+	QueryID *string `json:"query_id" validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `json:"example_id" validate:"required"`
+	ExampleID *string `json:"example_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteTrainingExampleOptions : Instantiate DeleteTrainingExampleOptions
-func (discovery *DiscoveryV1) NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
+func (*DiscoveryV1) NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
 	return &DeleteTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -5560,16 +6562,15 @@ func (options *DeleteTrainingExampleOptions) SetHeaders(param map[string]string)
 
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
-
 	// The customer ID for which all data is to be deleted.
 	CustomerID *string `json:"customer_id" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewDeleteUserDataOptions : Instantiate DeleteUserDataOptions
-func (discovery *DiscoveryV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
+func (*DiscoveryV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDataOptions {
 	return &DeleteUserDataOptions{
 		CustomerID: core.StringPtr(customerID),
 	}
@@ -5589,7 +6590,6 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 
 // DiskUsage : Summary of the disk usage statistics for the environment.
 type DiskUsage struct {
-
 	// Number of bytes within the environment's disk capacity that are currently used to store data.
 	UsedBytes *int64 `json:"used_bytes,omitempty"`
 
@@ -5597,9 +6597,23 @@ type DiskUsage struct {
 	MaximumAllowedBytes *int64 `json:"maximum_allowed_bytes,omitempty"`
 }
 
+// UnmarshalDiskUsage unmarshals an instance of DiskUsage from the specified map of raw messages.
+func UnmarshalDiskUsage(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DiskUsage)
+	err = core.UnmarshalPrimitive(m, "used_bytes", &obj.UsedBytes)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "maximum_allowed_bytes", &obj.MaximumAllowedBytes)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // DocumentAccepted : Information returned after an uploaded document is accepted.
 type DocumentAccepted struct {
-
 	// The unique identifier of the ingested document.
 	DocumentID *string `json:"document_id,omitempty"`
 
@@ -5615,13 +6629,31 @@ type DocumentAccepted struct {
 // Status of the document in the ingestion process. A status of `processing` is returned for documents that are ingested
 // with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
 const (
-	DocumentAccepted_Status_Pending    = "pending"
-	DocumentAccepted_Status_Processing = "processing"
+	DocumentAcceptedStatusPendingConst    = "pending"
+	DocumentAcceptedStatusProcessingConst = "processing"
 )
+
+// UnmarshalDocumentAccepted unmarshals an instance of DocumentAccepted from the specified map of raw messages.
+func UnmarshalDocumentAccepted(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DocumentAccepted)
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "notices", &obj.Notices, UnmarshalNotice)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // DocumentCounts : Object containing collection document count information.
 type DocumentCounts struct {
-
 	// The total number of available documents in the collection.
 	Available *int64 `json:"available,omitempty"`
 
@@ -5635,9 +6667,31 @@ type DocumentCounts struct {
 	Pending *int64 `json:"pending,omitempty"`
 }
 
+// UnmarshalDocumentCounts unmarshals an instance of DocumentCounts from the specified map of raw messages.
+func UnmarshalDocumentCounts(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DocumentCounts)
+	err = core.UnmarshalPrimitive(m, "available", &obj.Available)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "processing", &obj.Processing)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "failed", &obj.Failed)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "pending", &obj.Pending)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // DocumentStatus : Status information about a submitted document.
 type DocumentStatus struct {
-
 	// The unique identifier of the document.
 	DocumentID *string `json:"document_id" validate:"required"`
 
@@ -5666,26 +6720,64 @@ type DocumentStatus struct {
 // Constants associated with the DocumentStatus.Status property.
 // Status of the document in the ingestion process.
 const (
-	DocumentStatus_Status_Available            = "available"
-	DocumentStatus_Status_AvailableWithNotices = "available with notices"
-	DocumentStatus_Status_Failed               = "failed"
-	DocumentStatus_Status_Pending              = "pending"
-	DocumentStatus_Status_Processing           = "processing"
+	DocumentStatusStatusAvailableConst            = "available"
+	DocumentStatusStatusAvailableWithNoticesConst = "available with notices"
+	DocumentStatusStatusFailedConst               = "failed"
+	DocumentStatusStatusPendingConst              = "pending"
+	DocumentStatusStatusProcessingConst           = "processing"
 )
 
 // Constants associated with the DocumentStatus.FileType property.
 // The type of the original source file.
 const (
-	DocumentStatus_FileType_HTML = "html"
-	DocumentStatus_FileType_JSON = "json"
-	DocumentStatus_FileType_Pdf  = "pdf"
-	DocumentStatus_FileType_Word = "word"
+	DocumentStatusFileTypeHTMLConst = "html"
+	DocumentStatusFileTypeJSONConst = "json"
+	DocumentStatusFileTypePDFConst  = "pdf"
+	DocumentStatusFileTypeWordConst = "word"
 )
+
+// UnmarshalDocumentStatus unmarshals an instance of DocumentStatus from the specified map of raw messages.
+func UnmarshalDocumentStatus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DocumentStatus)
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "configuration_id", &obj.ConfigurationID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status_description", &obj.StatusDescription)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "filename", &obj.Filename)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "file_type", &obj.FileType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "sha1", &obj.Sha1)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "notices", &obj.Notices, UnmarshalNotice)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // Enrichment : Enrichment step to perform on the document. Each enrichment is performed on the specified field in the order that
 // they are listed in the configuration.
 type Enrichment struct {
-
 	// Describes what the enrichment step does.
 	Description *string `json:"description,omitempty"`
 
@@ -5723,7 +6815,7 @@ type Enrichment struct {
 }
 
 // NewEnrichment : Instantiate Enrichment (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewEnrichment(destinationField string, sourceField string, enrichment string) (model *Enrichment, err error) {
+func (*DiscoveryV1) NewEnrichment(destinationField string, sourceField string, enrichment string) (model *Enrichment, err error) {
 	model = &Enrichment{
 		DestinationField: core.StringPtr(destinationField),
 		SourceField:      core.StringPtr(sourceField),
@@ -5733,9 +6825,43 @@ func (discovery *DiscoveryV1) NewEnrichment(destinationField string, sourceField
 	return
 }
 
+// UnmarshalEnrichment unmarshals an instance of Enrichment from the specified map of raw messages.
+func UnmarshalEnrichment(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Enrichment)
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "destination_field", &obj.DestinationField)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "source_field", &obj.SourceField)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "overwrite", &obj.Overwrite)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "enrichment", &obj.Enrichment)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "ignore_downstream_errors", &obj.IgnoreDownstreamErrors)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "options", &obj.Options, UnmarshalEnrichmentOptions)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // EnrichmentOptions : Options which are specific to a particular enrichment.
 type EnrichmentOptions struct {
-
 	// Object containing Natural Language Understanding features to be used.
 	Features *NluEnrichmentFeatures `json:"features,omitempty"`
 
@@ -5755,20 +6881,38 @@ type EnrichmentOptions struct {
 // (Italian), `pt` (Portuguese), `ru` (Russian), `es` (Spanish), and `sv` (Swedish). **Note:** Not all features support
 // all languages, automatic detection is recommended.
 const (
-	EnrichmentOptions_Language_Ar = "ar"
-	EnrichmentOptions_Language_De = "de"
-	EnrichmentOptions_Language_En = "en"
-	EnrichmentOptions_Language_Es = "es"
-	EnrichmentOptions_Language_Fr = "fr"
-	EnrichmentOptions_Language_It = "it"
-	EnrichmentOptions_Language_Pt = "pt"
-	EnrichmentOptions_Language_Ru = "ru"
-	EnrichmentOptions_Language_Sv = "sv"
+	EnrichmentOptionsLanguageArConst = "ar"
+	EnrichmentOptionsLanguageDeConst = "de"
+	EnrichmentOptionsLanguageEnConst = "en"
+	EnrichmentOptionsLanguageEsConst = "es"
+	EnrichmentOptionsLanguageFrConst = "fr"
+	EnrichmentOptionsLanguageItConst = "it"
+	EnrichmentOptionsLanguagePtConst = "pt"
+	EnrichmentOptionsLanguageRuConst = "ru"
+	EnrichmentOptionsLanguageSvConst = "sv"
 )
+
+// UnmarshalEnrichmentOptions unmarshals an instance of EnrichmentOptions from the specified map of raw messages.
+func UnmarshalEnrichmentOptions(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(EnrichmentOptions)
+	err = core.UnmarshalModel(m, "features", &obj.Features, UnmarshalNluEnrichmentFeatures)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model", &obj.Model)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // Environment : Details about an environment.
 type Environment struct {
-
 	// Unique identifier for the environment.
 	EnvironmentID *string `json:"environment_id,omitempty"`
 
@@ -5810,30 +6954,80 @@ type Environment struct {
 // Current status of the environment. `resizing` is displayed when a request to increase the environment size has been
 // made, but is still in the process of being completed.
 const (
-	Environment_Status_Active      = "active"
-	Environment_Status_Maintenance = "maintenance"
-	Environment_Status_Pending     = "pending"
-	Environment_Status_Resizing    = "resizing"
+	EnvironmentStatusActiveConst      = "active"
+	EnvironmentStatusMaintenanceConst = "maintenance"
+	EnvironmentStatusPendingConst     = "pending"
+	EnvironmentStatusResizingConst    = "resizing"
 )
 
 // Constants associated with the Environment.Size property.
 // Current size of the environment.
 const (
-	Environment_Size_L    = "L"
-	Environment_Size_Lt   = "LT"
-	Environment_Size_M    = "M"
-	Environment_Size_Ml   = "ML"
-	Environment_Size_Ms   = "MS"
-	Environment_Size_S    = "S"
-	Environment_Size_Xl   = "XL"
-	Environment_Size_Xs   = "XS"
-	Environment_Size_Xxl  = "XXL"
-	Environment_Size_Xxxl = "XXXL"
+	EnvironmentSizeLConst    = "L"
+	EnvironmentSizeLtConst   = "LT"
+	EnvironmentSizeMConst    = "M"
+	EnvironmentSizeMlConst   = "ML"
+	EnvironmentSizeMsConst   = "MS"
+	EnvironmentSizeSConst    = "S"
+	EnvironmentSizeXlConst   = "XL"
+	EnvironmentSizeXsConst   = "XS"
+	EnvironmentSizeXxlConst  = "XXL"
+	EnvironmentSizeXxxlConst = "XXXL"
 )
+
+// UnmarshalEnvironment unmarshals an instance of Environment from the specified map of raw messages.
+func UnmarshalEnvironment(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Environment)
+	err = core.UnmarshalPrimitive(m, "environment_id", &obj.EnvironmentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "updated", &obj.Updated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "read_only", &obj.ReadOnly)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "size", &obj.Size)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "requested_size", &obj.RequestedSize)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "index_capacity", &obj.IndexCapacity, UnmarshalIndexCapacity)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "search_status", &obj.SearchStatus, UnmarshalSearchStatus)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // EnvironmentDocuments : Summary of the document usage statistics for the environment.
 type EnvironmentDocuments struct {
-
 	// Number of documents indexed for the environment.
 	Available *int64 `json:"available,omitempty"`
 
@@ -5841,9 +7035,23 @@ type EnvironmentDocuments struct {
 	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
 }
 
+// UnmarshalEnvironmentDocuments unmarshals an instance of EnvironmentDocuments from the specified map of raw messages.
+func UnmarshalEnvironmentDocuments(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(EnvironmentDocuments)
+	err = core.UnmarshalPrimitive(m, "available", &obj.Available)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "maximum_allowed", &obj.MaximumAllowed)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // EventData : Query event data object.
 type EventData struct {
-
 	// The **environment_id** associated with the query that the event is associated with.
 	EnvironmentID *string `json:"environment_id" validate:"required"`
 
@@ -5869,7 +7077,7 @@ type EventData struct {
 }
 
 // NewEventData : Instantiate EventData (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewEventData(environmentID string, sessionToken string, collectionID string, documentID string) (model *EventData, err error) {
+func (*DiscoveryV1) NewEventData(environmentID string, sessionToken string, collectionID string, documentID string) (model *EventData, err error) {
 	model = &EventData{
 		EnvironmentID: core.StringPtr(environmentID),
 		SessionToken:  core.StringPtr(sessionToken),
@@ -5880,10 +7088,44 @@ func (discovery *DiscoveryV1) NewEventData(environmentID string, sessionToken st
 	return
 }
 
+// UnmarshalEventData unmarshals an instance of EventData from the specified map of raw messages.
+func UnmarshalEventData(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(EventData)
+	err = core.UnmarshalPrimitive(m, "environment_id", &obj.EnvironmentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "session_token", &obj.SessionToken)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "client_timestamp", &obj.ClientTimestamp)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "display_rank", &obj.DisplayRank)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "collection_id", &obj.CollectionID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "query_id", &obj.QueryID)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Expansion : An expansion definition. Each object respresents one set of expandable strings. For example, you could have
 // expansions for the word `hot` in one object, and expansions for the word `cold` in another.
 type Expansion struct {
-
 	// A list of terms that will be expanded for this expansion. If specified, only the items in this list are expanded.
 	InputTerms []string `json:"input_terms,omitempty"`
 
@@ -5893,7 +7135,7 @@ type Expansion struct {
 }
 
 // NewExpansion : Instantiate Expansion (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewExpansion(expandedTerms []string) (model *Expansion, err error) {
+func (*DiscoveryV1) NewExpansion(expandedTerms []string) (model *Expansion, err error) {
 	model = &Expansion{
 		ExpandedTerms: expandedTerms,
 	}
@@ -5901,9 +7143,23 @@ func (discovery *DiscoveryV1) NewExpansion(expandedTerms []string) (model *Expan
 	return
 }
 
+// UnmarshalExpansion unmarshals an instance of Expansion from the specified map of raw messages.
+func UnmarshalExpansion(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Expansion)
+	err = core.UnmarshalPrimitive(m, "input_terms", &obj.InputTerms)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "expanded_terms", &obj.ExpandedTerms)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Expansions : The query expansion definitions for the specified collection.
 type Expansions struct {
-
 	// An array of query expansion definitions.
 	//
 	//  Each object in the **expansions** array represents a term or set of terms that will be expanded into other terms.
@@ -5921,7 +7177,7 @@ type Expansions struct {
 }
 
 // NewExpansions : Instantiate Expansions (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewExpansions(expansions []Expansion) (model *Expansions, err error) {
+func (*DiscoveryV1) NewExpansions(expansions []Expansion) (model *Expansions, err error) {
 	model = &Expansions{
 		Expansions: expansions,
 	}
@@ -5929,11 +7185,21 @@ func (discovery *DiscoveryV1) NewExpansions(expansions []Expansion) (model *Expa
 	return
 }
 
+// UnmarshalExpansions unmarshals an instance of Expansions from the specified map of raw messages.
+func UnmarshalExpansions(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Expansions)
+	err = core.UnmarshalModel(m, "expansions", &obj.Expansions, UnmarshalExpansion)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // FederatedQueryNoticesOptions : The FederatedQueryNotices options.
 type FederatedQueryNoticesOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
 	CollectionIds []string `json:"collection_ids" validate:"required"`
@@ -5995,12 +7261,12 @@ type FederatedQueryNoticesOptions struct {
 	// specified, the entire document is used for comparison.
 	SimilarFields []string `json:"similar.fields,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewFederatedQueryNoticesOptions : Instantiate FederatedQueryNoticesOptions
-func (discovery *DiscoveryV1) NewFederatedQueryNoticesOptions(environmentID string, collectionIds []string) *FederatedQueryNoticesOptions {
+func (*DiscoveryV1) NewFederatedQueryNoticesOptions(environmentID string, collectionIds []string) *FederatedQueryNoticesOptions {
 	return &FederatedQueryNoticesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionIds: collectionIds,
@@ -6105,9 +7371,8 @@ func (options *FederatedQueryNoticesOptions) SetHeaders(param map[string]string)
 
 // FederatedQueryOptions : The FederatedQuery options.
 type FederatedQueryOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
 	CollectionIds *string `json:"collection_ids" validate:"required"`
@@ -6195,12 +7460,12 @@ type FederatedQueryOptions struct {
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
 	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewFederatedQueryOptions : Instantiate FederatedQueryOptions
-func (discovery *DiscoveryV1) NewFederatedQueryOptions(environmentID string, collectionIds string) *FederatedQueryOptions {
+func (*DiscoveryV1) NewFederatedQueryOptions(environmentID string, collectionIds string) *FederatedQueryOptions {
 	return &FederatedQueryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionIds: core.StringPtr(collectionIds),
@@ -6347,7 +7612,6 @@ func (options *FederatedQueryOptions) SetHeaders(param map[string]string) *Feder
 
 // Field : Object containing field details.
 type Field struct {
-
 	// The name of the field.
 	Field *string `json:"field,omitempty"`
 
@@ -6358,22 +7622,36 @@ type Field struct {
 // Constants associated with the Field.Type property.
 // The type of the field.
 const (
-	Field_Type_Binary  = "binary"
-	Field_Type_Boolean = "boolean"
-	Field_Type_Byte    = "byte"
-	Field_Type_Date    = "date"
-	Field_Type_Double  = "double"
-	Field_Type_Float   = "float"
-	Field_Type_Integer = "integer"
-	Field_Type_Long    = "long"
-	Field_Type_Nested  = "nested"
-	Field_Type_Short   = "short"
-	Field_Type_String  = "string"
+	FieldTypeBinaryConst  = "binary"
+	FieldTypeBooleanConst = "boolean"
+	FieldTypeByteConst    = "byte"
+	FieldTypeDateConst    = "date"
+	FieldTypeDoubleConst  = "double"
+	FieldTypeFloatConst   = "float"
+	FieldTypeIntegerConst = "integer"
+	FieldTypeLongConst    = "long"
+	FieldTypeNestedConst  = "nested"
+	FieldTypeShortConst   = "short"
+	FieldTypeStringConst  = "string"
 )
+
+// UnmarshalField unmarshals an instance of Field from the specified map of raw messages.
+func UnmarshalField(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Field)
+	err = core.UnmarshalPrimitive(m, "field", &obj.Field)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // FontSetting : Font matching configuration.
 type FontSetting struct {
-
 	// The HTML heading level that any content with the matching font is converted to.
 	Level *int64 `json:"level,omitempty"`
 
@@ -6393,9 +7671,39 @@ type FontSetting struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// UnmarshalFontSetting unmarshals an instance of FontSetting from the specified map of raw messages.
+func UnmarshalFontSetting(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(FontSetting)
+	err = core.UnmarshalPrimitive(m, "level", &obj.Level)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "min_size", &obj.MinSize)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "max_size", &obj.MaxSize)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "bold", &obj.Bold)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "italic", &obj.Italic)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Gateway : Object describing a specific gateway.
 type Gateway struct {
-
 	// The gateway ID of the gateway.
 	GatewayID *string `json:"gateway_id,omitempty"`
 
@@ -6419,13 +7727,39 @@ type Gateway struct {
 // The current status of the gateway. `connected` means the gateway is connected to the remotly installed gateway.
 // `idle` means this gateway is not currently in use.
 const (
-	Gateway_Status_Connected = "connected"
-	Gateway_Status_Idle      = "idle"
+	GatewayStatusConnectedConst = "connected"
+	GatewayStatusIdleConst      = "idle"
 )
+
+// UnmarshalGateway unmarshals an instance of Gateway from the specified map of raw messages.
+func UnmarshalGateway(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Gateway)
+	err = core.UnmarshalPrimitive(m, "gateway_id", &obj.GatewayID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "token", &obj.Token)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "token_id", &obj.TokenID)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // GatewayDelete : Gatway deletion confirmation.
 type GatewayDelete struct {
-
 	// The gateway ID of the deleted gateway.
 	GatewayID *string `json:"gateway_id,omitempty"`
 
@@ -6433,21 +7767,45 @@ type GatewayDelete struct {
 	Status *string `json:"status,omitempty"`
 }
 
+// UnmarshalGatewayDelete unmarshals an instance of GatewayDelete from the specified map of raw messages.
+func UnmarshalGatewayDelete(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(GatewayDelete)
+	err = core.UnmarshalPrimitive(m, "gateway_id", &obj.GatewayID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // GatewayList : Object containing gateways array.
 type GatewayList struct {
-
 	// Array of configured gateway connections.
 	Gateways []Gateway `json:"gateways,omitempty"`
 }
 
+// UnmarshalGatewayList unmarshals an instance of GatewayList from the specified map of raw messages.
+func UnmarshalGatewayList(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(GatewayList)
+	err = core.UnmarshalModel(m, "gateways", &obj.Gateways, UnmarshalGateway)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // GetAutocompletionOptions : The GetAutocompletion options.
 type GetAutocompletionOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete to `Hot`, `Housing`, or `How
 	// do I upgrade`. Possible completions are.
@@ -6459,12 +7817,12 @@ type GetAutocompletionOptions struct {
 	// The number of autocompletion suggestions to return.
 	Count *int64 `json:"count,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetAutocompletionOptions : Instantiate GetAutocompletionOptions
-func (discovery *DiscoveryV1) NewGetAutocompletionOptions(environmentID string, collectionID string, prefix string) *GetAutocompletionOptions {
+func (*DiscoveryV1) NewGetAutocompletionOptions(environmentID string, collectionID string, prefix string) *GetAutocompletionOptions {
 	return &GetAutocompletionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -6510,19 +7868,18 @@ func (options *GetAutocompletionOptions) SetHeaders(param map[string]string) *Ge
 
 // GetCollectionOptions : The GetCollection options.
 type GetCollectionOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetCollectionOptions : Instantiate GetCollectionOptions
-func (discovery *DiscoveryV1) NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
+func (*DiscoveryV1) NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
 	return &GetCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -6549,19 +7906,18 @@ func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCol
 
 // GetConfigurationOptions : The GetConfiguration options.
 type GetConfigurationOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `json:"configuration_id" validate:"required"`
+	ConfigurationID *string `json:"configuration_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetConfigurationOptions : Instantiate GetConfigurationOptions
-func (discovery *DiscoveryV1) NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
+func (*DiscoveryV1) NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
 	return &GetConfigurationOptions{
 		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
@@ -6588,19 +7944,18 @@ func (options *GetConfigurationOptions) SetHeaders(param map[string]string) *Get
 
 // GetCredentialsOptions : The GetCredentials options.
 type GetCredentialsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `json:"credential_id" validate:"required"`
+	CredentialID *string `json:"credential_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetCredentialsOptions : Instantiate GetCredentialsOptions
-func (discovery *DiscoveryV1) NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
+func (*DiscoveryV1) NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
 	return &GetCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CredentialID:  core.StringPtr(credentialID),
@@ -6627,22 +7982,21 @@ func (options *GetCredentialsOptions) SetHeaders(param map[string]string) *GetCr
 
 // GetDocumentStatusOptions : The GetDocumentStatus options.
 type GetDocumentStatusOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `json:"document_id" validate:"required"`
+	DocumentID *string `json:"document_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetDocumentStatusOptions : Instantiate GetDocumentStatusOptions
-func (discovery *DiscoveryV1) NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
+func (*DiscoveryV1) NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
 	return &GetDocumentStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -6676,16 +8030,15 @@ func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *Ge
 
 // GetEnvironmentOptions : The GetEnvironment options.
 type GetEnvironmentOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetEnvironmentOptions : Instantiate GetEnvironmentOptions
-func (discovery *DiscoveryV1) NewGetEnvironmentOptions(environmentID string) *GetEnvironmentOptions {
+func (*DiscoveryV1) NewGetEnvironmentOptions(environmentID string) *GetEnvironmentOptions {
 	return &GetEnvironmentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -6705,19 +8058,18 @@ func (options *GetEnvironmentOptions) SetHeaders(param map[string]string) *GetEn
 
 // GetGatewayOptions : The GetGateway options.
 type GetGatewayOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The requested gateway ID.
-	GatewayID *string `json:"gateway_id" validate:"required"`
+	GatewayID *string `json:"gateway_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetGatewayOptions : Instantiate GetGatewayOptions
-func (discovery *DiscoveryV1) NewGetGatewayOptions(environmentID string, gatewayID string) *GetGatewayOptions {
+func (*DiscoveryV1) NewGetGatewayOptions(environmentID string, gatewayID string) *GetGatewayOptions {
 	return &GetGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		GatewayID:     core.StringPtr(gatewayID),
@@ -6744,7 +8096,6 @@ func (options *GetGatewayOptions) SetHeaders(param map[string]string) *GetGatewa
 
 // GetMetricsEventRateOptions : The GetMetricsEventRate options.
 type GetMetricsEventRateOptions struct {
-
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
 	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
 
@@ -6754,18 +8105,18 @@ type GetMetricsEventRateOptions struct {
 	// The type of result to consider when calculating the metric.
 	ResultType *string `json:"result_type,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the GetMetricsEventRateOptions.ResultType property.
 // The type of result to consider when calculating the metric.
 const (
-	GetMetricsEventRateOptions_ResultType_Document = "document"
+	GetMetricsEventRateOptionsResultTypeDocumentConst = "document"
 )
 
 // NewGetMetricsEventRateOptions : Instantiate GetMetricsEventRateOptions
-func (discovery *DiscoveryV1) NewGetMetricsEventRateOptions() *GetMetricsEventRateOptions {
+func (*DiscoveryV1) NewGetMetricsEventRateOptions() *GetMetricsEventRateOptions {
 	return &GetMetricsEventRateOptions{}
 }
 
@@ -6795,7 +8146,6 @@ func (options *GetMetricsEventRateOptions) SetHeaders(param map[string]string) *
 
 // GetMetricsQueryEventOptions : The GetMetricsQueryEvent options.
 type GetMetricsQueryEventOptions struct {
-
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
 	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
 
@@ -6805,18 +8155,18 @@ type GetMetricsQueryEventOptions struct {
 	// The type of result to consider when calculating the metric.
 	ResultType *string `json:"result_type,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the GetMetricsQueryEventOptions.ResultType property.
 // The type of result to consider when calculating the metric.
 const (
-	GetMetricsQueryEventOptions_ResultType_Document = "document"
+	GetMetricsQueryEventOptionsResultTypeDocumentConst = "document"
 )
 
 // NewGetMetricsQueryEventOptions : Instantiate GetMetricsQueryEventOptions
-func (discovery *DiscoveryV1) NewGetMetricsQueryEventOptions() *GetMetricsQueryEventOptions {
+func (*DiscoveryV1) NewGetMetricsQueryEventOptions() *GetMetricsQueryEventOptions {
 	return &GetMetricsQueryEventOptions{}
 }
 
@@ -6846,7 +8196,6 @@ func (options *GetMetricsQueryEventOptions) SetHeaders(param map[string]string) 
 
 // GetMetricsQueryNoResultsOptions : The GetMetricsQueryNoResults options.
 type GetMetricsQueryNoResultsOptions struct {
-
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
 	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
 
@@ -6856,18 +8205,18 @@ type GetMetricsQueryNoResultsOptions struct {
 	// The type of result to consider when calculating the metric.
 	ResultType *string `json:"result_type,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the GetMetricsQueryNoResultsOptions.ResultType property.
 // The type of result to consider when calculating the metric.
 const (
-	GetMetricsQueryNoResultsOptions_ResultType_Document = "document"
+	GetMetricsQueryNoResultsOptionsResultTypeDocumentConst = "document"
 )
 
 // NewGetMetricsQueryNoResultsOptions : Instantiate GetMetricsQueryNoResultsOptions
-func (discovery *DiscoveryV1) NewGetMetricsQueryNoResultsOptions() *GetMetricsQueryNoResultsOptions {
+func (*DiscoveryV1) NewGetMetricsQueryNoResultsOptions() *GetMetricsQueryNoResultsOptions {
 	return &GetMetricsQueryNoResultsOptions{}
 }
 
@@ -6897,7 +8246,6 @@ func (options *GetMetricsQueryNoResultsOptions) SetHeaders(param map[string]stri
 
 // GetMetricsQueryOptions : The GetMetricsQuery options.
 type GetMetricsQueryOptions struct {
-
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
 	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
 
@@ -6907,18 +8255,18 @@ type GetMetricsQueryOptions struct {
 	// The type of result to consider when calculating the metric.
 	ResultType *string `json:"result_type,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the GetMetricsQueryOptions.ResultType property.
 // The type of result to consider when calculating the metric.
 const (
-	GetMetricsQueryOptions_ResultType_Document = "document"
+	GetMetricsQueryOptionsResultTypeDocumentConst = "document"
 )
 
 // NewGetMetricsQueryOptions : Instantiate GetMetricsQueryOptions
-func (discovery *DiscoveryV1) NewGetMetricsQueryOptions() *GetMetricsQueryOptions {
+func (*DiscoveryV1) NewGetMetricsQueryOptions() *GetMetricsQueryOptions {
 	return &GetMetricsQueryOptions{}
 }
 
@@ -6948,17 +8296,16 @@ func (options *GetMetricsQueryOptions) SetHeaders(param map[string]string) *GetM
 
 // GetMetricsQueryTokenEventOptions : The GetMetricsQueryTokenEvent options.
 type GetMetricsQueryTokenEventOptions struct {
-
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
 	Count *int64 `json:"count,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetMetricsQueryTokenEventOptions : Instantiate GetMetricsQueryTokenEventOptions
-func (discovery *DiscoveryV1) NewGetMetricsQueryTokenEventOptions() *GetMetricsQueryTokenEventOptions {
+func (*DiscoveryV1) NewGetMetricsQueryTokenEventOptions() *GetMetricsQueryTokenEventOptions {
 	return &GetMetricsQueryTokenEventOptions{}
 }
 
@@ -6976,19 +8323,18 @@ func (options *GetMetricsQueryTokenEventOptions) SetHeaders(param map[string]str
 
 // GetStopwordListStatusOptions : The GetStopwordListStatus options.
 type GetStopwordListStatusOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetStopwordListStatusOptions : Instantiate GetStopwordListStatusOptions
-func (discovery *DiscoveryV1) NewGetStopwordListStatusOptions(environmentID string, collectionID string) *GetStopwordListStatusOptions {
+func (*DiscoveryV1) NewGetStopwordListStatusOptions(environmentID string, collectionID string) *GetStopwordListStatusOptions {
 	return &GetStopwordListStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -7015,19 +8361,18 @@ func (options *GetStopwordListStatusOptions) SetHeaders(param map[string]string)
 
 // GetTokenizationDictionaryStatusOptions : The GetTokenizationDictionaryStatus options.
 type GetTokenizationDictionaryStatusOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetTokenizationDictionaryStatusOptions : Instantiate GetTokenizationDictionaryStatusOptions
-func (discovery *DiscoveryV1) NewGetTokenizationDictionaryStatusOptions(environmentID string, collectionID string) *GetTokenizationDictionaryStatusOptions {
+func (*DiscoveryV1) NewGetTokenizationDictionaryStatusOptions(environmentID string, collectionID string) *GetTokenizationDictionaryStatusOptions {
 	return &GetTokenizationDictionaryStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -7054,22 +8399,21 @@ func (options *GetTokenizationDictionaryStatusOptions) SetHeaders(param map[stri
 
 // GetTrainingDataOptions : The GetTrainingData options.
 type GetTrainingDataOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required"`
+	QueryID *string `json:"query_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetTrainingDataOptions : Instantiate GetTrainingDataOptions
-func (discovery *DiscoveryV1) NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
+func (*DiscoveryV1) NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
 	return &GetTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -7103,25 +8447,24 @@ func (options *GetTrainingDataOptions) SetHeaders(param map[string]string) *GetT
 
 // GetTrainingExampleOptions : The GetTrainingExample options.
 type GetTrainingExampleOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required"`
+	QueryID *string `json:"query_id" validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `json:"example_id" validate:"required"`
+	ExampleID *string `json:"example_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewGetTrainingExampleOptions : Instantiate GetTrainingExampleOptions
-func (discovery *DiscoveryV1) NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
+func (*DiscoveryV1) NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
 	return &GetTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -7162,7 +8505,6 @@ func (options *GetTrainingExampleOptions) SetHeaders(param map[string]string) *G
 
 // HTMLSettings : A list of HTML conversion settings.
 type HTMLSettings struct {
-
 	// Array of HTML tags that are excluded completely.
 	ExcludeTagsCompletely []string `json:"exclude_tags_completely,omitempty"`
 
@@ -7182,9 +8524,39 @@ type HTMLSettings struct {
 	ExcludeTagAttributes []string `json:"exclude_tag_attributes,omitempty"`
 }
 
+// UnmarshalHTMLSettings unmarshals an instance of HTMLSettings from the specified map of raw messages.
+func UnmarshalHTMLSettings(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(HTMLSettings)
+	err = core.UnmarshalPrimitive(m, "exclude_tags_completely", &obj.ExcludeTagsCompletely)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "exclude_tags_keep_content", &obj.ExcludeTagsKeepContent)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "keep_content", &obj.KeepContent, UnmarshalXPathPatterns)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "exclude_content", &obj.ExcludeContent, UnmarshalXPathPatterns)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "keep_tag_attributes", &obj.KeepTagAttributes)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "exclude_tag_attributes", &obj.ExcludeTagAttributes)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // IndexCapacity : Details about the resource usage and capacity of the environment.
 type IndexCapacity struct {
-
 	// Summary of the document usage statistics for the environment.
 	Documents *EnvironmentDocuments `json:"documents,omitempty"`
 
@@ -7195,21 +8567,39 @@ type IndexCapacity struct {
 	Collections *CollectionUsage `json:"collections,omitempty"`
 }
 
+// UnmarshalIndexCapacity unmarshals an instance of IndexCapacity from the specified map of raw messages.
+func UnmarshalIndexCapacity(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(IndexCapacity)
+	err = core.UnmarshalModel(m, "documents", &obj.Documents, UnmarshalEnvironmentDocuments)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "disk_usage", &obj.DiskUsage, UnmarshalDiskUsage)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "collections", &obj.Collections, UnmarshalCollectionUsage)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ListCollectionFieldsOptions : The ListCollectionFields options.
 type ListCollectionFieldsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListCollectionFieldsOptions : Instantiate ListCollectionFieldsOptions
-func (discovery *DiscoveryV1) NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
+func (*DiscoveryV1) NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
 	return &ListCollectionFieldsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -7247,26 +8637,35 @@ func (options *ListCollectionFieldsOptions) SetHeaders(param map[string]string) 
 //   * Fields returned from the News collection are prefixed with `v{N}-fullnews-t3-{YEAR}.mappings` (for example,
 // `v5-fullnews-t3-2016.mappings.text.properties.author`).
 type ListCollectionFieldsResponse struct {
-
 	// An array containing information about each field in the collections.
 	Fields []Field `json:"fields,omitempty"`
 }
 
+// UnmarshalListCollectionFieldsResponse unmarshals an instance of ListCollectionFieldsResponse from the specified map of raw messages.
+func UnmarshalListCollectionFieldsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ListCollectionFieldsResponse)
+	err = core.UnmarshalModel(m, "fields", &obj.Fields, UnmarshalField)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ListCollectionsOptions : The ListCollections options.
 type ListCollectionsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// Find collections with the given name.
 	Name *string `json:"name,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListCollectionsOptions : Instantiate ListCollectionsOptions
-func (discovery *DiscoveryV1) NewListCollectionsOptions(environmentID string) *ListCollectionsOptions {
+func (*DiscoveryV1) NewListCollectionsOptions(environmentID string) *ListCollectionsOptions {
 	return &ListCollectionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -7292,26 +8691,35 @@ func (options *ListCollectionsOptions) SetHeaders(param map[string]string) *List
 
 // ListCollectionsResponse : Response object containing an array of collection details.
 type ListCollectionsResponse struct {
-
 	// An array containing information about each collection in the environment.
 	Collections []Collection `json:"collections,omitempty"`
 }
 
+// UnmarshalListCollectionsResponse unmarshals an instance of ListCollectionsResponse from the specified map of raw messages.
+func UnmarshalListCollectionsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ListCollectionsResponse)
+	err = core.UnmarshalModel(m, "collections", &obj.Collections, UnmarshalCollection)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ListConfigurationsOptions : The ListConfigurations options.
 type ListConfigurationsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// Find configurations with the given name.
 	Name *string `json:"name,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListConfigurationsOptions : Instantiate ListConfigurationsOptions
-func (discovery *DiscoveryV1) NewListConfigurationsOptions(environmentID string) *ListConfigurationsOptions {
+func (*DiscoveryV1) NewListConfigurationsOptions(environmentID string) *ListConfigurationsOptions {
 	return &ListConfigurationsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -7337,23 +8745,32 @@ func (options *ListConfigurationsOptions) SetHeaders(param map[string]string) *L
 
 // ListConfigurationsResponse : Object containing an array of available configurations.
 type ListConfigurationsResponse struct {
-
 	// An array of configurations that are available for the service instance.
 	Configurations []Configuration `json:"configurations,omitempty"`
 }
 
+// UnmarshalListConfigurationsResponse unmarshals an instance of ListConfigurationsResponse from the specified map of raw messages.
+func UnmarshalListConfigurationsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ListConfigurationsResponse)
+	err = core.UnmarshalModel(m, "configurations", &obj.Configurations, UnmarshalConfiguration)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ListCredentialsOptions : The ListCredentials options.
 type ListCredentialsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListCredentialsOptions : Instantiate ListCredentialsOptions
-func (discovery *DiscoveryV1) NewListCredentialsOptions(environmentID string) *ListCredentialsOptions {
+func (*DiscoveryV1) NewListCredentialsOptions(environmentID string) *ListCredentialsOptions {
 	return &ListCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -7373,16 +8790,15 @@ func (options *ListCredentialsOptions) SetHeaders(param map[string]string) *List
 
 // ListEnvironmentsOptions : The ListEnvironments options.
 type ListEnvironmentsOptions struct {
-
 	// Show only the environment with the given name.
 	Name *string `json:"name,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListEnvironmentsOptions : Instantiate ListEnvironmentsOptions
-func (discovery *DiscoveryV1) NewListEnvironmentsOptions() *ListEnvironmentsOptions {
+func (*DiscoveryV1) NewListEnvironmentsOptions() *ListEnvironmentsOptions {
 	return &ListEnvironmentsOptions{}
 }
 
@@ -7400,26 +8816,35 @@ func (options *ListEnvironmentsOptions) SetHeaders(param map[string]string) *Lis
 
 // ListEnvironmentsResponse : Response object containing an array of configured environments.
 type ListEnvironmentsResponse struct {
-
 	// An array of [environments] that are available for the service instance.
 	Environments []Environment `json:"environments,omitempty"`
 }
 
+// UnmarshalListEnvironmentsResponse unmarshals an instance of ListEnvironmentsResponse from the specified map of raw messages.
+func UnmarshalListEnvironmentsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ListEnvironmentsResponse)
+	err = core.UnmarshalModel(m, "environments", &obj.Environments, UnmarshalEnvironment)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ListExpansionsOptions : The ListExpansions options.
 type ListExpansionsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListExpansionsOptions : Instantiate ListExpansionsOptions
-func (discovery *DiscoveryV1) NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
+func (*DiscoveryV1) NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
 	return &ListExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -7446,19 +8871,18 @@ func (options *ListExpansionsOptions) SetHeaders(param map[string]string) *ListE
 
 // ListFieldsOptions : The ListFields options.
 type ListFieldsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
 	CollectionIds []string `json:"collection_ids" validate:"required"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListFieldsOptions : Instantiate ListFieldsOptions
-func (discovery *DiscoveryV1) NewListFieldsOptions(environmentID string, collectionIds []string) *ListFieldsOptions {
+func (*DiscoveryV1) NewListFieldsOptions(environmentID string, collectionIds []string) *ListFieldsOptions {
 	return &ListFieldsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionIds: collectionIds,
@@ -7485,16 +8909,15 @@ func (options *ListFieldsOptions) SetHeaders(param map[string]string) *ListField
 
 // ListGatewaysOptions : The ListGateways options.
 type ListGatewaysOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListGatewaysOptions : Instantiate ListGatewaysOptions
-func (discovery *DiscoveryV1) NewListGatewaysOptions(environmentID string) *ListGatewaysOptions {
+func (*DiscoveryV1) NewListGatewaysOptions(environmentID string) *ListGatewaysOptions {
 	return &ListGatewaysOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -7514,19 +8937,18 @@ func (options *ListGatewaysOptions) SetHeaders(param map[string]string) *ListGat
 
 // ListTrainingDataOptions : The ListTrainingData options.
 type ListTrainingDataOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListTrainingDataOptions : Instantiate ListTrainingDataOptions
-func (discovery *DiscoveryV1) NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
+func (*DiscoveryV1) NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
 	return &ListTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -7553,22 +8975,21 @@ func (options *ListTrainingDataOptions) SetHeaders(param map[string]string) *Lis
 
 // ListTrainingExamplesOptions : The ListTrainingExamples options.
 type ListTrainingExamplesOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required"`
+	QueryID *string `json:"query_id" validate:"required,ne="`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewListTrainingExamplesOptions : Instantiate ListTrainingExamplesOptions
-func (discovery *DiscoveryV1) NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
+func (*DiscoveryV1) NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
 	return &ListTrainingExamplesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -7602,7 +9023,6 @@ func (options *ListTrainingExamplesOptions) SetHeaders(param map[string]string) 
 
 // LogQueryResponse : Object containing results that match the requested **logs** query.
 type LogQueryResponse struct {
-
 	// Number of matching results.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
@@ -7610,10 +9030,24 @@ type LogQueryResponse struct {
 	Results []LogQueryResponseResult `json:"results,omitempty"`
 }
 
+// UnmarshalLogQueryResponse unmarshals an instance of LogQueryResponse from the specified map of raw messages.
+func UnmarshalLogQueryResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogQueryResponse)
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalLogQueryResponseResult)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // LogQueryResponseResult : Individual result object for a **logs** query. Each object represents either a query to a Discovery collection or an
 // event that is associated with a query.
 type LogQueryResponseResult struct {
-
 	// The environment ID that is associated with this log entry.
 	EnvironmentID *string `json:"environment_id,omitempty"`
 
@@ -7689,8 +9123,8 @@ type LogQueryResponseResult struct {
 //
 //  **event** indicates that the log represents  a call to the **events** API.
 const (
-	LogQueryResponseResult_DocumentType_Event = "event"
-	LogQueryResponseResult_DocumentType_Query = "query"
+	LogQueryResponseResultDocumentTypeEventConst = "event"
+	LogQueryResponseResultDocumentTypeQueryConst = "query"
 )
 
 // Constants associated with the LogQueryResponseResult.EventType property.
@@ -7700,20 +9134,82 @@ const (
 //
 //  -  `click` the result of a call to the **events** endpoint.
 const (
-	LogQueryResponseResult_EventType_Click = "click"
-	LogQueryResponseResult_EventType_Query = "query"
+	LogQueryResponseResultEventTypeClickConst = "click"
+	LogQueryResponseResultEventTypeQueryConst = "query"
 )
 
 // Constants associated with the LogQueryResponseResult.ResultType property.
 // The type of result that this **event** is associated with. Only returned with logs of type `event`.
 const (
-	LogQueryResponseResult_ResultType_Document = "document"
+	LogQueryResponseResultResultTypeDocumentConst = "document"
 )
+
+// UnmarshalLogQueryResponseResult unmarshals an instance of LogQueryResponseResult from the specified map of raw messages.
+func UnmarshalLogQueryResponseResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogQueryResponseResult)
+	err = core.UnmarshalPrimitive(m, "environment_id", &obj.EnvironmentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "customer_id", &obj.CustomerID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "document_type", &obj.DocumentType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "natural_language_query", &obj.NaturalLanguageQuery)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "document_results", &obj.DocumentResults, UnmarshalLogQueryResponseResultDocuments)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created_timestamp", &obj.CreatedTimestamp)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "client_timestamp", &obj.ClientTimestamp)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "query_id", &obj.QueryID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "session_token", &obj.SessionToken)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "collection_id", &obj.CollectionID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "display_rank", &obj.DisplayRank)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "event_type", &obj.EventType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "result_type", &obj.ResultType)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // LogQueryResponseResultDocuments : Object containing result information that was returned by the query used to create this log entry. Only returned with
 // logs of type `query`.
 type LogQueryResponseResultDocuments struct {
-
 	// Array of log query response results.
 	Results []LogQueryResponseResultDocumentsResult `json:"results,omitempty"`
 
@@ -7721,9 +9217,23 @@ type LogQueryResponseResultDocuments struct {
 	Count *int64 `json:"count,omitempty"`
 }
 
+// UnmarshalLogQueryResponseResultDocuments unmarshals an instance of LogQueryResponseResultDocuments from the specified map of raw messages.
+func UnmarshalLogQueryResponseResultDocuments(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogQueryResponseResultDocuments)
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalLogQueryResponseResultDocumentsResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "count", &obj.Count)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // LogQueryResponseResultDocumentsResult : Each object in the **results** array corresponds to an individual document returned by the original query.
 type LogQueryResponseResultDocumentsResult struct {
-
 	// The result rank of this document. A position of `1` indicates that it was the first returned result.
 	Position *int64 `json:"position,omitempty"`
 
@@ -7740,9 +9250,35 @@ type LogQueryResponseResultDocumentsResult struct {
 	CollectionID *string `json:"collection_id,omitempty"`
 }
 
+// UnmarshalLogQueryResponseResultDocumentsResult unmarshals an instance of LogQueryResponseResultDocumentsResult from the specified map of raw messages.
+func UnmarshalLogQueryResponseResultDocumentsResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogQueryResponseResultDocumentsResult)
+	err = core.UnmarshalPrimitive(m, "position", &obj.Position)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "score", &obj.Score)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "collection_id", &obj.CollectionID)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // MetricAggregation : An aggregation analyzing log information for queries and events.
 type MetricAggregation struct {
-
 	// The measurement interval for this metric. Metric intervals are always 1 day (`1d`).
 	Interval *string `json:"interval,omitempty"`
 
@@ -7753,9 +9289,27 @@ type MetricAggregation struct {
 	Results []MetricAggregationResult `json:"results,omitempty"`
 }
 
+// UnmarshalMetricAggregation unmarshals an instance of MetricAggregation from the specified map of raw messages.
+func UnmarshalMetricAggregation(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(MetricAggregation)
+	err = core.UnmarshalPrimitive(m, "interval", &obj.Interval)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "event_type", &obj.EventType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalMetricAggregationResult)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // MetricAggregationResult : Aggregation result data for the requested metric.
 type MetricAggregationResult struct {
-
 	// Date in string form representing the start of this interval.
 	KeyAsString *strfmt.DateTime `json:"key_as_string,omitempty"`
 
@@ -7770,16 +9324,48 @@ type MetricAggregationResult struct {
 	EventRate *float64 `json:"event_rate,omitempty"`
 }
 
+// UnmarshalMetricAggregationResult unmarshals an instance of MetricAggregationResult from the specified map of raw messages.
+func UnmarshalMetricAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(MetricAggregationResult)
+	err = core.UnmarshalPrimitive(m, "key_as_string", &obj.KeyAsString)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "key", &obj.Key)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "event_rate", &obj.EventRate)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // MetricResponse : The response generated from a call to a **metrics** method.
 type MetricResponse struct {
-
 	// Array of metric aggregations.
 	Aggregations []MetricAggregation `json:"aggregations,omitempty"`
 }
 
+// UnmarshalMetricResponse unmarshals an instance of MetricResponse from the specified map of raw messages.
+func UnmarshalMetricResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(MetricResponse)
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalMetricAggregation)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // MetricTokenAggregation : An aggregation analyzing log information for queries and events.
 type MetricTokenAggregation struct {
-
 	// The event type associated with this metric result. This field, when present, will always be `click`.
 	EventType *string `json:"event_type,omitempty"`
 
@@ -7787,9 +9373,23 @@ type MetricTokenAggregation struct {
 	Results []MetricTokenAggregationResult `json:"results,omitempty"`
 }
 
+// UnmarshalMetricTokenAggregation unmarshals an instance of MetricTokenAggregation from the specified map of raw messages.
+func UnmarshalMetricTokenAggregation(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(MetricTokenAggregation)
+	err = core.UnmarshalPrimitive(m, "event_type", &obj.EventType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalMetricTokenAggregationResult)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // MetricTokenAggregationResult : Aggregation result data for the requested metric.
 type MetricTokenAggregationResult struct {
-
 	// The content of the **natural_language_query** parameter used in the query that this result represents.
 	Key *string `json:"key,omitempty"`
 
@@ -7801,36 +9401,61 @@ type MetricTokenAggregationResult struct {
 	EventRate *float64 `json:"event_rate,omitempty"`
 }
 
+// UnmarshalMetricTokenAggregationResult unmarshals an instance of MetricTokenAggregationResult from the specified map of raw messages.
+func UnmarshalMetricTokenAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(MetricTokenAggregationResult)
+	err = core.UnmarshalPrimitive(m, "key", &obj.Key)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "event_rate", &obj.EventRate)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // MetricTokenResponse : The response generated from a call to a **metrics** method that evaluates tokens.
 type MetricTokenResponse struct {
-
 	// Array of metric token aggregations.
 	Aggregations []MetricTokenAggregation `json:"aggregations,omitempty"`
 }
 
-// NluEnrichmentCategories : An object that indicates the Categories enrichment will be applied to the specified field.
-type NluEnrichmentCategories map[string]interface{}
-
-// SetProperty : Allow user to set arbitrary property
-func (this *NluEnrichmentCategories) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
-}
-
-// GetProperty : Allow user to get arbitrary property
-func (this *NluEnrichmentCategories) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+// UnmarshalMetricTokenResponse unmarshals an instance of MetricTokenResponse from the specified map of raw messages.
+func UnmarshalMetricTokenResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(MetricTokenResponse)
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalMetricTokenAggregation)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
 
 // NluEnrichmentConcepts : An object specifiying the concepts enrichment and related parameters.
 type NluEnrichmentConcepts struct {
-
 	// The maximum number of concepts enrichments to extact from each instance of the specified field.
 	Limit *int64 `json:"limit,omitempty"`
 }
 
+// UnmarshalNluEnrichmentConcepts unmarshals an instance of NluEnrichmentConcepts from the specified map of raw messages.
+func UnmarshalNluEnrichmentConcepts(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NluEnrichmentConcepts)
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // NluEnrichmentEmotion : An object specifying the emotion detection enrichment and related parameters.
 type NluEnrichmentEmotion struct {
-
 	// When `true`, emotion detection is performed on the entire field.
 	Document *bool `json:"document,omitempty"`
 
@@ -7838,9 +9463,23 @@ type NluEnrichmentEmotion struct {
 	Targets []string `json:"targets,omitempty"`
 }
 
+// UnmarshalNluEnrichmentEmotion unmarshals an instance of NluEnrichmentEmotion from the specified map of raw messages.
+func UnmarshalNluEnrichmentEmotion(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NluEnrichmentEmotion)
+	err = core.UnmarshalPrimitive(m, "document", &obj.Document)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "targets", &obj.Targets)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // NluEnrichmentEntities : An object speficying the Entities enrichment and related parameters.
 type NluEnrichmentEntities struct {
-
 	// When `true`, sentiment analysis of entities will be performed on the specified field.
 	Sentiment *bool `json:"sentiment,omitempty"`
 
@@ -7865,9 +9504,43 @@ type NluEnrichmentEntities struct {
 	Model *string `json:"model,omitempty"`
 }
 
+// UnmarshalNluEnrichmentEntities unmarshals an instance of NluEnrichmentEntities from the specified map of raw messages.
+func UnmarshalNluEnrichmentEntities(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NluEnrichmentEntities)
+	err = core.UnmarshalPrimitive(m, "sentiment", &obj.Sentiment)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "emotion", &obj.Emotion)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "mentions", &obj.Mentions)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "mention_types", &obj.MentionTypes)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "sentence_locations", &obj.SentenceLocations)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model", &obj.Model)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // NluEnrichmentFeatures : Object containing Natural Language Understanding features to be used.
 type NluEnrichmentFeatures struct {
-
 	// An object specifying the Keyword enrichment and related parameters.
 	Keywords *NluEnrichmentKeywords `json:"keywords,omitempty"`
 
@@ -7881,7 +9554,7 @@ type NluEnrichmentFeatures struct {
 	Emotion *NluEnrichmentEmotion `json:"emotion,omitempty"`
 
 	// An object that indicates the Categories enrichment will be applied to the specified field.
-	Categories *NluEnrichmentCategories `json:"categories,omitempty"`
+	Categories map[string]interface{} `json:"categories,omitempty"`
 
 	// An object specifiying the semantic roles enrichment and related parameters.
 	SemanticRoles *NluEnrichmentSemanticRoles `json:"semantic_roles,omitempty"`
@@ -7893,9 +9566,47 @@ type NluEnrichmentFeatures struct {
 	Concepts *NluEnrichmentConcepts `json:"concepts,omitempty"`
 }
 
+// UnmarshalNluEnrichmentFeatures unmarshals an instance of NluEnrichmentFeatures from the specified map of raw messages.
+func UnmarshalNluEnrichmentFeatures(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NluEnrichmentFeatures)
+	err = core.UnmarshalModel(m, "keywords", &obj.Keywords, UnmarshalNluEnrichmentKeywords)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "entities", &obj.Entities, UnmarshalNluEnrichmentEntities)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "sentiment", &obj.Sentiment, UnmarshalNluEnrichmentSentiment)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "emotion", &obj.Emotion, UnmarshalNluEnrichmentEmotion)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "categories", &obj.Categories)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "semantic_roles", &obj.SemanticRoles, UnmarshalNluEnrichmentSemanticRoles)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "relations", &obj.Relations, UnmarshalNluEnrichmentRelations)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "concepts", &obj.Concepts, UnmarshalNluEnrichmentConcepts)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // NluEnrichmentKeywords : An object specifying the Keyword enrichment and related parameters.
 type NluEnrichmentKeywords struct {
-
 	// When `true`, sentiment analysis of keywords will be performed on the specified field.
 	Sentiment *bool `json:"sentiment,omitempty"`
 
@@ -7906,17 +9617,45 @@ type NluEnrichmentKeywords struct {
 	Limit *int64 `json:"limit,omitempty"`
 }
 
+// UnmarshalNluEnrichmentKeywords unmarshals an instance of NluEnrichmentKeywords from the specified map of raw messages.
+func UnmarshalNluEnrichmentKeywords(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NluEnrichmentKeywords)
+	err = core.UnmarshalPrimitive(m, "sentiment", &obj.Sentiment)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "emotion", &obj.Emotion)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // NluEnrichmentRelations : An object specifying the relations enrichment and related parameters.
 type NluEnrichmentRelations struct {
-
 	// *For use with `natural_language_understanding` enrichments only.* The enrichement model to use with relationship
 	// extraction. May be a custom model provided by Watson Knowledge Studio, the default public model is`en-news`.
 	Model *string `json:"model,omitempty"`
 }
 
+// UnmarshalNluEnrichmentRelations unmarshals an instance of NluEnrichmentRelations from the specified map of raw messages.
+func UnmarshalNluEnrichmentRelations(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NluEnrichmentRelations)
+	err = core.UnmarshalPrimitive(m, "model", &obj.Model)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // NluEnrichmentSemanticRoles : An object specifiying the semantic roles enrichment and related parameters.
 type NluEnrichmentSemanticRoles struct {
-
 	// When `true`, entities are extracted from the identified sentence parts.
 	Entities *bool `json:"entities,omitempty"`
 
@@ -7927,9 +9666,27 @@ type NluEnrichmentSemanticRoles struct {
 	Limit *int64 `json:"limit,omitempty"`
 }
 
+// UnmarshalNluEnrichmentSemanticRoles unmarshals an instance of NluEnrichmentSemanticRoles from the specified map of raw messages.
+func UnmarshalNluEnrichmentSemanticRoles(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NluEnrichmentSemanticRoles)
+	err = core.UnmarshalPrimitive(m, "entities", &obj.Entities)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "keywords", &obj.Keywords)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // NluEnrichmentSentiment : An object specifying the sentiment extraction enrichment and related parameters.
 type NluEnrichmentSentiment struct {
-
 	// When `true`, sentiment analysis is performed on the entire field.
 	Document *bool `json:"document,omitempty"`
 
@@ -7937,9 +9694,23 @@ type NluEnrichmentSentiment struct {
 	Targets []string `json:"targets,omitempty"`
 }
 
+// UnmarshalNluEnrichmentSentiment unmarshals an instance of NluEnrichmentSentiment from the specified map of raw messages.
+func UnmarshalNluEnrichmentSentiment(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NluEnrichmentSentiment)
+	err = core.UnmarshalPrimitive(m, "document", &obj.Document)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "targets", &obj.Targets)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // NormalizationOperation : Object containing normalization operations.
 type NormalizationOperation struct {
-
 	// Identifies what type of operation to perform.
 	//
 	// **copy** - Copies the value of the **source_field** to the **destination_field** field. If the **destination_field**
@@ -7996,16 +9767,34 @@ type NormalizationOperation struct {
 // Typically, **remove_nulls** is invoked as the last normalization operation (if it is invoked at all, it can be
 // time-expensive).
 const (
-	NormalizationOperation_Operation_Copy        = "copy"
-	NormalizationOperation_Operation_Merge       = "merge"
-	NormalizationOperation_Operation_Move        = "move"
-	NormalizationOperation_Operation_Remove      = "remove"
-	NormalizationOperation_Operation_RemoveNulls = "remove_nulls"
+	NormalizationOperationOperationCopyConst        = "copy"
+	NormalizationOperationOperationMergeConst       = "merge"
+	NormalizationOperationOperationMoveConst        = "move"
+	NormalizationOperationOperationRemoveConst      = "remove"
+	NormalizationOperationOperationRemoveNullsConst = "remove_nulls"
 )
+
+// UnmarshalNormalizationOperation unmarshals an instance of NormalizationOperation from the specified map of raw messages.
+func UnmarshalNormalizationOperation(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(NormalizationOperation)
+	err = core.UnmarshalPrimitive(m, "operation", &obj.Operation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "source_field", &obj.SourceField)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "destination_field", &obj.DestinationField)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // Notice : A notice produced for the collection.
 type Notice struct {
-
 	// Identifies the notice. Many notices might have the same ID. This field exists so that user applications can
 	// programmatically identify a notice and take automatic corrective action. Typical notice IDs include: `index_failed`,
 	// `index_failed_too_many_requests`, `index_failed_incompatible_field`, `index_failed_cluster_unavailable`,
@@ -8040,27 +9829,81 @@ type Notice struct {
 // Constants associated with the Notice.Severity property.
 // Severity level of the notice.
 const (
-	Notice_Severity_Error   = "error"
-	Notice_Severity_Warning = "warning"
+	NoticeSeverityErrorConst   = "error"
+	NoticeSeverityWarningConst = "warning"
 )
 
-// PdfHeadingDetection : Object containing heading detection conversion settings for PDF documents.
-type PdfHeadingDetection struct {
+// UnmarshalNotice unmarshals an instance of Notice from the specified map of raw messages.
+func UnmarshalNotice(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Notice)
+	err = core.UnmarshalPrimitive(m, "notice_id", &obj.NoticeID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "query_id", &obj.QueryID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "severity", &obj.Severity)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "step", &obj.Step)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
+// PDFHeadingDetection : Object containing heading detection conversion settings for PDF documents.
+type PDFHeadingDetection struct {
 	// Array of font matching configurations.
 	Fonts []FontSetting `json:"fonts,omitempty"`
 }
 
-// PdfSettings : A list of PDF conversion settings.
-type PdfSettings struct {
+// UnmarshalPDFHeadingDetection unmarshals an instance of PDFHeadingDetection from the specified map of raw messages.
+func UnmarshalPDFHeadingDetection(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(PDFHeadingDetection)
+	err = core.UnmarshalModel(m, "fonts", &obj.Fonts, UnmarshalFontSetting)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
+// PDFSettings : A list of PDF conversion settings.
+type PDFSettings struct {
 	// Object containing heading detection conversion settings for PDF documents.
-	Heading *PdfHeadingDetection `json:"heading,omitempty"`
+	Heading *PDFHeadingDetection `json:"heading,omitempty"`
+}
+
+// UnmarshalPDFSettings unmarshals an instance of PDFSettings from the specified map of raw messages.
+func UnmarshalPDFSettings(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(PDFSettings)
+	err = core.UnmarshalModel(m, "heading", &obj.Heading, UnmarshalPDFHeadingDetection)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
 
 // QueryAggregation : An aggregation produced by  Discovery to analyze the input provided.
 type QueryAggregation struct {
-
 	// The type of aggregation command used. For example: term, filter, max, min, etc.
 	Type *string `json:"type,omitempty"`
 
@@ -8071,12 +9914,60 @@ type QueryAggregation struct {
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	// Aggregations returned by Discovery.
-	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
+}
+
+func (*QueryAggregation) isaQueryAggregation() bool {
+	return true
+}
+
+type QueryAggregationIntf interface {
+	isaQueryAggregation() bool
+}
+
+// UnmarshalQueryAggregation unmarshals an instance of QueryAggregation from the specified map of raw messages.
+func UnmarshalQueryAggregation(m map[string]json.RawMessage, result interface{}) (err error) {
+	// Retrieve discriminator value to determine correct "subclass".
+	var discValue string
+	err = core.UnmarshalPrimitive(m, "type", &discValue)
+	if err != nil {
+		err = fmt.Errorf("error unmarshalling discriminator property 'type': %s", err.Error())
+		return
+	}
+	if discValue == "" {
+		err = fmt.Errorf("required discriminator property 'type' not found in JSON object")
+		return
+	}
+	if discValue == "histogram" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalHistogram)
+	} else if discValue == "max" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalCalculation)
+	} else if discValue == "min" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalCalculation)
+	} else if discValue == "average" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalCalculation)
+	} else if discValue == "sum" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalCalculation)
+	} else if discValue == "unique_count" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalCalculation)
+	} else if discValue == "term" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalTerm)
+	} else if discValue == "filter" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalFilter)
+	} else if discValue == "nested" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalNested)
+	} else if discValue == "timeslice" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalTimeslice)
+	} else if discValue == "top_hits" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalTopHits)
+	} else {
+		err = fmt.Errorf("unrecognized value for discriminator property 'type': %s", discValue)
+	}
+	return
 }
 
 // QueryLogOptions : The QueryLog options.
 type QueryLogOptions struct {
-
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
 	Filter *string `json:"filter,omitempty"`
@@ -8099,12 +9990,12 @@ type QueryLogOptions struct {
 	// prefix is specified.
 	Sort []string `json:"sort,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewQueryLogOptions : Instantiate QueryLogOptions
-func (discovery *DiscoveryV1) NewQueryLogOptions() *QueryLogOptions {
+func (*DiscoveryV1) NewQueryLogOptions() *QueryLogOptions {
 	return &QueryLogOptions{}
 }
 
@@ -8146,12 +10037,11 @@ func (options *QueryLogOptions) SetHeaders(param map[string]string) *QueryLogOpt
 
 // QueryNoticesOptions : The QueryNotices options.
 type QueryNoticesOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
@@ -8223,12 +10113,12 @@ type QueryNoticesOptions struct {
 	// specified, the entire document is used for comparison.
 	SimilarFields []string `json:"similar.fields,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewQueryNoticesOptions : Instantiate QueryNoticesOptions
-func (discovery *DiscoveryV1) NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
+func (*DiscoveryV1) NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
 	return &QueryNoticesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -8357,7 +10247,6 @@ func (options *QueryNoticesOptions) SetHeaders(param map[string]string) *QueryNo
 
 // QueryNoticesResponse : Object containing notice query results.
 type QueryNoticesResponse struct {
-
 	// The number of matching results.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
@@ -8365,7 +10254,7 @@ type QueryNoticesResponse struct {
 	Results []QueryNoticesResult `json:"results,omitempty"`
 
 	// Array of aggregation results that match the query.
-	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// Array of passage results that match the query.
 	Passages []QueryPassages `json:"passages,omitempty"`
@@ -8374,126 +10263,201 @@ type QueryNoticesResponse struct {
 	DuplicatesRemoved *int64 `json:"duplicates_removed,omitempty"`
 }
 
+// UnmarshalQueryNoticesResponse unmarshals an instance of QueryNoticesResponse from the specified map of raw messages.
+func UnmarshalQueryNoticesResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(QueryNoticesResponse)
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalQueryNoticesResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "passages", &obj.Passages, UnmarshalQueryPassages)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "duplicates_removed", &obj.DuplicatesRemoved)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // QueryNoticesResult : Query result object.
-type QueryNoticesResult map[string]interface{}
+type QueryNoticesResult struct {
+	// The unique identifier of the document.
+	ID *string `json:"id,omitempty"`
 
-// SetID : Allow user to set ID
-func (this *QueryNoticesResult) SetID(ID *string) {
-	(*this)["id"] = ID
-}
+	// Metadata of the document.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-// GetID : Allow user to get ID
-func (this *QueryNoticesResult) GetID() *string {
-	return (*this)["id"].(*string)
-}
+	// The collection ID of the collection containing the document for this result.
+	CollectionID *string `json:"collection_id,omitempty"`
 
-// SetMetadata : Allow user to set Metadata
-func (this *QueryNoticesResult) SetMetadata(Metadata *map[string]interface{}) {
-	(*this)["metadata"] = Metadata
-}
+	// Metadata of a query result.
+	ResultMetadata *QueryResultMetadata `json:"result_metadata,omitempty"`
 
-// GetMetadata : Allow user to get Metadata
-func (this *QueryNoticesResult) GetMetadata() *map[string]interface{} {
-	return (*this)["metadata"].(*map[string]interface{})
-}
+	// The internal status code returned by the ingestion subsystem indicating the overall result of ingesting the source
+	// document.
+	Code *int64 `json:"code,omitempty"`
 
-// SetCollectionID : Allow user to set CollectionID
-func (this *QueryNoticesResult) SetCollectionID(CollectionID *string) {
-	(*this)["collection_id"] = CollectionID
-}
+	// Name of the original source file (if available).
+	Filename *string `json:"filename,omitempty"`
 
-// GetCollectionID : Allow user to get CollectionID
-func (this *QueryNoticesResult) GetCollectionID() *string {
-	return (*this)["collection_id"].(*string)
-}
+	// The type of the original source file.
+	FileType *string `json:"file_type,omitempty"`
 
-// SetResultMetadata : Allow user to set ResultMetadata
-func (this *QueryNoticesResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) {
-	(*this)["result_metadata"] = ResultMetadata
-}
+	// The SHA-1 hash of the original source file (formatted as a hexadecimal string).
+	Sha1 *string `json:"sha1,omitempty"`
 
-// GetResultMetadata : Allow user to get ResultMetadata
-func (this *QueryNoticesResult) GetResultMetadata() *QueryResultMetadata {
-	return (*this)["result_metadata"].(*QueryResultMetadata)
-}
+	// Array of notices for the document.
+	Notices []Notice `json:"notices,omitempty"`
 
-// SetCode : Allow user to set Code
-func (this *QueryNoticesResult) SetCode(Code *int64) {
-	(*this)["code"] = Code
-}
-
-// GetCode : Allow user to get Code
-func (this *QueryNoticesResult) GetCode() *int64 {
-	return (*this)["code"].(*int64)
-}
-
-// SetFilename : Allow user to set Filename
-func (this *QueryNoticesResult) SetFilename(Filename *string) {
-	(*this)["filename"] = Filename
-}
-
-// GetFilename : Allow user to get Filename
-func (this *QueryNoticesResult) GetFilename() *string {
-	return (*this)["filename"].(*string)
-}
-
-// SetFileType : Allow user to set FileType
-func (this *QueryNoticesResult) SetFileType(FileType *string) {
-	(*this)["file_type"] = FileType
-}
-
-// GetFileType : Allow user to get FileType
-func (this *QueryNoticesResult) GetFileType() *string {
-	return (*this)["file_type"].(*string)
-}
-
-// SetSha1 : Allow user to set Sha1
-func (this *QueryNoticesResult) SetSha1(Sha1 *string) {
-	(*this)["sha1"] = Sha1
-}
-
-// GetSha1 : Allow user to get Sha1
-func (this *QueryNoticesResult) GetSha1() *string {
-	return (*this)["sha1"].(*string)
-}
-
-// SetNotices : Allow user to set Notices
-func (this *QueryNoticesResult) SetNotices(Notices *[]Notice) {
-	(*this)["notices"] = Notices
-}
-
-// GetNotices : Allow user to get Notices
-func (this *QueryNoticesResult) GetNotices() *[]Notice {
-	return (*this)["notices"].(*[]Notice)
-}
-
-// SetProperty : Allow user to set arbitrary property
-func (this *QueryNoticesResult) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
-}
-
-// GetProperty : Allow user to get arbitrary property
-func (this *QueryNoticesResult) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+	// Allows users to set arbitrary properties
+	additionalProperties map[string]interface{}
 }
 
 // Constants associated with the QueryNoticesResult.FileType property.
 // The type of the original source file.
 const (
-	QueryNoticesResult_FileType_HTML = "html"
-	QueryNoticesResult_FileType_JSON = "json"
-	QueryNoticesResult_FileType_Pdf  = "pdf"
-	QueryNoticesResult_FileType_Word = "word"
+	QueryNoticesResultFileTypeHTMLConst = "html"
+	QueryNoticesResultFileTypeJSONConst = "json"
+	QueryNoticesResultFileTypePDFConst  = "pdf"
+	QueryNoticesResultFileTypeWordConst = "word"
 )
+
+// SetProperty allows the user to set an arbitrary property on an instance of QueryNoticesResult
+func (o *QueryNoticesResult) SetProperty(key string, value interface{}) {
+	if o.additionalProperties == nil {
+		o.additionalProperties = make(map[string]interface{})
+	}
+	o.additionalProperties[key] = value
+}
+
+// GetProperty allows the user to retrieve an arbitrary property from an instance of QueryNoticesResult
+func (o *QueryNoticesResult) GetProperty(key string) interface{} {
+	return o.additionalProperties[key]
+}
+
+// GetProperties allows the user to retrieve the map of arbitrary properties from an instance of QueryNoticesResult
+func (o *QueryNoticesResult) GetProperties() map[string]interface{} {
+	return o.additionalProperties
+}
+
+// MarshalJSON performs custom serialization for instances of QueryNoticesResult
+func (o *QueryNoticesResult) MarshalJSON() (buffer []byte, err error) {
+	m := make(map[string]interface{})
+	if len(o.additionalProperties) > 0 {
+		for k, v := range o.additionalProperties {
+			m[k] = v
+		}
+	}
+	if o.ID != nil {
+		m["id"] = o.ID
+	}
+	if o.Metadata != nil {
+		m["metadata"] = o.Metadata
+	}
+	if o.CollectionID != nil {
+		m["collection_id"] = o.CollectionID
+	}
+	if o.ResultMetadata != nil {
+		m["result_metadata"] = o.ResultMetadata
+	}
+	if o.Code != nil {
+		m["code"] = o.Code
+	}
+	if o.Filename != nil {
+		m["filename"] = o.Filename
+	}
+	if o.FileType != nil {
+		m["file_type"] = o.FileType
+	}
+	if o.Sha1 != nil {
+		m["sha1"] = o.Sha1
+	}
+	if o.Notices != nil {
+		m["notices"] = o.Notices
+	}
+	buffer, err = json.Marshal(m)
+	return
+}
+
+// UnmarshalQueryNoticesResult unmarshals an instance of QueryNoticesResult from the specified map of raw messages.
+func UnmarshalQueryNoticesResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(QueryNoticesResult)
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	delete(m, "id")
+	err = core.UnmarshalPrimitive(m, "metadata", &obj.Metadata)
+	if err != nil {
+		return
+	}
+	delete(m, "metadata")
+	err = core.UnmarshalPrimitive(m, "collection_id", &obj.CollectionID)
+	if err != nil {
+		return
+	}
+	delete(m, "collection_id")
+	err = core.UnmarshalModel(m, "result_metadata", &obj.ResultMetadata, UnmarshalQueryResultMetadata)
+	if err != nil {
+		return
+	}
+	delete(m, "result_metadata")
+	err = core.UnmarshalPrimitive(m, "code", &obj.Code)
+	if err != nil {
+		return
+	}
+	delete(m, "code")
+	err = core.UnmarshalPrimitive(m, "filename", &obj.Filename)
+	if err != nil {
+		return
+	}
+	delete(m, "filename")
+	err = core.UnmarshalPrimitive(m, "file_type", &obj.FileType)
+	if err != nil {
+		return
+	}
+	delete(m, "file_type")
+	err = core.UnmarshalPrimitive(m, "sha1", &obj.Sha1)
+	if err != nil {
+		return
+	}
+	delete(m, "sha1")
+	err = core.UnmarshalModel(m, "notices", &obj.Notices, UnmarshalNotice)
+	if err != nil {
+		return
+	}
+	delete(m, "notices")
+	for k := range m {
+		var v interface{}
+		e := core.UnmarshalPrimitive(m, k, &v)
+		if e != nil {
+			err = e
+			return
+		}
+		obj.SetProperty(k, v)
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // QueryOptions : The Query options.
 type QueryOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
@@ -8584,12 +10548,12 @@ type QueryOptions struct {
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
 	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewQueryOptions : Instantiate QueryOptions
-func (discovery *DiscoveryV1) NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
+func (*DiscoveryV1) NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
 	return &QueryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -8742,7 +10706,6 @@ func (options *QueryOptions) SetHeaders(param map[string]string) *QueryOptions {
 
 // QueryPassages : A passage query result.
 type QueryPassages struct {
-
 	// The unique identifier of the document from which the passage has been extracted.
 	DocumentID *string `json:"document_id,omitempty"`
 
@@ -8762,9 +10725,39 @@ type QueryPassages struct {
 	Field *string `json:"field,omitempty"`
 }
 
+// UnmarshalQueryPassages unmarshals an instance of QueryPassages from the specified map of raw messages.
+func UnmarshalQueryPassages(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(QueryPassages)
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "passage_score", &obj.PassageScore)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "passage_text", &obj.PassageText)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "start_offset", &obj.StartOffset)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "end_offset", &obj.EndOffset)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "field", &obj.Field)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // QueryResponse : A response containing the documents and aggregations for the query.
 type QueryResponse struct {
-
 	// The number of matching results for the query.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
@@ -8772,7 +10765,7 @@ type QueryResponse struct {
 	Results []QueryResult `json:"results,omitempty"`
 
 	// Array of aggregation results for the query.
-	Aggregations []QueryAggregation `json:"aggregations,omitempty"`
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// Array of passage results for the query.
 	Passages []QueryPassages `json:"passages,omitempty"`
@@ -8793,62 +10786,143 @@ type QueryResponse struct {
 	SuggestedQuery *string `json:"suggested_query,omitempty"`
 }
 
+// UnmarshalQueryResponse unmarshals an instance of QueryResponse from the specified map of raw messages.
+func UnmarshalQueryResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(QueryResponse)
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalQueryResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "passages", &obj.Passages, UnmarshalQueryPassages)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "duplicates_removed", &obj.DuplicatesRemoved)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "session_token", &obj.SessionToken)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "retrieval_details", &obj.RetrievalDetails, UnmarshalRetrievalDetails)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "suggested_query", &obj.SuggestedQuery)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // QueryResult : Query result object.
-type QueryResult map[string]interface{}
+type QueryResult struct {
+	// The unique identifier of the document.
+	ID *string `json:"id,omitempty"`
 
-// SetID : Allow user to set ID
-func (this *QueryResult) SetID(ID *string) {
-	(*this)["id"] = ID
+	// Metadata of the document.
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
+	// The collection ID of the collection containing the document for this result.
+	CollectionID *string `json:"collection_id,omitempty"`
+
+	// Metadata of a query result.
+	ResultMetadata *QueryResultMetadata `json:"result_metadata,omitempty"`
+
+	// Allows users to set arbitrary properties
+	additionalProperties map[string]interface{}
 }
 
-// GetID : Allow user to get ID
-func (this *QueryResult) GetID() *string {
-	return (*this)["id"].(*string)
+// SetProperty allows the user to set an arbitrary property on an instance of QueryResult
+func (o *QueryResult) SetProperty(key string, value interface{}) {
+	if o.additionalProperties == nil {
+		o.additionalProperties = make(map[string]interface{})
+	}
+	o.additionalProperties[key] = value
 }
 
-// SetMetadata : Allow user to set Metadata
-func (this *QueryResult) SetMetadata(Metadata *map[string]interface{}) {
-	(*this)["metadata"] = Metadata
+// GetProperty allows the user to retrieve an arbitrary property from an instance of QueryResult
+func (o *QueryResult) GetProperty(key string) interface{} {
+	return o.additionalProperties[key]
 }
 
-// GetMetadata : Allow user to get Metadata
-func (this *QueryResult) GetMetadata() *map[string]interface{} {
-	return (*this)["metadata"].(*map[string]interface{})
+// GetProperties allows the user to retrieve the map of arbitrary properties from an instance of QueryResult
+func (o *QueryResult) GetProperties() map[string]interface{} {
+	return o.additionalProperties
 }
 
-// SetCollectionID : Allow user to set CollectionID
-func (this *QueryResult) SetCollectionID(CollectionID *string) {
-	(*this)["collection_id"] = CollectionID
+// MarshalJSON performs custom serialization for instances of QueryResult
+func (o *QueryResult) MarshalJSON() (buffer []byte, err error) {
+	m := make(map[string]interface{})
+	if len(o.additionalProperties) > 0 {
+		for k, v := range o.additionalProperties {
+			m[k] = v
+		}
+	}
+	if o.ID != nil {
+		m["id"] = o.ID
+	}
+	if o.Metadata != nil {
+		m["metadata"] = o.Metadata
+	}
+	if o.CollectionID != nil {
+		m["collection_id"] = o.CollectionID
+	}
+	if o.ResultMetadata != nil {
+		m["result_metadata"] = o.ResultMetadata
+	}
+	buffer, err = json.Marshal(m)
+	return
 }
 
-// GetCollectionID : Allow user to get CollectionID
-func (this *QueryResult) GetCollectionID() *string {
-	return (*this)["collection_id"].(*string)
-}
-
-// SetResultMetadata : Allow user to set ResultMetadata
-func (this *QueryResult) SetResultMetadata(ResultMetadata *QueryResultMetadata) {
-	(*this)["result_metadata"] = ResultMetadata
-}
-
-// GetResultMetadata : Allow user to get ResultMetadata
-func (this *QueryResult) GetResultMetadata() *QueryResultMetadata {
-	return (*this)["result_metadata"].(*QueryResultMetadata)
-}
-
-// SetProperty : Allow user to set arbitrary property
-func (this *QueryResult) SetProperty(Key string, Value *interface{}) {
-	(*this)[Key] = Value
-}
-
-// GetProperty : Allow user to get arbitrary property
-func (this *QueryResult) GetProperty(Key string) *interface{} {
-	return (*this)[Key].(*interface{})
+// UnmarshalQueryResult unmarshals an instance of QueryResult from the specified map of raw messages.
+func UnmarshalQueryResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(QueryResult)
+	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	delete(m, "id")
+	err = core.UnmarshalPrimitive(m, "metadata", &obj.Metadata)
+	if err != nil {
+		return
+	}
+	delete(m, "metadata")
+	err = core.UnmarshalPrimitive(m, "collection_id", &obj.CollectionID)
+	if err != nil {
+		return
+	}
+	delete(m, "collection_id")
+	err = core.UnmarshalModel(m, "result_metadata", &obj.ResultMetadata, UnmarshalQueryResultMetadata)
+	if err != nil {
+		return
+	}
+	delete(m, "result_metadata")
+	for k := range m {
+		var v interface{}
+		e := core.UnmarshalPrimitive(m, k, &v)
+		if e != nil {
+			err = e
+			return
+		}
+		obj.SetProperty(k, v)
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
 
 // QueryResultMetadata : Metadata of a query result.
 type QueryResultMetadata struct {
-
 	// An unbounded measure of the relevance of a particular result, dependent on the query and matching document. A higher
 	// score indicates a greater match to the query parameters.
 	Score *float64 `json:"score" validate:"required"`
@@ -8860,9 +10934,23 @@ type QueryResultMetadata struct {
 	Confidence *float64 `json:"confidence,omitempty"`
 }
 
+// UnmarshalQueryResultMetadata unmarshals an instance of QueryResultMetadata from the specified map of raw messages.
+func UnmarshalQueryResultMetadata(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(QueryResultMetadata)
+	err = core.UnmarshalPrimitive(m, "score", &obj.Score)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // RetrievalDetails : An object contain retrieval type information.
 type RetrievalDetails struct {
-
 	// Indentifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results
 	// were returned using a relevancy trained model. `continuous_relevancy_training` indicates that the results were
 	// returned using the continuous relevancy training model created by result feedback analysis. `untrained` means the
@@ -8882,14 +10970,24 @@ type RetrievalDetails struct {
 //  **Note**: In the event of trained collections being queried, but the trained model is not used to return results,
 // the **document_retrieval_strategy** will be listed as `untrained`.
 const (
-	RetrievalDetails_DocumentRetrievalStrategy_ContinuousRelevancyTraining = "continuous_relevancy_training"
-	RetrievalDetails_DocumentRetrievalStrategy_RelevancyTraining           = "relevancy_training"
-	RetrievalDetails_DocumentRetrievalStrategy_Untrained                   = "untrained"
+	RetrievalDetailsDocumentRetrievalStrategyContinuousRelevancyTrainingConst = "continuous_relevancy_training"
+	RetrievalDetailsDocumentRetrievalStrategyRelevancyTrainingConst           = "relevancy_training"
+	RetrievalDetailsDocumentRetrievalStrategyUntrainedConst                   = "untrained"
 )
+
+// UnmarshalRetrievalDetails unmarshals an instance of RetrievalDetails from the specified map of raw messages.
+func UnmarshalRetrievalDetails(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(RetrievalDetails)
+	err = core.UnmarshalPrimitive(m, "document_retrieval_strategy", &obj.DocumentRetrievalStrategy)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // SduStatus : Object containing smart document understanding information for this collection.
 type SduStatus struct {
-
 	// When `true`, smart document understanding conversion is enabled for this collection. All collections created with a
 	// version date after `2019-04-30` have smart document understanding enabled. If `false`, documents added to the
 	// collection are converted using the **conversion** settings specified in the configuration associated with the
@@ -8914,9 +11012,35 @@ type SduStatus struct {
 	CustomFields *SduStatusCustomFields `json:"custom_fields,omitempty"`
 }
 
+// UnmarshalSduStatus unmarshals an instance of SduStatus from the specified map of raw messages.
+func UnmarshalSduStatus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SduStatus)
+	err = core.UnmarshalPrimitive(m, "enabled", &obj.Enabled)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "total_annotated_pages", &obj.TotalAnnotatedPages)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "total_pages", &obj.TotalPages)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "total_documents", &obj.TotalDocuments)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "custom_fields", &obj.CustomFields, UnmarshalSduStatusCustomFields)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SduStatusCustomFields : Information about custom smart document understanding fields that exist in this collection.
 type SduStatusCustomFields struct {
-
 	// The number of custom fields defined for this collection.
 	Defined *int64 `json:"defined,omitempty"`
 
@@ -8924,9 +11048,23 @@ type SduStatusCustomFields struct {
 	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
 }
 
+// UnmarshalSduStatusCustomFields unmarshals an instance of SduStatusCustomFields from the specified map of raw messages.
+func UnmarshalSduStatusCustomFields(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SduStatusCustomFields)
+	err = core.UnmarshalPrimitive(m, "defined", &obj.Defined)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "maximum_allowed", &obj.MaximumAllowed)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SearchStatus : Information about the Continuous Relevancy Training for this environment.
 type SearchStatus struct {
-
 	// Current scope of the training. Always returned as `environment`.
 	Scope *string `json:"scope,omitempty"`
 
@@ -8943,16 +11081,38 @@ type SearchStatus struct {
 // Constants associated with the SearchStatus.Status property.
 // The current status of Continuous Relevancy Training for this environment.
 const (
-	SearchStatus_Status_InsufficentData = "INSUFFICENT_DATA"
-	SearchStatus_Status_NoData          = "NO_DATA"
-	SearchStatus_Status_NotApplicable   = "NOT_APPLICABLE"
-	SearchStatus_Status_Trained         = "TRAINED"
-	SearchStatus_Status_Training        = "TRAINING"
+	SearchStatusStatusInsufficentDataConst = "INSUFFICENT_DATA"
+	SearchStatusStatusNoDataConst          = "NO_DATA"
+	SearchStatusStatusNotApplicableConst   = "NOT_APPLICABLE"
+	SearchStatusStatusTrainedConst         = "TRAINED"
+	SearchStatusStatusTrainingConst        = "TRAINING"
 )
+
+// UnmarshalSearchStatus unmarshals an instance of SearchStatus from the specified map of raw messages.
+func UnmarshalSearchStatus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SearchStatus)
+	err = core.UnmarshalPrimitive(m, "scope", &obj.Scope)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status_description", &obj.StatusDescription)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "last_trained", &obj.LastTrained)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // SegmentSettings : A list of Document Segmentation settings.
 type SegmentSettings struct {
-
 	// Enables/disables the Document Segmentation feature.
 	Enabled *bool `json:"enabled,omitempty"`
 
@@ -8971,9 +11131,27 @@ type SegmentSettings struct {
 	AnnotatedFields []string `json:"annotated_fields,omitempty"`
 }
 
+// UnmarshalSegmentSettings unmarshals an instance of SegmentSettings from the specified map of raw messages.
+func UnmarshalSegmentSettings(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SegmentSettings)
+	err = core.UnmarshalPrimitive(m, "enabled", &obj.Enabled)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "selector_tags", &obj.SelectorTags)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "annotated_fields", &obj.AnnotatedFields)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Source : Object containing source parameters for the configuration.
 type Source struct {
-
 	// The type of source to connect to.
 	// -  `box` indicates the configuration is to connect an instance of Enterprise Box.
 	// -  `salesforce` indicates the configuration is to connect to Salesforce.
@@ -9002,16 +11180,38 @@ type Source struct {
 // -  `web_crawl` indicates the configuration is to perform a web page crawl.
 // -  `cloud_object_storage` indicates the configuration is to connect to a cloud object store.
 const (
-	Source_Type_Box                = "box"
-	Source_Type_CloudObjectStorage = "cloud_object_storage"
-	Source_Type_Salesforce         = "salesforce"
-	Source_Type_Sharepoint         = "sharepoint"
-	Source_Type_WebCrawl           = "web_crawl"
+	SourceTypeBoxConst                = "box"
+	SourceTypeCloudObjectStorageConst = "cloud_object_storage"
+	SourceTypeSalesforceConst         = "salesforce"
+	SourceTypeSharepointConst         = "sharepoint"
+	SourceTypeWebCrawlConst           = "web_crawl"
 )
+
+// UnmarshalSource unmarshals an instance of Source from the specified map of raw messages.
+func UnmarshalSource(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Source)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "credential_id", &obj.CredentialID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "schedule", &obj.Schedule, UnmarshalSourceSchedule)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "options", &obj.Options, UnmarshalSourceOptions)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // SourceOptions : The **options** object defines which items to crawl from the source system.
 type SourceOptions struct {
-
 	// Array of folders to crawl from the Box source. Only valid, and required, when the **type** field of the **source**
 	// object is set to `box`.
 	Folders []SourceOptionsFolder `json:"folders,omitempty"`
@@ -9037,9 +11237,39 @@ type SourceOptions struct {
 	CrawlAllBuckets *bool `json:"crawl_all_buckets,omitempty"`
 }
 
+// UnmarshalSourceOptions unmarshals an instance of SourceOptions from the specified map of raw messages.
+func UnmarshalSourceOptions(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SourceOptions)
+	err = core.UnmarshalModel(m, "folders", &obj.Folders, UnmarshalSourceOptionsFolder)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "objects", &obj.Objects, UnmarshalSourceOptionsObject)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "site_collections", &obj.SiteCollections, UnmarshalSourceOptionsSiteColl)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "urls", &obj.Urls, UnmarshalSourceOptionsWebCrawl)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "buckets", &obj.Buckets, UnmarshalSourceOptionsBuckets)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "crawl_all_buckets", &obj.CrawlAllBuckets)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SourceOptionsBuckets : Object defining a cloud object store bucket to crawl.
 type SourceOptionsBuckets struct {
-
 	// The name of the cloud object store bucket to crawl.
 	Name *string `json:"name" validate:"required"`
 
@@ -9049,7 +11279,7 @@ type SourceOptionsBuckets struct {
 }
 
 // NewSourceOptionsBuckets : Instantiate SourceOptionsBuckets (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewSourceOptionsBuckets(name string) (model *SourceOptionsBuckets, err error) {
+func (*DiscoveryV1) NewSourceOptionsBuckets(name string) (model *SourceOptionsBuckets, err error) {
 	model = &SourceOptionsBuckets{
 		Name: core.StringPtr(name),
 	}
@@ -9057,9 +11287,23 @@ func (discovery *DiscoveryV1) NewSourceOptionsBuckets(name string) (model *Sourc
 	return
 }
 
+// UnmarshalSourceOptionsBuckets unmarshals an instance of SourceOptionsBuckets from the specified map of raw messages.
+func UnmarshalSourceOptionsBuckets(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SourceOptionsBuckets)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SourceOptionsFolder : Object that defines a box folder to crawl with this configuration.
 type SourceOptionsFolder struct {
-
 	// The Box user ID of the user who owns the folder to crawl.
 	OwnerUserID *string `json:"owner_user_id" validate:"required"`
 
@@ -9071,7 +11315,7 @@ type SourceOptionsFolder struct {
 }
 
 // NewSourceOptionsFolder : Instantiate SourceOptionsFolder (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewSourceOptionsFolder(ownerUserID string, folderID string) (model *SourceOptionsFolder, err error) {
+func (*DiscoveryV1) NewSourceOptionsFolder(ownerUserID string, folderID string) (model *SourceOptionsFolder, err error) {
 	model = &SourceOptionsFolder{
 		OwnerUserID: core.StringPtr(ownerUserID),
 		FolderID:    core.StringPtr(folderID),
@@ -9080,9 +11324,27 @@ func (discovery *DiscoveryV1) NewSourceOptionsFolder(ownerUserID string, folderI
 	return
 }
 
+// UnmarshalSourceOptionsFolder unmarshals an instance of SourceOptionsFolder from the specified map of raw messages.
+func UnmarshalSourceOptionsFolder(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SourceOptionsFolder)
+	err = core.UnmarshalPrimitive(m, "owner_user_id", &obj.OwnerUserID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "folder_id", &obj.FolderID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SourceOptionsObject : Object that defines a Salesforce document object type crawl with this configuration.
 type SourceOptionsObject struct {
-
 	// The name of the Salesforce document object to crawl. For example, `case`.
 	Name *string `json:"name" validate:"required"`
 
@@ -9092,7 +11354,7 @@ type SourceOptionsObject struct {
 }
 
 // NewSourceOptionsObject : Instantiate SourceOptionsObject (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewSourceOptionsObject(name string) (model *SourceOptionsObject, err error) {
+func (*DiscoveryV1) NewSourceOptionsObject(name string) (model *SourceOptionsObject, err error) {
 	model = &SourceOptionsObject{
 		Name: core.StringPtr(name),
 	}
@@ -9100,9 +11362,23 @@ func (discovery *DiscoveryV1) NewSourceOptionsObject(name string) (model *Source
 	return
 }
 
+// UnmarshalSourceOptionsObject unmarshals an instance of SourceOptionsObject from the specified map of raw messages.
+func UnmarshalSourceOptionsObject(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SourceOptionsObject)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SourceOptionsSiteColl : Object that defines a Microsoft SharePoint site collection to crawl with this configuration.
 type SourceOptionsSiteColl struct {
-
 	// The Microsoft SharePoint Online site collection path to crawl. The path must be be relative to the
 	// **organization_url** that was specified in the credentials associated with this source configuration.
 	SiteCollectionPath *string `json:"site_collection_path" validate:"required"`
@@ -9113,7 +11389,7 @@ type SourceOptionsSiteColl struct {
 }
 
 // NewSourceOptionsSiteColl : Instantiate SourceOptionsSiteColl (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewSourceOptionsSiteColl(siteCollectionPath string) (model *SourceOptionsSiteColl, err error) {
+func (*DiscoveryV1) NewSourceOptionsSiteColl(siteCollectionPath string) (model *SourceOptionsSiteColl, err error) {
 	model = &SourceOptionsSiteColl{
 		SiteCollectionPath: core.StringPtr(siteCollectionPath),
 	}
@@ -9121,9 +11397,23 @@ func (discovery *DiscoveryV1) NewSourceOptionsSiteColl(siteCollectionPath string
 	return
 }
 
+// UnmarshalSourceOptionsSiteColl unmarshals an instance of SourceOptionsSiteColl from the specified map of raw messages.
+func UnmarshalSourceOptionsSiteColl(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SourceOptionsSiteColl)
+	err = core.UnmarshalPrimitive(m, "site_collection_path", &obj.SiteCollectionPath)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SourceOptionsWebCrawl : Object defining which URL to crawl and how to crawl it.
 type SourceOptionsWebCrawl struct {
-
 	// The starting URL to crawl.
 	URL *string `json:"url" validate:"required"`
 
@@ -9161,23 +11451,61 @@ type SourceOptionsWebCrawl struct {
 // `normal` means as many as two URLs are fectched concurrently with a short delay between fetch calls. `aggressive`
 // means that up to ten URLs are fetched concurrently with a short delay between fetch calls.
 const (
-	SourceOptionsWebCrawl_CrawlSpeed_Aggressive = "aggressive"
-	SourceOptionsWebCrawl_CrawlSpeed_Gentle     = "gentle"
-	SourceOptionsWebCrawl_CrawlSpeed_Normal     = "normal"
+	SourceOptionsWebCrawlCrawlSpeedAggressiveConst = "aggressive"
+	SourceOptionsWebCrawlCrawlSpeedGentleConst     = "gentle"
+	SourceOptionsWebCrawlCrawlSpeedNormalConst     = "normal"
 )
 
 // NewSourceOptionsWebCrawl : Instantiate SourceOptionsWebCrawl (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewSourceOptionsWebCrawl(URL string) (model *SourceOptionsWebCrawl, err error) {
+func (*DiscoveryV1) NewSourceOptionsWebCrawl(url string) (model *SourceOptionsWebCrawl, err error) {
 	model = &SourceOptionsWebCrawl{
-		URL: core.StringPtr(URL),
+		URL: core.StringPtr(url),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
 }
 
+// UnmarshalSourceOptionsWebCrawl unmarshals an instance of SourceOptionsWebCrawl from the specified map of raw messages.
+func UnmarshalSourceOptionsWebCrawl(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SourceOptionsWebCrawl)
+	err = core.UnmarshalPrimitive(m, "url", &obj.URL)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "limit_to_starting_hosts", &obj.LimitToStartingHosts)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "crawl_speed", &obj.CrawlSpeed)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "allow_untrusted_certificate", &obj.AllowUntrustedCertificate)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "maximum_hops", &obj.MaximumHops)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "request_timeout", &obj.RequestTimeout)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "override_robots_txt", &obj.OverrideRobotsTxt)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "blacklist", &obj.Blacklist)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SourceSchedule : Object containing the schedule information for the source.
 type SourceSchedule struct {
-
 	// When `true`, the source is re-crawled based on the **frequency** field in this object. When `false` the source is
 	// not re-crawled; When `false` and connecting to Salesforce the source is crawled annually.
 	Enabled *bool `json:"enabled,omitempty"`
@@ -9205,16 +11533,34 @@ type SourceSchedule struct {
 // -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
 // -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
 const (
-	SourceSchedule_Frequency_Daily       = "daily"
-	SourceSchedule_Frequency_FiveMinutes = "five_minutes"
-	SourceSchedule_Frequency_Hourly      = "hourly"
-	SourceSchedule_Frequency_Monthly     = "monthly"
-	SourceSchedule_Frequency_Weekly      = "weekly"
+	SourceScheduleFrequencyDailyConst       = "daily"
+	SourceScheduleFrequencyFiveMinutesConst = "five_minutes"
+	SourceScheduleFrequencyHourlyConst      = "hourly"
+	SourceScheduleFrequencyMonthlyConst     = "monthly"
+	SourceScheduleFrequencyWeeklyConst      = "weekly"
 )
+
+// UnmarshalSourceSchedule unmarshals an instance of SourceSchedule from the specified map of raw messages.
+func UnmarshalSourceSchedule(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SourceSchedule)
+	err = core.UnmarshalPrimitive(m, "enabled", &obj.Enabled)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "time_zone", &obj.TimeZone)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "frequency", &obj.Frequency)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // SourceStatus : Object containing source crawl status information.
 type SourceStatus struct {
-
 	// The current status of the source crawl for this collection. This field returns `not_configured` if the default
 	// configuration for this source does not have a **source** object defined.
 	//
@@ -9237,16 +11583,30 @@ type SourceStatus struct {
 // -  `queued` indicates that the crawl has been paused by the system and will automatically restart when possible.
 // -  `unknown` indicates that an unidentified error has occured in the service.
 const (
-	SourceStatus_Status_Complete      = "complete"
-	SourceStatus_Status_NotConfigured = "not_configured"
-	SourceStatus_Status_Queued        = "queued"
-	SourceStatus_Status_Running       = "running"
-	SourceStatus_Status_Unknown       = "unknown"
+	SourceStatusStatusCompleteConst      = "complete"
+	SourceStatusStatusNotConfiguredConst = "not_configured"
+	SourceStatusStatusQueuedConst        = "queued"
+	SourceStatusStatusRunningConst       = "running"
+	SourceStatusStatusUnknownConst       = "unknown"
 )
+
+// UnmarshalSourceStatus unmarshals an instance of SourceStatus from the specified map of raw messages.
+func UnmarshalSourceStatus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SourceStatus)
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "next_crawl", &obj.NextCrawl)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // TokenDictRule : An object defining a single tokenizaion rule.
 type TokenDictRule struct {
-
 	// The string to tokenize.
 	Text *string `json:"text" validate:"required"`
 
@@ -9261,7 +11621,7 @@ type TokenDictRule struct {
 }
 
 // NewTokenDictRule : Instantiate TokenDictRule (Generic Model Constructor)
-func (discovery *DiscoveryV1) NewTokenDictRule(text string, tokens []string, partOfSpeech string) (model *TokenDictRule, err error) {
+func (*DiscoveryV1) NewTokenDictRule(text string, tokens []string, partOfSpeech string) (model *TokenDictRule, err error) {
 	model = &TokenDictRule{
 		Text:         core.StringPtr(text),
 		Tokens:       tokens,
@@ -9271,9 +11631,31 @@ func (discovery *DiscoveryV1) NewTokenDictRule(text string, tokens []string, par
 	return
 }
 
+// UnmarshalTokenDictRule unmarshals an instance of TokenDictRule from the specified map of raw messages.
+func UnmarshalTokenDictRule(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TokenDictRule)
+	err = core.UnmarshalPrimitive(m, "text", &obj.Text)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "tokens", &obj.Tokens)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "readings", &obj.Readings)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "part_of_speech", &obj.PartOfSpeech)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TokenDictStatusResponse : Object describing the current status of the wordlist.
 type TokenDictStatusResponse struct {
-
 	// Current wordlist status for the specified collection.
 	Status *string `json:"status,omitempty"`
 
@@ -9284,14 +11666,28 @@ type TokenDictStatusResponse struct {
 // Constants associated with the TokenDictStatusResponse.Status property.
 // Current wordlist status for the specified collection.
 const (
-	TokenDictStatusResponse_Status_Active   = "active"
-	TokenDictStatusResponse_Status_NotFound = "not found"
-	TokenDictStatusResponse_Status_Pending  = "pending"
+	TokenDictStatusResponseStatusActiveConst   = "active"
+	TokenDictStatusResponseStatusNotFoundConst = "not found"
+	TokenDictStatusResponseStatusPendingConst  = "pending"
 )
+
+// UnmarshalTokenDictStatusResponse unmarshals an instance of TokenDictStatusResponse from the specified map of raw messages.
+func UnmarshalTokenDictStatusResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TokenDictStatusResponse)
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
 
 // TopHitsResults : Top hit information for this query.
 type TopHitsResults struct {
-
 	// Number of matching results.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
@@ -9299,9 +11695,23 @@ type TopHitsResults struct {
 	Hits []QueryResult `json:"hits,omitempty"`
 }
 
+// UnmarshalTopHitsResults unmarshals an instance of TopHitsResults from the specified map of raw messages.
+func UnmarshalTopHitsResults(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TopHitsResults)
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "hits", &obj.Hits, UnmarshalQueryResult)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TrainingDataSet : Training information for a specific collection.
 type TrainingDataSet struct {
-
 	// The environment id associated with this training data set.
 	EnvironmentID *string `json:"environment_id,omitempty"`
 
@@ -9312,9 +11722,27 @@ type TrainingDataSet struct {
 	Queries []TrainingQuery `json:"queries,omitempty"`
 }
 
+// UnmarshalTrainingDataSet unmarshals an instance of TrainingDataSet from the specified map of raw messages.
+func UnmarshalTrainingDataSet(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TrainingDataSet)
+	err = core.UnmarshalPrimitive(m, "environment_id", &obj.EnvironmentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "collection_id", &obj.CollectionID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "queries", &obj.Queries, UnmarshalTrainingQuery)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TrainingExample : Training example details.
 type TrainingExample struct {
-
 	// The document ID associated with this training example.
 	DocumentID *string `json:"document_id,omitempty"`
 
@@ -9325,16 +11753,44 @@ type TrainingExample struct {
 	Relevance *int64 `json:"relevance,omitempty"`
 }
 
+// UnmarshalTrainingExample unmarshals an instance of TrainingExample from the specified map of raw messages.
+func UnmarshalTrainingExample(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TrainingExample)
+	err = core.UnmarshalPrimitive(m, "document_id", &obj.DocumentID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "cross_reference", &obj.CrossReference)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "relevance", &obj.Relevance)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TrainingExampleList : Object containing an array of training examples.
 type TrainingExampleList struct {
-
 	// Array of training examples.
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
+// UnmarshalTrainingExampleList unmarshals an instance of TrainingExampleList from the specified map of raw messages.
+func UnmarshalTrainingExampleList(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TrainingExampleList)
+	err = core.UnmarshalModel(m, "examples", &obj.Examples, UnmarshalTrainingExample)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TrainingQuery : Training query details.
 type TrainingQuery struct {
-
 	// The query ID associated with the training query.
 	QueryID *string `json:"query_id,omitempty"`
 
@@ -9348,9 +11804,31 @@ type TrainingQuery struct {
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
 
+// UnmarshalTrainingQuery unmarshals an instance of TrainingQuery from the specified map of raw messages.
+func UnmarshalTrainingQuery(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TrainingQuery)
+	err = core.UnmarshalPrimitive(m, "query_id", &obj.QueryID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "natural_language_query", &obj.NaturalLanguageQuery)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "filter", &obj.Filter)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "examples", &obj.Examples, UnmarshalTrainingExample)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TrainingStatus : Training status details.
 type TrainingStatus struct {
-
 	// The total number of training examples uploaded to this collection.
 	TotalExamples *int64 `json:"total_examples,omitempty"`
 
@@ -9379,14 +11857,56 @@ type TrainingStatus struct {
 	DataUpdated *strfmt.DateTime `json:"data_updated,omitempty"`
 }
 
+// UnmarshalTrainingStatus unmarshals an instance of TrainingStatus from the specified map of raw messages.
+func UnmarshalTrainingStatus(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TrainingStatus)
+	err = core.UnmarshalPrimitive(m, "total_examples", &obj.TotalExamples)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "available", &obj.Available)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "processing", &obj.Processing)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "minimum_queries_added", &obj.MinimumQueriesAdded)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "minimum_examples_added", &obj.MinimumExamplesAdded)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "sufficient_label_diversity", &obj.SufficientLabelDiversity)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "notices", &obj.Notices)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "successfully_trained", &obj.SuccessfullyTrained)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "data_updated", &obj.DataUpdated)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // UpdateCollectionOptions : The UpdateCollection options.
 type UpdateCollectionOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The name of the collection.
 	Name *string `json:"name" validate:"required"`
@@ -9397,12 +11917,12 @@ type UpdateCollectionOptions struct {
 	// The ID of the configuration in which the collection is to be updated.
 	ConfigurationID *string `json:"configuration_id,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewUpdateCollectionOptions : Instantiate UpdateCollectionOptions
-func (discovery *DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string, name string) *UpdateCollectionOptions {
+func (*DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string, name string) *UpdateCollectionOptions {
 	return &UpdateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -9448,12 +11968,11 @@ func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *Upd
 
 // UpdateConfigurationOptions : The UpdateConfiguration options.
 type UpdateConfigurationOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `json:"configuration_id" validate:"required"`
+	ConfigurationID *string `json:"configuration_id" validate:"required,ne="`
 
 	// The name of the configuration.
 	Name *string `json:"name" validate:"required"`
@@ -9474,12 +11993,12 @@ type UpdateConfigurationOptions struct {
 	// Object containing source parameters for the configuration.
 	Source *Source `json:"source,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewUpdateConfigurationOptions : Instantiate UpdateConfigurationOptions
-func (discovery *DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string, name string) *UpdateConfigurationOptions {
+func (*DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string, name string) *UpdateConfigurationOptions {
 	return &UpdateConfigurationOptions{
 		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
@@ -9543,12 +12062,11 @@ func (options *UpdateConfigurationOptions) SetHeaders(param map[string]string) *
 
 // UpdateCredentialsOptions : The UpdateCredentials options.
 type UpdateCredentialsOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `json:"credential_id" validate:"required"`
+	CredentialID *string `json:"credential_id" validate:"required,ne="`
 
 	// The source that this credentials object connects to.
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
@@ -9568,7 +12086,7 @@ type UpdateCredentialsOptions struct {
 	// has expired) and must be corrected before they can be used with a collection.
 	Status *string `json:"status,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -9580,11 +12098,11 @@ type UpdateCredentialsOptions struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	UpdateCredentialsOptions_SourceType_Box                = "box"
-	UpdateCredentialsOptions_SourceType_CloudObjectStorage = "cloud_object_storage"
-	UpdateCredentialsOptions_SourceType_Salesforce         = "salesforce"
-	UpdateCredentialsOptions_SourceType_Sharepoint         = "sharepoint"
-	UpdateCredentialsOptions_SourceType_WebCrawl           = "web_crawl"
+	UpdateCredentialsOptionsSourceTypeBoxConst                = "box"
+	UpdateCredentialsOptionsSourceTypeCloudObjectStorageConst = "cloud_object_storage"
+	UpdateCredentialsOptionsSourceTypeSalesforceConst         = "salesforce"
+	UpdateCredentialsOptionsSourceTypeSharepointConst         = "sharepoint"
+	UpdateCredentialsOptionsSourceTypeWebCrawlConst           = "web_crawl"
 )
 
 // Constants associated with the UpdateCredentialsOptions.Status property.
@@ -9592,12 +12110,12 @@ const (
 // the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided has
 // expired) and must be corrected before they can be used with a collection.
 const (
-	UpdateCredentialsOptions_Status_Connected = "connected"
-	UpdateCredentialsOptions_Status_Invalid   = "invalid"
+	UpdateCredentialsOptionsStatusConnectedConst = "connected"
+	UpdateCredentialsOptionsStatusInvalidConst   = "invalid"
 )
 
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
-func (discovery *DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
+func (*DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
 	return &UpdateCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CredentialID:  core.StringPtr(credentialID),
@@ -9642,15 +12160,14 @@ func (options *UpdateCredentialsOptions) SetHeaders(param map[string]string) *Up
 
 // UpdateDocumentOptions : The UpdateDocument options.
 type UpdateDocumentOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `json:"document_id" validate:"required"`
+	DocumentID *string `json:"document_id" validate:"required,ne="`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
 	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
@@ -9669,12 +12186,12 @@ type UpdateDocumentOptions struct {
 	// } ```.
 	Metadata *string `json:"metadata,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewUpdateDocumentOptions : Instantiate UpdateDocumentOptions
-func (discovery *DiscoveryV1) NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
+func (*DiscoveryV1) NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
 	return &UpdateDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -9732,9 +12249,8 @@ func (options *UpdateDocumentOptions) SetHeaders(param map[string]string) *Updat
 
 // UpdateEnvironmentOptions : The UpdateEnvironment options.
 type UpdateEnvironmentOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// Name that identifies the environment.
 	Name *string `json:"name,omitempty"`
@@ -9746,7 +12262,7 @@ type UpdateEnvironmentOptions struct {
 	// Environment size can only increased and not decreased.
 	Size *string `json:"size,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
@@ -9754,18 +12270,18 @@ type UpdateEnvironmentOptions struct {
 // Size that the environment should be increased to. Environment size cannot be modified when using a Lite plan.
 // Environment size can only increased and not decreased.
 const (
-	UpdateEnvironmentOptions_Size_L    = "L"
-	UpdateEnvironmentOptions_Size_M    = "M"
-	UpdateEnvironmentOptions_Size_Ml   = "ML"
-	UpdateEnvironmentOptions_Size_Ms   = "MS"
-	UpdateEnvironmentOptions_Size_S    = "S"
-	UpdateEnvironmentOptions_Size_Xl   = "XL"
-	UpdateEnvironmentOptions_Size_Xxl  = "XXL"
-	UpdateEnvironmentOptions_Size_Xxxl = "XXXL"
+	UpdateEnvironmentOptionsSizeLConst    = "L"
+	UpdateEnvironmentOptionsSizeMConst    = "M"
+	UpdateEnvironmentOptionsSizeMlConst   = "ML"
+	UpdateEnvironmentOptionsSizeMsConst   = "MS"
+	UpdateEnvironmentOptionsSizeSConst    = "S"
+	UpdateEnvironmentOptionsSizeXlConst   = "XL"
+	UpdateEnvironmentOptionsSizeXxlConst  = "XXL"
+	UpdateEnvironmentOptionsSizeXxxlConst = "XXXL"
 )
 
 // NewUpdateEnvironmentOptions : Instantiate UpdateEnvironmentOptions
-func (discovery *DiscoveryV1) NewUpdateEnvironmentOptions(environmentID string) *UpdateEnvironmentOptions {
+func (*DiscoveryV1) NewUpdateEnvironmentOptions(environmentID string) *UpdateEnvironmentOptions {
 	return &UpdateEnvironmentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 	}
@@ -9803,18 +12319,17 @@ func (options *UpdateEnvironmentOptions) SetHeaders(param map[string]string) *Up
 
 // UpdateTrainingExampleOptions : The UpdateTrainingExample options.
 type UpdateTrainingExampleOptions struct {
-
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required"`
+	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required"`
+	CollectionID *string `json:"collection_id" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required"`
+	QueryID *string `json:"query_id" validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `json:"example_id" validate:"required"`
+	ExampleID *string `json:"example_id" validate:"required,ne="`
 
 	// The example to add.
 	CrossReference *string `json:"cross_reference,omitempty"`
@@ -9822,12 +12337,12 @@ type UpdateTrainingExampleOptions struct {
 	// The relevance value for this example.
 	Relevance *int64 `json:"relevance,omitempty"`
 
-	// Allows users to set headers to be GDPR compliant
+	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // NewUpdateTrainingExampleOptions : Instantiate UpdateTrainingExampleOptions
-func (discovery *DiscoveryV1) NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
+func (*DiscoveryV1) NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
 	return &UpdateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
 		CollectionID:  core.StringPtr(collectionID),
@@ -9880,7 +12395,6 @@ func (options *UpdateTrainingExampleOptions) SetHeaders(param map[string]string)
 
 // WordHeadingDetection : Object containing heading detection conversion settings for Microsoft Word documents.
 type WordHeadingDetection struct {
-
 	// Array of font matching configurations.
 	Fonts []FontSetting `json:"fonts,omitempty"`
 
@@ -9888,16 +12402,40 @@ type WordHeadingDetection struct {
 	Styles []WordStyle `json:"styles,omitempty"`
 }
 
+// UnmarshalWordHeadingDetection unmarshals an instance of WordHeadingDetection from the specified map of raw messages.
+func UnmarshalWordHeadingDetection(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(WordHeadingDetection)
+	err = core.UnmarshalModel(m, "fonts", &obj.Fonts, UnmarshalFontSetting)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "styles", &obj.Styles, UnmarshalWordStyle)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // WordSettings : A list of Word conversion settings.
 type WordSettings struct {
-
 	// Object containing heading detection conversion settings for Microsoft Word documents.
 	Heading *WordHeadingDetection `json:"heading,omitempty"`
 }
 
+// UnmarshalWordSettings unmarshals an instance of WordSettings from the specified map of raw messages.
+func UnmarshalWordSettings(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(WordSettings)
+	err = core.UnmarshalModel(m, "heading", &obj.Heading, UnmarshalWordHeadingDetection)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // WordStyle : Microsoft Word styles to convert into a specified HTML head level.
 type WordStyle struct {
-
 	// HTML head level that content matching this style is tagged with.
 	Level *int64 `json:"level,omitempty"`
 
@@ -9905,15 +12443,52 @@ type WordStyle struct {
 	Names []string `json:"names,omitempty"`
 }
 
+// UnmarshalWordStyle unmarshals an instance of WordStyle from the specified map of raw messages.
+func UnmarshalWordStyle(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(WordStyle)
+	err = core.UnmarshalPrimitive(m, "level", &obj.Level)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "names", &obj.Names)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // XPathPatterns : Object containing an array of XPaths.
 type XPathPatterns struct {
-
 	// An array to XPaths.
 	Xpaths []string `json:"xpaths,omitempty"`
 }
 
+// UnmarshalXPathPatterns unmarshals an instance of XPathPatterns from the specified map of raw messages.
+func UnmarshalXPathPatterns(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(XPathPatterns)
+	err = core.UnmarshalPrimitive(m, "xpaths", &obj.Xpaths)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Calculation : Calculation struct
+// This model "extends" QueryAggregation
 type Calculation struct {
+	// The type of aggregation command used. For example: term, filter, max, min, etc.
+	Type *string `json:"type,omitempty"`
+
+	// Array of aggregation results.
+	Results []AggregationResult `json:"results,omitempty"`
+
+	// Number of matching results.
+	MatchingResults *int64 `json:"matching_results,omitempty"`
+
+	// Aggregations returned by Discovery.
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// The field where the aggregation is located in the document.
 	Field *string `json:"field,omitempty"`
@@ -9922,15 +12497,105 @@ type Calculation struct {
 	Value *float64 `json:"value,omitempty"`
 }
 
+func (*Calculation) isaQueryAggregation() bool {
+	return true
+}
+
+// UnmarshalCalculation unmarshals an instance of Calculation from the specified map of raw messages.
+func UnmarshalCalculation(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Calculation)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalAggregationResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "field", &obj.Field)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Filter : Filter struct
+// This model "extends" QueryAggregation
 type Filter struct {
+	// The type of aggregation command used. For example: term, filter, max, min, etc.
+	Type *string `json:"type,omitempty"`
+
+	// Array of aggregation results.
+	Results []AggregationResult `json:"results,omitempty"`
+
+	// Number of matching results.
+	MatchingResults *int64 `json:"matching_results,omitempty"`
+
+	// Aggregations returned by Discovery.
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// The match the aggregated results queried for.
 	Match *string `json:"match,omitempty"`
 }
 
+func (*Filter) isaQueryAggregation() bool {
+	return true
+}
+
+// UnmarshalFilter unmarshals an instance of Filter from the specified map of raw messages.
+func UnmarshalFilter(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Filter)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalAggregationResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "match", &obj.Match)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Histogram : Histogram struct
+// This model "extends" QueryAggregation
 type Histogram struct {
+	// The type of aggregation command used. For example: term, filter, max, min, etc.
+	Type *string `json:"type,omitempty"`
+
+	// Array of aggregation results.
+	Results []AggregationResult `json:"results,omitempty"`
+
+	// Number of matching results.
+	MatchingResults *int64 `json:"matching_results,omitempty"`
+
+	// Aggregations returned by Discovery.
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// The field where the aggregation is located in the document.
 	Field *string `json:"field,omitempty"`
@@ -9939,15 +12604,105 @@ type Histogram struct {
 	Interval *int64 `json:"interval,omitempty"`
 }
 
+func (*Histogram) isaQueryAggregation() bool {
+	return true
+}
+
+// UnmarshalHistogram unmarshals an instance of Histogram from the specified map of raw messages.
+func UnmarshalHistogram(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Histogram)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalAggregationResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "field", &obj.Field)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "interval", &obj.Interval)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Nested : Nested struct
+// This model "extends" QueryAggregation
 type Nested struct {
+	// The type of aggregation command used. For example: term, filter, max, min, etc.
+	Type *string `json:"type,omitempty"`
+
+	// Array of aggregation results.
+	Results []AggregationResult `json:"results,omitempty"`
+
+	// Number of matching results.
+	MatchingResults *int64 `json:"matching_results,omitempty"`
+
+	// Aggregations returned by Discovery.
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// The area of the results the aggregation was restricted to.
 	Path *string `json:"path,omitempty"`
 }
 
+func (*Nested) isaQueryAggregation() bool {
+	return true
+}
+
+// UnmarshalNested unmarshals an instance of Nested from the specified map of raw messages.
+func UnmarshalNested(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Nested)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalAggregationResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "path", &obj.Path)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Term : Term struct
+// This model "extends" QueryAggregation
 type Term struct {
+	// The type of aggregation command used. For example: term, filter, max, min, etc.
+	Type *string `json:"type,omitempty"`
+
+	// Array of aggregation results.
+	Results []AggregationResult `json:"results,omitempty"`
+
+	// Number of matching results.
+	MatchingResults *int64 `json:"matching_results,omitempty"`
+
+	// Aggregations returned by Discovery.
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// The field where the aggregation is located in the document.
 	Field *string `json:"field,omitempty"`
@@ -9956,8 +12711,55 @@ type Term struct {
 	Count *int64 `json:"count,omitempty"`
 }
 
+func (*Term) isaQueryAggregation() bool {
+	return true
+}
+
+// UnmarshalTerm unmarshals an instance of Term from the specified map of raw messages.
+func UnmarshalTerm(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Term)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalAggregationResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "field", &obj.Field)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "count", &obj.Count)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // Timeslice : Timeslice struct
+// This model "extends" QueryAggregation
 type Timeslice struct {
+	// The type of aggregation command used. For example: term, filter, max, min, etc.
+	Type *string `json:"type,omitempty"`
+
+	// Array of aggregation results.
+	Results []AggregationResult `json:"results,omitempty"`
+
+	// Number of matching results.
+	MatchingResults *int64 `json:"matching_results,omitempty"`
+
+	// Aggregations returned by Discovery.
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// The field where the aggregation is located in the document.
 	Field *string `json:"field,omitempty"`
@@ -9971,11 +12773,97 @@ type Timeslice struct {
 	Anomaly *bool `json:"anomaly,omitempty"`
 }
 
+func (*Timeslice) isaQueryAggregation() bool {
+	return true
+}
+
+// UnmarshalTimeslice unmarshals an instance of Timeslice from the specified map of raw messages.
+func UnmarshalTimeslice(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Timeslice)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalAggregationResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "field", &obj.Field)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "interval", &obj.Interval)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "anomaly", &obj.Anomaly)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TopHits : TopHits struct
+// This model "extends" QueryAggregation
 type TopHits struct {
+	// The type of aggregation command used. For example: term, filter, max, min, etc.
+	Type *string `json:"type,omitempty"`
+
+	// Array of aggregation results.
+	Results []AggregationResult `json:"results,omitempty"`
+
+	// Number of matching results.
+	MatchingResults *int64 `json:"matching_results,omitempty"`
+
+	// Aggregations returned by Discovery.
+	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 
 	// Number of top hits returned by the aggregation.
 	Size *int64 `json:"size,omitempty"`
 
 	Hits *TopHitsResults `json:"hits,omitempty"`
+}
+
+func (*TopHits) isaQueryAggregation() bool {
+	return true
+}
+
+// UnmarshalTopHits unmarshals an instance of TopHits from the specified map of raw messages.
+func UnmarshalTopHits(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TopHits)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "results", &obj.Results, UnmarshalAggregationResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "aggregations", &obj.Aggregations, UnmarshalQueryAggregation)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "size", &obj.Size)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "hits", &obj.Hits, UnmarshalTopHitsResults)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }

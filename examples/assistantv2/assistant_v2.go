@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/watson-developer-cloud/go-sdk/assistantv2"
 )
 
@@ -15,7 +15,7 @@ func main() {
 	service, serviceErr := assistantv2.
 		NewAssistantV2(&assistantv2.AssistantV2Options{
 			URL:           "YOUR SERVICE URL",
-			Version:       "2017-04-21",
+			Version:       core.StringPtr("2017-04-21"),
 			Authenticator: authenticator,
 		})
 

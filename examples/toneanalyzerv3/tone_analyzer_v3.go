@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/watson-developer-cloud/go-sdk/toneanalyzerv3"
 )
 
@@ -16,7 +16,7 @@ func main() {
 	service, serviceErr := toneanalyzerv3.
 		NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 			URL:           "YOUR SERVICE URL",
-			Version:       "2017-09-21",
+			Version:       core.StringPtr("2017-09-21"),
 			Authenticator: authenticator,
 		})
 
@@ -28,11 +28,11 @@ func main() {
 	/* TONE CHAT */
 
 	utterances := []toneanalyzerv3.Utterance{
-		toneanalyzerv3.Utterance{
+		{
 			Text: core.StringPtr("Hello World"),
 			User: core.StringPtr("Watson"),
 		},
-		toneanalyzerv3.Utterance{
+		{
 			Text: core.StringPtr("World Hello"),
 			User: core.StringPtr("John Doe"),
 		},

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 
 	discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
 )
@@ -16,7 +16,7 @@ func main() {
 	}
 	service, serviceErr := discovery.NewDiscoveryV1(&discovery.DiscoveryV1Options{
 		URL:           "YOUR SERVICE URL",
-		Version:       "2018-03-05",
+		Version:       core.StringPtr("2018-03-05"),
 		Authenticator: authenticator,
 	})
 	// Check successful instantiation

@@ -24,7 +24,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/discoveryv1"
@@ -66,7 +66,7 @@ func TestConstructService(t *testing.T) {
 	var err error
 
 	service, err = discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-		Version: "2020-08-23",
+		Version: core.StringPtr("2020-11-05"),
 	})
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
@@ -349,7 +349,7 @@ func TestTokenizationDictionary(t *testing.T) {
 		&discoveryv1.CreateCollectionOptions{
 			EnvironmentID: environmentID,
 			Name:          core.StringPtr("Test Tokenization Dictionary For Golang"),
-			Language:      core.StringPtr(discoveryv1.CreateCollectionOptions_Language_Ja),
+			Language:      core.StringPtr(discoveryv1.CreateCollectionOptionsLanguageJaConst),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -361,7 +361,7 @@ func TestTokenizationDictionary(t *testing.T) {
 			EnvironmentID: environmentID,
 			CollectionID:  testCollection.CollectionID,
 			TokenizationRules: []discoveryv1.TokenDictRule{
-				discoveryv1.TokenDictRule{
+				{
 					Text:         core.StringPtr("token"),
 					Tokens:       []string{"token 1", "token 2"},
 					Readings:     []string{"reading 1", "reading 2"},

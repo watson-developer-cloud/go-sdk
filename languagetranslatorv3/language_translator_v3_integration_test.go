@@ -23,7 +23,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/languagetranslatorv3"
@@ -58,7 +58,7 @@ func TestConstructService(t *testing.T) {
 
 	service, err = languagetranslatorv3.NewLanguageTranslatorV3(
 		&languagetranslatorv3.LanguageTranslatorV3Options{
-			Version: "2020-04-01",
+			Version: core.StringPtr("2020-04-01"),
 		})
 	assert.Nil(t, err)
 	assert.NotNil(t, service)

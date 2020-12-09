@@ -1,13 +1,11 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 )
 
@@ -19,7 +17,7 @@ func main() {
 	service, serviceErr := personalityinsightsv3.
 		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 			URL:           "YOUR SERVICE URL",
-			Version:       "2017-10-13",
+			Version:       core.StringPtr("2017-10-13"),
 			Authenticator: authenticator,
 		})
 
@@ -89,38 +87,4 @@ func main() {
 	if profResult != nil {
 		core.PrettyPrint(profResult, "Profile for "+fileName)
 	}
-
-	/* PROFILE AS CSV */
-
-	// Read txt file with example speech
-	fileName = "personality-v3.txt"
-	file, fileErr = ioutil.ReadFile(pwd + "/../../resources/" + fileName)
-
-	// Check successful file read
-	if fileErr != nil {
-		panic(fileErr)
-	}
-
-	// Set text/plain of profileOptions
-	profileOptions.SetBody(string(file))
-
-	// Call the personality insights ProfileAsCsv method
-	profCsvResult, _, responseErr := service.ProfileAsCsv(profileOptions)
-
-	// Check successful call
-	if responseErr != nil {
-		panic(responseErr)
-	}
-
-	// Check successful casting
-	if profCsvResult != nil {
-		buff := new(bytes.Buffer)
-		buff.ReadFrom(profCsvResult)
-		fmt.Printf("Profile as CSV for %v\n%v\n", fileName, buff.String())
-
-		file, _ := os.Create("profile_example.csv")
-		file.Write(buff.Bytes())
-		file.Close()
-	}
-	profCsvResult.Close()
 }

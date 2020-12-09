@@ -23,7 +23,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/IBM/go-sdk-core/core"
+	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/watson-developer-cloud/go-sdk/assistantv2"
@@ -62,7 +62,7 @@ func TestConstructService(t *testing.T) {
 	var err error
 
 	service, err = assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-		Version:     "2020-04-01",
+		Version:     core.StringPtr("2020-04-01"),
 		ServiceName: "assistant",
 	})
 	assert.Nil(t, err)
@@ -102,10 +102,12 @@ func TestSession(t *testing.T) {
 						UserID: core.StringPtr("dummy"),
 					},
 				},
-				Skills: &assistantv2.MessageContextSkills{
-					"main_skill": map[string]interface{}{
-						"user_defined": map[string]string{
-							"account_number": "12345",
+				Skills: map[string]assistantv2.MessageContextSkill{
+					"main_skill": {
+						UserDefined: map[string]interface{}{
+							"user_defined": map[string]string{
+								"account_number": "12345",
+							},
 						},
 					},
 				},
