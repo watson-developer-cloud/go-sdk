@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package discoveryv1 : Operations and models for the DiscoveryV1 service
 package discoveryv1
@@ -26,14 +25,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/go-openapi/strfmt"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"net/http"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/go-openapi/strfmt"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // DiscoveryV1 : IBM Watson&trade; Discovery is a cognitive search and content analytics engine that you can add to
@@ -731,7 +731,7 @@ func (discovery *DiscoveryV1) GetConfigurationWithContext(ctx context.Context, g
 	}
 
 	pathParamsMap := map[string]string{
-		"environment_id": *getConfigurationOptions.EnvironmentID,
+		"environment_id":   *getConfigurationOptions.EnvironmentID,
 		"configuration_id": *getConfigurationOptions.ConfigurationID,
 	}
 
@@ -798,7 +798,7 @@ func (discovery *DiscoveryV1) UpdateConfigurationWithContext(ctx context.Context
 	}
 
 	pathParamsMap := map[string]string{
-		"environment_id": *updateConfigurationOptions.EnvironmentID,
+		"environment_id":   *updateConfigurationOptions.EnvironmentID,
 		"configuration_id": *updateConfigurationOptions.ConfigurationID,
 	}
 
@@ -887,7 +887,7 @@ func (discovery *DiscoveryV1) DeleteConfigurationWithContext(ctx context.Context
 	}
 
 	pathParamsMap := map[string]string{
-		"environment_id": *deleteConfigurationOptions.EnvironmentID,
+		"environment_id":   *deleteConfigurationOptions.EnvironmentID,
 		"configuration_id": *deleteConfigurationOptions.ConfigurationID,
 	}
 
@@ -1089,7 +1089,7 @@ func (discovery *DiscoveryV1) GetCollectionWithContext(ctx context.Context, getC
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getCollectionOptions.EnvironmentID,
-		"collection_id": *getCollectionOptions.CollectionID,
+		"collection_id":  *getCollectionOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1149,7 +1149,7 @@ func (discovery *DiscoveryV1) UpdateCollectionWithContext(ctx context.Context, u
 
 	pathParamsMap := map[string]string{
 		"environment_id": *updateCollectionOptions.EnvironmentID,
-		"collection_id": *updateCollectionOptions.CollectionID,
+		"collection_id":  *updateCollectionOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.PUT)
@@ -1225,7 +1225,7 @@ func (discovery *DiscoveryV1) DeleteCollectionWithContext(ctx context.Context, d
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteCollectionOptions.EnvironmentID,
-		"collection_id": *deleteCollectionOptions.CollectionID,
+		"collection_id":  *deleteCollectionOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1286,7 +1286,7 @@ func (discovery *DiscoveryV1) ListCollectionFieldsWithContext(ctx context.Contex
 
 	pathParamsMap := map[string]string{
 		"environment_id": *listCollectionFieldsOptions.EnvironmentID,
-		"collection_id": *listCollectionFieldsOptions.CollectionID,
+		"collection_id":  *listCollectionFieldsOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1348,7 +1348,7 @@ func (discovery *DiscoveryV1) ListExpansionsWithContext(ctx context.Context, lis
 
 	pathParamsMap := map[string]string{
 		"environment_id": *listExpansionsOptions.EnvironmentID,
-		"collection_id": *listExpansionsOptions.CollectionID,
+		"collection_id":  *listExpansionsOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1410,7 +1410,7 @@ func (discovery *DiscoveryV1) CreateExpansionsWithContext(ctx context.Context, c
 
 	pathParamsMap := map[string]string{
 		"environment_id": *createExpansionsOptions.EnvironmentID,
-		"collection_id": *createExpansionsOptions.CollectionID,
+		"collection_id":  *createExpansionsOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1482,7 +1482,7 @@ func (discovery *DiscoveryV1) DeleteExpansionsWithContext(ctx context.Context, d
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteExpansionsOptions.EnvironmentID,
-		"collection_id": *deleteExpansionsOptions.CollectionID,
+		"collection_id":  *deleteExpansionsOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1533,7 +1533,7 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatusWithContext(ctx con
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getTokenizationDictionaryStatusOptions.EnvironmentID,
-		"collection_id": *getTokenizationDictionaryStatusOptions.CollectionID,
+		"collection_id":  *getTokenizationDictionaryStatusOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1594,7 +1594,7 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionaryWithContext(ctx contex
 
 	pathParamsMap := map[string]string{
 		"environment_id": *createTokenizationDictionaryOptions.EnvironmentID,
-		"collection_id": *createTokenizationDictionaryOptions.CollectionID,
+		"collection_id":  *createTokenizationDictionaryOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1665,7 +1665,7 @@ func (discovery *DiscoveryV1) DeleteTokenizationDictionaryWithContext(ctx contex
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteTokenizationDictionaryOptions.EnvironmentID,
-		"collection_id": *deleteTokenizationDictionaryOptions.CollectionID,
+		"collection_id":  *deleteTokenizationDictionaryOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1716,7 +1716,7 @@ func (discovery *DiscoveryV1) GetStopwordListStatusWithContext(ctx context.Conte
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getStopwordListStatusOptions.EnvironmentID,
-		"collection_id": *getStopwordListStatusOptions.CollectionID,
+		"collection_id":  *getStopwordListStatusOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1777,7 +1777,7 @@ func (discovery *DiscoveryV1) CreateStopwordListWithContext(ctx context.Context,
 
 	pathParamsMap := map[string]string{
 		"environment_id": *createStopwordListOptions.EnvironmentID,
-		"collection_id": *createStopwordListOptions.CollectionID,
+		"collection_id":  *createStopwordListOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1842,7 +1842,7 @@ func (discovery *DiscoveryV1) DeleteStopwordListWithContext(ctx context.Context,
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteStopwordListOptions.EnvironmentID,
-		"collection_id": *deleteStopwordListOptions.CollectionID,
+		"collection_id":  *deleteStopwordListOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1918,7 +1918,7 @@ func (discovery *DiscoveryV1) AddDocumentWithContext(ctx context.Context, addDoc
 
 	pathParamsMap := map[string]string{
 		"environment_id": *addDocumentOptions.EnvironmentID,
-		"collection_id": *addDocumentOptions.CollectionID,
+		"collection_id":  *addDocumentOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1989,8 +1989,8 @@ func (discovery *DiscoveryV1) GetDocumentStatusWithContext(ctx context.Context, 
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getDocumentStatusOptions.EnvironmentID,
-		"collection_id": *getDocumentStatusOptions.CollectionID,
-		"document_id": *getDocumentStatusOptions.DocumentID,
+		"collection_id":  *getDocumentStatusOptions.CollectionID,
+		"document_id":    *getDocumentStatusOptions.DocumentID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2059,8 +2059,8 @@ func (discovery *DiscoveryV1) UpdateDocumentWithContext(ctx context.Context, upd
 
 	pathParamsMap := map[string]string{
 		"environment_id": *updateDocumentOptions.EnvironmentID,
-		"collection_id": *updateDocumentOptions.CollectionID,
-		"document_id": *updateDocumentOptions.DocumentID,
+		"collection_id":  *updateDocumentOptions.CollectionID,
+		"document_id":    *updateDocumentOptions.DocumentID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2130,8 +2130,8 @@ func (discovery *DiscoveryV1) DeleteDocumentWithContext(ctx context.Context, del
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteDocumentOptions.EnvironmentID,
-		"collection_id": *deleteDocumentOptions.CollectionID,
-		"document_id": *deleteDocumentOptions.DocumentID,
+		"collection_id":  *deleteDocumentOptions.CollectionID,
+		"document_id":    *deleteDocumentOptions.DocumentID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -2193,7 +2193,7 @@ func (discovery *DiscoveryV1) QueryWithContext(ctx context.Context, queryOptions
 
 	pathParamsMap := map[string]string{
 		"environment_id": *queryOptions.EnvironmentID,
-		"collection_id": *queryOptions.CollectionID,
+		"collection_id":  *queryOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2327,7 +2327,7 @@ func (discovery *DiscoveryV1) QueryNoticesWithContext(ctx context.Context, query
 
 	pathParamsMap := map[string]string{
 		"environment_id": *queryNoticesOptions.EnvironmentID,
-		"collection_id": *queryNoticesOptions.CollectionID,
+		"collection_id":  *queryNoticesOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2674,7 +2674,7 @@ func (discovery *DiscoveryV1) GetAutocompletionWithContext(ctx context.Context, 
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getAutocompletionOptions.EnvironmentID,
-		"collection_id": *getAutocompletionOptions.CollectionID,
+		"collection_id":  *getAutocompletionOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2742,7 +2742,7 @@ func (discovery *DiscoveryV1) ListTrainingDataWithContext(ctx context.Context, l
 
 	pathParamsMap := map[string]string{
 		"environment_id": *listTrainingDataOptions.EnvironmentID,
-		"collection_id": *listTrainingDataOptions.CollectionID,
+		"collection_id":  *listTrainingDataOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2803,7 +2803,7 @@ func (discovery *DiscoveryV1) AddTrainingDataWithContext(ctx context.Context, ad
 
 	pathParamsMap := map[string]string{
 		"environment_id": *addTrainingDataOptions.EnvironmentID,
-		"collection_id": *addTrainingDataOptions.CollectionID,
+		"collection_id":  *addTrainingDataOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2880,7 +2880,7 @@ func (discovery *DiscoveryV1) DeleteAllTrainingDataWithContext(ctx context.Conte
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteAllTrainingDataOptions.EnvironmentID,
-		"collection_id": *deleteAllTrainingDataOptions.CollectionID,
+		"collection_id":  *deleteAllTrainingDataOptions.CollectionID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -2931,8 +2931,8 @@ func (discovery *DiscoveryV1) GetTrainingDataWithContext(ctx context.Context, ge
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getTrainingDataOptions.EnvironmentID,
-		"collection_id": *getTrainingDataOptions.CollectionID,
-		"query_id": *getTrainingDataOptions.QueryID,
+		"collection_id":  *getTrainingDataOptions.CollectionID,
+		"query_id":       *getTrainingDataOptions.QueryID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2993,8 +2993,8 @@ func (discovery *DiscoveryV1) DeleteTrainingDataWithContext(ctx context.Context,
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteTrainingDataOptions.EnvironmentID,
-		"collection_id": *deleteTrainingDataOptions.CollectionID,
-		"query_id": *deleteTrainingDataOptions.QueryID,
+		"collection_id":  *deleteTrainingDataOptions.CollectionID,
+		"query_id":       *deleteTrainingDataOptions.QueryID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -3045,8 +3045,8 @@ func (discovery *DiscoveryV1) ListTrainingExamplesWithContext(ctx context.Contex
 
 	pathParamsMap := map[string]string{
 		"environment_id": *listTrainingExamplesOptions.EnvironmentID,
-		"collection_id": *listTrainingExamplesOptions.CollectionID,
-		"query_id": *listTrainingExamplesOptions.QueryID,
+		"collection_id":  *listTrainingExamplesOptions.CollectionID,
+		"query_id":       *listTrainingExamplesOptions.QueryID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -3107,8 +3107,8 @@ func (discovery *DiscoveryV1) CreateTrainingExampleWithContext(ctx context.Conte
 
 	pathParamsMap := map[string]string{
 		"environment_id": *createTrainingExampleOptions.EnvironmentID,
-		"collection_id": *createTrainingExampleOptions.CollectionID,
-		"query_id": *createTrainingExampleOptions.QueryID,
+		"collection_id":  *createTrainingExampleOptions.CollectionID,
+		"query_id":       *createTrainingExampleOptions.QueryID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -3185,9 +3185,9 @@ func (discovery *DiscoveryV1) DeleteTrainingExampleWithContext(ctx context.Conte
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteTrainingExampleOptions.EnvironmentID,
-		"collection_id": *deleteTrainingExampleOptions.CollectionID,
-		"query_id": *deleteTrainingExampleOptions.QueryID,
-		"example_id": *deleteTrainingExampleOptions.ExampleID,
+		"collection_id":  *deleteTrainingExampleOptions.CollectionID,
+		"query_id":       *deleteTrainingExampleOptions.QueryID,
+		"example_id":     *deleteTrainingExampleOptions.ExampleID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -3238,9 +3238,9 @@ func (discovery *DiscoveryV1) UpdateTrainingExampleWithContext(ctx context.Conte
 
 	pathParamsMap := map[string]string{
 		"environment_id": *updateTrainingExampleOptions.EnvironmentID,
-		"collection_id": *updateTrainingExampleOptions.CollectionID,
-		"query_id": *updateTrainingExampleOptions.QueryID,
-		"example_id": *updateTrainingExampleOptions.ExampleID,
+		"collection_id":  *updateTrainingExampleOptions.CollectionID,
+		"query_id":       *updateTrainingExampleOptions.QueryID,
+		"example_id":     *updateTrainingExampleOptions.ExampleID,
 	}
 
 	builder := core.NewRequestBuilder(core.PUT)
@@ -3314,9 +3314,9 @@ func (discovery *DiscoveryV1) GetTrainingExampleWithContext(ctx context.Context,
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getTrainingExampleOptions.EnvironmentID,
-		"collection_id": *getTrainingExampleOptions.CollectionID,
-		"query_id": *getTrainingExampleOptions.QueryID,
-		"example_id": *getTrainingExampleOptions.ExampleID,
+		"collection_id":  *getTrainingExampleOptions.CollectionID,
+		"query_id":       *getTrainingExampleOptions.QueryID,
+		"example_id":     *getTrainingExampleOptions.ExampleID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -4017,7 +4017,7 @@ func (discovery *DiscoveryV1) GetCredentialsWithContext(ctx context.Context, get
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getCredentialsOptions.EnvironmentID,
-		"credential_id": *getCredentialsOptions.CredentialID,
+		"credential_id":  *getCredentialsOptions.CredentialID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -4080,7 +4080,7 @@ func (discovery *DiscoveryV1) UpdateCredentialsWithContext(ctx context.Context, 
 
 	pathParamsMap := map[string]string{
 		"environment_id": *updateCredentialsOptions.EnvironmentID,
-		"credential_id": *updateCredentialsOptions.CredentialID,
+		"credential_id":  *updateCredentialsOptions.CredentialID,
 	}
 
 	builder := core.NewRequestBuilder(core.PUT)
@@ -4157,7 +4157,7 @@ func (discovery *DiscoveryV1) DeleteCredentialsWithContext(ctx context.Context, 
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteCredentialsOptions.EnvironmentID,
-		"credential_id": *deleteCredentialsOptions.CredentialID,
+		"credential_id":  *deleteCredentialsOptions.CredentialID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -4348,7 +4348,7 @@ func (discovery *DiscoveryV1) GetGatewayWithContext(ctx context.Context, getGate
 
 	pathParamsMap := map[string]string{
 		"environment_id": *getGatewayOptions.EnvironmentID,
-		"gateway_id": *getGatewayOptions.GatewayID,
+		"gateway_id":     *getGatewayOptions.GatewayID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -4409,7 +4409,7 @@ func (discovery *DiscoveryV1) DeleteGatewayWithContext(ctx context.Context, dele
 
 	pathParamsMap := map[string]string{
 		"environment_id": *deleteGatewayOptions.EnvironmentID,
-		"gateway_id": *deleteGatewayOptions.GatewayID,
+		"gateway_id":     *deleteGatewayOptions.GatewayID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -4484,7 +4484,7 @@ type AddDocumentOptions struct {
 func (*DiscoveryV1) NewAddDocumentOptions(environmentID string, collectionID string) *AddDocumentOptions {
 	return &AddDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -4555,7 +4555,7 @@ type AddTrainingDataOptions struct {
 func (*DiscoveryV1) NewAddTrainingDataOptions(environmentID string, collectionID string) *AddTrainingDataOptions {
 	return &AddTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -4607,13 +4607,15 @@ type AggregationResult struct {
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
-
 // UnmarshalAggregationResult unmarshals an instance of AggregationResult from the specified map of raw messages.
 func UnmarshalAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(AggregationResult)
 	err = core.UnmarshalPrimitive(m, "key", &obj.Key)
 	if err != nil {
-		return
+		err = core.UnmarshalPrimitive(m, "key_as_string", &obj.Key)
+		if err != nil {
+			return
+		}
 	}
 	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
 	if err != nil {
@@ -4673,11 +4675,10 @@ type Collection struct {
 // Constants associated with the Collection.Status property.
 // The status of the collection.
 const (
-	CollectionStatusActiveConst = "active"
+	CollectionStatusActiveConst      = "active"
 	CollectionStatusMaintenanceConst = "maintenance"
-	CollectionStatusPendingConst = "pending"
+	CollectionStatusPendingConst     = "pending"
 )
-
 
 // UnmarshalCollection unmarshals an instance of Collection from the specified map of raw messages.
 func UnmarshalCollection(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4744,7 +4745,6 @@ type CollectionCrawlStatus struct {
 	SourceCrawl *SourceStatus `json:"source_crawl,omitempty"`
 }
 
-
 // UnmarshalCollectionCrawlStatus unmarshals an instance of CollectionCrawlStatus from the specified map of raw messages.
 func UnmarshalCollectionCrawlStatus(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CollectionCrawlStatus)
@@ -4761,7 +4761,6 @@ type CollectionDiskUsage struct {
 	// Number of bytes used by the collection.
 	UsedBytes *int64 `json:"used_bytes,omitempty"`
 }
-
 
 // UnmarshalCollectionDiskUsage unmarshals an instance of CollectionDiskUsage from the specified map of raw messages.
 func UnmarshalCollectionDiskUsage(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4783,7 +4782,6 @@ type CollectionUsage struct {
 	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
 }
 
-
 // UnmarshalCollectionUsage unmarshals an instance of CollectionUsage from the specified map of raw messages.
 func UnmarshalCollectionUsage(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CollectionUsage)
@@ -4804,7 +4802,6 @@ type Completions struct {
 	// Array of autcomplete suggestion based on the provided prefix.
 	Completions []string `json:"completions,omitempty"`
 }
-
 
 // UnmarshalCompletions unmarshals an instance of Completions from the specified map of raw messages.
 func UnmarshalCompletions(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4847,7 +4844,6 @@ type Configuration struct {
 	// Object containing source parameters for the configuration.
 	Source *Source `json:"source,omitempty"`
 }
-
 
 // NewConfiguration : Instantiate Configuration (Generic Model Constructor)
 func (*DiscoveryV1) NewConfiguration(name string) (model *Configuration, err error) {
@@ -4925,7 +4921,6 @@ type Conversions struct {
 	ImageTextRecognition *bool `json:"image_text_recognition,omitempty"`
 }
 
-
 // UnmarshalConversions unmarshals an instance of Conversions from the specified map of raw messages.
 func UnmarshalConversions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Conversions)
@@ -4981,16 +4976,16 @@ type CreateCollectionOptions struct {
 // Constants associated with the CreateCollectionOptions.Language property.
 // The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
 const (
-	CreateCollectionOptionsLanguageArConst = "ar"
-	CreateCollectionOptionsLanguageDeConst = "de"
-	CreateCollectionOptionsLanguageEnConst = "en"
-	CreateCollectionOptionsLanguageEsConst = "es"
-	CreateCollectionOptionsLanguageFrConst = "fr"
-	CreateCollectionOptionsLanguageItConst = "it"
-	CreateCollectionOptionsLanguageJaConst = "ja"
-	CreateCollectionOptionsLanguageKoConst = "ko"
-	CreateCollectionOptionsLanguageNlConst = "nl"
-	CreateCollectionOptionsLanguagePtConst = "pt"
+	CreateCollectionOptionsLanguageArConst   = "ar"
+	CreateCollectionOptionsLanguageDeConst   = "de"
+	CreateCollectionOptionsLanguageEnConst   = "en"
+	CreateCollectionOptionsLanguageEsConst   = "es"
+	CreateCollectionOptionsLanguageFrConst   = "fr"
+	CreateCollectionOptionsLanguageItConst   = "it"
+	CreateCollectionOptionsLanguageJaConst   = "ja"
+	CreateCollectionOptionsLanguageKoConst   = "ko"
+	CreateCollectionOptionsLanguageNlConst   = "nl"
+	CreateCollectionOptionsLanguagePtConst   = "pt"
 	CreateCollectionOptionsLanguageZhCnConst = "zh-CN"
 )
 
@@ -4998,7 +4993,7 @@ const (
 func (*DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string) *CreateCollectionOptions {
 	return &CreateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		Name: core.StringPtr(name),
+		Name:          core.StringPtr(name),
 	}
 }
 
@@ -5070,7 +5065,7 @@ type CreateConfigurationOptions struct {
 func (*DiscoveryV1) NewCreateConfigurationOptions(environmentID string, name string) *CreateConfigurationOptions {
 	return &CreateConfigurationOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		Name: core.StringPtr(name),
+		Name:          core.StringPtr(name),
 	}
 }
 
@@ -5157,11 +5152,11 @@ type CreateCredentialsOptions struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	CreateCredentialsOptionsSourceTypeBoxConst = "box"
+	CreateCredentialsOptionsSourceTypeBoxConst                = "box"
 	CreateCredentialsOptionsSourceTypeCloudObjectStorageConst = "cloud_object_storage"
-	CreateCredentialsOptionsSourceTypeSalesforceConst = "salesforce"
-	CreateCredentialsOptionsSourceTypeSharepointConst = "sharepoint"
-	CreateCredentialsOptionsSourceTypeWebCrawlConst = "web_crawl"
+	CreateCredentialsOptionsSourceTypeSalesforceConst         = "salesforce"
+	CreateCredentialsOptionsSourceTypeSharepointConst         = "sharepoint"
+	CreateCredentialsOptionsSourceTypeWebCrawlConst           = "web_crawl"
 )
 
 // Constants associated with the CreateCredentialsOptions.Status property.
@@ -5170,7 +5165,7 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	CreateCredentialsOptionsStatusConnectedConst = "connected"
-	CreateCredentialsOptionsStatusInvalidConst = "invalid"
+	CreateCredentialsOptionsStatusInvalidConst   = "invalid"
 )
 
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
@@ -5230,15 +5225,15 @@ type CreateEnvironmentOptions struct {
 // Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the default
 // is `S`.
 const (
-	CreateEnvironmentOptionsSizeLConst = "L"
-	CreateEnvironmentOptionsSizeLtConst = "LT"
-	CreateEnvironmentOptionsSizeMConst = "M"
-	CreateEnvironmentOptionsSizeMlConst = "ML"
-	CreateEnvironmentOptionsSizeMsConst = "MS"
-	CreateEnvironmentOptionsSizeSConst = "S"
-	CreateEnvironmentOptionsSizeXlConst = "XL"
-	CreateEnvironmentOptionsSizeXsConst = "XS"
-	CreateEnvironmentOptionsSizeXxlConst = "XXL"
+	CreateEnvironmentOptionsSizeLConst    = "L"
+	CreateEnvironmentOptionsSizeLtConst   = "LT"
+	CreateEnvironmentOptionsSizeMConst    = "M"
+	CreateEnvironmentOptionsSizeMlConst   = "ML"
+	CreateEnvironmentOptionsSizeMsConst   = "MS"
+	CreateEnvironmentOptionsSizeSConst    = "S"
+	CreateEnvironmentOptionsSizeXlConst   = "XL"
+	CreateEnvironmentOptionsSizeXsConst   = "XS"
+	CreateEnvironmentOptionsSizeXxlConst  = "XXL"
 	CreateEnvironmentOptionsSizeXxxlConst = "XXXL"
 )
 
@@ -5332,7 +5327,6 @@ const (
 	CreateEventResponseTypeClickConst = "click"
 )
 
-
 // UnmarshalCreateEventResponse unmarshals an instance of CreateEventResponse from the specified map of raw messages.
 func UnmarshalCreateEventResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CreateEventResponse)
@@ -5379,8 +5373,8 @@ type CreateExpansionsOptions struct {
 func (*DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionID string, expansions []Expansion) *CreateExpansionsOptions {
 	return &CreateExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		Expansions: expansions,
+		CollectionID:  core.StringPtr(collectionID),
+		Expansions:    expansions,
 	}
 }
 
@@ -5466,9 +5460,9 @@ type CreateStopwordListOptions struct {
 // NewCreateStopwordListOptions : Instantiate CreateStopwordListOptions
 func (*DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectionID string, stopwordFile io.ReadCloser, stopwordFilename string) *CreateStopwordListOptions {
 	return &CreateStopwordListOptions{
-		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		StopwordFile: stopwordFile,
+		EnvironmentID:    core.StringPtr(environmentID),
+		CollectionID:     core.StringPtr(collectionID),
+		StopwordFile:     stopwordFile,
 		StopwordFilename: core.StringPtr(stopwordFilename),
 	}
 }
@@ -5523,7 +5517,7 @@ type CreateTokenizationDictionaryOptions struct {
 func (*DiscoveryV1) NewCreateTokenizationDictionaryOptions(environmentID string, collectionID string) *CreateTokenizationDictionaryOptions {
 	return &CreateTokenizationDictionaryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5579,8 +5573,8 @@ type CreateTrainingExampleOptions struct {
 func (*DiscoveryV1) NewCreateTrainingExampleOptions(environmentID string, collectionID string, queryID string) *CreateTrainingExampleOptions {
 	return &CreateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -5737,12 +5731,12 @@ type CredentialDetails struct {
 // -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`
 // -  "source_type": "cloud_object_storage"` - valid `credential_type`s: `aws4_hmac`.
 const (
-	CredentialDetailsCredentialTypeAws4HmacConst = "aws4_hmac"
-	CredentialDetailsCredentialTypeBasicConst = "basic"
-	CredentialDetailsCredentialTypeNoauthConst = "noauth"
-	CredentialDetailsCredentialTypeNtlmV1Const = "ntlm_v1"
-	CredentialDetailsCredentialTypeOauth2Const = "oauth2"
-	CredentialDetailsCredentialTypeSamlConst = "saml"
+	CredentialDetailsCredentialTypeAws4HmacConst         = "aws4_hmac"
+	CredentialDetailsCredentialTypeBasicConst            = "basic"
+	CredentialDetailsCredentialTypeNoauthConst           = "noauth"
+	CredentialDetailsCredentialTypeNtlmV1Const           = "ntlm_v1"
+	CredentialDetailsCredentialTypeOauth2Const           = "oauth2"
+	CredentialDetailsCredentialTypeSamlConst             = "saml"
 	CredentialDetailsCredentialTypeUsernamePasswordConst = "username_password"
 )
 
@@ -5751,7 +5745,6 @@ const (
 const (
 	CredentialDetailsSourceVersionOnlineConst = "online"
 )
-
 
 // UnmarshalCredentialDetails unmarshals an instance of CredentialDetails from the specified map of raw messages.
 func UnmarshalCredentialDetails(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5868,11 +5861,11 @@ type Credentials struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	CredentialsSourceTypeBoxConst = "box"
+	CredentialsSourceTypeBoxConst                = "box"
 	CredentialsSourceTypeCloudObjectStorageConst = "cloud_object_storage"
-	CredentialsSourceTypeSalesforceConst = "salesforce"
-	CredentialsSourceTypeSharepointConst = "sharepoint"
-	CredentialsSourceTypeWebCrawlConst = "web_crawl"
+	CredentialsSourceTypeSalesforceConst         = "salesforce"
+	CredentialsSourceTypeSharepointConst         = "sharepoint"
+	CredentialsSourceTypeWebCrawlConst           = "web_crawl"
 )
 
 // Constants associated with the Credentials.Status property.
@@ -5881,9 +5874,8 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	CredentialsStatusConnectedConst = "connected"
-	CredentialsStatusInvalidConst = "invalid"
+	CredentialsStatusInvalidConst   = "invalid"
 )
-
 
 // UnmarshalCredentials unmarshals an instance of Credentials from the specified map of raw messages.
 func UnmarshalCredentials(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5914,7 +5906,6 @@ type CredentialsList struct {
 	Credentials []Credentials `json:"credentials,omitempty"`
 }
 
-
 // UnmarshalCredentialsList unmarshals an instance of CredentialsList from the specified map of raw messages.
 func UnmarshalCredentialsList(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CredentialsList)
@@ -5942,7 +5933,7 @@ type DeleteAllTrainingDataOptions struct {
 func (*DiscoveryV1) NewDeleteAllTrainingDataOptions(environmentID string, collectionID string) *DeleteAllTrainingDataOptions {
 	return &DeleteAllTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -5980,7 +5971,7 @@ type DeleteCollectionOptions struct {
 func (*DiscoveryV1) NewDeleteCollectionOptions(environmentID string, collectionID string) *DeleteCollectionOptions {
 	return &DeleteCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6017,7 +6008,6 @@ const (
 	DeleteCollectionResponseStatusDeletedConst = "deleted"
 )
 
-
 // UnmarshalDeleteCollectionResponse unmarshals an instance of DeleteCollectionResponse from the specified map of raw messages.
 func UnmarshalDeleteCollectionResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DeleteCollectionResponse)
@@ -6048,7 +6038,7 @@ type DeleteConfigurationOptions struct {
 // NewDeleteConfigurationOptions : Instantiate DeleteConfigurationOptions
 func (*DiscoveryV1) NewDeleteConfigurationOptions(environmentID string, configurationID string) *DeleteConfigurationOptions {
 	return &DeleteConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -6089,7 +6079,6 @@ const (
 	DeleteConfigurationResponseStatusDeletedConst = "deleted"
 )
 
-
 // UnmarshalDeleteConfigurationResponse unmarshals an instance of DeleteConfigurationResponse from the specified map of raw messages.
 func UnmarshalDeleteConfigurationResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DeleteConfigurationResponse)
@@ -6124,7 +6113,6 @@ const (
 	DeleteCredentialsStatusDeletedConst = "deleted"
 )
 
-
 // UnmarshalDeleteCredentials unmarshals an instance of DeleteCredentials from the specified map of raw messages.
 func UnmarshalDeleteCredentials(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DeleteCredentials)
@@ -6156,7 +6144,7 @@ type DeleteCredentialsOptions struct {
 func (*DiscoveryV1) NewDeleteCredentialsOptions(environmentID string, credentialID string) *DeleteCredentialsOptions {
 	return &DeleteCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -6197,8 +6185,8 @@ type DeleteDocumentOptions struct {
 func (*DiscoveryV1) NewDeleteDocumentOptions(environmentID string, collectionID string, documentID string) *DeleteDocumentOptions {
 	return &DeleteDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -6240,7 +6228,6 @@ type DeleteDocumentResponse struct {
 const (
 	DeleteDocumentResponseStatusDeletedConst = "deleted"
 )
-
 
 // UnmarshalDeleteDocumentResponse unmarshals an instance of DeleteDocumentResponse from the specified map of raw messages.
 func UnmarshalDeleteDocumentResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6300,7 +6287,6 @@ const (
 	DeleteEnvironmentResponseStatusDeletedConst = "deleted"
 )
 
-
 // UnmarshalDeleteEnvironmentResponse unmarshals an instance of DeleteEnvironmentResponse from the specified map of raw messages.
 func UnmarshalDeleteEnvironmentResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DeleteEnvironmentResponse)
@@ -6332,7 +6318,7 @@ type DeleteExpansionsOptions struct {
 func (*DiscoveryV1) NewDeleteExpansionsOptions(environmentID string, collectionID string) *DeleteExpansionsOptions {
 	return &DeleteExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6370,7 +6356,7 @@ type DeleteGatewayOptions struct {
 func (*DiscoveryV1) NewDeleteGatewayOptions(environmentID string, gatewayID string) *DeleteGatewayOptions {
 	return &DeleteGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		GatewayID: core.StringPtr(gatewayID),
+		GatewayID:     core.StringPtr(gatewayID),
 	}
 }
 
@@ -6408,7 +6394,7 @@ type DeleteStopwordListOptions struct {
 func (*DiscoveryV1) NewDeleteStopwordListOptions(environmentID string, collectionID string) *DeleteStopwordListOptions {
 	return &DeleteStopwordListOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6446,7 +6432,7 @@ type DeleteTokenizationDictionaryOptions struct {
 func (*DiscoveryV1) NewDeleteTokenizationDictionaryOptions(environmentID string, collectionID string) *DeleteTokenizationDictionaryOptions {
 	return &DeleteTokenizationDictionaryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -6487,8 +6473,8 @@ type DeleteTrainingDataOptions struct {
 func (*DiscoveryV1) NewDeleteTrainingDataOptions(environmentID string, collectionID string, queryID string) *DeleteTrainingDataOptions {
 	return &DeleteTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -6538,9 +6524,9 @@ type DeleteTrainingExampleOptions struct {
 func (*DiscoveryV1) NewDeleteTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *DeleteTrainingExampleOptions {
 	return &DeleteTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
@@ -6611,7 +6597,6 @@ type DiskUsage struct {
 	MaximumAllowedBytes *int64 `json:"maximum_allowed_bytes,omitempty"`
 }
 
-
 // UnmarshalDiskUsage unmarshals an instance of DiskUsage from the specified map of raw messages.
 func UnmarshalDiskUsage(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DiskUsage)
@@ -6644,10 +6629,9 @@ type DocumentAccepted struct {
 // Status of the document in the ingestion process. A status of `processing` is returned for documents that are ingested
 // with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
 const (
-	DocumentAcceptedStatusPendingConst = "pending"
+	DocumentAcceptedStatusPendingConst    = "pending"
 	DocumentAcceptedStatusProcessingConst = "processing"
 )
-
 
 // UnmarshalDocumentAccepted unmarshals an instance of DocumentAccepted from the specified map of raw messages.
 func UnmarshalDocumentAccepted(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6682,7 +6666,6 @@ type DocumentCounts struct {
 	// The number of documents that have been uploaded to the collection, but have not yet started processing.
 	Pending *int64 `json:"pending,omitempty"`
 }
-
 
 // UnmarshalDocumentCounts unmarshals an instance of DocumentCounts from the specified map of raw messages.
 func UnmarshalDocumentCounts(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6737,11 +6720,11 @@ type DocumentStatus struct {
 // Constants associated with the DocumentStatus.Status property.
 // Status of the document in the ingestion process.
 const (
-	DocumentStatusStatusAvailableConst = "available"
+	DocumentStatusStatusAvailableConst            = "available"
 	DocumentStatusStatusAvailableWithNoticesConst = "available with notices"
-	DocumentStatusStatusFailedConst = "failed"
-	DocumentStatusStatusPendingConst = "pending"
-	DocumentStatusStatusProcessingConst = "processing"
+	DocumentStatusStatusFailedConst               = "failed"
+	DocumentStatusStatusPendingConst              = "pending"
+	DocumentStatusStatusProcessingConst           = "processing"
 )
 
 // Constants associated with the DocumentStatus.FileType property.
@@ -6749,10 +6732,9 @@ const (
 const (
 	DocumentStatusFileTypeHTMLConst = "html"
 	DocumentStatusFileTypeJSONConst = "json"
-	DocumentStatusFileTypePDFConst = "pdf"
+	DocumentStatusFileTypePDFConst  = "pdf"
 	DocumentStatusFileTypeWordConst = "word"
 )
-
 
 // UnmarshalDocumentStatus unmarshals an instance of DocumentStatus from the specified map of raw messages.
 func UnmarshalDocumentStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6832,13 +6814,12 @@ type Enrichment struct {
 	Options *EnrichmentOptions `json:"options,omitempty"`
 }
 
-
 // NewEnrichment : Instantiate Enrichment (Generic Model Constructor)
 func (*DiscoveryV1) NewEnrichment(destinationField string, sourceField string, enrichment string) (model *Enrichment, err error) {
 	model = &Enrichment{
 		DestinationField: core.StringPtr(destinationField),
-		SourceField: core.StringPtr(sourceField),
-		Enrichment: core.StringPtr(enrichment),
+		SourceField:      core.StringPtr(sourceField),
+		Enrichment:       core.StringPtr(enrichment),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -6911,7 +6892,6 @@ const (
 	EnrichmentOptionsLanguageSvConst = "sv"
 )
 
-
 // UnmarshalEnrichmentOptions unmarshals an instance of EnrichmentOptions from the specified map of raw messages.
 func UnmarshalEnrichmentOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(EnrichmentOptions)
@@ -6974,27 +6954,26 @@ type Environment struct {
 // Current status of the environment. `resizing` is displayed when a request to increase the environment size has been
 // made, but is still in the process of being completed.
 const (
-	EnvironmentStatusActiveConst = "active"
+	EnvironmentStatusActiveConst      = "active"
 	EnvironmentStatusMaintenanceConst = "maintenance"
-	EnvironmentStatusPendingConst = "pending"
-	EnvironmentStatusResizingConst = "resizing"
+	EnvironmentStatusPendingConst     = "pending"
+	EnvironmentStatusResizingConst    = "resizing"
 )
 
 // Constants associated with the Environment.Size property.
 // Current size of the environment.
 const (
-	EnvironmentSizeLConst = "L"
-	EnvironmentSizeLtConst = "LT"
-	EnvironmentSizeMConst = "M"
-	EnvironmentSizeMlConst = "ML"
-	EnvironmentSizeMsConst = "MS"
-	EnvironmentSizeSConst = "S"
-	EnvironmentSizeXlConst = "XL"
-	EnvironmentSizeXsConst = "XS"
-	EnvironmentSizeXxlConst = "XXL"
+	EnvironmentSizeLConst    = "L"
+	EnvironmentSizeLtConst   = "LT"
+	EnvironmentSizeMConst    = "M"
+	EnvironmentSizeMlConst   = "ML"
+	EnvironmentSizeMsConst   = "MS"
+	EnvironmentSizeSConst    = "S"
+	EnvironmentSizeXlConst   = "XL"
+	EnvironmentSizeXsConst   = "XS"
+	EnvironmentSizeXxlConst  = "XXL"
 	EnvironmentSizeXxxlConst = "XXXL"
 )
-
 
 // UnmarshalEnvironment unmarshals an instance of Environment from the specified map of raw messages.
 func UnmarshalEnvironment(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7056,7 +7035,6 @@ type EnvironmentDocuments struct {
 	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
 }
 
-
 // UnmarshalEnvironmentDocuments unmarshals an instance of EnvironmentDocuments from the specified map of raw messages.
 func UnmarshalEnvironmentDocuments(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(EnvironmentDocuments)
@@ -7098,14 +7076,13 @@ type EventData struct {
 	QueryID *string `json:"query_id,omitempty"`
 }
 
-
 // NewEventData : Instantiate EventData (Generic Model Constructor)
 func (*DiscoveryV1) NewEventData(environmentID string, sessionToken string, collectionID string, documentID string) (model *EventData, err error) {
 	model = &EventData{
 		EnvironmentID: core.StringPtr(environmentID),
-		SessionToken: core.StringPtr(sessionToken),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		SessionToken:  core.StringPtr(sessionToken),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -7157,7 +7134,6 @@ type Expansion struct {
 	ExpandedTerms []string `json:"expanded_terms" validate:"required"`
 }
 
-
 // NewExpansion : Instantiate Expansion (Generic Model Constructor)
 func (*DiscoveryV1) NewExpansion(expandedTerms []string) (model *Expansion, err error) {
 	model = &Expansion{
@@ -7199,7 +7175,6 @@ type Expansions struct {
 	// **expanded_terms** array.
 	Expansions []Expansion `json:"expansions" validate:"required"`
 }
-
 
 // NewExpansions : Instantiate Expansions (Generic Model Constructor)
 func (*DiscoveryV1) NewExpansions(expansions []Expansion) (model *Expansions, err error) {
@@ -7647,19 +7622,18 @@ type Field struct {
 // Constants associated with the Field.Type property.
 // The type of the field.
 const (
-	FieldTypeBinaryConst = "binary"
+	FieldTypeBinaryConst  = "binary"
 	FieldTypeBooleanConst = "boolean"
-	FieldTypeByteConst = "byte"
-	FieldTypeDateConst = "date"
-	FieldTypeDoubleConst = "double"
-	FieldTypeFloatConst = "float"
+	FieldTypeByteConst    = "byte"
+	FieldTypeDateConst    = "date"
+	FieldTypeDoubleConst  = "double"
+	FieldTypeFloatConst   = "float"
 	FieldTypeIntegerConst = "integer"
-	FieldTypeLongConst = "long"
-	FieldTypeNestedConst = "nested"
-	FieldTypeShortConst = "short"
-	FieldTypeStringConst = "string"
+	FieldTypeLongConst    = "long"
+	FieldTypeNestedConst  = "nested"
+	FieldTypeShortConst   = "short"
+	FieldTypeStringConst  = "string"
 )
-
 
 // UnmarshalField unmarshals an instance of Field from the specified map of raw messages.
 func UnmarshalField(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7696,7 +7670,6 @@ type FontSetting struct {
 	// The name of the font.
 	Name *string `json:"name,omitempty"`
 }
-
 
 // UnmarshalFontSetting unmarshals an instance of FontSetting from the specified map of raw messages.
 func UnmarshalFontSetting(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7755,9 +7728,8 @@ type Gateway struct {
 // `idle` means this gateway is not currently in use.
 const (
 	GatewayStatusConnectedConst = "connected"
-	GatewayStatusIdleConst = "idle"
+	GatewayStatusIdleConst      = "idle"
 )
-
 
 // UnmarshalGateway unmarshals an instance of Gateway from the specified map of raw messages.
 func UnmarshalGateway(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7795,7 +7767,6 @@ type GatewayDelete struct {
 	Status *string `json:"status,omitempty"`
 }
 
-
 // UnmarshalGatewayDelete unmarshals an instance of GatewayDelete from the specified map of raw messages.
 func UnmarshalGatewayDelete(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(GatewayDelete)
@@ -7816,7 +7787,6 @@ type GatewayList struct {
 	// Array of configured gateway connections.
 	Gateways []Gateway `json:"gateways,omitempty"`
 }
-
 
 // UnmarshalGatewayList unmarshals an instance of GatewayList from the specified map of raw messages.
 func UnmarshalGatewayList(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7855,8 +7825,8 @@ type GetAutocompletionOptions struct {
 func (*DiscoveryV1) NewGetAutocompletionOptions(environmentID string, collectionID string, prefix string) *GetAutocompletionOptions {
 	return &GetAutocompletionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		Prefix: core.StringPtr(prefix),
+		CollectionID:  core.StringPtr(collectionID),
+		Prefix:        core.StringPtr(prefix),
 	}
 }
 
@@ -7912,7 +7882,7 @@ type GetCollectionOptions struct {
 func (*DiscoveryV1) NewGetCollectionOptions(environmentID string, collectionID string) *GetCollectionOptions {
 	return &GetCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -7949,7 +7919,7 @@ type GetConfigurationOptions struct {
 // NewGetConfigurationOptions : Instantiate GetConfigurationOptions
 func (*DiscoveryV1) NewGetConfigurationOptions(environmentID string, configurationID string) *GetConfigurationOptions {
 	return &GetConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
 	}
 }
@@ -7988,7 +7958,7 @@ type GetCredentialsOptions struct {
 func (*DiscoveryV1) NewGetCredentialsOptions(environmentID string, credentialID string) *GetCredentialsOptions {
 	return &GetCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -8029,8 +7999,8 @@ type GetDocumentStatusOptions struct {
 func (*DiscoveryV1) NewGetDocumentStatusOptions(environmentID string, collectionID string, documentID string) *GetDocumentStatusOptions {
 	return &GetDocumentStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -8102,7 +8072,7 @@ type GetGatewayOptions struct {
 func (*DiscoveryV1) NewGetGatewayOptions(environmentID string, gatewayID string) *GetGatewayOptions {
 	return &GetGatewayOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		GatewayID: core.StringPtr(gatewayID),
+		GatewayID:     core.StringPtr(gatewayID),
 	}
 }
 
@@ -8367,7 +8337,7 @@ type GetStopwordListStatusOptions struct {
 func (*DiscoveryV1) NewGetStopwordListStatusOptions(environmentID string, collectionID string) *GetStopwordListStatusOptions {
 	return &GetStopwordListStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -8405,7 +8375,7 @@ type GetTokenizationDictionaryStatusOptions struct {
 func (*DiscoveryV1) NewGetTokenizationDictionaryStatusOptions(environmentID string, collectionID string) *GetTokenizationDictionaryStatusOptions {
 	return &GetTokenizationDictionaryStatusOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -8446,8 +8416,8 @@ type GetTrainingDataOptions struct {
 func (*DiscoveryV1) NewGetTrainingDataOptions(environmentID string, collectionID string, queryID string) *GetTrainingDataOptions {
 	return &GetTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -8497,9 +8467,9 @@ type GetTrainingExampleOptions struct {
 func (*DiscoveryV1) NewGetTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *GetTrainingExampleOptions {
 	return &GetTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
@@ -8554,7 +8524,6 @@ type HTMLSettings struct {
 	ExcludeTagAttributes []string `json:"exclude_tag_attributes,omitempty"`
 }
 
-
 // UnmarshalHTMLSettings unmarshals an instance of HTMLSettings from the specified map of raw messages.
 func UnmarshalHTMLSettings(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(HTMLSettings)
@@ -8598,7 +8567,6 @@ type IndexCapacity struct {
 	Collections *CollectionUsage `json:"collections,omitempty"`
 }
 
-
 // UnmarshalIndexCapacity unmarshals an instance of IndexCapacity from the specified map of raw messages.
 func UnmarshalIndexCapacity(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(IndexCapacity)
@@ -8634,7 +8602,7 @@ type ListCollectionFieldsOptions struct {
 func (*DiscoveryV1) NewListCollectionFieldsOptions(environmentID string, collectionID string) *ListCollectionFieldsOptions {
 	return &ListCollectionFieldsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -8672,7 +8640,6 @@ type ListCollectionFieldsResponse struct {
 	// An array containing information about each field in the collections.
 	Fields []Field `json:"fields,omitempty"`
 }
-
 
 // UnmarshalListCollectionFieldsResponse unmarshals an instance of ListCollectionFieldsResponse from the specified map of raw messages.
 func UnmarshalListCollectionFieldsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -8728,7 +8695,6 @@ type ListCollectionsResponse struct {
 	Collections []Collection `json:"collections,omitempty"`
 }
 
-
 // UnmarshalListCollectionsResponse unmarshals an instance of ListCollectionsResponse from the specified map of raw messages.
 func UnmarshalListCollectionsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ListCollectionsResponse)
@@ -8782,7 +8748,6 @@ type ListConfigurationsResponse struct {
 	// An array of configurations that are available for the service instance.
 	Configurations []Configuration `json:"configurations,omitempty"`
 }
-
 
 // UnmarshalListConfigurationsResponse unmarshals an instance of ListConfigurationsResponse from the specified map of raw messages.
 func UnmarshalListConfigurationsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -8855,7 +8820,6 @@ type ListEnvironmentsResponse struct {
 	Environments []Environment `json:"environments,omitempty"`
 }
 
-
 // UnmarshalListEnvironmentsResponse unmarshals an instance of ListEnvironmentsResponse from the specified map of raw messages.
 func UnmarshalListEnvironmentsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ListEnvironmentsResponse)
@@ -8883,7 +8847,7 @@ type ListExpansionsOptions struct {
 func (*DiscoveryV1) NewListExpansionsOptions(environmentID string, collectionID string) *ListExpansionsOptions {
 	return &ListExpansionsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -8987,7 +8951,7 @@ type ListTrainingDataOptions struct {
 func (*DiscoveryV1) NewListTrainingDataOptions(environmentID string, collectionID string) *ListTrainingDataOptions {
 	return &ListTrainingDataOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -9028,8 +8992,8 @@ type ListTrainingExamplesOptions struct {
 func (*DiscoveryV1) NewListTrainingExamplesOptions(environmentID string, collectionID string, queryID string) *ListTrainingExamplesOptions {
 	return &ListTrainingExamplesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
 	}
 }
 
@@ -9065,7 +9029,6 @@ type LogQueryResponse struct {
 	// Array of log query response results.
 	Results []LogQueryResponseResult `json:"results,omitempty"`
 }
-
 
 // UnmarshalLogQueryResponse unmarshals an instance of LogQueryResponse from the specified map of raw messages.
 func UnmarshalLogQueryResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9181,7 +9144,6 @@ const (
 	LogQueryResponseResultResultTypeDocumentConst = "document"
 )
 
-
 // UnmarshalLogQueryResponseResult unmarshals an instance of LogQueryResponseResult from the specified map of raw messages.
 func UnmarshalLogQueryResponseResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(LogQueryResponseResult)
@@ -9255,7 +9217,6 @@ type LogQueryResponseResultDocuments struct {
 	Count *int64 `json:"count,omitempty"`
 }
 
-
 // UnmarshalLogQueryResponseResultDocuments unmarshals an instance of LogQueryResponseResultDocuments from the specified map of raw messages.
 func UnmarshalLogQueryResponseResultDocuments(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(LogQueryResponseResultDocuments)
@@ -9288,7 +9249,6 @@ type LogQueryResponseResultDocumentsResult struct {
 	// The **collection_id** of the document represented by this result.
 	CollectionID *string `json:"collection_id,omitempty"`
 }
-
 
 // UnmarshalLogQueryResponseResultDocumentsResult unmarshals an instance of LogQueryResponseResultDocumentsResult from the specified map of raw messages.
 func UnmarshalLogQueryResponseResultDocumentsResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9329,7 +9289,6 @@ type MetricAggregation struct {
 	Results []MetricAggregationResult `json:"results,omitempty"`
 }
 
-
 // UnmarshalMetricAggregation unmarshals an instance of MetricAggregation from the specified map of raw messages.
 func UnmarshalMetricAggregation(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MetricAggregation)
@@ -9365,7 +9324,6 @@ type MetricAggregationResult struct {
 	EventRate *float64 `json:"event_rate,omitempty"`
 }
 
-
 // UnmarshalMetricAggregationResult unmarshals an instance of MetricAggregationResult from the specified map of raw messages.
 func UnmarshalMetricAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MetricAggregationResult)
@@ -9395,7 +9353,6 @@ type MetricResponse struct {
 	Aggregations []MetricAggregation `json:"aggregations,omitempty"`
 }
 
-
 // UnmarshalMetricResponse unmarshals an instance of MetricResponse from the specified map of raw messages.
 func UnmarshalMetricResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MetricResponse)
@@ -9415,7 +9372,6 @@ type MetricTokenAggregation struct {
 	// Array of results for the metric token aggregation.
 	Results []MetricTokenAggregationResult `json:"results,omitempty"`
 }
-
 
 // UnmarshalMetricTokenAggregation unmarshals an instance of MetricTokenAggregation from the specified map of raw messages.
 func UnmarshalMetricTokenAggregation(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9445,7 +9401,6 @@ type MetricTokenAggregationResult struct {
 	EventRate *float64 `json:"event_rate,omitempty"`
 }
 
-
 // UnmarshalMetricTokenAggregationResult unmarshals an instance of MetricTokenAggregationResult from the specified map of raw messages.
 func UnmarshalMetricTokenAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MetricTokenAggregationResult)
@@ -9471,7 +9426,6 @@ type MetricTokenResponse struct {
 	Aggregations []MetricTokenAggregation `json:"aggregations,omitempty"`
 }
 
-
 // UnmarshalMetricTokenResponse unmarshals an instance of MetricTokenResponse from the specified map of raw messages.
 func UnmarshalMetricTokenResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MetricTokenResponse)
@@ -9488,7 +9442,6 @@ type NluEnrichmentConcepts struct {
 	// The maximum number of concepts enrichments to extact from each instance of the specified field.
 	Limit *int64 `json:"limit,omitempty"`
 }
-
 
 // UnmarshalNluEnrichmentConcepts unmarshals an instance of NluEnrichmentConcepts from the specified map of raw messages.
 func UnmarshalNluEnrichmentConcepts(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9509,7 +9462,6 @@ type NluEnrichmentEmotion struct {
 	// A comma-separated list of target strings that will have any associated emotions detected.
 	Targets []string `json:"targets,omitempty"`
 }
-
 
 // UnmarshalNluEnrichmentEmotion unmarshals an instance of NluEnrichmentEmotion from the specified map of raw messages.
 func UnmarshalNluEnrichmentEmotion(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9551,7 +9503,6 @@ type NluEnrichmentEntities struct {
 	// the default public model `alchemy`.
 	Model *string `json:"model,omitempty"`
 }
-
 
 // UnmarshalNluEnrichmentEntities unmarshals an instance of NluEnrichmentEntities from the specified map of raw messages.
 func UnmarshalNluEnrichmentEntities(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9615,7 +9566,6 @@ type NluEnrichmentFeatures struct {
 	Concepts *NluEnrichmentConcepts `json:"concepts,omitempty"`
 }
 
-
 // UnmarshalNluEnrichmentFeatures unmarshals an instance of NluEnrichmentFeatures from the specified map of raw messages.
 func UnmarshalNluEnrichmentFeatures(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(NluEnrichmentFeatures)
@@ -9667,7 +9617,6 @@ type NluEnrichmentKeywords struct {
 	Limit *int64 `json:"limit,omitempty"`
 }
 
-
 // UnmarshalNluEnrichmentKeywords unmarshals an instance of NluEnrichmentKeywords from the specified map of raw messages.
 func UnmarshalNluEnrichmentKeywords(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(NluEnrichmentKeywords)
@@ -9694,7 +9643,6 @@ type NluEnrichmentRelations struct {
 	Model *string `json:"model,omitempty"`
 }
 
-
 // UnmarshalNluEnrichmentRelations unmarshals an instance of NluEnrichmentRelations from the specified map of raw messages.
 func UnmarshalNluEnrichmentRelations(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(NluEnrichmentRelations)
@@ -9717,7 +9665,6 @@ type NluEnrichmentSemanticRoles struct {
 	// The maximum number of semantic roles enrichments to extact from each instance of the specified field.
 	Limit *int64 `json:"limit,omitempty"`
 }
-
 
 // UnmarshalNluEnrichmentSemanticRoles unmarshals an instance of NluEnrichmentSemanticRoles from the specified map of raw messages.
 func UnmarshalNluEnrichmentSemanticRoles(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9746,7 +9693,6 @@ type NluEnrichmentSentiment struct {
 	// A comma-separated list of target strings that will have any associated sentiment analyzed.
 	Targets []string `json:"targets,omitempty"`
 }
-
 
 // UnmarshalNluEnrichmentSentiment unmarshals an instance of NluEnrichmentSentiment from the specified map of raw messages.
 func UnmarshalNluEnrichmentSentiment(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9821,13 +9767,12 @@ type NormalizationOperation struct {
 // Typically, **remove_nulls** is invoked as the last normalization operation (if it is invoked at all, it can be
 // time-expensive).
 const (
-	NormalizationOperationOperationCopyConst = "copy"
-	NormalizationOperationOperationMergeConst = "merge"
-	NormalizationOperationOperationMoveConst = "move"
-	NormalizationOperationOperationRemoveConst = "remove"
+	NormalizationOperationOperationCopyConst        = "copy"
+	NormalizationOperationOperationMergeConst       = "merge"
+	NormalizationOperationOperationMoveConst        = "move"
+	NormalizationOperationOperationRemoveConst      = "remove"
 	NormalizationOperationOperationRemoveNullsConst = "remove_nulls"
 )
-
 
 // UnmarshalNormalizationOperation unmarshals an instance of NormalizationOperation from the specified map of raw messages.
 func UnmarshalNormalizationOperation(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9884,10 +9829,9 @@ type Notice struct {
 // Constants associated with the Notice.Severity property.
 // Severity level of the notice.
 const (
-	NoticeSeverityErrorConst = "error"
+	NoticeSeverityErrorConst   = "error"
 	NoticeSeverityWarningConst = "warning"
 )
-
 
 // UnmarshalNotice unmarshals an instance of Notice from the specified map of raw messages.
 func UnmarshalNotice(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9930,7 +9874,6 @@ type PDFHeadingDetection struct {
 	Fonts []FontSetting `json:"fonts,omitempty"`
 }
 
-
 // UnmarshalPDFHeadingDetection unmarshals an instance of PDFHeadingDetection from the specified map of raw messages.
 func UnmarshalPDFHeadingDetection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(PDFHeadingDetection)
@@ -9947,7 +9890,6 @@ type PDFSettings struct {
 	// Object containing heading detection conversion settings for PDF documents.
 	Heading *PDFHeadingDetection `json:"heading,omitempty"`
 }
-
 
 // UnmarshalPDFSettings unmarshals an instance of PDFSettings from the specified map of raw messages.
 func UnmarshalPDFSettings(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10179,7 +10121,7 @@ type QueryNoticesOptions struct {
 func (*DiscoveryV1) NewQueryNoticesOptions(environmentID string, collectionID string) *QueryNoticesOptions {
 	return &QueryNoticesOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -10321,7 +10263,6 @@ type QueryNoticesResponse struct {
 	DuplicatesRemoved *int64 `json:"duplicates_removed,omitempty"`
 }
 
-
 // UnmarshalQueryNoticesResponse unmarshals an instance of QueryNoticesResponse from the specified map of raw messages.
 func UnmarshalQueryNoticesResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryNoticesResponse)
@@ -10388,10 +10329,9 @@ type QueryNoticesResult struct {
 const (
 	QueryNoticesResultFileTypeHTMLConst = "html"
 	QueryNoticesResultFileTypeJSONConst = "json"
-	QueryNoticesResultFileTypePDFConst = "pdf"
+	QueryNoticesResultFileTypePDFConst  = "pdf"
 	QueryNoticesResultFileTypeWordConst = "word"
 )
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of QueryNoticesResult
 func (o *QueryNoticesResult) SetProperty(key string, value interface{}) {
@@ -10616,7 +10556,7 @@ type QueryOptions struct {
 func (*DiscoveryV1) NewQueryOptions(environmentID string, collectionID string) *QueryOptions {
 	return &QueryOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
+		CollectionID:  core.StringPtr(collectionID),
 	}
 }
 
@@ -10785,7 +10725,6 @@ type QueryPassages struct {
 	Field *string `json:"field,omitempty"`
 }
 
-
 // UnmarshalQueryPassages unmarshals an instance of QueryPassages from the specified map of raw messages.
 func UnmarshalQueryPassages(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryPassages)
@@ -10847,7 +10786,6 @@ type QueryResponse struct {
 	SuggestedQuery *string `json:"suggested_query,omitempty"`
 }
 
-
 // UnmarshalQueryResponse unmarshals an instance of QueryResponse from the specified map of raw messages.
 func UnmarshalQueryResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryResponse)
@@ -10904,7 +10842,6 @@ type QueryResult struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string]interface{}
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of QueryResult
 func (o *QueryResult) SetProperty(key string, value interface{}) {
@@ -10997,7 +10934,6 @@ type QueryResultMetadata struct {
 	Confidence *float64 `json:"confidence,omitempty"`
 }
 
-
 // UnmarshalQueryResultMetadata unmarshals an instance of QueryResultMetadata from the specified map of raw messages.
 func UnmarshalQueryResultMetadata(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryResultMetadata)
@@ -11035,10 +10971,9 @@ type RetrievalDetails struct {
 // the **document_retrieval_strategy** will be listed as `untrained`.
 const (
 	RetrievalDetailsDocumentRetrievalStrategyContinuousRelevancyTrainingConst = "continuous_relevancy_training"
-	RetrievalDetailsDocumentRetrievalStrategyRelevancyTrainingConst = "relevancy_training"
-	RetrievalDetailsDocumentRetrievalStrategyUntrainedConst = "untrained"
+	RetrievalDetailsDocumentRetrievalStrategyRelevancyTrainingConst           = "relevancy_training"
+	RetrievalDetailsDocumentRetrievalStrategyUntrainedConst                   = "untrained"
 )
-
 
 // UnmarshalRetrievalDetails unmarshals an instance of RetrievalDetails from the specified map of raw messages.
 func UnmarshalRetrievalDetails(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11077,7 +11012,6 @@ type SduStatus struct {
 	CustomFields *SduStatusCustomFields `json:"custom_fields,omitempty"`
 }
 
-
 // UnmarshalSduStatus unmarshals an instance of SduStatus from the specified map of raw messages.
 func UnmarshalSduStatus(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SduStatus)
@@ -11114,7 +11048,6 @@ type SduStatusCustomFields struct {
 	MaximumAllowed *int64 `json:"maximum_allowed,omitempty"`
 }
 
-
 // UnmarshalSduStatusCustomFields unmarshals an instance of SduStatusCustomFields from the specified map of raw messages.
 func UnmarshalSduStatusCustomFields(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SduStatusCustomFields)
@@ -11149,12 +11082,11 @@ type SearchStatus struct {
 // The current status of Continuous Relevancy Training for this environment.
 const (
 	SearchStatusStatusInsufficentDataConst = "INSUFFICENT_DATA"
-	SearchStatusStatusNoDataConst = "NO_DATA"
-	SearchStatusStatusNotApplicableConst = "NOT_APPLICABLE"
-	SearchStatusStatusTrainedConst = "TRAINED"
-	SearchStatusStatusTrainingConst = "TRAINING"
+	SearchStatusStatusNoDataConst          = "NO_DATA"
+	SearchStatusStatusNotApplicableConst   = "NOT_APPLICABLE"
+	SearchStatusStatusTrainedConst         = "TRAINED"
+	SearchStatusStatusTrainingConst        = "TRAINING"
 )
-
 
 // UnmarshalSearchStatus unmarshals an instance of SearchStatus from the specified map of raw messages.
 func UnmarshalSearchStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11198,7 +11130,6 @@ type SegmentSettings struct {
 	// **smart_document_understanding** object.
 	AnnotatedFields []string `json:"annotated_fields,omitempty"`
 }
-
 
 // UnmarshalSegmentSettings unmarshals an instance of SegmentSettings from the specified map of raw messages.
 func UnmarshalSegmentSettings(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11249,13 +11180,12 @@ type Source struct {
 // -  `web_crawl` indicates the configuration is to perform a web page crawl.
 // -  `cloud_object_storage` indicates the configuration is to connect to a cloud object store.
 const (
-	SourceTypeBoxConst = "box"
+	SourceTypeBoxConst                = "box"
 	SourceTypeCloudObjectStorageConst = "cloud_object_storage"
-	SourceTypeSalesforceConst = "salesforce"
-	SourceTypeSharepointConst = "sharepoint"
-	SourceTypeWebCrawlConst = "web_crawl"
+	SourceTypeSalesforceConst         = "salesforce"
+	SourceTypeSharepointConst         = "sharepoint"
+	SourceTypeWebCrawlConst           = "web_crawl"
 )
-
 
 // UnmarshalSource unmarshals an instance of Source from the specified map of raw messages.
 func UnmarshalSource(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11307,7 +11237,6 @@ type SourceOptions struct {
 	CrawlAllBuckets *bool `json:"crawl_all_buckets,omitempty"`
 }
 
-
 // UnmarshalSourceOptions unmarshals an instance of SourceOptions from the specified map of raw messages.
 func UnmarshalSourceOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SourceOptions)
@@ -11349,7 +11278,6 @@ type SourceOptionsBuckets struct {
 	Limit *int64 `json:"limit,omitempty"`
 }
 
-
 // NewSourceOptionsBuckets : Instantiate SourceOptionsBuckets (Generic Model Constructor)
 func (*DiscoveryV1) NewSourceOptionsBuckets(name string) (model *SourceOptionsBuckets, err error) {
 	model = &SourceOptionsBuckets{
@@ -11386,12 +11314,11 @@ type SourceOptionsFolder struct {
 	Limit *int64 `json:"limit,omitempty"`
 }
 
-
 // NewSourceOptionsFolder : Instantiate SourceOptionsFolder (Generic Model Constructor)
 func (*DiscoveryV1) NewSourceOptionsFolder(ownerUserID string, folderID string) (model *SourceOptionsFolder, err error) {
 	model = &SourceOptionsFolder{
 		OwnerUserID: core.StringPtr(ownerUserID),
-		FolderID: core.StringPtr(folderID),
+		FolderID:    core.StringPtr(folderID),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -11425,7 +11352,6 @@ type SourceOptionsObject struct {
 	// are crawled.
 	Limit *int64 `json:"limit,omitempty"`
 }
-
 
 // NewSourceOptionsObject : Instantiate SourceOptionsObject (Generic Model Constructor)
 func (*DiscoveryV1) NewSourceOptionsObject(name string) (model *SourceOptionsObject, err error) {
@@ -11461,7 +11387,6 @@ type SourceOptionsSiteColl struct {
 	// are crawled.
 	Limit *int64 `json:"limit,omitempty"`
 }
-
 
 // NewSourceOptionsSiteColl : Instantiate SourceOptionsSiteColl (Generic Model Constructor)
 func (*DiscoveryV1) NewSourceOptionsSiteColl(siteCollectionPath string) (model *SourceOptionsSiteColl, err error) {
@@ -11527,10 +11452,9 @@ type SourceOptionsWebCrawl struct {
 // means that up to ten URLs are fetched concurrently with a short delay between fetch calls.
 const (
 	SourceOptionsWebCrawlCrawlSpeedAggressiveConst = "aggressive"
-	SourceOptionsWebCrawlCrawlSpeedGentleConst = "gentle"
-	SourceOptionsWebCrawlCrawlSpeedNormalConst = "normal"
+	SourceOptionsWebCrawlCrawlSpeedGentleConst     = "gentle"
+	SourceOptionsWebCrawlCrawlSpeedNormalConst     = "normal"
 )
-
 
 // NewSourceOptionsWebCrawl : Instantiate SourceOptionsWebCrawl (Generic Model Constructor)
 func (*DiscoveryV1) NewSourceOptionsWebCrawl(url string) (model *SourceOptionsWebCrawl, err error) {
@@ -11609,13 +11533,12 @@ type SourceSchedule struct {
 // -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
 // -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
 const (
-	SourceScheduleFrequencyDailyConst = "daily"
+	SourceScheduleFrequencyDailyConst       = "daily"
 	SourceScheduleFrequencyFiveMinutesConst = "five_minutes"
-	SourceScheduleFrequencyHourlyConst = "hourly"
-	SourceScheduleFrequencyMonthlyConst = "monthly"
-	SourceScheduleFrequencyWeeklyConst = "weekly"
+	SourceScheduleFrequencyHourlyConst      = "hourly"
+	SourceScheduleFrequencyMonthlyConst     = "monthly"
+	SourceScheduleFrequencyWeeklyConst      = "weekly"
 )
-
 
 // UnmarshalSourceSchedule unmarshals an instance of SourceSchedule from the specified map of raw messages.
 func UnmarshalSourceSchedule(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11660,13 +11583,12 @@ type SourceStatus struct {
 // -  `queued` indicates that the crawl has been paused by the system and will automatically restart when possible.
 // -  `unknown` indicates that an unidentified error has occured in the service.
 const (
-	SourceStatusStatusCompleteConst = "complete"
+	SourceStatusStatusCompleteConst      = "complete"
 	SourceStatusStatusNotConfiguredConst = "not_configured"
-	SourceStatusStatusQueuedConst = "queued"
-	SourceStatusStatusRunningConst = "running"
-	SourceStatusStatusUnknownConst = "unknown"
+	SourceStatusStatusQueuedConst        = "queued"
+	SourceStatusStatusRunningConst       = "running"
+	SourceStatusStatusUnknownConst       = "unknown"
 )
-
 
 // UnmarshalSourceStatus unmarshals an instance of SourceStatus from the specified map of raw messages.
 func UnmarshalSourceStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11698,12 +11620,11 @@ type TokenDictRule struct {
 	PartOfSpeech *string `json:"part_of_speech" validate:"required"`
 }
 
-
 // NewTokenDictRule : Instantiate TokenDictRule (Generic Model Constructor)
 func (*DiscoveryV1) NewTokenDictRule(text string, tokens []string, partOfSpeech string) (model *TokenDictRule, err error) {
 	model = &TokenDictRule{
-		Text: core.StringPtr(text),
-		Tokens: tokens,
+		Text:         core.StringPtr(text),
+		Tokens:       tokens,
 		PartOfSpeech: core.StringPtr(partOfSpeech),
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -11745,11 +11666,10 @@ type TokenDictStatusResponse struct {
 // Constants associated with the TokenDictStatusResponse.Status property.
 // Current wordlist status for the specified collection.
 const (
-	TokenDictStatusResponseStatusActiveConst = "active"
+	TokenDictStatusResponseStatusActiveConst   = "active"
 	TokenDictStatusResponseStatusNotFoundConst = "not found"
-	TokenDictStatusResponseStatusPendingConst = "pending"
+	TokenDictStatusResponseStatusPendingConst  = "pending"
 )
-
 
 // UnmarshalTokenDictStatusResponse unmarshals an instance of TokenDictStatusResponse from the specified map of raw messages.
 func UnmarshalTokenDictStatusResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11774,7 +11694,6 @@ type TopHitsResults struct {
 	// Top results returned by the aggregation.
 	Hits []QueryResult `json:"hits,omitempty"`
 }
-
 
 // UnmarshalTopHitsResults unmarshals an instance of TopHitsResults from the specified map of raw messages.
 func UnmarshalTopHitsResults(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11802,7 +11721,6 @@ type TrainingDataSet struct {
 	// Array of training queries.
 	Queries []TrainingQuery `json:"queries,omitempty"`
 }
-
 
 // UnmarshalTrainingDataSet unmarshals an instance of TrainingDataSet from the specified map of raw messages.
 func UnmarshalTrainingDataSet(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11835,7 +11753,6 @@ type TrainingExample struct {
 	Relevance *int64 `json:"relevance,omitempty"`
 }
 
-
 // UnmarshalTrainingExample unmarshals an instance of TrainingExample from the specified map of raw messages.
 func UnmarshalTrainingExample(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TrainingExample)
@@ -11860,7 +11777,6 @@ type TrainingExampleList struct {
 	// Array of training examples.
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
-
 
 // UnmarshalTrainingExampleList unmarshals an instance of TrainingExampleList from the specified map of raw messages.
 func UnmarshalTrainingExampleList(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11887,7 +11803,6 @@ type TrainingQuery struct {
 	// Array of training examples.
 	Examples []TrainingExample `json:"examples,omitempty"`
 }
-
 
 // UnmarshalTrainingQuery unmarshals an instance of TrainingQuery from the specified map of raw messages.
 func UnmarshalTrainingQuery(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11941,7 +11856,6 @@ type TrainingStatus struct {
 	// The timestamp of when the data was uploaded.
 	DataUpdated *strfmt.DateTime `json:"data_updated,omitempty"`
 }
-
 
 // UnmarshalTrainingStatus unmarshals an instance of TrainingStatus from the specified map of raw messages.
 func UnmarshalTrainingStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -12011,8 +11925,8 @@ type UpdateCollectionOptions struct {
 func (*DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionID string, name string) *UpdateCollectionOptions {
 	return &UpdateCollectionOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		Name: core.StringPtr(name),
+		CollectionID:  core.StringPtr(collectionID),
+		Name:          core.StringPtr(name),
 	}
 }
 
@@ -12086,9 +12000,9 @@ type UpdateConfigurationOptions struct {
 // NewUpdateConfigurationOptions : Instantiate UpdateConfigurationOptions
 func (*DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configurationID string, name string) *UpdateConfigurationOptions {
 	return &UpdateConfigurationOptions{
-		EnvironmentID: core.StringPtr(environmentID),
+		EnvironmentID:   core.StringPtr(environmentID),
 		ConfigurationID: core.StringPtr(configurationID),
-		Name: core.StringPtr(name),
+		Name:            core.StringPtr(name),
 	}
 }
 
@@ -12184,11 +12098,11 @@ type UpdateCredentialsOptions struct {
 // -  `web_crawl` indicates the credentials are used to perform a web crawl.
 // =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
 const (
-	UpdateCredentialsOptionsSourceTypeBoxConst = "box"
+	UpdateCredentialsOptionsSourceTypeBoxConst                = "box"
 	UpdateCredentialsOptionsSourceTypeCloudObjectStorageConst = "cloud_object_storage"
-	UpdateCredentialsOptionsSourceTypeSalesforceConst = "salesforce"
-	UpdateCredentialsOptionsSourceTypeSharepointConst = "sharepoint"
-	UpdateCredentialsOptionsSourceTypeWebCrawlConst = "web_crawl"
+	UpdateCredentialsOptionsSourceTypeSalesforceConst         = "salesforce"
+	UpdateCredentialsOptionsSourceTypeSharepointConst         = "sharepoint"
+	UpdateCredentialsOptionsSourceTypeWebCrawlConst           = "web_crawl"
 )
 
 // Constants associated with the UpdateCredentialsOptions.Status property.
@@ -12197,14 +12111,14 @@ const (
 // expired) and must be corrected before they can be used with a collection.
 const (
 	UpdateCredentialsOptionsStatusConnectedConst = "connected"
-	UpdateCredentialsOptionsStatusInvalidConst = "invalid"
+	UpdateCredentialsOptionsStatusInvalidConst   = "invalid"
 )
 
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
 func (*DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credentialID string) *UpdateCredentialsOptions {
 	return &UpdateCredentialsOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CredentialID: core.StringPtr(credentialID),
+		CredentialID:  core.StringPtr(credentialID),
 	}
 }
 
@@ -12280,8 +12194,8 @@ type UpdateDocumentOptions struct {
 func (*DiscoveryV1) NewUpdateDocumentOptions(environmentID string, collectionID string, documentID string) *UpdateDocumentOptions {
 	return &UpdateDocumentOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		CollectionID:  core.StringPtr(collectionID),
+		DocumentID:    core.StringPtr(documentID),
 	}
 }
 
@@ -12356,13 +12270,13 @@ type UpdateEnvironmentOptions struct {
 // Size that the environment should be increased to. Environment size cannot be modified when using a Lite plan.
 // Environment size can only increased and not decreased.
 const (
-	UpdateEnvironmentOptionsSizeLConst = "L"
-	UpdateEnvironmentOptionsSizeMConst = "M"
-	UpdateEnvironmentOptionsSizeMlConst = "ML"
-	UpdateEnvironmentOptionsSizeMsConst = "MS"
-	UpdateEnvironmentOptionsSizeSConst = "S"
-	UpdateEnvironmentOptionsSizeXlConst = "XL"
-	UpdateEnvironmentOptionsSizeXxlConst = "XXL"
+	UpdateEnvironmentOptionsSizeLConst    = "L"
+	UpdateEnvironmentOptionsSizeMConst    = "M"
+	UpdateEnvironmentOptionsSizeMlConst   = "ML"
+	UpdateEnvironmentOptionsSizeMsConst   = "MS"
+	UpdateEnvironmentOptionsSizeSConst    = "S"
+	UpdateEnvironmentOptionsSizeXlConst   = "XL"
+	UpdateEnvironmentOptionsSizeXxlConst  = "XXL"
 	UpdateEnvironmentOptionsSizeXxxlConst = "XXXL"
 )
 
@@ -12431,9 +12345,9 @@ type UpdateTrainingExampleOptions struct {
 func (*DiscoveryV1) NewUpdateTrainingExampleOptions(environmentID string, collectionID string, queryID string, exampleID string) *UpdateTrainingExampleOptions {
 	return &UpdateTrainingExampleOptions{
 		EnvironmentID: core.StringPtr(environmentID),
-		CollectionID: core.StringPtr(collectionID),
-		QueryID: core.StringPtr(queryID),
-		ExampleID: core.StringPtr(exampleID),
+		CollectionID:  core.StringPtr(collectionID),
+		QueryID:       core.StringPtr(queryID),
+		ExampleID:     core.StringPtr(exampleID),
 	}
 }
 
@@ -12488,7 +12402,6 @@ type WordHeadingDetection struct {
 	Styles []WordStyle `json:"styles,omitempty"`
 }
 
-
 // UnmarshalWordHeadingDetection unmarshals an instance of WordHeadingDetection from the specified map of raw messages.
 func UnmarshalWordHeadingDetection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WordHeadingDetection)
@@ -12510,7 +12423,6 @@ type WordSettings struct {
 	Heading *WordHeadingDetection `json:"heading,omitempty"`
 }
 
-
 // UnmarshalWordSettings unmarshals an instance of WordSettings from the specified map of raw messages.
 func UnmarshalWordSettings(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WordSettings)
@@ -12530,7 +12442,6 @@ type WordStyle struct {
 	// Array of word style names to convert.
 	Names []string `json:"names,omitempty"`
 }
-
 
 // UnmarshalWordStyle unmarshals an instance of WordStyle from the specified map of raw messages.
 func UnmarshalWordStyle(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -12552,7 +12463,6 @@ type XPathPatterns struct {
 	// An array to XPaths.
 	Xpaths []string `json:"xpaths,omitempty"`
 }
-
 
 // UnmarshalXPathPatterns unmarshals an instance of XPathPatterns from the specified map of raw messages.
 func UnmarshalXPathPatterns(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -12586,7 +12496,6 @@ type Calculation struct {
 	// Value of the aggregation.
 	Value *float64 `json:"value,omitempty"`
 }
-
 
 func (*Calculation) isaQueryAggregation() bool {
 	return true
@@ -12642,7 +12551,6 @@ type Filter struct {
 	Match *string `json:"match,omitempty"`
 }
 
-
 func (*Filter) isaQueryAggregation() bool {
 	return true
 }
@@ -12695,7 +12603,6 @@ type Histogram struct {
 	// Interval of the aggregation. (For 'histogram' type).
 	Interval *int64 `json:"interval,omitempty"`
 }
-
 
 func (*Histogram) isaQueryAggregation() bool {
 	return true
@@ -12751,7 +12658,6 @@ type Nested struct {
 	Path *string `json:"path,omitempty"`
 }
 
-
 func (*Nested) isaQueryAggregation() bool {
 	return true
 }
@@ -12804,7 +12710,6 @@ type Term struct {
 	// The number of terms identified.
 	Count *int64 `json:"count,omitempty"`
 }
-
 
 func (*Term) isaQueryAggregation() bool {
 	return true
@@ -12868,7 +12773,6 @@ type Timeslice struct {
 	Anomaly *bool `json:"anomaly,omitempty"`
 }
 
-
 func (*Timeslice) isaQueryAggregation() bool {
 	return true
 }
@@ -12928,7 +12832,6 @@ type TopHits struct {
 
 	Hits *TopHitsResults `json:"hits,omitempty"`
 }
-
 
 func (*TopHits) isaQueryAggregation() bool {
 	return true
