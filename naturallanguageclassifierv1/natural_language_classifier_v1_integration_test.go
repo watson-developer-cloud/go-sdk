@@ -140,7 +140,7 @@ func TestListClassifiers(t *testing.T) {
 			)
 			if err == nil {
 				t.Logf("   status=%s\n", *classifier.Status)
-				if *classifier.Status == naturallanguageclassifierv1.Classifier_Status_Available {
+				if *classifier.Status == naturallanguageclassifierv1.ClassifierStatusAvailableConst {
 					availableClassifierID = *classifier.ClassifierID
 					t.Logf("Found available classifier id: %s\n", availableClassifierID)
 					break
@@ -181,10 +181,10 @@ func TestClassifyCollection(t *testing.T) {
 		&naturallanguageclassifierv1.ClassifyCollectionOptions{
 			ClassifierID: &availableClassifierID,
 			Collection: []naturallanguageclassifierv1.ClassifyInput{
-				naturallanguageclassifierv1.ClassifyInput{
+				{
 					Text: core.StringPtr("How hot will it be today?"),
 				},
-				naturallanguageclassifierv1.ClassifyInput{
+				{
 					Text: core.StringPtr("Is it hot outside?"),
 				},
 			},

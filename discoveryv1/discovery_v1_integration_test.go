@@ -349,7 +349,7 @@ func TestTokenizationDictionary(t *testing.T) {
 		&discoveryv1.CreateCollectionOptions{
 			EnvironmentID: environmentID,
 			Name:          core.StringPtr("Test Tokenization Dictionary For Golang"),
-			Language:      core.StringPtr(discoveryv1.CreateCollectionOptions_Language_Ja),
+			Language:      core.StringPtr(discoveryv1.CreateCollectionOptionsLanguageJaConst),
 		},
 	)
 	assert.Nil(t, responseErr)

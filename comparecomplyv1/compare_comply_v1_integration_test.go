@@ -183,7 +183,7 @@ func TestFeedback(t *testing.T) {
 					},
 					Categories: []comparecomplyv1.Category{
 						{
-							Label: core.StringPtr(comparecomplyv1.Category_Label_Amendments),
+							Label: core.StringPtr(comparecomplyv1.CategoryLabelAmendmentsConst),
 						},
 					},
 				},

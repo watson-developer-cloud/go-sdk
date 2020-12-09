@@ -212,7 +212,7 @@ func TestAnalyze(t *testing.T) {
 	analyzeResult, _, responseErr := service.Analyze(
 		&visualrecognitionv4.AnalyzeOptions{
 			CollectionIds: []string{collectionID},
-			Features:      []string{visualrecognitionv4.AnalyzeOptions_Features_Objects},
+			Features:      []string{visualrecognitionv4.AnalyzeOptionsFeaturesObjectsConst},
 			ImagesFile: []visualrecognitionv4.FileWithMetadata{
 				{
 					Data:     giraffeFile,

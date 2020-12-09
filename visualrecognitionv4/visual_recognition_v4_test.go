@@ -20,17 +20,18 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/go-openapi/strfmt"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv4"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/go-openapi/strfmt"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv4"
 )
 
 var _ = Describe(`VisualRecognitionV4`, func() {
@@ -40,7 +41,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -50,7 +51,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -58,7 +59,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "https://visualrecognitionv4/api",
+				URL:     "https://visualrecognitionv4/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -79,7 +80,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -101,7 +102,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -137,7 +138,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -155,12 +156,12 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -203,7 +204,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -212,7 +213,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				analyzeOptionsModel := new(visualrecognitionv4.AnalyzeOptions)
 				analyzeOptionsModel.CollectionIds = []string{"testString"}
 				analyzeOptionsModel.Features = []string{"objects"}
-				analyzeOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }}
+				analyzeOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}}
 				analyzeOptionsModel.ImageURL = []string{"testString"}
 				analyzeOptionsModel.Threshold = core.Float32Ptr(float32(0.15))
 				analyzeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -264,7 +265,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -280,7 +281,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				analyzeOptionsModel := new(visualrecognitionv4.AnalyzeOptions)
 				analyzeOptionsModel.CollectionIds = []string{"testString"}
 				analyzeOptionsModel.Features = []string{"objects"}
-				analyzeOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }}
+				analyzeOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}}
 				analyzeOptionsModel.ImageURL = []string{"testString"}
 				analyzeOptionsModel.Threshold = core.Float32Ptr(float32(0.15))
 				analyzeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -320,7 +321,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -329,7 +330,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				analyzeOptionsModel := new(visualrecognitionv4.AnalyzeOptions)
 				analyzeOptionsModel.CollectionIds = []string{"testString"}
 				analyzeOptionsModel.Features = []string{"objects"}
-				analyzeOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }}
+				analyzeOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}}
 				analyzeOptionsModel.ImageURL = []string{"testString"}
 				analyzeOptionsModel.Threshold = core.Float32Ptr(float32(0.15))
 				analyzeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -359,7 +360,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -369,7 +370,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -377,7 +378,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "https://visualrecognitionv4/api",
+				URL:     "https://visualrecognitionv4/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -398,7 +399,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -420,7 +421,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -456,7 +457,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -474,12 +475,12 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -522,7 +523,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -609,7 +610,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -675,7 +676,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -734,7 +735,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -790,7 +791,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -841,7 +842,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -885,7 +886,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -942,7 +943,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -994,7 +995,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1046,7 +1047,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1134,7 +1135,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1201,7 +1202,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1268,7 +1269,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1299,7 +1300,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1361,7 +1362,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1415,7 +1416,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1452,7 +1453,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -1462,7 +1463,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -1470,7 +1471,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "https://visualrecognitionv4/api",
+				URL:     "https://visualrecognitionv4/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -1491,7 +1492,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -1513,7 +1514,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1549,7 +1550,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -1567,12 +1568,12 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -1615,7 +1616,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1623,7 +1624,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				// Construct an instance of the AddImagesOptions model
 				addImagesOptionsModel := new(visualrecognitionv4.AddImagesOptions)
 				addImagesOptionsModel.CollectionID = core.StringPtr("testString")
-				addImagesOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }}
+				addImagesOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}}
 				addImagesOptionsModel.ImageURL = []string{"testString"}
 				addImagesOptionsModel.TrainingData = core.StringPtr(`{"objects":[{"object":"2018-Fit","location":{"left":33,"top":8,"width":760,"height":419}}]}`)
 				addImagesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -1675,7 +1676,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1690,7 +1691,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				// Construct an instance of the AddImagesOptions model
 				addImagesOptionsModel := new(visualrecognitionv4.AddImagesOptions)
 				addImagesOptionsModel.CollectionID = core.StringPtr("testString")
-				addImagesOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }}
+				addImagesOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}}
 				addImagesOptionsModel.ImageURL = []string{"testString"}
 				addImagesOptionsModel.TrainingData = core.StringPtr(`{"objects":[{"object":"2018-Fit","location":{"left":33,"top":8,"width":760,"height":419}}]}`)
 				addImagesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -1728,9 +1729,9 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			})
 			It(`Invoke AddImages with error: Param validation error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-					URL:  testServer.URL,
+					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1747,7 +1748,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1755,7 +1756,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				// Construct an instance of the AddImagesOptions model
 				addImagesOptionsModel := new(visualrecognitionv4.AddImagesOptions)
 				addImagesOptionsModel.CollectionID = core.StringPtr("testString")
-				addImagesOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }}
+				addImagesOptionsModel.ImagesFile = []visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}}
 				addImagesOptionsModel.ImageURL = []string{"testString"}
 				addImagesOptionsModel.TrainingData = core.StringPtr(`{"objects":[{"object":"2018-Fit","location":{"left":33,"top":8,"width":760,"height":419}}]}`)
 				addImagesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -1802,7 +1803,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1859,7 +1860,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1911,7 +1912,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1963,7 +1964,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2021,7 +2022,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2074,7 +2075,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2127,7 +2128,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2159,7 +2160,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2220,7 +2221,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2274,7 +2275,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2311,7 +2312,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -2321,7 +2322,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -2329,7 +2330,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "https://visualrecognitionv4/api",
+				URL:     "https://visualrecognitionv4/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -2350,7 +2351,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -2372,7 +2373,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2408,7 +2409,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -2426,12 +2427,12 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -2474,7 +2475,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2531,7 +2532,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2583,7 +2584,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2635,7 +2636,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2710,7 +2711,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2764,7 +2765,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2818,7 +2819,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2876,7 +2877,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2929,7 +2930,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -2982,7 +2983,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3014,7 +3015,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3048,7 +3049,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -3058,7 +3059,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -3066,7 +3067,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "https://visualrecognitionv4/api",
+				URL:     "https://visualrecognitionv4/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -3087,7 +3088,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -3109,7 +3110,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3145,7 +3146,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -3163,12 +3164,12 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -3211,7 +3212,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3268,7 +3269,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3320,7 +3321,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3372,7 +3373,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3459,7 +3460,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3525,7 +3526,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3582,9 +3583,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -3597,7 +3596,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3642,9 +3641,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -3661,7 +3658,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3714,7 +3711,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3743,7 +3740,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -3753,7 +3750,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -3761,7 +3758,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "https://visualrecognitionv4/api",
+				URL:     "https://visualrecognitionv4/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -3782,7 +3779,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -3804,7 +3801,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3840,7 +3837,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv4/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv4/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -3858,12 +3855,12 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -3908,7 +3905,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3939,7 +3936,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -3973,7 +3970,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			visualRecognitionService, _ := visualrecognitionv4.NewVisualRecognitionV4(&visualrecognitionv4.VisualRecognitionV4Options{
 				URL:           "http://visualrecognitionv4modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			It(`Invoke NewAddImageTrainingDataOptions successfully`, func() {
 				// Construct an instance of the Location model
@@ -4025,13 +4022,13 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				collectionID := "testString"
 				addImagesOptionsModel := visualRecognitionService.NewAddImagesOptions(collectionID)
 				addImagesOptionsModel.SetCollectionID("testString")
-				addImagesOptionsModel.SetImagesFile([]visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }})
+				addImagesOptionsModel.SetImagesFile([]visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}})
 				addImagesOptionsModel.SetImageURL([]string{"testString"})
 				addImagesOptionsModel.SetTrainingData(`{"objects":[{"object":"2018-Fit","location":{"left":33,"top":8,"width":760,"height":419}}]}`)
 				addImagesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(addImagesOptionsModel).ToNot(BeNil())
 				Expect(addImagesOptionsModel.CollectionID).To(Equal(core.StringPtr("testString")))
-				Expect(addImagesOptionsModel.ImagesFile).To(Equal([]visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }}))
+				Expect(addImagesOptionsModel.ImagesFile).To(Equal([]visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}}))
 				Expect(addImagesOptionsModel.ImageURL).To(Equal([]string{"testString"}))
 				Expect(addImagesOptionsModel.TrainingData).To(Equal(core.StringPtr(`{"objects":[{"object":"2018-Fit","location":{"left":33,"top":8,"width":760,"height":419}}]}`)))
 				Expect(addImagesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
@@ -4053,14 +4050,14 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				analyzeOptionsModel := visualRecognitionService.NewAnalyzeOptions(collectionIds, features)
 				analyzeOptionsModel.SetCollectionIds([]string{"testString"})
 				analyzeOptionsModel.SetFeatures([]string{"objects"})
-				analyzeOptionsModel.SetImagesFile([]visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }})
+				analyzeOptionsModel.SetImagesFile([]visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}})
 				analyzeOptionsModel.SetImageURL([]string{"testString"})
 				analyzeOptionsModel.SetThreshold(float32(0.15))
 				analyzeOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(analyzeOptionsModel).ToNot(BeNil())
 				Expect(analyzeOptionsModel.CollectionIds).To(Equal([]string{"testString"}))
 				Expect(analyzeOptionsModel.Features).To(Equal([]string{"objects"}))
-				Expect(analyzeOptionsModel.ImagesFile).To(Equal([]visualrecognitionv4.FileWithMetadata{visualrecognitionv4.FileWithMetadata{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt"), }}))
+				Expect(analyzeOptionsModel.ImagesFile).To(Equal([]visualrecognitionv4.FileWithMetadata{{Data: CreateMockReader("This is a mock file."), Filename: core.StringPtr("mockfilename.txt")}}))
 				Expect(analyzeOptionsModel.ImageURL).To(Equal([]string{"testString"}))
 				Expect(analyzeOptionsModel.Threshold).To(Equal(core.Float32Ptr(float32(0.15))))
 				Expect(analyzeOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
