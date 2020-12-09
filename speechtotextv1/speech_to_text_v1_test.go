@@ -69,14 +69,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -105,8 +104,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -124,13 +122,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -141,7 +138,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -494,14 +491,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -530,8 +526,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -549,13 +544,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -566,7 +560,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -611,31 +605,23 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["base_model_version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for customization_weight query parameter
 
 					Expect(req.URL.Query()["inactivity_timeout"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for keywords_threshold query parameter
 
 					Expect(req.URL.Query()["max_alternatives"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for word_alternatives_threshold query parameter
-
 
 					// TODO: Add check for word_confidence query parameter
 
-
 					// TODO: Add check for timestamps query parameter
-
 
 					// TODO: Add check for profanity_filter query parameter
 
-
 					// TODO: Add check for smart_formatting query parameter
-
 
 					// TODO: Add check for speaker_labels query parameter
 
@@ -643,21 +629,15 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["grammar_name"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for redaction query parameter
-
 
 					// TODO: Add check for audio_metrics query parameter
 
-
 					// TODO: Add check for end_of_phrase_silence_time query parameter
-
 
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 
-
 					// TODO: Add check for speech_detector_sensitivity query parameter
-
 
 					// TODO: Add check for background_audio_suppression query parameter
 
@@ -760,31 +740,23 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["base_model_version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for customization_weight query parameter
 
 					Expect(req.URL.Query()["inactivity_timeout"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for keywords_threshold query parameter
 
 					Expect(req.URL.Query()["max_alternatives"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for word_alternatives_threshold query parameter
-
 
 					// TODO: Add check for word_confidence query parameter
 
-
 					// TODO: Add check for timestamps query parameter
-
 
 					// TODO: Add check for profanity_filter query parameter
 
-
 					// TODO: Add check for smart_formatting query parameter
-
 
 					// TODO: Add check for speaker_labels query parameter
 
@@ -792,21 +764,15 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["grammar_name"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for redaction query parameter
-
 
 					// TODO: Add check for audio_metrics query parameter
 
-
 					// TODO: Add check for end_of_phrase_silence_time query parameter
-
 
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 
-
 					// TODO: Add check for speech_detector_sensitivity query parameter
-
 
 					// TODO: Add check for background_audio_suppression query parameter
 
@@ -985,14 +951,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -1021,8 +986,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -1040,13 +1004,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -1057,7 +1020,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -1351,31 +1314,23 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["base_model_version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for customization_weight query parameter
 
 					Expect(req.URL.Query()["inactivity_timeout"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for keywords_threshold query parameter
 
 					Expect(req.URL.Query()["max_alternatives"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for word_alternatives_threshold query parameter
-
 
 					// TODO: Add check for word_confidence query parameter
 
-
 					// TODO: Add check for timestamps query parameter
-
 
 					// TODO: Add check for profanity_filter query parameter
 
-
 					// TODO: Add check for smart_formatting query parameter
-
 
 					// TODO: Add check for speaker_labels query parameter
 
@@ -1383,27 +1338,19 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["grammar_name"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for redaction query parameter
-
 
 					// TODO: Add check for processing_metrics query parameter
 
-
 					// TODO: Add check for processing_metrics_interval query parameter
-
 
 					// TODO: Add check for audio_metrics query parameter
 
-
 					// TODO: Add check for end_of_phrase_silence_time query parameter
-
 
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 
-
 					// TODO: Add check for speech_detector_sensitivity query parameter
-
 
 					// TODO: Add check for background_audio_suppression query parameter
 
@@ -1520,31 +1467,23 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["base_model_version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for customization_weight query parameter
 
 					Expect(req.URL.Query()["inactivity_timeout"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for keywords_threshold query parameter
 
 					Expect(req.URL.Query()["max_alternatives"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for word_alternatives_threshold query parameter
-
 
 					// TODO: Add check for word_confidence query parameter
 
-
 					// TODO: Add check for timestamps query parameter
-
 
 					// TODO: Add check for profanity_filter query parameter
 
-
 					// TODO: Add check for smart_formatting query parameter
-
 
 					// TODO: Add check for speaker_labels query parameter
 
@@ -1552,27 +1491,19 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["grammar_name"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for redaction query parameter
-
 
 					// TODO: Add check for processing_metrics query parameter
 
-
 					// TODO: Add check for processing_metrics_interval query parameter
-
 
 					// TODO: Add check for audio_metrics query parameter
 
-
 					// TODO: Add check for end_of_phrase_silence_time query parameter
-
 
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 
-
 					// TODO: Add check for speech_detector_sensitivity query parameter
-
 
 					// TODO: Add check for background_audio_suppression query parameter
 
@@ -2133,14 +2064,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -2169,8 +2099,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -2188,13 +2117,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -2205,7 +2133,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -2796,7 +2724,6 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["word_type_to_add"]).To(Equal([]string{"all"}))
 
-
 					// TODO: Add check for customization_weight query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -2851,7 +2778,6 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["word_type_to_add"]).To(Equal([]string{"all"}))
-
 
 					// TODO: Add check for customization_weight query parameter
 
@@ -3138,14 +3064,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -3174,8 +3099,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -3193,13 +3117,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -3210,7 +3133,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -3398,7 +3321,6 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(addCorpusPath))
 					Expect(req.Method).To(Equal("POST"))
-
 
 					// TODO: Add check for allow_overwrite query parameter
 
@@ -3739,14 +3661,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -3775,8 +3696,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -3794,13 +3714,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -3811,7 +3730,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -4475,14 +4394,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -4511,8 +4429,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -4530,13 +4447,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -4547,7 +4463,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -5096,14 +5012,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -5132,8 +5047,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -5151,13 +5065,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -5168,7 +5081,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -5993,7 +5906,6 @@ var _ = Describe(`SpeechToTextV1`, func() {
 
 					Expect(req.URL.Query()["custom_language_model_id"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for force query parameter
 
 					res.WriteHeader(200)
@@ -6098,14 +6010,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -6134,8 +6045,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -6153,13 +6063,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -6170,7 +6079,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -6723,14 +6632,13 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				Expect(speechToTextService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -6759,8 +6667,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-				})
+				speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 				err := speechToTextService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(speechToTextService).ToNot(BeNil())
@@ -6778,13 +6685,12 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_URL": "https://speechtotextv1/api",
+				"SPEECH_TO_TEXT_URL":       "https://speechtotextv1/api",
 				"SPEECH_TO_TEXT_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
-			})
+			speechToTextService, serviceErr := speechtotextv1.NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(speechToTextService).To(BeNil())
@@ -6795,7 +6701,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SPEECH_TO_TEXT_AUTH_TYPE":   "NOAuth",
+				"SPEECH_TO_TEXT_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)

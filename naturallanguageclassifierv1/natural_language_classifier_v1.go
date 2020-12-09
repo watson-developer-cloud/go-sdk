@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package naturallanguageclassifierv1 : Operations and models for the NaturalLanguageClassifierV1 service
 package naturallanguageclassifierv1
@@ -529,7 +528,6 @@ type Classification struct {
 	Classes []ClassifiedClass `json:"classes,omitempty"`
 }
 
-
 // UnmarshalClassification unmarshals an instance of Classification from the specified map of raw messages.
 func UnmarshalClassification(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Classification)
@@ -569,7 +567,6 @@ type ClassificationCollection struct {
 	Collection []CollectionItem `json:"collection,omitempty"`
 }
 
-
 // UnmarshalClassificationCollection unmarshals an instance of ClassificationCollection from the specified map of raw messages.
 func UnmarshalClassificationCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ClassificationCollection)
@@ -598,7 +595,6 @@ type ClassifiedClass struct {
 	// Class label.
 	ClassName *string `json:"class_name,omitempty"`
 }
-
 
 // UnmarshalClassifiedClass unmarshals an instance of ClassifiedClass from the specified map of raw messages.
 func UnmarshalClassifiedClass(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -642,13 +638,12 @@ type Classifier struct {
 // Constants associated with the Classifier.Status property.
 // The state of the classifier.
 const (
-	ClassifierStatusAvailableConst = "Available"
-	ClassifierStatusFailedConst = "Failed"
+	ClassifierStatusAvailableConst   = "Available"
+	ClassifierStatusFailedConst      = "Failed"
 	ClassifierStatusNonExistentConst = "Non Existent"
-	ClassifierStatusTrainingConst = "Training"
+	ClassifierStatusTrainingConst    = "Training"
 	ClassifierStatusUnavailableConst = "Unavailable"
 )
-
 
 // UnmarshalClassifier unmarshals an instance of Classifier from the specified map of raw messages.
 func UnmarshalClassifier(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -691,7 +686,6 @@ type ClassifierList struct {
 	Classifiers []Classifier `json:"classifiers" validate:"required"`
 }
 
-
 // UnmarshalClassifierList unmarshals an instance of ClassifierList from the specified map of raw messages.
 func UnmarshalClassifierList(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ClassifierList)
@@ -719,7 +713,7 @@ type ClassifyCollectionOptions struct {
 func (*NaturalLanguageClassifierV1) NewClassifyCollectionOptions(classifierID string, collection []ClassifyInput) *ClassifyCollectionOptions {
 	return &ClassifyCollectionOptions{
 		ClassifierID: core.StringPtr(classifierID),
-		Collection: collection,
+		Collection:   collection,
 	}
 }
 
@@ -746,7 +740,6 @@ type ClassifyInput struct {
 	// The submitted phrase. The maximum length is 2048 characters.
 	Text *string `json:"text" validate:"required"`
 }
-
 
 // NewClassifyInput : Instantiate ClassifyInput (Generic Model Constructor)
 func (*NaturalLanguageClassifierV1) NewClassifyInput(text string) (model *ClassifyInput, err error) {
@@ -784,7 +777,7 @@ type ClassifyOptions struct {
 func (*NaturalLanguageClassifierV1) NewClassifyOptions(classifierID string, text string) *ClassifyOptions {
 	return &ClassifyOptions{
 		ClassifierID: core.StringPtr(classifierID),
-		Text: core.StringPtr(text),
+		Text:         core.StringPtr(text),
 	}
 }
 
@@ -817,7 +810,6 @@ type CollectionItem struct {
 	// An array of up to ten class-confidence pairs sorted in descending order of confidence.
 	Classes []ClassifiedClass `json:"classes,omitempty"`
 }
-
 
 // UnmarshalCollectionItem unmarshals an instance of CollectionItem from the specified map of raw messages.
 func UnmarshalCollectionItem(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -860,7 +852,7 @@ type CreateClassifierOptions struct {
 func (*NaturalLanguageClassifierV1) NewCreateClassifierOptions(trainingMetadata io.ReadCloser, trainingData io.ReadCloser) *CreateClassifierOptions {
 	return &CreateClassifierOptions{
 		TrainingMetadata: trainingMetadata,
-		TrainingData: trainingData,
+		TrainingData:     trainingData,
 	}
 }
 

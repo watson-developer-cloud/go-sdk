@@ -40,7 +40,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -50,7 +50,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -58,7 +58,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -79,7 +79,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -101,7 +101,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -137,7 +137,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -155,12 +155,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -203,7 +203,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -278,7 +278,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -332,7 +332,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -388,7 +388,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -447,7 +447,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -499,7 +499,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -544,7 +544,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -601,7 +601,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -653,7 +653,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -705,7 +705,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -781,7 +781,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -836,7 +836,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -891,7 +891,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -948,7 +948,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -1000,7 +1000,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -1052,7 +1052,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -1110,7 +1110,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -1163,7 +1163,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -1199,7 +1199,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -1209,7 +1209,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -1217,7 +1217,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -1238,7 +1238,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -1260,7 +1260,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -1296,7 +1296,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -1314,12 +1314,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -1362,7 +1362,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -1627,7 +1627,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -1871,7 +1871,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2117,7 +2117,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2177,7 +2177,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2230,7 +2230,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2283,7 +2283,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2341,7 +2341,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2394,7 +2394,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2447,7 +2447,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2713,7 +2713,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -2958,7 +2958,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3203,7 +3203,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3261,7 +3261,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3314,7 +3314,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3350,7 +3350,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -3360,7 +3360,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -3368,7 +3368,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -3389,7 +3389,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -3411,7 +3411,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -3447,7 +3447,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -3465,12 +3465,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -3513,7 +3513,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3590,7 +3590,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3646,7 +3646,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3704,7 +3704,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3764,7 +3764,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3817,7 +3817,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3870,7 +3870,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3928,7 +3928,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -3981,7 +3981,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4034,7 +4034,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4111,7 +4111,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4167,7 +4167,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4223,7 +4223,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4281,7 +4281,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4334,7 +4334,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4387,7 +4387,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4445,7 +4445,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4498,7 +4498,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4534,7 +4534,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -4544,7 +4544,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -4552,7 +4552,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -4573,7 +4573,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -4595,7 +4595,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -4631,7 +4631,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -4649,12 +4649,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -4697,7 +4697,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4755,7 +4755,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4808,7 +4808,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4861,7 +4861,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -4941,7 +4941,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5000,7 +5000,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5059,7 +5059,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5091,7 +5091,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5142,7 +5142,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5200,7 +5200,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5253,7 +5253,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5306,7 +5306,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5388,7 +5388,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5449,7 +5449,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5510,7 +5510,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5542,7 +5542,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5593,7 +5593,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5651,7 +5651,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5704,7 +5704,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5757,7 +5757,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5817,7 +5817,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5872,7 +5872,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5927,7 +5927,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5959,7 +5959,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -5993,7 +5993,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -6003,7 +6003,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -6011,7 +6011,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -6032,7 +6032,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -6054,7 +6054,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -6090,7 +6090,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -6108,12 +6108,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -6156,7 +6156,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6218,7 +6218,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6273,9 +6273,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 			It(`Invoke AddDocument with error: Param validation error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:  testServer.URL,
+					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6292,7 +6292,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6349,7 +6349,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6408,7 +6408,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6462,7 +6462,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6516,7 +6516,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6579,7 +6579,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6635,9 +6635,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 			It(`Invoke UpdateDocument with error: Param validation error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:  testServer.URL,
+					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6654,7 +6654,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6712,7 +6712,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6771,7 +6771,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6825,7 +6825,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -6862,7 +6862,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -6872,7 +6872,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -6880,7 +6880,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -6901,7 +6901,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -6923,7 +6923,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -6959,7 +6959,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -6977,12 +6977,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -7027,7 +7027,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7124,7 +7124,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7198,7 +7198,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7269,7 +7269,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["natural_language_query"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for passages query parameter
 
 					Expect(req.URL.Query()["aggregation"]).To(Equal([]string{"testString"}))
@@ -7278,7 +7277,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for highlight query parameter
 
 					Expect(req.URL.Query()["passages.count"]).To(Equal([]string{fmt.Sprint(int64(100))}))
@@ -7286,7 +7284,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.Query()["passages.characters"]).To(Equal([]string{fmt.Sprint(int64(50))}))
 
 					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for similar query parameter
 
@@ -7299,7 +7296,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7367,7 +7364,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["natural_language_query"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for passages query parameter
 
 					Expect(req.URL.Query()["aggregation"]).To(Equal([]string{"testString"}))
@@ -7376,7 +7372,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for highlight query parameter
 
 					Expect(req.URL.Query()["passages.count"]).To(Equal([]string{fmt.Sprint(int64(100))}))
@@ -7384,7 +7379,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.Query()["passages.characters"]).To(Equal([]string{fmt.Sprint(int64(50))}))
 
 					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for similar query parameter
 
@@ -7401,7 +7395,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7471,7 +7465,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7543,7 +7537,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7639,7 +7633,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7712,7 +7706,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7788,11 +7782,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for highlight query parameter
 
 					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for similar query parameter
 
@@ -7805,7 +7797,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7875,11 +7867,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for highlight query parameter
 
 					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for similar query parameter
 
@@ -7896,7 +7886,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -7962,7 +7952,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8034,7 +8024,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8101,7 +8091,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8157,7 +8147,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8196,7 +8186,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -8206,7 +8196,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -8214,7 +8204,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -8235,7 +8225,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -8257,7 +8247,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -8293,7 +8283,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -8311,12 +8301,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -8359,7 +8349,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8417,7 +8407,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8470,7 +8460,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8523,7 +8513,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8606,7 +8596,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8668,7 +8658,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8730,7 +8720,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8762,7 +8752,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8813,7 +8803,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8872,7 +8862,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8926,7 +8916,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -8980,7 +8970,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9013,7 +9003,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9065,7 +9055,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9124,7 +9114,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9178,7 +9168,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9232,7 +9222,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9310,7 +9300,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9367,7 +9357,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9424,7 +9414,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9458,7 +9448,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9511,7 +9501,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9589,7 +9579,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9646,7 +9636,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9703,7 +9693,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9763,7 +9753,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9818,7 +9808,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -9856,7 +9846,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -9866,7 +9856,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -9874,7 +9864,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -9895,7 +9885,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -9917,7 +9907,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -9953,7 +9943,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -9971,12 +9961,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -10021,7 +10011,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10052,7 +10042,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10085,7 +10075,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -10095,7 +10085,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -10103,7 +10093,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -10124,7 +10114,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -10146,7 +10136,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -10182,7 +10172,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -10200,12 +10190,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -10248,7 +10238,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10331,7 +10321,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10393,7 +10383,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10463,7 +10453,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10532,7 +10522,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10588,7 +10578,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10628,9 +10618,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -10645,7 +10633,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10691,9 +10679,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -10712,7 +10698,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10766,7 +10752,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10804,9 +10790,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -10821,7 +10805,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10867,9 +10851,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -10888,7 +10870,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10942,7 +10924,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -10980,9 +10962,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -10997,7 +10977,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11043,9 +11023,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -11064,7 +11042,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11118,7 +11096,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11156,9 +11134,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -11173,7 +11149,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11219,9 +11195,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for start_time query parameter
-
 
 					// TODO: Add check for end_time query parameter
 
@@ -11240,7 +11214,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11294,7 +11268,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11343,7 +11317,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11402,7 +11376,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11454,7 +11428,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11482,7 +11456,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -11492,7 +11466,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -11500,7 +11474,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -11521,7 +11495,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -11543,7 +11517,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -11579,7 +11553,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -11597,12 +11571,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -11645,7 +11619,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11702,7 +11676,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11754,7 +11728,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11806,7 +11780,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11904,7 +11878,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -11981,7 +11955,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12058,7 +12032,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12116,7 +12090,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12169,7 +12143,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12222,7 +12196,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12321,7 +12295,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12399,7 +12373,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12477,7 +12451,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12535,7 +12509,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12588,7 +12562,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12624,7 +12598,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		It(`Instantiate service client`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(discoveryService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -12634,7 +12608,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(discoveryService).To(BeNil())
@@ -12642,7 +12616,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "https://discoveryv1/api",
+				URL:     "https://discoveryv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -12663,7 +12637,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "noauth",
 			}
 
@@ -12685,7 +12659,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(discoveryService).ToNot(BeNil())
@@ -12721,7 +12695,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_URL": "https://discoveryv1/api",
+				"DISCOVERY_URL":       "https://discoveryv1/api",
 				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -12739,12 +12713,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE":   "NOAuth",
+				"DISCOVERY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -12787,7 +12761,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12844,7 +12818,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12896,7 +12870,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -12948,7 +12922,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13022,7 +12996,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13075,7 +13049,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13128,7 +13102,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13186,7 +13160,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13239,7 +13213,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13292,7 +13266,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13350,7 +13324,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13403,7 +13377,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
@@ -13440,7 +13414,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 			discoveryService, _ := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 				URL:           "http://discoveryv1modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			It(`Invoke NewAddDocumentOptions successfully`, func() {
 				// Construct an instance of the AddDocumentOptions model

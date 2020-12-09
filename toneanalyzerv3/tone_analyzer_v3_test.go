@@ -40,7 +40,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 		It(`Instantiate service client`, func() {
 			toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(toneAnalyzerService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -50,7 +50,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(toneAnalyzerService).To(BeNil())
@@ -58,7 +58,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-				URL: "https://toneanalyzerv3/api",
+				URL:     "https://toneanalyzerv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -79,7 +79,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"TONE_ANALYZER_URL": "https://toneanalyzerv3/api",
+				"TONE_ANALYZER_URL":       "https://toneanalyzerv3/api",
 				"TONE_ANALYZER_AUTH_TYPE": "noauth",
 			}
 
@@ -101,7 +101,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(toneAnalyzerService).ToNot(BeNil())
@@ -137,7 +137,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"TONE_ANALYZER_URL": "https://toneanalyzerv3/api",
+				"TONE_ANALYZER_URL":       "https://toneanalyzerv3/api",
 				"TONE_ANALYZER_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -155,12 +155,12 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"TONE_ANALYZER_AUTH_TYPE":   "NOAuth",
+				"TONE_ANALYZER_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -200,7 +200,6 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for sentences query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -212,7 +211,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(toneAnalyzerService).ToNot(BeNil())
@@ -287,7 +286,6 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for sentences query parameter
 
 					// Sleep a short time to support a timeout test
@@ -303,7 +301,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(toneAnalyzerService).ToNot(BeNil())
@@ -364,7 +362,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(toneAnalyzerService).ToNot(BeNil())
@@ -422,7 +420,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(toneAnalyzerService).ToNot(BeNil())
@@ -506,7 +504,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(toneAnalyzerService).ToNot(BeNil())
@@ -565,7 +563,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneAnalyzerService, serviceErr := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(toneAnalyzerService).ToNot(BeNil())
@@ -608,7 +606,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 			toneAnalyzerService, _ := toneanalyzerv3.NewToneAnalyzerV3(&toneanalyzerv3.ToneAnalyzerV3Options{
 				URL:           "http://toneanalyzerv3modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			It(`Invoke NewToneChatOptions successfully`, func() {
 				// Construct an instance of the Utterance model

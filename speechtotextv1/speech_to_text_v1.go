@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package speechtotextv1 : Operations and models for the SpeechToTextV1 service
 package speechtotextv1
@@ -1615,7 +1614,7 @@ func (speechToText *SpeechToTextV1) AddCorpusWithContext(ctx context.Context, ad
 
 	pathParamsMap := map[string]string{
 		"customization_id": *addCorpusOptions.CustomizationID,
-		"corpus_name": *addCorpusOptions.CorpusName,
+		"corpus_name":      *addCorpusOptions.CorpusName,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1677,7 +1676,7 @@ func (speechToText *SpeechToTextV1) GetCorpusWithContext(ctx context.Context, ge
 
 	pathParamsMap := map[string]string{
 		"customization_id": *getCorpusOptions.CustomizationID,
-		"corpus_name": *getCorpusOptions.CorpusName,
+		"corpus_name":      *getCorpusOptions.CorpusName,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1743,7 +1742,7 @@ func (speechToText *SpeechToTextV1) DeleteCorpusWithContext(ctx context.Context,
 
 	pathParamsMap := map[string]string{
 		"customization_id": *deleteCorpusOptions.CustomizationID,
-		"corpus_name": *deleteCorpusOptions.CorpusName,
+		"corpus_name":      *deleteCorpusOptions.CorpusName,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -2002,7 +2001,7 @@ func (speechToText *SpeechToTextV1) AddWordWithContext(ctx context.Context, addW
 
 	pathParamsMap := map[string]string{
 		"customization_id": *addWordOptions.CustomizationID,
-		"word_name": *addWordOptions.WordName,
+		"word_name":        *addWordOptions.WordName,
 	}
 
 	builder := core.NewRequestBuilder(core.PUT)
@@ -2072,7 +2071,7 @@ func (speechToText *SpeechToTextV1) GetWordWithContext(ctx context.Context, getW
 
 	pathParamsMap := map[string]string{
 		"customization_id": *getWordOptions.CustomizationID,
-		"word_name": *getWordOptions.WordName,
+		"word_name":        *getWordOptions.WordName,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2138,7 +2137,7 @@ func (speechToText *SpeechToTextV1) DeleteWordWithContext(ctx context.Context, d
 
 	pathParamsMap := map[string]string{
 		"customization_id": *deleteWordOptions.CustomizationID,
-		"word_name": *deleteWordOptions.WordName,
+		"word_name":        *deleteWordOptions.WordName,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -2282,7 +2281,7 @@ func (speechToText *SpeechToTextV1) AddGrammarWithContext(ctx context.Context, a
 
 	pathParamsMap := map[string]string{
 		"customization_id": *addGrammarOptions.CustomizationID,
-		"grammar_name": *addGrammarOptions.GrammarName,
+		"grammar_name":     *addGrammarOptions.GrammarName,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2349,7 +2348,7 @@ func (speechToText *SpeechToTextV1) GetGrammarWithContext(ctx context.Context, g
 
 	pathParamsMap := map[string]string{
 		"customization_id": *getGrammarOptions.CustomizationID,
-		"grammar_name": *getGrammarOptions.GrammarName,
+		"grammar_name":     *getGrammarOptions.GrammarName,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2415,7 +2414,7 @@ func (speechToText *SpeechToTextV1) DeleteGrammarWithContext(ctx context.Context
 
 	pathParamsMap := map[string]string{
 		"customization_id": *deleteGrammarOptions.CustomizationID,
-		"grammar_name": *deleteGrammarOptions.GrammarName,
+		"grammar_name":     *deleteGrammarOptions.GrammarName,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -3106,7 +3105,7 @@ func (speechToText *SpeechToTextV1) AddAudioWithContext(ctx context.Context, add
 
 	pathParamsMap := map[string]string{
 		"customization_id": *addAudioOptions.CustomizationID,
-		"audio_name": *addAudioOptions.AudioName,
+		"audio_name":       *addAudioOptions.AudioName,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -3188,7 +3187,7 @@ func (speechToText *SpeechToTextV1) GetAudioWithContext(ctx context.Context, get
 
 	pathParamsMap := map[string]string{
 		"customization_id": *getAudioOptions.CustomizationID,
-		"audio_name": *getAudioOptions.AudioName,
+		"audio_name":       *getAudioOptions.AudioName,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -3256,7 +3255,7 @@ func (speechToText *SpeechToTextV1) DeleteAudioWithContext(ctx context.Context, 
 
 	pathParamsMap := map[string]string{
 		"customization_id": *deleteAudioOptions.CustomizationID,
-		"audio_name": *deleteAudioOptions.AudioName,
+		"audio_name":       *deleteAudioOptions.AudioName,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -3413,13 +3412,12 @@ type AcousticModel struct {
 // * `failed`: Training of the model failed.
 const (
 	AcousticModelStatusAvailableConst = "available"
-	AcousticModelStatusFailedConst = "failed"
-	AcousticModelStatusPendingConst = "pending"
-	AcousticModelStatusReadyConst = "ready"
-	AcousticModelStatusTrainingConst = "training"
+	AcousticModelStatusFailedConst    = "failed"
+	AcousticModelStatusPendingConst   = "pending"
+	AcousticModelStatusReadyConst     = "ready"
+	AcousticModelStatusTrainingConst  = "training"
 	AcousticModelStatusUpgradingConst = "upgrading"
 )
-
 
 // UnmarshalAcousticModel unmarshals an instance of AcousticModel from the specified map of raw messages.
 func UnmarshalAcousticModel(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3483,7 +3481,6 @@ type AcousticModels struct {
 	// acoustic models for the specified language.
 	Customizations []AcousticModel `json:"customizations" validate:"required"`
 }
-
 
 // UnmarshalAcousticModels unmarshals an instance of AcousticModels from the specified map of raw messages.
 func UnmarshalAcousticModels(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3561,20 +3558,20 @@ type AddAudioOptions struct {
 //
 // **For an audio-type resource,** omit the header.
 const (
-	AddAudioOptionsContainedContentTypeAudioAlawConst = "audio/alaw"
-	AddAudioOptionsContainedContentTypeAudioBasicConst = "audio/basic"
-	AddAudioOptionsContainedContentTypeAudioFlacConst = "audio/flac"
-	AddAudioOptionsContainedContentTypeAudioG729Const = "audio/g729"
-	AddAudioOptionsContainedContentTypeAudioL16Const = "audio/l16"
-	AddAudioOptionsContainedContentTypeAudioMp3Const = "audio/mp3"
-	AddAudioOptionsContainedContentTypeAudioMpegConst = "audio/mpeg"
-	AddAudioOptionsContainedContentTypeAudioMulawConst = "audio/mulaw"
-	AddAudioOptionsContainedContentTypeAudioOggConst = "audio/ogg"
-	AddAudioOptionsContainedContentTypeAudioOggCodecsOpusConst = "audio/ogg;codecs=opus"
-	AddAudioOptionsContainedContentTypeAudioOggCodecsVorbisConst = "audio/ogg;codecs=vorbis"
-	AddAudioOptionsContainedContentTypeAudioWavConst = "audio/wav"
-	AddAudioOptionsContainedContentTypeAudioWebmConst = "audio/webm"
-	AddAudioOptionsContainedContentTypeAudioWebmCodecsOpusConst = "audio/webm;codecs=opus"
+	AddAudioOptionsContainedContentTypeAudioAlawConst             = "audio/alaw"
+	AddAudioOptionsContainedContentTypeAudioBasicConst            = "audio/basic"
+	AddAudioOptionsContainedContentTypeAudioFlacConst             = "audio/flac"
+	AddAudioOptionsContainedContentTypeAudioG729Const             = "audio/g729"
+	AddAudioOptionsContainedContentTypeAudioL16Const              = "audio/l16"
+	AddAudioOptionsContainedContentTypeAudioMp3Const              = "audio/mp3"
+	AddAudioOptionsContainedContentTypeAudioMpegConst             = "audio/mpeg"
+	AddAudioOptionsContainedContentTypeAudioMulawConst            = "audio/mulaw"
+	AddAudioOptionsContainedContentTypeAudioOggConst              = "audio/ogg"
+	AddAudioOptionsContainedContentTypeAudioOggCodecsOpusConst    = "audio/ogg;codecs=opus"
+	AddAudioOptionsContainedContentTypeAudioOggCodecsVorbisConst  = "audio/ogg;codecs=vorbis"
+	AddAudioOptionsContainedContentTypeAudioWavConst              = "audio/wav"
+	AddAudioOptionsContainedContentTypeAudioWebmConst             = "audio/webm"
+	AddAudioOptionsContainedContentTypeAudioWebmCodecsOpusConst   = "audio/webm;codecs=opus"
 	AddAudioOptionsContainedContentTypeAudioWebmCodecsVorbisConst = "audio/webm;codecs=vorbis"
 )
 
@@ -3582,8 +3579,8 @@ const (
 func (*SpeechToTextV1) NewAddAudioOptions(customizationID string, audioName string, audioResource io.ReadCloser) *AddAudioOptions {
 	return &AddAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName: core.StringPtr(audioName),
-		AudioResource: audioResource,
+		AudioName:       core.StringPtr(audioName),
+		AudioResource:   audioResource,
 	}
 }
 
@@ -3671,8 +3668,8 @@ type AddCorpusOptions struct {
 func (*SpeechToTextV1) NewAddCorpusOptions(customizationID string, corpusName string, corpusFile io.ReadCloser) *AddCorpusOptions {
 	return &AddCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName: core.StringPtr(corpusName),
-		CorpusFile: corpusFile,
+		CorpusName:      core.StringPtr(corpusName),
+		CorpusFile:      corpusFile,
 	}
 }
 
@@ -3751,9 +3748,9 @@ type AddGrammarOptions struct {
 func (*SpeechToTextV1) NewAddGrammarOptions(customizationID string, grammarName string, grammarFile io.ReadCloser, contentType string) *AddGrammarOptions {
 	return &AddGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName: core.StringPtr(grammarName),
-		GrammarFile: grammarFile,
-		ContentType: core.StringPtr(contentType),
+		GrammarName:     core.StringPtr(grammarName),
+		GrammarFile:     grammarFile,
+		ContentType:     core.StringPtr(contentType),
 	}
 }
 
@@ -3837,7 +3834,7 @@ type AddWordOptions struct {
 func (*SpeechToTextV1) NewAddWordOptions(customizationID string, wordName string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName: core.StringPtr(wordName),
+		WordName:        core.StringPtr(wordName),
 	}
 }
 
@@ -3895,7 +3892,7 @@ type AddWordsOptions struct {
 func (*SpeechToTextV1) NewAddWordsOptions(customizationID string, words []CustomWord) *AddWordsOptions {
 	return &AddWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Words: words,
+		Words:           words,
 	}
 }
 
@@ -3948,8 +3945,8 @@ type AudioDetails struct {
 // * `undetermined` for a resource that the service cannot validate (for example, if the user mistakenly passes a file
 // that does not contain audio, such as a JPEG file).
 const (
-	AudioDetailsTypeArchiveConst = "archive"
-	AudioDetailsTypeAudioConst = "audio"
+	AudioDetailsTypeArchiveConst      = "archive"
+	AudioDetailsTypeAudioConst        = "audio"
 	AudioDetailsTypeUndeterminedConst = "undetermined"
 )
 
@@ -3961,9 +3958,8 @@ const (
 // Omitted for an audio-type resource.
 const (
 	AudioDetailsCompressionGzipConst = "gzip"
-	AudioDetailsCompressionZipConst = "zip"
+	AudioDetailsCompressionZipConst  = "zip"
 )
-
 
 // UnmarshalAudioDetails unmarshals an instance of AudioDetails from the specified map of raw messages.
 func UnmarshalAudioDetails(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4030,10 +4026,9 @@ type AudioListing struct {
 // Omitted for an archive-type resource.
 const (
 	AudioListingStatusBeingProcessedConst = "being_processed"
-	AudioListingStatusInvalidConst = "invalid"
-	AudioListingStatusOkConst = "ok"
+	AudioListingStatusInvalidConst        = "invalid"
+	AudioListingStatusOkConst             = "ok"
 )
-
 
 // UnmarshalAudioListing unmarshals an instance of AudioListing from the specified map of raw messages.
 func UnmarshalAudioListing(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4076,7 +4071,6 @@ type AudioMetrics struct {
 	// Detailed information about the signal characteristics of the input audio.
 	Accumulated *AudioMetricsDetails `json:"accumulated" validate:"required"`
 }
-
 
 // UnmarshalAudioMetrics unmarshals an instance of AudioMetrics from the specified map of raw messages.
 func UnmarshalAudioMetrics(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4140,7 +4134,6 @@ type AudioMetricsDetails struct {
 	NonSpeechLevel []AudioMetricsHistogramBin `json:"non_speech_level" validate:"required"`
 }
 
-
 // UnmarshalAudioMetricsDetails unmarshals an instance of AudioMetricsDetails from the specified map of raw messages.
 func UnmarshalAudioMetricsDetails(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(AudioMetricsDetails)
@@ -4198,7 +4191,6 @@ type AudioMetricsHistogramBin struct {
 	Count *int64 `json:"count" validate:"required"`
 }
 
-
 // UnmarshalAudioMetricsHistogramBin unmarshals an instance of AudioMetricsHistogramBin from the specified map of raw messages.
 func UnmarshalAudioMetricsHistogramBin(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(AudioMetricsHistogramBin)
@@ -4253,10 +4245,9 @@ type AudioResource struct {
 // files are invalid.
 const (
 	AudioResourceStatusBeingProcessedConst = "being_processed"
-	AudioResourceStatusInvalidConst = "invalid"
-	AudioResourceStatusOkConst = "ok"
+	AudioResourceStatusInvalidConst        = "invalid"
+	AudioResourceStatusOkConst             = "ok"
 )
-
 
 // UnmarshalAudioResource unmarshals an instance of AudioResource from the specified map of raw messages.
 func UnmarshalAudioResource(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4291,7 +4282,6 @@ type AudioResources struct {
 	// model. The array is empty if the custom model has no audio resources.
 	Audio []AudioResource `json:"audio" validate:"required"`
 }
-
 
 // UnmarshalAudioResources unmarshals an instance of AudioResources from the specified map of raw messages.
 func UnmarshalAudioResources(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4362,7 +4352,6 @@ type Corpora struct {
 	Corpora []Corpus `json:"corpora" validate:"required"`
 }
 
-
 // UnmarshalCorpora unmarshals an instance of Corpora from the specified map of raw messages.
 func UnmarshalCorpora(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Corpora)
@@ -4408,11 +4397,10 @@ type Corpus struct {
 // * `undetermined`: The service encountered an error while processing the corpus. The `error` field describes the
 // failure.
 const (
-	CorpusStatusAnalyzedConst = "analyzed"
+	CorpusStatusAnalyzedConst       = "analyzed"
 	CorpusStatusBeingProcessedConst = "being_processed"
-	CorpusStatusUndeterminedConst = "undetermined"
+	CorpusStatusUndeterminedConst   = "undetermined"
 )
-
 
 // UnmarshalCorpus unmarshals an instance of Corpus from the specified map of raw messages.
 func UnmarshalCorpus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4470,50 +4458,50 @@ type CreateAcousticModelOptions struct {
 // To determine whether a base model supports acoustic model customization, refer to [Language support for
 // customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
-	CreateAcousticModelOptionsBaseModelNameArArBroadbandmodelConst = "ar-AR_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEnUsBroadbandmodelConst = "en-US_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnAuNarrowbandmodelConst          = "en-AU_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnGbBroadbandmodelConst           = "en-GB_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnGbNarrowbandmodelConst          = "en-GB_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnUsBroadbandmodelConst           = "en-US_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEnUsNarrowbandmodelConst          = "en-US_NarrowbandModel"
 	CreateAcousticModelOptionsBaseModelNameEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsArBroadbandmodelConst = "es-AR_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsClBroadbandmodelConst = "es-CL_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameItItBroadbandmodelConst = "it-IT_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNamePtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNamePtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
-	CreateAcousticModelOptionsBaseModelNameZhCnBroadbandmodelConst = "zh-CN_BroadbandModel"
-	CreateAcousticModelOptionsBaseModelNameZhCnNarrowbandmodelConst = "zh-CN_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsArBroadbandmodelConst           = "es-AR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsArNarrowbandmodelConst          = "es-AR_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsClBroadbandmodelConst           = "es-CL_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsClNarrowbandmodelConst          = "es-CL_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsCoBroadbandmodelConst           = "es-CO_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsCoNarrowbandmodelConst          = "es-CO_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsEsBroadbandmodelConst           = "es-ES_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsEsNarrowbandmodelConst          = "es-ES_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsMxBroadbandmodelConst           = "es-MX_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsMxNarrowbandmodelConst          = "es-MX_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsPeBroadbandmodelConst           = "es-PE_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameEsPeNarrowbandmodelConst          = "es-PE_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameFrCaBroadbandmodelConst           = "fr-CA_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameFrCaNarrowbandmodelConst          = "fr-CA_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameFrFrBroadbandmodelConst           = "fr-FR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameFrFrNarrowbandmodelConst          = "fr-FR_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameItItBroadbandmodelConst           = "it-IT_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameItItNarrowbandmodelConst          = "it-IT_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameJaJpBroadbandmodelConst           = "ja-JP_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameJaJpNarrowbandmodelConst          = "ja-JP_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameKoKrBroadbandmodelConst           = "ko-KR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameKoKrNarrowbandmodelConst          = "ko-KR_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameNlNlBroadbandmodelConst           = "nl-NL_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameNlNlNarrowbandmodelConst          = "nl-NL_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNamePtBrBroadbandmodelConst           = "pt-BR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNamePtBrNarrowbandmodelConst          = "pt-BR_NarrowbandModel"
+	CreateAcousticModelOptionsBaseModelNameZhCnBroadbandmodelConst           = "zh-CN_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameZhCnNarrowbandmodelConst          = "zh-CN_NarrowbandModel"
 )
 
 // NewCreateAcousticModelOptions : Instantiate CreateAcousticModelOptions
 func (*SpeechToTextV1) NewCreateAcousticModelOptions(name string, baseModelName string) *CreateAcousticModelOptions {
 	return &CreateAcousticModelOptions{
-		Name: core.StringPtr(name),
+		Name:          core.StringPtr(name),
 		BaseModelName: core.StringPtr(baseModelName),
 	}
 }
@@ -4810,44 +4798,44 @@ type CreateJobOptions struct {
 // The identifier of the model that is to be used for the recognition request. See [Languages and
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 const (
-	CreateJobOptionsModelArArBroadbandmodelConst = "ar-AR_BroadbandModel"
-	CreateJobOptionsModelDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
-	CreateJobOptionsModelDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
-	CreateJobOptionsModelEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
-	CreateJobOptionsModelEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
-	CreateJobOptionsModelEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
-	CreateJobOptionsModelEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
-	CreateJobOptionsModelEnUsBroadbandmodelConst = "en-US_BroadbandModel"
-	CreateJobOptionsModelEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	CreateJobOptionsModelArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
+	CreateJobOptionsModelDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
+	CreateJobOptionsModelDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
+	CreateJobOptionsModelEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
+	CreateJobOptionsModelEnAuNarrowbandmodelConst          = "en-AU_NarrowbandModel"
+	CreateJobOptionsModelEnGbBroadbandmodelConst           = "en-GB_BroadbandModel"
+	CreateJobOptionsModelEnGbNarrowbandmodelConst          = "en-GB_NarrowbandModel"
+	CreateJobOptionsModelEnUsBroadbandmodelConst           = "en-US_BroadbandModel"
+	CreateJobOptionsModelEnUsNarrowbandmodelConst          = "en-US_NarrowbandModel"
 	CreateJobOptionsModelEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
-	CreateJobOptionsModelEsArBroadbandmodelConst = "es-AR_BroadbandModel"
-	CreateJobOptionsModelEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
-	CreateJobOptionsModelEsClBroadbandmodelConst = "es-CL_BroadbandModel"
-	CreateJobOptionsModelEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
-	CreateJobOptionsModelEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
-	CreateJobOptionsModelEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
-	CreateJobOptionsModelEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
-	CreateJobOptionsModelEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
-	CreateJobOptionsModelEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
-	CreateJobOptionsModelEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
-	CreateJobOptionsModelEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
-	CreateJobOptionsModelEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
-	CreateJobOptionsModelFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
-	CreateJobOptionsModelFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
-	CreateJobOptionsModelFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
-	CreateJobOptionsModelFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
-	CreateJobOptionsModelItItBroadbandmodelConst = "it-IT_BroadbandModel"
-	CreateJobOptionsModelItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
-	CreateJobOptionsModelJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
-	CreateJobOptionsModelJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
-	CreateJobOptionsModelKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
-	CreateJobOptionsModelKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
-	CreateJobOptionsModelNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
-	CreateJobOptionsModelNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
-	CreateJobOptionsModelPtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
-	CreateJobOptionsModelPtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
-	CreateJobOptionsModelZhCnBroadbandmodelConst = "zh-CN_BroadbandModel"
-	CreateJobOptionsModelZhCnNarrowbandmodelConst = "zh-CN_NarrowbandModel"
+	CreateJobOptionsModelEsArBroadbandmodelConst           = "es-AR_BroadbandModel"
+	CreateJobOptionsModelEsArNarrowbandmodelConst          = "es-AR_NarrowbandModel"
+	CreateJobOptionsModelEsClBroadbandmodelConst           = "es-CL_BroadbandModel"
+	CreateJobOptionsModelEsClNarrowbandmodelConst          = "es-CL_NarrowbandModel"
+	CreateJobOptionsModelEsCoBroadbandmodelConst           = "es-CO_BroadbandModel"
+	CreateJobOptionsModelEsCoNarrowbandmodelConst          = "es-CO_NarrowbandModel"
+	CreateJobOptionsModelEsEsBroadbandmodelConst           = "es-ES_BroadbandModel"
+	CreateJobOptionsModelEsEsNarrowbandmodelConst          = "es-ES_NarrowbandModel"
+	CreateJobOptionsModelEsMxBroadbandmodelConst           = "es-MX_BroadbandModel"
+	CreateJobOptionsModelEsMxNarrowbandmodelConst          = "es-MX_NarrowbandModel"
+	CreateJobOptionsModelEsPeBroadbandmodelConst           = "es-PE_BroadbandModel"
+	CreateJobOptionsModelEsPeNarrowbandmodelConst          = "es-PE_NarrowbandModel"
+	CreateJobOptionsModelFrCaBroadbandmodelConst           = "fr-CA_BroadbandModel"
+	CreateJobOptionsModelFrCaNarrowbandmodelConst          = "fr-CA_NarrowbandModel"
+	CreateJobOptionsModelFrFrBroadbandmodelConst           = "fr-FR_BroadbandModel"
+	CreateJobOptionsModelFrFrNarrowbandmodelConst          = "fr-FR_NarrowbandModel"
+	CreateJobOptionsModelItItBroadbandmodelConst           = "it-IT_BroadbandModel"
+	CreateJobOptionsModelItItNarrowbandmodelConst          = "it-IT_NarrowbandModel"
+	CreateJobOptionsModelJaJpBroadbandmodelConst           = "ja-JP_BroadbandModel"
+	CreateJobOptionsModelJaJpNarrowbandmodelConst          = "ja-JP_NarrowbandModel"
+	CreateJobOptionsModelKoKrBroadbandmodelConst           = "ko-KR_BroadbandModel"
+	CreateJobOptionsModelKoKrNarrowbandmodelConst          = "ko-KR_NarrowbandModel"
+	CreateJobOptionsModelNlNlBroadbandmodelConst           = "nl-NL_BroadbandModel"
+	CreateJobOptionsModelNlNlNarrowbandmodelConst          = "nl-NL_NarrowbandModel"
+	CreateJobOptionsModelPtBrBroadbandmodelConst           = "pt-BR_BroadbandModel"
+	CreateJobOptionsModelPtBrNarrowbandmodelConst          = "pt-BR_NarrowbandModel"
+	CreateJobOptionsModelZhCnBroadbandmodelConst           = "zh-CN_BroadbandModel"
+	CreateJobOptionsModelZhCnNarrowbandmodelConst          = "zh-CN_NarrowbandModel"
 )
 
 // Constants associated with the CreateJobOptions.Events property.
@@ -4867,10 +4855,10 @@ const (
 // If the job includes a callback URL, omit the parameter to subscribe to the default events: `recognitions.started`,
 // `recognitions.completed`, and `recognitions.failed`. If the job does not include a callback URL, omit the parameter.
 const (
-	CreateJobOptionsEventsRecognitionsCompletedConst = "recognitions.completed"
+	CreateJobOptionsEventsRecognitionsCompletedConst            = "recognitions.completed"
 	CreateJobOptionsEventsRecognitionsCompletedWithResultsConst = "recognitions.completed_with_results"
-	CreateJobOptionsEventsRecognitionsFailedConst = "recognitions.failed"
-	CreateJobOptionsEventsRecognitionsStartedConst = "recognitions.started"
+	CreateJobOptionsEventsRecognitionsFailedConst               = "recognitions.failed"
+	CreateJobOptionsEventsRecognitionsStartedConst              = "recognitions.started"
 )
 
 // NewCreateJobOptions : Instantiate CreateJobOptions
@@ -5121,47 +5109,47 @@ type CreateLanguageModelOptions struct {
 // that the attribute `custom_language_model` is set to `true`. You can also refer to [Language support for
 // customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
-	CreateLanguageModelOptionsBaseModelNameDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEnUsBroadbandmodelConst = "en-US_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnAuNarrowbandmodelConst          = "en-AU_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnGbBroadbandmodelConst           = "en-GB_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnGbNarrowbandmodelConst          = "en-GB_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnUsBroadbandmodelConst           = "en-US_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEnUsNarrowbandmodelConst          = "en-US_NarrowbandModel"
 	CreateLanguageModelOptionsBaseModelNameEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsArBroadbandmodelConst = "es-AR_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsClBroadbandmodelConst = "es-CL_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameItItBroadbandmodelConst = "it-IT_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNameNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNameNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
-	CreateLanguageModelOptionsBaseModelNamePtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
-	CreateLanguageModelOptionsBaseModelNamePtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsArBroadbandmodelConst           = "es-AR_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsArNarrowbandmodelConst          = "es-AR_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsClBroadbandmodelConst           = "es-CL_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsClNarrowbandmodelConst          = "es-CL_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsCoBroadbandmodelConst           = "es-CO_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsCoNarrowbandmodelConst          = "es-CO_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsEsBroadbandmodelConst           = "es-ES_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsEsNarrowbandmodelConst          = "es-ES_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsMxBroadbandmodelConst           = "es-MX_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsMxNarrowbandmodelConst          = "es-MX_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsPeBroadbandmodelConst           = "es-PE_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameEsPeNarrowbandmodelConst          = "es-PE_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameFrCaBroadbandmodelConst           = "fr-CA_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameFrCaNarrowbandmodelConst          = "fr-CA_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameFrFrBroadbandmodelConst           = "fr-FR_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameFrFrNarrowbandmodelConst          = "fr-FR_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameItItBroadbandmodelConst           = "it-IT_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameItItNarrowbandmodelConst          = "it-IT_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameJaJpBroadbandmodelConst           = "ja-JP_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameJaJpNarrowbandmodelConst          = "ja-JP_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameKoKrBroadbandmodelConst           = "ko-KR_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameKoKrNarrowbandmodelConst          = "ko-KR_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNameNlNlBroadbandmodelConst           = "nl-NL_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNameNlNlNarrowbandmodelConst          = "nl-NL_NarrowbandModel"
+	CreateLanguageModelOptionsBaseModelNamePtBrBroadbandmodelConst           = "pt-BR_BroadbandModel"
+	CreateLanguageModelOptionsBaseModelNamePtBrNarrowbandmodelConst          = "pt-BR_NarrowbandModel"
 )
 
 // NewCreateLanguageModelOptions : Instantiate CreateLanguageModelOptions
 func (*SpeechToTextV1) NewCreateLanguageModelOptions(name string, baseModelName string) *CreateLanguageModelOptions {
 	return &CreateLanguageModelOptions{
-		Name: core.StringPtr(name),
+		Name:          core.StringPtr(name),
 		BaseModelName: core.StringPtr(baseModelName),
 	}
 }
@@ -5222,7 +5210,6 @@ type CustomWord struct {
 	// data.
 	DisplayAs *string `json:"display_as,omitempty"`
 }
-
 
 // UnmarshalCustomWord unmarshals an instance of CustomWord from the specified map of raw messages.
 func UnmarshalCustomWord(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5289,7 +5276,7 @@ type DeleteAudioOptions struct {
 func (*SpeechToTextV1) NewDeleteAudioOptions(customizationID string, audioName string) *DeleteAudioOptions {
 	return &DeleteAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName: core.StringPtr(audioName),
+		AudioName:       core.StringPtr(audioName),
 	}
 }
 
@@ -5328,7 +5315,7 @@ type DeleteCorpusOptions struct {
 func (*SpeechToTextV1) NewDeleteCorpusOptions(customizationID string, corpusName string) *DeleteCorpusOptions {
 	return &DeleteCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName: core.StringPtr(corpusName),
+		CorpusName:      core.StringPtr(corpusName),
 	}
 }
 
@@ -5367,7 +5354,7 @@ type DeleteGrammarOptions struct {
 func (*SpeechToTextV1) NewDeleteGrammarOptions(customizationID string, grammarName string) *DeleteGrammarOptions {
 	return &DeleteGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName: core.StringPtr(grammarName),
+		GrammarName:     core.StringPtr(grammarName),
 	}
 }
 
@@ -5494,7 +5481,7 @@ type DeleteWordOptions struct {
 func (*SpeechToTextV1) NewDeleteWordOptions(customizationID string, wordName string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName: core.StringPtr(wordName),
+		WordName:        core.StringPtr(wordName),
 	}
 }
 
@@ -5562,7 +5549,7 @@ type GetAudioOptions struct {
 func (*SpeechToTextV1) NewGetAudioOptions(customizationID string, audioName string) *GetAudioOptions {
 	return &GetAudioOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		AudioName: core.StringPtr(audioName),
+		AudioName:       core.StringPtr(audioName),
 	}
 }
 
@@ -5601,7 +5588,7 @@ type GetCorpusOptions struct {
 func (*SpeechToTextV1) NewGetCorpusOptions(customizationID string, corpusName string) *GetCorpusOptions {
 	return &GetCorpusOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		CorpusName: core.StringPtr(corpusName),
+		CorpusName:      core.StringPtr(corpusName),
 	}
 }
 
@@ -5640,7 +5627,7 @@ type GetGrammarOptions struct {
 func (*SpeechToTextV1) NewGetGrammarOptions(customizationID string, grammarName string) *GetGrammarOptions {
 	return &GetGrammarOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		GrammarName: core.StringPtr(grammarName),
+		GrammarName:     core.StringPtr(grammarName),
 	}
 }
 
@@ -5703,44 +5690,44 @@ type GetModelOptions struct {
 // Constants associated with the GetModelOptions.ModelID property.
 // The identifier of the model in the form of its name from the output of the **Get a model** method.
 const (
-	GetModelOptionsModelIDArArBroadbandmodelConst = "ar-AR_BroadbandModel"
-	GetModelOptionsModelIDDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
-	GetModelOptionsModelIDDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
-	GetModelOptionsModelIDEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
-	GetModelOptionsModelIDEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
-	GetModelOptionsModelIDEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
-	GetModelOptionsModelIDEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
-	GetModelOptionsModelIDEnUsBroadbandmodelConst = "en-US_BroadbandModel"
-	GetModelOptionsModelIDEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	GetModelOptionsModelIDArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
+	GetModelOptionsModelIDDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
+	GetModelOptionsModelIDDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
+	GetModelOptionsModelIDEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
+	GetModelOptionsModelIDEnAuNarrowbandmodelConst          = "en-AU_NarrowbandModel"
+	GetModelOptionsModelIDEnGbBroadbandmodelConst           = "en-GB_BroadbandModel"
+	GetModelOptionsModelIDEnGbNarrowbandmodelConst          = "en-GB_NarrowbandModel"
+	GetModelOptionsModelIDEnUsBroadbandmodelConst           = "en-US_BroadbandModel"
+	GetModelOptionsModelIDEnUsNarrowbandmodelConst          = "en-US_NarrowbandModel"
 	GetModelOptionsModelIDEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
-	GetModelOptionsModelIDEsArBroadbandmodelConst = "es-AR_BroadbandModel"
-	GetModelOptionsModelIDEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
-	GetModelOptionsModelIDEsClBroadbandmodelConst = "es-CL_BroadbandModel"
-	GetModelOptionsModelIDEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
-	GetModelOptionsModelIDEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
-	GetModelOptionsModelIDEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
-	GetModelOptionsModelIDEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
-	GetModelOptionsModelIDEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
-	GetModelOptionsModelIDEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
-	GetModelOptionsModelIDEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
-	GetModelOptionsModelIDEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
-	GetModelOptionsModelIDEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
-	GetModelOptionsModelIDFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
-	GetModelOptionsModelIDFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
-	GetModelOptionsModelIDFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
-	GetModelOptionsModelIDFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
-	GetModelOptionsModelIDItItBroadbandmodelConst = "it-IT_BroadbandModel"
-	GetModelOptionsModelIDItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
-	GetModelOptionsModelIDJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
-	GetModelOptionsModelIDJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
-	GetModelOptionsModelIDKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
-	GetModelOptionsModelIDKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
-	GetModelOptionsModelIDNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
-	GetModelOptionsModelIDNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
-	GetModelOptionsModelIDPtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
-	GetModelOptionsModelIDPtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
-	GetModelOptionsModelIDZhCnBroadbandmodelConst = "zh-CN_BroadbandModel"
-	GetModelOptionsModelIDZhCnNarrowbandmodelConst = "zh-CN_NarrowbandModel"
+	GetModelOptionsModelIDEsArBroadbandmodelConst           = "es-AR_BroadbandModel"
+	GetModelOptionsModelIDEsArNarrowbandmodelConst          = "es-AR_NarrowbandModel"
+	GetModelOptionsModelIDEsClBroadbandmodelConst           = "es-CL_BroadbandModel"
+	GetModelOptionsModelIDEsClNarrowbandmodelConst          = "es-CL_NarrowbandModel"
+	GetModelOptionsModelIDEsCoBroadbandmodelConst           = "es-CO_BroadbandModel"
+	GetModelOptionsModelIDEsCoNarrowbandmodelConst          = "es-CO_NarrowbandModel"
+	GetModelOptionsModelIDEsEsBroadbandmodelConst           = "es-ES_BroadbandModel"
+	GetModelOptionsModelIDEsEsNarrowbandmodelConst          = "es-ES_NarrowbandModel"
+	GetModelOptionsModelIDEsMxBroadbandmodelConst           = "es-MX_BroadbandModel"
+	GetModelOptionsModelIDEsMxNarrowbandmodelConst          = "es-MX_NarrowbandModel"
+	GetModelOptionsModelIDEsPeBroadbandmodelConst           = "es-PE_BroadbandModel"
+	GetModelOptionsModelIDEsPeNarrowbandmodelConst          = "es-PE_NarrowbandModel"
+	GetModelOptionsModelIDFrCaBroadbandmodelConst           = "fr-CA_BroadbandModel"
+	GetModelOptionsModelIDFrCaNarrowbandmodelConst          = "fr-CA_NarrowbandModel"
+	GetModelOptionsModelIDFrFrBroadbandmodelConst           = "fr-FR_BroadbandModel"
+	GetModelOptionsModelIDFrFrNarrowbandmodelConst          = "fr-FR_NarrowbandModel"
+	GetModelOptionsModelIDItItBroadbandmodelConst           = "it-IT_BroadbandModel"
+	GetModelOptionsModelIDItItNarrowbandmodelConst          = "it-IT_NarrowbandModel"
+	GetModelOptionsModelIDJaJpBroadbandmodelConst           = "ja-JP_BroadbandModel"
+	GetModelOptionsModelIDJaJpNarrowbandmodelConst          = "ja-JP_NarrowbandModel"
+	GetModelOptionsModelIDKoKrBroadbandmodelConst           = "ko-KR_BroadbandModel"
+	GetModelOptionsModelIDKoKrNarrowbandmodelConst          = "ko-KR_NarrowbandModel"
+	GetModelOptionsModelIDNlNlBroadbandmodelConst           = "nl-NL_BroadbandModel"
+	GetModelOptionsModelIDNlNlNarrowbandmodelConst          = "nl-NL_NarrowbandModel"
+	GetModelOptionsModelIDPtBrBroadbandmodelConst           = "pt-BR_BroadbandModel"
+	GetModelOptionsModelIDPtBrNarrowbandmodelConst          = "pt-BR_NarrowbandModel"
+	GetModelOptionsModelIDZhCnBroadbandmodelConst           = "zh-CN_BroadbandModel"
+	GetModelOptionsModelIDZhCnNarrowbandmodelConst          = "zh-CN_NarrowbandModel"
 )
 
 // NewGetModelOptions : Instantiate GetModelOptions
@@ -5781,7 +5768,7 @@ type GetWordOptions struct {
 func (*SpeechToTextV1) NewGetWordOptions(customizationID string, wordName string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		WordName: core.StringPtr(wordName),
+		WordName:        core.StringPtr(wordName),
 	}
 }
 
@@ -5834,11 +5821,10 @@ type Grammar struct {
 // * `undetermined`: The service encountered an error while processing the grammar. The `error` field describes the
 // failure.
 const (
-	GrammarStatusAnalyzedConst = "analyzed"
+	GrammarStatusAnalyzedConst       = "analyzed"
 	GrammarStatusBeingProcessedConst = "being_processed"
-	GrammarStatusUndeterminedConst = "undetermined"
+	GrammarStatusUndeterminedConst   = "undetermined"
 )
-
 
 // UnmarshalGrammar unmarshals an instance of Grammar from the specified map of raw messages.
 func UnmarshalGrammar(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5870,7 +5856,6 @@ type Grammars struct {
 	Grammars []Grammar `json:"grammars" validate:"required"`
 }
 
-
 // UnmarshalGrammars unmarshals an instance of Grammars from the specified map of raw messages.
 func UnmarshalGrammars(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Grammars)
@@ -5896,7 +5881,6 @@ type KeywordResult struct {
 	// A confidence score for the keyword match in the range of 0.0 to 1.0.
 	Confidence *float64 `json:"confidence" validate:"required"`
 }
-
 
 // UnmarshalKeywordResult unmarshals an instance of KeywordResult from the specified map of raw messages.
 func UnmarshalKeywordResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6004,13 +5988,12 @@ type LanguageModel struct {
 // * `failed`: Training of the model failed.
 const (
 	LanguageModelStatusAvailableConst = "available"
-	LanguageModelStatusFailedConst = "failed"
-	LanguageModelStatusPendingConst = "pending"
-	LanguageModelStatusReadyConst = "ready"
-	LanguageModelStatusTrainingConst = "training"
+	LanguageModelStatusFailedConst    = "failed"
+	LanguageModelStatusPendingConst   = "pending"
+	LanguageModelStatusReadyConst     = "ready"
+	LanguageModelStatusTrainingConst  = "training"
 	LanguageModelStatusUpgradingConst = "upgrading"
 )
-
 
 // UnmarshalLanguageModel unmarshals an instance of LanguageModel from the specified map of raw messages.
 func UnmarshalLanguageModel(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6082,7 +6065,6 @@ type LanguageModels struct {
 	// language models for the specified language.
 	Customizations []LanguageModel `json:"customizations" validate:"required"`
 }
-
 
 // UnmarshalLanguageModels unmarshals an instance of LanguageModels from the specified map of raw messages.
 func UnmarshalLanguageModels(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6347,10 +6329,10 @@ type ListWordsOptions struct {
 // * `corpora` shows only OOV that were extracted from corpora.
 // * `grammars` shows only OOV words that are recognized by grammars.
 const (
-	ListWordsOptionsWordTypeAllConst = "all"
-	ListWordsOptionsWordTypeCorporaConst = "corpora"
+	ListWordsOptionsWordTypeAllConst      = "all"
+	ListWordsOptionsWordTypeCorporaConst  = "corpora"
 	ListWordsOptionsWordTypeGrammarsConst = "grammars"
-	ListWordsOptionsWordTypeUserConst = "user"
+	ListWordsOptionsWordTypeUserConst     = "user"
 )
 
 // Constants associated with the ListWordsOptions.Sort property.
@@ -6361,7 +6343,7 @@ const (
 // ordered alphabetically. With the `curl` command, URL-encode the `+` symbol as `%2B`.
 const (
 	ListWordsOptionsSortAlphabeticalConst = "alphabetical"
-	ListWordsOptionsSortCountConst = "count"
+	ListWordsOptionsSortCountConst        = "count"
 )
 
 // NewListWordsOptions : Instantiate ListWordsOptions
@@ -6420,7 +6402,6 @@ type ProcessedAudio struct {
 	SpeakerLabels *float32 `json:"speaker_labels,omitempty"`
 }
 
-
 // UnmarshalProcessedAudio unmarshals an instance of ProcessedAudio from the specified map of raw messages.
 func UnmarshalProcessedAudio(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ProcessedAudio)
@@ -6467,7 +6448,6 @@ type ProcessingMetrics struct {
 	// Use the field to identify why the service generated the response and to filter different results if necessary.
 	Periodic *bool `json:"periodic" validate:"required"`
 }
-
 
 // UnmarshalProcessingMetrics unmarshals an instance of ProcessingMetrics from the specified map of raw messages.
 func UnmarshalProcessingMetrics(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6543,12 +6523,11 @@ type RecognitionJob struct {
 // must retrieve the results by checking the individual job.
 // * `failed`: The job failed.
 const (
-	RecognitionJobStatusCompletedConst = "completed"
-	RecognitionJobStatusFailedConst = "failed"
+	RecognitionJobStatusCompletedConst  = "completed"
+	RecognitionJobStatusFailedConst     = "failed"
 	RecognitionJobStatusProcessingConst = "processing"
-	RecognitionJobStatusWaitingConst = "waiting"
+	RecognitionJobStatusWaitingConst    = "waiting"
 )
-
 
 // UnmarshalRecognitionJob unmarshals an instance of RecognitionJob from the specified map of raw messages.
 func UnmarshalRecognitionJob(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6595,7 +6574,6 @@ type RecognitionJobs struct {
 	// empty if the user has no current jobs.
 	Recognitions []RecognitionJob `json:"recognitions" validate:"required"`
 }
-
 
 // UnmarshalRecognitionJobs unmarshals an instance of RecognitionJobs from the specified map of raw messages.
 func UnmarshalRecognitionJobs(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6820,44 +6798,44 @@ type RecognizeOptions struct {
 // The identifier of the model that is to be used for the recognition request. See [Languages and
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 const (
-	RecognizeOptionsModelArArBroadbandmodelConst = "ar-AR_BroadbandModel"
-	RecognizeOptionsModelDeDeBroadbandmodelConst = "de-DE_BroadbandModel"
-	RecognizeOptionsModelDeDeNarrowbandmodelConst = "de-DE_NarrowbandModel"
-	RecognizeOptionsModelEnAuBroadbandmodelConst = "en-AU_BroadbandModel"
-	RecognizeOptionsModelEnAuNarrowbandmodelConst = "en-AU_NarrowbandModel"
-	RecognizeOptionsModelEnGbBroadbandmodelConst = "en-GB_BroadbandModel"
-	RecognizeOptionsModelEnGbNarrowbandmodelConst = "en-GB_NarrowbandModel"
-	RecognizeOptionsModelEnUsBroadbandmodelConst = "en-US_BroadbandModel"
-	RecognizeOptionsModelEnUsNarrowbandmodelConst = "en-US_NarrowbandModel"
+	RecognizeOptionsModelArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
+	RecognizeOptionsModelDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
+	RecognizeOptionsModelDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
+	RecognizeOptionsModelEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
+	RecognizeOptionsModelEnAuNarrowbandmodelConst          = "en-AU_NarrowbandModel"
+	RecognizeOptionsModelEnGbBroadbandmodelConst           = "en-GB_BroadbandModel"
+	RecognizeOptionsModelEnGbNarrowbandmodelConst          = "en-GB_NarrowbandModel"
+	RecognizeOptionsModelEnUsBroadbandmodelConst           = "en-US_BroadbandModel"
+	RecognizeOptionsModelEnUsNarrowbandmodelConst          = "en-US_NarrowbandModel"
 	RecognizeOptionsModelEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
-	RecognizeOptionsModelEsArBroadbandmodelConst = "es-AR_BroadbandModel"
-	RecognizeOptionsModelEsArNarrowbandmodelConst = "es-AR_NarrowbandModel"
-	RecognizeOptionsModelEsClBroadbandmodelConst = "es-CL_BroadbandModel"
-	RecognizeOptionsModelEsClNarrowbandmodelConst = "es-CL_NarrowbandModel"
-	RecognizeOptionsModelEsCoBroadbandmodelConst = "es-CO_BroadbandModel"
-	RecognizeOptionsModelEsCoNarrowbandmodelConst = "es-CO_NarrowbandModel"
-	RecognizeOptionsModelEsEsBroadbandmodelConst = "es-ES_BroadbandModel"
-	RecognizeOptionsModelEsEsNarrowbandmodelConst = "es-ES_NarrowbandModel"
-	RecognizeOptionsModelEsMxBroadbandmodelConst = "es-MX_BroadbandModel"
-	RecognizeOptionsModelEsMxNarrowbandmodelConst = "es-MX_NarrowbandModel"
-	RecognizeOptionsModelEsPeBroadbandmodelConst = "es-PE_BroadbandModel"
-	RecognizeOptionsModelEsPeNarrowbandmodelConst = "es-PE_NarrowbandModel"
-	RecognizeOptionsModelFrCaBroadbandmodelConst = "fr-CA_BroadbandModel"
-	RecognizeOptionsModelFrCaNarrowbandmodelConst = "fr-CA_NarrowbandModel"
-	RecognizeOptionsModelFrFrBroadbandmodelConst = "fr-FR_BroadbandModel"
-	RecognizeOptionsModelFrFrNarrowbandmodelConst = "fr-FR_NarrowbandModel"
-	RecognizeOptionsModelItItBroadbandmodelConst = "it-IT_BroadbandModel"
-	RecognizeOptionsModelItItNarrowbandmodelConst = "it-IT_NarrowbandModel"
-	RecognizeOptionsModelJaJpBroadbandmodelConst = "ja-JP_BroadbandModel"
-	RecognizeOptionsModelJaJpNarrowbandmodelConst = "ja-JP_NarrowbandModel"
-	RecognizeOptionsModelKoKrBroadbandmodelConst = "ko-KR_BroadbandModel"
-	RecognizeOptionsModelKoKrNarrowbandmodelConst = "ko-KR_NarrowbandModel"
-	RecognizeOptionsModelNlNlBroadbandmodelConst = "nl-NL_BroadbandModel"
-	RecognizeOptionsModelNlNlNarrowbandmodelConst = "nl-NL_NarrowbandModel"
-	RecognizeOptionsModelPtBrBroadbandmodelConst = "pt-BR_BroadbandModel"
-	RecognizeOptionsModelPtBrNarrowbandmodelConst = "pt-BR_NarrowbandModel"
-	RecognizeOptionsModelZhCnBroadbandmodelConst = "zh-CN_BroadbandModel"
-	RecognizeOptionsModelZhCnNarrowbandmodelConst = "zh-CN_NarrowbandModel"
+	RecognizeOptionsModelEsArBroadbandmodelConst           = "es-AR_BroadbandModel"
+	RecognizeOptionsModelEsArNarrowbandmodelConst          = "es-AR_NarrowbandModel"
+	RecognizeOptionsModelEsClBroadbandmodelConst           = "es-CL_BroadbandModel"
+	RecognizeOptionsModelEsClNarrowbandmodelConst          = "es-CL_NarrowbandModel"
+	RecognizeOptionsModelEsCoBroadbandmodelConst           = "es-CO_BroadbandModel"
+	RecognizeOptionsModelEsCoNarrowbandmodelConst          = "es-CO_NarrowbandModel"
+	RecognizeOptionsModelEsEsBroadbandmodelConst           = "es-ES_BroadbandModel"
+	RecognizeOptionsModelEsEsNarrowbandmodelConst          = "es-ES_NarrowbandModel"
+	RecognizeOptionsModelEsMxBroadbandmodelConst           = "es-MX_BroadbandModel"
+	RecognizeOptionsModelEsMxNarrowbandmodelConst          = "es-MX_NarrowbandModel"
+	RecognizeOptionsModelEsPeBroadbandmodelConst           = "es-PE_BroadbandModel"
+	RecognizeOptionsModelEsPeNarrowbandmodelConst          = "es-PE_NarrowbandModel"
+	RecognizeOptionsModelFrCaBroadbandmodelConst           = "fr-CA_BroadbandModel"
+	RecognizeOptionsModelFrCaNarrowbandmodelConst          = "fr-CA_NarrowbandModel"
+	RecognizeOptionsModelFrFrBroadbandmodelConst           = "fr-FR_BroadbandModel"
+	RecognizeOptionsModelFrFrNarrowbandmodelConst          = "fr-FR_NarrowbandModel"
+	RecognizeOptionsModelItItBroadbandmodelConst           = "it-IT_BroadbandModel"
+	RecognizeOptionsModelItItNarrowbandmodelConst          = "it-IT_NarrowbandModel"
+	RecognizeOptionsModelJaJpBroadbandmodelConst           = "ja-JP_BroadbandModel"
+	RecognizeOptionsModelJaJpNarrowbandmodelConst          = "ja-JP_NarrowbandModel"
+	RecognizeOptionsModelKoKrBroadbandmodelConst           = "ko-KR_BroadbandModel"
+	RecognizeOptionsModelKoKrNarrowbandmodelConst          = "ko-KR_NarrowbandModel"
+	RecognizeOptionsModelNlNlBroadbandmodelConst           = "nl-NL_BroadbandModel"
+	RecognizeOptionsModelNlNlNarrowbandmodelConst          = "nl-NL_NarrowbandModel"
+	RecognizeOptionsModelPtBrBroadbandmodelConst           = "pt-BR_BroadbandModel"
+	RecognizeOptionsModelPtBrNarrowbandmodelConst          = "pt-BR_NarrowbandModel"
+	RecognizeOptionsModelZhCnBroadbandmodelConst           = "zh-CN_BroadbandModel"
+	RecognizeOptionsModelZhCnNarrowbandmodelConst          = "zh-CN_NarrowbandModel"
 )
 
 // NewRecognizeOptions : Instantiate RecognizeOptions
@@ -7082,9 +7060,8 @@ type RegisterStatus struct {
 // * `already created`: The URL was already allowlisted.
 const (
 	RegisterStatusStatusAlreadyCreatedConst = "already created"
-	RegisterStatusStatusCreatedConst = "created"
+	RegisterStatusStatusCreatedConst        = "created"
 )
-
 
 // UnmarshalRegisterStatus unmarshals an instance of RegisterStatus from the specified map of raw messages.
 func UnmarshalRegisterStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7182,7 +7159,6 @@ type SpeakerLabelsResult struct {
 	Final *bool `json:"final" validate:"required"`
 }
 
-
 // UnmarshalSpeakerLabelsResult unmarshals an instance of SpeakerLabelsResult from the specified map of raw messages.
 func UnmarshalSpeakerLabelsResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SpeakerLabelsResult)
@@ -7231,7 +7207,6 @@ type SpeechModel struct {
 	Description *string `json:"description" validate:"required"`
 }
 
-
 // UnmarshalSpeechModel unmarshals an instance of SpeechModel from the specified map of raw messages.
 func UnmarshalSpeechModel(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SpeechModel)
@@ -7269,7 +7244,6 @@ type SpeechModels struct {
 	Models []SpeechModel `json:"models" validate:"required"`
 }
 
-
 // UnmarshalSpeechModels unmarshals an instance of SpeechModels from the specified map of raw messages.
 func UnmarshalSpeechModels(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SpeechModels)
@@ -7300,7 +7274,6 @@ type SpeechRecognitionAlternative struct {
 	// Confidence scores are returned only for the best alternative and only with results marked as final.
 	WordConfidence []interface{} `json:"word_confidence,omitempty"`
 }
-
 
 // UnmarshalSpeechRecognitionAlternative unmarshals an instance of SpeechRecognitionAlternative from the specified map of raw messages.
 func UnmarshalSpeechRecognitionAlternative(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7365,11 +7338,10 @@ type SpeechRecognitionResult struct {
 // * `silence` - A pause or silence that is at least as long as the pause interval.
 const (
 	SpeechRecognitionResultEndOfUtteranceEndOfDataConst = "end_of_data"
-	SpeechRecognitionResultEndOfUtteranceFullStopConst = "full_stop"
-	SpeechRecognitionResultEndOfUtteranceResetConst = "reset"
-	SpeechRecognitionResultEndOfUtteranceSilenceConst = "silence"
+	SpeechRecognitionResultEndOfUtteranceFullStopConst  = "full_stop"
+	SpeechRecognitionResultEndOfUtteranceResetConst     = "reset"
+	SpeechRecognitionResultEndOfUtteranceSilenceConst   = "silence"
 )
-
 
 // UnmarshalSpeechRecognitionResult unmarshals an instance of SpeechRecognitionResult from the specified map of raw messages.
 func UnmarshalSpeechRecognitionResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7437,7 +7409,6 @@ type SpeechRecognitionResults struct {
 	Warnings []string `json:"warnings,omitempty"`
 }
 
-
 // UnmarshalSpeechRecognitionResults unmarshals an instance of SpeechRecognitionResults from the specified map of raw messages.
 func UnmarshalSpeechRecognitionResults(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SpeechRecognitionResults)
@@ -7482,7 +7453,6 @@ type SupportedFeatures struct {
 	// (narrowband model only). Speaker labels are not supported for any other models.
 	SpeakerLabels *bool `json:"speaker_labels" validate:"required"`
 }
-
 
 // UnmarshalSupportedFeatures unmarshals an instance of SupportedFeatures from the specified map of raw messages.
 func UnmarshalSupportedFeatures(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7577,7 +7547,7 @@ type TrainLanguageModelOptions struct {
 // * `user` trains the model only on new words that were added or modified by the user directly. The model is not
 // trained on new words extracted from corpora or grammars.
 const (
-	TrainLanguageModelOptionsWordTypeToAddAllConst = "all"
+	TrainLanguageModelOptionsWordTypeToAddAllConst  = "all"
 	TrainLanguageModelOptionsWordTypeToAddUserConst = "user"
 )
 
@@ -7620,7 +7590,6 @@ type TrainingResponse struct {
 	Warnings []TrainingWarning `json:"warnings,omitempty"`
 }
 
-
 // UnmarshalTrainingResponse unmarshals an instance of TrainingResponse from the specified map of raw messages.
 func UnmarshalTrainingResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TrainingResponse)
@@ -7646,12 +7615,11 @@ type TrainingWarning struct {
 // Constants associated with the TrainingWarning.Code property.
 // An identifier for the type of invalid resources listed in the `description` field.
 const (
-	TrainingWarningCodeInvalidAudioFilesConst = "invalid_audio_files"
-	TrainingWarningCodeInvalidCorpusFilesConst = "invalid_corpus_files"
+	TrainingWarningCodeInvalidAudioFilesConst   = "invalid_audio_files"
+	TrainingWarningCodeInvalidCorpusFilesConst  = "invalid_corpus_files"
 	TrainingWarningCodeInvalidGrammarFilesConst = "invalid_grammar_files"
-	TrainingWarningCodeInvalidWordsConst = "invalid_words"
+	TrainingWarningCodeInvalidWordsConst        = "invalid_words"
 )
-
 
 // UnmarshalTrainingWarning unmarshals an instance of TrainingWarning from the specified map of raw messages.
 func UnmarshalTrainingWarning(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7809,7 +7777,6 @@ type Word struct {
 	Error []WordError `json:"error,omitempty"`
 }
 
-
 // UnmarshalWord unmarshals an instance of Word from the specified map of raw messages.
 func UnmarshalWord(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Word)
@@ -7850,7 +7817,6 @@ type WordAlternativeResult struct {
 	Word *string `json:"word" validate:"required"`
 }
 
-
 // UnmarshalWordAlternativeResult unmarshals an instance of WordAlternativeResult from the specified map of raw messages.
 func UnmarshalWordAlternativeResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WordAlternativeResult)
@@ -7877,7 +7843,6 @@ type WordAlternativeResults struct {
 	// An array of alternative hypotheses for a word from the input audio.
 	Alternatives []WordAlternativeResult `json:"alternatives" validate:"required"`
 }
-
 
 // UnmarshalWordAlternativeResults unmarshals an instance of WordAlternativeResults from the specified map of raw messages.
 func UnmarshalWordAlternativeResults(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7908,7 +7873,6 @@ type WordError struct {
 	Element *string `json:"element" validate:"required"`
 }
 
-
 // UnmarshalWordError unmarshals an instance of WordError from the specified map of raw messages.
 func UnmarshalWordError(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WordError)
@@ -7926,7 +7890,6 @@ type Words struct {
 	// is empty if the custom model has no words.
 	Words []Word `json:"words" validate:"required"`
 }
-
 
 // UnmarshalWords unmarshals an instance of Words from the specified map of raw messages.
 func UnmarshalWords(m map[string]json.RawMessage, result interface{}) (err error) {

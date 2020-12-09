@@ -40,7 +40,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -50,7 +50,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -58,7 +58,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "https://visualrecognitionv3/api",
+				URL:     "https://visualrecognitionv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -79,7 +79,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv3/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -101,7 +101,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -137,7 +137,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv3/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -155,12 +155,12 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -205,7 +205,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -271,7 +271,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -328,9 +328,9 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			})
 			It(`Invoke Classify with error: Param validation error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL:  testServer.URL,
+					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -347,7 +347,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -382,7 +382,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -392,7 +392,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -400,7 +400,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "https://visualrecognitionv3/api",
+				URL:     "https://visualrecognitionv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -421,7 +421,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv3/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -443,7 +443,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -479,7 +479,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv3/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -497,12 +497,12 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -545,7 +545,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -553,7 +553,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				// Construct an instance of the CreateClassifierOptions model
 				createClassifierOptionsModel := new(visualrecognitionv3.CreateClassifierOptions)
 				createClassifierOptionsModel.Name = core.StringPtr("testString")
-				createClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser { "key1": CreateMockReader("This is a mock file.") }
+				createClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
 				createClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
 				createClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
 				createClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -605,7 +605,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -620,7 +620,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				// Construct an instance of the CreateClassifierOptions model
 				createClassifierOptionsModel := new(visualrecognitionv3.CreateClassifierOptions)
 				createClassifierOptionsModel.Name = core.StringPtr("testString")
-				createClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser { "key1": CreateMockReader("This is a mock file.") }
+				createClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
 				createClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
 				createClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
 				createClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -660,7 +660,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -668,7 +668,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				// Construct an instance of the CreateClassifierOptions model
 				createClassifierOptionsModel := new(visualrecognitionv3.CreateClassifierOptions)
 				createClassifierOptionsModel.Name = core.StringPtr("testString")
-				createClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser { "key1": CreateMockReader("This is a mock file.") }
+				createClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
 				createClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
 				createClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
 				createClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -706,7 +706,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for verbose query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -718,7 +717,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -762,7 +761,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for verbose query parameter
 
 					// Sleep a short time to support a timeout test
@@ -778,7 +776,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -830,7 +828,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -875,7 +873,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -932,7 +930,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -984,7 +982,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1036,7 +1034,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1044,7 +1042,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				// Construct an instance of the UpdateClassifierOptions model
 				updateClassifierOptionsModel := new(visualrecognitionv3.UpdateClassifierOptions)
 				updateClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
-				updateClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser { "key1": CreateMockReader("This is a mock file.") }
+				updateClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
 				updateClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
 				updateClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
 				updateClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -1096,7 +1094,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1111,7 +1109,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				// Construct an instance of the UpdateClassifierOptions model
 				updateClassifierOptionsModel := new(visualrecognitionv3.UpdateClassifierOptions)
 				updateClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
-				updateClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser { "key1": CreateMockReader("This is a mock file.") }
+				updateClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
 				updateClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
 				updateClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
 				updateClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -1149,9 +1147,9 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			})
 			It(`Invoke UpdateClassifier with error: Param validation error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL:  testServer.URL,
+					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1168,7 +1166,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1176,7 +1174,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				// Construct an instance of the UpdateClassifierOptions model
 				updateClassifierOptionsModel := new(visualrecognitionv3.UpdateClassifierOptions)
 				updateClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
-				updateClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser { "key1": CreateMockReader("This is a mock file.") }
+				updateClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
 				updateClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
 				updateClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
 				updateClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -1223,7 +1221,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1254,7 +1252,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1287,7 +1285,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -1297,7 +1295,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -1305,7 +1303,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "https://visualrecognitionv3/api",
+				URL:     "https://visualrecognitionv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -1326,7 +1324,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv3/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -1348,7 +1346,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1384,7 +1382,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv3/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -1402,12 +1400,12 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -1458,7 +1456,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1510,7 +1508,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1545,7 +1543,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		It(`Instantiate service client`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -1555,7 +1553,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(visualRecognitionService).To(BeNil())
@@ -1563,7 +1561,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "https://visualrecognitionv3/api",
+				URL:     "https://visualrecognitionv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -1584,7 +1582,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv3/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
 			}
 
@@ -1606,7 +1604,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1642,7 +1640,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL": "https://visualrecognitionv3/api",
+				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
 				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -1660,12 +1658,12 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE":   "NOAuth",
+				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -1710,7 +1708,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1741,7 +1739,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
@@ -1775,7 +1773,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			visualRecognitionService, _ := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
 				URL:           "http://visualrecognitionv3modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			It(`Invoke NewClassifyOptions successfully`, func() {
 				// Construct an instance of the ClassifyOptions model

@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package toneanalyzerv3 : Operations and models for the ToneAnalyzerV3 service
 package toneanalyzerv3
@@ -369,7 +368,6 @@ type DocumentAnalysis struct {
 	Warning *string `json:"warning,omitempty"`
 }
 
-
 // UnmarshalDocumentAnalysis unmarshals an instance of DocumentAnalysis from the specified map of raw messages.
 func UnmarshalDocumentAnalysis(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DocumentAnalysis)
@@ -417,7 +415,6 @@ type SentenceAnalysis struct {
 	InputTo *int64 `json:"input_to,omitempty"`
 }
 
-
 // UnmarshalSentenceAnalysis unmarshals an instance of SentenceAnalysis from the specified map of raw messages.
 func UnmarshalSentenceAnalysis(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SentenceAnalysis)
@@ -460,7 +457,6 @@ type ToneAnalysis struct {
 	SentencesTone []SentenceAnalysis `json:"sentences_tone,omitempty"`
 }
 
-
 // UnmarshalToneAnalysis unmarshals an instance of ToneAnalysis from the specified map of raw messages.
 func UnmarshalToneAnalysis(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ToneAnalysis)
@@ -488,7 +484,6 @@ type ToneCategory struct {
 	// The user-visible, localized name of the category.
 	CategoryName *string `json:"category_name" validate:"required"`
 }
-
 
 // UnmarshalToneCategory unmarshals an instance of ToneCategory from the specified map of raw messages.
 func UnmarshalToneCategory(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -548,14 +543,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneChatOptionsAcceptLanguageArConst = "ar"
-	ToneChatOptionsAcceptLanguageDeConst = "de"
-	ToneChatOptionsAcceptLanguageEnConst = "en"
-	ToneChatOptionsAcceptLanguageEsConst = "es"
-	ToneChatOptionsAcceptLanguageFrConst = "fr"
-	ToneChatOptionsAcceptLanguageItConst = "it"
-	ToneChatOptionsAcceptLanguageJaConst = "ja"
-	ToneChatOptionsAcceptLanguageKoConst = "ko"
+	ToneChatOptionsAcceptLanguageArConst   = "ar"
+	ToneChatOptionsAcceptLanguageDeConst   = "de"
+	ToneChatOptionsAcceptLanguageEnConst   = "en"
+	ToneChatOptionsAcceptLanguageEsConst   = "es"
+	ToneChatOptionsAcceptLanguageFrConst   = "fr"
+	ToneChatOptionsAcceptLanguageItConst   = "it"
+	ToneChatOptionsAcceptLanguageJaConst   = "ja"
+	ToneChatOptionsAcceptLanguageKoConst   = "ko"
 	ToneChatOptionsAcceptLanguagePtBrConst = "pt-br"
 	ToneChatOptionsAcceptLanguageZhCnConst = "zh-cn"
 	ToneChatOptionsAcceptLanguageZhTwConst = "zh-tw"
@@ -610,15 +605,14 @@ type ToneChatScore struct {
 // The unique, non-localized identifier of the tone for the results. The service returns results only for tones whose
 // scores meet a minimum threshold of 0.5.
 const (
-	ToneChatScoreToneIDExcitedConst = "excited"
-	ToneChatScoreToneIDFrustratedConst = "frustrated"
-	ToneChatScoreToneIDImpoliteConst = "impolite"
-	ToneChatScoreToneIDPoliteConst = "polite"
-	ToneChatScoreToneIDSadConst = "sad"
-	ToneChatScoreToneIDSatisfiedConst = "satisfied"
+	ToneChatScoreToneIDExcitedConst     = "excited"
+	ToneChatScoreToneIDFrustratedConst  = "frustrated"
+	ToneChatScoreToneIDImpoliteConst    = "impolite"
+	ToneChatScoreToneIDPoliteConst      = "polite"
+	ToneChatScoreToneIDSadConst         = "sad"
+	ToneChatScoreToneIDSatisfiedConst   = "satisfied"
 	ToneChatScoreToneIDSympatheticConst = "sympathetic"
 )
-
 
 // UnmarshalToneChatScore unmarshals an instance of ToneChatScore from the specified map of raw messages.
 func UnmarshalToneChatScore(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -644,7 +638,6 @@ type ToneInput struct {
 	// The input content that the service is to analyze.
 	Text *string `json:"text" validate:"required"`
 }
-
 
 // NewToneInput : Instantiate ToneInput (Generic Model Constructor)
 func (*ToneAnalyzerV3) NewToneInput(text string) (model *ToneInput, err error) {
@@ -711,9 +704,9 @@ type ToneOptions struct {
 
 // Constants associated with the ToneOptions.Tone property.
 const (
-	ToneOptionsToneEmotionConst = "emotion"
+	ToneOptionsToneEmotionConst  = "emotion"
 	ToneOptionsToneLanguageConst = "language"
-	ToneOptionsToneSocialConst = "social"
+	ToneOptionsToneSocialConst   = "social"
 )
 
 // Constants associated with the ToneOptions.ContentLanguage property.
@@ -733,14 +726,14 @@ const (
 // language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 // **Accept-Language**.
 const (
-	ToneOptionsAcceptLanguageArConst = "ar"
-	ToneOptionsAcceptLanguageDeConst = "de"
-	ToneOptionsAcceptLanguageEnConst = "en"
-	ToneOptionsAcceptLanguageEsConst = "es"
-	ToneOptionsAcceptLanguageFrConst = "fr"
-	ToneOptionsAcceptLanguageItConst = "it"
-	ToneOptionsAcceptLanguageJaConst = "ja"
-	ToneOptionsAcceptLanguageKoConst = "ko"
+	ToneOptionsAcceptLanguageArConst   = "ar"
+	ToneOptionsAcceptLanguageDeConst   = "de"
+	ToneOptionsAcceptLanguageEnConst   = "en"
+	ToneOptionsAcceptLanguageEsConst   = "es"
+	ToneOptionsAcceptLanguageFrConst   = "fr"
+	ToneOptionsAcceptLanguageItConst   = "it"
+	ToneOptionsAcceptLanguageJaConst   = "ja"
+	ToneOptionsAcceptLanguageKoConst   = "ko"
 	ToneOptionsAcceptLanguagePtBrConst = "pt-br"
 	ToneOptionsAcceptLanguageZhCnConst = "zh-cn"
 	ToneOptionsAcceptLanguageZhTwConst = "zh-tw"
@@ -824,7 +817,6 @@ type ToneScore struct {
 	ToneName *string `json:"tone_name" validate:"required"`
 }
 
-
 // UnmarshalToneScore unmarshals an instance of ToneScore from the specified map of raw messages.
 func UnmarshalToneScore(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ToneScore)
@@ -853,7 +845,6 @@ type Utterance struct {
 	// A string that identifies the user who contributed the utterance specified by the `text` parameter.
 	User *string `json:"user,omitempty"`
 }
-
 
 // NewUtterance : Instantiate Utterance (Generic Model Constructor)
 func (*ToneAnalyzerV3) NewUtterance(text string) (model *Utterance, err error) {
@@ -889,7 +880,6 @@ type UtteranceAnalyses struct {
 	Warning *string `json:"warning,omitempty"`
 }
 
-
 // UnmarshalUtteranceAnalyses unmarshals an instance of UtteranceAnalyses from the specified map of raw messages.
 func UnmarshalUtteranceAnalyses(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(UtteranceAnalyses)
@@ -923,7 +913,6 @@ type UtteranceAnalysis struct {
 	// the utterance. **`2016-05-19`:** Not returned.
 	Error *string `json:"error,omitempty"`
 }
-
 
 // UnmarshalUtteranceAnalysis unmarshals an instance of UtteranceAnalysis from the specified map of raw messages.
 func UnmarshalUtteranceAnalysis(m map[string]json.RawMessage, result interface{}) (err error) {

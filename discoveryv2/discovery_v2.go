@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package discoveryv2 : Operations and models for the DiscoveryV2 service
 package discoveryv2
@@ -329,7 +328,7 @@ func (discovery *DiscoveryV2) GetCollectionWithContext(ctx context.Context, getC
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *getCollectionOptions.ProjectID,
+		"project_id":    *getCollectionOptions.ProjectID,
 		"collection_id": *getCollectionOptions.CollectionID,
 	}
 
@@ -390,7 +389,7 @@ func (discovery *DiscoveryV2) UpdateCollectionWithContext(ctx context.Context, u
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *updateCollectionOptions.ProjectID,
+		"project_id":    *updateCollectionOptions.ProjectID,
 		"collection_id": *updateCollectionOptions.CollectionID,
 	}
 
@@ -468,7 +467,7 @@ func (discovery *DiscoveryV2) DeleteCollectionWithContext(ctx context.Context, d
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *deleteCollectionOptions.ProjectID,
+		"project_id":    *deleteCollectionOptions.ProjectID,
 		"collection_id": *deleteCollectionOptions.CollectionID,
 	}
 
@@ -931,7 +930,7 @@ func (discovery *DiscoveryV2) AddDocumentWithContext(ctx context.Context, addDoc
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *addDocumentOptions.ProjectID,
+		"project_id":    *addDocumentOptions.ProjectID,
 		"collection_id": *addDocumentOptions.CollectionID,
 	}
 
@@ -1020,9 +1019,9 @@ func (discovery *DiscoveryV2) UpdateDocumentWithContext(ctx context.Context, upd
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *updateDocumentOptions.ProjectID,
+		"project_id":    *updateDocumentOptions.ProjectID,
 		"collection_id": *updateDocumentOptions.CollectionID,
-		"document_id": *updateDocumentOptions.DocumentID,
+		"document_id":   *updateDocumentOptions.DocumentID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1100,9 +1099,9 @@ func (discovery *DiscoveryV2) DeleteDocumentWithContext(ctx context.Context, del
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *deleteDocumentOptions.ProjectID,
+		"project_id":    *deleteDocumentOptions.ProjectID,
 		"collection_id": *deleteDocumentOptions.CollectionID,
-		"document_id": *deleteDocumentOptions.DocumentID,
+		"document_id":   *deleteDocumentOptions.DocumentID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1352,7 +1351,7 @@ func (discovery *DiscoveryV2) GetTrainingQueryWithContext(ctx context.Context, g
 
 	pathParamsMap := map[string]string{
 		"project_id": *getTrainingQueryOptions.ProjectID,
-		"query_id": *getTrainingQueryOptions.QueryID,
+		"query_id":   *getTrainingQueryOptions.QueryID,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1413,7 +1412,7 @@ func (discovery *DiscoveryV2) UpdateTrainingQueryWithContext(ctx context.Context
 
 	pathParamsMap := map[string]string{
 		"project_id": *updateTrainingQueryOptions.ProjectID,
-		"query_id": *updateTrainingQueryOptions.QueryID,
+		"query_id":   *updateTrainingQueryOptions.QueryID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1497,7 +1496,7 @@ func (discovery *DiscoveryV2) AnalyzeDocumentWithContext(ctx context.Context, an
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *analyzeDocumentOptions.ProjectID,
+		"project_id":    *analyzeDocumentOptions.ProjectID,
 		"collection_id": *analyzeDocumentOptions.CollectionID,
 	}
 
@@ -1692,7 +1691,7 @@ func (discovery *DiscoveryV2) GetEnrichmentWithContext(ctx context.Context, getE
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *getEnrichmentOptions.ProjectID,
+		"project_id":    *getEnrichmentOptions.ProjectID,
 		"enrichment_id": *getEnrichmentOptions.EnrichmentID,
 	}
 
@@ -1753,7 +1752,7 @@ func (discovery *DiscoveryV2) UpdateEnrichmentWithContext(ctx context.Context, u
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *updateEnrichmentOptions.ProjectID,
+		"project_id":    *updateEnrichmentOptions.ProjectID,
 		"enrichment_id": *updateEnrichmentOptions.EnrichmentID,
 	}
 
@@ -1829,7 +1828,7 @@ func (discovery *DiscoveryV2) DeleteEnrichmentWithContext(ctx context.Context, d
 	}
 
 	pathParamsMap := map[string]string{
-		"project_id": *deleteEnrichmentOptions.ProjectID,
+		"project_id":    *deleteEnrichmentOptions.ProjectID,
 		"enrichment_id": *deleteEnrichmentOptions.EnrichmentID,
 	}
 
@@ -2262,7 +2261,7 @@ type AddDocumentOptions struct {
 // NewAddDocumentOptions : Instantiate AddDocumentOptions
 func (*DiscoveryV2) NewAddDocumentOptions(projectID string, collectionID string) *AddDocumentOptions {
 	return &AddDocumentOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		CollectionID: core.StringPtr(collectionID),
 	}
 }
@@ -2350,7 +2349,7 @@ type AnalyzeDocumentOptions struct {
 // NewAnalyzeDocumentOptions : Instantiate AnalyzeDocumentOptions
 func (*DiscoveryV2) NewAnalyzeDocumentOptions(projectID string, collectionID string) *AnalyzeDocumentOptions {
 	return &AnalyzeDocumentOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		CollectionID: core.StringPtr(collectionID),
 	}
 }
@@ -2406,7 +2405,6 @@ type AnalyzedDocument struct {
 	Result *AnalyzedResult `json:"result,omitempty"`
 }
 
-
 // UnmarshalAnalyzedDocument unmarshals an instance of AnalyzedDocument from the specified map of raw messages.
 func UnmarshalAnalyzedDocument(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(AnalyzedDocument)
@@ -2430,7 +2428,6 @@ type AnalyzedResult struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string]interface{}
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of AnalyzedResult
 func (o *AnalyzedResult) SetProperty(key string, value interface{}) {
@@ -2495,7 +2492,6 @@ type Collection struct {
 	Name *string `json:"name,omitempty"`
 }
 
-
 // UnmarshalCollection unmarshals an instance of Collection from the specified map of raw messages.
 func UnmarshalCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Collection)
@@ -2531,7 +2527,6 @@ type CollectionDetails struct {
 	// An array of enrichments that are applied to this collection.
 	Enrichments []CollectionEnrichment `json:"enrichments,omitempty"`
 }
-
 
 // NewCollectionDetails : Instantiate CollectionDetails (Generic Model Constructor)
 func (*DiscoveryV2) NewCollectionDetails(name string) (model *CollectionDetails, err error) {
@@ -2582,7 +2577,6 @@ type CollectionEnrichment struct {
 	Fields []string `json:"fields,omitempty"`
 }
 
-
 // UnmarshalCollectionEnrichment unmarshals an instance of CollectionEnrichment from the specified map of raw messages.
 func UnmarshalCollectionEnrichment(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CollectionEnrichment)
@@ -2603,7 +2597,6 @@ type Completions struct {
 	// Array of autocomplete suggestion based on the provided prefix.
 	Completions []string `json:"completions,omitempty"`
 }
-
 
 // UnmarshalCompletions unmarshals an instance of Completions from the specified map of raw messages.
 func UnmarshalCompletions(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2634,12 +2627,11 @@ type ComponentSettingsAggregation struct {
 // Constants associated with the ComponentSettingsAggregation.VisualizationType property.
 // Type of visualization to use when rendering the aggregation.
 const (
-	ComponentSettingsAggregationVisualizationTypeAutoConst = "auto"
+	ComponentSettingsAggregationVisualizationTypeAutoConst       = "auto"
 	ComponentSettingsAggregationVisualizationTypeFacetTableConst = "facet_table"
-	ComponentSettingsAggregationVisualizationTypeMapConst = "map"
-	ComponentSettingsAggregationVisualizationTypeWordCloudConst = "word_cloud"
+	ComponentSettingsAggregationVisualizationTypeMapConst        = "map"
+	ComponentSettingsAggregationVisualizationTypeWordCloudConst  = "word_cloud"
 )
-
 
 // UnmarshalComponentSettingsAggregation unmarshals an instance of ComponentSettingsAggregation from the specified map of raw messages.
 func UnmarshalComponentSettingsAggregation(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2673,7 +2665,6 @@ type ComponentSettingsFieldsShown struct {
 	Title *ComponentSettingsFieldsShownTitle `json:"title,omitempty"`
 }
 
-
 // UnmarshalComponentSettingsFieldsShown unmarshals an instance of ComponentSettingsFieldsShown from the specified map of raw messages.
 func UnmarshalComponentSettingsFieldsShown(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ComponentSettingsFieldsShown)
@@ -2698,7 +2689,6 @@ type ComponentSettingsFieldsShownBody struct {
 	Field *string `json:"field,omitempty"`
 }
 
-
 // UnmarshalComponentSettingsFieldsShownBody unmarshals an instance of ComponentSettingsFieldsShownBody from the specified map of raw messages.
 func UnmarshalComponentSettingsFieldsShownBody(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ComponentSettingsFieldsShownBody)
@@ -2719,7 +2709,6 @@ type ComponentSettingsFieldsShownTitle struct {
 	// Use a specific field as the title.
 	Field *string `json:"field,omitempty"`
 }
-
 
 // UnmarshalComponentSettingsFieldsShownTitle unmarshals an instance of ComponentSettingsFieldsShownTitle from the specified map of raw messages.
 func UnmarshalComponentSettingsFieldsShownTitle(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2749,7 +2738,6 @@ type ComponentSettingsResponse struct {
 	// a list of component setting aggregations.
 	Aggregations []ComponentSettingsAggregation `json:"aggregations,omitempty"`
 }
-
 
 // UnmarshalComponentSettingsResponse unmarshals an instance of ComponentSettingsResponse from the specified map of raw messages.
 func UnmarshalComponentSettingsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2803,7 +2791,7 @@ type CreateCollectionOptions struct {
 func (*DiscoveryV2) NewCreateCollectionOptions(projectID string, name string) *CreateCollectionOptions {
 	return &CreateCollectionOptions{
 		ProjectID: core.StringPtr(projectID),
-		Name: core.StringPtr(name),
+		Name:      core.StringPtr(name),
 	}
 }
 
@@ -2861,13 +2849,12 @@ type CreateEnrichment struct {
 // Constants associated with the CreateEnrichment.Type property.
 // The type of this enrichment.
 const (
-	CreateEnrichmentTypeDictionaryConst = "dictionary"
-	CreateEnrichmentTypeRegularExpressionConst = "regular_expression"
-	CreateEnrichmentTypeRuleBasedConst = "rule_based"
-	CreateEnrichmentTypeUimaAnnotatorConst = "uima_annotator"
+	CreateEnrichmentTypeDictionaryConst                 = "dictionary"
+	CreateEnrichmentTypeRegularExpressionConst          = "regular_expression"
+	CreateEnrichmentTypeRuleBasedConst                  = "rule_based"
+	CreateEnrichmentTypeUimaAnnotatorConst              = "uima_annotator"
 	CreateEnrichmentTypeWatsonKnowledgeStudioModelConst = "watson_knowledge_studio_model"
 )
-
 
 // UnmarshalCreateEnrichment unmarshals an instance of CreateEnrichment from the specified map of raw messages.
 func UnmarshalCreateEnrichment(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2910,7 +2897,7 @@ type CreateEnrichmentOptions struct {
 // NewCreateEnrichmentOptions : Instantiate CreateEnrichmentOptions
 func (*DiscoveryV2) NewCreateEnrichmentOptions(projectID string, enrichment *CreateEnrichment) *CreateEnrichmentOptions {
 	return &CreateEnrichmentOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:  core.StringPtr(projectID),
 		Enrichment: enrichment,
 	}
 }
@@ -2957,10 +2944,10 @@ type CreateProjectOptions struct {
 // Constants associated with the CreateProjectOptions.Type property.
 // The project type of this project.
 const (
-	CreateProjectOptionsTypeAnswerRetrievalConst = "answer_retrieval"
-	CreateProjectOptionsTypeContentMiningConst = "content_mining"
+	CreateProjectOptionsTypeAnswerRetrievalConst   = "answer_retrieval"
+	CreateProjectOptionsTypeContentMiningConst     = "content_mining"
 	CreateProjectOptionsTypeDocumentRetrievalConst = "document_retrieval"
-	CreateProjectOptionsTypeOtherConst = "other"
+	CreateProjectOptionsTypeOtherConst             = "other"
 )
 
 // NewCreateProjectOptions : Instantiate CreateProjectOptions
@@ -3016,9 +3003,9 @@ type CreateTrainingQueryOptions struct {
 // NewCreateTrainingQueryOptions : Instantiate CreateTrainingQueryOptions
 func (*DiscoveryV2) NewCreateTrainingQueryOptions(projectID string, naturalLanguageQuery string, examples []TrainingExample) *CreateTrainingQueryOptions {
 	return &CreateTrainingQueryOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:            core.StringPtr(projectID),
 		NaturalLanguageQuery: core.StringPtr(naturalLanguageQuery),
-		Examples: examples,
+		Examples:             examples,
 	}
 }
 
@@ -3084,7 +3071,6 @@ type DefaultQueryParams struct {
 	// An array of field names to return in document results if present by default.
 	Return []string `json:"return,omitempty"`
 }
-
 
 // UnmarshalDefaultQueryParams unmarshals an instance of DefaultQueryParams from the specified map of raw messages.
 func UnmarshalDefaultQueryParams(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3155,7 +3141,6 @@ type DefaultQueryParamsPassages struct {
 	MaxPerDocument *int64 `json:"max_per_document,omitempty"`
 }
 
-
 // UnmarshalDefaultQueryParamsPassages unmarshals an instance of DefaultQueryParamsPassages from the specified map of raw messages.
 func UnmarshalDefaultQueryParamsPassages(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DefaultQueryParamsPassages)
@@ -3196,7 +3181,6 @@ type DefaultQueryParamsSuggestedRefinements struct {
 	Count *int64 `json:"count,omitempty"`
 }
 
-
 // UnmarshalDefaultQueryParamsSuggestedRefinements unmarshals an instance of DefaultQueryParamsSuggestedRefinements from the specified map of raw messages.
 func UnmarshalDefaultQueryParamsSuggestedRefinements(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DefaultQueryParamsSuggestedRefinements)
@@ -3223,7 +3207,6 @@ type DefaultQueryParamsTableResults struct {
 	// The number of table results to include in each result document.
 	PerDocument *int64 `json:"per_document,omitempty"`
 }
-
 
 // UnmarshalDefaultQueryParamsTableResults unmarshals an instance of DefaultQueryParamsTableResults from the specified map of raw messages.
 func UnmarshalDefaultQueryParamsTableResults(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3259,7 +3242,7 @@ type DeleteCollectionOptions struct {
 // NewDeleteCollectionOptions : Instantiate DeleteCollectionOptions
 func (*DiscoveryV2) NewDeleteCollectionOptions(projectID string, collectionID string) *DeleteCollectionOptions {
 	return &DeleteCollectionOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		CollectionID: core.StringPtr(collectionID),
 	}
 }
@@ -3304,9 +3287,9 @@ type DeleteDocumentOptions struct {
 // NewDeleteDocumentOptions : Instantiate DeleteDocumentOptions
 func (*DiscoveryV2) NewDeleteDocumentOptions(projectID string, collectionID string, documentID string) *DeleteDocumentOptions {
 	return &DeleteDocumentOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		DocumentID:   core.StringPtr(documentID),
 	}
 }
 
@@ -3355,7 +3338,6 @@ const (
 	DeleteDocumentResponseStatusDeletedConst = "deleted"
 )
 
-
 // UnmarshalDeleteDocumentResponse unmarshals an instance of DeleteDocumentResponse from the specified map of raw messages.
 func UnmarshalDeleteDocumentResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DeleteDocumentResponse)
@@ -3386,7 +3368,7 @@ type DeleteEnrichmentOptions struct {
 // NewDeleteEnrichmentOptions : Instantiate DeleteEnrichmentOptions
 func (*DiscoveryV2) NewDeleteEnrichmentOptions(projectID string, enrichmentID string) *DeleteEnrichmentOptions {
 	return &DeleteEnrichmentOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		EnrichmentID: core.StringPtr(enrichmentID),
 	}
 }
@@ -3507,10 +3489,9 @@ type DocumentAccepted struct {
 // Status of the document in the ingestion process. A status of `processing` is returned for documents that are ingested
 // with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
 const (
-	DocumentAcceptedStatusPendingConst = "pending"
+	DocumentAcceptedStatusPendingConst    = "pending"
 	DocumentAcceptedStatusProcessingConst = "processing"
 )
-
 
 // UnmarshalDocumentAccepted unmarshals an instance of DocumentAccepted from the specified map of raw messages.
 func UnmarshalDocumentAccepted(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3539,7 +3520,6 @@ type DocumentAttribute struct {
 	// `end`.
 	Location *TableElementLocation `json:"location,omitempty"`
 }
-
 
 // UnmarshalDocumentAttribute unmarshals an instance of DocumentAttribute from the specified map of raw messages.
 func UnmarshalDocumentAttribute(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3581,16 +3561,15 @@ type Enrichment struct {
 // Constants associated with the Enrichment.Type property.
 // The type of this enrichment.
 const (
-	EnrichmentTypeDictionaryConst = "dictionary"
+	EnrichmentTypeDictionaryConst                   = "dictionary"
 	EnrichmentTypeNaturalLanguageUnderstandingConst = "natural_language_understanding"
-	EnrichmentTypePartOfSpeechConst = "part_of_speech"
-	EnrichmentTypeRegularExpressionConst = "regular_expression"
-	EnrichmentTypeRuleBasedConst = "rule_based"
-	EnrichmentTypeSentimentConst = "sentiment"
-	EnrichmentTypeUimaAnnotatorConst = "uima_annotator"
-	EnrichmentTypeWatsonKnowledgeStudioModelConst = "watson_knowledge_studio_model"
+	EnrichmentTypePartOfSpeechConst                 = "part_of_speech"
+	EnrichmentTypeRegularExpressionConst            = "regular_expression"
+	EnrichmentTypeRuleBasedConst                    = "rule_based"
+	EnrichmentTypeSentimentConst                    = "sentiment"
+	EnrichmentTypeUimaAnnotatorConst                = "uima_annotator"
+	EnrichmentTypeWatsonKnowledgeStudioModelConst   = "watson_knowledge_studio_model"
 )
-
 
 // UnmarshalEnrichment unmarshals an instance of Enrichment from the specified map of raw messages.
 func UnmarshalEnrichment(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3637,7 +3616,6 @@ type EnrichmentOptions struct {
 	ResultField *string `json:"result_field,omitempty"`
 }
 
-
 // UnmarshalEnrichmentOptions unmarshals an instance of EnrichmentOptions from the specified map of raw messages.
 func UnmarshalEnrichmentOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(EnrichmentOptions)
@@ -3667,7 +3645,6 @@ type Enrichments struct {
 	Enrichments []Enrichment `json:"enrichments,omitempty"`
 }
 
-
 // UnmarshalEnrichments unmarshals an instance of Enrichments from the specified map of raw messages.
 func UnmarshalEnrichments(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Enrichments)
@@ -3694,19 +3671,18 @@ type Field struct {
 // Constants associated with the Field.Type property.
 // The type of the field.
 const (
-	FieldTypeBinaryConst = "binary"
+	FieldTypeBinaryConst  = "binary"
 	FieldTypeBooleanConst = "boolean"
-	FieldTypeByteConst = "byte"
-	FieldTypeDateConst = "date"
-	FieldTypeDoubleConst = "double"
-	FieldTypeFloatConst = "float"
+	FieldTypeByteConst    = "byte"
+	FieldTypeDateConst    = "date"
+	FieldTypeDoubleConst  = "double"
+	FieldTypeFloatConst   = "float"
 	FieldTypeIntegerConst = "integer"
-	FieldTypeLongConst = "long"
-	FieldTypeNestedConst = "nested"
-	FieldTypeShortConst = "short"
-	FieldTypeStringConst = "string"
+	FieldTypeLongConst    = "long"
+	FieldTypeNestedConst  = "nested"
+	FieldTypeShortConst   = "short"
+	FieldTypeStringConst  = "string"
 )
-
 
 // UnmarshalField unmarshals an instance of Field from the specified map of raw messages.
 func UnmarshalField(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3754,7 +3730,7 @@ type GetAutocompletionOptions struct {
 func (*DiscoveryV2) NewGetAutocompletionOptions(projectID string, prefix string) *GetAutocompletionOptions {
 	return &GetAutocompletionOptions{
 		ProjectID: core.StringPtr(projectID),
-		Prefix: core.StringPtr(prefix),
+		Prefix:    core.StringPtr(prefix),
 	}
 }
 
@@ -3809,7 +3785,7 @@ type GetCollectionOptions struct {
 // NewGetCollectionOptions : Instantiate GetCollectionOptions
 func (*DiscoveryV2) NewGetCollectionOptions(projectID string, collectionID string) *GetCollectionOptions {
 	return &GetCollectionOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		CollectionID: core.StringPtr(collectionID),
 	}
 }
@@ -3875,7 +3851,7 @@ type GetEnrichmentOptions struct {
 // NewGetEnrichmentOptions : Instantiate GetEnrichmentOptions
 func (*DiscoveryV2) NewGetEnrichmentOptions(projectID string, enrichmentID string) *GetEnrichmentOptions {
 	return &GetEnrichmentOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		EnrichmentID: core.StringPtr(enrichmentID),
 	}
 }
@@ -3942,7 +3918,7 @@ type GetTrainingQueryOptions struct {
 func (*DiscoveryV2) NewGetTrainingQueryOptions(projectID string, queryID string) *GetTrainingQueryOptions {
 	return &GetTrainingQueryOptions{
 		ProjectID: core.StringPtr(projectID),
-		QueryID: core.StringPtr(queryID),
+		QueryID:   core.StringPtr(queryID),
 	}
 }
 
@@ -3997,7 +3973,6 @@ type ListCollectionsResponse struct {
 	// An array containing information about each collection in the project.
 	Collections []Collection `json:"collections,omitempty"`
 }
-
 
 // UnmarshalListCollectionsResponse unmarshals an instance of ListCollectionsResponse from the specified map of raw messages.
 func UnmarshalListCollectionsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4090,7 +4065,6 @@ type ListFieldsResponse struct {
 	Fields []Field `json:"fields,omitempty"`
 }
 
-
 // UnmarshalListFieldsResponse unmarshals an instance of ListFieldsResponse from the specified map of raw messages.
 func UnmarshalListFieldsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ListFieldsResponse)
@@ -4125,7 +4099,6 @@ type ListProjectsResponse struct {
 	// An array of project details.
 	Projects []ProjectListDetails `json:"projects,omitempty"`
 }
-
 
 // UnmarshalListProjectsResponse unmarshals an instance of ListProjectsResponse from the specified map of raw messages.
 func UnmarshalListProjectsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4203,10 +4176,9 @@ type Notice struct {
 // Constants associated with the Notice.Severity property.
 // Severity level of the notice.
 const (
-	NoticeSeverityErrorConst = "error"
+	NoticeSeverityErrorConst   = "error"
 	NoticeSeverityWarningConst = "warning"
 )
-
 
 // UnmarshalNotice unmarshals an instance of Notice from the specified map of raw messages.
 func UnmarshalNotice(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4271,12 +4243,11 @@ type ProjectDetails struct {
 // Constants associated with the ProjectDetails.Type property.
 // The project type of this project.
 const (
-	ProjectDetailsTypeAnswerRetrievalConst = "answer_retrieval"
-	ProjectDetailsTypeContentMiningConst = "content_mining"
+	ProjectDetailsTypeAnswerRetrievalConst   = "answer_retrieval"
+	ProjectDetailsTypeContentMiningConst     = "content_mining"
 	ProjectDetailsTypeDocumentRetrievalConst = "document_retrieval"
-	ProjectDetailsTypeOtherConst = "other"
+	ProjectDetailsTypeOtherConst             = "other"
 )
-
 
 // UnmarshalProjectDetails unmarshals an instance of ProjectDetails from the specified map of raw messages.
 func UnmarshalProjectDetails(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4330,12 +4301,11 @@ type ProjectListDetails struct {
 // Constants associated with the ProjectListDetails.Type property.
 // The project type of this project.
 const (
-	ProjectListDetailsTypeAnswerRetrievalConst = "answer_retrieval"
-	ProjectListDetailsTypeContentMiningConst = "content_mining"
+	ProjectListDetailsTypeAnswerRetrievalConst   = "answer_retrieval"
+	ProjectListDetailsTypeContentMiningConst     = "content_mining"
 	ProjectListDetailsTypeDocumentRetrievalConst = "document_retrieval"
-	ProjectListDetailsTypeOtherConst = "other"
+	ProjectListDetailsTypeOtherConst             = "other"
 )
-
 
 // UnmarshalProjectListDetails unmarshals an instance of ProjectListDetails from the specified map of raw messages.
 func UnmarshalProjectListDetails(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4393,7 +4363,6 @@ type ProjectListDetailsRelevancyTrainingStatus struct {
 	// When `true`, the minimum number of queries required to train has been met.
 	MinimumQueriesAdded *bool `json:"minimum_queries_added,omitempty"`
 }
-
 
 // UnmarshalProjectListDetailsRelevancyTrainingStatus unmarshals an instance of ProjectListDetailsRelevancyTrainingStatus from the specified map of raw messages.
 func UnmarshalProjectListDetailsRelevancyTrainingStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4519,7 +4488,6 @@ type QueryGroupByAggregationResult struct {
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
-
 // UnmarshalQueryGroupByAggregationResult unmarshals an instance of QueryGroupByAggregationResult from the specified map of raw messages.
 func UnmarshalQueryGroupByAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryGroupByAggregationResult)
@@ -4563,7 +4531,6 @@ type QueryHistogramAggregationResult struct {
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
-
 // UnmarshalQueryHistogramAggregationResult unmarshals an instance of QueryHistogramAggregationResult from the specified map of raw messages.
 func UnmarshalQueryHistogramAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryHistogramAggregationResult)
@@ -4606,7 +4573,6 @@ type QueryLargePassages struct {
 	Characters *int64 `json:"characters,omitempty"`
 }
 
-
 // UnmarshalQueryLargePassages unmarshals an instance of QueryLargePassages from the specified map of raw messages.
 func UnmarshalQueryLargePassages(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryLargePassages)
@@ -4647,7 +4613,6 @@ type QueryLargeSuggestedRefinements struct {
 	Count *int64 `json:"count,omitempty"`
 }
 
-
 // UnmarshalQueryLargeSuggestedRefinements unmarshals an instance of QueryLargeSuggestedRefinements from the specified map of raw messages.
 func UnmarshalQueryLargeSuggestedRefinements(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryLargeSuggestedRefinements)
@@ -4671,7 +4636,6 @@ type QueryLargeTableResults struct {
 	// Maximum number of tables to return.
 	Count *int64 `json:"count,omitempty"`
 }
-
 
 // UnmarshalQueryLargeTableResults unmarshals an instance of QueryLargeTableResults from the specified map of raw messages.
 func UnmarshalQueryLargeTableResults(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4775,7 +4739,6 @@ type QueryNoticesResponse struct {
 	// Array of document results that match the query.
 	Notices []Notice `json:"notices,omitempty"`
 }
-
 
 // UnmarshalQueryNoticesResponse unmarshals an instance of QueryNoticesResponse from the specified map of raw messages.
 func UnmarshalQueryNoticesResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4983,7 +4946,6 @@ type QueryResponse struct {
 	Passages []QueryResponsePassage `json:"passages,omitempty"`
 }
 
-
 // UnmarshalQueryResponse unmarshals an instance of QueryResponse from the specified map of raw messages.
 func UnmarshalQueryResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryResponse)
@@ -5047,7 +5009,6 @@ type QueryResponsePassage struct {
 	Field *string `json:"field,omitempty"`
 }
 
-
 // UnmarshalQueryResponsePassage unmarshals an instance of QueryResponsePassage from the specified map of raw messages.
 func UnmarshalQueryResponsePassage(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryResponsePassage)
@@ -5100,7 +5061,6 @@ type QueryResult struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string]interface{}
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of QueryResult
 func (o *QueryResult) SetProperty(key string, value interface{}) {
@@ -5199,9 +5159,8 @@ type QueryResultMetadata struct {
 // The document retrieval source that produced this search result.
 const (
 	QueryResultMetadataDocumentRetrievalSourceCurationConst = "curation"
-	QueryResultMetadataDocumentRetrievalSourceSearchConst = "search"
+	QueryResultMetadataDocumentRetrievalSourceSearchConst   = "search"
 )
-
 
 // UnmarshalQueryResultMetadata unmarshals an instance of QueryResultMetadata from the specified map of raw messages.
 func UnmarshalQueryResultMetadata(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5237,7 +5196,6 @@ type QueryResultPassage struct {
 	Field *string `json:"field,omitempty"`
 }
 
-
 // UnmarshalQueryResultPassage unmarshals an instance of QueryResultPassage from the specified map of raw messages.
 func UnmarshalQueryResultPassage(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryResultPassage)
@@ -5266,7 +5224,6 @@ type QuerySuggestedRefinement struct {
 	// The text used to filter.
 	Text *string `json:"text,omitempty"`
 }
-
 
 // UnmarshalQuerySuggestedRefinement unmarshals an instance of QuerySuggestedRefinement from the specified map of raw messages.
 func UnmarshalQuerySuggestedRefinement(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5299,7 +5256,6 @@ type QueryTableResult struct {
 	// Full table object retrieved from Table Understanding Enrichment.
 	Table *TableResultTable `json:"table,omitempty"`
 }
-
 
 // UnmarshalQueryTableResult unmarshals an instance of QueryTableResult from the specified map of raw messages.
 func UnmarshalQueryTableResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5355,7 +5311,6 @@ type QueryTermAggregationResult struct {
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
-
 // UnmarshalQueryTermAggregationResult unmarshals an instance of QueryTermAggregationResult from the specified map of raw messages.
 func UnmarshalQueryTermAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryTermAggregationResult)
@@ -5402,7 +5357,6 @@ type QueryTimesliceAggregationResult struct {
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
-
 // UnmarshalQueryTimesliceAggregationResult unmarshals an instance of QueryTimesliceAggregationResult from the specified map of raw messages.
 func UnmarshalQueryTimesliceAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(QueryTimesliceAggregationResult)
@@ -5434,7 +5388,6 @@ type QueryTopHitsAggregationResult struct {
 	// An array of the document results.
 	Hits []map[string]interface{} `json:"hits,omitempty"`
 }
-
 
 // UnmarshalQueryTopHitsAggregationResult unmarshals an instance of QueryTopHitsAggregationResult from the specified map of raw messages.
 func UnmarshalQueryTopHitsAggregationResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5469,9 +5422,8 @@ type RetrievalDetails struct {
 // the **document_retrieval_strategy** will be listed as `untrained`.
 const (
 	RetrievalDetailsDocumentRetrievalStrategyRelevancyTrainingConst = "relevancy_training"
-	RetrievalDetailsDocumentRetrievalStrategyUntrainedConst = "untrained"
+	RetrievalDetailsDocumentRetrievalStrategyUntrainedConst         = "untrained"
 )
-
 
 // UnmarshalRetrievalDetails unmarshals an instance of RetrievalDetails from the specified map of raw messages.
 func UnmarshalRetrievalDetails(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5529,7 +5481,6 @@ type TableBodyCells struct {
 	// A list of document attributes.
 	Attributes []DocumentAttribute `json:"attributes,omitempty"`
 }
-
 
 // UnmarshalTableBodyCells unmarshals an instance of TableBodyCells from the specified map of raw messages.
 func UnmarshalTableBodyCells(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5607,7 +5558,6 @@ type TableCellKey struct {
 	Text *string `json:"text,omitempty"`
 }
 
-
 // UnmarshalTableCellKey unmarshals an instance of TableCellKey from the specified map of raw messages.
 func UnmarshalTableCellKey(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TableCellKey)
@@ -5640,7 +5590,6 @@ type TableCellValues struct {
 	Text *string `json:"text,omitempty"`
 }
 
-
 // UnmarshalTableCellValues unmarshals an instance of TableCellValues from the specified map of raw messages.
 func UnmarshalTableCellValues(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TableCellValues)
@@ -5666,7 +5615,6 @@ type TableColumnHeaderIds struct {
 	ID *string `json:"id,omitempty"`
 }
 
-
 // UnmarshalTableColumnHeaderIds unmarshals an instance of TableColumnHeaderIds from the specified map of raw messages.
 func UnmarshalTableColumnHeaderIds(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TableColumnHeaderIds)
@@ -5683,7 +5631,6 @@ type TableColumnHeaderTexts struct {
 	// The `text` value of a column header.
 	Text *string `json:"text,omitempty"`
 }
-
 
 // UnmarshalTableColumnHeaderTexts unmarshals an instance of TableColumnHeaderTexts from the specified map of raw messages.
 func UnmarshalTableColumnHeaderTexts(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5702,7 +5649,6 @@ type TableColumnHeaderTextsNormalized struct {
 	// The normalized version of a column header text.
 	TextNormalized *string `json:"text_normalized,omitempty"`
 }
-
 
 // UnmarshalTableColumnHeaderTextsNormalized unmarshals an instance of TableColumnHeaderTextsNormalized from the specified map of raw messages.
 func UnmarshalTableColumnHeaderTextsNormalized(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5743,7 +5689,6 @@ type TableColumnHeaders struct {
 	// The `end` index of this cell's `column` location in the current table.
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 }
-
 
 // UnmarshalTableColumnHeaders unmarshals an instance of TableColumnHeaders from the specified map of raw messages.
 func UnmarshalTableColumnHeaders(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5794,7 +5739,6 @@ type TableElementLocation struct {
 	End *int64 `json:"end" validate:"required"`
 }
 
-
 // UnmarshalTableElementLocation unmarshals an instance of TableElementLocation from the specified map of raw messages.
 func UnmarshalTableElementLocation(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TableElementLocation)
@@ -5834,7 +5778,6 @@ type TableHeaders struct {
 	// The `end` index of this cell's `column` location in the current table.
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 }
-
 
 // UnmarshalTableHeaders unmarshals an instance of TableHeaders from the specified map of raw messages.
 func UnmarshalTableHeaders(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5879,7 +5822,6 @@ type TableKeyValuePairs struct {
 	// A list of values in a key-value pair.
 	Value []TableCellValues `json:"value,omitempty"`
 }
-
 
 // UnmarshalTableKeyValuePairs unmarshals an instance of TableKeyValuePairs from the specified map of raw messages.
 func UnmarshalTableKeyValuePairs(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5932,7 +5874,6 @@ type TableResultTable struct {
 	// An array of lists of textual entries across the document related to the current table being parsed.
 	Contexts []TableTextLocation `json:"contexts,omitempty"`
 }
-
 
 // UnmarshalTableResultTable unmarshals an instance of TableResultTable from the specified map of raw messages.
 func UnmarshalTableResultTable(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5987,7 +5928,6 @@ type TableRowHeaderIds struct {
 	ID *string `json:"id,omitempty"`
 }
 
-
 // UnmarshalTableRowHeaderIds unmarshals an instance of TableRowHeaderIds from the specified map of raw messages.
 func UnmarshalTableRowHeaderIds(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TableRowHeaderIds)
@@ -6004,7 +5944,6 @@ type TableRowHeaderTexts struct {
 	// The `text` value of a row header.
 	Text *string `json:"text,omitempty"`
 }
-
 
 // UnmarshalTableRowHeaderTexts unmarshals an instance of TableRowHeaderTexts from the specified map of raw messages.
 func UnmarshalTableRowHeaderTexts(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6023,7 +5962,6 @@ type TableRowHeaderTextsNormalized struct {
 	// The normalized version of a row header text.
 	TextNormalized *string `json:"text_normalized,omitempty"`
 }
-
 
 // UnmarshalTableRowHeaderTextsNormalized unmarshals an instance of TableRowHeaderTextsNormalized from the specified map of raw messages.
 func UnmarshalTableRowHeaderTextsNormalized(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6064,7 +6002,6 @@ type TableRowHeaders struct {
 	// The `end` index of this cell's `column` location in the current table.
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 }
-
 
 // UnmarshalTableRowHeaders unmarshals an instance of TableRowHeaders from the specified map of raw messages.
 func UnmarshalTableRowHeaders(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6115,7 +6052,6 @@ type TableTextLocation struct {
 	Location *TableElementLocation `json:"location,omitempty"`
 }
 
-
 // UnmarshalTableTextLocation unmarshals an instance of TableTextLocation from the specified map of raw messages.
 func UnmarshalTableTextLocation(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TableTextLocation)
@@ -6149,13 +6085,12 @@ type TrainingExample struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
-
 // NewTrainingExample : Instantiate TrainingExample (Generic Model Constructor)
 func (*DiscoveryV2) NewTrainingExample(documentID string, collectionID string, relevance int64) (model *TrainingExample, err error) {
 	model = &TrainingExample{
-		DocumentID: core.StringPtr(documentID),
+		DocumentID:   core.StringPtr(documentID),
 		CollectionID: core.StringPtr(collectionID),
-		Relevance: core.Int64Ptr(relevance),
+		Relevance:    core.Int64Ptr(relevance),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -6209,12 +6144,11 @@ type TrainingQuery struct {
 	Examples []TrainingExample `json:"examples" validate:"required"`
 }
 
-
 // NewTrainingQuery : Instantiate TrainingQuery (Generic Model Constructor)
 func (*DiscoveryV2) NewTrainingQuery(naturalLanguageQuery string, examples []TrainingExample) (model *TrainingQuery, err error) {
 	model = &TrainingQuery{
 		NaturalLanguageQuery: core.StringPtr(naturalLanguageQuery),
-		Examples: examples,
+		Examples:             examples,
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -6257,7 +6191,6 @@ type TrainingQuerySet struct {
 	Queries []TrainingQuery `json:"queries,omitempty"`
 }
 
-
 // UnmarshalTrainingQuerySet unmarshals an instance of TrainingQuerySet from the specified map of raw messages.
 func UnmarshalTrainingQuerySet(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TrainingQuerySet)
@@ -6293,7 +6226,7 @@ type UpdateCollectionOptions struct {
 // NewUpdateCollectionOptions : Instantiate UpdateCollectionOptions
 func (*DiscoveryV2) NewUpdateCollectionOptions(projectID string, collectionID string) *UpdateCollectionOptions {
 	return &UpdateCollectionOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		CollectionID: core.StringPtr(collectionID),
 	}
 }
@@ -6376,9 +6309,9 @@ type UpdateDocumentOptions struct {
 // NewUpdateDocumentOptions : Instantiate UpdateDocumentOptions
 func (*DiscoveryV2) NewUpdateDocumentOptions(projectID string, collectionID string, documentID string) *UpdateDocumentOptions {
 	return &UpdateDocumentOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		CollectionID: core.StringPtr(collectionID),
-		DocumentID: core.StringPtr(documentID),
+		DocumentID:   core.StringPtr(documentID),
 	}
 }
 
@@ -6457,9 +6390,9 @@ type UpdateEnrichmentOptions struct {
 // NewUpdateEnrichmentOptions : Instantiate UpdateEnrichmentOptions
 func (*DiscoveryV2) NewUpdateEnrichmentOptions(projectID string, enrichmentID string, name string) *UpdateEnrichmentOptions {
 	return &UpdateEnrichmentOptions{
-		ProjectID: core.StringPtr(projectID),
+		ProjectID:    core.StringPtr(projectID),
 		EnrichmentID: core.StringPtr(enrichmentID),
-		Name: core.StringPtr(name),
+		Name:         core.StringPtr(name),
 	}
 }
 
@@ -6554,10 +6487,10 @@ type UpdateTrainingQueryOptions struct {
 // NewUpdateTrainingQueryOptions : Instantiate UpdateTrainingQueryOptions
 func (*DiscoveryV2) NewUpdateTrainingQueryOptions(projectID string, queryID string, naturalLanguageQuery string, examples []TrainingExample) *UpdateTrainingQueryOptions {
 	return &UpdateTrainingQueryOptions{
-		ProjectID: core.StringPtr(projectID),
-		QueryID: core.StringPtr(queryID),
+		ProjectID:            core.StringPtr(projectID),
+		QueryID:              core.StringPtr(queryID),
 		NaturalLanguageQuery: core.StringPtr(naturalLanguageQuery),
-		Examples: examples,
+		Examples:             examples,
 	}
 }
 
@@ -6612,7 +6545,6 @@ type QueryCalculationAggregation struct {
 	Value *float64 `json:"value,omitempty"`
 }
 
-
 func (*QueryCalculationAggregation) isaQueryAggregation() bool {
 	return true
 }
@@ -6653,7 +6585,6 @@ type QueryFilterAggregation struct {
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
-
 func (*QueryFilterAggregation) isaQueryAggregation() bool {
 	return true
 }
@@ -6691,7 +6622,6 @@ type QueryGroupByAggregation struct {
 	// Array of top values for the field.
 	Results []QueryGroupByAggregationResult `json:"results,omitempty"`
 }
-
 
 func (*QueryGroupByAggregation) isaQueryAggregation() bool {
 	return true
@@ -6732,7 +6662,6 @@ type QueryHistogramAggregation struct {
 	// Array of numeric intervals.
 	Results []QueryHistogramAggregationResult `json:"results,omitempty"`
 }
-
 
 func (*QueryHistogramAggregation) isaQueryAggregation() bool {
 	return true
@@ -6783,7 +6712,6 @@ type QueryNestedAggregation struct {
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
-
 func (*QueryNestedAggregation) isaQueryAggregation() bool {
 	return true
 }
@@ -6830,7 +6758,6 @@ type QueryTermAggregation struct {
 	// Array of top values for the field.
 	Results []QueryTermAggregationResult `json:"results,omitempty"`
 }
-
 
 func (*QueryTermAggregation) isaQueryAggregation() bool {
 	return true
@@ -6883,7 +6810,6 @@ type QueryTimesliceAggregation struct {
 	Results []QueryTimesliceAggregationResult `json:"results,omitempty"`
 }
 
-
 func (*QueryTimesliceAggregation) isaQueryAggregation() bool {
 	return true
 }
@@ -6930,7 +6856,6 @@ type QueryTopHitsAggregation struct {
 
 	Hits *QueryTopHitsAggregationResult `json:"hits,omitempty"`
 }
-
 
 func (*QueryTopHitsAggregation) isaQueryAggregation() bool {
 	return true

@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package naturallanguageunderstandingv1 : Operations and models for the NaturalLanguageUnderstandingV1 service
 package naturallanguageunderstandingv1
@@ -441,7 +440,6 @@ type AnalysisResults struct {
 	Syntax *SyntaxResult `json:"syntax,omitempty"`
 }
 
-
 // UnmarshalAnalysisResults unmarshals an instance of AnalysisResults from the specified map of raw messages.
 func UnmarshalAnalysisResults(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(AnalysisResults)
@@ -516,7 +514,6 @@ type AnalysisResultsUsage struct {
 	// Number of 10,000-character units processed.
 	TextUnits *int64 `json:"text_units,omitempty"`
 }
-
 
 // UnmarshalAnalysisResultsUsage unmarshals an instance of AnalysisResultsUsage from the specified map of raw messages.
 func UnmarshalAnalysisResultsUsage(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -658,7 +655,6 @@ type Author struct {
 	Name *string `json:"name,omitempty"`
 }
 
-
 // UnmarshalAuthor unmarshals an instance of Author from the specified map of raw messages.
 func UnmarshalAuthor(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Author)
@@ -692,7 +688,6 @@ type CategoriesOptions struct {
 	Model *string `json:"model,omitempty"`
 }
 
-
 // UnmarshalCategoriesOptions unmarshals an instance of CategoriesOptions from the specified map of raw messages.
 func UnmarshalCategoriesOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CategoriesOptions)
@@ -718,7 +713,6 @@ type CategoriesRelevantText struct {
 	Text *string `json:"text,omitempty"`
 }
 
-
 // UnmarshalCategoriesRelevantText unmarshals an instance of CategoriesRelevantText from the specified map of raw messages.
 func UnmarshalCategoriesRelevantText(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CategoriesRelevantText)
@@ -743,7 +737,6 @@ type CategoriesResult struct {
 	// Information that helps to explain what contributed to the categories result.
 	Explanation *CategoriesResultExplanation `json:"explanation,omitempty"`
 }
-
 
 // UnmarshalCategoriesResult unmarshals an instance of CategoriesResult from the specified map of raw messages.
 func UnmarshalCategoriesResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -771,7 +764,6 @@ type CategoriesResultExplanation struct {
 	RelevantText []CategoriesRelevantText `json:"relevant_text,omitempty"`
 }
 
-
 // UnmarshalCategoriesResultExplanation unmarshals an instance of CategoriesResultExplanation from the specified map of raw messages.
 func UnmarshalCategoriesResultExplanation(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CategoriesResultExplanation)
@@ -791,7 +783,6 @@ type ConceptsOptions struct {
 	// Maximum number of concepts to return.
 	Limit *int64 `json:"limit,omitempty"`
 }
-
 
 // UnmarshalConceptsOptions unmarshals an instance of ConceptsOptions from the specified map of raw messages.
 func UnmarshalConceptsOptions(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -815,7 +806,6 @@ type ConceptsResult struct {
 	// Link to the corresponding DBpedia resource.
 	DbpediaResource *string `json:"dbpedia_resource,omitempty"`
 }
-
 
 // UnmarshalConceptsResult unmarshals an instance of ConceptsResult from the specified map of raw messages.
 func UnmarshalConceptsResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -870,7 +860,6 @@ type DeleteModelResults struct {
 	Deleted *string `json:"deleted,omitempty"`
 }
 
-
 // UnmarshalDeleteModelResults unmarshals an instance of DeleteModelResults from the specified map of raw messages.
 func UnmarshalDeleteModelResults(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DeleteModelResults)
@@ -893,7 +882,6 @@ type DisambiguationResult struct {
 	// Entity subtype information.
 	Subtype []string `json:"subtype,omitempty"`
 }
-
 
 // UnmarshalDisambiguationResult unmarshals an instance of DisambiguationResult from the specified map of raw messages.
 func UnmarshalDisambiguationResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -920,7 +908,6 @@ type DocumentEmotionResults struct {
 	Emotion *EmotionScores `json:"emotion,omitempty"`
 }
 
-
 // UnmarshalDocumentEmotionResults unmarshals an instance of DocumentEmotionResults from the specified map of raw messages.
 func UnmarshalDocumentEmotionResults(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DocumentEmotionResults)
@@ -940,7 +927,6 @@ type DocumentSentimentResults struct {
 	// Sentiment score from -1 (negative) to 1 (positive).
 	Score *float64 `json:"score,omitempty"`
 }
-
 
 // UnmarshalDocumentSentimentResults unmarshals an instance of DocumentSentimentResults from the specified map of raw messages.
 func UnmarshalDocumentSentimentResults(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -970,7 +956,6 @@ type EmotionOptions struct {
 	Targets []string `json:"targets,omitempty"`
 }
 
-
 // UnmarshalEmotionOptions unmarshals an instance of EmotionOptions from the specified map of raw messages.
 func UnmarshalEmotionOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(EmotionOptions)
@@ -995,7 +980,6 @@ type EmotionResult struct {
 	// Emotion results for specified targets.
 	Targets []TargetedEmotionResults `json:"targets,omitempty"`
 }
-
 
 // UnmarshalEmotionResult unmarshals an instance of EmotionResult from the specified map of raw messages.
 func UnmarshalEmotionResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1029,7 +1013,6 @@ type EmotionScores struct {
 	// Sadness score from 0 to 1. A higher score means that the text is more likely to convey sadness.
 	Sadness *float64 `json:"sadness,omitempty"`
 }
-
 
 // UnmarshalEmotionScores unmarshals an instance of EmotionScores from the specified map of raw messages.
 func UnmarshalEmotionScores(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1082,7 +1065,6 @@ type EntitiesOptions struct {
 	// Set this to `true` to analyze emotion for detected keywords.
 	Emotion *bool `json:"emotion,omitempty"`
 }
-
 
 // UnmarshalEntitiesOptions unmarshals an instance of EntitiesOptions from the specified map of raw messages.
 func UnmarshalEntitiesOptions(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1143,7 +1125,6 @@ type EntitiesResult struct {
 	Disambiguation *DisambiguationResult `json:"disambiguation,omitempty"`
 }
 
-
 // UnmarshalEntitiesResult unmarshals an instance of EntitiesResult from the specified map of raw messages.
 func UnmarshalEntitiesResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(EntitiesResult)
@@ -1201,7 +1182,6 @@ type EntityMention struct {
 	Confidence *float64 `json:"confidence,omitempty"`
 }
 
-
 // UnmarshalEntityMention unmarshals an instance of EntityMention from the specified map of raw messages.
 func UnmarshalEntityMention(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(EntityMention)
@@ -1226,7 +1206,6 @@ type FeatureSentimentResults struct {
 	// Sentiment score from -1 (negative) to 1 (positive).
 	Score *float64 `json:"score,omitempty"`
 }
-
 
 // UnmarshalFeatureSentimentResults unmarshals an instance of FeatureSentimentResults from the specified map of raw messages.
 func UnmarshalFeatureSentimentResults(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1299,7 +1278,6 @@ type Features struct {
 	Syntax *SyntaxOptions `json:"syntax,omitempty"`
 }
 
-
 // UnmarshalFeatures unmarshals an instance of Features from the specified map of raw messages.
 func UnmarshalFeatures(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Features)
@@ -1365,7 +1343,6 @@ type FeaturesResultsMetadata struct {
 	Feeds []Feed `json:"feeds,omitempty"`
 }
 
-
 // UnmarshalFeaturesResultsMetadata unmarshals an instance of FeaturesResultsMetadata from the specified map of raw messages.
 func UnmarshalFeaturesResultsMetadata(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(FeaturesResultsMetadata)
@@ -1399,7 +1376,6 @@ type Feed struct {
 	Link *string `json:"link,omitempty"`
 }
 
-
 // UnmarshalFeed unmarshals an instance of Feed from the specified map of raw messages.
 func UnmarshalFeed(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Feed)
@@ -1424,7 +1400,6 @@ type KeywordsOptions struct {
 	// Set this to `true` to analyze emotion for detected keywords.
 	Emotion *bool `json:"emotion,omitempty"`
 }
-
 
 // UnmarshalKeywordsOptions unmarshals an instance of KeywordsOptions from the specified map of raw messages.
 func UnmarshalKeywordsOptions(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1462,7 +1437,6 @@ type KeywordsResult struct {
 	// Sentiment analysis results for the keyword, enabled with the `sentiment` option.
 	Sentiment *FeatureSentimentResults `json:"sentiment,omitempty"`
 }
-
 
 // UnmarshalKeywordsResult unmarshals an instance of KeywordsResult from the specified map of raw messages.
 func UnmarshalKeywordsResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1515,7 +1489,6 @@ type ListModelsResults struct {
 	Models []Model `json:"models,omitempty"`
 }
 
-
 // UnmarshalListModelsResults unmarshals an instance of ListModelsResults from the specified map of raw messages.
 func UnmarshalListModelsResults(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ListModelsResults)
@@ -1561,13 +1534,12 @@ type Model struct {
 // When the status is `available`, the model is ready to use.
 const (
 	ModelStatusAvailableConst = "available"
-	ModelStatusDeletedConst = "deleted"
+	ModelStatusDeletedConst   = "deleted"
 	ModelStatusDeployingConst = "deploying"
-	ModelStatusErrorConst = "error"
-	ModelStatusStartingConst = "starting"
-	ModelStatusTrainingConst = "training"
+	ModelStatusErrorConst     = "error"
+	ModelStatusStartingConst  = "starting"
+	ModelStatusTrainingConst  = "training"
 )
-
 
 // UnmarshalModel unmarshals an instance of Model from the specified map of raw messages.
 func UnmarshalModel(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1624,7 +1596,6 @@ type RelationArgument struct {
 	Text *string `json:"text,omitempty"`
 }
 
-
 // UnmarshalRelationArgument unmarshals an instance of RelationArgument from the specified map of raw messages.
 func UnmarshalRelationArgument(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(RelationArgument)
@@ -1652,7 +1623,6 @@ type RelationEntity struct {
 	// Entity type.
 	Type *string `json:"type,omitempty"`
 }
-
 
 // UnmarshalRelationEntity unmarshals an instance of RelationEntity from the specified map of raw messages.
 func UnmarshalRelationEntity(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1682,7 +1652,6 @@ type RelationsOptions struct {
 	Model *string `json:"model,omitempty"`
 }
 
-
 // UnmarshalRelationsOptions unmarshals an instance of RelationsOptions from the specified map of raw messages.
 func UnmarshalRelationsOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(RelationsOptions)
@@ -1708,7 +1677,6 @@ type RelationsResult struct {
 	// Entity mentions that are involved in the relation.
 	Arguments []RelationArgument `json:"arguments,omitempty"`
 }
-
 
 // UnmarshalRelationsResult unmarshals an instance of RelationsResult from the specified map of raw messages.
 func UnmarshalRelationsResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1742,7 +1710,6 @@ type SemanticRolesEntity struct {
 	Text *string `json:"text,omitempty"`
 }
 
-
 // UnmarshalSemanticRolesEntity unmarshals an instance of SemanticRolesEntity from the specified map of raw messages.
 func UnmarshalSemanticRolesEntity(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SemanticRolesEntity)
@@ -1763,7 +1730,6 @@ type SemanticRolesKeyword struct {
 	// The keyword text.
 	Text *string `json:"text,omitempty"`
 }
-
 
 // UnmarshalSemanticRolesKeyword unmarshals an instance of SemanticRolesKeyword from the specified map of raw messages.
 func UnmarshalSemanticRolesKeyword(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1789,7 +1755,6 @@ type SemanticRolesOptions struct {
 	// Set this to `true` to return entity information for subjects and objects.
 	Entities *bool `json:"entities,omitempty"`
 }
-
 
 // UnmarshalSemanticRolesOptions unmarshals an instance of SemanticRolesOptions from the specified map of raw messages.
 func UnmarshalSemanticRolesOptions(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1825,7 +1790,6 @@ type SemanticRolesResult struct {
 	Object *SemanticRolesResultObject `json:"object,omitempty"`
 }
 
-
 // UnmarshalSemanticRolesResult unmarshals an instance of SemanticRolesResult from the specified map of raw messages.
 func UnmarshalSemanticRolesResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SemanticRolesResult)
@@ -1860,7 +1824,6 @@ type SemanticRolesResultAction struct {
 	Verb *SemanticRolesVerb `json:"verb,omitempty"`
 }
 
-
 // UnmarshalSemanticRolesResultAction unmarshals an instance of SemanticRolesResultAction from the specified map of raw messages.
 func UnmarshalSemanticRolesResultAction(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SemanticRolesResultAction)
@@ -1889,7 +1852,6 @@ type SemanticRolesResultObject struct {
 	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
 }
 
-
 // UnmarshalSemanticRolesResultObject unmarshals an instance of SemanticRolesResultObject from the specified map of raw messages.
 func UnmarshalSemanticRolesResultObject(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SemanticRolesResultObject)
@@ -1916,7 +1878,6 @@ type SemanticRolesResultSubject struct {
 	// An array of extracted keywords.
 	Keywords []SemanticRolesKeyword `json:"keywords,omitempty"`
 }
-
 
 // UnmarshalSemanticRolesResultSubject unmarshals an instance of SemanticRolesResultSubject from the specified map of raw messages.
 func UnmarshalSemanticRolesResultSubject(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1946,7 +1907,6 @@ type SemanticRolesVerb struct {
 	Tense *string `json:"tense,omitempty"`
 }
 
-
 // UnmarshalSemanticRolesVerb unmarshals an instance of SemanticRolesVerb from the specified map of raw messages.
 func UnmarshalSemanticRolesVerb(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SemanticRolesVerb)
@@ -1970,7 +1930,6 @@ type SentenceResult struct {
 	// Character offsets indicating the beginning and end of the sentence in the analyzed text.
 	Location []int64 `json:"location,omitempty"`
 }
-
 
 // UnmarshalSentenceResult unmarshals an instance of SentenceResult from the specified map of raw messages.
 func UnmarshalSentenceResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1999,7 +1958,6 @@ type SentimentOptions struct {
 	Targets []string `json:"targets,omitempty"`
 }
 
-
 // UnmarshalSentimentOptions unmarshals an instance of SentimentOptions from the specified map of raw messages.
 func UnmarshalSentimentOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SentimentOptions)
@@ -2023,7 +1981,6 @@ type SentimentResult struct {
 	// The targeted sentiment to analyze.
 	Targets []TargetedSentimentResults `json:"targets,omitempty"`
 }
-
 
 // UnmarshalSentimentResult unmarshals an instance of SentimentResult from the specified map of raw messages.
 func UnmarshalSentimentResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2049,7 +2006,6 @@ type SyntaxOptions struct {
 	Sentences *bool `json:"sentences,omitempty"`
 }
 
-
 // UnmarshalSyntaxOptions unmarshals an instance of SyntaxOptions from the specified map of raw messages.
 func UnmarshalSyntaxOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SyntaxOptions)
@@ -2074,7 +2030,6 @@ type SyntaxOptionsTokens struct {
 	PartOfSpeech *bool `json:"part_of_speech,omitempty"`
 }
 
-
 // UnmarshalSyntaxOptionsTokens unmarshals an instance of SyntaxOptionsTokens from the specified map of raw messages.
 func UnmarshalSyntaxOptionsTokens(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SyntaxOptionsTokens)
@@ -2096,7 +2051,6 @@ type SyntaxResult struct {
 
 	Sentences []SentenceResult `json:"sentences,omitempty"`
 }
-
 
 // UnmarshalSyntaxResult unmarshals an instance of SyntaxResult from the specified map of raw messages.
 func UnmarshalSyntaxResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2122,7 +2076,6 @@ type TargetedEmotionResults struct {
 	Emotion *EmotionScores `json:"emotion,omitempty"`
 }
 
-
 // UnmarshalTargetedEmotionResults unmarshals an instance of TargetedEmotionResults from the specified map of raw messages.
 func UnmarshalTargetedEmotionResults(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TargetedEmotionResults)
@@ -2146,7 +2099,6 @@ type TargetedSentimentResults struct {
 	// Sentiment score from -1 (negative) to 1 (positive).
 	Score *float64 `json:"score,omitempty"`
 }
-
 
 // UnmarshalTargetedSentimentResults unmarshals an instance of TargetedSentimentResults from the specified map of raw messages.
 func UnmarshalTargetedSentimentResults(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2183,25 +2135,24 @@ type TokenResult struct {
 // The part of speech of the token. For more information about the values, see [Universal Dependencies POS
 // tags](https://universaldependencies.org/u/pos/).
 const (
-	TokenResultPartOfSpeechAdjConst = "ADJ"
-	TokenResultPartOfSpeechAdpConst = "ADP"
-	TokenResultPartOfSpeechAdvConst = "ADV"
-	TokenResultPartOfSpeechAuxConst = "AUX"
+	TokenResultPartOfSpeechAdjConst   = "ADJ"
+	TokenResultPartOfSpeechAdpConst   = "ADP"
+	TokenResultPartOfSpeechAdvConst   = "ADV"
+	TokenResultPartOfSpeechAuxConst   = "AUX"
 	TokenResultPartOfSpeechCconjConst = "CCONJ"
-	TokenResultPartOfSpeechDetConst = "DET"
-	TokenResultPartOfSpeechIntjConst = "INTJ"
-	TokenResultPartOfSpeechNounConst = "NOUN"
-	TokenResultPartOfSpeechNumConst = "NUM"
-	TokenResultPartOfSpeechPartConst = "PART"
-	TokenResultPartOfSpeechPronConst = "PRON"
+	TokenResultPartOfSpeechDetConst   = "DET"
+	TokenResultPartOfSpeechIntjConst  = "INTJ"
+	TokenResultPartOfSpeechNounConst  = "NOUN"
+	TokenResultPartOfSpeechNumConst   = "NUM"
+	TokenResultPartOfSpeechPartConst  = "PART"
+	TokenResultPartOfSpeechPronConst  = "PRON"
 	TokenResultPartOfSpeechPropnConst = "PROPN"
 	TokenResultPartOfSpeechPunctConst = "PUNCT"
 	TokenResultPartOfSpeechSconjConst = "SCONJ"
-	TokenResultPartOfSpeechSymConst = "SYM"
-	TokenResultPartOfSpeechVerbConst = "VERB"
-	TokenResultPartOfSpeechXConst = "X"
+	TokenResultPartOfSpeechSymConst   = "SYM"
+	TokenResultPartOfSpeechVerbConst  = "VERB"
+	TokenResultPartOfSpeechXConst     = "X"
 )
-
 
 // UnmarshalTokenResult unmarshals an instance of TokenResult from the specified map of raw messages.
 func UnmarshalTokenResult(m map[string]json.RawMessage, result interface{}) (err error) {

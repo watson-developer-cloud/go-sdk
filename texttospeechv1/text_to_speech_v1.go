@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package texttospeechv1 : Operations and models for the TextToSpeechV1 service
 package texttospeechv1
@@ -992,7 +991,7 @@ func (textToSpeech *TextToSpeechV1) AddWordWithContext(ctx context.Context, addW
 
 	pathParamsMap := map[string]string{
 		"customization_id": *addWordOptions.CustomizationID,
-		"word": *addWordOptions.Word,
+		"word":             *addWordOptions.Word,
 	}
 
 	builder := core.NewRequestBuilder(core.PUT)
@@ -1058,7 +1057,7 @@ func (textToSpeech *TextToSpeechV1) GetWordWithContext(ctx context.Context, getW
 
 	pathParamsMap := map[string]string{
 		"customization_id": *getWordOptions.CustomizationID,
-		"word": *getWordOptions.Word,
+		"word":             *getWordOptions.Word,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1121,7 +1120,7 @@ func (textToSpeech *TextToSpeechV1) DeleteWordWithContext(ctx context.Context, d
 
 	pathParamsMap := map[string]string{
 		"customization_id": *deleteWordOptions.CustomizationID,
-		"word": *deleteWordOptions.Word,
+		"word":             *deleteWordOptions.Word,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1262,8 +1261,8 @@ const (
 func (*TextToSpeechV1) NewAddWordOptions(customizationID string, word string, translation string) *AddWordOptions {
 	return &AddWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
-		Translation: core.StringPtr(translation),
+		Word:            core.StringPtr(word),
+		Translation:     core.StringPtr(translation),
 	}
 }
 
@@ -1319,7 +1318,7 @@ type AddWordsOptions struct {
 func (*TextToSpeechV1) NewAddWordsOptions(customizationID string, words []Word) *AddWordsOptions {
 	return &AddWordsOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Words: words,
+		Words:           words,
 	}
 }
 
@@ -1443,7 +1442,6 @@ type CustomModel struct {
 	Words []Word `json:"words,omitempty"`
 }
 
-
 // UnmarshalCustomModel unmarshals an instance of CustomModel from the specified map of raw messages.
 func UnmarshalCustomModel(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CustomModel)
@@ -1490,7 +1488,6 @@ type CustomModels struct {
 	// specified language.
 	Customizations []CustomModel `json:"customizations" validate:"required"`
 }
-
 
 // UnmarshalCustomModels unmarshals an instance of CustomModels from the specified map of raw messages.
 func UnmarshalCustomModels(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1577,7 +1574,7 @@ type DeleteWordOptions struct {
 func (*TextToSpeechV1) NewDeleteWordOptions(customizationID string, word string) *DeleteWordOptions {
 	return &DeleteWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1656,50 +1653,50 @@ type GetPronunciationOptions struct {
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation.
 const (
-	GetPronunciationOptionsVoiceArArOmarvoiceConst = "ar-AR_OmarVoice"
-	GetPronunciationOptionsVoiceDeDeBirgitv3voiceConst = "de-DE_BirgitV3Voice"
-	GetPronunciationOptionsVoiceDeDeBirgitvoiceConst = "de-DE_BirgitVoice"
-	GetPronunciationOptionsVoiceDeDeDieterv3voiceConst = "de-DE_DieterV3Voice"
-	GetPronunciationOptionsVoiceDeDeDietervoiceConst = "de-DE_DieterVoice"
-	GetPronunciationOptionsVoiceDeDeErikav3voiceConst = "de-DE_ErikaV3Voice"
+	GetPronunciationOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
+	GetPronunciationOptionsVoiceDeDeBirgitv3voiceConst    = "de-DE_BirgitV3Voice"
+	GetPronunciationOptionsVoiceDeDeBirgitvoiceConst      = "de-DE_BirgitVoice"
+	GetPronunciationOptionsVoiceDeDeDieterv3voiceConst    = "de-DE_DieterV3Voice"
+	GetPronunciationOptionsVoiceDeDeDietervoiceConst      = "de-DE_DieterVoice"
+	GetPronunciationOptionsVoiceDeDeErikav3voiceConst     = "de-DE_ErikaV3Voice"
 	GetPronunciationOptionsVoiceEnGbCharlottev3voiceConst = "en-GB_CharlotteV3Voice"
-	GetPronunciationOptionsVoiceEnGbJamesv3voiceConst = "en-GB_JamesV3Voice"
-	GetPronunciationOptionsVoiceEnGbKatev3voiceConst = "en-GB_KateV3Voice"
-	GetPronunciationOptionsVoiceEnGbKatevoiceConst = "en-GB_KateVoice"
-	GetPronunciationOptionsVoiceEnUsAllisonv3voiceConst = "en-US_AllisonV3Voice"
-	GetPronunciationOptionsVoiceEnUsAllisonvoiceConst = "en-US_AllisonVoice"
-	GetPronunciationOptionsVoiceEnUsEmilyv3voiceConst = "en-US_EmilyV3Voice"
-	GetPronunciationOptionsVoiceEnUsHenryv3voiceConst = "en-US_HenryV3Voice"
-	GetPronunciationOptionsVoiceEnUsKevinv3voiceConst = "en-US_KevinV3Voice"
-	GetPronunciationOptionsVoiceEnUsLisav3voiceConst = "en-US_LisaV3Voice"
-	GetPronunciationOptionsVoiceEnUsLisavoiceConst = "en-US_LisaVoice"
-	GetPronunciationOptionsVoiceEnUsMichaelv3voiceConst = "en-US_MichaelV3Voice"
-	GetPronunciationOptionsVoiceEnUsMichaelvoiceConst = "en-US_MichaelVoice"
-	GetPronunciationOptionsVoiceEnUsOliviav3voiceConst = "en-US_OliviaV3Voice"
-	GetPronunciationOptionsVoiceEsEsEnriquev3voiceConst = "es-ES_EnriqueV3Voice"
-	GetPronunciationOptionsVoiceEsEsEnriquevoiceConst = "es-ES_EnriqueVoice"
-	GetPronunciationOptionsVoiceEsEsLaurav3voiceConst = "es-ES_LauraV3Voice"
-	GetPronunciationOptionsVoiceEsEsLauravoiceConst = "es-ES_LauraVoice"
-	GetPronunciationOptionsVoiceEsLaSofiav3voiceConst = "es-LA_SofiaV3Voice"
-	GetPronunciationOptionsVoiceEsLaSofiavoiceConst = "es-LA_SofiaVoice"
-	GetPronunciationOptionsVoiceEsUsSofiav3voiceConst = "es-US_SofiaV3Voice"
-	GetPronunciationOptionsVoiceEsUsSofiavoiceConst = "es-US_SofiaVoice"
-	GetPronunciationOptionsVoiceFrFrNicolasv3voiceConst = "fr-FR_NicolasV3Voice"
-	GetPronunciationOptionsVoiceFrFrReneev3voiceConst = "fr-FR_ReneeV3Voice"
-	GetPronunciationOptionsVoiceFrFrReneevoiceConst = "fr-FR_ReneeVoice"
+	GetPronunciationOptionsVoiceEnGbJamesv3voiceConst     = "en-GB_JamesV3Voice"
+	GetPronunciationOptionsVoiceEnGbKatev3voiceConst      = "en-GB_KateV3Voice"
+	GetPronunciationOptionsVoiceEnGbKatevoiceConst        = "en-GB_KateVoice"
+	GetPronunciationOptionsVoiceEnUsAllisonv3voiceConst   = "en-US_AllisonV3Voice"
+	GetPronunciationOptionsVoiceEnUsAllisonvoiceConst     = "en-US_AllisonVoice"
+	GetPronunciationOptionsVoiceEnUsEmilyv3voiceConst     = "en-US_EmilyV3Voice"
+	GetPronunciationOptionsVoiceEnUsHenryv3voiceConst     = "en-US_HenryV3Voice"
+	GetPronunciationOptionsVoiceEnUsKevinv3voiceConst     = "en-US_KevinV3Voice"
+	GetPronunciationOptionsVoiceEnUsLisav3voiceConst      = "en-US_LisaV3Voice"
+	GetPronunciationOptionsVoiceEnUsLisavoiceConst        = "en-US_LisaVoice"
+	GetPronunciationOptionsVoiceEnUsMichaelv3voiceConst   = "en-US_MichaelV3Voice"
+	GetPronunciationOptionsVoiceEnUsMichaelvoiceConst     = "en-US_MichaelVoice"
+	GetPronunciationOptionsVoiceEnUsOliviav3voiceConst    = "en-US_OliviaV3Voice"
+	GetPronunciationOptionsVoiceEsEsEnriquev3voiceConst   = "es-ES_EnriqueV3Voice"
+	GetPronunciationOptionsVoiceEsEsEnriquevoiceConst     = "es-ES_EnriqueVoice"
+	GetPronunciationOptionsVoiceEsEsLaurav3voiceConst     = "es-ES_LauraV3Voice"
+	GetPronunciationOptionsVoiceEsEsLauravoiceConst       = "es-ES_LauraVoice"
+	GetPronunciationOptionsVoiceEsLaSofiav3voiceConst     = "es-LA_SofiaV3Voice"
+	GetPronunciationOptionsVoiceEsLaSofiavoiceConst       = "es-LA_SofiaVoice"
+	GetPronunciationOptionsVoiceEsUsSofiav3voiceConst     = "es-US_SofiaV3Voice"
+	GetPronunciationOptionsVoiceEsUsSofiavoiceConst       = "es-US_SofiaVoice"
+	GetPronunciationOptionsVoiceFrFrNicolasv3voiceConst   = "fr-FR_NicolasV3Voice"
+	GetPronunciationOptionsVoiceFrFrReneev3voiceConst     = "fr-FR_ReneeV3Voice"
+	GetPronunciationOptionsVoiceFrFrReneevoiceConst       = "fr-FR_ReneeVoice"
 	GetPronunciationOptionsVoiceItItFrancescav3voiceConst = "it-IT_FrancescaV3Voice"
-	GetPronunciationOptionsVoiceItItFrancescavoiceConst = "it-IT_FrancescaVoice"
-	GetPronunciationOptionsVoiceJaJpEmiv3voiceConst = "ja-JP_EmiV3Voice"
-	GetPronunciationOptionsVoiceJaJpEmivoiceConst = "ja-JP_EmiVoice"
-	GetPronunciationOptionsVoiceKoKrYoungmivoiceConst = "ko-KR_YoungmiVoice"
-	GetPronunciationOptionsVoiceKoKrYunavoiceConst = "ko-KR_YunaVoice"
-	GetPronunciationOptionsVoiceNlNlEmmavoiceConst = "nl-NL_EmmaVoice"
-	GetPronunciationOptionsVoiceNlNlLiamvoiceConst = "nl-NL_LiamVoice"
-	GetPronunciationOptionsVoicePtBrIsabelav3voiceConst = "pt-BR_IsabelaV3Voice"
-	GetPronunciationOptionsVoicePtBrIsabelavoiceConst = "pt-BR_IsabelaVoice"
-	GetPronunciationOptionsVoiceZhCnLinavoiceConst = "zh-CN_LiNaVoice"
-	GetPronunciationOptionsVoiceZhCnWangweivoiceConst = "zh-CN_WangWeiVoice"
-	GetPronunciationOptionsVoiceZhCnZhangjingvoiceConst = "zh-CN_ZhangJingVoice"
+	GetPronunciationOptionsVoiceItItFrancescavoiceConst   = "it-IT_FrancescaVoice"
+	GetPronunciationOptionsVoiceJaJpEmiv3voiceConst       = "ja-JP_EmiV3Voice"
+	GetPronunciationOptionsVoiceJaJpEmivoiceConst         = "ja-JP_EmiVoice"
+	GetPronunciationOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
+	GetPronunciationOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
+	GetPronunciationOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
+	GetPronunciationOptionsVoiceNlNlLiamvoiceConst        = "nl-NL_LiamVoice"
+	GetPronunciationOptionsVoicePtBrIsabelav3voiceConst   = "pt-BR_IsabelaV3Voice"
+	GetPronunciationOptionsVoicePtBrIsabelavoiceConst     = "pt-BR_IsabelaVoice"
+	GetPronunciationOptionsVoiceZhCnLinavoiceConst        = "zh-CN_LiNaVoice"
+	GetPronunciationOptionsVoiceZhCnWangweivoiceConst     = "zh-CN_WangWeiVoice"
+	GetPronunciationOptionsVoiceZhCnZhangjingvoiceConst   = "zh-CN_ZhangJingVoice"
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
@@ -1764,50 +1761,50 @@ type GetVoiceOptions struct {
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned.
 const (
-	GetVoiceOptionsVoiceArArOmarvoiceConst = "ar-AR_OmarVoice"
-	GetVoiceOptionsVoiceDeDeBirgitv3voiceConst = "de-DE_BirgitV3Voice"
-	GetVoiceOptionsVoiceDeDeBirgitvoiceConst = "de-DE_BirgitVoice"
-	GetVoiceOptionsVoiceDeDeDieterv3voiceConst = "de-DE_DieterV3Voice"
-	GetVoiceOptionsVoiceDeDeDietervoiceConst = "de-DE_DieterVoice"
-	GetVoiceOptionsVoiceDeDeErikav3voiceConst = "de-DE_ErikaV3Voice"
+	GetVoiceOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
+	GetVoiceOptionsVoiceDeDeBirgitv3voiceConst    = "de-DE_BirgitV3Voice"
+	GetVoiceOptionsVoiceDeDeBirgitvoiceConst      = "de-DE_BirgitVoice"
+	GetVoiceOptionsVoiceDeDeDieterv3voiceConst    = "de-DE_DieterV3Voice"
+	GetVoiceOptionsVoiceDeDeDietervoiceConst      = "de-DE_DieterVoice"
+	GetVoiceOptionsVoiceDeDeErikav3voiceConst     = "de-DE_ErikaV3Voice"
 	GetVoiceOptionsVoiceEnGbCharlottev3voiceConst = "en-GB_CharlotteV3Voice"
-	GetVoiceOptionsVoiceEnGbJamesv3voiceConst = "en-GB_JamesV3Voice"
-	GetVoiceOptionsVoiceEnGbKatev3voiceConst = "en-GB_KateV3Voice"
-	GetVoiceOptionsVoiceEnGbKatevoiceConst = "en-GB_KateVoice"
-	GetVoiceOptionsVoiceEnUsAllisonv3voiceConst = "en-US_AllisonV3Voice"
-	GetVoiceOptionsVoiceEnUsAllisonvoiceConst = "en-US_AllisonVoice"
-	GetVoiceOptionsVoiceEnUsEmilyv3voiceConst = "en-US_EmilyV3Voice"
-	GetVoiceOptionsVoiceEnUsHenryv3voiceConst = "en-US_HenryV3Voice"
-	GetVoiceOptionsVoiceEnUsKevinv3voiceConst = "en-US_KevinV3Voice"
-	GetVoiceOptionsVoiceEnUsLisav3voiceConst = "en-US_LisaV3Voice"
-	GetVoiceOptionsVoiceEnUsLisavoiceConst = "en-US_LisaVoice"
-	GetVoiceOptionsVoiceEnUsMichaelv3voiceConst = "en-US_MichaelV3Voice"
-	GetVoiceOptionsVoiceEnUsMichaelvoiceConst = "en-US_MichaelVoice"
-	GetVoiceOptionsVoiceEnUsOliviav3voiceConst = "en-US_OliviaV3Voice"
-	GetVoiceOptionsVoiceEsEsEnriquev3voiceConst = "es-ES_EnriqueV3Voice"
-	GetVoiceOptionsVoiceEsEsEnriquevoiceConst = "es-ES_EnriqueVoice"
-	GetVoiceOptionsVoiceEsEsLaurav3voiceConst = "es-ES_LauraV3Voice"
-	GetVoiceOptionsVoiceEsEsLauravoiceConst = "es-ES_LauraVoice"
-	GetVoiceOptionsVoiceEsLaSofiav3voiceConst = "es-LA_SofiaV3Voice"
-	GetVoiceOptionsVoiceEsLaSofiavoiceConst = "es-LA_SofiaVoice"
-	GetVoiceOptionsVoiceEsUsSofiav3voiceConst = "es-US_SofiaV3Voice"
-	GetVoiceOptionsVoiceEsUsSofiavoiceConst = "es-US_SofiaVoice"
-	GetVoiceOptionsVoiceFrFrNicolasv3voiceConst = "fr-FR_NicolasV3Voice"
-	GetVoiceOptionsVoiceFrFrReneev3voiceConst = "fr-FR_ReneeV3Voice"
-	GetVoiceOptionsVoiceFrFrReneevoiceConst = "fr-FR_ReneeVoice"
+	GetVoiceOptionsVoiceEnGbJamesv3voiceConst     = "en-GB_JamesV3Voice"
+	GetVoiceOptionsVoiceEnGbKatev3voiceConst      = "en-GB_KateV3Voice"
+	GetVoiceOptionsVoiceEnGbKatevoiceConst        = "en-GB_KateVoice"
+	GetVoiceOptionsVoiceEnUsAllisonv3voiceConst   = "en-US_AllisonV3Voice"
+	GetVoiceOptionsVoiceEnUsAllisonvoiceConst     = "en-US_AllisonVoice"
+	GetVoiceOptionsVoiceEnUsEmilyv3voiceConst     = "en-US_EmilyV3Voice"
+	GetVoiceOptionsVoiceEnUsHenryv3voiceConst     = "en-US_HenryV3Voice"
+	GetVoiceOptionsVoiceEnUsKevinv3voiceConst     = "en-US_KevinV3Voice"
+	GetVoiceOptionsVoiceEnUsLisav3voiceConst      = "en-US_LisaV3Voice"
+	GetVoiceOptionsVoiceEnUsLisavoiceConst        = "en-US_LisaVoice"
+	GetVoiceOptionsVoiceEnUsMichaelv3voiceConst   = "en-US_MichaelV3Voice"
+	GetVoiceOptionsVoiceEnUsMichaelvoiceConst     = "en-US_MichaelVoice"
+	GetVoiceOptionsVoiceEnUsOliviav3voiceConst    = "en-US_OliviaV3Voice"
+	GetVoiceOptionsVoiceEsEsEnriquev3voiceConst   = "es-ES_EnriqueV3Voice"
+	GetVoiceOptionsVoiceEsEsEnriquevoiceConst     = "es-ES_EnriqueVoice"
+	GetVoiceOptionsVoiceEsEsLaurav3voiceConst     = "es-ES_LauraV3Voice"
+	GetVoiceOptionsVoiceEsEsLauravoiceConst       = "es-ES_LauraVoice"
+	GetVoiceOptionsVoiceEsLaSofiav3voiceConst     = "es-LA_SofiaV3Voice"
+	GetVoiceOptionsVoiceEsLaSofiavoiceConst       = "es-LA_SofiaVoice"
+	GetVoiceOptionsVoiceEsUsSofiav3voiceConst     = "es-US_SofiaV3Voice"
+	GetVoiceOptionsVoiceEsUsSofiavoiceConst       = "es-US_SofiaVoice"
+	GetVoiceOptionsVoiceFrFrNicolasv3voiceConst   = "fr-FR_NicolasV3Voice"
+	GetVoiceOptionsVoiceFrFrReneev3voiceConst     = "fr-FR_ReneeV3Voice"
+	GetVoiceOptionsVoiceFrFrReneevoiceConst       = "fr-FR_ReneeVoice"
 	GetVoiceOptionsVoiceItItFrancescav3voiceConst = "it-IT_FrancescaV3Voice"
-	GetVoiceOptionsVoiceItItFrancescavoiceConst = "it-IT_FrancescaVoice"
-	GetVoiceOptionsVoiceJaJpEmiv3voiceConst = "ja-JP_EmiV3Voice"
-	GetVoiceOptionsVoiceJaJpEmivoiceConst = "ja-JP_EmiVoice"
-	GetVoiceOptionsVoiceKoKrYoungmivoiceConst = "ko-KR_YoungmiVoice"
-	GetVoiceOptionsVoiceKoKrYunavoiceConst = "ko-KR_YunaVoice"
-	GetVoiceOptionsVoiceNlNlEmmavoiceConst = "nl-NL_EmmaVoice"
-	GetVoiceOptionsVoiceNlNlLiamvoiceConst = "nl-NL_LiamVoice"
-	GetVoiceOptionsVoicePtBrIsabelav3voiceConst = "pt-BR_IsabelaV3Voice"
-	GetVoiceOptionsVoicePtBrIsabelavoiceConst = "pt-BR_IsabelaVoice"
-	GetVoiceOptionsVoiceZhCnLinavoiceConst = "zh-CN_LiNaVoice"
-	GetVoiceOptionsVoiceZhCnWangweivoiceConst = "zh-CN_WangWeiVoice"
-	GetVoiceOptionsVoiceZhCnZhangjingvoiceConst = "zh-CN_ZhangJingVoice"
+	GetVoiceOptionsVoiceItItFrancescavoiceConst   = "it-IT_FrancescaVoice"
+	GetVoiceOptionsVoiceJaJpEmiv3voiceConst       = "ja-JP_EmiV3Voice"
+	GetVoiceOptionsVoiceJaJpEmivoiceConst         = "ja-JP_EmiVoice"
+	GetVoiceOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
+	GetVoiceOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
+	GetVoiceOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
+	GetVoiceOptionsVoiceNlNlLiamvoiceConst        = "nl-NL_LiamVoice"
+	GetVoiceOptionsVoicePtBrIsabelav3voiceConst   = "pt-BR_IsabelaV3Voice"
+	GetVoiceOptionsVoicePtBrIsabelavoiceConst     = "pt-BR_IsabelaVoice"
+	GetVoiceOptionsVoiceZhCnLinavoiceConst        = "zh-CN_LiNaVoice"
+	GetVoiceOptionsVoiceZhCnWangweivoiceConst     = "zh-CN_WangWeiVoice"
+	GetVoiceOptionsVoiceZhCnZhangjingvoiceConst   = "zh-CN_ZhangJingVoice"
 )
 
 // NewGetVoiceOptions : Instantiate GetVoiceOptions
@@ -1852,7 +1849,7 @@ type GetWordOptions struct {
 func (*TextToSpeechV1) NewGetWordOptions(customizationID string, word string) *GetWordOptions {
 	return &GetWordOptions{
 		CustomizationID: core.StringPtr(customizationID),
-		Word: core.StringPtr(word),
+		Word:            core.StringPtr(word),
 	}
 }
 
@@ -1974,7 +1971,6 @@ type Pronunciation struct {
 	Pronunciation *string `json:"pronunciation" validate:"required"`
 }
 
-
 // UnmarshalPronunciation unmarshals an instance of Pronunciation from the specified map of raw messages.
 func UnmarshalPronunciation(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Pronunciation)
@@ -1995,7 +1991,6 @@ type SupportedFeatures struct {
 	// voice cannot be transformed.
 	VoiceTransformation *bool `json:"voice_transformation" validate:"required"`
 }
-
 
 // UnmarshalSupportedFeatures unmarshals an instance of SupportedFeatures from the specified map of raw messages.
 func UnmarshalSupportedFeatures(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2037,50 +2032,50 @@ type SynthesizeOptions struct {
 // Constants associated with the SynthesizeOptions.Voice property.
 // The voice to use for synthesis.
 const (
-	SynthesizeOptionsVoiceArArOmarvoiceConst = "ar-AR_OmarVoice"
-	SynthesizeOptionsVoiceDeDeBirgitv3voiceConst = "de-DE_BirgitV3Voice"
-	SynthesizeOptionsVoiceDeDeBirgitvoiceConst = "de-DE_BirgitVoice"
-	SynthesizeOptionsVoiceDeDeDieterv3voiceConst = "de-DE_DieterV3Voice"
-	SynthesizeOptionsVoiceDeDeDietervoiceConst = "de-DE_DieterVoice"
-	SynthesizeOptionsVoiceDeDeErikav3voiceConst = "de-DE_ErikaV3Voice"
+	SynthesizeOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
+	SynthesizeOptionsVoiceDeDeBirgitv3voiceConst    = "de-DE_BirgitV3Voice"
+	SynthesizeOptionsVoiceDeDeBirgitvoiceConst      = "de-DE_BirgitVoice"
+	SynthesizeOptionsVoiceDeDeDieterv3voiceConst    = "de-DE_DieterV3Voice"
+	SynthesizeOptionsVoiceDeDeDietervoiceConst      = "de-DE_DieterVoice"
+	SynthesizeOptionsVoiceDeDeErikav3voiceConst     = "de-DE_ErikaV3Voice"
 	SynthesizeOptionsVoiceEnGbCharlottev3voiceConst = "en-GB_CharlotteV3Voice"
-	SynthesizeOptionsVoiceEnGbJamesv3voiceConst = "en-GB_JamesV3Voice"
-	SynthesizeOptionsVoiceEnGbKatev3voiceConst = "en-GB_KateV3Voice"
-	SynthesizeOptionsVoiceEnGbKatevoiceConst = "en-GB_KateVoice"
-	SynthesizeOptionsVoiceEnUsAllisonv3voiceConst = "en-US_AllisonV3Voice"
-	SynthesizeOptionsVoiceEnUsAllisonvoiceConst = "en-US_AllisonVoice"
-	SynthesizeOptionsVoiceEnUsEmilyv3voiceConst = "en-US_EmilyV3Voice"
-	SynthesizeOptionsVoiceEnUsHenryv3voiceConst = "en-US_HenryV3Voice"
-	SynthesizeOptionsVoiceEnUsKevinv3voiceConst = "en-US_KevinV3Voice"
-	SynthesizeOptionsVoiceEnUsLisav3voiceConst = "en-US_LisaV3Voice"
-	SynthesizeOptionsVoiceEnUsLisavoiceConst = "en-US_LisaVoice"
-	SynthesizeOptionsVoiceEnUsMichaelv3voiceConst = "en-US_MichaelV3Voice"
-	SynthesizeOptionsVoiceEnUsMichaelvoiceConst = "en-US_MichaelVoice"
-	SynthesizeOptionsVoiceEnUsOliviav3voiceConst = "en-US_OliviaV3Voice"
-	SynthesizeOptionsVoiceEsEsEnriquev3voiceConst = "es-ES_EnriqueV3Voice"
-	SynthesizeOptionsVoiceEsEsEnriquevoiceConst = "es-ES_EnriqueVoice"
-	SynthesizeOptionsVoiceEsEsLaurav3voiceConst = "es-ES_LauraV3Voice"
-	SynthesizeOptionsVoiceEsEsLauravoiceConst = "es-ES_LauraVoice"
-	SynthesizeOptionsVoiceEsLaSofiav3voiceConst = "es-LA_SofiaV3Voice"
-	SynthesizeOptionsVoiceEsLaSofiavoiceConst = "es-LA_SofiaVoice"
-	SynthesizeOptionsVoiceEsUsSofiav3voiceConst = "es-US_SofiaV3Voice"
-	SynthesizeOptionsVoiceEsUsSofiavoiceConst = "es-US_SofiaVoice"
-	SynthesizeOptionsVoiceFrFrNicolasv3voiceConst = "fr-FR_NicolasV3Voice"
-	SynthesizeOptionsVoiceFrFrReneev3voiceConst = "fr-FR_ReneeV3Voice"
-	SynthesizeOptionsVoiceFrFrReneevoiceConst = "fr-FR_ReneeVoice"
+	SynthesizeOptionsVoiceEnGbJamesv3voiceConst     = "en-GB_JamesV3Voice"
+	SynthesizeOptionsVoiceEnGbKatev3voiceConst      = "en-GB_KateV3Voice"
+	SynthesizeOptionsVoiceEnGbKatevoiceConst        = "en-GB_KateVoice"
+	SynthesizeOptionsVoiceEnUsAllisonv3voiceConst   = "en-US_AllisonV3Voice"
+	SynthesizeOptionsVoiceEnUsAllisonvoiceConst     = "en-US_AllisonVoice"
+	SynthesizeOptionsVoiceEnUsEmilyv3voiceConst     = "en-US_EmilyV3Voice"
+	SynthesizeOptionsVoiceEnUsHenryv3voiceConst     = "en-US_HenryV3Voice"
+	SynthesizeOptionsVoiceEnUsKevinv3voiceConst     = "en-US_KevinV3Voice"
+	SynthesizeOptionsVoiceEnUsLisav3voiceConst      = "en-US_LisaV3Voice"
+	SynthesizeOptionsVoiceEnUsLisavoiceConst        = "en-US_LisaVoice"
+	SynthesizeOptionsVoiceEnUsMichaelv3voiceConst   = "en-US_MichaelV3Voice"
+	SynthesizeOptionsVoiceEnUsMichaelvoiceConst     = "en-US_MichaelVoice"
+	SynthesizeOptionsVoiceEnUsOliviav3voiceConst    = "en-US_OliviaV3Voice"
+	SynthesizeOptionsVoiceEsEsEnriquev3voiceConst   = "es-ES_EnriqueV3Voice"
+	SynthesizeOptionsVoiceEsEsEnriquevoiceConst     = "es-ES_EnriqueVoice"
+	SynthesizeOptionsVoiceEsEsLaurav3voiceConst     = "es-ES_LauraV3Voice"
+	SynthesizeOptionsVoiceEsEsLauravoiceConst       = "es-ES_LauraVoice"
+	SynthesizeOptionsVoiceEsLaSofiav3voiceConst     = "es-LA_SofiaV3Voice"
+	SynthesizeOptionsVoiceEsLaSofiavoiceConst       = "es-LA_SofiaVoice"
+	SynthesizeOptionsVoiceEsUsSofiav3voiceConst     = "es-US_SofiaV3Voice"
+	SynthesizeOptionsVoiceEsUsSofiavoiceConst       = "es-US_SofiaVoice"
+	SynthesizeOptionsVoiceFrFrNicolasv3voiceConst   = "fr-FR_NicolasV3Voice"
+	SynthesizeOptionsVoiceFrFrReneev3voiceConst     = "fr-FR_ReneeV3Voice"
+	SynthesizeOptionsVoiceFrFrReneevoiceConst       = "fr-FR_ReneeVoice"
 	SynthesizeOptionsVoiceItItFrancescav3voiceConst = "it-IT_FrancescaV3Voice"
-	SynthesizeOptionsVoiceItItFrancescavoiceConst = "it-IT_FrancescaVoice"
-	SynthesizeOptionsVoiceJaJpEmiv3voiceConst = "ja-JP_EmiV3Voice"
-	SynthesizeOptionsVoiceJaJpEmivoiceConst = "ja-JP_EmiVoice"
-	SynthesizeOptionsVoiceKoKrYoungmivoiceConst = "ko-KR_YoungmiVoice"
-	SynthesizeOptionsVoiceKoKrYunavoiceConst = "ko-KR_YunaVoice"
-	SynthesizeOptionsVoiceNlNlEmmavoiceConst = "nl-NL_EmmaVoice"
-	SynthesizeOptionsVoiceNlNlLiamvoiceConst = "nl-NL_LiamVoice"
-	SynthesizeOptionsVoicePtBrIsabelav3voiceConst = "pt-BR_IsabelaV3Voice"
-	SynthesizeOptionsVoicePtBrIsabelavoiceConst = "pt-BR_IsabelaVoice"
-	SynthesizeOptionsVoiceZhCnLinavoiceConst = "zh-CN_LiNaVoice"
-	SynthesizeOptionsVoiceZhCnWangweivoiceConst = "zh-CN_WangWeiVoice"
-	SynthesizeOptionsVoiceZhCnZhangjingvoiceConst = "zh-CN_ZhangJingVoice"
+	SynthesizeOptionsVoiceItItFrancescavoiceConst   = "it-IT_FrancescaVoice"
+	SynthesizeOptionsVoiceJaJpEmiv3voiceConst       = "ja-JP_EmiV3Voice"
+	SynthesizeOptionsVoiceJaJpEmivoiceConst         = "ja-JP_EmiVoice"
+	SynthesizeOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
+	SynthesizeOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
+	SynthesizeOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
+	SynthesizeOptionsVoiceNlNlLiamvoiceConst        = "nl-NL_LiamVoice"
+	SynthesizeOptionsVoicePtBrIsabelav3voiceConst   = "pt-BR_IsabelaV3Voice"
+	SynthesizeOptionsVoicePtBrIsabelavoiceConst     = "pt-BR_IsabelaVoice"
+	SynthesizeOptionsVoiceZhCnLinavoiceConst        = "zh-CN_LiNaVoice"
+	SynthesizeOptionsVoiceZhCnWangweivoiceConst     = "zh-CN_WangWeiVoice"
+	SynthesizeOptionsVoiceZhCnZhangjingvoiceConst   = "zh-CN_ZhangJingVoice"
 )
 
 // NewSynthesizeOptions : Instantiate SynthesizeOptions
@@ -2159,7 +2154,6 @@ const (
 	TranslationPartOfSpeechStzoConst = "Stzo"
 	TranslationPartOfSpeechSujiConst = "Suji"
 )
-
 
 // NewTranslation : Instantiate Translation (Generic Model Constructor)
 func (*TextToSpeechV1) NewTranslation(translation string) (model *Translation, err error) {
@@ -2271,7 +2265,6 @@ type Voice struct {
 	Customization *CustomModel `json:"customization,omitempty"`
 }
 
-
 // UnmarshalVoice unmarshals an instance of Voice from the specified map of raw messages.
 func UnmarshalVoice(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Voice)
@@ -2316,7 +2309,6 @@ type Voices struct {
 	// A list of available voices.
 	Voices []Voice `json:"voices" validate:"required"`
 }
-
 
 // UnmarshalVoices unmarshals an instance of Voices from the specified map of raw messages.
 func UnmarshalVoices(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2372,11 +2364,10 @@ const (
 	WordPartOfSpeechSujiConst = "Suji"
 )
 
-
 // NewWord : Instantiate Word (Generic Model Constructor)
 func (*TextToSpeechV1) NewWord(word string, translation string) (model *Word, err error) {
 	model = &Word{
-		Word: core.StringPtr(word),
+		Word:        core.StringPtr(word),
 		Translation: core.StringPtr(translation),
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -2415,7 +2406,6 @@ type Words struct {
 	// letters. The array is empty if the custom model contains no words.
 	Words []Word `json:"words" validate:"required"`
 }
-
 
 // NewWords : Instantiate Words (Generic Model Constructor)
 func (*TextToSpeechV1) NewWords(words []Word) (model *Words, err error) {

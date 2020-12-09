@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package languagetranslatorv3 : Operations and models for the LanguageTranslatorV3 service
 package languagetranslatorv3
@@ -1160,7 +1159,6 @@ type DeleteModelResult struct {
 	Status *string `json:"status" validate:"required"`
 }
 
-
 // UnmarshalDeleteModelResult unmarshals an instance of DeleteModelResult from the specified map of raw messages.
 func UnmarshalDeleteModelResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DeleteModelResult)
@@ -1177,7 +1175,6 @@ type DocumentList struct {
 	// An array of all previously submitted documents.
 	Documents []DocumentStatus `json:"documents" validate:"required"`
 }
-
 
 // UnmarshalDocumentList unmarshals an instance of DocumentList from the specified map of raw messages.
 func UnmarshalDocumentList(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1234,11 +1231,10 @@ type DocumentStatus struct {
 // Constants associated with the DocumentStatus.Status property.
 // The status of the translation job associated with a submitted document.
 const (
-	DocumentStatusStatusAvailableConst = "available"
-	DocumentStatusStatusFailedConst = "failed"
+	DocumentStatusStatusAvailableConst  = "available"
+	DocumentStatusStatusFailedConst     = "failed"
 	DocumentStatusStatusProcessingConst = "processing"
 )
-
 
 // UnmarshalDocumentStatus unmarshals an instance of DocumentStatus from the specified map of raw messages.
 func UnmarshalDocumentStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1404,7 +1400,6 @@ type IdentifiableLanguage struct {
 	Name *string `json:"name" validate:"required"`
 }
 
-
 // UnmarshalIdentifiableLanguage unmarshals an instance of IdentifiableLanguage from the specified map of raw messages.
 func UnmarshalIdentifiableLanguage(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(IdentifiableLanguage)
@@ -1426,7 +1421,6 @@ type IdentifiableLanguages struct {
 	Languages []IdentifiableLanguage `json:"languages" validate:"required"`
 }
 
-
 // UnmarshalIdentifiableLanguages unmarshals an instance of IdentifiableLanguages from the specified map of raw messages.
 func UnmarshalIdentifiableLanguages(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(IdentifiableLanguages)
@@ -1446,7 +1440,6 @@ type IdentifiedLanguage struct {
 	// The confidence score for the identified language.
 	Confidence *float64 `json:"confidence" validate:"required"`
 }
-
 
 // UnmarshalIdentifiedLanguage unmarshals an instance of IdentifiedLanguage from the specified map of raw messages.
 func UnmarshalIdentifiedLanguage(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1468,7 +1461,6 @@ type IdentifiedLanguages struct {
 	// A ranking of identified languages with confidence scores.
 	Languages []IdentifiedLanguage `json:"languages" validate:"required"`
 }
-
 
 // UnmarshalIdentifiedLanguages unmarshals an instance of IdentifiedLanguages from the specified map of raw messages.
 func UnmarshalIdentifiedLanguages(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1543,7 +1535,6 @@ type Language struct {
 	Identifiable *bool `json:"identifiable,omitempty"`
 }
 
-
 // UnmarshalLanguage unmarshals an instance of Language from the specified map of raw messages.
 func UnmarshalLanguage(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Language)
@@ -1592,7 +1583,6 @@ type Languages struct {
 	// An array of supported languages with information about each language.
 	Languages []Language `json:"languages" validate:"required"`
 }
-
 
 // UnmarshalLanguages unmarshals an instance of Languages from the specified map of raw messages.
 func UnmarshalLanguages(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1742,7 +1732,7 @@ type TranslateDocumentOptions struct {
 // NewTranslateDocumentOptions : Instantiate TranslateDocumentOptions
 func (*LanguageTranslatorV3) NewTranslateDocumentOptions(file io.ReadCloser, filename string) *TranslateDocumentOptions {
 	return &TranslateDocumentOptions{
-		File: file,
+		File:     file,
 		Filename: core.StringPtr(filename),
 	}
 }
@@ -1860,7 +1850,6 @@ type Translation struct {
 	Translation *string `json:"translation" validate:"required"`
 }
 
-
 // UnmarshalTranslation unmarshals an instance of Translation from the specified map of raw messages.
 func UnmarshalTranslation(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Translation)
@@ -1912,18 +1901,17 @@ type TranslationModel struct {
 // Constants associated with the TranslationModel.Status property.
 // Availability of a model.
 const (
-	TranslationModelStatusAvailableConst = "available"
-	TranslationModelStatusDeletedConst = "deleted"
+	TranslationModelStatusAvailableConst   = "available"
+	TranslationModelStatusDeletedConst     = "deleted"
 	TranslationModelStatusDispatchingConst = "dispatching"
-	TranslationModelStatusErrorConst = "error"
-	TranslationModelStatusPublishingConst = "publishing"
-	TranslationModelStatusQueuedConst = "queued"
-	TranslationModelStatusTrainedConst = "trained"
-	TranslationModelStatusTrainingConst = "training"
-	TranslationModelStatusUploadedConst = "uploaded"
-	TranslationModelStatusUploadingConst = "uploading"
+	TranslationModelStatusErrorConst       = "error"
+	TranslationModelStatusPublishingConst  = "publishing"
+	TranslationModelStatusQueuedConst      = "queued"
+	TranslationModelStatusTrainedConst     = "trained"
+	TranslationModelStatusTrainingConst    = "training"
+	TranslationModelStatusUploadedConst    = "uploaded"
+	TranslationModelStatusUploadingConst   = "uploading"
 )
-
 
 // UnmarshalTranslationModel unmarshals an instance of TranslationModel from the specified map of raw messages.
 func UnmarshalTranslationModel(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1978,7 +1966,6 @@ type TranslationModels struct {
 	Models []TranslationModel `json:"models" validate:"required"`
 }
 
-
 // UnmarshalTranslationModels unmarshals an instance of TranslationModels from the specified map of raw messages.
 func UnmarshalTranslationModels(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TranslationModels)
@@ -2008,7 +1995,6 @@ type TranslationResult struct {
 	// List of translation output in UTF-8, corresponding to the input text entries.
 	Translations []Translation `json:"translations" validate:"required"`
 }
-
 
 // UnmarshalTranslationResult unmarshals an instance of TranslationResult from the specified map of raw messages.
 func UnmarshalTranslationResult(m map[string]json.RawMessage, result interface{}) (err error) {

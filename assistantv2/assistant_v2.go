@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package assistantv2 : Operations and models for the AssistantV2 service
 package assistantv2
@@ -252,7 +251,7 @@ func (assistant *AssistantV2) DeleteSessionWithContext(ctx context.Context, dele
 
 	pathParamsMap := map[string]string{
 		"assistant_id": *deleteSessionOptions.AssistantID,
-		"session_id": *deleteSessionOptions.SessionID,
+		"session_id":   *deleteSessionOptions.SessionID,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -305,7 +304,7 @@ func (assistant *AssistantV2) MessageWithContext(ctx context.Context, messageOpt
 
 	pathParamsMap := map[string]string{
 		"assistant_id": *messageOptions.AssistantID,
-		"session_id": *messageOptions.SessionID,
+		"session_id":   *messageOptions.SessionID,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -687,7 +686,6 @@ type BulkClassifyOutput struct {
 	Intents []RuntimeIntent `json:"intents,omitempty"`
 }
 
-
 // UnmarshalBulkClassifyOutput unmarshals an instance of BulkClassifyOutput from the specified map of raw messages.
 func UnmarshalBulkClassifyOutput(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(BulkClassifyOutput)
@@ -713,7 +711,6 @@ type BulkClassifyResponse struct {
 	Output []BulkClassifyOutput `json:"output,omitempty"`
 }
 
-
 // UnmarshalBulkClassifyResponse unmarshals an instance of BulkClassifyResponse from the specified map of raw messages.
 func UnmarshalBulkClassifyResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(BulkClassifyResponse)
@@ -730,7 +727,6 @@ type BulkClassifyUtterance struct {
 	// The text of the input utterance.
 	Text *string `json:"text" validate:"required"`
 }
-
 
 // NewBulkClassifyUtterance : Instantiate BulkClassifyUtterance (Generic Model Constructor)
 func (*AssistantV2) NewBulkClassifyUtterance(text string) (model *BulkClassifyUtterance, err error) {
@@ -760,7 +756,6 @@ type CaptureGroup struct {
 	// Zero-based character offsets that indicate where the entity value begins and ends in the input text.
 	Location []int64 `json:"location,omitempty"`
 }
-
 
 // NewCaptureGroup : Instantiate CaptureGroup (Generic Model Constructor)
 func (*AssistantV2) NewCaptureGroup(group string) (model *CaptureGroup, err error) {
@@ -838,7 +833,7 @@ type DeleteSessionOptions struct {
 func (*AssistantV2) NewDeleteSessionOptions(assistantID string, sessionID string) *DeleteSessionOptions {
 	return &DeleteSessionOptions{
 		AssistantID: core.StringPtr(assistantID),
-		SessionID: core.StringPtr(sessionID),
+		SessionID:   core.StringPtr(sessionID),
 	}
 }
 
@@ -901,10 +896,9 @@ type DialogLogMessage struct {
 // The severity of the log message.
 const (
 	DialogLogMessageLevelErrorConst = "error"
-	DialogLogMessageLevelInfoConst = "info"
-	DialogLogMessageLevelWarnConst = "warn"
+	DialogLogMessageLevelInfoConst  = "info"
+	DialogLogMessageLevelWarnConst  = "warn"
 )
-
 
 // UnmarshalDialogLogMessage unmarshals an instance of DialogLogMessage from the specified map of raw messages.
 func UnmarshalDialogLogMessage(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -942,12 +936,11 @@ type DialogNodeAction struct {
 // Constants associated with the DialogNodeAction.Type property.
 // The type of action to invoke.
 const (
-	DialogNodeActionTypeClientConst = "client"
+	DialogNodeActionTypeClientConst        = "client"
 	DialogNodeActionTypeCloudFunctionConst = "cloud-function"
-	DialogNodeActionTypeServerConst = "server"
-	DialogNodeActionTypeWebActionConst = "web-action"
+	DialogNodeActionTypeServerConst        = "server"
+	DialogNodeActionTypeWebActionConst     = "web-action"
 )
-
 
 // UnmarshalDialogNodeAction unmarshals an instance of DialogNodeAction from the specified map of raw messages.
 func UnmarshalDialogNodeAction(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -981,7 +974,6 @@ type DialogNodeOutputConnectToAgentTransferInfo struct {
 	Target map[string]map[string]interface{} `json:"target,omitempty"`
 }
 
-
 // UnmarshalDialogNodeOutputConnectToAgentTransferInfo unmarshals an instance of DialogNodeOutputConnectToAgentTransferInfo from the specified map of raw messages.
 func UnmarshalDialogNodeOutputConnectToAgentTransferInfo(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DialogNodeOutputConnectToAgentTransferInfo)
@@ -1001,7 +993,6 @@ type DialogNodeOutputOptionsElement struct {
 	// An object defining the message input to be sent to the assistant if the user selects the corresponding option.
 	Value *DialogNodeOutputOptionsElementValue `json:"value" validate:"required"`
 }
-
 
 // UnmarshalDialogNodeOutputOptionsElement unmarshals an instance of DialogNodeOutputOptionsElement from the specified map of raw messages.
 func UnmarshalDialogNodeOutputOptionsElement(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1023,7 +1014,6 @@ type DialogNodeOutputOptionsElementValue struct {
 	// An input object that includes the input text.
 	Input *MessageInput `json:"input,omitempty"`
 }
-
 
 // UnmarshalDialogNodeOutputOptionsElementValue unmarshals an instance of DialogNodeOutputOptionsElementValue from the specified map of raw messages.
 func UnmarshalDialogNodeOutputOptionsElementValue(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1047,7 +1037,6 @@ type DialogNodesVisited struct {
 	// The conditions that trigger the dialog node.
 	Conditions *string `json:"conditions,omitempty"`
 }
-
 
 // UnmarshalDialogNodesVisited unmarshals an instance of DialogNodesVisited from the specified map of raw messages.
 func UnmarshalDialogNodesVisited(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1083,7 +1072,6 @@ type DialogSuggestion struct {
 	Output map[string]interface{} `json:"output,omitempty"`
 }
 
-
 // UnmarshalDialogSuggestion unmarshals an instance of DialogSuggestion from the specified map of raw messages.
 func UnmarshalDialogSuggestion(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DialogSuggestion)
@@ -1109,7 +1097,6 @@ type DialogSuggestionValue struct {
 	// An input object that includes the input text.
 	Input *MessageInput `json:"input,omitempty"`
 }
-
 
 // UnmarshalDialogSuggestionValue unmarshals an instance of DialogSuggestionValue from the specified map of raw messages.
 func UnmarshalDialogSuggestionValue(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1228,7 +1215,6 @@ type Log struct {
 	CustomerID *string `json:"customer_id,omitempty"`
 }
 
-
 // UnmarshalLog unmarshals an instance of Log from the specified map of raw messages.
 func UnmarshalLog(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Log)
@@ -1289,7 +1275,6 @@ type LogCollection struct {
 	Pagination *LogPagination `json:"pagination" validate:"required"`
 }
 
-
 // UnmarshalLogCollection unmarshals an instance of LogCollection from the specified map of raw messages.
 func UnmarshalLogCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(LogCollection)
@@ -1316,7 +1301,6 @@ type LogPagination struct {
 	// A token identifying the next page of results.
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
-
 
 // UnmarshalLogPagination unmarshals an instance of LogPagination from the specified map of raw messages.
 func UnmarshalLogPagination(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1349,7 +1333,6 @@ type MessageContext struct {
 	Skills map[string]MessageContextSkill `json:"skills,omitempty"`
 }
 
-
 // UnmarshalMessageContext unmarshals an instance of MessageContext from the specified map of raw messages.
 func UnmarshalMessageContext(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageContext)
@@ -1374,7 +1357,6 @@ type MessageContextGlobal struct {
 	SessionID *string `json:"session_id,omitempty"`
 }
 
-
 // UnmarshalMessageContextGlobal unmarshals an instance of MessageContextGlobal from the specified map of raw messages.
 func UnmarshalMessageContextGlobal(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageContextGlobal)
@@ -1398,7 +1380,6 @@ type MessageContextGlobalStateless struct {
 	// The unique identifier of the session.
 	SessionID *string `json:"session_id,omitempty"`
 }
-
 
 // UnmarshalMessageContextGlobalStateless unmarshals an instance of MessageContextGlobalStateless from the specified map of raw messages.
 func UnmarshalMessageContextGlobalStateless(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1474,7 +1455,6 @@ const (
 	MessageContextGlobalSystemLocaleZhTwConst = "zh-tw"
 )
 
-
 // UnmarshalMessageContextGlobalSystem unmarshals an instance of MessageContextGlobalSystem from the specified map of raw messages.
 func UnmarshalMessageContextGlobalSystem(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageContextGlobalSystem)
@@ -1512,7 +1492,6 @@ type MessageContextSkill struct {
 	System *MessageContextSkillSystem `json:"system,omitempty"`
 }
 
-
 // UnmarshalMessageContextSkill unmarshals an instance of MessageContextSkill from the specified map of raw messages.
 func UnmarshalMessageContextSkill(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageContextSkill)
@@ -1538,7 +1517,6 @@ type MessageContextSkillSystem struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string]interface{}
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of MessageContextSkillSystem
 func (o *MessageContextSkillSystem) SetProperty(key string, value interface{}) {
@@ -1606,7 +1584,6 @@ type MessageContextStateless struct {
 	Skills map[string]MessageContextSkill `json:"skills,omitempty"`
 }
 
-
 // UnmarshalMessageContextStateless unmarshals an instance of MessageContextStateless from the specified map of raw messages.
 func UnmarshalMessageContextStateless(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageContextStateless)
@@ -1650,7 +1627,6 @@ type MessageInput struct {
 const (
 	MessageInputMessageTypeTextConst = "text"
 )
-
 
 // UnmarshalMessageInput unmarshals an instance of MessageInput from the specified map of raw messages.
 func UnmarshalMessageInput(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1712,7 +1688,6 @@ type MessageInputOptions struct {
 	Export *bool `json:"export,omitempty"`
 }
 
-
 // UnmarshalMessageInputOptions unmarshals an instance of MessageInputOptions from the specified map of raw messages.
 func UnmarshalMessageInputOptions(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageInputOptions)
@@ -1761,7 +1736,6 @@ type MessageInputOptionsSpelling struct {
 	AutoCorrect *bool `json:"auto_correct,omitempty"`
 }
 
-
 // UnmarshalMessageInputOptionsSpelling unmarshals an instance of MessageInputOptionsSpelling from the specified map of raw messages.
 func UnmarshalMessageInputOptionsSpelling(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageInputOptionsSpelling)
@@ -1794,7 +1768,6 @@ type MessageInputOptionsStateless struct {
 	// `output.debug` property.
 	Debug *bool `json:"debug,omitempty"`
 }
-
 
 // UnmarshalMessageInputOptionsStateless unmarshals an instance of MessageInputOptionsStateless from the specified map of raw messages.
 func UnmarshalMessageInputOptionsStateless(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1847,7 +1820,6 @@ type MessageInputStateless struct {
 const (
 	MessageInputStatelessMessageTypeTextConst = "text"
 )
-
 
 // UnmarshalMessageInputStateless unmarshals an instance of MessageInputStateless from the specified map of raw messages.
 func UnmarshalMessageInputStateless(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1909,7 +1881,7 @@ type MessageOptions struct {
 func (*AssistantV2) NewMessageOptions(assistantID string, sessionID string) *MessageOptions {
 	return &MessageOptions{
 		AssistantID: core.StringPtr(assistantID),
-		SessionID: core.StringPtr(sessionID),
+		SessionID:   core.StringPtr(sessionID),
 	}
 }
 
@@ -1969,7 +1941,6 @@ type MessageOutput struct {
 	Spelling *MessageOutputSpelling `json:"spelling,omitempty"`
 }
 
-
 // UnmarshalMessageOutput unmarshals an instance of MessageOutput from the specified map of raw messages.
 func UnmarshalMessageOutput(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageOutput)
@@ -2027,9 +1998,8 @@ type MessageOutputDebug struct {
 // completed by itself or got interrupted.
 const (
 	MessageOutputDebugBranchExitedReasonCompletedConst = "completed"
-	MessageOutputDebugBranchExitedReasonFallbackConst = "fallback"
+	MessageOutputDebugBranchExitedReasonFallbackConst  = "fallback"
 )
-
 
 // UnmarshalMessageOutputDebug unmarshals an instance of MessageOutputDebug from the specified map of raw messages.
 func UnmarshalMessageOutputDebug(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2069,7 +2039,6 @@ type MessageOutputSpelling struct {
 	SuggestedText *string `json:"suggested_text,omitempty"`
 }
 
-
 // UnmarshalMessageOutputSpelling unmarshals an instance of MessageOutputSpelling from the specified map of raw messages.
 func UnmarshalMessageOutputSpelling(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageOutputSpelling)
@@ -2101,7 +2070,6 @@ type MessageRequest struct {
 	Context *MessageContext `json:"context,omitempty"`
 }
 
-
 // UnmarshalMessageRequest unmarshals an instance of MessageRequest from the specified map of raw messages.
 func UnmarshalMessageRequest(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageRequest)
@@ -2130,7 +2098,6 @@ type MessageResponse struct {
 	Context *MessageContext `json:"context,omitempty"`
 }
 
-
 // UnmarshalMessageResponse unmarshals an instance of MessageResponse from the specified map of raw messages.
 func UnmarshalMessageResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageResponse)
@@ -2155,7 +2122,6 @@ type MessageResponseStateless struct {
 	// by the assistant; to maintain session state, include the context from the response in the next message.
 	Context *MessageContextStateless `json:"context" validate:"required"`
 }
-
 
 // UnmarshalMessageResponseStateless unmarshals an instance of MessageResponseStateless from the specified map of raw messages.
 func UnmarshalMessageResponseStateless(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2266,13 +2232,12 @@ type RuntimeEntity struct {
 	Role *RuntimeEntityRole `json:"role,omitempty"`
 }
 
-
 // NewRuntimeEntity : Instantiate RuntimeEntity (Generic Model Constructor)
 func (*AssistantV2) NewRuntimeEntity(entity string, location []int64, value string) (model *RuntimeEntity, err error) {
 	model = &RuntimeEntity{
-		Entity: core.StringPtr(entity),
+		Entity:   core.StringPtr(entity),
 		Location: location,
-		Value: core.StringPtr(value),
+		Value:    core.StringPtr(value),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -2329,7 +2294,6 @@ type RuntimeEntityAlternative struct {
 	// A decimal percentage that represents Watson's confidence in the recognized entity.
 	Confidence *float64 `json:"confidence,omitempty"`
 }
-
 
 // UnmarshalRuntimeEntityAlternative unmarshals an instance of RuntimeEntityAlternative from the specified map of raw messages.
 func UnmarshalRuntimeEntityAlternative(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2446,19 +2410,18 @@ type RuntimeEntityInterpretation struct {
 // Constants associated with the RuntimeEntityInterpretation.Granularity property.
 // The precision or duration of a time range specified by a recognized `@sys-time` or `@sys-date` entity.
 const (
-	RuntimeEntityInterpretationGranularityDayConst = "day"
+	RuntimeEntityInterpretationGranularityDayConst       = "day"
 	RuntimeEntityInterpretationGranularityFortnightConst = "fortnight"
-	RuntimeEntityInterpretationGranularityHourConst = "hour"
-	RuntimeEntityInterpretationGranularityInstantConst = "instant"
-	RuntimeEntityInterpretationGranularityMinuteConst = "minute"
-	RuntimeEntityInterpretationGranularityMonthConst = "month"
-	RuntimeEntityInterpretationGranularityQuarterConst = "quarter"
-	RuntimeEntityInterpretationGranularitySecondConst = "second"
-	RuntimeEntityInterpretationGranularityWeekConst = "week"
-	RuntimeEntityInterpretationGranularityWeekendConst = "weekend"
-	RuntimeEntityInterpretationGranularityYearConst = "year"
+	RuntimeEntityInterpretationGranularityHourConst      = "hour"
+	RuntimeEntityInterpretationGranularityInstantConst   = "instant"
+	RuntimeEntityInterpretationGranularityMinuteConst    = "minute"
+	RuntimeEntityInterpretationGranularityMonthConst     = "month"
+	RuntimeEntityInterpretationGranularityQuarterConst   = "quarter"
+	RuntimeEntityInterpretationGranularitySecondConst    = "second"
+	RuntimeEntityInterpretationGranularityWeekConst      = "week"
+	RuntimeEntityInterpretationGranularityWeekendConst   = "weekend"
+	RuntimeEntityInterpretationGranularityYearConst      = "year"
 )
-
 
 // UnmarshalRuntimeEntityInterpretation unmarshals an instance of RuntimeEntityInterpretation from the specified map of raw messages.
 func UnmarshalRuntimeEntityInterpretation(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2581,14 +2544,13 @@ type RuntimeEntityRole struct {
 // Constants associated with the RuntimeEntityRole.Type property.
 // The relationship of the entity to the range.
 const (
-	RuntimeEntityRoleTypeDateFromConst = "date_from"
-	RuntimeEntityRoleTypeDateToConst = "date_to"
+	RuntimeEntityRoleTypeDateFromConst   = "date_from"
+	RuntimeEntityRoleTypeDateToConst     = "date_to"
 	RuntimeEntityRoleTypeNumberFromConst = "number_from"
-	RuntimeEntityRoleTypeNumberToConst = "number_to"
-	RuntimeEntityRoleTypeTimeFromConst = "time_from"
-	RuntimeEntityRoleTypeTimeToConst = "time_to"
+	RuntimeEntityRoleTypeNumberToConst   = "number_to"
+	RuntimeEntityRoleTypeTimeFromConst   = "time_from"
+	RuntimeEntityRoleTypeTimeToConst     = "time_to"
 )
-
 
 // UnmarshalRuntimeEntityRole unmarshals an instance of RuntimeEntityRole from the specified map of raw messages.
 func UnmarshalRuntimeEntityRole(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2610,11 +2572,10 @@ type RuntimeIntent struct {
 	Confidence *float64 `json:"confidence" validate:"required"`
 }
 
-
 // NewRuntimeIntent : Instantiate RuntimeIntent (Generic Model Constructor)
 func (*AssistantV2) NewRuntimeIntent(intent string, confidence float64) (model *RuntimeIntent, err error) {
 	model = &RuntimeIntent{
-		Intent: core.StringPtr(intent),
+		Intent:     core.StringPtr(intent),
 		Confidence: core.Float64Ptr(confidence),
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -2715,7 +2676,7 @@ const (
 // Constants associated with the RuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	RuntimeResponseGenericPreferenceButtonConst = "button"
+	RuntimeResponseGenericPreferenceButtonConst   = "button"
 	RuntimeResponseGenericPreferenceDropdownConst = "dropdown"
 )
 
@@ -2786,7 +2747,6 @@ type SearchResult struct {
 	Highlight *SearchResultHighlight `json:"highlight,omitempty"`
 }
 
-
 // UnmarshalSearchResult unmarshals an instance of SearchResult from the specified map of raw messages.
 func UnmarshalSearchResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SearchResult)
@@ -2836,7 +2796,6 @@ type SearchResultHighlight struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string][]string
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of SearchResultHighlight
 func (o *SearchResultHighlight) SetProperty(key string, value []string) {
@@ -2919,7 +2878,6 @@ type SearchResultMetadata struct {
 	Score *float64 `json:"score,omitempty"`
 }
 
-
 // UnmarshalSearchResultMetadata unmarshals an instance of SearchResultMetadata from the specified map of raw messages.
 func UnmarshalSearchResultMetadata(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SearchResultMetadata)
@@ -2940,7 +2898,6 @@ type SessionResponse struct {
 	// The session ID.
 	SessionID *string `json:"session_id" validate:"required"`
 }
-
 
 // UnmarshalSessionResponse unmarshals an instance of SessionResponse from the specified map of raw messages.
 func UnmarshalSessionResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2985,7 +2942,6 @@ type RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct {
 const (
 	RuntimeResponseGenericRuntimeResponseTypeConnectToAgentResponseTypeConnectToAgentConst = "connect_to_agent"
 )
-
 
 func (*RuntimeResponseGenericRuntimeResponseTypeConnectToAgent) isaRuntimeResponseGeneric() bool {
 	return true
@@ -3046,7 +3002,6 @@ const (
 	RuntimeResponseGenericRuntimeResponseTypeImageResponseTypeImageConst = "image"
 )
 
-
 func (*RuntimeResponseGenericRuntimeResponseTypeImage) isaRuntimeResponseGeneric() bool {
 	return true
 }
@@ -3104,10 +3059,9 @@ const (
 // Constants associated with the RuntimeResponseGenericRuntimeResponseTypeOption.Preference property.
 // The preferred type of control to display.
 const (
-	RuntimeResponseGenericRuntimeResponseTypeOptionPreferenceButtonConst = "button"
+	RuntimeResponseGenericRuntimeResponseTypeOptionPreferenceButtonConst   = "button"
 	RuntimeResponseGenericRuntimeResponseTypeOptionPreferenceDropdownConst = "dropdown"
 )
-
 
 func (*RuntimeResponseGenericRuntimeResponseTypeOption) isaRuntimeResponseGeneric() bool {
 	return true
@@ -3161,7 +3115,6 @@ const (
 	RuntimeResponseGenericRuntimeResponseTypePauseResponseTypePauseConst = "pause"
 )
 
-
 func (*RuntimeResponseGenericRuntimeResponseTypePause) isaRuntimeResponseGeneric() bool {
 	return true
 }
@@ -3208,7 +3161,6 @@ type RuntimeResponseGenericRuntimeResponseTypeSearch struct {
 const (
 	RuntimeResponseGenericRuntimeResponseTypeSearchResponseTypeSearchConst = "search"
 )
-
 
 func (*RuntimeResponseGenericRuntimeResponseTypeSearch) isaRuntimeResponseGeneric() bool {
 	return true
@@ -3258,7 +3210,6 @@ const (
 	RuntimeResponseGenericRuntimeResponseTypeSuggestionResponseTypeSuggestionConst = "suggestion"
 )
 
-
 func (*RuntimeResponseGenericRuntimeResponseTypeSuggestion) isaRuntimeResponseGeneric() bool {
 	return true
 }
@@ -3299,7 +3250,6 @@ type RuntimeResponseGenericRuntimeResponseTypeText struct {
 const (
 	RuntimeResponseGenericRuntimeResponseTypeTextResponseTypeTextConst = "text"
 )
-
 
 func (*RuntimeResponseGenericRuntimeResponseTypeText) isaRuntimeResponseGeneric() bool {
 	return true

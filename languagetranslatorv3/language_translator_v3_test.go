@@ -40,7 +40,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		It(`Instantiate service client`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -50,7 +50,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).To(BeNil())
@@ -58,7 +58,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "https://languagetranslatorv3/api",
+				URL:     "https://languagetranslatorv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -79,7 +79,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
 			}
 
@@ -101,7 +101,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -137,7 +137,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -155,12 +155,12 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE":   "NOAuth",
+				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -203,7 +203,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -259,7 +259,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -310,7 +310,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -337,7 +337,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		It(`Instantiate service client`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -347,7 +347,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).To(BeNil())
@@ -355,7 +355,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "https://languagetranslatorv3/api",
+				URL:     "https://languagetranslatorv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -376,7 +376,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
 			}
 
@@ -398,7 +398,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -434,7 +434,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -452,12 +452,12 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE":   "NOAuth",
+				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -500,7 +500,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -576,7 +576,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -631,7 +631,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -669,7 +669,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		It(`Instantiate service client`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -679,7 +679,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).To(BeNil())
@@ -687,7 +687,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "https://languagetranslatorv3/api",
+				URL:     "https://languagetranslatorv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -708,7 +708,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
 			}
 
@@ -730,7 +730,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -766,7 +766,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -784,12 +784,12 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE":   "NOAuth",
+				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -832,7 +832,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -888,7 +888,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -939,7 +939,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -983,7 +983,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1056,7 +1056,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1108,7 +1108,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1143,7 +1143,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		It(`Instantiate service client`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -1153,7 +1153,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).To(BeNil())
@@ -1161,7 +1161,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "https://languagetranslatorv3/api",
+				URL:     "https://languagetranslatorv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -1182,7 +1182,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
 			}
 
@@ -1204,7 +1204,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1240,7 +1240,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -1258,12 +1258,12 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE":   "NOAuth",
+				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -1301,7 +1301,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 
 					Expect(req.URL.Query()["target"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for default query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -1313,7 +1312,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1363,7 +1362,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 
 					Expect(req.URL.Query()["target"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for default query parameter
 
 					// Sleep a short time to support a timeout test
@@ -1379,7 +1377,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1433,7 +1431,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1484,7 +1482,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1548,7 +1546,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1601,9 +1599,9 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 			It(`Invoke CreateModel with error: Param validation error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL:  testServer.URL,
+					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1620,7 +1618,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1675,7 +1673,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1732,7 +1730,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1784,7 +1782,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1836,7 +1834,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1893,7 +1891,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1945,7 +1943,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -1980,7 +1978,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		It(`Instantiate service client`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -1990,7 +1988,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(languageTranslatorService).To(BeNil())
@@ -1998,7 +1996,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "https://languagetranslatorv3/api",
+				URL:     "https://languagetranslatorv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -2019,7 +2017,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
 			}
 
@@ -2041,7 +2039,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2077,7 +2075,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL": "https://languagetranslatorv3/api",
+				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
 				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -2095,12 +2093,12 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE":   "NOAuth",
+				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -2143,7 +2141,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2199,7 +2197,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2250,7 +2248,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2294,7 +2292,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2357,7 +2355,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2415,7 +2413,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2473,7 +2471,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2530,7 +2528,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2582,7 +2580,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2634,7 +2632,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2665,7 +2663,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2725,7 +2723,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2778,7 +2776,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
@@ -2815,7 +2813,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			languageTranslatorService, _ := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				URL:           "http://languagetranslatorv3modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			It(`Invoke NewCreateModelOptions successfully`, func() {
 				// Construct an instance of the CreateModelOptions model

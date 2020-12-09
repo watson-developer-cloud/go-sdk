@@ -40,7 +40,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -50,7 +50,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -58,7 +58,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -79,7 +79,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -101,7 +101,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -137,7 +137,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -155,12 +155,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -194,7 +194,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for nodes_visited_details query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -206,7 +205,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -391,7 +390,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for nodes_visited_details query parameter
 
 					// Sleep a short time to support a timeout test
@@ -407,7 +405,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -584,7 +582,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -744,7 +742,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -754,7 +752,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -762,7 +760,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -783,7 +781,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -805,7 +803,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -841,7 +839,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -859,12 +857,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -900,13 +898,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"name"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -919,7 +915,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -969,13 +965,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"name"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -992,7 +986,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -1048,7 +1042,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -1088,7 +1082,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -1100,7 +1093,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -1310,7 +1303,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -1326,7 +1318,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -1528,7 +1520,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -1714,9 +1706,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -1731,7 +1721,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -1778,9 +1768,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -1799,7 +1787,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -1854,7 +1842,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -1900,9 +1888,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for append query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -1915,7 +1901,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -2127,9 +2113,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for append query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -2146,7 +2130,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -2350,7 +2334,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -2554,7 +2538,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -2585,7 +2569,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -2618,7 +2602,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -2628,7 +2612,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -2636,7 +2620,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -2657,7 +2641,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -2679,7 +2663,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -2715,7 +2699,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -2733,12 +2717,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -2772,18 +2756,15 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"intent"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -2796,7 +2777,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -2846,18 +2827,15 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"intent"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -2874,7 +2852,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -2932,7 +2910,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -2981,7 +2959,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -2993,7 +2970,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3067,7 +3044,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -3083,7 +3059,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3149,7 +3125,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3206,9 +3182,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -3221,7 +3195,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3268,9 +3242,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -3287,7 +3259,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3342,7 +3314,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3388,9 +3360,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for append query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -3403,7 +3373,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3479,9 +3449,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for append query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -3498,7 +3466,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3566,7 +3534,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3634,7 +3602,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3666,7 +3634,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3700,7 +3668,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -3710,7 +3678,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -3718,7 +3686,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -3739,7 +3707,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -3761,7 +3729,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -3797,7 +3765,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -3815,12 +3783,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -3856,13 +3824,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -3875,7 +3841,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -3927,13 +3893,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -3950,7 +3914,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4008,7 +3972,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4057,7 +4021,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -4069,7 +4032,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4138,7 +4101,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -4154,7 +4116,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4215,7 +4177,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4267,7 +4229,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -4279,7 +4240,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4326,7 +4287,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -4342,7 +4302,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4397,7 +4357,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4443,7 +4403,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -4455,7 +4414,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4525,7 +4484,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -4541,7 +4499,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4603,7 +4561,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4665,7 +4623,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4698,7 +4656,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4733,7 +4691,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -4743,7 +4701,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -4751,7 +4709,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -4772,7 +4730,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -4794,7 +4752,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -4830,7 +4788,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -4848,12 +4806,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -4889,13 +4847,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -4908,7 +4864,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -4959,13 +4915,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -4982,7 +4936,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5039,7 +4993,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5087,7 +5041,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -5099,7 +5052,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5161,7 +5114,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -5177,7 +5129,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5231,7 +5183,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5276,7 +5228,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -5288,7 +5239,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5334,7 +5285,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -5350,7 +5300,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5404,7 +5354,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5449,7 +5399,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -5461,7 +5410,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5524,7 +5473,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -5540,7 +5488,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5595,7 +5543,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5650,7 +5598,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5682,7 +5630,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5716,7 +5664,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -5726,7 +5674,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -5734,7 +5682,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -5755,7 +5703,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -5777,7 +5725,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -5813,7 +5761,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -5831,12 +5779,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -5870,18 +5818,15 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"entity"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -5894,7 +5839,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -5944,18 +5889,15 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"entity"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -5972,7 +5914,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6030,7 +5972,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6079,7 +6021,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -6091,7 +6032,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6165,7 +6106,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -6181,7 +6121,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6247,7 +6187,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6304,9 +6244,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -6319,7 +6257,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6366,9 +6304,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -6385,7 +6321,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6440,7 +6376,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6486,9 +6422,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for append query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -6501,7 +6435,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6577,9 +6511,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for append query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -6596,7 +6528,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6664,7 +6596,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6732,7 +6664,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6764,7 +6696,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -6798,7 +6730,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -6808,7 +6740,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -6816,7 +6748,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -6837,7 +6769,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -6859,7 +6791,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -6895,7 +6827,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -6913,12 +6845,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -6952,9 +6884,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -6967,7 +6897,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7014,9 +6944,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -7033,7 +6961,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7088,7 +7016,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7126,7 +7054,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -7136,7 +7064,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -7144,7 +7072,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -7165,7 +7093,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -7187,7 +7115,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -7223,7 +7151,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -7241,12 +7169,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -7280,18 +7208,15 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"value"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -7304,7 +7229,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7355,18 +7280,15 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"value"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -7383,7 +7305,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7442,7 +7364,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7492,7 +7414,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -7504,7 +7425,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7571,7 +7492,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -7587,7 +7507,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7646,7 +7566,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7696,9 +7616,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -7711,7 +7629,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7759,9 +7677,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for export query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -7778,7 +7694,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7834,7 +7750,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7881,9 +7797,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for append query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -7896,7 +7810,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -7965,9 +7879,7 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for append query parameter
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -7984,7 +7896,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8045,7 +7957,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8106,7 +8018,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8139,7 +8051,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8174,7 +8086,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -8184,7 +8096,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -8192,7 +8104,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -8213,7 +8125,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -8235,7 +8147,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -8271,7 +8183,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -8289,12 +8201,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -8330,13 +8242,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"synonym"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -8349,7 +8259,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8402,13 +8312,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"synonym"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -8425,7 +8333,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8484,7 +8392,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8534,7 +8442,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -8546,7 +8453,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8610,7 +8517,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -8626,7 +8532,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8682,7 +8588,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8729,7 +8635,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -8741,7 +8646,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8789,7 +8694,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -8805,7 +8709,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8861,7 +8765,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8908,7 +8812,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -8920,7 +8823,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -8985,7 +8888,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -9001,7 +8903,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9058,7 +8960,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9115,7 +9017,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9149,7 +9051,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9185,7 +9087,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -9195,7 +9097,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -9203,7 +9105,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -9224,7 +9126,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -9246,7 +9148,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -9282,7 +9184,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -9300,12 +9202,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -9341,13 +9243,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"dialog_node"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -9360,7 +9260,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9411,13 +9311,11 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 
-
 					// TODO: Add check for include_count query parameter
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"dialog_node"}))
 
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 
 					// TODO: Add check for include_audit query parameter
 
@@ -9434,7 +9332,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9491,7 +9389,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9539,7 +9437,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -9551,7 +9448,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9669,7 +9566,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -9685,7 +9581,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9795,7 +9691,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9896,7 +9792,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -9908,7 +9803,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -9954,7 +9849,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -9970,7 +9864,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10024,7 +9918,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10069,7 +9963,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -10081,7 +9974,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10200,7 +10093,6 @@ var _ = Describe(`AssistantV1`, func() {
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_audit query parameter
 
 					// Sleep a short time to support a timeout test
@@ -10216,7 +10108,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10327,7 +10219,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10438,7 +10330,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10470,7 +10362,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10504,7 +10396,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -10514,7 +10406,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -10522,7 +10414,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -10543,7 +10435,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -10565,7 +10457,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -10601,7 +10493,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -10619,12 +10511,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -10675,7 +10567,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10744,7 +10636,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10800,7 +10692,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10864,7 +10756,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10932,7 +10824,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -10987,7 +10879,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -11025,7 +10917,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -11035,7 +10927,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -11043,7 +10935,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -11064,7 +10956,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -11086,7 +10978,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -11122,7 +11014,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -11140,12 +11032,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -11190,7 +11082,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -11221,7 +11113,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -11254,7 +11146,7 @@ var _ = Describe(`AssistantV1`, func() {
 		It(`Instantiate service client`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(assistantService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -11264,7 +11156,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(assistantService).To(BeNil())
@@ -11272,7 +11164,7 @@ var _ = Describe(`AssistantV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "https://assistantv1/api",
+				URL:     "https://assistantv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -11293,7 +11185,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "noauth",
 			}
 
@@ -11315,7 +11207,7 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(assistantService).ToNot(BeNil())
@@ -11351,7 +11243,7 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_URL": "https://assistantv1/api",
+				"CONVERSATION_URL":       "https://assistantv1/api",
 				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -11369,12 +11261,12 @@ var _ = Describe(`AssistantV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE":   "NOAuth",
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -11417,7 +11309,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -11495,7 +11387,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -11552,7 +11444,7 @@ var _ = Describe(`AssistantV1`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
@@ -11593,7 +11485,7 @@ var _ = Describe(`AssistantV1`, func() {
 			assistantService, _ := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
 				URL:           "http://assistantv1modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			It(`Invoke NewBulkClassifyOptions successfully`, func() {
 				// Construct an instance of the BulkClassifyUtterance model

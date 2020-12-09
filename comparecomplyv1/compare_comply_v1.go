@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package comparecomplyv1 : Operations and models for the CompareComplyV1 service
 package comparecomplyv1
@@ -1026,7 +1025,6 @@ type Address struct {
 	Location *Location `json:"location,omitempty"`
 }
 
-
 // UnmarshalAddress unmarshals an instance of Address from the specified map of raw messages.
 func UnmarshalAddress(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Address)
@@ -1058,7 +1056,6 @@ type AlignedElement struct {
 	// Indicates that the elements aligned are contractual clauses of significance.
 	SignificantElements *bool `json:"significant_elements,omitempty"`
 }
-
 
 // UnmarshalAlignedElement unmarshals an instance of AlignedElement from the specified map of raw messages.
 func UnmarshalAlignedElement(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1099,17 +1096,16 @@ type Attribute struct {
 // Constants associated with the Attribute.Type property.
 // The type of attribute.
 const (
-	AttributeTypeCurrencyConst = "Currency"
-	AttributeTypeDatetimeConst = "DateTime"
-	AttributeTypeDefinedtermConst = "DefinedTerm"
-	AttributeTypeDurationConst = "Duration"
-	AttributeTypeLocationConst = "Location"
-	AttributeTypeNumberConst = "Number"
+	AttributeTypeCurrencyConst     = "Currency"
+	AttributeTypeDatetimeConst     = "DateTime"
+	AttributeTypeDefinedtermConst  = "DefinedTerm"
+	AttributeTypeDurationConst     = "Duration"
+	AttributeTypeLocationConst     = "Location"
+	AttributeTypeNumberConst       = "Number"
 	AttributeTypeOrganizationConst = "Organization"
-	AttributeTypePercentageConst = "Percentage"
-	AttributeTypePersonConst = "Person"
+	AttributeTypePercentageConst   = "Percentage"
+	AttributeTypePersonConst       = "Person"
 )
-
 
 // UnmarshalAttribute unmarshals an instance of Attribute from the specified map of raw messages.
 func UnmarshalAttribute(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1171,10 +1167,9 @@ type BatchStatus struct {
 // `tables`.
 const (
 	BatchStatusFunctionElementClassificationConst = "element_classification"
-	BatchStatusFunctionHTMLConversionConst = "html_conversion"
-	BatchStatusFunctionTablesConst = "tables"
+	BatchStatusFunctionHTMLConversionConst        = "html_conversion"
+	BatchStatusFunctionTablesConst                = "tables"
 )
-
 
 // UnmarshalBatchStatus unmarshals an instance of BatchStatus from the specified map of raw messages.
 func UnmarshalBatchStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1228,7 +1223,6 @@ type Batches struct {
 	// A list of the status of all batch requests.
 	Batches []BatchStatus `json:"batches,omitempty"`
 }
-
 
 // UnmarshalBatches unmarshals an instance of Batches from the specified map of raw messages.
 func UnmarshalBatches(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1287,7 +1281,6 @@ type BodyCells struct {
 
 	Attributes []Attribute `json:"attributes,omitempty"`
 }
-
 
 // UnmarshalBodyCells unmarshals an instance of BodyCells from the specified map of raw messages.
 func UnmarshalBodyCells(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1367,41 +1360,40 @@ type Category struct {
 // Constants associated with the Category.Label property.
 // The category of the associated element.
 const (
-	CategoryLabelAmendmentsConst = "Amendments"
-	CategoryLabelAssetUseConst = "Asset Use"
-	CategoryLabelAssignmentsConst = "Assignments"
-	CategoryLabelAuditsConst = "Audits"
-	CategoryLabelBusinessContinuityConst = "Business Continuity"
-	CategoryLabelCommunicationConst = "Communication"
-	CategoryLabelConfidentialityConst = "Confidentiality"
-	CategoryLabelDeliverablesConst = "Deliverables"
-	CategoryLabelDeliveryConst = "Delivery"
-	CategoryLabelDisputeResolutionConst = "Dispute Resolution"
-	CategoryLabelForceMajeureConst = "Force Majeure"
-	CategoryLabelIndemnificationConst = "Indemnification"
-	CategoryLabelInsuranceConst = "Insurance"
+	CategoryLabelAmendmentsConst           = "Amendments"
+	CategoryLabelAssetUseConst             = "Asset Use"
+	CategoryLabelAssignmentsConst          = "Assignments"
+	CategoryLabelAuditsConst               = "Audits"
+	CategoryLabelBusinessContinuityConst   = "Business Continuity"
+	CategoryLabelCommunicationConst        = "Communication"
+	CategoryLabelConfidentialityConst      = "Confidentiality"
+	CategoryLabelDeliverablesConst         = "Deliverables"
+	CategoryLabelDeliveryConst             = "Delivery"
+	CategoryLabelDisputeResolutionConst    = "Dispute Resolution"
+	CategoryLabelForceMajeureConst         = "Force Majeure"
+	CategoryLabelIndemnificationConst      = "Indemnification"
+	CategoryLabelInsuranceConst            = "Insurance"
 	CategoryLabelIntellectualPropertyConst = "Intellectual Property"
-	CategoryLabelLiabilityConst = "Liability"
-	CategoryLabelOrderOfPrecedenceConst = "Order of Precedence"
-	CategoryLabelPaymentTermsBillingConst = "Payment Terms & Billing"
-	CategoryLabelPricingTaxesConst = "Pricing & Taxes"
-	CategoryLabelPrivacyConst = "Privacy"
-	CategoryLabelResponsibilitiesConst = "Responsibilities"
-	CategoryLabelSafetyAndSecurityConst = "Safety and Security"
-	CategoryLabelScopeOfWorkConst = "Scope of Work"
-	CategoryLabelSubcontractsConst = "Subcontracts"
-	CategoryLabelTermTerminationConst = "Term & Termination"
-	CategoryLabelWarrantiesConst = "Warranties"
+	CategoryLabelLiabilityConst            = "Liability"
+	CategoryLabelOrderOfPrecedenceConst    = "Order of Precedence"
+	CategoryLabelPaymentTermsBillingConst  = "Payment Terms & Billing"
+	CategoryLabelPricingTaxesConst         = "Pricing & Taxes"
+	CategoryLabelPrivacyConst              = "Privacy"
+	CategoryLabelResponsibilitiesConst     = "Responsibilities"
+	CategoryLabelSafetyAndSecurityConst    = "Safety and Security"
+	CategoryLabelScopeOfWorkConst          = "Scope of Work"
+	CategoryLabelSubcontractsConst         = "Subcontracts"
+	CategoryLabelTermTerminationConst      = "Term & Termination"
+	CategoryLabelWarrantiesConst           = "Warranties"
 )
 
 // Constants associated with the Category.Modification property.
 // The type of modification of the feedback entry in the updated labels response.
 const (
-	CategoryModificationAddedConst = "added"
-	CategoryModificationRemovedConst = "removed"
+	CategoryModificationAddedConst     = "added"
+	CategoryModificationRemovedConst   = "removed"
 	CategoryModificationUnchangedConst = "unchanged"
 )
-
 
 // UnmarshalCategory unmarshals an instance of Category from the specified map of raw messages.
 func UnmarshalCategory(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1431,33 +1423,32 @@ type CategoryComparison struct {
 // Constants associated with the CategoryComparison.Label property.
 // The category of the associated element.
 const (
-	CategoryComparisonLabelAmendmentsConst = "Amendments"
-	CategoryComparisonLabelAssetUseConst = "Asset Use"
-	CategoryComparisonLabelAssignmentsConst = "Assignments"
-	CategoryComparisonLabelAuditsConst = "Audits"
-	CategoryComparisonLabelBusinessContinuityConst = "Business Continuity"
-	CategoryComparisonLabelCommunicationConst = "Communication"
-	CategoryComparisonLabelConfidentialityConst = "Confidentiality"
-	CategoryComparisonLabelDeliverablesConst = "Deliverables"
-	CategoryComparisonLabelDeliveryConst = "Delivery"
-	CategoryComparisonLabelDisputeResolutionConst = "Dispute Resolution"
-	CategoryComparisonLabelForceMajeureConst = "Force Majeure"
-	CategoryComparisonLabelIndemnificationConst = "Indemnification"
-	CategoryComparisonLabelInsuranceConst = "Insurance"
+	CategoryComparisonLabelAmendmentsConst           = "Amendments"
+	CategoryComparisonLabelAssetUseConst             = "Asset Use"
+	CategoryComparisonLabelAssignmentsConst          = "Assignments"
+	CategoryComparisonLabelAuditsConst               = "Audits"
+	CategoryComparisonLabelBusinessContinuityConst   = "Business Continuity"
+	CategoryComparisonLabelCommunicationConst        = "Communication"
+	CategoryComparisonLabelConfidentialityConst      = "Confidentiality"
+	CategoryComparisonLabelDeliverablesConst         = "Deliverables"
+	CategoryComparisonLabelDeliveryConst             = "Delivery"
+	CategoryComparisonLabelDisputeResolutionConst    = "Dispute Resolution"
+	CategoryComparisonLabelForceMajeureConst         = "Force Majeure"
+	CategoryComparisonLabelIndemnificationConst      = "Indemnification"
+	CategoryComparisonLabelInsuranceConst            = "Insurance"
 	CategoryComparisonLabelIntellectualPropertyConst = "Intellectual Property"
-	CategoryComparisonLabelLiabilityConst = "Liability"
-	CategoryComparisonLabelOrderOfPrecedenceConst = "Order of Precedence"
-	CategoryComparisonLabelPaymentTermsBillingConst = "Payment Terms & Billing"
-	CategoryComparisonLabelPricingTaxesConst = "Pricing & Taxes"
-	CategoryComparisonLabelPrivacyConst = "Privacy"
-	CategoryComparisonLabelResponsibilitiesConst = "Responsibilities"
-	CategoryComparisonLabelSafetyAndSecurityConst = "Safety and Security"
-	CategoryComparisonLabelScopeOfWorkConst = "Scope of Work"
-	CategoryComparisonLabelSubcontractsConst = "Subcontracts"
-	CategoryComparisonLabelTermTerminationConst = "Term & Termination"
-	CategoryComparisonLabelWarrantiesConst = "Warranties"
+	CategoryComparisonLabelLiabilityConst            = "Liability"
+	CategoryComparisonLabelOrderOfPrecedenceConst    = "Order of Precedence"
+	CategoryComparisonLabelPaymentTermsBillingConst  = "Payment Terms & Billing"
+	CategoryComparisonLabelPricingTaxesConst         = "Pricing & Taxes"
+	CategoryComparisonLabelPrivacyConst              = "Privacy"
+	CategoryComparisonLabelResponsibilitiesConst     = "Responsibilities"
+	CategoryComparisonLabelSafetyAndSecurityConst    = "Safety and Security"
+	CategoryComparisonLabelScopeOfWorkConst          = "Scope of Work"
+	CategoryComparisonLabelSubcontractsConst         = "Subcontracts"
+	CategoryComparisonLabelTermTerminationConst      = "Term & Termination"
+	CategoryComparisonLabelWarrantiesConst           = "Warranties"
 )
-
 
 // UnmarshalCategoryComparison unmarshals an instance of CategoryComparison from the specified map of raw messages.
 func UnmarshalCategoryComparison(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1493,7 +1484,7 @@ type ClassifyElementsOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ClassifyElementsOptionsModelContractsConst = "contracts"
-	ClassifyElementsOptionsModelTablesConst = "tables"
+	ClassifyElementsOptionsModelTablesConst    = "tables"
 )
 
 // NewClassifyElementsOptions : Instantiate ClassifyElementsOptions
@@ -1572,7 +1563,6 @@ type ClassifyReturn struct {
 	// Definitions of the parties identified in the input document.
 	Parties []Parties `json:"parties,omitempty"`
 }
-
 
 // UnmarshalClassifyReturn unmarshals an instance of ClassifyReturn from the specified map of raw messages.
 func UnmarshalClassifyReturn(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1666,7 +1656,6 @@ type ColumnHeaders struct {
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 }
 
-
 // UnmarshalColumnHeaders unmarshals an instance of ColumnHeaders from the specified map of raw messages.
 func UnmarshalColumnHeaders(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ColumnHeaders)
@@ -1741,7 +1730,7 @@ type CompareDocumentsOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	CompareDocumentsOptionsModelContractsConst = "contracts"
-	CompareDocumentsOptionsModelTablesConst = "tables"
+	CompareDocumentsOptionsModelTablesConst    = "tables"
 )
 
 // NewCompareDocumentsOptions : Instantiate CompareDocumentsOptions
@@ -1819,7 +1808,6 @@ type CompareReturn struct {
 	UnalignedElements []UnalignedElement `json:"unaligned_elements,omitempty"`
 }
 
-
 // UnmarshalCompareReturn unmarshals an instance of CompareReturn from the specified map of raw messages.
 func UnmarshalCompareReturn(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CompareReturn)
@@ -1856,7 +1844,6 @@ type Contact struct {
 	Role *string `json:"role,omitempty"`
 }
 
-
 // UnmarshalContact unmarshals an instance of Contact from the specified map of raw messages.
 func UnmarshalContact(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Contact)
@@ -1881,7 +1868,6 @@ type Contexts struct {
 	// `end`.
 	Location *Location `json:"location,omitempty"`
 }
-
 
 // UnmarshalContexts unmarshals an instance of Contexts from the specified map of raw messages.
 func UnmarshalContexts(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1925,11 +1911,10 @@ type ContractAmts struct {
 // Constants associated with the ContractAmts.ConfidenceLevel property.
 // The confidence level in the identification of the contract amount.
 const (
-	ContractAmtsConfidenceLevelHighConst = "High"
-	ContractAmtsConfidenceLevelLowConst = "Low"
+	ContractAmtsConfidenceLevelHighConst   = "High"
+	ContractAmtsConfidenceLevelLowConst    = "Low"
 	ContractAmtsConfidenceLevelMediumConst = "Medium"
 )
-
 
 // UnmarshalContractAmts unmarshals an instance of ContractAmts from the specified map of raw messages.
 func UnmarshalContractAmts(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -1986,11 +1971,10 @@ type ContractCurrencies struct {
 // Constants associated with the ContractCurrencies.ConfidenceLevel property.
 // The confidence level in the identification of the contract currency.
 const (
-	ContractCurrenciesConfidenceLevelHighConst = "High"
-	ContractCurrenciesConfidenceLevelLowConst = "Low"
+	ContractCurrenciesConfidenceLevelHighConst   = "High"
+	ContractCurrenciesConfidenceLevelLowConst    = "Low"
 	ContractCurrenciesConfidenceLevelMediumConst = "Medium"
 )
-
 
 // UnmarshalContractCurrencies unmarshals an instance of ContractCurrencies from the specified map of raw messages.
 func UnmarshalContractCurrencies(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2046,11 +2030,10 @@ type ContractTerms struct {
 // Constants associated with the ContractTerms.ConfidenceLevel property.
 // The confidence level in the identification of the contract term.
 const (
-	ContractTermsConfidenceLevelHighConst = "High"
-	ContractTermsConfidenceLevelLowConst = "Low"
+	ContractTermsConfidenceLevelHighConst   = "High"
+	ContractTermsConfidenceLevelLowConst    = "Low"
 	ContractTermsConfidenceLevelMediumConst = "Medium"
 )
-
 
 // UnmarshalContractTerms unmarshals an instance of ContractTerms from the specified map of raw messages.
 func UnmarshalContractTerms(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2102,11 +2085,10 @@ type ContractTypes struct {
 // Constants associated with the ContractTypes.ConfidenceLevel property.
 // The confidence level in the identification of the contract type.
 const (
-	ContractTypesConfidenceLevelHighConst = "High"
-	ContractTypesConfidenceLevelLowConst = "Low"
+	ContractTypesConfidenceLevelHighConst   = "High"
+	ContractTypesConfidenceLevelLowConst    = "Low"
 	ContractTypesConfidenceLevelMediumConst = "Medium"
 )
-
 
 // UnmarshalContractTypes unmarshals an instance of ContractTypes from the specified map of raw messages.
 func UnmarshalContractTypes(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2154,7 +2136,7 @@ type ConvertToHTMLOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ConvertToHTMLOptionsModelContractsConst = "contracts"
-	ConvertToHTMLOptionsModelTablesConst = "tables"
+	ConvertToHTMLOptionsModelTablesConst    = "tables"
 )
 
 // NewConvertToHTMLOptions : Instantiate ConvertToHTMLOptions
@@ -2228,8 +2210,8 @@ type CreateBatchOptions struct {
 // The Compare and Comply method to run across the submitted input documents.
 const (
 	CreateBatchOptionsFunctionElementClassificationConst = "element_classification"
-	CreateBatchOptionsFunctionHTMLConversionConst = "html_conversion"
-	CreateBatchOptionsFunctionTablesConst = "tables"
+	CreateBatchOptionsFunctionHTMLConversionConst        = "html_conversion"
+	CreateBatchOptionsFunctionTablesConst                = "tables"
 )
 
 // Constants associated with the CreateBatchOptions.Model property.
@@ -2238,19 +2220,19 @@ const (
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	CreateBatchOptionsModelContractsConst = "contracts"
-	CreateBatchOptionsModelTablesConst = "tables"
+	CreateBatchOptionsModelTablesConst    = "tables"
 )
 
 // NewCreateBatchOptions : Instantiate CreateBatchOptions
 func (*CompareComplyV1) NewCreateBatchOptions(function string, inputCredentialsFile io.ReadCloser, inputBucketLocation string, inputBucketName string, outputCredentialsFile io.ReadCloser, outputBucketLocation string, outputBucketName string) *CreateBatchOptions {
 	return &CreateBatchOptions{
-		Function: core.StringPtr(function),
-		InputCredentialsFile: inputCredentialsFile,
-		InputBucketLocation: core.StringPtr(inputBucketLocation),
-		InputBucketName: core.StringPtr(inputBucketName),
+		Function:              core.StringPtr(function),
+		InputCredentialsFile:  inputCredentialsFile,
+		InputBucketLocation:   core.StringPtr(inputBucketLocation),
+		InputBucketName:       core.StringPtr(inputBucketName),
 		OutputCredentialsFile: outputCredentialsFile,
-		OutputBucketLocation: core.StringPtr(outputBucketLocation),
-		OutputBucketName: core.StringPtr(outputBucketName),
+		OutputBucketLocation:  core.StringPtr(outputBucketLocation),
+		OutputBucketName:      core.StringPtr(outputBucketName),
 	}
 }
 
@@ -2328,7 +2310,7 @@ type DeleteFeedbackOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	DeleteFeedbackOptionsModelContractsConst = "contracts"
-	DeleteFeedbackOptionsModelTablesConst = "tables"
+	DeleteFeedbackOptionsModelTablesConst    = "tables"
 )
 
 // NewDeleteFeedbackOptions : Instantiate DeleteFeedbackOptions
@@ -2371,7 +2353,6 @@ type DocCounts struct {
 	Failed *int64 `json:"failed,omitempty"`
 }
 
-
 // UnmarshalDocCounts unmarshals an instance of DocCounts from the specified map of raw messages.
 func UnmarshalDocCounts(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DocCounts)
@@ -2407,7 +2388,6 @@ type DocInfo struct {
 	Hash *string `json:"hash,omitempty"`
 }
 
-
 // UnmarshalDocInfo unmarshals an instance of DocInfo from the specified map of raw messages.
 func UnmarshalDocInfo(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DocInfo)
@@ -2439,7 +2419,6 @@ type DocStructure struct {
 	// An array containing one object per paragraph, in parallel with the `section_titles` and `leading_sentences` arrays.
 	Paragraphs []Paragraphs `json:"paragraphs,omitempty"`
 }
-
 
 // UnmarshalDocStructure unmarshals an instance of DocStructure from the specified map of raw messages.
 func UnmarshalDocStructure(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2475,7 +2454,6 @@ type Document struct {
 	// is specified only in the output of the **Comparing two documents** method.
 	Label *string `json:"label,omitempty"`
 }
-
 
 // UnmarshalDocument unmarshals an instance of Document from the specified map of raw messages.
 func UnmarshalDocument(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2523,11 +2501,10 @@ type EffectiveDates struct {
 // Constants associated with the EffectiveDates.ConfidenceLevel property.
 // The confidence level in the identification of the effective date.
 const (
-	EffectiveDatesConfidenceLevelHighConst = "High"
-	EffectiveDatesConfidenceLevelLowConst = "Low"
+	EffectiveDatesConfidenceLevelHighConst   = "High"
+	EffectiveDatesConfidenceLevelLowConst    = "Low"
 	EffectiveDatesConfidenceLevelMediumConst = "Medium"
 )
-
 
 // UnmarshalEffectiveDates unmarshals an instance of EffectiveDates from the specified map of raw messages.
 func UnmarshalEffectiveDates(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2575,7 +2552,6 @@ type Element struct {
 	Attributes []Attribute `json:"attributes,omitempty"`
 }
 
-
 // UnmarshalElement unmarshals an instance of Element from the specified map of raw messages.
 func UnmarshalElement(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Element)
@@ -2611,7 +2587,6 @@ type ElementLocations struct {
 	// An integer that indicates the ending position of the element in the input document.
 	End *int64 `json:"end,omitempty"`
 }
-
 
 // UnmarshalElementLocations unmarshals an instance of ElementLocations from the specified map of raw messages.
 func UnmarshalElementLocations(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2650,7 +2625,6 @@ type ElementPair struct {
 	// List of document attributes.
 	Attributes []Attribute `json:"attributes,omitempty"`
 }
-
 
 // UnmarshalElementPair unmarshals an instance of ElementPair from the specified map of raw messages.
 func UnmarshalElementPair(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2706,7 +2680,7 @@ type ExtractTablesOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	ExtractTablesOptionsModelContractsConst = "contracts"
-	ExtractTablesOptionsModelTablesConst = "tables"
+	ExtractTablesOptionsModelTablesConst    = "tables"
 )
 
 // NewExtractTablesOptions : Instantiate ExtractTablesOptions
@@ -2768,15 +2742,14 @@ type FeedbackDataInput struct {
 	UpdatedLabels *UpdatedLabelsIn `json:"updated_labels" validate:"required"`
 }
 
-
 // NewFeedbackDataInput : Instantiate FeedbackDataInput (Generic Model Constructor)
 func (*CompareComplyV1) NewFeedbackDataInput(feedbackType string, location *Location, text string, originalLabels *OriginalLabelsIn, updatedLabels *UpdatedLabelsIn) (model *FeedbackDataInput, err error) {
 	model = &FeedbackDataInput{
-		FeedbackType: core.StringPtr(feedbackType),
-		Location: location,
-		Text: core.StringPtr(text),
+		FeedbackType:   core.StringPtr(feedbackType),
+		Location:       location,
+		Text:           core.StringPtr(text),
 		OriginalLabels: originalLabels,
-		UpdatedLabels: updatedLabels,
+		UpdatedLabels:  updatedLabels,
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -2852,7 +2825,6 @@ type FeedbackDataOutput struct {
 	Pagination *Pagination `json:"pagination,omitempty"`
 }
 
-
 // UnmarshalFeedbackDataOutput unmarshals an instance of FeedbackDataOutput from the specified map of raw messages.
 func UnmarshalFeedbackDataOutput(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(FeedbackDataOutput)
@@ -2905,7 +2877,6 @@ type FeedbackDeleted struct {
 	Message *string `json:"message,omitempty"`
 }
 
-
 // UnmarshalFeedbackDeleted unmarshals an instance of FeedbackDeleted from the specified map of raw messages.
 func UnmarshalFeedbackDeleted(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(FeedbackDeleted)
@@ -2926,7 +2897,6 @@ type FeedbackList struct {
 	// A list of all feedback for the document.
 	Feedback []GetFeedback `json:"feedback,omitempty"`
 }
-
 
 // UnmarshalFeedbackList unmarshals an instance of FeedbackList from the specified map of raw messages.
 func UnmarshalFeedbackList(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -2956,7 +2926,6 @@ type FeedbackReturn struct {
 	// Information returned from the **Add Feedback** method.
 	FeedbackData *FeedbackDataOutput `json:"feedback_data,omitempty"`
 }
-
 
 // UnmarshalFeedbackReturn unmarshals an instance of FeedbackReturn from the specified map of raw messages.
 func UnmarshalFeedbackReturn(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3028,7 +2997,6 @@ type GetFeedback struct {
 	FeedbackData *FeedbackDataOutput `json:"feedback_data,omitempty"`
 }
 
-
 // UnmarshalGetFeedback unmarshals an instance of GetFeedback from the specified map of raw messages.
 func UnmarshalGetFeedback(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(GetFeedback)
@@ -3072,7 +3040,7 @@ type GetFeedbackOptions struct {
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	GetFeedbackOptionsModelContractsConst = "contracts"
-	GetFeedbackOptionsModelTablesConst = "tables"
+	GetFeedbackOptionsModelTablesConst    = "tables"
 )
 
 // NewGetFeedbackOptions : Instantiate GetFeedbackOptions
@@ -3118,7 +3086,6 @@ type HTMLReturn struct {
 	HTML *string `json:"html,omitempty"`
 }
 
-
 // UnmarshalHTMLReturn unmarshals an instance of HTMLReturn from the specified map of raw messages.
 func UnmarshalHTMLReturn(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(HTMLReturn)
@@ -3163,7 +3130,6 @@ type Interpretation struct {
 	Unit *string `json:"unit,omitempty"`
 }
 
-
 // UnmarshalInterpretation unmarshals an instance of Interpretation from the specified map of raw messages.
 func UnmarshalInterpretation(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Interpretation)
@@ -3196,7 +3162,6 @@ type Key struct {
 	Text *string `json:"text,omitempty"`
 }
 
-
 // UnmarshalKey unmarshals an instance of Key from the specified map of raw messages.
 func UnmarshalKey(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Key)
@@ -3225,7 +3190,6 @@ type KeyValuePair struct {
 	Value []Value `json:"value,omitempty"`
 }
 
-
 // UnmarshalKeyValuePair unmarshals an instance of KeyValuePair from the specified map of raw messages.
 func UnmarshalKeyValuePair(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(KeyValuePair)
@@ -3251,12 +3215,11 @@ type Label struct {
 	Party *string `json:"party" validate:"required"`
 }
 
-
 // NewLabel : Instantiate Label (Generic Model Constructor)
 func (*CompareComplyV1) NewLabel(nature string, party string) (model *Label, err error) {
 	model = &Label{
 		Nature: core.StringPtr(nature),
-		Party: core.StringPtr(party),
+		Party:  core.StringPtr(party),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -3289,7 +3252,6 @@ type LeadingSentence struct {
 	// An array of `location` objects that lists the locations of detected leading sentences.
 	ElementLocations []ElementLocations `json:"element_locations,omitempty"`
 }
-
 
 // UnmarshalLeadingSentence unmarshals an instance of LeadingSentence from the specified map of raw messages.
 func UnmarshalLeadingSentence(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3494,12 +3456,11 @@ type Location struct {
 	End *int64 `json:"end" validate:"required"`
 }
 
-
 // NewLocation : Instantiate Location (Generic Model Constructor)
 func (*CompareComplyV1) NewLocation(begin int64, end int64) (model *Location, err error) {
 	model = &Location{
 		Begin: core.Int64Ptr(begin),
-		End: core.Int64Ptr(end),
+		End:   core.Int64Ptr(end),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -3530,7 +3491,6 @@ type Mention struct {
 	Location *Location `json:"location,omitempty"`
 }
 
-
 // UnmarshalMention unmarshals an instance of Mention from the specified map of raw messages.
 func UnmarshalMention(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Mention)
@@ -3555,11 +3515,10 @@ type OriginalLabelsIn struct {
 	Categories []Category `json:"categories" validate:"required"`
 }
 
-
 // NewOriginalLabelsIn : Instantiate OriginalLabelsIn (Generic Model Constructor)
 func (*CompareComplyV1) NewOriginalLabelsIn(types []TypeLabel, categories []Category) (model *OriginalLabelsIn, err error) {
 	model = &OriginalLabelsIn{
-		Types: types,
+		Types:      types,
 		Categories: categories,
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -3589,7 +3548,6 @@ type OriginalLabelsOut struct {
 	// List of functional categories into which the element falls; in other words, the subject matter of the element.
 	Categories []Category `json:"categories,omitempty"`
 }
-
 
 // UnmarshalOriginalLabelsOut unmarshals an instance of OriginalLabelsOut from the specified map of raw messages.
 func UnmarshalOriginalLabelsOut(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3624,7 +3582,6 @@ type Pagination struct {
 	Total *int64 `json:"total,omitempty"`
 }
 
-
 // UnmarshalPagination unmarshals an instance of Pagination from the specified map of raw messages.
 func UnmarshalPagination(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Pagination)
@@ -3658,7 +3615,6 @@ type Paragraphs struct {
 	// `end`.
 	Location *Location `json:"location,omitempty"`
 }
-
 
 // UnmarshalParagraphs unmarshals an instance of Paragraphs from the specified map of raw messages.
 func UnmarshalParagraphs(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3698,7 +3654,6 @@ const (
 	PartiesImportancePrimaryConst = "Primary"
 	PartiesImportanceUnknownConst = "Unknown"
 )
-
 
 // UnmarshalParties unmarshals an instance of Parties from the specified map of raw messages.
 func UnmarshalParties(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3758,11 +3713,10 @@ type PaymentTerms struct {
 // Constants associated with the PaymentTerms.ConfidenceLevel property.
 // The confidence level in the identification of the payment term.
 const (
-	PaymentTermsConfidenceLevelHighConst = "High"
-	PaymentTermsConfidenceLevelLowConst = "Low"
+	PaymentTermsConfidenceLevelHighConst   = "High"
+	PaymentTermsConfidenceLevelLowConst    = "Low"
 	PaymentTermsConfidenceLevelMediumConst = "Medium"
 )
-
 
 // UnmarshalPaymentTerms unmarshals an instance of PaymentTerms from the specified map of raw messages.
 func UnmarshalPaymentTerms(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3824,7 +3778,6 @@ type RowHeaders struct {
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 }
 
-
 // UnmarshalRowHeaders unmarshals an instance of RowHeaders from the specified map of raw messages.
 func UnmarshalRowHeaders(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(RowHeaders)
@@ -3874,7 +3827,6 @@ type SectionTitle struct {
 	Location *Location `json:"location,omitempty"`
 }
 
-
 // UnmarshalSectionTitle unmarshals an instance of SectionTitle from the specified map of raw messages.
 func UnmarshalSectionTitle(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SectionTitle)
@@ -3909,7 +3861,6 @@ type SectionTitles struct {
 	ElementLocations []ElementLocations `json:"element_locations,omitempty"`
 }
 
-
 // UnmarshalSectionTitles unmarshals an instance of SectionTitles from the specified map of raw messages.
 func UnmarshalSectionTitles(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SectionTitles)
@@ -3941,7 +3892,6 @@ type ShortDoc struct {
 	// The MD5 hash of the input document.
 	Hash *string `json:"hash,omitempty"`
 }
-
 
 // UnmarshalShortDoc unmarshals an instance of ShortDoc from the specified map of raw messages.
 func UnmarshalShortDoc(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3982,7 +3932,6 @@ type TableHeaders struct {
 	// The `end` index of this cell's `column` location in the current table.
 	ColumnIndexEnd *int64 `json:"column_index_end,omitempty"`
 }
-
 
 // UnmarshalTableHeaders unmarshals an instance of TableHeaders from the specified map of raw messages.
 func UnmarshalTableHeaders(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4034,7 +3983,6 @@ type TableReturn struct {
 	Tables []Tables `json:"tables,omitempty"`
 }
 
-
 // UnmarshalTableReturn unmarshals an instance of TableReturn from the specified map of raw messages.
 func UnmarshalTableReturn(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TableReturn)
@@ -4068,7 +4016,6 @@ type TableTitle struct {
 	// The text of the identified table title or caption.
 	Text *string `json:"text,omitempty"`
 }
-
 
 // UnmarshalTableTitle unmarshals an instance of TableTitle from the specified map of raw messages.
 func UnmarshalTableTitle(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4123,7 +4070,6 @@ type Tables struct {
 	// An array of key-value pairs identified in the current table.
 	KeyValuePairs []KeyValuePair `json:"key_value_pairs,omitempty"`
 }
-
 
 // UnmarshalTables unmarshals an instance of Tables from the specified map of raw messages.
 func UnmarshalTables(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4195,11 +4141,10 @@ type TerminationDates struct {
 // Constants associated with the TerminationDates.ConfidenceLevel property.
 // The confidence level in the identification of the termination date.
 const (
-	TerminationDatesConfidenceLevelHighConst = "High"
-	TerminationDatesConfidenceLevelLowConst = "Low"
+	TerminationDatesConfidenceLevelHighConst   = "High"
+	TerminationDatesConfidenceLevelLowConst    = "Low"
 	TerminationDatesConfidenceLevelMediumConst = "Medium"
 )
-
 
 // UnmarshalTerminationDates unmarshals an instance of TerminationDates from the specified map of raw messages.
 func UnmarshalTerminationDates(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4244,11 +4189,10 @@ type TypeLabel struct {
 // Constants associated with the TypeLabel.Modification property.
 // The type of modification of the feedback entry in the updated labels response.
 const (
-	TypeLabelModificationAddedConst = "added"
-	TypeLabelModificationRemovedConst = "removed"
+	TypeLabelModificationAddedConst     = "added"
+	TypeLabelModificationRemovedConst   = "removed"
 	TypeLabelModificationUnchangedConst = "unchanged"
 )
-
 
 // UnmarshalTypeLabel unmarshals an instance of TypeLabel from the specified map of raw messages.
 func UnmarshalTypeLabel(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4275,7 +4219,6 @@ type TypeLabelComparison struct {
 	// `party`, and the `party` object identifies the affected party.
 	Label *Label `json:"label,omitempty"`
 }
-
 
 // UnmarshalTypeLabelComparison unmarshals an instance of TypeLabelComparison from the specified map of raw messages.
 func UnmarshalTypeLabelComparison(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4310,7 +4253,6 @@ type UnalignedElement struct {
 	// List of document attributes.
 	Attributes []Attribute `json:"attributes,omitempty"`
 }
-
 
 // UnmarshalUnalignedElement unmarshals an instance of UnalignedElement from the specified map of raw messages.
 func UnmarshalUnalignedElement(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4373,14 +4315,14 @@ const (
 // to the standalone methods as well as to the methods' use in batch-processing requests.
 const (
 	UpdateBatchOptionsModelContractsConst = "contracts"
-	UpdateBatchOptionsModelTablesConst = "tables"
+	UpdateBatchOptionsModelTablesConst    = "tables"
 )
 
 // NewUpdateBatchOptions : Instantiate UpdateBatchOptions
 func (*CompareComplyV1) NewUpdateBatchOptions(batchID string, action string) *UpdateBatchOptions {
 	return &UpdateBatchOptions{
 		BatchID: core.StringPtr(batchID),
-		Action: core.StringPtr(action),
+		Action:  core.StringPtr(action),
 	}
 }
 
@@ -4417,11 +4359,10 @@ type UpdatedLabelsIn struct {
 	Categories []Category `json:"categories" validate:"required"`
 }
 
-
 // NewUpdatedLabelsIn : Instantiate UpdatedLabelsIn (Generic Model Constructor)
 func (*CompareComplyV1) NewUpdatedLabelsIn(types []TypeLabel, categories []Category) (model *UpdatedLabelsIn, err error) {
 	model = &UpdatedLabelsIn{
-		Types: types,
+		Types:      types,
 		Categories: categories,
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -4452,7 +4393,6 @@ type UpdatedLabelsOut struct {
 	Categories []Category `json:"categories,omitempty"`
 }
 
-
 // UnmarshalUpdatedLabelsOut unmarshals an instance of UpdatedLabelsOut from the specified map of raw messages.
 func UnmarshalUpdatedLabelsOut(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(UpdatedLabelsOut)
@@ -4480,7 +4420,6 @@ type Value struct {
 	// The text content of the table cell without HTML markup.
 	Text *string `json:"text,omitempty"`
 }
-
 
 // UnmarshalValue unmarshals an instance of Value from the specified map of raw messages.
 func UnmarshalValue(m map[string]json.RawMessage, result interface{}) (err error) {

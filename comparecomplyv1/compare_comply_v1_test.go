@@ -40,7 +40,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		It(`Instantiate service client`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(compareComplyService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -50,7 +50,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(compareComplyService).To(BeNil())
@@ -58,7 +58,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "https://comparecomplyv1/api",
+				URL:     "https://comparecomplyv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -79,7 +79,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "noauth",
 			}
 
@@ -101,7 +101,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(compareComplyService).ToNot(BeNil())
@@ -137,7 +137,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -155,12 +155,12 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_AUTH_TYPE":   "NOAuth",
+				"COMPARE_COMPLY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -205,7 +205,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -266,7 +266,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -320,7 +320,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -357,7 +357,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		It(`Instantiate service client`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(compareComplyService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -367,7 +367,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(compareComplyService).To(BeNil())
@@ -375,7 +375,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "https://comparecomplyv1/api",
+				URL:     "https://comparecomplyv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -396,7 +396,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "noauth",
 			}
 
@@ -418,7 +418,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(compareComplyService).ToNot(BeNil())
@@ -454,7 +454,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -472,12 +472,12 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_AUTH_TYPE":   "NOAuth",
+				"COMPARE_COMPLY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -522,7 +522,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -583,7 +583,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -637,7 +637,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -674,7 +674,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		It(`Instantiate service client`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(compareComplyService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -684,7 +684,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(compareComplyService).To(BeNil())
@@ -692,7 +692,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "https://comparecomplyv1/api",
+				URL:     "https://comparecomplyv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -713,7 +713,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "noauth",
 			}
 
@@ -735,7 +735,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(compareComplyService).ToNot(BeNil())
@@ -771,7 +771,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -789,12 +789,12 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_AUTH_TYPE":   "NOAuth",
+				"COMPARE_COMPLY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -839,7 +839,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -900,7 +900,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -954,7 +954,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -991,7 +991,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		It(`Instantiate service client`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(compareComplyService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -1001,7 +1001,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(compareComplyService).To(BeNil())
@@ -1009,7 +1009,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "https://comparecomplyv1/api",
+				URL:     "https://comparecomplyv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -1030,7 +1030,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "noauth",
 			}
 
@@ -1052,7 +1052,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1088,7 +1088,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -1106,12 +1106,12 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_AUTH_TYPE":   "NOAuth",
+				"COMPARE_COMPLY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -1160,7 +1160,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1229,7 +1229,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1287,7 +1287,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1328,7 +1328,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		It(`Instantiate service client`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(compareComplyService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -1338,7 +1338,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(compareComplyService).To(BeNil())
@@ -1346,7 +1346,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "https://comparecomplyv1/api",
+				URL:     "https://comparecomplyv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -1367,7 +1367,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "noauth",
 			}
 
@@ -1389,7 +1389,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1425,7 +1425,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -1443,12 +1443,12 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_AUTH_TYPE":   "NOAuth",
+				"COMPARE_COMPLY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -1491,7 +1491,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1614,7 +1614,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1716,7 +1716,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1835,7 +1835,6 @@ var _ = Describe(`CompareComplyV1`, func() {
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_total query parameter
 
 					res.Header().Set("Content-type", "application/json")
@@ -1847,7 +1846,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -1930,7 +1929,6 @@ var _ = Describe(`CompareComplyV1`, func() {
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for include_total query parameter
 
 					// Sleep a short time to support a timeout test
@@ -1946,7 +1944,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2011,7 +2009,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2071,7 +2069,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2131,7 +2129,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2184,7 +2182,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2239,7 +2237,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2299,7 +2297,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2352,7 +2350,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2388,7 +2386,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		It(`Instantiate service client`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(compareComplyService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -2398,7 +2396,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(compareComplyService).To(BeNil())
@@ -2406,7 +2404,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "https://comparecomplyv1/api",
+				URL:     "https://comparecomplyv1/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -2427,7 +2425,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "noauth",
 			}
 
@@ -2449,7 +2447,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2485,7 +2483,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_URL": "https://comparecomplyv1/api",
+				"COMPARE_COMPLY_URL":       "https://comparecomplyv1/api",
 				"COMPARE_COMPLY_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -2503,12 +2501,12 @@ var _ = Describe(`CompareComplyV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"COMPARE_COMPLY_AUTH_TYPE":   "NOAuth",
+				"COMPARE_COMPLY_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -2555,7 +2553,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2623,7 +2621,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2682,7 +2680,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2741,7 +2739,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2797,7 +2795,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2848,7 +2846,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2892,7 +2890,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -2949,7 +2947,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -3001,7 +2999,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -3057,7 +3055,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -3120,7 +3118,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -3174,7 +3172,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareComplyService, serviceErr := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(compareComplyService).ToNot(BeNil())
@@ -3212,7 +3210,7 @@ var _ = Describe(`CompareComplyV1`, func() {
 			compareComplyService, _ := comparecomplyv1.NewCompareComplyV1(&comparecomplyv1.CompareComplyV1Options{
 				URL:           "http://comparecomplyv1modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			It(`Invoke NewAddFeedbackOptions successfully`, func() {
 				// Construct an instance of the ShortDoc model

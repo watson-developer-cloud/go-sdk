@@ -69,14 +69,13 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_URL": "https://naturallanguageclassifierv1/api",
+				"NATURAL_LANGUAGE_CLASSIFIER_URL":       "https://naturallanguageclassifierv1/api",
 				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				})
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -105,8 +104,7 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				})
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
 				err := naturalLanguageClassifierService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
@@ -124,13 +122,12 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_URL": "https://naturallanguageclassifierv1/api",
+				"NATURAL_LANGUAGE_CLASSIFIER_URL":       "https://naturallanguageclassifierv1/api",
 				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-			})
+			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(naturalLanguageClassifierService).To(BeNil())
@@ -141,7 +138,7 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE":   "NOAuth",
+				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -554,14 +551,13 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_URL": "https://naturallanguageclassifierv1/api",
+				"NATURAL_LANGUAGE_CLASSIFIER_URL":       "https://naturallanguageclassifierv1/api",
 				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				})
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -590,8 +586,7 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				})
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
 				err := naturalLanguageClassifierService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
@@ -609,13 +604,12 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_URL": "https://naturallanguageclassifierv1/api",
+				"NATURAL_LANGUAGE_CLASSIFIER_URL":       "https://naturallanguageclassifierv1/api",
 				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-			})
+			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(naturalLanguageClassifierService).To(BeNil())
@@ -626,7 +620,7 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE":   "NOAuth",
+				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)

@@ -40,7 +40,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 		It(`Instantiate service client`, func() {
 			personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			Expect(personalityInsightsService).ToNot(BeNil())
 			Expect(serviceErr).To(BeNil())
@@ -50,7 +50,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid URL`, func() {
 			personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 			Expect(personalityInsightsService).To(BeNil())
@@ -58,7 +58,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 		})
 		It(`Instantiate service client with error: Invalid Auth`, func() {
 			personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-				URL: "https://personalityinsightsv3/api",
+				URL:     "https://personalityinsightsv3/api",
 				Version: core.StringPtr(version),
 				Authenticator: &core.BasicAuthenticator{
 					Username: "",
@@ -79,7 +79,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"PERSONALITY_INSIGHTS_URL": "https://personalityinsightsv3/api",
+				"PERSONALITY_INSIGHTS_URL":       "https://personalityinsightsv3/api",
 				"PERSONALITY_INSIGHTS_AUTH_TYPE": "noauth",
 			}
 
@@ -101,7 +101,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 			It(`Create service client using external config and set url from constructor successfully`, func() {
 				SetTestEnvironment(testEnvironment)
 				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-					URL: "https://testService/api",
+					URL:     "https://testService/api",
 					Version: core.StringPtr(version),
 				})
 				Expect(personalityInsightsService).ToNot(BeNil())
@@ -137,7 +137,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"PERSONALITY_INSIGHTS_URL": "https://personalityinsightsv3/api",
+				"PERSONALITY_INSIGHTS_URL":       "https://personalityinsightsv3/api",
 				"PERSONALITY_INSIGHTS_AUTH_TYPE": "someOtherAuth",
 			}
 
@@ -155,12 +155,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"PERSONALITY_INSIGHTS_AUTH_TYPE":   "NOAuth",
+				"PERSONALITY_INSIGHTS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
 			personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
-				URL: "{BAD_URL_STRING",
+				URL:     "{BAD_URL_STRING",
 				Version: core.StringPtr(version),
 			})
 
@@ -200,12 +200,9 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for raw_scores query parameter
 
-
 					// TODO: Add check for csv_headers query parameter
-
 
 					// TODO: Add check for consumption_preferences query parameter
 
@@ -218,7 +215,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(personalityInsightsService).ToNot(BeNil())
@@ -306,12 +303,9 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for raw_scores query parameter
 
-
 					// TODO: Add check for csv_headers query parameter
-
 
 					// TODO: Add check for consumption_preferences query parameter
 
@@ -328,7 +322,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(personalityInsightsService).ToNot(BeNil())
@@ -402,7 +396,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(personalityInsightsService).ToNot(BeNil())
@@ -486,12 +480,9 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 
-
 					// TODO: Add check for raw_scores query parameter
 
-
 					// TODO: Add check for csv_headers query parameter
-
 
 					// TODO: Add check for consumption_preferences query parameter
 
@@ -508,7 +499,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(personalityInsightsService).ToNot(BeNil())
@@ -582,7 +573,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
-					Version: core.StringPtr(version),
+					Version:       core.StringPtr(version),
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(personalityInsightsService).ToNot(BeNil())
@@ -633,7 +624,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 			personalityInsightsService, _ := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
 				URL:           "http://personalityinsightsv3modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
-				Version: core.StringPtr(version),
+				Version:       core.StringPtr(version),
 			})
 			It(`Invoke NewContent successfully`, func() {
 				contentItems := []personalityinsightsv3.ContentItem{}

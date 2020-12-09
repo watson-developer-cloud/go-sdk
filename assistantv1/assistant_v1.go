@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
  */
- 
 
 // Package assistantv1 : Operations and models for the AssistantV1 service
 package assistantv1
@@ -831,7 +830,7 @@ func (assistant *AssistantV1) GetIntentWithContext(ctx context.Context, getInten
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *getIntentOptions.WorkspaceID,
-		"intent": *getIntentOptions.Intent,
+		"intent":       *getIntentOptions.Intent,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -902,7 +901,7 @@ func (assistant *AssistantV1) UpdateIntentWithContext(ctx context.Context, updat
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *updateIntentOptions.WorkspaceID,
-		"intent": *updateIntentOptions.Intent,
+		"intent":       *updateIntentOptions.Intent,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -985,7 +984,7 @@ func (assistant *AssistantV1) DeleteIntentWithContext(ctx context.Context, delet
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *deleteIntentOptions.WorkspaceID,
-		"intent": *deleteIntentOptions.Intent,
+		"intent":       *deleteIntentOptions.Intent,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1037,7 +1036,7 @@ func (assistant *AssistantV1) ListExamplesWithContext(ctx context.Context, listE
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *listExamplesOptions.WorkspaceID,
-		"intent": *listExamplesOptions.Intent,
+		"intent":       *listExamplesOptions.Intent,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1116,7 +1115,7 @@ func (assistant *AssistantV1) CreateExampleWithContext(ctx context.Context, crea
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *createExampleOptions.WorkspaceID,
-		"intent": *createExampleOptions.Intent,
+		"intent":       *createExampleOptions.Intent,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1193,8 +1192,8 @@ func (assistant *AssistantV1) GetExampleWithContext(ctx context.Context, getExam
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *getExampleOptions.WorkspaceID,
-		"intent": *getExampleOptions.Intent,
-		"text": *getExampleOptions.Text,
+		"intent":       *getExampleOptions.Intent,
+		"text":         *getExampleOptions.Text,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1261,8 +1260,8 @@ func (assistant *AssistantV1) UpdateExampleWithContext(ctx context.Context, upda
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *updateExampleOptions.WorkspaceID,
-		"intent": *updateExampleOptions.Intent,
-		"text": *updateExampleOptions.Text,
+		"intent":       *updateExampleOptions.Intent,
+		"text":         *updateExampleOptions.Text,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1339,8 +1338,8 @@ func (assistant *AssistantV1) DeleteExampleWithContext(ctx context.Context, dele
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *deleteExampleOptions.WorkspaceID,
-		"intent": *deleteExampleOptions.Intent,
-		"text": *deleteExampleOptions.Text,
+		"intent":       *deleteExampleOptions.Intent,
+		"text":         *deleteExampleOptions.Text,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1543,7 +1542,7 @@ func (assistant *AssistantV1) GetCounterexampleWithContext(ctx context.Context, 
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *getCounterexampleOptions.WorkspaceID,
-		"text": *getCounterexampleOptions.Text,
+		"text":         *getCounterexampleOptions.Text,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1607,7 +1606,7 @@ func (assistant *AssistantV1) UpdateCounterexampleWithContext(ctx context.Contex
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *updateCounterexampleOptions.WorkspaceID,
-		"text": *updateCounterexampleOptions.Text,
+		"text":         *updateCounterexampleOptions.Text,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -1681,7 +1680,7 @@ func (assistant *AssistantV1) DeleteCounterexampleWithContext(ctx context.Contex
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *deleteCounterexampleOptions.WorkspaceID,
-		"text": *deleteCounterexampleOptions.Text,
+		"text":         *deleteCounterexampleOptions.Text,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -1899,7 +1898,7 @@ func (assistant *AssistantV1) GetEntityWithContext(ctx context.Context, getEntit
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *getEntityOptions.WorkspaceID,
-		"entity": *getEntityOptions.Entity,
+		"entity":       *getEntityOptions.Entity,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -1970,7 +1969,7 @@ func (assistant *AssistantV1) UpdateEntityWithContext(ctx context.Context, updat
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *updateEntityOptions.WorkspaceID,
-		"entity": *updateEntityOptions.Entity,
+		"entity":       *updateEntityOptions.Entity,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2059,7 +2058,7 @@ func (assistant *AssistantV1) DeleteEntityWithContext(ctx context.Context, delet
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *deleteEntityOptions.WorkspaceID,
-		"entity": *deleteEntityOptions.Entity,
+		"entity":       *deleteEntityOptions.Entity,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -2112,7 +2111,7 @@ func (assistant *AssistantV1) ListMentionsWithContext(ctx context.Context, listM
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *listMentionsOptions.WorkspaceID,
-		"entity": *listMentionsOptions.Entity,
+		"entity":       *listMentionsOptions.Entity,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2179,7 +2178,7 @@ func (assistant *AssistantV1) ListValuesWithContext(ctx context.Context, listVal
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *listValuesOptions.WorkspaceID,
-		"entity": *listValuesOptions.Entity,
+		"entity":       *listValuesOptions.Entity,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2261,7 +2260,7 @@ func (assistant *AssistantV1) CreateValueWithContext(ctx context.Context, create
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *createValueOptions.WorkspaceID,
-		"entity": *createValueOptions.Entity,
+		"entity":       *createValueOptions.Entity,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2347,8 +2346,8 @@ func (assistant *AssistantV1) GetValueWithContext(ctx context.Context, getValueO
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *getValueOptions.WorkspaceID,
-		"entity": *getValueOptions.Entity,
-		"value": *getValueOptions.Value,
+		"entity":       *getValueOptions.Entity,
+		"value":        *getValueOptions.Value,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2419,8 +2418,8 @@ func (assistant *AssistantV1) UpdateValueWithContext(ctx context.Context, update
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *updateValueOptions.WorkspaceID,
-		"entity": *updateValueOptions.Entity,
-		"value": *updateValueOptions.Value,
+		"entity":       *updateValueOptions.Entity,
+		"value":        *updateValueOptions.Value,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2509,8 +2508,8 @@ func (assistant *AssistantV1) DeleteValueWithContext(ctx context.Context, delete
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *deleteValueOptions.WorkspaceID,
-		"entity": *deleteValueOptions.Entity,
-		"value": *deleteValueOptions.Value,
+		"entity":       *deleteValueOptions.Entity,
+		"value":        *deleteValueOptions.Value,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -2562,8 +2561,8 @@ func (assistant *AssistantV1) ListSynonymsWithContext(ctx context.Context, listS
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *listSynonymsOptions.WorkspaceID,
-		"entity": *listSynonymsOptions.Entity,
-		"value": *listSynonymsOptions.Value,
+		"entity":       *listSynonymsOptions.Entity,
+		"value":        *listSynonymsOptions.Value,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2642,8 +2641,8 @@ func (assistant *AssistantV1) CreateSynonymWithContext(ctx context.Context, crea
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *createSynonymOptions.WorkspaceID,
-		"entity": *createSynonymOptions.Entity,
-		"value": *createSynonymOptions.Value,
+		"entity":       *createSynonymOptions.Entity,
+		"value":        *createSynonymOptions.Value,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2717,9 +2716,9 @@ func (assistant *AssistantV1) GetSynonymWithContext(ctx context.Context, getSyno
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *getSynonymOptions.WorkspaceID,
-		"entity": *getSynonymOptions.Entity,
-		"value": *getSynonymOptions.Value,
-		"synonym": *getSynonymOptions.Synonym,
+		"entity":       *getSynonymOptions.Entity,
+		"value":        *getSynonymOptions.Value,
+		"synonym":      *getSynonymOptions.Synonym,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -2786,9 +2785,9 @@ func (assistant *AssistantV1) UpdateSynonymWithContext(ctx context.Context, upda
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *updateSynonymOptions.WorkspaceID,
-		"entity": *updateSynonymOptions.Entity,
-		"value": *updateSynonymOptions.Value,
-		"synonym": *updateSynonymOptions.Synonym,
+		"entity":       *updateSynonymOptions.Entity,
+		"value":        *updateSynonymOptions.Value,
+		"synonym":      *updateSynonymOptions.Synonym,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -2862,9 +2861,9 @@ func (assistant *AssistantV1) DeleteSynonymWithContext(ctx context.Context, dele
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *deleteSynonymOptions.WorkspaceID,
-		"entity": *deleteSynonymOptions.Entity,
-		"value": *deleteSynonymOptions.Value,
-		"synonym": *deleteSynonymOptions.Synonym,
+		"entity":       *deleteSynonymOptions.Entity,
+		"value":        *deleteSynonymOptions.Value,
+		"synonym":      *deleteSynonymOptions.Synonym,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -3121,7 +3120,7 @@ func (assistant *AssistantV1) GetDialogNodeWithContext(ctx context.Context, getD
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *getDialogNodeOptions.WorkspaceID,
-		"dialog_node": *getDialogNodeOptions.DialogNode,
+		"dialog_node":  *getDialogNodeOptions.DialogNode,
 	}
 
 	builder := core.NewRequestBuilder(core.GET)
@@ -3188,7 +3187,7 @@ func (assistant *AssistantV1) UpdateDialogNodeWithContext(ctx context.Context, u
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *updateDialogNodeOptions.WorkspaceID,
-		"dialog_node": *updateDialogNodeOptions.DialogNode,
+		"dialog_node":  *updateDialogNodeOptions.DialogNode,
 	}
 
 	builder := core.NewRequestBuilder(core.POST)
@@ -3316,7 +3315,7 @@ func (assistant *AssistantV1) DeleteDialogNodeWithContext(ctx context.Context, d
 
 	pathParamsMap := map[string]string{
 		"workspace_id": *deleteDialogNodeOptions.WorkspaceID,
-		"dialog_node": *deleteDialogNodeOptions.DialogNode,
+		"dialog_node":  *deleteDialogNodeOptions.DialogNode,
 	}
 
 	builder := core.NewRequestBuilder(core.DELETE)
@@ -3662,7 +3661,6 @@ type BulkClassifyOutput struct {
 	Intents []RuntimeIntent `json:"intents,omitempty"`
 }
 
-
 // UnmarshalBulkClassifyOutput unmarshals an instance of BulkClassifyOutput from the specified map of raw messages.
 func UnmarshalBulkClassifyOutput(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(BulkClassifyOutput)
@@ -3688,7 +3686,6 @@ type BulkClassifyResponse struct {
 	Output []BulkClassifyOutput `json:"output,omitempty"`
 }
 
-
 // UnmarshalBulkClassifyResponse unmarshals an instance of BulkClassifyResponse from the specified map of raw messages.
 func UnmarshalBulkClassifyResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(BulkClassifyResponse)
@@ -3705,7 +3702,6 @@ type BulkClassifyUtterance struct {
 	// The text of the input utterance.
 	Text *string `json:"text" validate:"required"`
 }
-
 
 // NewBulkClassifyUtterance : Instantiate BulkClassifyUtterance (Generic Model Constructor)
 func (*AssistantV1) NewBulkClassifyUtterance(text string) (model *BulkClassifyUtterance, err error) {
@@ -3735,7 +3731,6 @@ type CaptureGroup struct {
 	// Zero-based character offsets that indicate where the entity value begins and ends in the input text.
 	Location []int64 `json:"location,omitempty"`
 }
-
 
 // NewCaptureGroup : Instantiate CaptureGroup (Generic Model Constructor)
 func (*AssistantV1) NewCaptureGroup(group string) (model *CaptureGroup, err error) {
@@ -3775,7 +3770,6 @@ type Context struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string]interface{}
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of Context
 func (o *Context) SetProperty(key string, value interface{}) {
@@ -3861,7 +3855,6 @@ type Counterexample struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
-
 // NewCounterexample : Instantiate Counterexample (Generic Model Constructor)
 func (*AssistantV1) NewCounterexample(text string) (model *Counterexample, err error) {
 	model = &Counterexample{
@@ -3899,7 +3892,6 @@ type CounterexampleCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-
 // UnmarshalCounterexampleCollection unmarshals an instance of CounterexampleCollection from the specified map of raw messages.
 func UnmarshalCounterexampleCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(CounterexampleCollection)
@@ -3936,7 +3928,7 @@ type CreateCounterexampleOptions struct {
 func (*AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text string) *CreateCounterexampleOptions {
 	return &CreateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4041,57 +4033,57 @@ type CreateDialogNodeOptions struct {
 // Constants associated with the CreateDialogNodeOptions.Type property.
 // How the dialog node is processed.
 const (
-	CreateDialogNodeOptionsTypeEventHandlerConst = "event_handler"
-	CreateDialogNodeOptionsTypeFolderConst = "folder"
-	CreateDialogNodeOptionsTypeFrameConst = "frame"
+	CreateDialogNodeOptionsTypeEventHandlerConst      = "event_handler"
+	CreateDialogNodeOptionsTypeFolderConst            = "folder"
+	CreateDialogNodeOptionsTypeFrameConst             = "frame"
 	CreateDialogNodeOptionsTypeResponseConditionConst = "response_condition"
-	CreateDialogNodeOptionsTypeSlotConst = "slot"
-	CreateDialogNodeOptionsTypeStandardConst = "standard"
+	CreateDialogNodeOptionsTypeSlotConst              = "slot"
+	CreateDialogNodeOptionsTypeStandardConst          = "standard"
 )
 
 // Constants associated with the CreateDialogNodeOptions.EventName property.
 // How an `event_handler` node is processed.
 const (
-	CreateDialogNodeOptionsEventNameDigressionReturnPromptConst = "digression_return_prompt"
-	CreateDialogNodeOptionsEventNameFilledConst = "filled"
-	CreateDialogNodeOptionsEventNameFilledMultipleConst = "filled_multiple"
-	CreateDialogNodeOptionsEventNameFocusConst = "focus"
-	CreateDialogNodeOptionsEventNameGenericConst = "generic"
-	CreateDialogNodeOptionsEventNameInputConst = "input"
-	CreateDialogNodeOptionsEventNameNomatchConst = "nomatch"
+	CreateDialogNodeOptionsEventNameDigressionReturnPromptConst   = "digression_return_prompt"
+	CreateDialogNodeOptionsEventNameFilledConst                   = "filled"
+	CreateDialogNodeOptionsEventNameFilledMultipleConst           = "filled_multiple"
+	CreateDialogNodeOptionsEventNameFocusConst                    = "focus"
+	CreateDialogNodeOptionsEventNameGenericConst                  = "generic"
+	CreateDialogNodeOptionsEventNameInputConst                    = "input"
+	CreateDialogNodeOptionsEventNameNomatchConst                  = "nomatch"
 	CreateDialogNodeOptionsEventNameNomatchResponsesDepletedConst = "nomatch_responses_depleted"
-	CreateDialogNodeOptionsEventNameValidateConst = "validate"
+	CreateDialogNodeOptionsEventNameValidateConst                 = "validate"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	CreateDialogNodeOptionsDigressInDoesNotReturnConst = "does_not_return"
-	CreateDialogNodeOptionsDigressInNotAvailableConst = "not_available"
-	CreateDialogNodeOptionsDigressInReturnsConst = "returns"
+	CreateDialogNodeOptionsDigressInNotAvailableConst  = "not_available"
+	CreateDialogNodeOptionsDigressInReturnsConst       = "returns"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	CreateDialogNodeOptionsDigressOutAllowAllConst = "allow_all"
+	CreateDialogNodeOptionsDigressOutAllowAllConst            = "allow_all"
 	CreateDialogNodeOptionsDigressOutAllowAllNeverReturnConst = "allow_all_never_return"
-	CreateDialogNodeOptionsDigressOutAllowReturningConst = "allow_returning"
+	CreateDialogNodeOptionsDigressOutAllowReturningConst      = "allow_returning"
 )
 
 // Constants associated with the CreateDialogNodeOptions.DigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	CreateDialogNodeOptionsDigressOutSlotsAllowAllConst = "allow_all"
+	CreateDialogNodeOptionsDigressOutSlotsAllowAllConst       = "allow_all"
 	CreateDialogNodeOptionsDigressOutSlotsAllowReturningConst = "allow_returning"
-	CreateDialogNodeOptionsDigressOutSlotsNotAllowedConst = "not_allowed"
+	CreateDialogNodeOptionsDigressOutSlotsNotAllowedConst     = "not_allowed"
 )
 
 // NewCreateDialogNodeOptions : Instantiate CreateDialogNodeOptions
 func (*AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode string) *CreateDialogNodeOptions {
 	return &CreateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -4254,7 +4246,6 @@ type CreateEntity struct {
 	Values []CreateValue `json:"values,omitempty"`
 }
 
-
 // NewCreateEntity : Instantiate CreateEntity (Generic Model Constructor)
 func (*AssistantV1) NewCreateEntity(entity string) (model *CreateEntity, err error) {
 	model = &CreateEntity{
@@ -4333,7 +4324,7 @@ type CreateEntityOptions struct {
 func (*AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *CreateEntityOptions {
 	return &CreateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -4412,8 +4403,8 @@ type CreateExampleOptions struct {
 func (*AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, text string) *CreateExampleOptions {
 	return &CreateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -4472,7 +4463,6 @@ type CreateIntent struct {
 	// An array of user input examples for the intent.
 	Examples []Example `json:"examples,omitempty"`
 }
-
 
 // NewCreateIntent : Instantiate CreateIntent (Generic Model Constructor)
 func (*AssistantV1) NewCreateIntent(intent string) (model *CreateIntent, err error) {
@@ -4537,7 +4527,7 @@ type CreateIntentOptions struct {
 func (*AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *CreateIntentOptions {
 	return &CreateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -4604,9 +4594,9 @@ type CreateSynonymOptions struct {
 func (*AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, value string, synonym string) *CreateSynonymOptions {
 	return &CreateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -4683,7 +4673,6 @@ const (
 	CreateValueTypePatternsConst = "patterns"
 	CreateValueTypeSynonymsConst = "synonyms"
 )
-
 
 // NewCreateValue : Instantiate CreateValue (Generic Model Constructor)
 func (*AssistantV1) NewCreateValue(value string) (model *CreateValue, err error) {
@@ -4777,8 +4766,8 @@ const (
 func (*AssistantV1) NewCreateValueOptions(workspaceID string, entity string, value string) *CreateValueOptions {
 	return &CreateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -4977,7 +4966,7 @@ type DeleteCounterexampleOptions struct {
 func (*AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text string) *DeleteCounterexampleOptions {
 	return &DeleteCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -5015,7 +5004,7 @@ type DeleteDialogNodeOptions struct {
 func (*AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode string) *DeleteDialogNodeOptions {
 	return &DeleteDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -5053,7 +5042,7 @@ type DeleteEntityOptions struct {
 func (*AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *DeleteEntityOptions {
 	return &DeleteEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -5094,8 +5083,8 @@ type DeleteExampleOptions struct {
 func (*AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, text string) *DeleteExampleOptions {
 	return &DeleteExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -5139,7 +5128,7 @@ type DeleteIntentOptions struct {
 func (*AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *DeleteIntentOptions {
 	return &DeleteIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -5183,9 +5172,9 @@ type DeleteSynonymOptions struct {
 func (*AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, value string, synonym string) *DeleteSynonymOptions {
 	return &DeleteSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -5266,8 +5255,8 @@ type DeleteValueOptions struct {
 func (*AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, value string) *DeleteValueOptions {
 	return &DeleteValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -5400,52 +5389,51 @@ type DialogNode struct {
 // Constants associated with the DialogNode.Type property.
 // How the dialog node is processed.
 const (
-	DialogNodeTypeEventHandlerConst = "event_handler"
-	DialogNodeTypeFolderConst = "folder"
-	DialogNodeTypeFrameConst = "frame"
+	DialogNodeTypeEventHandlerConst      = "event_handler"
+	DialogNodeTypeFolderConst            = "folder"
+	DialogNodeTypeFrameConst             = "frame"
 	DialogNodeTypeResponseConditionConst = "response_condition"
-	DialogNodeTypeSlotConst = "slot"
-	DialogNodeTypeStandardConst = "standard"
+	DialogNodeTypeSlotConst              = "slot"
+	DialogNodeTypeStandardConst          = "standard"
 )
 
 // Constants associated with the DialogNode.EventName property.
 // How an `event_handler` node is processed.
 const (
-	DialogNodeEventNameDigressionReturnPromptConst = "digression_return_prompt"
-	DialogNodeEventNameFilledConst = "filled"
-	DialogNodeEventNameFilledMultipleConst = "filled_multiple"
-	DialogNodeEventNameFocusConst = "focus"
-	DialogNodeEventNameGenericConst = "generic"
-	DialogNodeEventNameInputConst = "input"
-	DialogNodeEventNameNomatchConst = "nomatch"
+	DialogNodeEventNameDigressionReturnPromptConst   = "digression_return_prompt"
+	DialogNodeEventNameFilledConst                   = "filled"
+	DialogNodeEventNameFilledMultipleConst           = "filled_multiple"
+	DialogNodeEventNameFocusConst                    = "focus"
+	DialogNodeEventNameGenericConst                  = "generic"
+	DialogNodeEventNameInputConst                    = "input"
+	DialogNodeEventNameNomatchConst                  = "nomatch"
 	DialogNodeEventNameNomatchResponsesDepletedConst = "nomatch_responses_depleted"
-	DialogNodeEventNameValidateConst = "validate"
+	DialogNodeEventNameValidateConst                 = "validate"
 )
 
 // Constants associated with the DialogNode.DigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	DialogNodeDigressInDoesNotReturnConst = "does_not_return"
-	DialogNodeDigressInNotAvailableConst = "not_available"
-	DialogNodeDigressInReturnsConst = "returns"
+	DialogNodeDigressInNotAvailableConst  = "not_available"
+	DialogNodeDigressInReturnsConst       = "returns"
 )
 
 // Constants associated with the DialogNode.DigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	DialogNodeDigressOutAllowAllConst = "allow_all"
+	DialogNodeDigressOutAllowAllConst            = "allow_all"
 	DialogNodeDigressOutAllowAllNeverReturnConst = "allow_all_never_return"
-	DialogNodeDigressOutAllowReturningConst = "allow_returning"
+	DialogNodeDigressOutAllowReturningConst      = "allow_returning"
 )
 
 // Constants associated with the DialogNode.DigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	DialogNodeDigressOutSlotsAllowAllConst = "allow_all"
+	DialogNodeDigressOutSlotsAllowAllConst       = "allow_all"
 	DialogNodeDigressOutSlotsAllowReturningConst = "allow_returning"
-	DialogNodeDigressOutSlotsNotAllowedConst = "not_allowed"
+	DialogNodeDigressOutSlotsNotAllowedConst     = "not_allowed"
 )
-
 
 // NewDialogNode : Instantiate DialogNode (Generic Model Constructor)
 func (*AssistantV1) NewDialogNode(dialogNode string) (model *DialogNode, err error) {
@@ -5572,18 +5560,17 @@ type DialogNodeAction struct {
 // Constants associated with the DialogNodeAction.Type property.
 // The type of action to invoke.
 const (
-	DialogNodeActionTypeClientConst = "client"
+	DialogNodeActionTypeClientConst        = "client"
 	DialogNodeActionTypeCloudFunctionConst = "cloud_function"
-	DialogNodeActionTypeServerConst = "server"
-	DialogNodeActionTypeWebActionConst = "web_action"
-	DialogNodeActionTypeWebhookConst = "webhook"
+	DialogNodeActionTypeServerConst        = "server"
+	DialogNodeActionTypeWebActionConst     = "web_action"
+	DialogNodeActionTypeWebhookConst       = "webhook"
 )
-
 
 // NewDialogNodeAction : Instantiate DialogNodeAction (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeAction(name string, resultVariable string) (model *DialogNodeAction, err error) {
 	model = &DialogNodeAction{
-		Name: core.StringPtr(name),
+		Name:           core.StringPtr(name),
 		ResultVariable: core.StringPtr(resultVariable),
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -5626,7 +5613,6 @@ type DialogNodeCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-
 // UnmarshalDialogNodeCollection unmarshals an instance of DialogNodeCollection from the specified map of raw messages.
 func UnmarshalDialogNodeCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DialogNodeCollection)
@@ -5650,7 +5636,6 @@ type DialogNodeContext struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string]interface{}
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of DialogNodeContext
 func (o *DialogNodeContext) SetProperty(key string, value interface{}) {
@@ -5757,23 +5742,22 @@ type DialogNodeNextStep struct {
 //     - `skip_all_slots`
 //      If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
 const (
-	DialogNodeNextStepBehaviorGetUserInputConst = "get_user_input"
-	DialogNodeNextStepBehaviorJumpToConst = "jump_to"
-	DialogNodeNextStepBehaviorRepromptConst = "reprompt"
-	DialogNodeNextStepBehaviorSkipAllSlotsConst = "skip_all_slots"
-	DialogNodeNextStepBehaviorSkipSlotConst = "skip_slot"
+	DialogNodeNextStepBehaviorGetUserInputConst  = "get_user_input"
+	DialogNodeNextStepBehaviorJumpToConst        = "jump_to"
+	DialogNodeNextStepBehaviorRepromptConst      = "reprompt"
+	DialogNodeNextStepBehaviorSkipAllSlotsConst  = "skip_all_slots"
+	DialogNodeNextStepBehaviorSkipSlotConst      = "skip_slot"
 	DialogNodeNextStepBehaviorSkipUserInputConst = "skip_user_input"
 )
 
 // Constants associated with the DialogNodeNextStep.Selector property.
 // Which part of the dialog node to process next.
 const (
-	DialogNodeNextStepSelectorBodyConst = "body"
-	DialogNodeNextStepSelectorClientConst = "client"
+	DialogNodeNextStepSelectorBodyConst      = "body"
+	DialogNodeNextStepSelectorClientConst    = "client"
 	DialogNodeNextStepSelectorConditionConst = "condition"
 	DialogNodeNextStepSelectorUserInputConst = "user_input"
 )
-
 
 // NewDialogNodeNextStep : Instantiate DialogNodeNextStep (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeNextStep(behavior string) (model *DialogNodeNextStep, err error) {
@@ -5819,7 +5803,6 @@ type DialogNodeOutput struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string]interface{}
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of DialogNodeOutput
 func (o *DialogNodeOutput) SetProperty(key string, value interface{}) {
@@ -5895,7 +5878,6 @@ func UnmarshalDialogNodeOutput(m map[string]json.RawMessage, result interface{})
 type DialogNodeOutputConnectToAgentTransferInfo struct {
 	Target map[string]map[string]interface{} `json:"target,omitempty"`
 }
-
 
 // UnmarshalDialogNodeOutputConnectToAgentTransferInfo unmarshals an instance of DialogNodeOutputConnectToAgentTransferInfo from the specified map of raw messages.
 func UnmarshalDialogNodeOutputConnectToAgentTransferInfo(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5992,15 +5974,15 @@ const (
 // Constants associated with the DialogNodeOutputGeneric.SelectionPolicy property.
 // How a response is selected from the list, if more than one response is specified.
 const (
-	DialogNodeOutputGenericSelectionPolicyMultilineConst = "multiline"
-	DialogNodeOutputGenericSelectionPolicyRandomConst = "random"
+	DialogNodeOutputGenericSelectionPolicyMultilineConst  = "multiline"
+	DialogNodeOutputGenericSelectionPolicyRandomConst     = "random"
 	DialogNodeOutputGenericSelectionPolicySequentialConst = "sequential"
 )
 
 // Constants associated with the DialogNodeOutputGeneric.Preference property.
 // The preferred type of control to display, if supported by the channel.
 const (
-	DialogNodeOutputGenericPreferenceButtonConst = "button"
+	DialogNodeOutputGenericPreferenceButtonConst   = "button"
 	DialogNodeOutputGenericPreferenceDropdownConst = "dropdown"
 )
 
@@ -6008,7 +5990,7 @@ const (
 // The type of the search query.
 const (
 	DialogNodeOutputGenericQueryTypeDiscoveryQueryLanguageConst = "discovery_query_language"
-	DialogNodeOutputGenericQueryTypeNaturalLanguageConst = "natural_language"
+	DialogNodeOutputGenericQueryTypeNaturalLanguageConst        = "natural_language"
 )
 
 func (*DialogNodeOutputGeneric) isaDialogNodeOutputGeneric() bool {
@@ -6057,7 +6039,6 @@ type DialogNodeOutputModifiers struct {
 	Overwrite *bool `json:"overwrite,omitempty"`
 }
 
-
 // UnmarshalDialogNodeOutputModifiers unmarshals an instance of DialogNodeOutputModifiers from the specified map of raw messages.
 func UnmarshalDialogNodeOutputModifiers(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DialogNodeOutputModifiers)
@@ -6078,7 +6059,6 @@ type DialogNodeOutputOptionsElement struct {
 	// corresponding option.
 	Value *DialogNodeOutputOptionsElementValue `json:"value" validate:"required"`
 }
-
 
 // NewDialogNodeOutputOptionsElement : Instantiate DialogNodeOutputOptionsElement (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputOptionsElement(label string, value *DialogNodeOutputOptionsElementValue) (model *DialogNodeOutputOptionsElement, err error) {
@@ -6124,7 +6104,6 @@ type DialogNodeOutputOptionsElementValue struct {
 	Entities []RuntimeEntity `json:"entities,omitempty"`
 }
 
-
 // UnmarshalDialogNodeOutputOptionsElementValue unmarshals an instance of DialogNodeOutputOptionsElementValue from the specified map of raw messages.
 func UnmarshalDialogNodeOutputOptionsElementValue(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DialogNodeOutputOptionsElementValue)
@@ -6151,7 +6130,6 @@ type DialogNodeOutputTextValuesElement struct {
 	Text *string `json:"text,omitempty"`
 }
 
-
 // UnmarshalDialogNodeOutputTextValuesElement unmarshals an instance of DialogNodeOutputTextValuesElement from the specified map of raw messages.
 func UnmarshalDialogNodeOutputTextValuesElement(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DialogNodeOutputTextValuesElement)
@@ -6174,7 +6152,6 @@ type DialogNodeVisitedDetails struct {
 	// The conditions that trigger the dialog node.
 	Conditions *string `json:"conditions,omitempty"`
 }
-
 
 // UnmarshalDialogNodeVisitedDetails unmarshals an instance of DialogNodeVisitedDetails from the specified map of raw messages.
 func UnmarshalDialogNodeVisitedDetails(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6213,7 +6190,6 @@ type DialogSuggestion struct {
 	// value of the dialog node's **user_label** property.
 	DialogNode *string `json:"dialog_node,omitempty"`
 }
-
 
 // NewDialogSuggestion : Instantiate DialogSuggestion (Generic Model Constructor)
 func (*AssistantV1) NewDialogSuggestion(label string, value *DialogSuggestionValue) (model *DialogSuggestion, err error) {
@@ -6261,7 +6237,6 @@ type DialogSuggestionValue struct {
 	Entities []RuntimeEntity `json:"entities,omitempty"`
 }
 
-
 // UnmarshalDialogSuggestionValue unmarshals an instance of DialogSuggestionValue from the specified map of raw messages.
 func UnmarshalDialogSuggestionValue(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(DialogSuggestionValue)
@@ -6308,7 +6283,6 @@ type Entity struct {
 	Values []Value `json:"values,omitempty"`
 }
 
-
 // UnmarshalEntity unmarshals an instance of Entity from the specified map of raw messages.
 func UnmarshalEntity(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Entity)
@@ -6353,7 +6327,6 @@ type EntityCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-
 // UnmarshalEntityCollection unmarshals an instance of EntityCollection from the specified map of raw messages.
 func UnmarshalEntityCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(EntityCollection)
@@ -6380,7 +6353,6 @@ type EntityMention struct {
 	// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input text.
 	Location []int64 `json:"location" validate:"required"`
 }
-
 
 // UnmarshalEntityMention unmarshals an instance of EntityMention from the specified map of raw messages.
 func UnmarshalEntityMention(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6409,7 +6381,6 @@ type EntityMentionCollection struct {
 	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
-
 
 // UnmarshalEntityMentionCollection unmarshals an instance of EntityMentionCollection from the specified map of raw messages.
 func UnmarshalEntityMentionCollection(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6442,7 +6413,6 @@ type Example struct {
 	// The timestamp for the most recent update to the object.
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
-
 
 // NewExample : Instantiate Example (Generic Model Constructor)
 func (*AssistantV1) NewExample(text string) (model *Example, err error) {
@@ -6485,7 +6455,6 @@ type ExampleCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-
 // UnmarshalExampleCollection unmarshals an instance of ExampleCollection from the specified map of raw messages.
 func UnmarshalExampleCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ExampleCollection)
@@ -6520,7 +6489,7 @@ type GetCounterexampleOptions struct {
 func (*AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string) *GetCounterexampleOptions {
 	return &GetCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -6567,7 +6536,7 @@ type GetDialogNodeOptions struct {
 func (*AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode string) *GetDialogNodeOptions {
 	return &GetDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -6618,7 +6587,7 @@ type GetEntityOptions struct {
 func (*AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetEntityOptions {
 	return &GetEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -6674,8 +6643,8 @@ type GetExampleOptions struct {
 func (*AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text string) *GetExampleOptions {
 	return &GetExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -6732,7 +6701,7 @@ type GetIntentOptions struct {
 func (*AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetIntentOptions {
 	return &GetIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -6791,9 +6760,9 @@ type GetSynonymOptions struct {
 func (*AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, value string, synonym string) *GetSynonymOptions {
 	return &GetSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -6859,8 +6828,8 @@ type GetValueOptions struct {
 func (*AssistantV1) NewGetValueOptions(workspaceID string, entity string, value string) *GetValueOptions {
 	return &GetValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -6984,7 +6953,6 @@ type Intent struct {
 	Examples []Example `json:"examples,omitempty"`
 }
 
-
 // UnmarshalIntent unmarshals an instance of Intent from the specified map of raw messages.
 func UnmarshalIntent(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Intent)
@@ -7020,7 +6988,6 @@ type IntentCollection struct {
 	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
-
 
 // UnmarshalIntentCollection unmarshals an instance of IntentCollection from the specified map of raw messages.
 func UnmarshalIntentCollection(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7126,7 +7093,7 @@ type ListCounterexamplesOptions struct {
 // The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
 // minus sign (`-`).
 const (
-	ListCounterexamplesOptionsSortTextConst = "text"
+	ListCounterexamplesOptionsSortTextConst    = "text"
 	ListCounterexamplesOptionsSortUpdatedConst = "updated"
 )
 
@@ -7210,7 +7177,7 @@ type ListDialogNodesOptions struct {
 // sign (`-`).
 const (
 	ListDialogNodesOptionsSortDialogNodeConst = "dialog_node"
-	ListDialogNodesOptionsSortUpdatedConst = "updated"
+	ListDialogNodesOptionsSortUpdatedConst    = "updated"
 )
 
 // NewListDialogNodesOptions : Instantiate ListDialogNodesOptions
@@ -7296,7 +7263,7 @@ type ListEntitiesOptions struct {
 // The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListEntitiesOptionsSortEntityConst = "entity"
+	ListEntitiesOptionsSortEntityConst  = "entity"
 	ListEntitiesOptionsSortUpdatedConst = "updated"
 )
 
@@ -7388,7 +7355,7 @@ type ListExamplesOptions struct {
 // The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListExamplesOptionsSortTextConst = "text"
+	ListExamplesOptionsSortTextConst    = "text"
 	ListExamplesOptionsSortUpdatedConst = "updated"
 )
 
@@ -7396,7 +7363,7 @@ const (
 func (*AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *ListExamplesOptions {
 	return &ListExamplesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -7482,7 +7449,7 @@ type ListIntentsOptions struct {
 // The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus sign
 // (`-`).
 const (
-	ListIntentsOptionsSortIntentConst = "intent"
+	ListIntentsOptionsSortIntentConst  = "intent"
 	ListIntentsOptionsSortUpdatedConst = "updated"
 )
 
@@ -7630,7 +7597,7 @@ type ListMentionsOptions struct {
 func (*AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *ListMentionsOptions {
 	return &ListMentionsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -7708,8 +7675,8 @@ const (
 func (*AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, value string) *ListSynonymsOptions {
 	return &ListSynonymsOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -7805,14 +7772,14 @@ type ListValuesOptions struct {
 // minus sign (`-`).
 const (
 	ListValuesOptionsSortUpdatedConst = "updated"
-	ListValuesOptionsSortValueConst = "value"
+	ListValuesOptionsSortValueConst   = "value"
 )
 
 // NewListValuesOptions : Instantiate ListValuesOptions
 func (*AssistantV1) NewListValuesOptions(workspaceID string, entity string) *ListValuesOptions {
 	return &ListValuesOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -7897,7 +7864,7 @@ type ListWorkspacesOptions struct {
 // The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
 // sign (`-`).
 const (
-	ListWorkspacesOptionsSortNameConst = "name"
+	ListWorkspacesOptionsSortNameConst    = "name"
 	ListWorkspacesOptionsSortUpdatedConst = "updated"
 )
 
@@ -7966,7 +7933,6 @@ type Log struct {
 	Language *string `json:"language" validate:"required"`
 }
 
-
 // UnmarshalLog unmarshals an instance of Log from the specified map of raw messages.
 func UnmarshalLog(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Log)
@@ -8011,7 +7977,6 @@ type LogCollection struct {
 	Pagination *LogPagination `json:"pagination" validate:"required"`
 }
 
-
 // UnmarshalLogCollection unmarshals an instance of LogCollection from the specified map of raw messages.
 func UnmarshalLogCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(LogCollection)
@@ -8040,16 +8005,15 @@ type LogMessage struct {
 // The severity of the log message.
 const (
 	LogMessageLevelErrorConst = "error"
-	LogMessageLevelInfoConst = "info"
-	LogMessageLevelWarnConst = "warn"
+	LogMessageLevelInfoConst  = "info"
+	LogMessageLevelWarnConst  = "warn"
 )
-
 
 // NewLogMessage : Instantiate LogMessage (Generic Model Constructor)
 func (*AssistantV1) NewLogMessage(level string, msg string) (model *LogMessage, err error) {
 	model = &LogMessage{
 		Level: core.StringPtr(level),
-		Msg: core.StringPtr(msg),
+		Msg:   core.StringPtr(msg),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -8082,7 +8046,6 @@ type LogPagination struct {
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
 
-
 // UnmarshalLogPagination unmarshals an instance of LogPagination from the specified map of raw messages.
 func UnmarshalLogPagination(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(LogPagination)
@@ -8111,11 +8074,10 @@ type Mention struct {
 	Location []int64 `json:"location" validate:"required"`
 }
 
-
 // NewMention : Instantiate Mention (Generic Model Constructor)
 func (*AssistantV1) NewMention(entity string, location []int64) (model *Mention, err error) {
 	model = &Mention{
-		Entity: core.StringPtr(entity),
+		Entity:   core.StringPtr(entity),
 		Location: location,
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -8149,7 +8111,6 @@ type MessageContextMetadata struct {
 	// characters.
 	UserID *string `json:"user_id,omitempty"`
 }
-
 
 // UnmarshalMessageContextMetadata unmarshals an instance of MessageContextMetadata from the specified map of raw messages.
 func UnmarshalMessageContextMetadata(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -8193,7 +8154,6 @@ type MessageInput struct {
 	// Allows users to set arbitrary properties
 	additionalProperties map[string]interface{}
 }
-
 
 // SetProperty allows the user to set an arbitrary property on an instance of MessageInput
 func (o *MessageInput) SetProperty(key string, value interface{}) {
@@ -8403,7 +8363,6 @@ type MessageRequest struct {
 	Actions []DialogNodeAction `json:"actions,omitempty"`
 }
 
-
 // UnmarshalMessageRequest unmarshals an instance of MessageRequest from the specified map of raw messages.
 func UnmarshalMessageRequest(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(MessageRequest)
@@ -8463,7 +8422,6 @@ type MessageResponse struct {
 	// An array of objects describing any actions requested by the dialog node.
 	Actions []DialogNodeAction `json:"actions,omitempty"`
 }
-
 
 // UnmarshalMessageResponse unmarshals an instance of MessageResponse from the specified map of raw messages.
 func UnmarshalMessageResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -8525,12 +8483,11 @@ type OutputData struct {
 	additionalProperties map[string]interface{}
 }
 
-
 // NewOutputData : Instantiate OutputData (Generic Model Constructor)
 func (*AssistantV1) NewOutputData(logMessages []LogMessage, text []string) (model *OutputData, err error) {
 	model = &OutputData{
 		LogMessages: logMessages,
-		Text: text,
+		Text:        text,
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -8644,7 +8601,6 @@ type Pagination struct {
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
 
-
 // UnmarshalPagination unmarshals an instance of Pagination from the specified map of raw messages.
 func UnmarshalPagination(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Pagination)
@@ -8716,13 +8672,12 @@ type RuntimeEntity struct {
 	Role *RuntimeEntityRole `json:"role,omitempty"`
 }
 
-
 // NewRuntimeEntity : Instantiate RuntimeEntity (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeEntity(entity string, location []int64, value string) (model *RuntimeEntity, err error) {
 	model = &RuntimeEntity{
-		Entity: core.StringPtr(entity),
+		Entity:   core.StringPtr(entity),
 		Location: location,
-		Value: core.StringPtr(value),
+		Value:    core.StringPtr(value),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -8779,7 +8734,6 @@ type RuntimeEntityAlternative struct {
 	// A decimal percentage that represents Watson's confidence in the recognized entity.
 	Confidence *float64 `json:"confidence,omitempty"`
 }
-
 
 // UnmarshalRuntimeEntityAlternative unmarshals an instance of RuntimeEntityAlternative from the specified map of raw messages.
 func UnmarshalRuntimeEntityAlternative(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -8896,19 +8850,18 @@ type RuntimeEntityInterpretation struct {
 // Constants associated with the RuntimeEntityInterpretation.Granularity property.
 // The precision or duration of a time range specified by a recognized `@sys-time` or `@sys-date` entity.
 const (
-	RuntimeEntityInterpretationGranularityDayConst = "day"
+	RuntimeEntityInterpretationGranularityDayConst       = "day"
 	RuntimeEntityInterpretationGranularityFortnightConst = "fortnight"
-	RuntimeEntityInterpretationGranularityHourConst = "hour"
-	RuntimeEntityInterpretationGranularityInstantConst = "instant"
-	RuntimeEntityInterpretationGranularityMinuteConst = "minute"
-	RuntimeEntityInterpretationGranularityMonthConst = "month"
-	RuntimeEntityInterpretationGranularityQuarterConst = "quarter"
-	RuntimeEntityInterpretationGranularitySecondConst = "second"
-	RuntimeEntityInterpretationGranularityWeekConst = "week"
-	RuntimeEntityInterpretationGranularityWeekendConst = "weekend"
-	RuntimeEntityInterpretationGranularityYearConst = "year"
+	RuntimeEntityInterpretationGranularityHourConst      = "hour"
+	RuntimeEntityInterpretationGranularityInstantConst   = "instant"
+	RuntimeEntityInterpretationGranularityMinuteConst    = "minute"
+	RuntimeEntityInterpretationGranularityMonthConst     = "month"
+	RuntimeEntityInterpretationGranularityQuarterConst   = "quarter"
+	RuntimeEntityInterpretationGranularitySecondConst    = "second"
+	RuntimeEntityInterpretationGranularityWeekConst      = "week"
+	RuntimeEntityInterpretationGranularityWeekendConst   = "weekend"
+	RuntimeEntityInterpretationGranularityYearConst      = "year"
 )
-
 
 // UnmarshalRuntimeEntityInterpretation unmarshals an instance of RuntimeEntityInterpretation from the specified map of raw messages.
 func UnmarshalRuntimeEntityInterpretation(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9031,14 +8984,13 @@ type RuntimeEntityRole struct {
 // Constants associated with the RuntimeEntityRole.Type property.
 // The relationship of the entity to the range.
 const (
-	RuntimeEntityRoleTypeDateFromConst = "date_from"
-	RuntimeEntityRoleTypeDateToConst = "date_to"
+	RuntimeEntityRoleTypeDateFromConst   = "date_from"
+	RuntimeEntityRoleTypeDateToConst     = "date_to"
 	RuntimeEntityRoleTypeNumberFromConst = "number_from"
-	RuntimeEntityRoleTypeNumberToConst = "number_to"
-	RuntimeEntityRoleTypeTimeFromConst = "time_from"
-	RuntimeEntityRoleTypeTimeToConst = "time_to"
+	RuntimeEntityRoleTypeNumberToConst   = "number_to"
+	RuntimeEntityRoleTypeTimeFromConst   = "time_from"
+	RuntimeEntityRoleTypeTimeToConst     = "time_to"
 )
-
 
 // UnmarshalRuntimeEntityRole unmarshals an instance of RuntimeEntityRole from the specified map of raw messages.
 func UnmarshalRuntimeEntityRole(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9060,11 +9012,10 @@ type RuntimeIntent struct {
 	Confidence *float64 `json:"confidence" validate:"required"`
 }
 
-
 // NewRuntimeIntent : Instantiate RuntimeIntent (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeIntent(intent string, confidence float64) (model *RuntimeIntent, err error) {
 	model = &RuntimeIntent{
-		Intent: core.StringPtr(intent),
+		Intent:     core.StringPtr(intent),
 		Confidence: core.Float64Ptr(confidence),
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -9159,7 +9110,7 @@ const (
 // Constants associated with the RuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
 const (
-	RuntimeResponseGenericPreferenceButtonConst = "button"
+	RuntimeResponseGenericPreferenceButtonConst   = "button"
 	RuntimeResponseGenericPreferenceDropdownConst = "dropdown"
 )
 
@@ -9216,7 +9167,6 @@ type Synonym struct {
 	Updated *strfmt.DateTime `json:"updated,omitempty"`
 }
 
-
 // NewSynonym : Instantiate Synonym (Generic Model Constructor)
 func (*AssistantV1) NewSynonym(synonym string) (model *Synonym, err error) {
 	model = &Synonym{
@@ -9253,7 +9203,6 @@ type SynonymCollection struct {
 	// The pagination data for the returned objects.
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
-
 
 // UnmarshalSynonymCollection unmarshals an instance of SynonymCollection from the specified map of raw messages.
 func UnmarshalSynonymCollection(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9294,7 +9243,7 @@ type UpdateCounterexampleOptions struct {
 func (*AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text string) *UpdateCounterexampleOptions {
 	return &UpdateCounterexampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Text: core.StringPtr(text),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -9408,57 +9357,57 @@ type UpdateDialogNodeOptions struct {
 // Constants associated with the UpdateDialogNodeOptions.NewType property.
 // How the dialog node is processed.
 const (
-	UpdateDialogNodeOptionsNewTypeEventHandlerConst = "event_handler"
-	UpdateDialogNodeOptionsNewTypeFolderConst = "folder"
-	UpdateDialogNodeOptionsNewTypeFrameConst = "frame"
+	UpdateDialogNodeOptionsNewTypeEventHandlerConst      = "event_handler"
+	UpdateDialogNodeOptionsNewTypeFolderConst            = "folder"
+	UpdateDialogNodeOptionsNewTypeFrameConst             = "frame"
 	UpdateDialogNodeOptionsNewTypeResponseConditionConst = "response_condition"
-	UpdateDialogNodeOptionsNewTypeSlotConst = "slot"
-	UpdateDialogNodeOptionsNewTypeStandardConst = "standard"
+	UpdateDialogNodeOptionsNewTypeSlotConst              = "slot"
+	UpdateDialogNodeOptionsNewTypeStandardConst          = "standard"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewEventName property.
 // How an `event_handler` node is processed.
 const (
-	UpdateDialogNodeOptionsNewEventNameDigressionReturnPromptConst = "digression_return_prompt"
-	UpdateDialogNodeOptionsNewEventNameFilledConst = "filled"
-	UpdateDialogNodeOptionsNewEventNameFilledMultipleConst = "filled_multiple"
-	UpdateDialogNodeOptionsNewEventNameFocusConst = "focus"
-	UpdateDialogNodeOptionsNewEventNameGenericConst = "generic"
-	UpdateDialogNodeOptionsNewEventNameInputConst = "input"
-	UpdateDialogNodeOptionsNewEventNameNomatchConst = "nomatch"
+	UpdateDialogNodeOptionsNewEventNameDigressionReturnPromptConst   = "digression_return_prompt"
+	UpdateDialogNodeOptionsNewEventNameFilledConst                   = "filled"
+	UpdateDialogNodeOptionsNewEventNameFilledMultipleConst           = "filled_multiple"
+	UpdateDialogNodeOptionsNewEventNameFocusConst                    = "focus"
+	UpdateDialogNodeOptionsNewEventNameGenericConst                  = "generic"
+	UpdateDialogNodeOptionsNewEventNameInputConst                    = "input"
+	UpdateDialogNodeOptionsNewEventNameNomatchConst                  = "nomatch"
 	UpdateDialogNodeOptionsNewEventNameNomatchResponsesDepletedConst = "nomatch_responses_depleted"
-	UpdateDialogNodeOptionsNewEventNameValidateConst = "validate"
+	UpdateDialogNodeOptionsNewEventNameValidateConst                 = "validate"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressIn property.
 // Whether this top-level dialog node can be digressed into.
 const (
 	UpdateDialogNodeOptionsNewDigressInDoesNotReturnConst = "does_not_return"
-	UpdateDialogNodeOptionsNewDigressInNotAvailableConst = "not_available"
-	UpdateDialogNodeOptionsNewDigressInReturnsConst = "returns"
+	UpdateDialogNodeOptionsNewDigressInNotAvailableConst  = "not_available"
+	UpdateDialogNodeOptionsNewDigressInReturnsConst       = "returns"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressOut property.
 // Whether this dialog node can be returned to after a digression.
 const (
-	UpdateDialogNodeOptionsNewDigressOutAllowAllConst = "allow_all"
+	UpdateDialogNodeOptionsNewDigressOutAllowAllConst            = "allow_all"
 	UpdateDialogNodeOptionsNewDigressOutAllowAllNeverReturnConst = "allow_all_never_return"
-	UpdateDialogNodeOptionsNewDigressOutAllowReturningConst = "allow_returning"
+	UpdateDialogNodeOptionsNewDigressOutAllowReturningConst      = "allow_returning"
 )
 
 // Constants associated with the UpdateDialogNodeOptions.NewDigressOutSlots property.
 // Whether the user can digress to top-level nodes while filling out slots.
 const (
-	UpdateDialogNodeOptionsNewDigressOutSlotsAllowAllConst = "allow_all"
+	UpdateDialogNodeOptionsNewDigressOutSlotsAllowAllConst       = "allow_all"
 	UpdateDialogNodeOptionsNewDigressOutSlotsAllowReturningConst = "allow_returning"
-	UpdateDialogNodeOptionsNewDigressOutSlotsNotAllowedConst = "not_allowed"
+	UpdateDialogNodeOptionsNewDigressOutSlotsNotAllowedConst     = "not_allowed"
 )
 
 // NewUpdateDialogNodeOptions : Instantiate UpdateDialogNodeOptions
 func (*AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode string) *UpdateDialogNodeOptions {
 	return &UpdateDialogNodeOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		DialogNode: core.StringPtr(dialogNode),
+		DialogNode:  core.StringPtr(dialogNode),
 	}
 }
 
@@ -9645,7 +9594,7 @@ type UpdateEntityOptions struct {
 func (*AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *UpdateEntityOptions {
 	return &UpdateEntityOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
+		Entity:      core.StringPtr(entity),
 	}
 }
 
@@ -9739,8 +9688,8 @@ type UpdateExampleOptions struct {
 func (*AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, text string) *UpdateExampleOptions {
 	return &UpdateExampleOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
-		Text: core.StringPtr(text),
+		Intent:      core.StringPtr(intent),
+		Text:        core.StringPtr(text),
 	}
 }
 
@@ -9825,7 +9774,7 @@ type UpdateIntentOptions struct {
 func (*AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *UpdateIntentOptions {
 	return &UpdateIntentOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Intent: core.StringPtr(intent),
+		Intent:      core.StringPtr(intent),
 	}
 }
 
@@ -9907,9 +9856,9 @@ type UpdateSynonymOptions struct {
 func (*AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, value string, synonym string) *UpdateSynonymOptions {
 	return &UpdateSynonymOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
-		Synonym: core.StringPtr(synonym),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
+		Synonym:     core.StringPtr(synonym),
 	}
 }
 
@@ -10015,8 +9964,8 @@ const (
 func (*AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, value string) *UpdateValueOptions {
 	return &UpdateValueOptions{
 		WorkspaceID: core.StringPtr(workspaceID),
-		Entity: core.StringPtr(entity),
-		Value: core.StringPtr(value),
+		Entity:      core.StringPtr(entity),
+		Value:       core.StringPtr(value),
 	}
 }
 
@@ -10275,7 +10224,6 @@ const (
 	ValueTypeSynonymsConst = "synonyms"
 )
 
-
 // UnmarshalValue unmarshals an instance of Value from the specified map of raw messages.
 func UnmarshalValue(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Value)
@@ -10320,7 +10268,6 @@ type ValueCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-
 // UnmarshalValueCollection unmarshals an instance of ValueCollection from the specified map of raw messages.
 func UnmarshalValueCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ValueCollection)
@@ -10350,11 +10297,10 @@ type Webhook struct {
 	HeadersVar []WebhookHeader `json:"headers,omitempty"`
 }
 
-
 // NewWebhook : Instantiate Webhook (Generic Model Constructor)
 func (*AssistantV1) NewWebhook(url string, name string) (model *Webhook, err error) {
 	model = &Webhook{
-		URL: core.StringPtr(url),
+		URL:  core.StringPtr(url),
 		Name: core.StringPtr(name),
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -10389,11 +10335,10 @@ type WebhookHeader struct {
 	Value *string `json:"value" validate:"required"`
 }
 
-
 // NewWebhookHeader : Instantiate WebhookHeader (Generic Model Constructor)
 func (*AssistantV1) NewWebhookHeader(name string, value string) (model *WebhookHeader, err error) {
 	model = &WebhookHeader{
-		Name: core.StringPtr(name),
+		Name:  core.StringPtr(name),
 		Value: core.StringPtr(value),
 	}
 	err = core.ValidateStruct(model, "required parameters")
@@ -10466,13 +10411,12 @@ type Workspace struct {
 // Constants associated with the Workspace.Status property.
 // The current status of the workspace.
 const (
-	WorkspaceStatusAvailableConst = "Available"
-	WorkspaceStatusFailedConst = "Failed"
+	WorkspaceStatusAvailableConst   = "Available"
+	WorkspaceStatusFailedConst      = "Failed"
 	WorkspaceStatusNonExistentConst = "Non Existent"
-	WorkspaceStatusTrainingConst = "Training"
+	WorkspaceStatusTrainingConst    = "Training"
 	WorkspaceStatusUnavailableConst = "Unavailable"
 )
-
 
 // UnmarshalWorkspace unmarshals an instance of Workspace from the specified map of raw messages.
 func UnmarshalWorkspace(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10550,7 +10494,6 @@ type WorkspaceCollection struct {
 	Pagination *Pagination `json:"pagination" validate:"required"`
 }
 
-
 // UnmarshalWorkspaceCollection unmarshals an instance of WorkspaceCollection from the specified map of raw messages.
 func UnmarshalWorkspaceCollection(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceCollection)
@@ -10592,7 +10535,6 @@ type WorkspaceSystemSettings struct {
 	// Workspace settings related to detection of irrelevant input.
 	OffTopic *WorkspaceSystemSettingsOffTopic `json:"off_topic,omitempty"`
 }
-
 
 // UnmarshalWorkspaceSystemSettings unmarshals an instance of WorkspaceSystemSettings from the specified map of raw messages.
 func UnmarshalWorkspaceSystemSettings(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10664,7 +10606,6 @@ const (
 	WorkspaceSystemSettingsDisambiguationSensitivityHighConst = "high"
 )
 
-
 // UnmarshalWorkspaceSystemSettingsDisambiguation unmarshals an instance of WorkspaceSystemSettingsDisambiguation from the specified map of raw messages.
 func UnmarshalWorkspaceSystemSettingsDisambiguation(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceSystemSettingsDisambiguation)
@@ -10706,7 +10647,6 @@ type WorkspaceSystemSettingsOffTopic struct {
 	Enabled *bool `json:"enabled,omitempty"`
 }
 
-
 // UnmarshalWorkspaceSystemSettingsOffTopic unmarshals an instance of WorkspaceSystemSettingsOffTopic from the specified map of raw messages.
 func UnmarshalWorkspaceSystemSettingsOffTopic(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceSystemSettingsOffTopic)
@@ -10724,7 +10664,6 @@ type WorkspaceSystemSettingsSystemEntities struct {
 	Enabled *bool `json:"enabled,omitempty"`
 }
 
-
 // UnmarshalWorkspaceSystemSettingsSystemEntities unmarshals an instance of WorkspaceSystemSettingsSystemEntities from the specified map of raw messages.
 func UnmarshalWorkspaceSystemSettingsSystemEntities(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceSystemSettingsSystemEntities)
@@ -10741,7 +10680,6 @@ type WorkspaceSystemSettingsTooling struct {
 	// Whether the dialog JSON editor displays text responses within the `output.generic` object.
 	StoreGenericResponses *bool `json:"store_generic_responses,omitempty"`
 }
-
 
 // UnmarshalWorkspaceSystemSettingsTooling unmarshals an instance of WorkspaceSystemSettingsTooling from the specified map of raw messages.
 func UnmarshalWorkspaceSystemSettingsTooling(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10782,7 +10720,6 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent struct {
 const (
 	DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgentResponseTypeConnectToAgentConst = "connect_to_agent"
 )
-
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(responseType string) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent, err error) {
@@ -10848,12 +10785,11 @@ const (
 	DialogNodeOutputGenericDialogNodeOutputResponseTypeImageResponseTypeImageConst = "image"
 )
 
-
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeImage (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage(responseType string, source string) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeImage, err error) {
 	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeImage{
 		ResponseType: core.StringPtr(responseType),
-		Source: core.StringPtr(source),
+		Source:       core.StringPtr(source),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -10916,17 +10852,16 @@ const (
 // Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeOption.Preference property.
 // The preferred type of control to display, if supported by the channel.
 const (
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeOptionPreferenceButtonConst = "button"
+	DialogNodeOutputGenericDialogNodeOutputResponseTypeOptionPreferenceButtonConst   = "button"
 	DialogNodeOutputGenericDialogNodeOutputResponseTypeOptionPreferenceDropdownConst = "dropdown"
 )
-
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeOption : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeOption (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeOption(responseType string, title string, options []DialogNodeOutputOptionsElement) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeOption, err error) {
 	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeOption{
 		ResponseType: core.StringPtr(responseType),
-		Title: core.StringPtr(title),
-		Options: options,
+		Title:        core.StringPtr(title),
+		Options:      options,
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -10984,12 +10919,11 @@ const (
 	DialogNodeOutputGenericDialogNodeOutputResponseTypePauseResponseTypePauseConst = "pause"
 )
 
-
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypePause (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause(responseType string, time int64) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypePause, err error) {
 	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypePause{
 		ResponseType: core.StringPtr(responseType),
-		Time: core.Int64Ptr(time),
+		Time:         core.Int64Ptr(time),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -11057,16 +10991,15 @@ const (
 // The type of the search query.
 const (
 	DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkillQueryTypeDiscoveryQueryLanguageConst = "discovery_query_language"
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkillQueryTypeNaturalLanguageConst = "natural_language"
+	DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkillQueryTypeNaturalLanguageConst        = "natural_language"
 )
-
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill(responseType string, query string, queryType string) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill, err error) {
 	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill{
 		ResponseType: core.StringPtr(responseType),
-		Query: core.StringPtr(query),
-		QueryType: core.StringPtr(queryType),
+		Query:        core.StringPtr(query),
+		QueryType:    core.StringPtr(queryType),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -11130,17 +11063,16 @@ const (
 // Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeText.SelectionPolicy property.
 // How a response is selected from the list, if more than one response is specified.
 const (
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeTextSelectionPolicyMultilineConst = "multiline"
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeTextSelectionPolicyRandomConst = "random"
+	DialogNodeOutputGenericDialogNodeOutputResponseTypeTextSelectionPolicyMultilineConst  = "multiline"
+	DialogNodeOutputGenericDialogNodeOutputResponseTypeTextSelectionPolicyRandomConst     = "random"
 	DialogNodeOutputGenericDialogNodeOutputResponseTypeTextSelectionPolicySequentialConst = "sequential"
 )
-
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeText (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText(responseType string, values []DialogNodeOutputTextValuesElement) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeText, err error) {
 	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeText{
 		ResponseType: core.StringPtr(responseType),
-		Values: values,
+		Values:       values,
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -11209,7 +11141,6 @@ type RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct {
 const (
 	RuntimeResponseGenericRuntimeResponseTypeConnectToAgentResponseTypeConnectToAgentConst = "connect_to_agent"
 )
-
 
 // NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent : Instantiate RuntimeResponseGenericRuntimeResponseTypeConnectToAgent (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(responseType string) (model *RuntimeResponseGenericRuntimeResponseTypeConnectToAgent, err error) {
@@ -11283,12 +11214,11 @@ const (
 	RuntimeResponseGenericRuntimeResponseTypeImageResponseTypeImageConst = "image"
 )
 
-
 // NewRuntimeResponseGenericRuntimeResponseTypeImage : Instantiate RuntimeResponseGenericRuntimeResponseTypeImage (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeImage(responseType string, source string) (model *RuntimeResponseGenericRuntimeResponseTypeImage, err error) {
 	model = &RuntimeResponseGenericRuntimeResponseTypeImage{
 		ResponseType: core.StringPtr(responseType),
-		Source: core.StringPtr(source),
+		Source:       core.StringPtr(source),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -11351,17 +11281,16 @@ const (
 // Constants associated with the RuntimeResponseGenericRuntimeResponseTypeOption.Preference property.
 // The preferred type of control to display.
 const (
-	RuntimeResponseGenericRuntimeResponseTypeOptionPreferenceButtonConst = "button"
+	RuntimeResponseGenericRuntimeResponseTypeOptionPreferenceButtonConst   = "button"
 	RuntimeResponseGenericRuntimeResponseTypeOptionPreferenceDropdownConst = "dropdown"
 )
-
 
 // NewRuntimeResponseGenericRuntimeResponseTypeOption : Instantiate RuntimeResponseGenericRuntimeResponseTypeOption (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeOption(responseType string, title string, options []DialogNodeOutputOptionsElement) (model *RuntimeResponseGenericRuntimeResponseTypeOption, err error) {
 	model = &RuntimeResponseGenericRuntimeResponseTypeOption{
 		ResponseType: core.StringPtr(responseType),
-		Title: core.StringPtr(title),
-		Options: options,
+		Title:        core.StringPtr(title),
+		Options:      options,
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -11419,12 +11348,11 @@ const (
 	RuntimeResponseGenericRuntimeResponseTypePauseResponseTypePauseConst = "pause"
 )
 
-
 // NewRuntimeResponseGenericRuntimeResponseTypePause : Instantiate RuntimeResponseGenericRuntimeResponseTypePause (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypePause(responseType string, time int64) (model *RuntimeResponseGenericRuntimeResponseTypePause, err error) {
 	model = &RuntimeResponseGenericRuntimeResponseTypePause{
 		ResponseType: core.StringPtr(responseType),
-		Time: core.Int64Ptr(time),
+		Time:         core.Int64Ptr(time),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -11474,13 +11402,12 @@ const (
 	RuntimeResponseGenericRuntimeResponseTypeSuggestionResponseTypeSuggestionConst = "suggestion"
 )
 
-
 // NewRuntimeResponseGenericRuntimeResponseTypeSuggestion : Instantiate RuntimeResponseGenericRuntimeResponseTypeSuggestion (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeSuggestion(responseType string, title string, suggestions []DialogSuggestion) (model *RuntimeResponseGenericRuntimeResponseTypeSuggestion, err error) {
 	model = &RuntimeResponseGenericRuntimeResponseTypeSuggestion{
 		ResponseType: core.StringPtr(responseType),
-		Title: core.StringPtr(title),
-		Suggestions: suggestions,
+		Title:        core.StringPtr(title),
+		Suggestions:  suggestions,
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -11527,12 +11454,11 @@ const (
 	RuntimeResponseGenericRuntimeResponseTypeTextResponseTypeTextConst = "text"
 )
 
-
 // NewRuntimeResponseGenericRuntimeResponseTypeText : Instantiate RuntimeResponseGenericRuntimeResponseTypeText (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeText(responseType string, text string) (model *RuntimeResponseGenericRuntimeResponseTypeText, err error) {
 	model = &RuntimeResponseGenericRuntimeResponseTypeText{
 		ResponseType: core.StringPtr(responseType),
-		Text: core.StringPtr(text),
+		Text:         core.StringPtr(text),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
