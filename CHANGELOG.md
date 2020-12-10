@@ -1,3 +1,73 @@
+# [2.0.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.7.0...v2.0.0) (2020-12-10)
+
+
+* Release/2.0.0 (#90) ([4f091a2](https://github.com/watson-developer-cloud/go-sdk/commit/4f091a21576297153b17817971bc20a186d0efef)), closes [#90](https://github.com/watson-developer-cloud/go-sdk/issues/90)
+
+
+### BREAKING CHANGES
+
+* version is now a string pointer
+
+* feat(assistantv2): update models with latest definitions
+
+* feat(comparecomplyv1): update models with latest definitions
+* version is now a string pointer
+
+* feat(discoveryv1): update models with latest definitions
+* version is now a string pointer
+
+* feat(discoveryv2): update models with latest definitions
+* version is now a string pointer
+
+* feat(languagetranslatorv3): update models with latest definitions
+
+* feat(naturallanguageclassifierv1): update models with latest definitions
+* version is now a string pointer
+
+* feat(naturallanguageunderstandingv1): update models with latest definitions
+
+* feat(personalityinsightsv3): update models with latest definitions
+* version is now a string pointer
+
+* feat(speechtotextv1): update models with latest definitions
+
+* feat(texttospeechv1): update models with latest definitions
+* VoiceModel is now renamed to CustomModel for all related models and operations
+
+* feat(toneanalyzerv3): update models with latest definitions
+* version is now a string pointer
+
+* feat(visualrecognitionv3): update models with latest definitions
+* version is now a string pointer
+
+* feat(visualrecognitionv4): update models with latest definitions
+* version is now a string pointer
+
+* docs(examples): update examples
+
+* build(update modules): update go modules
+* the go sdk now requires go-sdk-core/v4 as a dependency
+
+* chore(personalityinsightsv3): log deprecation warning
+
+* fix(hand edit): make SpeechRecognitionAlternative utilize generic interface{}
+
+* chore(copyright dates): fix copyright dates
+
+* fix(hand edit): remove trainingStatus from CreateCollection and UpdateCollection
+
+these are output parameters and should not be generated in the options model
+
+* chore(deprecation): add deprecation message for visual recognition
+
+* chore(deps): update strfmt
+
+* test(integration tests): update tests for improvedNameFormatting constants
+
+* fix(hand edit): unmarshal key_as_string for timestamp keys
+
+* style(format): run gofmt
+
 # [1.7.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.6.0...v1.7.0) (2020-08-26)
 
 
