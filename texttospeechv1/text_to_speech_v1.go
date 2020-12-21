@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2020.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.22.0-937b9a1c-20201211-223043
  */
 
 // Package texttospeechv1 : Operations and models for the TextToSpeechV1 service
@@ -47,7 +47,7 @@ import (
 // words. A sounds-like translation consists of one or more words that, when combined, sound like the word. A phonetic
 // translation is based on the SSML phoneme format for representing a word. You can specify a phonetic translation in
 // standard International Phonetic Alphabet (IPA) representation or in the proprietary IBM Symbolic Phonetic
-// Representation (SPR). The Arabic, Chinese, Dutch, and Korean languages support only IPA.
+// Representation (SPR). The Arabic, Chinese, Dutch, Australian English, and Korean languages support only IPA.
 //
 // Version: 1.0.0
 // See: https://cloud.ibm.com/docs/text-to-speech
@@ -228,6 +228,24 @@ func (textToSpeech *TextToSpeechV1) ListVoicesWithContext(ctx context.Context, l
 //
 // **See also:** [Listing a specific
 // voice](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoice).
+//
+// ### Important voice updates
+//
+//  The service's voices underwent significant change on 2 December 2020.
+// * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
+// * The `ar-AR_OmarVoice` voice is deprecated. Use `ar-MS_OmarVoice` voice instead.
+// * The `ar-AR` language identifier cannot be used to create a custom model. Use the `ar-MS` identifier instead.
+// * The standard concatenative voices for the following languages are now deprecated: Brazilian Portuguese, United
+// Kingdom and United States English, French, German, Italian, Japanese, and Spanish (all dialects).
+// * The features expressive SSML, voice transformation SSML, and use of the `volume` attribute of the `<prosody>`
+// element are deprecated and are not supported with any of the service's neural voices.
+// * All of the service's voices are now customizable and generally available (GA) for production use.
+//
+// The deprecated voices and features will continue to function for at least one year but might be removed at a future
+// date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For more
+// information about all voice updates, see the [2 December 2020 service
+// update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the release
+// notes.
 func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (result *Voice, response *core.DetailedResponse, err error) {
 	return textToSpeech.GetVoiceWithContext(context.Background(), getVoiceOptions)
 }
@@ -335,6 +353,24 @@ func (textToSpeech *TextToSpeechV1) GetVoiceWithContext(ctx context.Context, get
 // For more information about specifying an audio format, including additional details about some of the formats, see
 // [Audio formats](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
 //
+// ### Important voice updates
+//
+//  The service's voices underwent significant change on 2 December 2020.
+// * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
+// * The `ar-AR_OmarVoice` voice is deprecated. Use `ar-MS_OmarVoice` voice instead.
+// * The `ar-AR` language identifier cannot be used to create a custom model. Use the `ar-MS` identifier instead.
+// * The standard concatenative voices for the following languages are now deprecated: Brazilian Portuguese, United
+// Kingdom and United States English, French, German, Italian, Japanese, and Spanish (all dialects).
+// * The features expressive SSML, voice transformation SSML, and use of the `volume` attribute of the `<prosody>`
+// element are deprecated and are not supported with any of the service's neural voices.
+// * All of the service's voices are now customizable and generally available (GA) for production use.
+//
+// The deprecated voices and features will continue to function for at least one year but might be removed at a future
+// date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For more
+// information about all voice updates, see the [2 December 2020 service
+// update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the release
+// notes.
+//
 // ### Warning messages
 //
 //  If a request includes invalid query parameters, the service returns a `Warnings` response header that provides
@@ -411,6 +447,24 @@ func (textToSpeech *TextToSpeechV1) SynthesizeWithContext(ctx context.Context, s
 //
 // **See also:** [Querying a word from a
 // language](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
+//
+// ### Important voice updates
+//
+//  The service's voices underwent significant change on 2 December 2020.
+// * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
+// * The `ar-AR_OmarVoice` voice is deprecated. Use `ar-MS_OmarVoice` voice instead.
+// * The `ar-AR` language identifier cannot be used to create a custom model. Use the `ar-MS` identifier instead.
+// * The standard concatenative voices for the following languages are now deprecated: Brazilian Portuguese, United
+// Kingdom and United States English, French, German, Italian, Japanese, and Spanish (all dialects).
+// * The features expressive SSML, voice transformation SSML, and use of the `volume` attribute of the `<prosody>`
+// element are deprecated and are not supported with any of the service's neural voices.
+// * All of the service's voices are now customizable and generally available (GA) for production use.
+//
+// The deprecated voices and features will continue to function for at least one year but might be removed at a future
+// date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For more
+// information about all voice updates, see the [2 December 2020 service
+// update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the release
+// notes.
 func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (result *Pronunciation, response *core.DetailedResponse, err error) {
 	return textToSpeech.GetPronunciationWithContext(context.Background(), getPronunciationOptions)
 }
@@ -481,6 +535,24 @@ func (textToSpeech *TextToSpeechV1) GetPronunciationWithContext(ctx context.Cont
 //
 // **See also:** [Creating a custom
 // model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
+//
+// ### Important voice updates
+//
+//  The service's voices underwent significant change on 2 December 2020.
+// * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
+// * The `ar-AR_OmarVoice` voice is deprecated. Use `ar-MS_OmarVoice` voice instead.
+// * The `ar-AR` language identifier cannot be used to create a custom model. Use the `ar-MS` identifier instead.
+// * The standard concatenative voices for the following languages are now deprecated: Brazilian Portuguese, United
+// Kingdom and United States English, French, German, Italian, Japanese, and Spanish (all dialects).
+// * The features expressive SSML, voice transformation SSML, and use of the `volume` attribute of the `<prosody>`
+// element are deprecated and are not supported with any of the service's neural voices.
+// * All of the service's voices are now customizable and generally available (GA) for production use.
+//
+// The deprecated voices and features will continue to function for at least one year but might be removed at a future
+// date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For more
+// information about all voice updates, see the [2 December 2020 service
+// update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the release
+// notes.
 func (textToSpeech *TextToSpeechV1) CreateCustomModel(createCustomModelOptions *CreateCustomModelOptions) (result *CustomModel, response *core.DetailedResponse, err error) {
 	return textToSpeech.CreateCustomModelWithContext(context.Background(), createCustomModelOptions)
 }
@@ -1218,8 +1290,8 @@ type AddWordOptions struct {
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
 	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. The Arabic,
-	// Chinese, Dutch, and Korean languages support only IPA. A sounds-like is one or more words that, when combined, sound
-	// like the word.
+	// Chinese, Dutch, Australian English, and Korean languages support only IPA. A sounds-like is one or more words that,
+	// when combined, sound like the word.
 	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
@@ -1346,8 +1418,9 @@ type CreateCustomModelOptions struct {
 	Name *string `json:"name" validate:"required"`
 
 	// The language of the new custom model. You create a custom model for a specific language, not for a specific voice. A
-	// custom model can be used with any voice, standard or neural, for its specified language. Omit the parameter to use
-	// the the default language, `en-US`.
+	// custom model can be used with any voice for its specified language. Omit the parameter to use the the default
+	// language, `en-US`. **Note:** The `ar-AR` language identifier cannot be used to create a custom model. Use the
+	// `ar-MS` identifier instead.
 	Language *string `json:"language,omitempty"`
 
 	// A description of the new custom model. Specifying a description is recommended.
@@ -1359,9 +1432,11 @@ type CreateCustomModelOptions struct {
 
 // Constants associated with the CreateCustomModelOptions.Language property.
 // The language of the new custom model. You create a custom model for a specific language, not for a specific voice. A
-// custom model can be used with any voice, standard or neural, for its specified language. Omit the parameter to use
-// the the default language, `en-US`.
+// custom model can be used with any voice for its specified language. Omit the parameter to use the the default
+// language, `en-US`. **Note:** The `ar-AR` language identifier cannot be used to create a custom model. Use the `ar-MS`
+// identifier instead.
 const (
+	CreateCustomModelOptionsLanguageArMsConst = "ar-MS"
 	CreateCustomModelOptionsLanguageDeDeConst = "de-DE"
 	CreateCustomModelOptionsLanguageEnGbConst = "en-GB"
 	CreateCustomModelOptionsLanguageEnUsConst = "en-US"
@@ -1631,11 +1706,12 @@ type GetPronunciationOptions struct {
 	Text *string `json:"text" validate:"required"`
 
 	// A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
-	// (for example, `en-US`) return the same translation.
+	// (for example, `en-US`) return the same translation. For more information about specifying a voice, see **Important
+	// voice updates** in the method description.
 	Voice *string `json:"voice,omitempty"`
 
-	// The phoneme format in which to return the pronunciation. The Arabic, Chinese, Dutch, and Korean languages support
-	// only IPA. Omit the parameter to obtain the pronunciation in the default format.
+	// The phoneme format in which to return the pronunciation. The Arabic, Chinese, Dutch, Australian English, and Korean
+	// languages support only IPA. Omit the parameter to obtain the pronunciation in the default format.
 	Format *string `json:"format,omitempty"`
 
 	// The customization ID (GUID) of a custom model for which the pronunciation is to be returned. The language of a
@@ -1651,14 +1727,18 @@ type GetPronunciationOptions struct {
 
 // Constants associated with the GetPronunciationOptions.Voice property.
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
-// (for example, `en-US`) return the same translation.
+// (for example, `en-US`) return the same translation. For more information about specifying a voice, see **Important
+// voice updates** in the method description.
 const (
 	GetPronunciationOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
+	GetPronunciationOptionsVoiceArMsOmarvoiceConst        = "ar-MS_OmarVoice"
 	GetPronunciationOptionsVoiceDeDeBirgitv3voiceConst    = "de-DE_BirgitV3Voice"
 	GetPronunciationOptionsVoiceDeDeBirgitvoiceConst      = "de-DE_BirgitVoice"
 	GetPronunciationOptionsVoiceDeDeDieterv3voiceConst    = "de-DE_DieterV3Voice"
 	GetPronunciationOptionsVoiceDeDeDietervoiceConst      = "de-DE_DieterVoice"
 	GetPronunciationOptionsVoiceDeDeErikav3voiceConst     = "de-DE_ErikaV3Voice"
+	GetPronunciationOptionsVoiceEnAuCraigvoiceConst       = "en-AU-CraigVoice"
+	GetPronunciationOptionsVoiceEnAuMadisonvoiceConst     = "en-AU-MadisonVoice"
 	GetPronunciationOptionsVoiceEnGbCharlottev3voiceConst = "en-GB_CharlotteV3Voice"
 	GetPronunciationOptionsVoiceEnGbJamesv3voiceConst     = "en-GB_JamesV3Voice"
 	GetPronunciationOptionsVoiceEnGbKatev3voiceConst      = "en-GB_KateV3Voice"
@@ -1688,6 +1768,8 @@ const (
 	GetPronunciationOptionsVoiceItItFrancescavoiceConst   = "it-IT_FrancescaVoice"
 	GetPronunciationOptionsVoiceJaJpEmiv3voiceConst       = "ja-JP_EmiV3Voice"
 	GetPronunciationOptionsVoiceJaJpEmivoiceConst         = "ja-JP_EmiVoice"
+	GetPronunciationOptionsVoiceKoKrHyunjunvoiceConst     = "ko-KR_HyunjunVoice"
+	GetPronunciationOptionsVoiceKoKrSiwoovoiceConst       = "ko-KR_SiWooVoice"
 	GetPronunciationOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
 	GetPronunciationOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
 	GetPronunciationOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
@@ -1700,8 +1782,8 @@ const (
 )
 
 // Constants associated with the GetPronunciationOptions.Format property.
-// The phoneme format in which to return the pronunciation. The Arabic, Chinese, Dutch, and Korean languages support
-// only IPA. Omit the parameter to obtain the pronunciation in the default format.
+// The phoneme format in which to return the pronunciation. The Arabic, Chinese, Dutch, Australian English, and Korean
+// languages support only IPA. Omit the parameter to obtain the pronunciation in the default format.
 const (
 	GetPronunciationOptionsFormatIBMConst = "ibm"
 	GetPronunciationOptionsFormatIpaConst = "ipa"
@@ -1746,7 +1828,8 @@ func (options *GetPronunciationOptions) SetHeaders(param map[string]string) *Get
 
 // GetVoiceOptions : The GetVoice options.
 type GetVoiceOptions struct {
-	// The voice for which information is to be returned.
+	// The voice for which information is to be returned. For more information about specifying a voice, see **Important
+	// voice updates** in the method description.
 	Voice *string `json:"voice" validate:"required,ne="`
 
 	// The customization ID (GUID) of a custom model for which information is to be returned. You must make the request
@@ -1759,14 +1842,18 @@ type GetVoiceOptions struct {
 }
 
 // Constants associated with the GetVoiceOptions.Voice property.
-// The voice for which information is to be returned.
+// The voice for which information is to be returned. For more information about specifying a voice, see **Important
+// voice updates** in the method description.
 const (
 	GetVoiceOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
+	GetVoiceOptionsVoiceArMsOmarvoiceConst        = "ar-MS_OmarVoice"
 	GetVoiceOptionsVoiceDeDeBirgitv3voiceConst    = "de-DE_BirgitV3Voice"
 	GetVoiceOptionsVoiceDeDeBirgitvoiceConst      = "de-DE_BirgitVoice"
 	GetVoiceOptionsVoiceDeDeDieterv3voiceConst    = "de-DE_DieterV3Voice"
 	GetVoiceOptionsVoiceDeDeDietervoiceConst      = "de-DE_DieterVoice"
 	GetVoiceOptionsVoiceDeDeErikav3voiceConst     = "de-DE_ErikaV3Voice"
+	GetVoiceOptionsVoiceEnAuCraigvoiceConst       = "en-AU-CraigVoice"
+	GetVoiceOptionsVoiceEnAuMadisonvoiceConst     = "en-AU-MadisonVoice"
 	GetVoiceOptionsVoiceEnGbCharlottev3voiceConst = "en-GB_CharlotteV3Voice"
 	GetVoiceOptionsVoiceEnGbJamesv3voiceConst     = "en-GB_JamesV3Voice"
 	GetVoiceOptionsVoiceEnGbKatev3voiceConst      = "en-GB_KateV3Voice"
@@ -1796,6 +1883,8 @@ const (
 	GetVoiceOptionsVoiceItItFrancescavoiceConst   = "it-IT_FrancescaVoice"
 	GetVoiceOptionsVoiceJaJpEmiv3voiceConst       = "ja-JP_EmiV3Voice"
 	GetVoiceOptionsVoiceJaJpEmivoiceConst         = "ja-JP_EmiVoice"
+	GetVoiceOptionsVoiceKoKrHyunjunvoiceConst     = "ko-KR_HyunjunVoice"
+	GetVoiceOptionsVoiceKoKrSiwoovoiceConst       = "ko-KR_SiWooVoice"
 	GetVoiceOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
 	GetVoiceOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
 	GetVoiceOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
@@ -1885,7 +1974,9 @@ type ListCustomModelsOptions struct {
 // The language for which custom models that are owned by the requesting credentials are to be returned. Omit the
 // parameter to see all custom models that are owned by the requester.
 const (
+	ListCustomModelsOptionsLanguageArMsConst = "ar-MS"
 	ListCustomModelsOptionsLanguageDeDeConst = "de-DE"
+	ListCustomModelsOptionsLanguageEnAuConst = "en-AU"
 	ListCustomModelsOptionsLanguageEnGbConst = "en-GB"
 	ListCustomModelsOptionsLanguageEnUsConst = "en-US"
 	ListCustomModelsOptionsLanguageEsEsConst = "es-ES"
@@ -1988,7 +2079,8 @@ type SupportedFeatures struct {
 	CustomPronunciation *bool `json:"custom_pronunciation" validate:"required"`
 
 	// If `true`, the voice can be transformed by using the SSML &lt;voice-transformation&gt; element; if `false`, the
-	// voice cannot be transformed.
+	// voice cannot be transformed. The feature was available only for the now-deprecated standard voices. You cannot use
+	// the feature with neural voices.
 	VoiceTransformation *bool `json:"voice_transformation" validate:"required"`
 }
 
@@ -2017,7 +2109,8 @@ type SynthesizeOptions struct {
 	// method description.
 	Accept *string `json:"Accept,omitempty"`
 
-	// The voice to use for synthesis.
+	// The voice to use for synthesis. For more information about specifying a voice, see **Important voice updates** in
+	// the method description.
 	Voice *string `json:"voice,omitempty"`
 
 	// The customization ID (GUID) of a custom model to use for the synthesis. If a custom model is specified, it works
@@ -2030,14 +2123,18 @@ type SynthesizeOptions struct {
 }
 
 // Constants associated with the SynthesizeOptions.Voice property.
-// The voice to use for synthesis.
+// The voice to use for synthesis. For more information about specifying a voice, see **Important voice updates** in the
+// method description.
 const (
 	SynthesizeOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
+	SynthesizeOptionsVoiceArMsOmarvoiceConst        = "ar-MS_OmarVoice"
 	SynthesizeOptionsVoiceDeDeBirgitv3voiceConst    = "de-DE_BirgitV3Voice"
 	SynthesizeOptionsVoiceDeDeBirgitvoiceConst      = "de-DE_BirgitVoice"
 	SynthesizeOptionsVoiceDeDeDieterv3voiceConst    = "de-DE_DieterV3Voice"
 	SynthesizeOptionsVoiceDeDeDietervoiceConst      = "de-DE_DieterVoice"
 	SynthesizeOptionsVoiceDeDeErikav3voiceConst     = "de-DE_ErikaV3Voice"
+	SynthesizeOptionsVoiceEnAuCraigvoiceConst       = "en-AU-CraigVoice"
+	SynthesizeOptionsVoiceEnAuMadisonvoiceConst     = "en-AU-MadisonVoice"
 	SynthesizeOptionsVoiceEnGbCharlottev3voiceConst = "en-GB_CharlotteV3Voice"
 	SynthesizeOptionsVoiceEnGbJamesv3voiceConst     = "en-GB_JamesV3Voice"
 	SynthesizeOptionsVoiceEnGbKatev3voiceConst      = "en-GB_KateV3Voice"
@@ -2067,6 +2164,8 @@ const (
 	SynthesizeOptionsVoiceItItFrancescavoiceConst   = "it-IT_FrancescaVoice"
 	SynthesizeOptionsVoiceJaJpEmiv3voiceConst       = "ja-JP_EmiV3Voice"
 	SynthesizeOptionsVoiceJaJpEmivoiceConst         = "ja-JP_EmiVoice"
+	SynthesizeOptionsVoiceKoKrHyunjunvoiceConst     = "ko-KR_HyunjunVoice"
+	SynthesizeOptionsVoiceKoKrSiwoovoiceConst       = "ko-KR_SiWooVoice"
 	SynthesizeOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
 	SynthesizeOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
 	SynthesizeOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
@@ -2119,8 +2218,8 @@ func (options *SynthesizeOptions) SetHeaders(param map[string]string) *Synthesiz
 type Translation struct {
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
 	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. The Arabic,
-	// Chinese, Dutch, and Korean languages support only IPA. A sounds-like is one or more words that, when combined, sound
-	// like the word.
+	// Chinese, Dutch, Australian English, and Korean languages support only IPA. A sounds-like is one or more words that,
+	// when combined, sound like the word.
 	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
@@ -2327,9 +2426,9 @@ type Word struct {
 	Word *string `json:"word" validate:"required"`
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
-	// representing the phonetic string of a word either as an IPA or IBM SPR translation. The Arabic, Chinese, Dutch, and
-	// Korean languages support only IPA. A sounds-like translation consists of one or more words that, when combined,
-	// sound like the word. The maximum length of a translation is 499 characters.
+	// representing the phonetic string of a word either as an IPA or IBM SPR translation. The Arabic, Chinese, Dutch,
+	// Australian English, and Korean languages support only IPA. A sounds-like translation consists of one or more words
+	// that, when combined, sound like the word. The maximum length of a translation is 499 characters.
 	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
