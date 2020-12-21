@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/watson-developer-cloud/go-sdk/compare/v2.0.0...v2.0.1) (2020-12-21)
+
+
+### Bug Fixes
+
+* **readme:** remove preview message ([a9fd11d](https://github.com/watson-developer-cloud/go-sdk/commit/a9fd11dc4bef76f11a00dce58a829ea878407089))
+
 # [2.0.0](https://github.com/watson-developer-cloud/go-sdk/compare/v1.7.0...v2.0.0) (2020-12-10)
 
 
