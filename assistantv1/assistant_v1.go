@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.22.0-937b9a1c-20201211-223043
  */
 
 // Package assistantv1 : Operations and models for the AssistantV1 service
@@ -253,6 +253,79 @@ func (assistant *AssistantV1) MessageWithContext(ctx context.Context, messageOpt
 		return
 	}
 	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMessageResponse)
+	if err != nil {
+		return
+	}
+	response.Result = result
+
+	return
+}
+
+// BulkClassify : Identify intents and entities in multiple user utterances
+// Send multiple user inputs to a workspace in a single request and receive information about the intents and entities
+// recognized in each input. This method is useful for testing and comparing the performance of different workspaces.
+//
+// This method is available only with Premium plans.
+func (assistant *AssistantV1) BulkClassify(bulkClassifyOptions *BulkClassifyOptions) (result *BulkClassifyResponse, response *core.DetailedResponse, err error) {
+	return assistant.BulkClassifyWithContext(context.Background(), bulkClassifyOptions)
+}
+
+// BulkClassifyWithContext is an alternate form of the BulkClassify method which supports a Context parameter
+func (assistant *AssistantV1) BulkClassifyWithContext(ctx context.Context, bulkClassifyOptions *BulkClassifyOptions) (result *BulkClassifyResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(bulkClassifyOptions, "bulkClassifyOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(bulkClassifyOptions, "bulkClassifyOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"workspace_id": *bulkClassifyOptions.WorkspaceID,
+	}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = assistant.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(assistant.Service.Options.URL, `/v1/workspaces/{workspace_id}/bulk_classify`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range bulkClassifyOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "BulkClassify")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*assistant.Version))
+
+	body := make(map[string]interface{})
+	if bulkClassifyOptions.Input != nil {
+		body["input"] = bulkClassifyOptions.Input
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = assistant.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBulkClassifyResponse)
 	if err != nil {
 		return
 	}
@@ -3539,76 +3612,20 @@ func (assistant *AssistantV1) DeleteUserDataWithContext(ctx context.Context, del
 	return
 }
 
-// BulkClassify : Identify intents and entities in multiple user utterances
-// Send multiple user inputs to a workspace in a single request and receive information about the intents and entities
-// recognized in each input. This method is useful for testing and comparing the performance of different workspaces.
-//
-// This method is available only with Premium plans.
-func (assistant *AssistantV1) BulkClassify(bulkClassifyOptions *BulkClassifyOptions) (result *BulkClassifyResponse, response *core.DetailedResponse, err error) {
-	return assistant.BulkClassifyWithContext(context.Background(), bulkClassifyOptions)
+// AgentAvailabilityMessage : AgentAvailabilityMessage struct
+type AgentAvailabilityMessage struct {
+	// The text of the message.
+	Message *string `json:"message,omitempty"`
 }
 
-// BulkClassifyWithContext is an alternate form of the BulkClassify method which supports a Context parameter
-func (assistant *AssistantV1) BulkClassifyWithContext(ctx context.Context, bulkClassifyOptions *BulkClassifyOptions) (result *BulkClassifyResponse, response *core.DetailedResponse, err error) {
-	err = core.ValidateNotNil(bulkClassifyOptions, "bulkClassifyOptions cannot be nil")
+// UnmarshalAgentAvailabilityMessage unmarshals an instance of AgentAvailabilityMessage from the specified map of raw messages.
+func UnmarshalAgentAvailabilityMessage(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(AgentAvailabilityMessage)
+	err = core.UnmarshalPrimitive(m, "message", &obj.Message)
 	if err != nil {
 		return
 	}
-	err = core.ValidateStruct(bulkClassifyOptions, "bulkClassifyOptions")
-	if err != nil {
-		return
-	}
-
-	pathParamsMap := map[string]string{
-		"workspace_id": *bulkClassifyOptions.WorkspaceID,
-	}
-
-	builder := core.NewRequestBuilder(core.POST)
-	builder = builder.WithContext(ctx)
-	builder.EnableGzipCompression = assistant.GetEnableGzipCompression()
-	_, err = builder.ResolveRequestURL(assistant.Service.Options.URL, `/v1/workspaces/{workspace_id}/bulk_classify`, pathParamsMap)
-	if err != nil {
-		return
-	}
-
-	for headerName, headerValue := range bulkClassifyOptions.Headers {
-		builder.AddHeader(headerName, headerValue)
-	}
-
-	sdkHeaders := common.GetSdkHeaders("conversation", "V1", "BulkClassify")
-	for headerName, headerValue := range sdkHeaders {
-		builder.AddHeader(headerName, headerValue)
-	}
-	builder.AddHeader("Accept", "application/json")
-	builder.AddHeader("Content-Type", "application/json")
-
-	builder.AddQuery("version", fmt.Sprint(*assistant.Version))
-
-	body := make(map[string]interface{})
-	if bulkClassifyOptions.Input != nil {
-		body["input"] = bulkClassifyOptions.Input
-	}
-	_, err = builder.SetBodyContentJSON(body)
-	if err != nil {
-		return
-	}
-
-	request, err := builder.Build()
-	if err != nil {
-		return
-	}
-
-	var rawResponse map[string]json.RawMessage
-	response, err = assistant.Service.Request(request, &rawResponse)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBulkClassifyResponse)
-	if err != nil {
-		return
-	}
-	response.Result = result
-
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
@@ -5938,11 +5955,11 @@ type DialogNodeOutputGeneric struct {
 
 	// An optional message to be displayed to the user to indicate that the conversation will be transferred to the next
 	// available agent.
-	AgentAvailable *string `json:"agent_available,omitempty"`
+	AgentAvailable *AgentAvailabilityMessage `json:"agent_available,omitempty"`
 
 	// An optional message to be displayed to the user to indicate that no online agent is available to take over the
 	// conversation.
-	AgentUnavailable *string `json:"agent_unavailable,omitempty"`
+	AgentUnavailable *AgentAvailabilityMessage `json:"agent_unavailable,omitempty"`
 
 	// Routing or other contextual information to be used by target service desk systems.
 	TransferInfo *DialogNodeOutputConnectToAgentTransferInfo `json:"transfer_info,omitempty"`
@@ -8653,11 +8670,10 @@ type RuntimeEntity struct {
 	// The recognized capture groups for the entity, as defined by the entity pattern.
 	Groups []CaptureGroup `json:"groups,omitempty"`
 
-	// An object containing detailed information about the entity recognized in the user input. This property is included
-	// only if the new system entities are enabled for the workspace.
+	// An object containing detailed information about the entity recognized in the user input.
 	//
-	// For more information about how the new system entities are interpreted, see the
-	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-beta-system-entities).
+	// For more information about how system entities are interpreted, see the
+	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-system-entities).
 	Interpretation *RuntimeEntityInterpretation `json:"interpretation,omitempty"`
 
 	// An array of possible alternative values that the user might have intended instead of the value returned in the
@@ -9079,11 +9095,11 @@ type RuntimeResponseGeneric struct {
 
 	// An optional message to be displayed to the user to indicate that the conversation will be transferred to the next
 	// available agent.
-	AgentAvailable *string `json:"agent_available,omitempty"`
+	AgentAvailable *AgentAvailabilityMessage `json:"agent_available,omitempty"`
 
 	// An optional message to be displayed to the user to indicate that no online agent is available to take over the
 	// conversation.
-	AgentUnavailable *string `json:"agent_unavailable,omitempty"`
+	AgentUnavailable *AgentAvailabilityMessage `json:"agent_unavailable,omitempty"`
 
 	// Routing or other contextual information to be used by target service desk systems.
 	TransferInfo *DialogNodeOutputConnectToAgentTransferInfo `json:"transfer_info,omitempty"`
@@ -10704,11 +10720,11 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent struct {
 
 	// An optional message to be displayed to the user to indicate that the conversation will be transferred to the next
 	// available agent.
-	AgentAvailable *string `json:"agent_available,omitempty"`
+	AgentAvailable *AgentAvailabilityMessage `json:"agent_available,omitempty"`
 
 	// An optional message to be displayed to the user to indicate that no online agent is available to take over the
 	// conversation.
-	AgentUnavailable *string `json:"agent_unavailable,omitempty"`
+	AgentUnavailable *AgentAvailabilityMessage `json:"agent_unavailable,omitempty"`
 
 	// Routing or other contextual information to be used by target service desk systems.
 	TransferInfo *DialogNodeOutputConnectToAgentTransferInfo `json:"transfer_info,omitempty"`
@@ -10745,11 +10761,11 @@ func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "agent_available", &obj.AgentAvailable)
+	err = core.UnmarshalModel(m, "agent_available", &obj.AgentAvailable, UnmarshalAgentAvailabilityMessage)
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "agent_unavailable", &obj.AgentUnavailable)
+	err = core.UnmarshalModel(m, "agent_unavailable", &obj.AgentUnavailable, UnmarshalAgentAvailabilityMessage)
 	if err != nil {
 		return
 	}
@@ -11117,11 +11133,11 @@ type RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct {
 
 	// An optional message to be displayed to the user to indicate that the conversation will be transferred to the next
 	// available agent.
-	AgentAvailable *string `json:"agent_available,omitempty"`
+	AgentAvailable *AgentAvailabilityMessage `json:"agent_available,omitempty"`
 
 	// An optional message to be displayed to the user to indicate that no online agent is available to take over the
 	// conversation.
-	AgentUnavailable *string `json:"agent_unavailable,omitempty"`
+	AgentUnavailable *AgentAvailabilityMessage `json:"agent_unavailable,omitempty"`
 
 	// Routing or other contextual information to be used by target service desk systems.
 	TransferInfo *DialogNodeOutputConnectToAgentTransferInfo `json:"transfer_info,omitempty"`
@@ -11166,11 +11182,11 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(m map[stri
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "agent_available", &obj.AgentAvailable)
+	err = core.UnmarshalModel(m, "agent_available", &obj.AgentAvailable, UnmarshalAgentAvailabilityMessage)
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "agent_unavailable", &obj.AgentUnavailable)
+	err = core.UnmarshalModel(m, "agent_unavailable", &obj.AgentUnavailable, UnmarshalAgentAvailabilityMessage)
 	if err != nil {
 		return
 	}

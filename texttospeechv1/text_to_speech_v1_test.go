@@ -1186,7 +1186,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the CreateCustomModelOptions model
 				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
 				createCustomModelOptionsModel.Name = core.StringPtr("testString")
-				createCustomModelOptionsModel.Language = core.StringPtr("de-DE")
+				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
 				createCustomModelOptionsModel.Description = core.StringPtr("testString")
 				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -1264,7 +1264,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the CreateCustomModelOptions model
 				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
 				createCustomModelOptionsModel.Name = core.StringPtr("testString")
-				createCustomModelOptionsModel.Language = core.StringPtr("de-DE")
+				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
 				createCustomModelOptionsModel.Description = core.StringPtr("testString")
 				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1310,7 +1310,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the CreateCustomModelOptions model
 				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
 				createCustomModelOptionsModel.Name = core.StringPtr("testString")
-				createCustomModelOptionsModel.Language = core.StringPtr("de-DE")
+				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
 				createCustomModelOptionsModel.Description = core.StringPtr("testString")
 				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -1344,7 +1344,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listCustomModelsPath))
 					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["language"]).To(Equal([]string{"de-DE"}))
+					Expect(req.URL.Query()["language"]).To(Equal([]string{"ar-MS"}))
 
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1361,7 +1361,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 
 				// Construct an instance of the ListCustomModelsOptions model
 				listCustomModelsOptionsModel := new(texttospeechv1.ListCustomModelsOptions)
-				listCustomModelsOptionsModel.Language = core.StringPtr("de-DE")
+				listCustomModelsOptionsModel.Language = core.StringPtr("ar-MS")
 				listCustomModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := textToSpeechService.ListCustomModels(listCustomModelsOptionsModel)
@@ -1395,7 +1395,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listCustomModelsPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["language"]).To(Equal([]string{"de-DE"}))
+					Expect(req.URL.Query()["language"]).To(Equal([]string{"ar-MS"}))
 
 					// Sleep a short time to support a timeout test
 					time.Sleep(serverSleepTime)
@@ -1423,7 +1423,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 
 				// Construct an instance of the ListCustomModelsOptions model
 				listCustomModelsOptionsModel := new(texttospeechv1.ListCustomModelsOptions)
-				listCustomModelsOptionsModel.Language = core.StringPtr("de-DE")
+				listCustomModelsOptionsModel.Language = core.StringPtr("ar-MS")
 				listCustomModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -1467,7 +1467,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 
 				// Construct an instance of the ListCustomModelsOptions model
 				listCustomModelsOptionsModel := new(texttospeechv1.ListCustomModelsOptions)
-				listCustomModelsOptionsModel.Language = core.StringPtr("de-DE")
+				listCustomModelsOptionsModel.Language = core.StringPtr("ar-MS")
 				listCustomModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := textToSpeechService.SetServiceURL("")
@@ -2796,12 +2796,12 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				createCustomModelOptionsName := "testString"
 				createCustomModelOptionsModel := textToSpeechService.NewCreateCustomModelOptions(createCustomModelOptionsName)
 				createCustomModelOptionsModel.SetName("testString")
-				createCustomModelOptionsModel.SetLanguage("de-DE")
+				createCustomModelOptionsModel.SetLanguage("ar-MS")
 				createCustomModelOptionsModel.SetDescription("testString")
 				createCustomModelOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createCustomModelOptionsModel).ToNot(BeNil())
 				Expect(createCustomModelOptionsModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(createCustomModelOptionsModel.Language).To(Equal(core.StringPtr("de-DE")))
+				Expect(createCustomModelOptionsModel.Language).To(Equal(core.StringPtr("ar-MS")))
 				Expect(createCustomModelOptionsModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(createCustomModelOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -2892,10 +2892,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			It(`Invoke NewListCustomModelsOptions successfully`, func() {
 				// Construct an instance of the ListCustomModelsOptions model
 				listCustomModelsOptionsModel := textToSpeechService.NewListCustomModelsOptions()
-				listCustomModelsOptionsModel.SetLanguage("de-DE")
+				listCustomModelsOptionsModel.SetLanguage("ar-MS")
 				listCustomModelsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listCustomModelsOptionsModel).ToNot(BeNil())
-				Expect(listCustomModelsOptionsModel.Language).To(Equal(core.StringPtr("de-DE")))
+				Expect(listCustomModelsOptionsModel.Language).To(Equal(core.StringPtr("ar-MS")))
 				Expect(listCustomModelsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListVoicesOptions successfully`, func() {

@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.22.0-937b9a1c-20201211-223043
  */
 
 // Package speechtotextv1 : Operations and models for the SpeechToTextV1 service
@@ -25,13 +25,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"net/http"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	common "github.com/watson-developer-cloud/go-sdk/common"
 )
 
 // SpeechToTextV1 : The IBM Watson&trade; Speech to Text service provides APIs that use IBM's speech-recognition
@@ -4437,7 +4438,8 @@ type CreateAcousticModelOptions struct {
 	Name *string `json:"name" validate:"required"`
 
 	// The name of the base language model that is to be customized by the new custom acoustic model. The new custom model
-	// can be used only with the base model that it customizes.
+	// can be used only with the base model that it customizes. (**Note:** The model `ar-AR_BroadbandModel` is deprecated;
+	// use `ar-MS_BroadbandModel` instead.)
 	//
 	// To determine whether a base model supports acoustic model customization, refer to [Language support for
 	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
@@ -4453,12 +4455,14 @@ type CreateAcousticModelOptions struct {
 
 // Constants associated with the CreateAcousticModelOptions.BaseModelName property.
 // The name of the base language model that is to be customized by the new custom acoustic model. The new custom model
-// can be used only with the base model that it customizes.
+// can be used only with the base model that it customizes. (**Note:** The model `ar-AR_BroadbandModel` is deprecated;
+// use `ar-MS_BroadbandModel` instead.)
 //
 // To determine whether a base model supports acoustic model customization, refer to [Language support for
 // customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
 	CreateAcousticModelOptionsBaseModelNameArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
+	CreateAcousticModelOptionsBaseModelNameArMsBroadbandmodelConst           = "ar-MS_BroadbandModel"
 	CreateAcousticModelOptionsBaseModelNameDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
 	CreateAcousticModelOptionsBaseModelNameDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
 	CreateAcousticModelOptionsBaseModelNameEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
@@ -4539,7 +4543,8 @@ type CreateJobOptions struct {
 	// (content types)** in the method description.
 	ContentType *string `json:"Content-Type,omitempty"`
 
-	// The identifier of the model that is to be used for the recognition request. See [Languages and
+	// The identifier of the model that is to be used for the recognition request. (**Note:** The model
+	// `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Languages and
 	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 	Model *string `json:"model,omitempty"`
 
@@ -4795,10 +4800,12 @@ type CreateJobOptions struct {
 }
 
 // Constants associated with the CreateJobOptions.Model property.
-// The identifier of the model that is to be used for the recognition request. See [Languages and
+// The identifier of the model that is to be used for the recognition request. (**Note:** The model
+// `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Languages and
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 const (
 	CreateJobOptionsModelArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
+	CreateJobOptionsModelArMsBroadbandmodelConst           = "ar-MS_BroadbandModel"
 	CreateJobOptionsModelDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
 	CreateJobOptionsModelDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
 	CreateJobOptionsModelEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
@@ -5680,7 +5687,8 @@ func (options *GetLanguageModelOptions) SetHeaders(param map[string]string) *Get
 
 // GetModelOptions : The GetModel options.
 type GetModelOptions struct {
-	// The identifier of the model in the form of its name from the output of the **Get a model** method.
+	// The identifier of the model in the form of its name from the output of the **Get a model** method. (**Note:** The
+	// model `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.).
 	ModelID *string `json:"model_id" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
@@ -5688,9 +5696,11 @@ type GetModelOptions struct {
 }
 
 // Constants associated with the GetModelOptions.ModelID property.
-// The identifier of the model in the form of its name from the output of the **Get a model** method.
+// The identifier of the model in the form of its name from the output of the **Get a model** method. (**Note:** The
+// model `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.).
 const (
 	GetModelOptionsModelIDArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
+	GetModelOptionsModelIDArMsBroadbandmodelConst           = "ar-MS_BroadbandModel"
 	GetModelOptionsModelIDDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
 	GetModelOptionsModelIDDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
 	GetModelOptionsModelIDEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
@@ -6081,6 +6091,7 @@ func UnmarshalLanguageModels(m map[string]json.RawMessage, result interface{}) (
 type ListAcousticModelsOptions struct {
 	// The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
 	// parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
+	// (**Note:** The identifier `ar-AR` is deprecated; use `ar-MS` instead.)
 	//
 	// To determine the languages for which customization is available, see [Language support for
 	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
@@ -6093,11 +6104,13 @@ type ListAcousticModelsOptions struct {
 // Constants associated with the ListAcousticModelsOptions.Language property.
 // The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
 // parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
+// (**Note:** The identifier `ar-AR` is deprecated; use `ar-MS` instead.)
 //
 // To determine the languages for which customization is available, see [Language support for
 // customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
 	ListAcousticModelsOptionsLanguageArArConst = "ar-AR"
+	ListAcousticModelsOptionsLanguageArMsConst = "ar-MS"
 	ListAcousticModelsOptionsLanguageDeDeConst = "de-DE"
 	ListAcousticModelsOptionsLanguageEnAuConst = "en-AU"
 	ListAcousticModelsOptionsLanguageEnGbConst = "en-GB"
@@ -6226,6 +6239,7 @@ func (options *ListGrammarsOptions) SetHeaders(param map[string]string) *ListGra
 type ListLanguageModelsOptions struct {
 	// The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
 	// parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
+	// (**Note:** The identifier `ar-AR` is deprecated; use `ar-MS` instead.)
 	//
 	// To determine the languages for which customization is available, see [Language support for
 	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
@@ -6238,11 +6252,13 @@ type ListLanguageModelsOptions struct {
 // Constants associated with the ListLanguageModelsOptions.Language property.
 // The identifier of the language for which custom language or custom acoustic models are to be returned. Omit the
 // parameter to see all custom language or custom acoustic models that are owned by the requesting credentials.
+// (**Note:** The identifier `ar-AR` is deprecated; use `ar-MS` instead.)
 //
 // To determine the languages for which customization is available, see [Language support for
 // customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
 const (
 	ListLanguageModelsOptionsLanguageArArConst = "ar-AR"
+	ListLanguageModelsOptionsLanguageArMsConst = "ar-MS"
 	ListLanguageModelsOptionsLanguageDeDeConst = "de-DE"
 	ListLanguageModelsOptionsLanguageEnAuConst = "en-AU"
 	ListLanguageModelsOptionsLanguageEnGbConst = "en-GB"
@@ -6595,7 +6611,8 @@ type RecognizeOptions struct {
 	// (content types)** in the method description.
 	ContentType *string `json:"Content-Type,omitempty"`
 
-	// The identifier of the model that is to be used for the recognition request. See [Languages and
+	// The identifier of the model that is to be used for the recognition request. (**Note:** The model
+	// `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Languages and
 	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 	Model *string `json:"model,omitempty"`
 
@@ -6795,10 +6812,12 @@ type RecognizeOptions struct {
 }
 
 // Constants associated with the RecognizeOptions.Model property.
-// The identifier of the model that is to be used for the recognition request. See [Languages and
+// The identifier of the model that is to be used for the recognition request. (**Note:** The model
+// `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Languages and
 // models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
 const (
 	RecognizeOptionsModelArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
+	RecognizeOptionsModelArMsBroadbandmodelConst           = "ar-MS_BroadbandModel"
 	RecognizeOptionsModelDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
 	RecognizeOptionsModelDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
 	RecognizeOptionsModelEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"

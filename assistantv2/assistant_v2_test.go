@@ -1749,6 +1749,344 @@ var _ = Describe(`AssistantV2`, func() {
 			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
+	Describe(`BulkClassify(bulkClassifyOptions *BulkClassifyOptions) - Operation response error`, func() {
+		version := "testString"
+		bulkClassifyPath := "/v2/skills/testString/workspace/bulk_classify"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(bulkClassifyPath))
+					Expect(req.Method).To(Equal("POST"))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke BulkClassify with error: Operation response processing error`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the BulkClassifyUtterance model
+				bulkClassifyUtteranceModel := new(assistantv2.BulkClassifyUtterance)
+				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the BulkClassifyOptions model
+				bulkClassifyOptionsModel := new(assistantv2.BulkClassifyOptions)
+				bulkClassifyOptionsModel.SkillID = core.StringPtr("testString")
+				bulkClassifyOptionsModel.Input = []assistantv2.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
+				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				assistantService.EnableRetries(0, 0)
+				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`BulkClassify(bulkClassifyOptions *BulkClassifyOptions)`, func() {
+		version := "testString"
+		bulkClassifyPath := "/v2/skills/testString/workspace/bulk_classify"
+		var serverSleepTime time.Duration
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				serverSleepTime = 0
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(bulkClassifyPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(serverSleepTime)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"output": [{"input": {"text": "Text"}, "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "intents": [{"intent": "Intent", "confidence": 10}]}]}`)
+				}))
+			})
+			It(`Invoke BulkClassify successfully`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := assistantService.BulkClassify(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the BulkClassifyUtterance model
+				bulkClassifyUtteranceModel := new(assistantv2.BulkClassifyUtterance)
+				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the BulkClassifyOptions model
+				bulkClassifyOptionsModel := new(assistantv2.BulkClassifyOptions)
+				bulkClassifyOptionsModel.SkillID = core.StringPtr("testString")
+				bulkClassifyOptionsModel.Input = []assistantv2.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
+				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				serverSleepTime = 100 * time.Millisecond
+				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+				serverSleepTime = time.Duration(0)
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				serverSleepTime = 100 * time.Millisecond
+				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+				serverSleepTime = time.Duration(0)
+			})
+			It(`Invoke BulkClassify with error: Operation validation and request error`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the BulkClassifyUtterance model
+				bulkClassifyUtteranceModel := new(assistantv2.BulkClassifyUtterance)
+				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the BulkClassifyOptions model
+				bulkClassifyOptionsModel := new(assistantv2.BulkClassifyOptions)
+				bulkClassifyOptionsModel.SkillID = core.StringPtr("testString")
+				bulkClassifyOptionsModel.Input = []assistantv2.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
+				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := assistantService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the BulkClassifyOptions model with no property values
+				bulkClassifyOptionsModelNew := new(assistantv2.BulkClassifyOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`Service constructor tests`, func() {
+		version := "testString"
+		It(`Instantiate service client`, func() {
+			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+				Authenticator: &core.NoAuthAuthenticator{},
+				Version:       core.StringPtr(version),
+			})
+			Expect(assistantService).ToNot(BeNil())
+			Expect(serviceErr).To(BeNil())
+			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
+			assistantService.DisableSSLVerification()
+			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
+		})
+		It(`Instantiate service client with error: Invalid URL`, func() {
+			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+				URL:     "{BAD_URL_STRING",
+				Version: core.StringPtr(version),
+			})
+			Expect(assistantService).To(BeNil())
+			Expect(serviceErr).ToNot(BeNil())
+		})
+		It(`Instantiate service client with error: Invalid Auth`, func() {
+			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+				URL:     "https://assistantv2/api",
+				Version: core.StringPtr(version),
+				Authenticator: &core.BasicAuthenticator{
+					Username: "",
+					Password: "",
+				},
+			})
+			Expect(assistantService).To(BeNil())
+			Expect(serviceErr).ToNot(BeNil())
+		})
+		It(`Instantiate service client with error: Validation Error`, func() {
+			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{})
+			Expect(assistantService).To(BeNil())
+			Expect(serviceErr).ToNot(BeNil())
+		})
+	})
+	Describe(`Service constructor tests using external config`, func() {
+		version := "testString"
+		Context(`Using external config, construct service client instances`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"CONVERSATION_URL":       "https://assistantv2/api",
+				"CONVERSATION_AUTH_TYPE": "noauth",
+			}
+
+			It(`Create service client using external config successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					Version: core.StringPtr(version),
+				})
+				Expect(assistantService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				ClearTestEnvironment(testEnvironment)
+
+				clone := assistantService.Clone()
+				Expect(clone).ToNot(BeNil())
+				Expect(clone.Service != assistantService.Service).To(BeTrue())
+				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
+				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
+			})
+			It(`Create service client using external config and set url from constructor successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:     "https://testService/api",
+					Version: core.StringPtr(version),
+				})
+				Expect(assistantService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
+				ClearTestEnvironment(testEnvironment)
+
+				clone := assistantService.Clone()
+				Expect(clone).ToNot(BeNil())
+				Expect(clone.Service != assistantService.Service).To(BeTrue())
+				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
+				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
+			})
+			It(`Create service client using external config and set url programatically successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					Version: core.StringPtr(version),
+				})
+				err := assistantService.SetServiceURL("https://testService/api")
+				Expect(err).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
+				ClearTestEnvironment(testEnvironment)
+
+				clone := assistantService.Clone()
+				Expect(clone).ToNot(BeNil())
+				Expect(clone.Service != assistantService.Service).To(BeTrue())
+				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
+				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
+			})
+		})
+		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"CONVERSATION_URL":       "https://assistantv2/api",
+				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
+			}
+
+			SetTestEnvironment(testEnvironment)
+			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+				Version: core.StringPtr(version),
+			})
+
+			It(`Instantiate service client with error`, func() {
+				Expect(assistantService).To(BeNil())
+				Expect(serviceErr).ToNot(BeNil())
+				ClearTestEnvironment(testEnvironment)
+			})
+		})
+		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"CONVERSATION_AUTH_TYPE": "NOAuth",
+			}
+
+			SetTestEnvironment(testEnvironment)
+			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+				URL:     "{BAD_URL_STRING",
+				Version: core.StringPtr(version),
+			})
+
+			It(`Instantiate service client with error`, func() {
+				Expect(assistantService).To(BeNil())
+				Expect(serviceErr).ToNot(BeNil())
+				ClearTestEnvironment(testEnvironment)
+			})
+		})
+	})
+	Describe(`Regional endpoint tests`, func() {
+		It(`GetServiceURLForRegion(region string)`, func() {
+			var url string
+			var err error
+			url, err = assistantv2.GetServiceURLForRegion("INVALID_REGION")
+			Expect(url).To(BeEmpty())
+			Expect(err).ToNot(BeNil())
+			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
+		})
+	})
 	Describe(`ListLogs(listLogsOptions *ListLogsOptions) - Operation response error`, func() {
 		version := "testString"
 		listLogsPath := "/v2/assistants/testString/logs"
@@ -2161,344 +2499,6 @@ var _ = Describe(`AssistantV2`, func() {
 				response, operationErr = assistantService.DeleteUserData(deleteUserDataOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "https://assistantv2/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv2.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
-	Describe(`BulkClassify(bulkClassifyOptions *BulkClassifyOptions) - Operation response error`, func() {
-		version := "testString"
-		bulkClassifyPath := "/v2/skills/testString/workspace/bulk_classify"
-		Context(`Using mock server endpoint`, func() {
-			BeforeEach(func() {
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(bulkClassifyPath))
-					Expect(req.Method).To(Equal("POST"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, `} this is not valid json {`)
-				}))
-			})
-			It(`Invoke BulkClassify with error: Operation response processing error`, func() {
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-					Version:       core.StringPtr(version),
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-
-				// Construct an instance of the BulkClassifyUtterance model
-				bulkClassifyUtteranceModel := new(assistantv2.BulkClassifyUtterance)
-				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
-
-				// Construct an instance of the BulkClassifyOptions model
-				bulkClassifyOptionsModel := new(assistantv2.BulkClassifyOptions)
-				bulkClassifyOptionsModel.SkillID = core.StringPtr("testString")
-				bulkClassifyOptionsModel.Input = []assistantv2.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
-				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-				// Expect response parsing to fail since we are receiving a text/plain response
-				result, response, operationErr := assistantService.BulkClassify(bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				assistantService.EnableRetries(0, 0)
-				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-			})
-			AfterEach(func() {
-				testServer.Close()
-			})
-		})
-	})
-
-	Describe(`BulkClassify(bulkClassifyOptions *BulkClassifyOptions)`, func() {
-		version := "testString"
-		bulkClassifyPath := "/v2/skills/testString/workspace/bulk_classify"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
-			BeforeEach(func() {
-				serverSleepTime = 0
-				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-					defer GinkgoRecover()
-
-					// Verify the contents of the request
-					Expect(req.URL.EscapedPath()).To(Equal(bulkClassifyPath))
-					Expect(req.Method).To(Equal("POST"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
-					res.Header().Set("Content-type", "application/json")
-					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"output": [{"input": {"text": "Text"}, "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "intents": [{"intent": "Intent", "confidence": 10}]}]}`)
-				}))
-			})
-			It(`Invoke BulkClassify successfully`, func() {
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-					Version:       core.StringPtr(version),
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
-
-				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := assistantService.BulkClassify(nil)
-				Expect(operationErr).NotTo(BeNil())
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-
-				// Construct an instance of the BulkClassifyUtterance model
-				bulkClassifyUtteranceModel := new(assistantv2.BulkClassifyUtterance)
-				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
-
-				// Construct an instance of the BulkClassifyOptions model
-				bulkClassifyOptionsModel := new(assistantv2.BulkClassifyOptions)
-				bulkClassifyOptionsModel.SkillID = core.StringPtr("testString")
-				bulkClassifyOptionsModel.Input = []assistantv2.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
-				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-
-				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-			})
-			It(`Invoke BulkClassify with error: Operation validation and request error`, func() {
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL:           testServer.URL,
-					Authenticator: &core.NoAuthAuthenticator{},
-					Version:       core.StringPtr(version),
-				})
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-
-				// Construct an instance of the BulkClassifyUtterance model
-				bulkClassifyUtteranceModel := new(assistantv2.BulkClassifyUtterance)
-				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
-
-				// Construct an instance of the BulkClassifyOptions model
-				bulkClassifyOptionsModel := new(assistantv2.BulkClassifyOptions)
-				bulkClassifyOptionsModel.SkillID = core.StringPtr("testString")
-				bulkClassifyOptionsModel.Input = []assistantv2.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
-				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
-				// Invoke operation with empty URL (negative test)
-				err := assistantService.SetServiceURL("")
-				Expect(err).To(BeNil())
-				result, response, operationErr := assistantService.BulkClassify(bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
-				// Construct a second instance of the BulkClassifyOptions model with no property values
-				bulkClassifyOptionsModelNew := new(assistantv2.BulkClassifyOptions)
-				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModelNew)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
