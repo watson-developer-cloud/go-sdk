@@ -14,7 +14,6 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 * [Before you begin](#before-you-begin)
 * [Installation](#installation)
-* [Preview of 2.0.0 release](#preview-release-for-version-2.0.0)
 * [Personality Insights Deprecation](#personality-insights-deprecation)
 * [Discovery v2 only on CP4D](#discovery-v2-only-on-cp4d)
 * [Running in IBM Cloud](#running-in-ibm-cloud)
@@ -58,18 +57,6 @@ go get -u github.com/watson-developer-cloud/go-sdk@v2.0.0
 ```
 
 Note: For the latest tag release, look into [examples][examples] folder for basic and advanced examples.
-
-## Preview release for version `2.0.0`
-
-We have a preview release available for the upcoming version `2.0.0`. This introduces a number of breaking changes to the SDK, and adds some convenient new features for all packages in the SDK. See `Migrating-V2` at the root of the SDK for details on what is changing.
-
-If you want to try out the new version before it is released, you can add it as a dependency by targeting the branch directly in your `go.mod`. The easier way to do this is by running this command:
-
-```sh
-go get github.com/watson-developer-cloud/go-sdk@c2fbbe350edbc8f9a6ce6325d4c7880c3c1c538d
-```
-
-If you decide to preview the new release, and have any feedback or comments they are greatly appreciated!
 
 ## Personality Insights Deprecation
 
