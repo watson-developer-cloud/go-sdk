@@ -4,6 +4,16 @@ In order to move from versions `1.x` to version `2.0.0`, there are some breaking
 
 ## Overall Changes to all Packages
 
+### Breaking import path
+
+In order to import the `v2` version of the Go module, the import path for the SDK must be updated to the following schema:
+
+```go
+import "github.com/watson-developer-cloud/go-sdk/v2/{service}"
+```
+
+Where `{service}` represents the service you are attempting to import, i.e. `assistantv1`.
+
 ### Breaking `go-sdk-core` version change
 
 For all packages, we now import the `go-sdk-core/v4` module as a dependency. This replaces `go-sdk-core`. Any code that previously imported the Go Core should replace their existing imports with:
