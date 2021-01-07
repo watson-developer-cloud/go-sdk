@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/watson-developer-cloud/go-sdk/speechtotextv1"
+	"github.com/watson-developer-cloud/go-sdk/v2/speechtotextv1"
 )
 
 func main() {

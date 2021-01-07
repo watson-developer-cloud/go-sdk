@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/IBM/go-sdk-core/v4/core"
-	nlu "github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
+	nlu "github.com/watson-developer-cloud/go-sdk/v2/naturallanguageunderstandingv1"
 )
 
 func main() {
