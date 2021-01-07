@@ -1,4 +1,4 @@
-module github.com/watson-developer-cloud/go-sdk
+module github.com/watson-developer-cloud/go-sdk/v2
 
 go 1.12
 
