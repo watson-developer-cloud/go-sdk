@@ -53,7 +53,7 @@ IBM Watson™ Visual Recognition is discontinued. Existing instances are support
 
 Get SDK package:
 ```bash
-go get -u github.com/watson-developer-cloud/go-sdk@v2.0.1
+go get -u github.com/watson-developer-cloud/go-sdk/v2
 ```
 
 Note: For the latest tag release, look into [examples][examples] folder for basic and advanced examples.
