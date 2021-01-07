@@ -10,5 +10,5 @@ require (
 	github.com/onsi/ginkgo v1.14.2
 	github.com/onsi/gomega v1.10.3
 	github.com/stretchr/testify v1.6.1
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
+	github.com/watson-developer-cloud/go-sdk v1.7.0
 )
