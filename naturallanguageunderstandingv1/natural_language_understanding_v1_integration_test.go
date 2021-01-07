@@ -25,7 +25,7 @@ import (
 	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
+	"github.com/watson-developer-cloud/go-sdk/v2/naturallanguageunderstandingv1"
 )
 
 const skipMessage = "External configuration could not be loaded, skipping..."

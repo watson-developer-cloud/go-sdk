@@ -27,7 +27,7 @@ import (
 	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
-	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv3"
+	"github.com/watson-developer-cloud/go-sdk/v2/visualrecognitionv3"
 )
 
 const skipMessage = "External configuration could not be loaded, skipping..."
