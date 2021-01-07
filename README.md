@@ -103,7 +103,7 @@ The file downloaded will be called `ibm-credentials.env`. This is the name the S
 As long as you set that up correctly, you don't have to worry about setting any authentication options in your code. So, for example, if you created and downloaded the credential file for your Discovery instance, you just need to do the following:
 
 ```go
-import "github.com/watson-developer-cloud/go-sdk/servicev1"
+import "github.com/watson-developer-cloud/go-sdk/v2/servicev1"
 
 service, serviceErr := servicev1.NewServiceV1(&servicev1.ServiceV1Options{
 	Version:   "2018-03-05",
@@ -138,7 +138,7 @@ You supply either an IAM service **API key** or an **access token**:
 
 ```go
 // In the constructor, letting the SDK manage the IAM token
-import "github.com/watson-developer-cloud/go-sdk/servicev1"
+import "github.com/watson-developer-cloud/go-sdk/v2/servicev1"
 authenticator := &core.IamAuthenticator{
 	ApiKey: "<apikey>",
 }
@@ -152,7 +152,7 @@ service, serviceErr := servicev1.NewServiceV1(&servicev1.ServiceV1Options{
 
 ```go
 // In the constructor
-import "github.com/watson-developer-cloud/go-sdk/servicev1"
+import "github.com/watson-developer-cloud/go-sdk/v2/servicev1"
 
 service, serviceErr := servicev1.NewServiceV1(&servicev1.ServiceV1Options{
 		URL:      "<service_url>",
@@ -176,7 +176,7 @@ package main
 
 import (
 "fmt"
-"github.com/watson-developer-cloud/go-sdk/discoveryv1"
+"github.com/watson-developer-cloud/go-sdk/v2/discoveryv1"
 )
 
 // Creates a Discovery service instance and does a list of environments
@@ -238,7 +238,7 @@ import (
   "net/http"
   "net/url"
 
-  discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+  discovery "github.com/watson-developer-cloud/go-sdk/v2/discoveryv1"
 )
 
 func main() {
@@ -285,7 +285,7 @@ package main
 
 import (
   "fmt"
-  discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+  discovery "github.com/watson-developer-cloud/go-sdk/v2/discoveryv1"
 )
 
 func main() {
@@ -356,7 +356,7 @@ package main
 
 import (
   "fmt"
-  discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+  discovery "github.com/watson-developer-cloud/go-sdk/v2/discoveryv1"
 )
 
 func main() {
@@ -389,7 +389,7 @@ package main
 
 import (
   "fmt"
-  discovery "github.com/watson-developer-cloud/go-sdk/discoveryv1"
+  discovery "github.com/watson-developer-cloud/go-sdk/v2/discoveryv1"
 )
 
 func main() {
