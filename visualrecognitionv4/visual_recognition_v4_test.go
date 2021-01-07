@@ -31,7 +31,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/watson-developer-cloud/go-sdk/visualrecognitionv4"
+	"github.com/watson-developer-cloud/go-sdk/v2/visualrecognitionv4"
 )
 
 var _ = Describe(`VisualRecognitionV4`, func() {
