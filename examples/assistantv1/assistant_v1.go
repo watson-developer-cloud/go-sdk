@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/IBM/go-sdk-core/v4/core"
-	assistant "github.com/watson-developer-cloud/go-sdk/assistantv1"
+	assistant "github.com/watson-developer-cloud/go-sdk/v2/assistantv1"
 )
 
 func main() {
