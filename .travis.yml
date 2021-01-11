@@ -27,13 +27,7 @@ before_script:
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then chmod a+x ./appscan/ASOC.sh; fi
 
 script:
-# This step is required since we use a go module
-- cd ./v2
-- go mod download
-- golangci-lint run
-- go test `go list ./... | grep -v examples`
-- go test `go list ./... | grep -v examples` -tags=integration
-- cd ..
+- make all
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi
 
 before_deploy:
