@@ -25,13 +25,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/go-openapi/strfmt"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"net/http"
 	"reflect"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/go-openapi/strfmt"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // LanguageTranslatorV3 : IBM Watson&trade; Language Translator translates text from one language to another. The

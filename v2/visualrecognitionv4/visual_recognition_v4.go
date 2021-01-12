@@ -32,7 +32,7 @@ import (
 
 	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/go-openapi/strfmt"
-	common "github.com/watson-developer-cloud/go-sdk/common"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // VisualRecognitionV4 : IBM Watson&trade; Visual Recognition is discontinued. Existing instances are supported until 1

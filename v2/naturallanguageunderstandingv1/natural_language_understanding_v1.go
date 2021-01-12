@@ -25,12 +25,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/go-openapi/strfmt"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"net/http"
 	"reflect"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/go-openapi/strfmt"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // NaturalLanguageUnderstandingV1 : Analyze various features of text content at scale. Provide text, raw HTML, or a

@@ -25,13 +25,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/go-openapi/strfmt"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"net/http"
 	"reflect"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/go-openapi/strfmt"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to
