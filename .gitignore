@@ -19,3 +19,4 @@ vendor/
 
 # VSCode config
 .vscode/
+*.code-workspace
