@@ -1,4 +1,4 @@
-# Watson Developer Cloud Go SDK v2.0.1
+# Watson Developer Cloud Go SDK v2.0.2
 [![Build Status](https://travis-ci.org/watson-developer-cloud/go-sdk.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/go-sdk)
 [![Release](https://img.shields.io/github/v/release/watson-developer-cloud/go-sdk)](https://github.com/watson-developer-cloud/go-sdk/releases/latest)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/watson-developer-cloud/go-sdk)
