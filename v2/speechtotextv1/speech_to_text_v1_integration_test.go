@@ -340,6 +340,7 @@ func TestAudio(t *testing.T) {
 		},
 	)
 	assert.NotNil(t, listAudio)
+	assert.Nil(t, responseErr)
 
 	// Add audio
 	pwd, _ := os.Getwd()
@@ -368,6 +369,7 @@ func TestAudio(t *testing.T) {
 		},
 	)
 	assert.NotNil(t, getAudio)
+	assert.Nil(t, responseErr)
 
 	// Delete audio
 	_, responseErr = service.DeleteAudio(
@@ -402,7 +404,10 @@ func (cb myCallBack) OnClose() {
 func (cb myCallBack) OnData(resp *core.DetailedResponse) {
 	var speechResults speechtotextv1.SpeechRecognitionResults
 	result := resp.GetResult().([]byte)
-	json.Unmarshal(result, &speechResults)
+	err := json.Unmarshal(result, &speechResults)
+	if err != nil {
+		cb.T.Fail()
+	}
 	assert.NotNil(cb.T, speechResults)
 	assert.NotNil(cb.T, speechResults.Results[0].Alternatives[0].WordConfidence)
 	assert.NotNil(cb.T, speechResults.SpeakerLabels)

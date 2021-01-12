@@ -371,6 +371,7 @@ func TestTokenizationDictionary(t *testing.T) {
 		},
 	)
 	assert.NotNil(t, createTokenizationDictionary)
+	assert.Nil(t, responseErr)
 
 	// get tokenization dictionary status
 	getTokenizationDictionaryStatus, _, responseErr := service.GetTokenizationDictionaryStatus(
@@ -380,6 +381,7 @@ func TestTokenizationDictionary(t *testing.T) {
 		},
 	)
 	assert.NotNil(t, getTokenizationDictionaryStatus)
+	assert.Nil(t, responseErr)
 
 	// delete tokenization dictionary
 	_, _ = service.DeleteTokenizationDictionary(
@@ -478,12 +480,16 @@ func TestDeleteOperations(t *testing.T) {
 	for _, collection := range listCollection.Collections {
 		fmt.Println("Deleting collection " + *collection.Name)
 		// delete the collection
-		service.DeleteCollection(
+		_, _, deleteErr := service.DeleteCollection(
 			&discoveryv1.DeleteCollectionOptions{
 				EnvironmentID: environmentID,
 				CollectionID:  collection.CollectionID,
 			},
 		)
+
+		if deleteErr != nil {
+			fmt.Println("Error when deleting collection" + deleteErr.Error())
+		}
 	}
 
 	// Delete all configurations
@@ -499,12 +505,16 @@ func TestDeleteOperations(t *testing.T) {
 		// delete the configuration
 		if *configuration.Name != "Default Configuration" {
 			fmt.Println("Deleting configuration " + *configuration.Name)
-			service.DeleteConfiguration(
+			_, _, deleteErr := service.DeleteConfiguration(
 				&discoveryv1.DeleteConfigurationOptions{
 					EnvironmentID:   environmentID,
 					ConfigurationID: configuration.ConfigurationID,
 				},
 			)
+
+			if deleteErr != nil {
+				fmt.Println("Error when deleting collection" + deleteErr.Error())
+			}
 		}
 	}
 }

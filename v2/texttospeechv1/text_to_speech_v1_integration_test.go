@@ -80,7 +80,7 @@ func TestVoice(t *testing.T) {
 	assert.NotNil(t, listVoices)
 
 	// Get voice
-	voice, _, responseErr := service.GetVoice(
+	voice, _, _ := service.GetVoice(
 		&texttospeechv1.GetVoiceOptions{
 			Voice: core.StringPtr(texttospeechv1.GetVoiceOptionsVoiceEnUsAllisonvoiceConst),
 		},
