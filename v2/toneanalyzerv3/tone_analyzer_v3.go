@@ -25,12 +25,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"net/http"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // ToneAnalyzerV3 : The IBM Watson&trade; Tone Analyzer service uses linguistic analysis to detect emotional and

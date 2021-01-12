@@ -31,7 +31,7 @@ import (
 	"time"
 
 	"github.com/IBM/go-sdk-core/v4/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // PersonalityInsightsV3 : IBM&reg; will begin sunsetting IBM Watson&trade; Personality Insights on 1 December 2020. For

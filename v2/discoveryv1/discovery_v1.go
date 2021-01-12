@@ -33,7 +33,7 @@ import (
 
 	"github.com/IBM/go-sdk-core/v4/core"
 	"github.com/go-openapi/strfmt"
-	common "github.com/watson-developer-cloud/go-sdk/common"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // DiscoveryV1 : IBM Watson&trade; Discovery is a cognitive search and content analytics engine that you can add to

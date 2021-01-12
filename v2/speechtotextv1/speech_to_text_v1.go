@@ -32,7 +32,7 @@ import (
 	"time"
 
 	"github.com/IBM/go-sdk-core/v4/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // SpeechToTextV1 : The IBM Watson&trade; Speech to Text service provides APIs that use IBM's speech-recognition

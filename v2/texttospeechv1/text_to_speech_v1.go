@@ -25,12 +25,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"net/http"
 	"reflect"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // TextToSpeechV1 : The IBM Watson&trade; Text to Speech service provides APIs that use IBM's speech-synthesis
