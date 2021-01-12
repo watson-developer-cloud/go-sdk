@@ -80,7 +80,7 @@ func TestCounterexamples(t *testing.T) {
 	shouldSkipTest(t)
 
 	// List Counter Examples
-	result, response, responseErr := service.ListCounterexamples(service.
+	result, _, responseErr := service.ListCounterexamples(service.
 		NewListCounterexamplesOptions(workspaceId))
 	assert.Nil(t, responseErr)
 
@@ -94,7 +94,7 @@ func TestCounterexamples(t *testing.T) {
 	assert.NotNil(t, createCounterExample)
 
 	// Get counter example
-	getCounterExample, response, responseErr := service.GetCounterexample(service.
+	getCounterExample, _, responseErr := service.GetCounterexample(service.
 		NewGetCounterexampleOptions(workspaceId, "Make me a lemonade?"))
 	assert.Nil(t, responseErr)
 
@@ -110,9 +110,10 @@ func TestCounterexamples(t *testing.T) {
 	assert.NotNil(t, updateCounterExample)
 
 	// Delete counter example
-	response, responseErr = service.DeleteCounterexample(service.
+	response, responseErr := service.DeleteCounterexample(service.
 		NewDeleteCounterexampleOptions(workspaceId, "Make me a smoothie?"))
 	assert.NotNil(t, response)
+	assert.Nil(t, responseErr)
 }
 
 func TestEntity(t *testing.T) {
