@@ -1,3 +1,12 @@
+## [2.0.2](https://github.com/watson-developer-cloud/go-sdk/compare/v2.0.1...v2.0.2) (2021-01-12)
+
+
+### Bug Fixes
+
+* **bumpversion:** correct path for the common module ([e073583](https://github.com/watson-developer-cloud/go-sdk/commit/e07358311c242e3bd6deadc3645861ec609cc161))
+* **gomod:** add v2 path to correct identify the major version ([a647bc5](https://github.com/watson-developer-cloud/go-sdk/commit/a647bc5794ec16c027fdd3e6d5800635c960caa4))
+* **imports:** import v2 of the common module ([47f93e3](https://github.com/watson-developer-cloud/go-sdk/commit/47f93e3aefdbdb335ea1c547c31fb67c560b6181))
+
 ## [2.0.1](https://github.com/watson-developer-cloud/go-sdk/compare/v2.0.0...v2.0.1) (2020-12-21)
 
 
