@@ -1,7 +1,7 @@
 # Watson Developer Cloud Go SDK v2.0.2
 [![Build Status](https://travis-ci.org/watson-developer-cloud/go-sdk.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/go-sdk)
 [![Release](https://img.shields.io/github/v/release/watson-developer-cloud/go-sdk)](https://github.com/watson-developer-cloud/go-sdk/releases/latest)
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/watson-developer-cloud/go-sdk)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/watson-developer-cloud/go-sdk/v2)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![wdc-community.slack.com](https://wdc-slack-inviter.mybluemix.net/badge.svg)](http://wdc-slack-inviter.mybluemix.net/)
