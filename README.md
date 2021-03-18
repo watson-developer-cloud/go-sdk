@@ -36,7 +36,7 @@ Go client library to quickly get started with the various [Watson APIs](https://
 
 </details>
 
-## ANNOUNCEMENTS!
+## Announcements
 ### Updating endpoint URLs from watsonplatform.net
 Watson API endpoint URLs at watsonplatform.net are changing and will not work after 26 May 2021. Update your calls to use the newer endpoint URLs. For more information, see https://cloud.ibm.com/docs/watson?topic=watson-endpoint-change.
 
