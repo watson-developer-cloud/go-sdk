@@ -29,13 +29,6 @@ before_script:
 script:
 - make all
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi
-- sudo apt-get install -y ccrypt
-- echo $encrypted_5831e1224655_key > info1.txt
-- ccencrypt info1.txt -K $KNOWN_SECRET
-- cat info1.txt.cpt | base64
-- echo $encrypted_5831e1224655_iv > info2.txt
-- ccencrypt info2.txt -K $KNOWN_SECRET
-- cat info2.txt.cpt | base64
 
 before_deploy:
 - pip install --user bumpversion
