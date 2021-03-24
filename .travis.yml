@@ -29,8 +29,7 @@ before_script:
 script:
 - make all
 - if [ "${TRAVIS_TAG}" = "${TRAVIS_BRANCH}" ]; then ./appscan/ASOC.sh; fi
-- printenv encrypted_5831e1224655_key
-- printenv encrypted_5831e1224655_iv
+- env
 
 before_deploy:
 - pip install --user bumpversion
