@@ -6,11 +6,10 @@
 name: Deploy and Publish
 
 on:
-  workflow_run:
-    workflows: ["Build and Test"]
-    branches: [ 9210_actions ]
-    types:
-      - completed
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ master ]
 
   # Allows you to run this workflow manually from the Action tab
   workflow_dispatch:
