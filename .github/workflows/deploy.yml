@@ -40,7 +40,6 @@ jobs:
         npm install -g @semantic-release/github
         npm install -g @semantic-release/commit-analyzer
     - name: Publish to Git Releases and Tags
-      if: ${{ github.event.workflow_run.conclusion == 'success' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
