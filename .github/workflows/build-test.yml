@@ -33,5 +33,5 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Execute GO tests
       run: |
-        make build
+        make all
 
