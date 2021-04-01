@@ -35,8 +35,12 @@ import (
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
-// CompareComplyV1 : IBM Watson&trade; Compare and Comply analyzes governing documents to provide details about critical
-// aspects of the documents.
+// CompareComplyV1 : IBM Watson&trade; Compare and Comply is discontinued. Existing instances are supported until 30
+// November 2021, but as of 1 December 2020, you can't create instances. Any instance that is provisioned on 30 November
+// 2021 will be deleted.
+// {: deprecated}
+//
+// Compare and Comply analyzes governing documents to provide details about critical aspects of the documents.
 //
 // Version: 1.0
 // See: https://cloud.ibm.com/docs/compare-comply?topic=compare-comply-about
@@ -67,6 +71,9 @@ type CompareComplyV1Options struct {
 
 // NewCompareComplyV1 : constructs an instance of CompareComplyV1 with passed in options.
 func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComplyV1, err error) {
+	// Log deprecation warning
+	core.GetLogger().Log(core.LevelWarn, "", "On 30 November 2021, Compare and Comply will no longer be available. For more information, see Compare and Comply deprecation.")
+
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
