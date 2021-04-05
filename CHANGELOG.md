@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/watson-developer-cloud/go-sdk/compare/v2.0.2...v2.0.3) (2021-04-05)
+
+
+### Bug Fixes
+
+* add message ([50b9216](https://github.com/watson-developer-cloud/go-sdk/commit/50b9216da161458e3f7533c32297ff3c961d7436))
+
 ## [2.0.2](https://github.com/watson-developer-cloud/go-sdk/compare/v2.0.1...v2.0.2) (2021-01-12)
 
 
