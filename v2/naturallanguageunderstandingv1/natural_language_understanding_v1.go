@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package naturallanguageunderstandingv1 : Operations and models for the NaturalLanguageUnderstandingV1 service
@@ -25,11 +25,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
@@ -49,7 +50,7 @@ type NaturalLanguageUnderstandingV1 struct {
 	Service *core.BaseService
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2020-08-01`.
+	// `2021-03-25`.
 	Version *string
 }
 
@@ -66,7 +67,7 @@ type NaturalLanguageUnderstandingV1Options struct {
 	Authenticator core.Authenticator
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2020-08-01`.
+	// `2021-03-25`.
 	Version *string `validate:"required"`
 }
 
@@ -177,6 +178,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DisableSSLVe
 // Analyze : Analyze text
 // Analyzes text, HTML, or a public webpage for the following features:
 // - Categories
+// - Classifications
 // - Concepts
 // - Emotion
 // - Entities
@@ -273,11 +275,13 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) AnalyzeWithC
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAnalysisResults)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAnalysisResults)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -327,11 +331,13 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListModelsWi
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListModelsResults)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListModelsResults)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -387,11 +393,1030 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteModelW
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteModelResults)
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteModelResults)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// CreateSentimentModel : Create sentiment model
+// (Beta) Creates a custom sentiment model by uploading training data and associated metadata. The model begins the
+// training and deploying process and is ready to use when the `status` is `available`.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) CreateSentimentModel(createSentimentModelOptions *CreateSentimentModelOptions) (result *SentimentModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.CreateSentimentModelWithContext(context.Background(), createSentimentModelOptions)
+}
+
+// CreateSentimentModelWithContext is an alternate form of the CreateSentimentModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) CreateSentimentModelWithContext(ctx context.Context, createSentimentModelOptions *CreateSentimentModelOptions) (result *SentimentModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createSentimentModelOptions, "createSentimentModelOptions cannot be nil")
 	if err != nil {
 		return
 	}
-	response.Result = result
+	err = core.ValidateStruct(createSentimentModelOptions, "createSentimentModelOptions")
+	if err != nil {
+		return
+	}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/sentiment`, nil)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range createSentimentModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "CreateSentimentModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	builder.AddFormData("language", "", "", fmt.Sprint(*createSentimentModelOptions.Language))
+	builder.AddFormData("training_data", "filename",
+		"text/csv", createSentimentModelOptions.TrainingData)
+	if createSentimentModelOptions.Name != nil {
+		builder.AddFormData("name", "", "", fmt.Sprint(*createSentimentModelOptions.Name))
+	}
+	if createSentimentModelOptions.Description != nil {
+		builder.AddFormData("description", "", "", fmt.Sprint(*createSentimentModelOptions.Description))
+	}
+	if createSentimentModelOptions.ModelVersion != nil {
+		builder.AddFormData("model_version", "", "", fmt.Sprint(*createSentimentModelOptions.ModelVersion))
+	}
+	if createSentimentModelOptions.WorkspaceID != nil {
+		builder.AddFormData("workspace_id", "", "", fmt.Sprint(*createSentimentModelOptions.WorkspaceID))
+	}
+	if createSentimentModelOptions.VersionDescription != nil {
+		builder.AddFormData("version_description", "", "", fmt.Sprint(*createSentimentModelOptions.VersionDescription))
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSentimentModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// ListSentimentModels : List sentiment models
+// (Beta) Returns all custom sentiment models associated with this service instance.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListSentimentModels(listSentimentModelsOptions *ListSentimentModelsOptions) (result *ListSentimentModelsResponse, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.ListSentimentModelsWithContext(context.Background(), listSentimentModelsOptions)
+}
+
+// ListSentimentModelsWithContext is an alternate form of the ListSentimentModels method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListSentimentModelsWithContext(ctx context.Context, listSentimentModelsOptions *ListSentimentModelsOptions) (result *ListSentimentModelsResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listSentimentModelsOptions, "listSentimentModelsOptions")
+	if err != nil {
+		return
+	}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/sentiment`, nil)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range listSentimentModelsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "ListSentimentModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListSentimentModelsResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// GetSentimentModel : Get sentiment model details
+// (Beta) Returns the status of the sentiment model with the given model ID.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetSentimentModel(getSentimentModelOptions *GetSentimentModelOptions) (result *SentimentModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.GetSentimentModelWithContext(context.Background(), getSentimentModelOptions)
+}
+
+// GetSentimentModelWithContext is an alternate form of the GetSentimentModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetSentimentModelWithContext(ctx context.Context, getSentimentModelOptions *GetSentimentModelOptions) (result *SentimentModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getSentimentModelOptions, "getSentimentModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getSentimentModelOptions, "getSentimentModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *getSentimentModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/sentiment/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getSentimentModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "GetSentimentModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSentimentModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// UpdateSentimentModel : Update sentiment model
+// (Beta) Overwrites the training data associated with this custom sentiment model and retrains the model. The new model
+// replaces the current deployment.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) UpdateSentimentModel(updateSentimentModelOptions *UpdateSentimentModelOptions) (result *SentimentModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.UpdateSentimentModelWithContext(context.Background(), updateSentimentModelOptions)
+}
+
+// UpdateSentimentModelWithContext is an alternate form of the UpdateSentimentModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) UpdateSentimentModelWithContext(ctx context.Context, updateSentimentModelOptions *UpdateSentimentModelOptions) (result *SentimentModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateSentimentModelOptions, "updateSentimentModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(updateSentimentModelOptions, "updateSentimentModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *updateSentimentModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.PUT)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/sentiment/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range updateSentimentModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "UpdateSentimentModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	builder.AddFormData("language", "", "", fmt.Sprint(*updateSentimentModelOptions.Language))
+	builder.AddFormData("training_data", "filename",
+		"text/csv", updateSentimentModelOptions.TrainingData)
+	if updateSentimentModelOptions.Name != nil {
+		builder.AddFormData("name", "", "", fmt.Sprint(*updateSentimentModelOptions.Name))
+	}
+	if updateSentimentModelOptions.Description != nil {
+		builder.AddFormData("description", "", "", fmt.Sprint(*updateSentimentModelOptions.Description))
+	}
+	if updateSentimentModelOptions.ModelVersion != nil {
+		builder.AddFormData("model_version", "", "", fmt.Sprint(*updateSentimentModelOptions.ModelVersion))
+	}
+	if updateSentimentModelOptions.WorkspaceID != nil {
+		builder.AddFormData("workspace_id", "", "", fmt.Sprint(*updateSentimentModelOptions.WorkspaceID))
+	}
+	if updateSentimentModelOptions.VersionDescription != nil {
+		builder.AddFormData("version_description", "", "", fmt.Sprint(*updateSentimentModelOptions.VersionDescription))
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSentimentModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// DeleteSentimentModel : Delete sentiment model
+// (Beta) Un-deploys the custom sentiment model with the given model ID and deletes all associated customer data,
+// including any training data or binary artifacts.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteSentimentModel(deleteSentimentModelOptions *DeleteSentimentModelOptions) (result *DeleteModelResults, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.DeleteSentimentModelWithContext(context.Background(), deleteSentimentModelOptions)
+}
+
+// DeleteSentimentModelWithContext is an alternate form of the DeleteSentimentModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteSentimentModelWithContext(ctx context.Context, deleteSentimentModelOptions *DeleteSentimentModelOptions) (result *DeleteModelResults, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteSentimentModelOptions, "deleteSentimentModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteSentimentModelOptions, "deleteSentimentModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *deleteSentimentModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/sentiment/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteSentimentModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "DeleteSentimentModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteModelResults)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// CreateCategoriesModel : Create categories model
+// (Beta) Creates a custom categories model by uploading training data and associated metadata. The model begins the
+// training and deploying process and is ready to use when the `status` is `available`.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) CreateCategoriesModel(createCategoriesModelOptions *CreateCategoriesModelOptions) (result *CategoriesModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.CreateCategoriesModelWithContext(context.Background(), createCategoriesModelOptions)
+}
+
+// CreateCategoriesModelWithContext is an alternate form of the CreateCategoriesModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) CreateCategoriesModelWithContext(ctx context.Context, createCategoriesModelOptions *CreateCategoriesModelOptions) (result *CategoriesModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createCategoriesModelOptions, "createCategoriesModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(createCategoriesModelOptions, "createCategoriesModelOptions")
+	if err != nil {
+		return
+	}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/categories`, nil)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range createCategoriesModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "CreateCategoriesModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	builder.AddFormData("language", "", "", fmt.Sprint(*createCategoriesModelOptions.Language))
+	builder.AddFormData("training_data", "filename",
+		core.StringNilMapper(createCategoriesModelOptions.TrainingDataContentType), createCategoriesModelOptions.TrainingData)
+	if createCategoriesModelOptions.Name != nil {
+		builder.AddFormData("name", "", "", fmt.Sprint(*createCategoriesModelOptions.Name))
+	}
+	if createCategoriesModelOptions.Description != nil {
+		builder.AddFormData("description", "", "", fmt.Sprint(*createCategoriesModelOptions.Description))
+	}
+	if createCategoriesModelOptions.ModelVersion != nil {
+		builder.AddFormData("model_version", "", "", fmt.Sprint(*createCategoriesModelOptions.ModelVersion))
+	}
+	if createCategoriesModelOptions.WorkspaceID != nil {
+		builder.AddFormData("workspace_id", "", "", fmt.Sprint(*createCategoriesModelOptions.WorkspaceID))
+	}
+	if createCategoriesModelOptions.VersionDescription != nil {
+		builder.AddFormData("version_description", "", "", fmt.Sprint(*createCategoriesModelOptions.VersionDescription))
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCategoriesModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// ListCategoriesModels : List categories models
+// (Beta) Returns all custom categories models associated with this service instance.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListCategoriesModels(listCategoriesModelsOptions *ListCategoriesModelsOptions) (result *CategoriesModelList, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.ListCategoriesModelsWithContext(context.Background(), listCategoriesModelsOptions)
+}
+
+// ListCategoriesModelsWithContext is an alternate form of the ListCategoriesModels method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListCategoriesModelsWithContext(ctx context.Context, listCategoriesModelsOptions *ListCategoriesModelsOptions) (result *CategoriesModelList, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listCategoriesModelsOptions, "listCategoriesModelsOptions")
+	if err != nil {
+		return
+	}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/categories`, nil)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range listCategoriesModelsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "ListCategoriesModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCategoriesModelList)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// GetCategoriesModel : Get categories model details
+// (Beta) Returns the status of the categories model with the given model ID.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetCategoriesModel(getCategoriesModelOptions *GetCategoriesModelOptions) (result *CategoriesModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.GetCategoriesModelWithContext(context.Background(), getCategoriesModelOptions)
+}
+
+// GetCategoriesModelWithContext is an alternate form of the GetCategoriesModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetCategoriesModelWithContext(ctx context.Context, getCategoriesModelOptions *GetCategoriesModelOptions) (result *CategoriesModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getCategoriesModelOptions, "getCategoriesModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getCategoriesModelOptions, "getCategoriesModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *getCategoriesModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/categories/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getCategoriesModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "GetCategoriesModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCategoriesModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// UpdateCategoriesModel : Update categories model
+// (Beta) Overwrites the training data associated with this custom categories model and retrains the model. The new
+// model replaces the current deployment.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) UpdateCategoriesModel(updateCategoriesModelOptions *UpdateCategoriesModelOptions) (result *CategoriesModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.UpdateCategoriesModelWithContext(context.Background(), updateCategoriesModelOptions)
+}
+
+// UpdateCategoriesModelWithContext is an alternate form of the UpdateCategoriesModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) UpdateCategoriesModelWithContext(ctx context.Context, updateCategoriesModelOptions *UpdateCategoriesModelOptions) (result *CategoriesModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateCategoriesModelOptions, "updateCategoriesModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(updateCategoriesModelOptions, "updateCategoriesModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *updateCategoriesModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.PUT)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/categories/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range updateCategoriesModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "UpdateCategoriesModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	builder.AddFormData("language", "", "", fmt.Sprint(*updateCategoriesModelOptions.Language))
+	builder.AddFormData("training_data", "filename",
+		core.StringNilMapper(updateCategoriesModelOptions.TrainingDataContentType), updateCategoriesModelOptions.TrainingData)
+	if updateCategoriesModelOptions.Name != nil {
+		builder.AddFormData("name", "", "", fmt.Sprint(*updateCategoriesModelOptions.Name))
+	}
+	if updateCategoriesModelOptions.Description != nil {
+		builder.AddFormData("description", "", "", fmt.Sprint(*updateCategoriesModelOptions.Description))
+	}
+	if updateCategoriesModelOptions.ModelVersion != nil {
+		builder.AddFormData("model_version", "", "", fmt.Sprint(*updateCategoriesModelOptions.ModelVersion))
+	}
+	if updateCategoriesModelOptions.WorkspaceID != nil {
+		builder.AddFormData("workspace_id", "", "", fmt.Sprint(*updateCategoriesModelOptions.WorkspaceID))
+	}
+	if updateCategoriesModelOptions.VersionDescription != nil {
+		builder.AddFormData("version_description", "", "", fmt.Sprint(*updateCategoriesModelOptions.VersionDescription))
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCategoriesModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// DeleteCategoriesModel : Delete categories model
+// (Beta) Un-deploys the custom categories model with the given model ID and deletes all associated customer data,
+// including any training data or binary artifacts.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteCategoriesModel(deleteCategoriesModelOptions *DeleteCategoriesModelOptions) (result *DeleteModelResults, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.DeleteCategoriesModelWithContext(context.Background(), deleteCategoriesModelOptions)
+}
+
+// DeleteCategoriesModelWithContext is an alternate form of the DeleteCategoriesModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteCategoriesModelWithContext(ctx context.Context, deleteCategoriesModelOptions *DeleteCategoriesModelOptions) (result *DeleteModelResults, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteCategoriesModelOptions, "deleteCategoriesModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteCategoriesModelOptions, "deleteCategoriesModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *deleteCategoriesModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/categories/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteCategoriesModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "DeleteCategoriesModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteModelResults)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// CreateClassificationsModel : Create classifications model
+// (Beta) Creates a custom classifications model by uploading training data and associated metadata. The model begins
+// the training and deploying process and is ready to use when the `status` is `available`.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) CreateClassificationsModel(createClassificationsModelOptions *CreateClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.CreateClassificationsModelWithContext(context.Background(), createClassificationsModelOptions)
+}
+
+// CreateClassificationsModelWithContext is an alternate form of the CreateClassificationsModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) CreateClassificationsModelWithContext(ctx context.Context, createClassificationsModelOptions *CreateClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(createClassificationsModelOptions, "createClassificationsModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(createClassificationsModelOptions, "createClassificationsModelOptions")
+	if err != nil {
+		return
+	}
+
+	builder := core.NewRequestBuilder(core.POST)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/classifications`, nil)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range createClassificationsModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "CreateClassificationsModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	builder.AddFormData("language", "", "", fmt.Sprint(*createClassificationsModelOptions.Language))
+	builder.AddFormData("training_data", "filename",
+		core.StringNilMapper(createClassificationsModelOptions.TrainingDataContentType), createClassificationsModelOptions.TrainingData)
+	if createClassificationsModelOptions.Name != nil {
+		builder.AddFormData("name", "", "", fmt.Sprint(*createClassificationsModelOptions.Name))
+	}
+	if createClassificationsModelOptions.Description != nil {
+		builder.AddFormData("description", "", "", fmt.Sprint(*createClassificationsModelOptions.Description))
+	}
+	if createClassificationsModelOptions.ModelVersion != nil {
+		builder.AddFormData("model_version", "", "", fmt.Sprint(*createClassificationsModelOptions.ModelVersion))
+	}
+	if createClassificationsModelOptions.WorkspaceID != nil {
+		builder.AddFormData("workspace_id", "", "", fmt.Sprint(*createClassificationsModelOptions.WorkspaceID))
+	}
+	if createClassificationsModelOptions.VersionDescription != nil {
+		builder.AddFormData("version_description", "", "", fmt.Sprint(*createClassificationsModelOptions.VersionDescription))
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassificationsModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// ListClassificationsModels : List classifications models
+// (Beta) Returns all custom classifications models associated with this service instance.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListClassificationsModels(listClassificationsModelsOptions *ListClassificationsModelsOptions) (result *ListClassificationsModelsResponse, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.ListClassificationsModelsWithContext(context.Background(), listClassificationsModelsOptions)
+}
+
+// ListClassificationsModelsWithContext is an alternate form of the ListClassificationsModels method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListClassificationsModelsWithContext(ctx context.Context, listClassificationsModelsOptions *ListClassificationsModelsOptions) (result *ListClassificationsModelsResponse, response *core.DetailedResponse, err error) {
+	err = core.ValidateStruct(listClassificationsModelsOptions, "listClassificationsModelsOptions")
+	if err != nil {
+		return
+	}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/classifications`, nil)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range listClassificationsModelsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "ListClassificationsModels")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListClassificationsModelsResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// GetClassificationsModel : Get classifications model details
+// (Beta) Returns the status of the classifications model with the given model ID.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetClassificationsModel(getClassificationsModelOptions *GetClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.GetClassificationsModelWithContext(context.Background(), getClassificationsModelOptions)
+}
+
+// GetClassificationsModelWithContext is an alternate form of the GetClassificationsModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetClassificationsModelWithContext(ctx context.Context, getClassificationsModelOptions *GetClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(getClassificationsModelOptions, "getClassificationsModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(getClassificationsModelOptions, "getClassificationsModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *getClassificationsModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.GET)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/classifications/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range getClassificationsModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "GetClassificationsModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassificationsModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// UpdateClassificationsModel : Update classifications model
+// (Beta) Overwrites the training data associated with this custom classifications model and retrains the model. The new
+// model replaces the current deployment.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) UpdateClassificationsModel(updateClassificationsModelOptions *UpdateClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.UpdateClassificationsModelWithContext(context.Background(), updateClassificationsModelOptions)
+}
+
+// UpdateClassificationsModelWithContext is an alternate form of the UpdateClassificationsModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) UpdateClassificationsModelWithContext(ctx context.Context, updateClassificationsModelOptions *UpdateClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(updateClassificationsModelOptions, "updateClassificationsModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(updateClassificationsModelOptions, "updateClassificationsModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *updateClassificationsModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.PUT)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/classifications/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range updateClassificationsModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "UpdateClassificationsModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	builder.AddFormData("language", "", "", fmt.Sprint(*updateClassificationsModelOptions.Language))
+	builder.AddFormData("training_data", "filename",
+		core.StringNilMapper(updateClassificationsModelOptions.TrainingDataContentType), updateClassificationsModelOptions.TrainingData)
+	if updateClassificationsModelOptions.Name != nil {
+		builder.AddFormData("name", "", "", fmt.Sprint(*updateClassificationsModelOptions.Name))
+	}
+	if updateClassificationsModelOptions.Description != nil {
+		builder.AddFormData("description", "", "", fmt.Sprint(*updateClassificationsModelOptions.Description))
+	}
+	if updateClassificationsModelOptions.ModelVersion != nil {
+		builder.AddFormData("model_version", "", "", fmt.Sprint(*updateClassificationsModelOptions.ModelVersion))
+	}
+	if updateClassificationsModelOptions.WorkspaceID != nil {
+		builder.AddFormData("workspace_id", "", "", fmt.Sprint(*updateClassificationsModelOptions.WorkspaceID))
+	}
+	if updateClassificationsModelOptions.VersionDescription != nil {
+		builder.AddFormData("version_description", "", "", fmt.Sprint(*updateClassificationsModelOptions.VersionDescription))
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassificationsModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
+
+	return
+}
+
+// DeleteClassificationsModel : Delete classifications model
+// (Beta) Un-deploys the custom classifications model with the given model ID and deletes all associated customer data,
+// including any training data or binary artifacts.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteClassificationsModel(deleteClassificationsModelOptions *DeleteClassificationsModelOptions) (result *DeleteModelResults, response *core.DetailedResponse, err error) {
+	return naturalLanguageUnderstanding.DeleteClassificationsModelWithContext(context.Background(), deleteClassificationsModelOptions)
+}
+
+// DeleteClassificationsModelWithContext is an alternate form of the DeleteClassificationsModel method which supports a Context parameter
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteClassificationsModelWithContext(ctx context.Context, deleteClassificationsModelOptions *DeleteClassificationsModelOptions) (result *DeleteModelResults, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(deleteClassificationsModelOptions, "deleteClassificationsModelOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(deleteClassificationsModelOptions, "deleteClassificationsModelOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"model_id": *deleteClassificationsModelOptions.ModelID,
+	}
+
+	builder := core.NewRequestBuilder(core.DELETE)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = naturalLanguageUnderstanding.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(naturalLanguageUnderstanding.Service.Options.URL, `/v1/models/classifications/{model_id}`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range deleteClassificationsModelOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("natural-language-understanding", "V1", "DeleteClassificationsModel")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+
+	builder.AddQuery("version", fmt.Sprint(*naturalLanguageUnderstanding.Version))
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = naturalLanguageUnderstanding.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteModelResults)
+		if err != nil {
+			return
+		}
+		response.Result = result
+	}
 
 	return
 }
@@ -421,6 +1446,9 @@ type AnalysisResults struct {
 
 	// The categories that the service assigned to the analyzed text.
 	Categories []CategoriesResult `json:"categories,omitempty"`
+
+	// The classifications assigned to the analyzed text.
+	Classifications []ClassificationsResult `json:"classifications,omitempty"`
 
 	// The anger, disgust, fear, joy, or sadness conveyed by the content.
 	Emotion *EmotionResult `json:"emotion,omitempty"`
@@ -473,6 +1501,10 @@ func UnmarshalAnalysisResults(m map[string]json.RawMessage, result interface{}) 
 		return
 	}
 	err = core.UnmarshalModel(m, "categories", &obj.Categories, UnmarshalCategoriesResult)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "classifications", &obj.Classifications, UnmarshalClassificationsResult)
 	if err != nil {
 		return
 	}
@@ -538,40 +1570,40 @@ func UnmarshalAnalysisResultsUsage(m map[string]json.RawMessage, result interfac
 // AnalyzeOptions : The Analyze options.
 type AnalyzeOptions struct {
 	// Specific features to analyze the document for.
-	Features *Features `json:"features" validate:"required"`
+	Features *Features `validate:"required"`
 
 	// The plain text to analyze. One of the `text`, `html`, or `url` parameters is required.
-	Text *string `json:"text,omitempty"`
+	Text *string
 
 	// The HTML file to analyze. One of the `text`, `html`, or `url` parameters is required.
-	HTML *string `json:"html,omitempty"`
+	HTML *string
 
 	// The webpage to analyze. One of the `text`, `html`, or `url` parameters is required.
-	URL *string `json:"url,omitempty"`
+	URL *string
 
 	// Set this to `false` to disable webpage cleaning. For more information about webpage cleaning, see [Analyzing
 	// webpages](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages).
-	Clean *bool `json:"clean,omitempty"`
+	Clean *bool
 
 	// An [XPath
 	// query](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages#xpath)
 	// to perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text before it is
 	// analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
-	Xpath *string `json:"xpath,omitempty"`
+	Xpath *string
 
 	// Whether to use raw HTML content if text cleaning fails.
-	FallbackToRaw *bool `json:"fallback_to_raw,omitempty"`
+	FallbackToRaw *bool
 
 	// Whether or not to return the analyzed text.
-	ReturnAnalyzedText *bool `json:"return_analyzed_text,omitempty"`
+	ReturnAnalyzedText *bool
 
 	// ISO 639-1 code that specifies the language of your text. This overrides automatic language detection. Language
 	// support differs depending on the features you include in your analysis. For more information, see [Language
 	// support](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-language-support).
-	Language *string `json:"language,omitempty"`
+	Language *string
 
 	// Sets the maximum number of characters that are processed by the service.
-	LimitTextCharacters *int64 `json:"limit_text_characters,omitempty"`
+	LimitTextCharacters *int64
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -667,6 +1699,141 @@ func UnmarshalAuthor(m map[string]json.RawMessage, result interface{}) (err erro
 	return
 }
 
+// CategoriesModel : Categories model.
+type CategoriesModel struct {
+	// An optional name for the model.
+	Name *string `json:"name,omitempty"`
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{} `json:"user_metadata,omitempty"`
+
+	// The 2-letter language code of this model.
+	Language *string `json:"language" validate:"required"`
+
+	// An optional description of the model.
+	Description *string `json:"description,omitempty"`
+
+	// An optional version string.
+	ModelVersion *string `json:"model_version,omitempty"`
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string `json:"workspace_id,omitempty"`
+
+	// The description of the version.
+	VersionDescription *string `json:"version_description,omitempty"`
+
+	// The service features that are supported by the custom model.
+	Features []string `json:"features,omitempty"`
+
+	// When the status is `available`, the model is ready to use.
+	Status *string `json:"status" validate:"required"`
+
+	// Unique model ID.
+	ModelID *string `json:"model_id" validate:"required"`
+
+	// dateTime indicating when the model was created.
+	Created *strfmt.DateTime `json:"created" validate:"required"`
+
+	Notices []Notice `json:"notices,omitempty"`
+
+	// dateTime of last successful model training.
+	LastTrained *strfmt.DateTime `json:"last_trained,omitempty"`
+
+	// dateTime of last successful model deployment.
+	LastDeployed *strfmt.DateTime `json:"last_deployed,omitempty"`
+}
+
+// Constants associated with the CategoriesModel.Status property.
+// When the status is `available`, the model is ready to use.
+const (
+	CategoriesModelStatusAvailableConst = "available"
+	CategoriesModelStatusDeletedConst   = "deleted"
+	CategoriesModelStatusDeployingConst = "deploying"
+	CategoriesModelStatusErrorConst     = "error"
+	CategoriesModelStatusStartingConst  = "starting"
+	CategoriesModelStatusTrainingConst  = "training"
+)
+
+// UnmarshalCategoriesModel unmarshals an instance of CategoriesModel from the specified map of raw messages.
+func UnmarshalCategoriesModel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CategoriesModel)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_metadata", &obj.UserMetadata)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model_version", &obj.ModelVersion)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "workspace_id", &obj.WorkspaceID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "version_description", &obj.VersionDescription)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "features", &obj.Features)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model_id", &obj.ModelID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "notices", &obj.Notices, UnmarshalNotice)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "last_trained", &obj.LastTrained)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "last_deployed", &obj.LastDeployed)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// CategoriesModelList : List of categories models.
+type CategoriesModelList struct {
+	// The categories models.
+	Models []CategoriesModel `json:"models,omitempty"`
+}
+
+// UnmarshalCategoriesModelList unmarshals an instance of CategoriesModelList from the specified map of raw messages.
+func UnmarshalCategoriesModelList(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(CategoriesModelList)
+	err = core.UnmarshalModel(m, "models", &obj.Models, UnmarshalCategoriesModel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // CategoriesOptions : Returns a five-level taxonomy of the content. The top three categories are returned.
 //
 // Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
@@ -678,14 +1845,9 @@ type CategoriesOptions struct {
 	// Maximum number of categories to return.
 	Limit *int64 `json:"limit,omitempty"`
 
-	// Enter a [custom
+	// (Beta) Enter a [custom
 	// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
-	// ID to override the standard categories model.
-	//
-	// The custom categories experimental feature will be retired on 19 December 2019. On that date, deployed custom
-	// categories models will no longer be accessible in Natural Language Understanding. The feature will be removed from
-	// Knowledge Studio on an earlier date. Custom categories models will no longer be accessible in Knowledge Studio on 17
-	// December 2019.
+	// ID to override the standard categories model. **This is available only for English categories.**.
 	Model *string `json:"model,omitempty"`
 }
 
@@ -776,6 +1938,186 @@ func UnmarshalCategoriesResultExplanation(m map[string]json.RawMessage, result i
 	return
 }
 
+// ClassificationsModel : Classifications model.
+type ClassificationsModel struct {
+	// An optional name for the model.
+	Name *string `json:"name,omitempty"`
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{} `json:"user_metadata,omitempty"`
+
+	// The 2-letter language code of this model.
+	Language *string `json:"language" validate:"required"`
+
+	// An optional description of the model.
+	Description *string `json:"description,omitempty"`
+
+	// An optional version string.
+	ModelVersion *string `json:"model_version,omitempty"`
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string `json:"workspace_id,omitempty"`
+
+	// The description of the version.
+	VersionDescription *string `json:"version_description,omitempty"`
+
+	// The service features that are supported by the custom model.
+	Features []string `json:"features,omitempty"`
+
+	// When the status is `available`, the model is ready to use.
+	Status *string `json:"status" validate:"required"`
+
+	// Unique model ID.
+	ModelID *string `json:"model_id" validate:"required"`
+
+	// dateTime indicating when the model was created.
+	Created *strfmt.DateTime `json:"created" validate:"required"`
+
+	Notices []Notice `json:"notices,omitempty"`
+
+	// dateTime of last successful model training.
+	LastTrained *strfmt.DateTime `json:"last_trained,omitempty"`
+
+	// dateTime of last successful model deployment.
+	LastDeployed *strfmt.DateTime `json:"last_deployed,omitempty"`
+}
+
+// Constants associated with the ClassificationsModel.Status property.
+// When the status is `available`, the model is ready to use.
+const (
+	ClassificationsModelStatusAvailableConst = "available"
+	ClassificationsModelStatusDeletedConst   = "deleted"
+	ClassificationsModelStatusDeployingConst = "deploying"
+	ClassificationsModelStatusErrorConst     = "error"
+	ClassificationsModelStatusStartingConst  = "starting"
+	ClassificationsModelStatusTrainingConst  = "training"
+)
+
+// UnmarshalClassificationsModel unmarshals an instance of ClassificationsModel from the specified map of raw messages.
+func UnmarshalClassificationsModel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ClassificationsModel)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_metadata", &obj.UserMetadata)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model_version", &obj.ModelVersion)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "workspace_id", &obj.WorkspaceID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "version_description", &obj.VersionDescription)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "features", &obj.Features)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model_id", &obj.ModelID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "notices", &obj.Notices, UnmarshalNotice)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "last_trained", &obj.LastTrained)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "last_deployed", &obj.LastDeployed)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ClassificationsModelList : List of classifications models.
+type ClassificationsModelList struct {
+	// The classifications models.
+	Models []ClassificationsModel `json:"models,omitempty"`
+}
+
+// UnmarshalClassificationsModelList unmarshals an instance of ClassificationsModelList from the specified map of raw messages.
+func UnmarshalClassificationsModelList(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ClassificationsModelList)
+	err = core.UnmarshalModel(m, "models", &obj.Models, UnmarshalClassificationsModel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ClassificationsOptions : Returns text classifications for the content.
+//
+// Supported languages: English only.
+type ClassificationsOptions struct {
+	// (Beta) Enter a [custom
+	// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// ID of the classification model to be used.
+	Model *string `json:"model,omitempty"`
+}
+
+// UnmarshalClassificationsOptions unmarshals an instance of ClassificationsOptions from the specified map of raw messages.
+func UnmarshalClassificationsOptions(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ClassificationsOptions)
+	err = core.UnmarshalPrimitive(m, "model", &obj.Model)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ClassificationsResult : A classification of the analyzed text.
+type ClassificationsResult struct {
+	// Classification assigned to the text.
+	ClassName *string `json:"class_name,omitempty"`
+
+	// Confidence score for the classification. Higher values indicate greater confidence.
+	Confidence *float64 `json:"confidence,omitempty"`
+}
+
+// UnmarshalClassificationsResult unmarshals an instance of ClassificationsResult from the specified map of raw messages.
+func UnmarshalClassificationsResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ClassificationsResult)
+	err = core.UnmarshalPrimitive(m, "class_name", &obj.ClassName)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ConceptsOptions : Returns high-level concepts in the content. For example, a research paper about deep learning might return the
 // concept, "Artificial Intelligence" although the term is not mentioned.
 //
@@ -827,10 +2169,363 @@ func UnmarshalConceptsResult(m map[string]json.RawMessage, result interface{}) (
 	return
 }
 
+// CreateCategoriesModelOptions : The CreateCategoriesModel options.
+type CreateCategoriesModelOptions struct {
+	// The 2-letter language code of this model.
+	Language *string `validate:"required"`
+
+	// Training data in JSON format. For more information, see [Categories training data
+	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories##categories-training-data-requirements).
+	TrainingData io.ReadCloser `validate:"required"`
+
+	// The content type of trainingData.
+	TrainingDataContentType *string
+
+	// An optional name for the model.
+	Name *string
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{}
+
+	// An optional description of the model.
+	Description *string
+
+	// An optional version string.
+	ModelVersion *string
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string
+
+	// The description of the version.
+	VersionDescription *string
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewCreateCategoriesModelOptions : Instantiate CreateCategoriesModelOptions
+func (*NaturalLanguageUnderstandingV1) NewCreateCategoriesModelOptions(language string, trainingData io.ReadCloser) *CreateCategoriesModelOptions {
+	return &CreateCategoriesModelOptions{
+		Language:     core.StringPtr(language),
+		TrainingData: trainingData,
+	}
+}
+
+// SetLanguage : Allow user to set Language
+func (options *CreateCategoriesModelOptions) SetLanguage(language string) *CreateCategoriesModelOptions {
+	options.Language = core.StringPtr(language)
+	return options
+}
+
+// SetTrainingData : Allow user to set TrainingData
+func (options *CreateCategoriesModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateCategoriesModelOptions {
+	options.TrainingData = trainingData
+	return options
+}
+
+// SetTrainingDataContentType : Allow user to set TrainingDataContentType
+func (options *CreateCategoriesModelOptions) SetTrainingDataContentType(trainingDataContentType string) *CreateCategoriesModelOptions {
+	options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *CreateCategoriesModelOptions) SetName(name string) *CreateCategoriesModelOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetUserMetadata : Allow user to set UserMetadata
+func (options *CreateCategoriesModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateCategoriesModelOptions {
+	options.UserMetadata = userMetadata
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateCategoriesModelOptions) SetDescription(description string) *CreateCategoriesModelOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetModelVersion : Allow user to set ModelVersion
+func (options *CreateCategoriesModelOptions) SetModelVersion(modelVersion string) *CreateCategoriesModelOptions {
+	options.ModelVersion = core.StringPtr(modelVersion)
+	return options
+}
+
+// SetWorkspaceID : Allow user to set WorkspaceID
+func (options *CreateCategoriesModelOptions) SetWorkspaceID(workspaceID string) *CreateCategoriesModelOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
+	return options
+}
+
+// SetVersionDescription : Allow user to set VersionDescription
+func (options *CreateCategoriesModelOptions) SetVersionDescription(versionDescription string) *CreateCategoriesModelOptions {
+	options.VersionDescription = core.StringPtr(versionDescription)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateCategoriesModelOptions) SetHeaders(param map[string]string) *CreateCategoriesModelOptions {
+	options.Headers = param
+	return options
+}
+
+// CreateClassificationsModelOptions : The CreateClassificationsModel options.
+type CreateClassificationsModelOptions struct {
+	// The 2-letter language code of this model.
+	Language *string `validate:"required"`
+
+	// Training data in JSON format. For more information, see [Classifications training data
+	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-classifications#classification-training-data-requirements).
+	TrainingData io.ReadCloser `validate:"required"`
+
+	// The content type of trainingData.
+	TrainingDataContentType *string
+
+	// An optional name for the model.
+	Name *string
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{}
+
+	// An optional description of the model.
+	Description *string
+
+	// An optional version string.
+	ModelVersion *string
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string
+
+	// The description of the version.
+	VersionDescription *string
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewCreateClassificationsModelOptions : Instantiate CreateClassificationsModelOptions
+func (*NaturalLanguageUnderstandingV1) NewCreateClassificationsModelOptions(language string, trainingData io.ReadCloser) *CreateClassificationsModelOptions {
+	return &CreateClassificationsModelOptions{
+		Language:     core.StringPtr(language),
+		TrainingData: trainingData,
+	}
+}
+
+// SetLanguage : Allow user to set Language
+func (options *CreateClassificationsModelOptions) SetLanguage(language string) *CreateClassificationsModelOptions {
+	options.Language = core.StringPtr(language)
+	return options
+}
+
+// SetTrainingData : Allow user to set TrainingData
+func (options *CreateClassificationsModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateClassificationsModelOptions {
+	options.TrainingData = trainingData
+	return options
+}
+
+// SetTrainingDataContentType : Allow user to set TrainingDataContentType
+func (options *CreateClassificationsModelOptions) SetTrainingDataContentType(trainingDataContentType string) *CreateClassificationsModelOptions {
+	options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *CreateClassificationsModelOptions) SetName(name string) *CreateClassificationsModelOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetUserMetadata : Allow user to set UserMetadata
+func (options *CreateClassificationsModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateClassificationsModelOptions {
+	options.UserMetadata = userMetadata
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateClassificationsModelOptions) SetDescription(description string) *CreateClassificationsModelOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetModelVersion : Allow user to set ModelVersion
+func (options *CreateClassificationsModelOptions) SetModelVersion(modelVersion string) *CreateClassificationsModelOptions {
+	options.ModelVersion = core.StringPtr(modelVersion)
+	return options
+}
+
+// SetWorkspaceID : Allow user to set WorkspaceID
+func (options *CreateClassificationsModelOptions) SetWorkspaceID(workspaceID string) *CreateClassificationsModelOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
+	return options
+}
+
+// SetVersionDescription : Allow user to set VersionDescription
+func (options *CreateClassificationsModelOptions) SetVersionDescription(versionDescription string) *CreateClassificationsModelOptions {
+	options.VersionDescription = core.StringPtr(versionDescription)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateClassificationsModelOptions) SetHeaders(param map[string]string) *CreateClassificationsModelOptions {
+	options.Headers = param
+	return options
+}
+
+// CreateSentimentModelOptions : The CreateSentimentModel options.
+type CreateSentimentModelOptions struct {
+	// The 2-letter language code of this model.
+	Language *string `validate:"required"`
+
+	// Training data in CSV format. For more information, see [Sentiment training data
+	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-custom-sentiment#sentiment-training-data-requirements).
+	TrainingData io.ReadCloser `validate:"required"`
+
+	// An optional name for the model.
+	Name *string
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{}
+
+	// An optional description of the model.
+	Description *string
+
+	// An optional version string.
+	ModelVersion *string
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string
+
+	// The description of the version.
+	VersionDescription *string
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewCreateSentimentModelOptions : Instantiate CreateSentimentModelOptions
+func (*NaturalLanguageUnderstandingV1) NewCreateSentimentModelOptions(language string, trainingData io.ReadCloser) *CreateSentimentModelOptions {
+	return &CreateSentimentModelOptions{
+		Language:     core.StringPtr(language),
+		TrainingData: trainingData,
+	}
+}
+
+// SetLanguage : Allow user to set Language
+func (options *CreateSentimentModelOptions) SetLanguage(language string) *CreateSentimentModelOptions {
+	options.Language = core.StringPtr(language)
+	return options
+}
+
+// SetTrainingData : Allow user to set TrainingData
+func (options *CreateSentimentModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateSentimentModelOptions {
+	options.TrainingData = trainingData
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *CreateSentimentModelOptions) SetName(name string) *CreateSentimentModelOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetUserMetadata : Allow user to set UserMetadata
+func (options *CreateSentimentModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateSentimentModelOptions {
+	options.UserMetadata = userMetadata
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *CreateSentimentModelOptions) SetDescription(description string) *CreateSentimentModelOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetModelVersion : Allow user to set ModelVersion
+func (options *CreateSentimentModelOptions) SetModelVersion(modelVersion string) *CreateSentimentModelOptions {
+	options.ModelVersion = core.StringPtr(modelVersion)
+	return options
+}
+
+// SetWorkspaceID : Allow user to set WorkspaceID
+func (options *CreateSentimentModelOptions) SetWorkspaceID(workspaceID string) *CreateSentimentModelOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
+	return options
+}
+
+// SetVersionDescription : Allow user to set VersionDescription
+func (options *CreateSentimentModelOptions) SetVersionDescription(versionDescription string) *CreateSentimentModelOptions {
+	options.VersionDescription = core.StringPtr(versionDescription)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *CreateSentimentModelOptions) SetHeaders(param map[string]string) *CreateSentimentModelOptions {
+	options.Headers = param
+	return options
+}
+
+// DeleteCategoriesModelOptions : The DeleteCategoriesModel options.
+type DeleteCategoriesModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewDeleteCategoriesModelOptions : Instantiate DeleteCategoriesModelOptions
+func (*NaturalLanguageUnderstandingV1) NewDeleteCategoriesModelOptions(modelID string) *DeleteCategoriesModelOptions {
+	return &DeleteCategoriesModelOptions{
+		ModelID: core.StringPtr(modelID),
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *DeleteCategoriesModelOptions) SetModelID(modelID string) *DeleteCategoriesModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteCategoriesModelOptions) SetHeaders(param map[string]string) *DeleteCategoriesModelOptions {
+	options.Headers = param
+	return options
+}
+
+// DeleteClassificationsModelOptions : The DeleteClassificationsModel options.
+type DeleteClassificationsModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewDeleteClassificationsModelOptions : Instantiate DeleteClassificationsModelOptions
+func (*NaturalLanguageUnderstandingV1) NewDeleteClassificationsModelOptions(modelID string) *DeleteClassificationsModelOptions {
+	return &DeleteClassificationsModelOptions{
+		ModelID: core.StringPtr(modelID),
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *DeleteClassificationsModelOptions) SetModelID(modelID string) *DeleteClassificationsModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteClassificationsModelOptions) SetHeaders(param map[string]string) *DeleteClassificationsModelOptions {
+	options.Headers = param
+	return options
+}
+
 // DeleteModelOptions : The DeleteModel options.
 type DeleteModelOptions struct {
 	// Model ID of the model to delete.
-	ModelID *string `json:"model_id" validate:"required,ne="`
+	ModelID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -870,6 +2565,34 @@ func UnmarshalDeleteModelResults(m map[string]json.RawMessage, result interface{
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
+}
+
+// DeleteSentimentModelOptions : The DeleteSentimentModel options.
+type DeleteSentimentModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewDeleteSentimentModelOptions : Instantiate DeleteSentimentModelOptions
+func (*NaturalLanguageUnderstandingV1) NewDeleteSentimentModelOptions(modelID string) *DeleteSentimentModelOptions {
+	return &DeleteSentimentModelOptions{
+		ModelID: core.StringPtr(modelID),
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *DeleteSentimentModelOptions) SetModelID(modelID string) *DeleteSentimentModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *DeleteSentimentModelOptions) SetHeaders(param map[string]string) *DeleteSentimentModelOptions {
+	options.Headers = param
+	return options
 }
 
 // DisambiguationResult : Disambiguation information for the entity.
@@ -1221,6 +2944,11 @@ func UnmarshalFeatureSentimentResults(m map[string]json.RawMessage, result inter
 
 // Features : Analysis features and options.
 type Features struct {
+	// Returns text classifications for the content.
+	//
+	// Supported languages: English only.
+	Classifications *ClassificationsOptions `json:"classifications,omitempty"`
+
 	// Returns high-level concepts in the content. For example, a research paper about deep learning might return the
 	// concept, "Artificial Intelligence" although the term is not mentioned.
 	//
@@ -1270,6 +2998,11 @@ type Features struct {
 	//  Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish.
 	Sentiment *SentimentOptions `json:"sentiment,omitempty"`
 
+	// (Experimental) Returns a summary of content.
+	//
+	// Supported languages: English only.
+	Summarization *SummarizationOptions `json:"summarization,omitempty"`
+
 	// Returns a five-level taxonomy of the content. The top three categories are returned.
 	//
 	// Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
@@ -1282,6 +3015,10 @@ type Features struct {
 // UnmarshalFeatures unmarshals an instance of Features from the specified map of raw messages.
 func UnmarshalFeatures(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Features)
+	err = core.UnmarshalModel(m, "classifications", &obj.Classifications, UnmarshalClassificationsOptions)
+	if err != nil {
+		return
+	}
 	err = core.UnmarshalModel(m, "concepts", &obj.Concepts, UnmarshalConceptsOptions)
 	if err != nil {
 		return
@@ -1298,7 +3035,7 @@ func UnmarshalFeatures(m map[string]json.RawMessage, result interface{}) (err er
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "metadata", &obj.Metadata)
+	err = core.UnmarshalModel(m, "metadata", &obj.Metadata, UnmarshalMetadataOptions)
 	if err != nil {
 		return
 	}
@@ -1311,6 +3048,10 @@ func UnmarshalFeatures(m map[string]json.RawMessage, result interface{}) (err er
 		return
 	}
 	err = core.UnmarshalModel(m, "sentiment", &obj.Sentiment, UnmarshalSentimentOptions)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "summarization", &obj.Summarization, UnmarshalSummarizationOptions)
 	if err != nil {
 		return
 	}
@@ -1386,6 +3127,90 @@ func UnmarshalFeed(m map[string]json.RawMessage, result interface{}) (err error)
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
+}
+
+// GetCategoriesModelOptions : The GetCategoriesModel options.
+type GetCategoriesModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewGetCategoriesModelOptions : Instantiate GetCategoriesModelOptions
+func (*NaturalLanguageUnderstandingV1) NewGetCategoriesModelOptions(modelID string) *GetCategoriesModelOptions {
+	return &GetCategoriesModelOptions{
+		ModelID: core.StringPtr(modelID),
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *GetCategoriesModelOptions) SetModelID(modelID string) *GetCategoriesModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetCategoriesModelOptions) SetHeaders(param map[string]string) *GetCategoriesModelOptions {
+	options.Headers = param
+	return options
+}
+
+// GetClassificationsModelOptions : The GetClassificationsModel options.
+type GetClassificationsModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewGetClassificationsModelOptions : Instantiate GetClassificationsModelOptions
+func (*NaturalLanguageUnderstandingV1) NewGetClassificationsModelOptions(modelID string) *GetClassificationsModelOptions {
+	return &GetClassificationsModelOptions{
+		ModelID: core.StringPtr(modelID),
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *GetClassificationsModelOptions) SetModelID(modelID string) *GetClassificationsModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetClassificationsModelOptions) SetHeaders(param map[string]string) *GetClassificationsModelOptions {
+	options.Headers = param
+	return options
+}
+
+// GetSentimentModelOptions : The GetSentimentModel options.
+type GetSentimentModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewGetSentimentModelOptions : Instantiate GetSentimentModelOptions
+func (*NaturalLanguageUnderstandingV1) NewGetSentimentModelOptions(modelID string) *GetSentimentModelOptions {
+	return &GetSentimentModelOptions{
+		ModelID: core.StringPtr(modelID),
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *GetSentimentModelOptions) SetModelID(modelID string) *GetSentimentModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *GetSentimentModelOptions) SetHeaders(param map[string]string) *GetSentimentModelOptions {
+	options.Headers = param
+	return options
 }
 
 // KeywordsOptions : Returns important keywords in the content.
@@ -1466,6 +3291,58 @@ func UnmarshalKeywordsResult(m map[string]json.RawMessage, result interface{}) (
 	return
 }
 
+// ListCategoriesModelsOptions : The ListCategoriesModels options.
+type ListCategoriesModelsOptions struct {
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewListCategoriesModelsOptions : Instantiate ListCategoriesModelsOptions
+func (*NaturalLanguageUnderstandingV1) NewListCategoriesModelsOptions() *ListCategoriesModelsOptions {
+	return &ListCategoriesModelsOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListCategoriesModelsOptions) SetHeaders(param map[string]string) *ListCategoriesModelsOptions {
+	options.Headers = param
+	return options
+}
+
+// ListClassificationsModelsOptions : The ListClassificationsModels options.
+type ListClassificationsModelsOptions struct {
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewListClassificationsModelsOptions : Instantiate ListClassificationsModelsOptions
+func (*NaturalLanguageUnderstandingV1) NewListClassificationsModelsOptions() *ListClassificationsModelsOptions {
+	return &ListClassificationsModelsOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListClassificationsModelsOptions) SetHeaders(param map[string]string) *ListClassificationsModelsOptions {
+	options.Headers = param
+	return options
+}
+
+// ListClassificationsModelsResponse : ListClassificationsModelsResponse struct
+type ListClassificationsModelsResponse struct {
+	Models []ClassificationsModelList `json:"models,omitempty"`
+}
+
+// UnmarshalListClassificationsModelsResponse unmarshals an instance of ListClassificationsModelsResponse from the specified map of raw messages.
+func UnmarshalListClassificationsModelsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ListClassificationsModelsResponse)
+	err = core.UnmarshalModel(m, "models", &obj.Models, UnmarshalClassificationsModelList)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // ListModelsOptions : The ListModels options.
 type ListModelsOptions struct {
 
@@ -1497,6 +3374,52 @@ func UnmarshalListModelsResults(m map[string]json.RawMessage, result interface{}
 	if err != nil {
 		return
 	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ListSentimentModelsOptions : The ListSentimentModels options.
+type ListSentimentModelsOptions struct {
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewListSentimentModelsOptions : Instantiate ListSentimentModelsOptions
+func (*NaturalLanguageUnderstandingV1) NewListSentimentModelsOptions() *ListSentimentModelsOptions {
+	return &ListSentimentModelsOptions{}
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *ListSentimentModelsOptions) SetHeaders(param map[string]string) *ListSentimentModelsOptions {
+	options.Headers = param
+	return options
+}
+
+// ListSentimentModelsResponse : ListSentimentModelsResponse struct
+type ListSentimentModelsResponse struct {
+	Models []SentimentModel `json:"models,omitempty"`
+}
+
+// UnmarshalListSentimentModelsResponse unmarshals an instance of ListSentimentModelsResponse from the specified map of raw messages.
+func UnmarshalListSentimentModelsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ListSentimentModelsResponse)
+	err = core.UnmarshalModel(m, "models", &obj.Models, UnmarshalSentimentModel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// MetadataOptions : Returns information from the document, including author name, title, RSS/ATOM feeds, prominent page image, and
+// publication date. Supports URL and HTML input types only.
+type MetadataOptions struct {
+}
+
+// UnmarshalMetadataOptions unmarshals an instance of MetadataOptions from the specified map of raw messages.
+func UnmarshalMetadataOptions(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(MetadataOptions)
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
@@ -1578,6 +3501,23 @@ func UnmarshalModel(m map[string]json.RawMessage, result interface{}) (err error
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// Notice : A list of messages describing model training issues when model status is `error`.
+type Notice struct {
+	// Describes deficiencies or inconsistencies in training data.
+	Message *string `json:"message,omitempty"`
+}
+
+// UnmarshalNotice unmarshals an instance of Notice from the specified map of raw messages.
+func UnmarshalNotice(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(Notice)
+	err = core.UnmarshalPrimitive(m, "message", &obj.Message)
 	if err != nil {
 		return
 	}
@@ -1947,6 +3887,124 @@ func UnmarshalSentenceResult(m map[string]json.RawMessage, result interface{}) (
 	return
 }
 
+// SentimentModel : SentimentModel struct
+type SentimentModel struct {
+	// The service features that are supported by the custom model.
+	Features []string `json:"features,omitempty"`
+
+	// When the status is `available`, the model is ready to use.
+	Status *string `json:"status,omitempty"`
+
+	// Unique model ID.
+	ModelID *string `json:"model_id,omitempty"`
+
+	// dateTime indicating when the model was created.
+	Created *strfmt.DateTime `json:"created,omitempty"`
+
+	// dateTime of last successful model training.
+	LastTrained *strfmt.DateTime `json:"last_trained,omitempty"`
+
+	// dateTime of last successful model deployment.
+	LastDeployed *strfmt.DateTime `json:"last_deployed,omitempty"`
+
+	// A name for the model.
+	Name *string `json:"name,omitempty"`
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{} `json:"user_metadata,omitempty"`
+
+	// The 2-letter language code of this model.
+	Language *string `json:"language,omitempty"`
+
+	// An optional description of the model.
+	Description *string `json:"description,omitempty"`
+
+	// An optional version string.
+	ModelVersion *string `json:"model_version,omitempty"`
+
+	Notices []Notice `json:"notices,omitempty"`
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string `json:"workspace_id,omitempty"`
+
+	// The description of the version.
+	VersionDescription *string `json:"version_description,omitempty"`
+}
+
+// Constants associated with the SentimentModel.Status property.
+// When the status is `available`, the model is ready to use.
+const (
+	SentimentModelStatusAvailableConst = "available"
+	SentimentModelStatusDeletedConst   = "deleted"
+	SentimentModelStatusDeployingConst = "deploying"
+	SentimentModelStatusErrorConst     = "error"
+	SentimentModelStatusStartingConst  = "starting"
+	SentimentModelStatusTrainingConst  = "training"
+)
+
+// UnmarshalSentimentModel unmarshals an instance of SentimentModel from the specified map of raw messages.
+func UnmarshalSentimentModel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SentimentModel)
+	err = core.UnmarshalPrimitive(m, "features", &obj.Features)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model_id", &obj.ModelID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "created", &obj.Created)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "last_trained", &obj.LastTrained)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "last_deployed", &obj.LastDeployed)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_metadata", &obj.UserMetadata)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "language", &obj.Language)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model_version", &obj.ModelVersion)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "notices", &obj.Notices, UnmarshalNotice)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "workspace_id", &obj.WorkspaceID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "version_description", &obj.VersionDescription)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // SentimentOptions : Analyzes the general sentiment of your content or the sentiment toward specific target phrases. You can analyze
 // sentiment for detected entities with `entities.sentiment` and for keywords with `keywords.sentiment`.
 //
@@ -1957,6 +4015,12 @@ type SentimentOptions struct {
 
 	// Sentiment results will be returned for each target string that is found in the document.
 	Targets []string `json:"targets,omitempty"`
+
+	// (Beta) Enter a [custom
+	// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
+	// ID to override the standard sentiment model for all sentiment analysis operations in the request, including targeted
+	// sentiment for entities and keywords.
+	Model *string `json:"model,omitempty"`
 }
 
 // UnmarshalSentimentOptions unmarshals an instance of SentimentOptions from the specified map of raw messages.
@@ -1967,6 +4031,10 @@ func UnmarshalSentimentOptions(m map[string]json.RawMessage, result interface{})
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "targets", &obj.Targets)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "model", &obj.Model)
 	if err != nil {
 		return
 	}
@@ -1991,6 +4059,25 @@ func UnmarshalSentimentResult(m map[string]json.RawMessage, result interface{}) 
 		return
 	}
 	err = core.UnmarshalModel(m, "targets", &obj.Targets, UnmarshalTargetedSentimentResults)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// SummarizationOptions : (Experimental) Returns a summary of content.
+//
+// Supported languages: English only.
+type SummarizationOptions struct {
+	// Maximum number of summary sentences to return.
+	Limit *int64 `json:"limit,omitempty"`
+}
+
+// UnmarshalSummarizationOptions unmarshals an instance of SummarizationOptions from the specified map of raw messages.
+func UnmarshalSummarizationOptions(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SummarizationOptions)
+	err = core.UnmarshalPrimitive(m, "limit", &obj.Limit)
 	if err != nil {
 		return
 	}
@@ -2176,4 +4263,331 @@ func UnmarshalTokenResult(m map[string]json.RawMessage, result interface{}) (err
 	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
+}
+
+// UpdateCategoriesModelOptions : The UpdateCategoriesModel options.
+type UpdateCategoriesModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// The 2-letter language code of this model.
+	Language *string `validate:"required"`
+
+	// Training data in JSON format. For more information, see [Categories training data
+	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories##categories-training-data-requirements).
+	TrainingData io.ReadCloser `validate:"required"`
+
+	// The content type of trainingData.
+	TrainingDataContentType *string
+
+	// An optional name for the model.
+	Name *string
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{}
+
+	// An optional description of the model.
+	Description *string
+
+	// An optional version string.
+	ModelVersion *string
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string
+
+	// The description of the version.
+	VersionDescription *string
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewUpdateCategoriesModelOptions : Instantiate UpdateCategoriesModelOptions
+func (*NaturalLanguageUnderstandingV1) NewUpdateCategoriesModelOptions(modelID string, language string, trainingData io.ReadCloser) *UpdateCategoriesModelOptions {
+	return &UpdateCategoriesModelOptions{
+		ModelID:      core.StringPtr(modelID),
+		Language:     core.StringPtr(language),
+		TrainingData: trainingData,
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *UpdateCategoriesModelOptions) SetModelID(modelID string) *UpdateCategoriesModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetLanguage : Allow user to set Language
+func (options *UpdateCategoriesModelOptions) SetLanguage(language string) *UpdateCategoriesModelOptions {
+	options.Language = core.StringPtr(language)
+	return options
+}
+
+// SetTrainingData : Allow user to set TrainingData
+func (options *UpdateCategoriesModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateCategoriesModelOptions {
+	options.TrainingData = trainingData
+	return options
+}
+
+// SetTrainingDataContentType : Allow user to set TrainingDataContentType
+func (options *UpdateCategoriesModelOptions) SetTrainingDataContentType(trainingDataContentType string) *UpdateCategoriesModelOptions {
+	options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateCategoriesModelOptions) SetName(name string) *UpdateCategoriesModelOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetUserMetadata : Allow user to set UserMetadata
+func (options *UpdateCategoriesModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateCategoriesModelOptions {
+	options.UserMetadata = userMetadata
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *UpdateCategoriesModelOptions) SetDescription(description string) *UpdateCategoriesModelOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetModelVersion : Allow user to set ModelVersion
+func (options *UpdateCategoriesModelOptions) SetModelVersion(modelVersion string) *UpdateCategoriesModelOptions {
+	options.ModelVersion = core.StringPtr(modelVersion)
+	return options
+}
+
+// SetWorkspaceID : Allow user to set WorkspaceID
+func (options *UpdateCategoriesModelOptions) SetWorkspaceID(workspaceID string) *UpdateCategoriesModelOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
+	return options
+}
+
+// SetVersionDescription : Allow user to set VersionDescription
+func (options *UpdateCategoriesModelOptions) SetVersionDescription(versionDescription string) *UpdateCategoriesModelOptions {
+	options.VersionDescription = core.StringPtr(versionDescription)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateCategoriesModelOptions) SetHeaders(param map[string]string) *UpdateCategoriesModelOptions {
+	options.Headers = param
+	return options
+}
+
+// UpdateClassificationsModelOptions : The UpdateClassificationsModel options.
+type UpdateClassificationsModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// The 2-letter language code of this model.
+	Language *string `validate:"required"`
+
+	// Training data in JSON format. For more information, see [Classifications training data
+	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-classifications#classification-training-data-requirements).
+	TrainingData io.ReadCloser `validate:"required"`
+
+	// The content type of trainingData.
+	TrainingDataContentType *string
+
+	// An optional name for the model.
+	Name *string
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{}
+
+	// An optional description of the model.
+	Description *string
+
+	// An optional version string.
+	ModelVersion *string
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string
+
+	// The description of the version.
+	VersionDescription *string
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewUpdateClassificationsModelOptions : Instantiate UpdateClassificationsModelOptions
+func (*NaturalLanguageUnderstandingV1) NewUpdateClassificationsModelOptions(modelID string, language string, trainingData io.ReadCloser) *UpdateClassificationsModelOptions {
+	return &UpdateClassificationsModelOptions{
+		ModelID:      core.StringPtr(modelID),
+		Language:     core.StringPtr(language),
+		TrainingData: trainingData,
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *UpdateClassificationsModelOptions) SetModelID(modelID string) *UpdateClassificationsModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetLanguage : Allow user to set Language
+func (options *UpdateClassificationsModelOptions) SetLanguage(language string) *UpdateClassificationsModelOptions {
+	options.Language = core.StringPtr(language)
+	return options
+}
+
+// SetTrainingData : Allow user to set TrainingData
+func (options *UpdateClassificationsModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateClassificationsModelOptions {
+	options.TrainingData = trainingData
+	return options
+}
+
+// SetTrainingDataContentType : Allow user to set TrainingDataContentType
+func (options *UpdateClassificationsModelOptions) SetTrainingDataContentType(trainingDataContentType string) *UpdateClassificationsModelOptions {
+	options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateClassificationsModelOptions) SetName(name string) *UpdateClassificationsModelOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetUserMetadata : Allow user to set UserMetadata
+func (options *UpdateClassificationsModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateClassificationsModelOptions {
+	options.UserMetadata = userMetadata
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *UpdateClassificationsModelOptions) SetDescription(description string) *UpdateClassificationsModelOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetModelVersion : Allow user to set ModelVersion
+func (options *UpdateClassificationsModelOptions) SetModelVersion(modelVersion string) *UpdateClassificationsModelOptions {
+	options.ModelVersion = core.StringPtr(modelVersion)
+	return options
+}
+
+// SetWorkspaceID : Allow user to set WorkspaceID
+func (options *UpdateClassificationsModelOptions) SetWorkspaceID(workspaceID string) *UpdateClassificationsModelOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
+	return options
+}
+
+// SetVersionDescription : Allow user to set VersionDescription
+func (options *UpdateClassificationsModelOptions) SetVersionDescription(versionDescription string) *UpdateClassificationsModelOptions {
+	options.VersionDescription = core.StringPtr(versionDescription)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateClassificationsModelOptions) SetHeaders(param map[string]string) *UpdateClassificationsModelOptions {
+	options.Headers = param
+	return options
+}
+
+// UpdateSentimentModelOptions : The UpdateSentimentModel options.
+type UpdateSentimentModelOptions struct {
+	// ID of the model.
+	ModelID *string `validate:"required,ne="`
+
+	// The 2-letter language code of this model.
+	Language *string `validate:"required"`
+
+	// Training data in CSV format. For more information, see [Sentiment training data
+	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-custom-sentiment#sentiment-training-data-requirements).
+	TrainingData io.ReadCloser `validate:"required"`
+
+	// An optional name for the model.
+	Name *string
+
+	// An optional map of metadata key-value pairs to store with this model.
+	UserMetadata map[string]interface{}
+
+	// An optional description of the model.
+	Description *string
+
+	// An optional version string.
+	ModelVersion *string
+
+	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
+	WorkspaceID *string
+
+	// The description of the version.
+	VersionDescription *string
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewUpdateSentimentModelOptions : Instantiate UpdateSentimentModelOptions
+func (*NaturalLanguageUnderstandingV1) NewUpdateSentimentModelOptions(modelID string, language string, trainingData io.ReadCloser) *UpdateSentimentModelOptions {
+	return &UpdateSentimentModelOptions{
+		ModelID:      core.StringPtr(modelID),
+		Language:     core.StringPtr(language),
+		TrainingData: trainingData,
+	}
+}
+
+// SetModelID : Allow user to set ModelID
+func (options *UpdateSentimentModelOptions) SetModelID(modelID string) *UpdateSentimentModelOptions {
+	options.ModelID = core.StringPtr(modelID)
+	return options
+}
+
+// SetLanguage : Allow user to set Language
+func (options *UpdateSentimentModelOptions) SetLanguage(language string) *UpdateSentimentModelOptions {
+	options.Language = core.StringPtr(language)
+	return options
+}
+
+// SetTrainingData : Allow user to set TrainingData
+func (options *UpdateSentimentModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateSentimentModelOptions {
+	options.TrainingData = trainingData
+	return options
+}
+
+// SetName : Allow user to set Name
+func (options *UpdateSentimentModelOptions) SetName(name string) *UpdateSentimentModelOptions {
+	options.Name = core.StringPtr(name)
+	return options
+}
+
+// SetUserMetadata : Allow user to set UserMetadata
+func (options *UpdateSentimentModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateSentimentModelOptions {
+	options.UserMetadata = userMetadata
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *UpdateSentimentModelOptions) SetDescription(description string) *UpdateSentimentModelOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetModelVersion : Allow user to set ModelVersion
+func (options *UpdateSentimentModelOptions) SetModelVersion(modelVersion string) *UpdateSentimentModelOptions {
+	options.ModelVersion = core.StringPtr(modelVersion)
+	return options
+}
+
+// SetWorkspaceID : Allow user to set WorkspaceID
+func (options *UpdateSentimentModelOptions) SetWorkspaceID(workspaceID string) *UpdateSentimentModelOptions {
+	options.WorkspaceID = core.StringPtr(workspaceID)
+	return options
+}
+
+// SetVersionDescription : Allow user to set VersionDescription
+func (options *UpdateSentimentModelOptions) SetVersionDescription(versionDescription string) *UpdateSentimentModelOptions {
+	options.VersionDescription = core.StringPtr(versionDescription)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *UpdateSentimentModelOptions) SetHeaders(param map[string]string) *UpdateSentimentModelOptions {
+	options.Headers = param
+	return options
 }
