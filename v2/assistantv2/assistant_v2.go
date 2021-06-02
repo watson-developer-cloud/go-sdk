@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.22.0-937b9a1c-20201211-223043
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package assistantv2 : Operations and models for the AssistantV2 service
@@ -29,7 +29,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
@@ -45,7 +45,7 @@ type AssistantV2 struct {
 	Service *core.BaseService
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2020-04-01`.
+	// `2020-09-24`.
 	Version *string
 }
 
@@ -62,7 +62,7 @@ type AssistantV2Options struct {
 	Authenticator core.Authenticator
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2020-04-01`.
+	// `2020-09-24`.
 	Version *string `validate:"required"`
 }
 
@@ -223,11 +223,13 @@ func (assistant *AssistantV2) CreateSessionWithContext(ctx context.Context, crea
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSessionResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSessionResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -336,6 +338,9 @@ func (assistant *AssistantV2) MessageWithContext(ctx context.Context, messageOpt
 	if messageOptions.Context != nil {
 		body["context"] = messageOptions.Context
 	}
+	if messageOptions.UserID != nil {
+		body["user_id"] = messageOptions.UserID
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -351,11 +356,13 @@ func (assistant *AssistantV2) MessageWithContext(ctx context.Context, messageOpt
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMessageResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMessageResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -410,6 +417,9 @@ func (assistant *AssistantV2) MessageStatelessWithContext(ctx context.Context, m
 	if messageStatelessOptions.Context != nil {
 		body["context"] = messageStatelessOptions.Context
 	}
+	if messageStatelessOptions.UserID != nil {
+		body["user_id"] = messageStatelessOptions.UserID
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -425,11 +435,13 @@ func (assistant *AssistantV2) MessageStatelessWithContext(ctx context.Context, m
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMessageResponseStateless)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMessageResponseStateless)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -439,7 +451,7 @@ func (assistant *AssistantV2) MessageStatelessWithContext(ctx context.Context, m
 // entities recognized in each input. This method is useful for testing and comparing the performance of different
 // skills or skill versions.
 //
-// This method is available only with Premium plans.
+// This method is available only with Enterprise with Data Isolation plans.
 func (assistant *AssistantV2) BulkClassify(bulkClassifyOptions *BulkClassifyOptions) (result *BulkClassifyResponse, response *core.DetailedResponse, err error) {
 	return assistant.BulkClassifyWithContext(context.Background(), bulkClassifyOptions)
 }
@@ -499,11 +511,13 @@ func (assistant *AssistantV2) BulkClassifyWithContext(ctx context.Context, bulkC
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBulkClassifyResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBulkClassifyResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -511,7 +525,7 @@ func (assistant *AssistantV2) BulkClassifyWithContext(ctx context.Context, bulkC
 // ListLogs : List log events for an assistant
 // List the events from the log of an assistant.
 //
-// This method is available only with Premium plans.
+// This method requires Manager access, and is available only with Enterprise plans.
 func (assistant *AssistantV2) ListLogs(listLogsOptions *ListLogsOptions) (result *LogCollection, response *core.DetailedResponse, err error) {
 	return assistant.ListLogsWithContext(context.Background(), listLogsOptions)
 }
@@ -573,11 +587,13 @@ func (assistant *AssistantV2) ListLogsWithContext(ctx context.Context, listLogsO
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -590,7 +606,10 @@ func (assistant *AssistantV2) ListLogsWithContext(ctx context.Context, listLogsO
 // more information about personal data and customer IDs, see [Information
 // security](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security).
 //
-// This operation is limited to 4 requests per minute. For more information, see **Rate limiting**.
+// **Note:** This operation is intended only for deleting data associated with a single specific customer, not for
+// deleting data associated with multiple customers or for any other purpose. For more information, see [Labeling and
+// deleting data in Watson
+// Assistant](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security-gdpr-wa).
 func (assistant *AssistantV2) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	return assistant.DeleteUserDataWithContext(context.Background(), deleteUserDataOptions)
 }
@@ -658,10 +677,10 @@ func UnmarshalAgentAvailabilityMessage(m map[string]json.RawMessage, result inte
 type BulkClassifyOptions struct {
 	// Unique identifier of the skill. To find the skill ID in the Watson Assistant user interface, open the skill settings
 	// and click **API Details**.
-	SkillID *string `json:"skill_id" validate:"required,ne="`
+	SkillID *string `validate:"required,ne="`
 
 	// An array of input utterances to classify.
-	Input []BulkClassifyUtterance `json:"input,omitempty"`
+	Input []BulkClassifyUtterance
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -799,6 +818,60 @@ func UnmarshalCaptureGroup(m map[string]json.RawMessage, result interface{}) (er
 	return
 }
 
+// ChannelTransferInfo : Information used by an integration to transfer the conversation to a different channel.
+type ChannelTransferInfo struct {
+	// An object specifying target channels available for the transfer. Each property of this object represents an
+	// available transfer target. Currently, the only supported property is **chat**, representing the web chat
+	// integration.
+	Target *ChannelTransferTarget `json:"target" validate:"required"`
+}
+
+// UnmarshalChannelTransferInfo unmarshals an instance of ChannelTransferInfo from the specified map of raw messages.
+func UnmarshalChannelTransferInfo(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ChannelTransferInfo)
+	err = core.UnmarshalModel(m, "target", &obj.Target, UnmarshalChannelTransferTarget)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ChannelTransferTarget : An object specifying target channels available for the transfer. Each property of this object represents an available
+// transfer target. Currently, the only supported property is **chat**, representing the web chat integration.
+type ChannelTransferTarget struct {
+	// Information for transferring to the web chat integration.
+	Chat *ChannelTransferTargetChat `json:"chat,omitempty"`
+}
+
+// UnmarshalChannelTransferTarget unmarshals an instance of ChannelTransferTarget from the specified map of raw messages.
+func UnmarshalChannelTransferTarget(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ChannelTransferTarget)
+	err = core.UnmarshalModel(m, "chat", &obj.Chat, UnmarshalChannelTransferTargetChat)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ChannelTransferTargetChat : Information for transferring to the web chat integration.
+type ChannelTransferTargetChat struct {
+	// The URL of the target web chat.
+	URL *string `json:"url,omitempty"`
+}
+
+// UnmarshalChannelTransferTargetChat unmarshals an instance of ChannelTransferTargetChat from the specified map of raw messages.
+func UnmarshalChannelTransferTargetChat(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ChannelTransferTargetChat)
+	err = core.UnmarshalPrimitive(m, "url", &obj.URL)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // CreateSessionOptions : The CreateSession options.
 type CreateSessionOptions struct {
 	// Unique identifier of the assistant. To find the assistant ID in the Watson Assistant user interface, open the
@@ -806,7 +879,7 @@ type CreateSessionOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `json:"assistant_id" validate:"required,ne="`
+	AssistantID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -838,10 +911,10 @@ type DeleteSessionOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `json:"assistant_id" validate:"required,ne="`
+	AssistantID *string `validate:"required,ne="`
 
 	// Unique identifier of the session.
-	SessionID *string `json:"session_id" validate:"required,ne="`
+	SessionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -876,7 +949,7 @@ func (options *DeleteSessionOptions) SetHeaders(param map[string]string) *Delete
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `json:"customer_id" validate:"required"`
+	CustomerID *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -908,6 +981,12 @@ type DialogLogMessage struct {
 
 	// The text of the log message.
 	Message *string `json:"message" validate:"required"`
+
+	// A code that indicates the category to which the error message belongs.
+	Code *string `json:"code" validate:"required"`
+
+	// An object that identifies the dialog element that generated the error message.
+	Source LogMessageSourceIntf `json:"source,omitempty"`
 }
 
 // Constants associated with the DialogLogMessage.Level property.
@@ -926,6 +1005,14 @@ func UnmarshalDialogLogMessage(m map[string]json.RawMessage, result interface{})
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "message", &obj.Message)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "code", &obj.Code)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "source", &obj.Source, UnmarshalLogMessageSource)
 	if err != nil {
 		return
 	}
@@ -1134,21 +1221,21 @@ type ListLogsOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `json:"assistant_id" validate:"required,ne="`
+	AssistantID *string `validate:"required,ne="`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
 	// parameter value with a minus sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
-	Filter *string `json:"filter,omitempty"`
+	Filter *string
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1308,6 +1395,64 @@ func UnmarshalLogCollection(m map[string]json.RawMessage, result interface{}) (e
 	return
 }
 
+// LogMessageSource : An object that identifies the dialog element that generated the error message.
+// Models which "extend" this model:
+// - LogMessageSourceDialogNode
+// - LogMessageSourceAction
+// - LogMessageSourceStep
+// - LogMessageSourceHandler
+type LogMessageSource struct {
+	// A string that indicates the type of dialog element that generated the error message.
+	Type *string `json:"type,omitempty"`
+
+	// The unique identifier of the dialog node that generated the error message.
+	DialogNode *string `json:"dialog_node,omitempty"`
+
+	// The unique identifier of the action that generated the error message.
+	Action *string `json:"action,omitempty"`
+
+	// The unique identifier of the step that generated the error message.
+	Step *string `json:"step,omitempty"`
+
+	// The unique identifier of the handler that generated the error message.
+	Handler *string `json:"handler,omitempty"`
+}
+
+func (*LogMessageSource) isaLogMessageSource() bool {
+	return true
+}
+
+type LogMessageSourceIntf interface {
+	isaLogMessageSource() bool
+}
+
+// UnmarshalLogMessageSource unmarshals an instance of LogMessageSource from the specified map of raw messages.
+func UnmarshalLogMessageSource(m map[string]json.RawMessage, result interface{}) (err error) {
+	// Retrieve discriminator value to determine correct "subclass".
+	var discValue string
+	err = core.UnmarshalPrimitive(m, "type", &discValue)
+	if err != nil {
+		err = fmt.Errorf("error unmarshalling discriminator property 'type': %s", err.Error())
+		return
+	}
+	if discValue == "" {
+		err = fmt.Errorf("required discriminator property 'type' not found in JSON object")
+		return
+	}
+	if discValue == "dialog_node" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalLogMessageSourceDialogNode)
+	} else if discValue == "action" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalLogMessageSourceAction)
+	} else if discValue == "step" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalLogMessageSourceStep)
+	} else if discValue == "handler" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalLogMessageSourceHandler)
+	} else {
+		err = fmt.Errorf("unrecognized value for discriminator property 'type': %s", discValue)
+	}
+	return
+}
+
 // LogPagination : The pagination data for the returned objects.
 type LogPagination struct {
 	// The URL that will return the next page of results, if any.
@@ -1420,9 +1565,13 @@ type MessageContextGlobalSystem struct {
 	Timezone *string `json:"timezone,omitempty"`
 
 	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
-	// identifier for each individual end user who accesses the application. For Plus and Premium plans, this user ID is
-	// used to identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab
-	// characters.
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of
+	// **context.global.session_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property at the root of the message body. If **user_id** is
+	// specified in both locations in a message request, the value specified at the root is used.
 	UserID *string `json:"user_id,omitempty"`
 
 	// A counter that is automatically incremented with each turn of the conversation. A value of 1 indicates that this is
@@ -1877,19 +2026,29 @@ type MessageOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `json:"assistant_id" validate:"required,ne="`
+	AssistantID *string `validate:"required,ne="`
 
 	// Unique identifier of the session.
-	SessionID *string `json:"session_id" validate:"required,ne="`
+	SessionID *string `validate:"required,ne="`
 
 	// An input object that includes the input text.
-	Input *MessageInput `json:"input,omitempty"`
+	Input *MessageInput
 
 	// Context data for the conversation. You can use this property to set or modify context variables, which can also be
 	// accessed by dialog nodes. The context is stored by the assistant on a per-session basis.
 	//
 	// **Note:** The total size of the context data stored for a stateful session cannot exceed 100KB.
-	Context *MessageContext `json:"context,omitempty"`
+	Context *MessageContext
+
+	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of
+	// **context.global.session_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property in the global system context. If **user_id** is
+	// specified in both locations, the value specified at the root is used.
+	UserID *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1924,6 +2083,12 @@ func (options *MessageOptions) SetInput(input *MessageInput) *MessageOptions {
 // SetContext : Allow user to set Context
 func (options *MessageOptions) SetContext(context *MessageContext) *MessageOptions {
 	options.Context = context
+	return options
+}
+
+// SetUserID : Allow user to set UserID
+func (options *MessageOptions) SetUserID(userID string) *MessageOptions {
+	options.UserID = core.StringPtr(userID)
 	return options
 }
 
@@ -2086,6 +2251,16 @@ type MessageRequest struct {
 	//
 	// **Note:** The total size of the context data stored for a stateful session cannot exceed 100KB.
 	Context *MessageContext `json:"context,omitempty"`
+
+	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of
+	// **context.global.session_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property in the global system context. If **user_id** is
+	// specified in both locations, the value specified at the root is used.
+	UserID *string `json:"user_id,omitempty"`
 }
 
 // UnmarshalMessageRequest unmarshals an instance of MessageRequest from the specified map of raw messages.
@@ -2096,6 +2271,10 @@ func UnmarshalMessageRequest(m map[string]json.RawMessage, result interface{}) (
 		return
 	}
 	err = core.UnmarshalModel(m, "context", &obj.Context, UnmarshalMessageContext)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_id", &obj.UserID)
 	if err != nil {
 		return
 	}
@@ -2114,6 +2293,15 @@ type MessageResponse struct {
 	// **Note:** The context is included in message responses only if **return_context**=`true` in the message request.
 	// Full context is always included in logs.
 	Context *MessageContext `json:"context,omitempty"`
+
+	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of
+	// **context.global.session_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property in the global system context.
+	UserID *string `json:"user_id" validate:"required"`
 }
 
 // UnmarshalMessageResponse unmarshals an instance of MessageResponse from the specified map of raw messages.
@@ -2124,6 +2312,10 @@ func UnmarshalMessageResponse(m map[string]json.RawMessage, result interface{}) 
 		return
 	}
 	err = core.UnmarshalModel(m, "context", &obj.Context, UnmarshalMessageContext)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_id", &obj.UserID)
 	if err != nil {
 		return
 	}
@@ -2139,6 +2331,15 @@ type MessageResponseStateless struct {
 	// Context data for the conversation. You can use this property to access context variables. The context is not stored
 	// by the assistant; to maintain session state, include the context from the response in the next message.
 	Context *MessageContextStateless `json:"context" validate:"required"`
+
+	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of
+	// **context.global.session_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property in the global system context.
+	UserID *string `json:"user_id,omitempty"`
 }
 
 // UnmarshalMessageResponseStateless unmarshals an instance of MessageResponseStateless from the specified map of raw messages.
@@ -2149,6 +2350,10 @@ func UnmarshalMessageResponseStateless(m map[string]json.RawMessage, result inte
 		return
 	}
 	err = core.UnmarshalModel(m, "context", &obj.Context, UnmarshalMessageContextStateless)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_id", &obj.UserID)
 	if err != nil {
 		return
 	}
@@ -2163,17 +2368,27 @@ type MessageStatelessOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `json:"assistant_id" validate:"required,ne="`
+	AssistantID *string `validate:"required,ne="`
 
 	// An input object that includes the input text.
-	Input *MessageInputStateless `json:"input,omitempty"`
+	Input *MessageInputStateless
 
 	// Context data for the conversation. You can use this property to set or modify context variables, which can also be
 	// accessed by dialog nodes. The context is not stored by the assistant. To maintain session state, include the context
 	// from the previous response.
 	//
 	// **Note:** The total size of the context data for a stateless session cannot exceed 250KB.
-	Context *MessageContextStateless `json:"context,omitempty"`
+	Context *MessageContextStateless
+
+	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of
+	// **context.global.session_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property in the global system context. If **user_id** is
+	// specified in both locations in a message request, the value specified at the root is used.
+	UserID *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2204,10 +2419,33 @@ func (options *MessageStatelessOptions) SetContext(context *MessageContextStatel
 	return options
 }
 
+// SetUserID : Allow user to set UserID
+func (options *MessageStatelessOptions) SetUserID(userID string) *MessageStatelessOptions {
+	options.UserID = core.StringPtr(userID)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *MessageStatelessOptions) SetHeaders(param map[string]string) *MessageStatelessOptions {
 	options.Headers = param
 	return options
+}
+
+// ResponseGenericChannel : ResponseGenericChannel struct
+type ResponseGenericChannel struct {
+	// A channel for which the response is intended.
+	Channel *string `json:"channel,omitempty"`
+}
+
+// UnmarshalResponseGenericChannel unmarshals an instance of ResponseGenericChannel from the specified map of raw messages.
+func UnmarshalResponseGenericChannel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ResponseGenericChannel)
+	err = core.UnmarshalPrimitive(m, "channel", &obj.Channel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
 }
 
 // RuntimeEntity : The entity value that was recognized in the user input.
@@ -2623,7 +2861,9 @@ func UnmarshalRuntimeIntent(m map[string]json.RawMessage, result interface{}) (e
 // - RuntimeResponseGenericRuntimeResponseTypeOption
 // - RuntimeResponseGenericRuntimeResponseTypeConnectToAgent
 // - RuntimeResponseGenericRuntimeResponseTypeSuggestion
+// - RuntimeResponseGenericRuntimeResponseTypeChannelTransfer
 // - RuntimeResponseGenericRuntimeResponseTypeSearch
+// - RuntimeResponseGenericRuntimeResponseTypeUserDefined
 type RuntimeResponseGeneric struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
@@ -2631,6 +2871,10 @@ type RuntimeResponseGeneric struct {
 
 	// The text of the response.
 	Text *string `json:"text,omitempty"`
+
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
 
 	// How long to pause, in milliseconds.
 	Time *int64 `json:"time,omitempty"`
@@ -2674,6 +2918,9 @@ type RuntimeResponseGeneric struct {
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
 
+	// The message to display to the user when initiating a channel transfer.
+	MessageToUser *string `json:"message_to_user,omitempty"`
+
 	// The title or introductory text to show before the response. This text is defined in the search skill configuration.
 	Header *string `json:"header,omitempty"`
 
@@ -2682,14 +2929,10 @@ type RuntimeResponseGeneric struct {
 
 	// An array of objects that contains additional search results that can be displayed to the user upon request.
 	AdditionalResults []SearchResult `json:"additional_results,omitempty"`
-}
 
-// Constants associated with the RuntimeResponseGeneric.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericResponseTypeTextConst = "text"
-)
+	// An object containing any properties for the user-defined response type.
+	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
+}
 
 // Constants associated with the RuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
@@ -2719,7 +2962,9 @@ func UnmarshalRuntimeResponseGeneric(m map[string]json.RawMessage, result interf
 		err = fmt.Errorf("required discriminator property 'response_type' not found in JSON object")
 		return
 	}
-	if discValue == "connect_to_agent" {
+	if discValue == "channel_transfer" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeChannelTransfer)
+	} else if discValue == "connect_to_agent" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeConnectToAgent)
 	} else if discValue == "image" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeImage)
@@ -2733,6 +2978,8 @@ func UnmarshalRuntimeResponseGeneric(m map[string]json.RawMessage, result interf
 		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeSearch)
 	} else if discValue == "text" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeText)
+	} else if discValue == "user_defined" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeUserDefined)
 	} else {
 		err = fmt.Errorf("unrecognized value for discriminator property 'response_type': %s", discValue)
 	}
@@ -2743,7 +2990,8 @@ func UnmarshalRuntimeResponseGeneric(m map[string]json.RawMessage, result interf
 type SearchResult struct {
 	// The unique identifier of the document in the Discovery service collection.
 	//
-	// This property is included in responses from search skills, which are available only to Plus or Premium plan users.
+	// This property is included in responses from search skills, which are available only to Plus or Enterprise plan
+	// users.
 	ID *string `json:"id" validate:"required"`
 
 	// An object containing search result metadata from the Discovery service.
@@ -2887,8 +3135,7 @@ func UnmarshalSearchResultHighlight(m map[string]json.RawMessage, result interfa
 
 // SearchResultMetadata : An object containing search result metadata from the Discovery service.
 type SearchResultMetadata struct {
-	// The confidence score for the given result. For more information about how the confidence is calculated, see the
-	// Discovery service [documentation](../discovery#query-your-collection).
+	// The confidence score for the given result, as returned by the Discovery service.
 	Confidence *float64 `json:"confidence,omitempty"`
 
 	// An unbounded measure of the relevance of a particular result, dependent on the query and matching document. A higher
@@ -2928,7 +3175,189 @@ func UnmarshalSessionResponse(m map[string]json.RawMessage, result interface{}) 
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeConnectToAgent : An object that describes a response with response type `connect_to_agent`.
+// LogMessageSourceAction : An object that identifies the dialog element that generated the error message.
+// This model "extends" LogMessageSource
+type LogMessageSourceAction struct {
+	// A string that indicates the type of dialog element that generated the error message.
+	Type *string `json:"type" validate:"required"`
+
+	// The unique identifier of the action that generated the error message.
+	Action *string `json:"action" validate:"required"`
+}
+
+func (*LogMessageSourceAction) isaLogMessageSource() bool {
+	return true
+}
+
+// UnmarshalLogMessageSourceAction unmarshals an instance of LogMessageSourceAction from the specified map of raw messages.
+func UnmarshalLogMessageSourceAction(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogMessageSourceAction)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "action", &obj.Action)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// LogMessageSourceDialogNode : An object that identifies the dialog element that generated the error message.
+// This model "extends" LogMessageSource
+type LogMessageSourceDialogNode struct {
+	// A string that indicates the type of dialog element that generated the error message.
+	Type *string `json:"type" validate:"required"`
+
+	// The unique identifier of the dialog node that generated the error message.
+	DialogNode *string `json:"dialog_node" validate:"required"`
+}
+
+func (*LogMessageSourceDialogNode) isaLogMessageSource() bool {
+	return true
+}
+
+// UnmarshalLogMessageSourceDialogNode unmarshals an instance of LogMessageSourceDialogNode from the specified map of raw messages.
+func UnmarshalLogMessageSourceDialogNode(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogMessageSourceDialogNode)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "dialog_node", &obj.DialogNode)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// LogMessageSourceHandler : An object that identifies the dialog element that generated the error message.
+// This model "extends" LogMessageSource
+type LogMessageSourceHandler struct {
+	// A string that indicates the type of dialog element that generated the error message.
+	Type *string `json:"type" validate:"required"`
+
+	// The unique identifier of the action that generated the error message.
+	Action *string `json:"action" validate:"required"`
+
+	// The unique identifier of the step that generated the error message.
+	Step *string `json:"step,omitempty"`
+
+	// The unique identifier of the handler that generated the error message.
+	Handler *string `json:"handler" validate:"required"`
+}
+
+func (*LogMessageSourceHandler) isaLogMessageSource() bool {
+	return true
+}
+
+// UnmarshalLogMessageSourceHandler unmarshals an instance of LogMessageSourceHandler from the specified map of raw messages.
+func UnmarshalLogMessageSourceHandler(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogMessageSourceHandler)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "action", &obj.Action)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "step", &obj.Step)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "handler", &obj.Handler)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// LogMessageSourceStep : An object that identifies the dialog element that generated the error message.
+// This model "extends" LogMessageSource
+type LogMessageSourceStep struct {
+	// A string that indicates the type of dialog element that generated the error message.
+	Type *string `json:"type" validate:"required"`
+
+	// The unique identifier of the action that generated the error message.
+	Action *string `json:"action" validate:"required"`
+
+	// The unique identifier of the step that generated the error message.
+	Step *string `json:"step" validate:"required"`
+}
+
+func (*LogMessageSourceStep) isaLogMessageSource() bool {
+	return true
+}
+
+// UnmarshalLogMessageSourceStep unmarshals an instance of LogMessageSourceStep from the specified map of raw messages.
+func UnmarshalLogMessageSourceStep(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogMessageSourceStep)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "action", &obj.Action)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "step", &obj.Step)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// RuntimeResponseGenericRuntimeResponseTypeChannelTransfer : RuntimeResponseGenericRuntimeResponseTypeChannelTransfer struct
+// This model "extends" RuntimeResponseGeneric
+type RuntimeResponseGenericRuntimeResponseTypeChannelTransfer struct {
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
+	ResponseType *string `json:"response_type" validate:"required"`
+
+	// The message to display to the user when initiating a channel transfer.
+	MessageToUser *string `json:"message_to_user" validate:"required"`
+
+	// Information used by an integration to transfer the conversation to a different channel.
+	TransferInfo *ChannelTransferInfo `json:"transfer_info" validate:"required"`
+
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
+
+func (*RuntimeResponseGenericRuntimeResponseTypeChannelTransfer) isaRuntimeResponseGeneric() bool {
+	return true
+}
+
+// UnmarshalRuntimeResponseGenericRuntimeResponseTypeChannelTransfer unmarshals an instance of RuntimeResponseGenericRuntimeResponseTypeChannelTransfer from the specified map of raw messages.
+func UnmarshalRuntimeResponseGenericRuntimeResponseTypeChannelTransfer(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(RuntimeResponseGenericRuntimeResponseTypeChannelTransfer)
+	err = core.UnmarshalPrimitive(m, "response_type", &obj.ResponseType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "message_to_user", &obj.MessageToUser)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "transfer_info", &obj.TransferInfo, UnmarshalChannelTransferInfo)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// RuntimeResponseGenericRuntimeResponseTypeConnectToAgent : RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -2952,14 +3381,11 @@ type RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct {
 	// A label identifying the topic of the conversation, derived from the **title** property of the relevant node or the
 	// **topic** property of the dialog node response.
 	Topic *string `json:"topic,omitempty"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeConnectToAgent.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeConnectToAgentResponseTypeConnectToAgentConst = "connect_to_agent"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 func (*RuntimeResponseGenericRuntimeResponseTypeConnectToAgent) isaRuntimeResponseGeneric() bool {
 	return true
@@ -2992,11 +3418,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(m map[stri
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeImage : An object that describes a response with response type `image`.
+// RuntimeResponseGenericRuntimeResponseTypeImage : RuntimeResponseGenericRuntimeResponseTypeImage struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeImage struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -3011,14 +3441,11 @@ type RuntimeResponseGenericRuntimeResponseTypeImage struct {
 
 	// The description to show with the the response.
 	Description *string `json:"description,omitempty"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeImage.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeImageResponseTypeImageConst = "image"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 func (*RuntimeResponseGenericRuntimeResponseTypeImage) isaRuntimeResponseGeneric() bool {
 	return true
@@ -3043,11 +3470,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeImage(m map[string]json.R
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeOption : An object that describes a response with response type `option`.
+// RuntimeResponseGenericRuntimeResponseTypeOption : RuntimeResponseGenericRuntimeResponseTypeOption struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeOption struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -3065,14 +3496,11 @@ type RuntimeResponseGenericRuntimeResponseTypeOption struct {
 
 	// An array of objects describing the options from which the user can choose.
 	Options []DialogNodeOutputOptionsElement `json:"options" validate:"required"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeOption.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeOptionResponseTypeOptionConst = "option"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // Constants associated with the RuntimeResponseGenericRuntimeResponseTypeOption.Preference property.
 // The preferred type of control to display.
@@ -3108,11 +3536,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeOption(m map[string]json.
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypePause : An object that describes a response with response type `pause`.
+// RuntimeResponseGenericRuntimeResponseTypePause : RuntimeResponseGenericRuntimeResponseTypePause struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypePause struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -3124,14 +3556,11 @@ type RuntimeResponseGenericRuntimeResponseTypePause struct {
 
 	// Whether to send a "user is typing" event during the pause.
 	Typing *bool `json:"typing,omitempty"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypePause.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypePauseResponseTypePauseConst = "pause"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 func (*RuntimeResponseGenericRuntimeResponseTypePause) isaRuntimeResponseGeneric() bool {
 	return true
@@ -3152,11 +3581,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypePause(m map[string]json.R
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeSearch : An object that describes a response with response type `search`.
+// RuntimeResponseGenericRuntimeResponseTypeSearch : RuntimeResponseGenericRuntimeResponseTypeSearch struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeSearch struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -3171,14 +3604,11 @@ type RuntimeResponseGenericRuntimeResponseTypeSearch struct {
 
 	// An array of objects that contains additional search results that can be displayed to the user upon request.
 	AdditionalResults []SearchResult `json:"additional_results" validate:"required"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeSearch.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeSearchResponseTypeSearchConst = "search"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 func (*RuntimeResponseGenericRuntimeResponseTypeSearch) isaRuntimeResponseGeneric() bool {
 	return true
@@ -3203,11 +3633,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeSearch(m map[string]json.
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeSuggestion : An object that describes a response with response type `suggestion`.
+// RuntimeResponseGenericRuntimeResponseTypeSuggestion : RuntimeResponseGenericRuntimeResponseTypeSuggestion struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeSuggestion struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -3219,14 +3653,11 @@ type RuntimeResponseGenericRuntimeResponseTypeSuggestion struct {
 
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
 	Suggestions []DialogSuggestion `json:"suggestions" validate:"required"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeSuggestion.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeSuggestionResponseTypeSuggestionConst = "suggestion"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 func (*RuntimeResponseGenericRuntimeResponseTypeSuggestion) isaRuntimeResponseGeneric() bool {
 	return true
@@ -3247,11 +3678,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeSuggestion(m map[string]j
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeText : An object that describes a response with response type `text`.
+// RuntimeResponseGenericRuntimeResponseTypeText : RuntimeResponseGenericRuntimeResponseTypeText struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeText struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -3260,14 +3695,11 @@ type RuntimeResponseGenericRuntimeResponseTypeText struct {
 
 	// The text of the response.
 	Text *string `json:"text" validate:"required"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeText.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeTextResponseTypeTextConst = "text"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 func (*RuntimeResponseGenericRuntimeResponseTypeText) isaRuntimeResponseGeneric() bool {
 	return true
@@ -3281,6 +3713,48 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeText(m map[string]json.Ra
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "text", &obj.Text)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// RuntimeResponseGenericRuntimeResponseTypeUserDefined : RuntimeResponseGenericRuntimeResponseTypeUserDefined struct
+// This model "extends" RuntimeResponseGeneric
+type RuntimeResponseGenericRuntimeResponseTypeUserDefined struct {
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
+	ResponseType *string `json:"response_type" validate:"required"`
+
+	// An object containing any properties for the user-defined response type.
+	UserDefined map[string]interface{} `json:"user_defined" validate:"required"`
+
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
+
+func (*RuntimeResponseGenericRuntimeResponseTypeUserDefined) isaRuntimeResponseGeneric() bool {
+	return true
+}
+
+// UnmarshalRuntimeResponseGenericRuntimeResponseTypeUserDefined unmarshals an instance of RuntimeResponseGenericRuntimeResponseTypeUserDefined from the specified map of raw messages.
+func UnmarshalRuntimeResponseGenericRuntimeResponseTypeUserDefined(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(RuntimeResponseGenericRuntimeResponseTypeUserDefined)
+	err = core.UnmarshalPrimitive(m, "response_type", &obj.ResponseType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_defined", &obj.UserDefined)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
 	if err != nil {
 		return
 	}

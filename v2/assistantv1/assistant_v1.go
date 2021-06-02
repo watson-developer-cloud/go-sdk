@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.22.0-937b9a1c-20201211-223043
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package assistantv1 : Operations and models for the AssistantV1 service
@@ -29,7 +29,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
@@ -238,6 +238,9 @@ func (assistant *AssistantV1) MessageWithContext(ctx context.Context, messageOpt
 	if messageOptions.Output != nil {
 		body["output"] = messageOptions.Output
 	}
+	if messageOptions.UserID != nil {
+		body["user_id"] = messageOptions.UserID
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -253,11 +256,13 @@ func (assistant *AssistantV1) MessageWithContext(ctx context.Context, messageOpt
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMessageResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMessageResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -266,7 +271,7 @@ func (assistant *AssistantV1) MessageWithContext(ctx context.Context, messageOpt
 // Send multiple user inputs to a workspace in a single request and receive information about the intents and entities
 // recognized in each input. This method is useful for testing and comparing the performance of different workspaces.
 //
-// This method is available only with Premium plans.
+// This method is available only with Enterprise with Data Isolation plans.
 func (assistant *AssistantV1) BulkClassify(bulkClassifyOptions *BulkClassifyOptions) (result *BulkClassifyResponse, response *core.DetailedResponse, err error) {
 	return assistant.BulkClassifyWithContext(context.Background(), bulkClassifyOptions)
 }
@@ -326,11 +331,13 @@ func (assistant *AssistantV1) BulkClassifyWithContext(ctx context.Context, bulkC
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBulkClassifyResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBulkClassifyResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -393,11 +400,13 @@ func (assistant *AssistantV1) ListWorkspacesWithContext(ctx context.Context, lis
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspaceCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspaceCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -489,11 +498,13 @@ func (assistant *AssistantV1) CreateWorkspaceWithContext(ctx context.Context, cr
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspace)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspace)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -558,11 +569,13 @@ func (assistant *AssistantV1) GetWorkspaceWithContext(ctx context.Context, getWo
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspace)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspace)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -665,11 +678,13 @@ func (assistant *AssistantV1) UpdateWorkspaceWithContext(ctx context.Context, up
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspace)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspace)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -794,11 +809,13 @@ func (assistant *AssistantV1) ListIntentsWithContext(ctx context.Context, listIn
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIntentCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIntentCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -876,11 +893,13 @@ func (assistant *AssistantV1) CreateIntentWithContext(ctx context.Context, creat
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIntent)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIntent)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -943,11 +962,13 @@ func (assistant *AssistantV1) GetIntentWithContext(ctx context.Context, getInten
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIntent)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIntent)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1030,11 +1051,13 @@ func (assistant *AssistantV1) UpdateIntentWithContext(ctx context.Context, updat
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIntent)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIntent)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1158,11 +1181,13 @@ func (assistant *AssistantV1) ListExamplesWithContext(ctx context.Context, listE
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExampleCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExampleCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1238,11 +1263,13 @@ func (assistant *AssistantV1) CreateExampleWithContext(ctx context.Context, crea
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1303,11 +1330,13 @@ func (assistant *AssistantV1) GetExampleWithContext(ctx context.Context, getExam
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1384,11 +1413,13 @@ func (assistant *AssistantV1) UpdateExampleWithContext(ctx context.Context, upda
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1512,11 +1543,13 @@ func (assistant *AssistantV1) ListCounterexamplesWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCounterexampleCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCounterexampleCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1588,11 +1621,13 @@ func (assistant *AssistantV1) CreateCounterexampleWithContext(ctx context.Contex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCounterexample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCounterexample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1652,11 +1687,13 @@ func (assistant *AssistantV1) GetCounterexampleWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCounterexample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCounterexample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1726,11 +1763,13 @@ func (assistant *AssistantV1) UpdateCounterexampleWithContext(ctx context.Contex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCounterexample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCounterexample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1856,11 +1895,13 @@ func (assistant *AssistantV1) ListEntitiesWithContext(ctx context.Context, listE
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntityCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntityCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1944,11 +1985,13 @@ func (assistant *AssistantV1) CreateEntityWithContext(ctx context.Context, creat
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntity)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntity)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2011,11 +2054,13 @@ func (assistant *AssistantV1) GetEntityWithContext(ctx context.Context, getEntit
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntity)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntity)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2104,11 +2149,13 @@ func (assistant *AssistantV1) UpdateEntityWithContext(ctx context.Context, updat
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntity)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntity)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2224,11 +2271,13 @@ func (assistant *AssistantV1) ListMentionsWithContext(ctx context.Context, listM
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntityMentionCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEntityMentionCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2303,11 +2352,13 @@ func (assistant *AssistantV1) ListValuesWithContext(ctx context.Context, listVal
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalValueCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalValueCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2392,11 +2443,13 @@ func (assistant *AssistantV1) CreateValueWithContext(ctx context.Context, create
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalValue)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalValue)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2460,11 +2513,13 @@ func (assistant *AssistantV1) GetValueWithContext(ctx context.Context, getValueO
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalValue)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalValue)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2554,11 +2609,13 @@ func (assistant *AssistantV1) UpdateValueWithContext(ctx context.Context, update
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalValue)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalValue)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2684,11 +2741,13 @@ func (assistant *AssistantV1) ListSynonymsWithContext(ctx context.Context, listS
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSynonymCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSynonymCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2762,11 +2821,13 @@ func (assistant *AssistantV1) CreateSynonymWithContext(ctx context.Context, crea
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSynonym)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSynonym)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2828,11 +2889,13 @@ func (assistant *AssistantV1) GetSynonymWithContext(ctx context.Context, getSyno
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSynonym)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSynonym)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2907,11 +2970,13 @@ func (assistant *AssistantV1) UpdateSynonymWithContext(ctx context.Context, upda
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSynonym)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSynonym)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3036,11 +3101,13 @@ func (assistant *AssistantV1) ListDialogNodesWithContext(ctx context.Context, li
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDialogNodeCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDialogNodeCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3166,11 +3233,13 @@ func (assistant *AssistantV1) CreateDialogNodeWithContext(ctx context.Context, c
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDialogNode)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDialogNode)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3230,11 +3299,13 @@ func (assistant *AssistantV1) GetDialogNodeWithContext(ctx context.Context, getD
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDialogNode)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDialogNode)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3361,11 +3432,13 @@ func (assistant *AssistantV1) UpdateDialogNodeWithContext(ctx context.Context, u
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDialogNode)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDialogNode)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3424,6 +3497,8 @@ func (assistant *AssistantV1) DeleteDialogNodeWithContext(ctx context.Context, d
 
 // ListLogs : List log events in a workspace
 // List the events from the log of a specific workspace.
+//
+// This method requires Manager access.
 func (assistant *AssistantV1) ListLogs(listLogsOptions *ListLogsOptions) (result *LogCollection, response *core.DetailedResponse, err error) {
 	return assistant.ListLogsWithContext(context.Background(), listLogsOptions)
 }
@@ -3485,11 +3560,13 @@ func (assistant *AssistantV1) ListLogsWithContext(ctx context.Context, listLogsO
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3551,11 +3628,13 @@ func (assistant *AssistantV1) ListAllLogsWithContext(ctx context.Context, listAl
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3567,6 +3646,11 @@ func (assistant *AssistantV1) ListAllLogsWithContext(ctx context.Context, listAl
 // You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes data. For
 // more information about personal data and customer IDs, see [Information
 // security](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security).
+//
+// **Note:** This operation is intended only for deleting data associated with a single specific customer, not for
+// deleting data associated with multiple customers or for any other purpose. For more information, see [Labeling and
+// deleting data in Watson
+// Assistant](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security-gdpr-wa).
 func (assistant *AssistantV1) DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions) (response *core.DetailedResponse, err error) {
 	return assistant.DeleteUserDataWithContext(context.Background(), deleteUserDataOptions)
 }
@@ -3633,10 +3717,10 @@ func UnmarshalAgentAvailabilityMessage(m map[string]json.RawMessage, result inte
 // BulkClassifyOptions : The BulkClassify options.
 type BulkClassifyOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// An array of input utterances to classify.
-	Input []BulkClassifyUtterance `json:"input,omitempty"`
+	Input []BulkClassifyUtterance
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3767,6 +3851,69 @@ func UnmarshalCaptureGroup(m map[string]json.RawMessage, result interface{}) (er
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "location", &obj.Location)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ChannelTransferInfo : Information used by an integration to transfer the conversation to a different channel.
+type ChannelTransferInfo struct {
+	// An object specifying target channels available for the transfer. Each property of this object represents an
+	// available transfer target. Currently, the only supported property is **chat**, representing the web chat
+	// integration.
+	Target *ChannelTransferTarget `json:"target" validate:"required"`
+}
+
+// NewChannelTransferInfo : Instantiate ChannelTransferInfo (Generic Model Constructor)
+func (*AssistantV1) NewChannelTransferInfo(target *ChannelTransferTarget) (model *ChannelTransferInfo, err error) {
+	model = &ChannelTransferInfo{
+		Target: target,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
+// UnmarshalChannelTransferInfo unmarshals an instance of ChannelTransferInfo from the specified map of raw messages.
+func UnmarshalChannelTransferInfo(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ChannelTransferInfo)
+	err = core.UnmarshalModel(m, "target", &obj.Target, UnmarshalChannelTransferTarget)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ChannelTransferTarget : An object specifying target channels available for the transfer. Each property of this object represents an available
+// transfer target. Currently, the only supported property is **chat**, representing the web chat integration.
+type ChannelTransferTarget struct {
+	// Information for transferring to the web chat integration.
+	Chat *ChannelTransferTargetChat `json:"chat,omitempty"`
+}
+
+// UnmarshalChannelTransferTarget unmarshals an instance of ChannelTransferTarget from the specified map of raw messages.
+func UnmarshalChannelTransferTarget(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ChannelTransferTarget)
+	err = core.UnmarshalModel(m, "chat", &obj.Chat, UnmarshalChannelTransferTargetChat)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ChannelTransferTargetChat : Information for transferring to the web chat integration.
+type ChannelTransferTargetChat struct {
+	// The URL of the target web chat.
+	URL *string `json:"url,omitempty"`
+}
+
+// UnmarshalChannelTransferTargetChat unmarshals an instance of ChannelTransferTargetChat from the specified map of raw messages.
+func UnmarshalChannelTransferTargetChat(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ChannelTransferTargetChat)
+	err = core.UnmarshalPrimitive(m, "url", &obj.URL)
 	if err != nil {
 		return
 	}
@@ -3928,15 +4075,15 @@ func UnmarshalCounterexampleCollection(m map[string]json.RawMessage, result inte
 // CreateCounterexampleOptions : The CreateCounterexample options.
 type CreateCounterexampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Text *string `json:"text" validate:"required"`
+	Text *string `validate:"required"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3977,72 +4124,80 @@ func (options *CreateCounterexampleOptions) SetHeaders(param map[string]string) 
 // CreateDialogNodeOptions : The CreateDialogNode options.
 type CreateDialogNodeOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
-	// The dialog node ID. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	DialogNode *string `json:"dialog_node" validate:"required"`
+	// The unique ID of the dialog node. This is an internal identifier used to refer to the dialog node from other dialog
+	// nodes and in the diagnostic information included with message responses.
+	//
+	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	DialogNode *string `validate:"required"`
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
 	// characters.
-	Conditions *string `json:"conditions,omitempty"`
+	Conditions *string
 
-	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
-	Parent *string `json:"parent,omitempty"`
+	// The unique ID of the parent dialog node. This property is omitted if the dialog node has no parent.
+	Parent *string
 
-	// The ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous sibling.
-	PreviousSibling *string `json:"previous_sibling,omitempty"`
+	// The unique ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous
+	// sibling.
+	PreviousSibling *string
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
-	Output *DialogNodeOutput `json:"output,omitempty"`
+	Output *DialogNodeOutput
 
 	// The context for the dialog node.
-	Context *DialogNodeContext `json:"context,omitempty"`
+	Context *DialogNodeContext
 
 	// The metadata for the dialog node.
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{}
 
 	// The next step to execute following this dialog node.
-	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
+	NextStep *DialogNodeNextStep
 
-	// The alias used to identify the dialog node. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	Title *string `json:"title,omitempty"`
+	// A human-readable name for the dialog node. If the node is included in disambiguation, this title is used to populate
+	// the **label** property of the corresponding suggestion in the `suggestion` response type (unless it is overridden by
+	// the **user_label** property). The title is also used to populate the **topic** property in the `connect_to_agent`
+	// response type.
+	//
+	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	Title *string
 
 	// How the dialog node is processed.
-	Type *string `json:"type,omitempty"`
+	Type *string
 
 	// How an `event_handler` node is processed.
-	EventName *string `json:"event_name,omitempty"`
+	EventName *string
 
 	// The location in the dialog context where output is stored.
-	Variable *string `json:"variable,omitempty"`
+	Variable *string
 
 	// An array of objects describing any actions to be invoked by the dialog node.
-	Actions []DialogNodeAction `json:"actions,omitempty"`
+	Actions []DialogNodeAction
 
 	// Whether this top-level dialog node can be digressed into.
-	DigressIn *string `json:"digress_in,omitempty"`
+	DigressIn *string
 
 	// Whether this dialog node can be returned to after a digression.
-	DigressOut *string `json:"digress_out,omitempty"`
+	DigressOut *string
 
 	// Whether the user can digress to top-level nodes while filling out slots.
-	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
+	DigressOutSlots *string
 
-	// A label that can be displayed externally to describe the purpose of the node to users.
-	UserLabel *string `json:"user_label,omitempty"`
+	// A label that can be displayed externally to describe the purpose of the node to users. If set, this label is used to
+	// identify the node in disambiguation responses (overriding the value of the **title** property).
+	UserLabel *string
 
 	// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when **type**=`standard` or
 	// `frame`.
-	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
+	DisambiguationOptOut *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4311,28 +4466,28 @@ func UnmarshalCreateEntity(m map[string]json.RawMessage, result interface{}) (er
 // CreateEntityOptions : The CreateEntity options.
 type CreateEntityOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
 	// - If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity
 	// that you want to enable. (Any entity content specified with the request is ignored.).
-	Entity *string `json:"entity" validate:"required"`
+	Entity *string `validate:"required"`
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// Any metadata related to the entity.
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{}
 
 	// Whether to use fuzzy matching for the entity.
-	FuzzyMatch *bool `json:"fuzzy_match,omitempty"`
+	FuzzyMatch *bool
 
 	// An array of objects describing the entity values.
-	Values []CreateValue `json:"values,omitempty"`
+	Values []CreateValue
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4397,21 +4552,21 @@ func (options *CreateEntityOptions) SetHeaders(param map[string]string) *CreateE
 // CreateExampleOptions : The CreateExample options.
 type CreateExampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `json:"intent" validate:"required,ne="`
+	Intent *string `validate:"required,ne="`
 
 	// The text of a user input example. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Text *string `json:"text" validate:"required"`
+	Text *string `validate:"required"`
 
 	// An array of contextual entity mentions.
-	Mentions []Mention `json:"mentions,omitempty"`
+	Mentions []Mention
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4521,21 +4676,21 @@ func UnmarshalCreateIntent(m map[string]json.RawMessage, result interface{}) (er
 // CreateIntentOptions : The CreateIntent options.
 type CreateIntentOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the intent. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	Intent *string `json:"intent" validate:"required"`
+	Intent *string `validate:"required"`
 
 	// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// An array of user input examples for the intent.
-	Examples []Example `json:"examples,omitempty"`
+	Examples []Example
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4588,21 +4743,21 @@ func (options *CreateIntentOptions) SetHeaders(param map[string]string) *CreateI
 // CreateSynonymOptions : The CreateSynonym options.
 type CreateSynonymOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `json:"value" validate:"required,ne="`
+	Value *string `validate:"required,ne="`
 
 	// The text of the synonym. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Synonym *string `json:"synonym" validate:"required"`
+	Synonym *string `validate:"required"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4739,35 +4894,35 @@ func UnmarshalCreateValue(m map[string]json.RawMessage, result interface{}) (err
 // CreateValueOptions : The CreateValue options.
 type CreateValueOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Value *string `json:"value" validate:"required"`
+	Value *string `validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{}
 
 	// Specifies the type of entity value.
-	Type *string `json:"type,omitempty"`
+	Type *string
 
 	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Synonyms []string `json:"synonyms,omitempty"`
+	Synonyms []string
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
-	Patterns []string `json:"patterns,omitempty"`
+	Patterns []string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4846,40 +5001,40 @@ func (options *CreateValueOptions) SetHeaders(param map[string]string) *CreateVa
 // CreateWorkspaceOptions : The CreateWorkspace options.
 type CreateWorkspaceOptions struct {
 	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// The language of the workspace.
-	Language *string `json:"language,omitempty"`
+	Language *string
 
 	// An array of objects describing the dialog nodes in the workspace.
-	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
+	DialogNodes []DialogNode
 
 	// An array of objects defining input examples that have been marked as irrelevant input.
-	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
+	Counterexamples []Counterexample
 
 	// Any metadata related to the workspace.
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{}
 
 	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
 	// general service improvements. `true` indicates that workspace training data is not to be used.
-	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
+	LearningOptOut *bool
 
 	// Global settings for the workspace.
-	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
+	SystemSettings *WorkspaceSystemSettings
 
-	Webhooks []Webhook `json:"webhooks,omitempty"`
+	Webhooks []Webhook
 
 	// An array of objects defining the intents for the workspace.
-	Intents []CreateIntent `json:"intents,omitempty"`
+	Intents []CreateIntent
 
 	// An array of objects describing the entities for the workspace.
-	Entities []CreateEntity `json:"entities,omitempty"`
+	Entities []CreateEntity
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4971,10 +5126,10 @@ func (options *CreateWorkspaceOptions) SetHeaders(param map[string]string) *Crea
 // DeleteCounterexampleOptions : The DeleteCounterexample options.
 type DeleteCounterexampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `json:"text" validate:"required,ne="`
+	Text *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5009,10 +5164,10 @@ func (options *DeleteCounterexampleOptions) SetHeaders(param map[string]string) 
 // DeleteDialogNodeOptions : The DeleteDialogNode options.
 type DeleteDialogNodeOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
-	// The dialog node ID (for example, `get_order`).
-	DialogNode *string `json:"dialog_node" validate:"required,ne="`
+	// The dialog node ID (for example, `node_1_1479323581900`).
+	DialogNode *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5047,10 +5202,10 @@ func (options *DeleteDialogNodeOptions) SetHeaders(param map[string]string) *Del
 // DeleteEntityOptions : The DeleteEntity options.
 type DeleteEntityOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5085,13 +5240,13 @@ func (options *DeleteEntityOptions) SetHeaders(param map[string]string) *DeleteE
 // DeleteExampleOptions : The DeleteExample options.
 type DeleteExampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `json:"intent" validate:"required,ne="`
+	Intent *string `validate:"required,ne="`
 
 	// The text of the user input example.
-	Text *string `json:"text" validate:"required,ne="`
+	Text *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5133,10 +5288,10 @@ func (options *DeleteExampleOptions) SetHeaders(param map[string]string) *Delete
 // DeleteIntentOptions : The DeleteIntent options.
 type DeleteIntentOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `json:"intent" validate:"required,ne="`
+	Intent *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5171,16 +5326,16 @@ func (options *DeleteIntentOptions) SetHeaders(param map[string]string) *DeleteI
 // DeleteSynonymOptions : The DeleteSynonym options.
 type DeleteSynonymOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `json:"value" validate:"required,ne="`
+	Value *string `validate:"required,ne="`
 
 	// The text of the synonym.
-	Synonym *string `json:"synonym" validate:"required,ne="`
+	Synonym *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5229,7 +5384,7 @@ func (options *DeleteSynonymOptions) SetHeaders(param map[string]string) *Delete
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `json:"customer_id" validate:"required"`
+	CustomerID *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5257,13 +5412,13 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 // DeleteValueOptions : The DeleteValue options.
 type DeleteValueOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `json:"value" validate:"required,ne="`
+	Value *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5305,7 +5460,7 @@ func (options *DeleteValueOptions) SetHeaders(param map[string]string) *DeleteVa
 // DeleteWorkspaceOptions : The DeleteWorkspace options.
 type DeleteWorkspaceOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5332,8 +5487,10 @@ func (options *DeleteWorkspaceOptions) SetHeaders(param map[string]string) *Dele
 
 // DialogNode : DialogNode struct
 type DialogNode struct {
-	// The dialog node ID. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// The unique ID of the dialog node. This is an internal identifier used to refer to the dialog node from other dialog
+	// nodes and in the diagnostic information included with message responses.
+	//
+	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
 	DialogNode *string `json:"dialog_node" validate:"required"`
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
@@ -5343,10 +5500,11 @@ type DialogNode struct {
 	// characters.
 	Conditions *string `json:"conditions,omitempty"`
 
-	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
+	// The unique ID of the parent dialog node. This property is omitted if the dialog node has no parent.
 	Parent *string `json:"parent,omitempty"`
 
-	// The ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous sibling.
+	// The unique ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous
+	// sibling.
 	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
@@ -5362,8 +5520,12 @@ type DialogNode struct {
 	// The next step to execute following this dialog node.
 	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
 
-	// The alias used to identify the dialog node. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	// A human-readable name for the dialog node. If the node is included in disambiguation, this title is used to populate
+	// the **label** property of the corresponding suggestion in the `suggestion` response type (unless it is overridden by
+	// the **user_label** property). The title is also used to populate the **topic** property in the `connect_to_agent`
+	// response type.
+	//
+	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
 	Title *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
@@ -5387,7 +5549,8 @@ type DialogNode struct {
 	// Whether the user can digress to top-level nodes while filling out slots.
 	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
 
-	// A label that can be displayed externally to describe the purpose of the node to users.
+	// A label that can be displayed externally to describe the purpose of the node to users. If set, this label is used to
+	// identify the node in disambiguation responses (overriding the value of the **title** property).
 	UserLabel *string `json:"user_label,omitempty"`
 
 	// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when **type**=`standard` or
@@ -5732,7 +5895,7 @@ type DialogNodeNextStep struct {
 	//      If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
 	Behavior *string `json:"behavior" validate:"required"`
 
-	// The ID of the dialog node to process next. This parameter is required if **behavior**=`jump_to`.
+	// The unique ID of the dialog node to process next. This parameter is required if **behavior**=`jump_to`.
 	DialogNode *string `json:"dialog_node,omitempty"`
 
 	// Which part of the dialog node to process next.
@@ -5916,6 +6079,8 @@ func UnmarshalDialogNodeOutputConnectToAgentTransferInfo(m map[string]json.RawMe
 // - DialogNodeOutputGenericDialogNodeOutputResponseTypeOption
 // - DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent
 // - DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill
+// - DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer
+// - DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined
 type DialogNodeOutputGeneric struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
@@ -5929,6 +6094,9 @@ type DialogNodeOutputGeneric struct {
 
 	// The delimiter to use as a separator between responses when `selection_policy`=`multiline`.
 	Delimiter *string `json:"delimiter,omitempty"`
+
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
 
 	// How long to pause, in milliseconds. The valid values are from 0 to 10000.
 	Time *int64 `json:"time,omitempty"`
@@ -5980,14 +6148,14 @@ type DialogNodeOutputGeneric struct {
 
 	// The version of the Discovery service API to use for the query.
 	DiscoveryVersion *string `json:"discovery_version,omitempty"`
-}
 
-// Constants associated with the DialogNodeOutputGeneric.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	DialogNodeOutputGenericResponseTypeTextConst = "text"
-)
+	// The message to display to the user when initiating a channel transfer.
+	MessageToUser *string `json:"message_to_user,omitempty"`
+
+	// An object containing any properties for the user-defined response type. The total size of this object cannot exceed
+	// 5000 bytes.
+	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
+}
 
 // Constants associated with the DialogNodeOutputGeneric.SelectionPolicy property.
 // How a response is selected from the list, if more than one response is specified.
@@ -6032,7 +6200,9 @@ func UnmarshalDialogNodeOutputGeneric(m map[string]json.RawMessage, result inter
 		err = fmt.Errorf("required discriminator property 'response_type' not found in JSON object")
 		return
 	}
-	if discValue == "connect_to_agent" {
+	if discValue == "channel_transfer" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer)
+	} else if discValue == "connect_to_agent" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent)
 	} else if discValue == "image" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeImage)
@@ -6044,6 +6214,8 @@ func UnmarshalDialogNodeOutputGeneric(m map[string]json.RawMessage, result inter
 		err = core.UnmarshalModel(m, "", result, UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 	} else if discValue == "text" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeText)
+	} else if discValue == "user_defined" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined)
 	} else {
 		err = fmt.Errorf("unrecognized value for discriminator property 'response_type': %s", discValue)
 	}
@@ -6161,7 +6333,7 @@ func UnmarshalDialogNodeOutputTextValuesElement(m map[string]json.RawMessage, re
 
 // DialogNodeVisitedDetails : DialogNodeVisitedDetails struct
 type DialogNodeVisitedDetails struct {
-	// A dialog node that was triggered during processing of the input message.
+	// The unique ID of a dialog node that was triggered during processing of the input message.
 	DialogNode *string `json:"dialog_node,omitempty"`
 
 	// The title of the dialog node.
@@ -6193,7 +6365,7 @@ func UnmarshalDialogNodeVisitedDetails(m map[string]json.RawMessage, result inte
 // DialogSuggestion : DialogSuggestion struct
 type DialogSuggestion struct {
 	// The user-facing label for the disambiguation option. This label is taken from the **title** or **user_label**
-	// property of the corresponding dialog node, depending on the disambiguation options.
+	// property of the corresponding dialog node.
 	Label *string `json:"label" validate:"required"`
 
 	// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the user
@@ -6204,8 +6376,8 @@ type DialogSuggestion struct {
 	// option.
 	Output map[string]interface{} `json:"output,omitempty"`
 
-	// The ID of the dialog node that the **label** property is taken from. The **label** property is populated using the
-	// value of the dialog node's **user_label** property.
+	// The unique ID of the dialog node that the **label** property is taken from. The **label** property is populated
+	// using the value of the dialog node's **title** or **user_label** property.
 	DialogNode *string `json:"dialog_node,omitempty"`
 }
 
@@ -6491,13 +6663,13 @@ func UnmarshalExampleCollection(m map[string]json.RawMessage, result interface{}
 // GetCounterexampleOptions : The GetCounterexample options.
 type GetCounterexampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `json:"text" validate:"required,ne="`
+	Text *string `validate:"required,ne="`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6538,13 +6710,13 @@ func (options *GetCounterexampleOptions) SetHeaders(param map[string]string) *Ge
 // GetDialogNodeOptions : The GetDialogNode options.
 type GetDialogNodeOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
-	// The dialog node ID (for example, `get_order`).
-	DialogNode *string `json:"dialog_node" validate:"required,ne="`
+	// The dialog node ID (for example, `node_1_1479323581900`).
+	DialogNode *string `validate:"required,ne="`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6585,17 +6757,17 @@ func (options *GetDialogNodeOptions) SetHeaders(param map[string]string) *GetDia
 // GetEntityOptions : The GetEntity options.
 type GetEntityOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool `json:"export,omitempty"`
+	Export *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6642,16 +6814,16 @@ func (options *GetEntityOptions) SetHeaders(param map[string]string) *GetEntityO
 // GetExampleOptions : The GetExample options.
 type GetExampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `json:"intent" validate:"required,ne="`
+	Intent *string `validate:"required,ne="`
 
 	// The text of the user input example.
-	Text *string `json:"text" validate:"required,ne="`
+	Text *string `validate:"required,ne="`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6699,17 +6871,17 @@ func (options *GetExampleOptions) SetHeaders(param map[string]string) *GetExampl
 // GetIntentOptions : The GetIntent options.
 type GetIntentOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `json:"intent" validate:"required,ne="`
+	Intent *string `validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool `json:"export,omitempty"`
+	Export *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6756,19 +6928,19 @@ func (options *GetIntentOptions) SetHeaders(param map[string]string) *GetIntentO
 // GetSynonymOptions : The GetSynonym options.
 type GetSynonymOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `json:"value" validate:"required,ne="`
+	Value *string `validate:"required,ne="`
 
 	// The text of the synonym.
-	Synonym *string `json:"synonym" validate:"required,ne="`
+	Synonym *string `validate:"required,ne="`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6823,20 +6995,20 @@ func (options *GetSynonymOptions) SetHeaders(param map[string]string) *GetSynony
 // GetValueOptions : The GetValue options.
 type GetValueOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `json:"value" validate:"required,ne="`
+	Value *string `validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool `json:"export,omitempty"`
+	Export *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6890,18 +7062,18 @@ func (options *GetValueOptions) SetHeaders(param map[string]string) *GetValueOpt
 // GetWorkspaceOptions : The GetWorkspace options.
 type GetWorkspaceOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool `json:"export,omitempty"`
+	Export *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Indicates how the returned workspace data will be sorted. This parameter is valid only if **export**=`true`. Specify
 	// `sort=stable` to sort all workspace objects by unique identifier, in ascending alphabetical order.
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7028,17 +7200,17 @@ type ListAllLogsOptions struct {
 	// query that includes a value for `language`, as well as a value for `request.context.system.assistant_id`,
 	// `workspace_id`, or `request.context.metadata.deployment`. For more information, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
-	Filter *string `json:"filter" validate:"required"`
+	Filter *string `validate:"required"`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
 	// parameter value with a minus sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7084,24 +7256,24 @@ func (options *ListAllLogsOptions) SetHeaders(param map[string]string) *ListAllL
 // ListCounterexamplesOptions : The ListCounterexamples options.
 type ListCounterexamplesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool `json:"include_count,omitempty"`
+	IncludeCount *bool
 
 	// The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7167,24 +7339,24 @@ func (options *ListCounterexamplesOptions) SetHeaders(param map[string]string) *
 // ListDialogNodesOptions : The ListDialogNodes options.
 type ListDialogNodesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool `json:"include_count,omitempty"`
+	IncludeCount *bool
 
 	// The attribute by which returned dialog nodes will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7250,28 +7422,28 @@ func (options *ListDialogNodesOptions) SetHeaders(param map[string]string) *List
 // ListEntitiesOptions : The ListEntities options.
 type ListEntitiesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool `json:"export,omitempty"`
+	Export *bool
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool `json:"include_count,omitempty"`
+	IncludeCount *bool
 
 	// The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7343,27 +7515,27 @@ func (options *ListEntitiesOptions) SetHeaders(param map[string]string) *ListEnt
 // ListExamplesOptions : The ListExamples options.
 type ListExamplesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `json:"intent" validate:"required,ne="`
+	Intent *string `validate:"required,ne="`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool `json:"include_count,omitempty"`
+	IncludeCount *bool
 
 	// The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7436,28 +7608,28 @@ func (options *ListExamplesOptions) SetHeaders(param map[string]string) *ListExa
 // ListIntentsOptions : The ListIntents options.
 type ListIntentsOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool `json:"export,omitempty"`
+	Export *bool
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool `json:"include_count,omitempty"`
+	IncludeCount *bool
 
 	// The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7529,21 +7701,21 @@ func (options *ListIntentsOptions) SetHeaders(param map[string]string) *ListInte
 // ListLogsOptions : The ListLogs options.
 type ListLogsOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
 	// parameter value with a minus sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
-	Filter *string `json:"filter,omitempty"`
+	Filter *string
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7595,17 +7767,17 @@ func (options *ListLogsOptions) SetHeaders(param map[string]string) *ListLogsOpt
 // ListMentionsOptions : The ListMentions options.
 type ListMentionsOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool `json:"export,omitempty"`
+	Export *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7652,30 +7824,30 @@ func (options *ListMentionsOptions) SetHeaders(param map[string]string) *ListMen
 // ListSynonymsOptions : The ListSynonyms options.
 type ListSynonymsOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `json:"value" validate:"required,ne="`
+	Value *string `validate:"required,ne="`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool `json:"include_count,omitempty"`
+	IncludeCount *bool
 
 	// The attribute by which returned entity value synonyms will be sorted. To reverse the sort order, prefix the value
 	// with a minus sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7755,31 +7927,31 @@ func (options *ListSynonymsOptions) SetHeaders(param map[string]string) *ListSyn
 // ListValuesOptions : The ListValues options.
 type ListValuesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool `json:"export,omitempty"`
+	Export *bool
 
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool `json:"include_count,omitempty"`
+	IncludeCount *bool
 
 	// The attribute by which returned entity values will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7858,21 +8030,21 @@ func (options *ListValuesOptions) SetHeaders(param map[string]string) *ListValue
 // ListWorkspacesOptions : The ListWorkspaces options.
 type ListWorkspacesOptions struct {
 	// The number of records to return in each page of results.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool `json:"include_count,omitempty"`
+	IncludeCount *bool
 
 	// The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8017,6 +8189,12 @@ type LogMessage struct {
 
 	// The text of the log message.
 	Msg *string `json:"msg" validate:"required"`
+
+	// A code that indicates the category to which the error message belongs.
+	Code *string `json:"code" validate:"required"`
+
+	// An object that identifies the dialog element that generated the error message.
+	Source *LogMessageSource `json:"source,omitempty"`
 }
 
 // Constants associated with the LogMessage.Level property.
@@ -8028,10 +8206,11 @@ const (
 )
 
 // NewLogMessage : Instantiate LogMessage (Generic Model Constructor)
-func (*AssistantV1) NewLogMessage(level string, msg string) (model *LogMessage, err error) {
+func (*AssistantV1) NewLogMessage(level string, msg string, code string) (model *LogMessage, err error) {
 	model = &LogMessage{
 		Level: core.StringPtr(level),
 		Msg:   core.StringPtr(msg),
+		Code:  core.StringPtr(code),
 	}
 	err = core.ValidateStruct(model, "required parameters")
 	return
@@ -8045,6 +8224,44 @@ func UnmarshalLogMessage(m map[string]json.RawMessage, result interface{}) (err 
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "msg", &obj.Msg)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "code", &obj.Code)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "source", &obj.Source, UnmarshalLogMessageSource)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// LogMessageSource : An object that identifies the dialog element that generated the error message.
+type LogMessageSource struct {
+	// A string that indicates the type of dialog element that generated the error message.
+	Type *string `json:"type,omitempty"`
+
+	// The unique identifier of the dialog node that generated the error message.
+	DialogNode *string `json:"dialog_node,omitempty"`
+}
+
+// Constants associated with the LogMessageSource.Type property.
+// A string that indicates the type of dialog element that generated the error message.
+const (
+	LogMessageSourceTypeDialogNodeConst = "dialog_node"
+)
+
+// UnmarshalLogMessageSource unmarshals an instance of LogMessageSource from the specified map of raw messages.
+func UnmarshalLogMessageSource(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(LogMessageSource)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "dialog_node", &obj.DialogNode)
 	if err != nil {
 		return
 	}
@@ -8124,9 +8341,12 @@ type MessageContextMetadata struct {
 	Deployment *string `json:"deployment,omitempty"`
 
 	// A string value that identifies the user who is interacting with the workspace. The client must provide a unique
-	// identifier for each individual end user who accesses the application. For Plus and Premium plans, this user ID is
-	// used to identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab
-	// characters.
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of **context.conversation_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property at the root of the message body. If **user_id** is
+	// specified in both locations in a message request, the value specified at the root is used.
 	UserID *string `json:"user_id,omitempty"`
 }
 
@@ -8262,32 +8482,41 @@ func UnmarshalMessageInput(m map[string]json.RawMessage, result interface{}) (er
 // MessageOptions : The Message options.
 type MessageOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// An input object that includes the input text.
-	Input *MessageInput `json:"input,omitempty"`
+	Input *MessageInput
 
 	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
 	// intents rather than trying to recognize intents in the new input.
-	Intents []RuntimeIntent `json:"intents,omitempty"`
+	Intents []RuntimeIntent
 
 	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
 	// entities rather than detecting entities in the new input.
-	Entities []RuntimeEntity `json:"entities,omitempty"`
+	Entities []RuntimeEntity
 
 	// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
-	AlternateIntents *bool `json:"alternate_intents,omitempty"`
+	AlternateIntents *bool
 
 	// State information for the conversation. To maintain state, include the context from the previous response.
-	Context *Context `json:"context,omitempty"`
+	Context *Context
 
 	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
 	// log.
-	Output *OutputData `json:"output,omitempty"`
+	Output *OutputData
+
+	// A string value that identifies the user who is interacting with the workspace. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of **context.conversation_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property in the context metadata. If **user_id** is specified
+	// in both locations in a message request, the value specified at the root is used.
+	UserID *string
 
 	// Whether to include additional diagnostic information about the dialog nodes that were visited during processing of
 	// the message.
-	NodesVisitedDetails *bool `json:"nodes_visited_details,omitempty"`
+	NodesVisitedDetails *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8342,6 +8571,12 @@ func (options *MessageOptions) SetOutput(output *OutputData) *MessageOptions {
 	return options
 }
 
+// SetUserID : Allow user to set UserID
+func (options *MessageOptions) SetUserID(userID string) *MessageOptions {
+	options.UserID = core.StringPtr(userID)
+	return options
+}
+
 // SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
 func (options *MessageOptions) SetNodesVisitedDetails(nodesVisitedDetails bool) *MessageOptions {
 	options.NodesVisitedDetails = core.BoolPtr(nodesVisitedDetails)
@@ -8379,6 +8614,15 @@ type MessageRequest struct {
 
 	// An array of objects describing any actions requested by the dialog node.
 	Actions []DialogNodeAction `json:"actions,omitempty"`
+
+	// A string value that identifies the user who is interacting with the workspace. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of **context.conversation_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property in the context metadata. If **user_id** is specified
+	// in both locations in a message request, the value specified at the root is used.
+	UserID *string `json:"user_id,omitempty"`
 }
 
 // UnmarshalMessageRequest unmarshals an instance of MessageRequest from the specified map of raw messages.
@@ -8412,6 +8656,10 @@ func UnmarshalMessageRequest(m map[string]json.RawMessage, result interface{}) (
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalPrimitive(m, "user_id", &obj.UserID)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
@@ -8439,6 +8687,15 @@ type MessageResponse struct {
 
 	// An array of objects describing any actions requested by the dialog node.
 	Actions []DialogNodeAction `json:"actions,omitempty"`
+
+	// A string value that identifies the user who is interacting with the workspace. The client must provide a unique
+	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
+	// identify unique users for billing purposes. This string cannot contain carriage return, newline, or tab characters.
+	// If no value is specified in the input, **user_id** is automatically set to the value of **context.conversation_id**.
+	//
+	// **Note:** This property is the same as the **user_id** property in the context metadata. If **user_id** is specified
+	// in both locations in a message request, the value specified at the root is used.
+	UserID *string `json:"user_id" validate:"required"`
 }
 
 // UnmarshalMessageResponse unmarshals an instance of MessageResponse from the specified map of raw messages.
@@ -8469,6 +8726,10 @@ func UnmarshalMessageResponse(m map[string]json.RawMessage, result interface{}) 
 		return
 	}
 	err = core.UnmarshalModel(m, "actions", &obj.Actions, UnmarshalDialogNodeAction)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_id", &obj.UserID)
 	if err != nil {
 		return
 	}
@@ -8643,6 +8904,35 @@ func UnmarshalPagination(m map[string]json.RawMessage, result interface{}) (err 
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "next_cursor", &obj.NextCursor)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// ResponseGenericChannel : ResponseGenericChannel struct
+type ResponseGenericChannel struct {
+	// A channel for which the response is intended.
+	Channel *string `json:"channel,omitempty"`
+}
+
+// Constants associated with the ResponseGenericChannel.Channel property.
+// A channel for which the response is intended.
+const (
+	ResponseGenericChannelChannelChatConst           = "chat"
+	ResponseGenericChannelChannelFacebookConst       = "facebook"
+	ResponseGenericChannelChannelIntercomConst       = "intercom"
+	ResponseGenericChannelChannelSlackConst          = "slack"
+	ResponseGenericChannelChannelTextMessagingConst  = "text_messaging"
+	ResponseGenericChannelChannelVoiceTelephonyConst = "voice_telephony"
+	ResponseGenericChannelChannelWhatsappConst       = "whatsapp"
+)
+
+// UnmarshalResponseGenericChannel unmarshals an instance of ResponseGenericChannel from the specified map of raw messages.
+func UnmarshalResponseGenericChannel(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(ResponseGenericChannel)
+	err = core.UnmarshalPrimitive(m, "channel", &obj.Channel)
 	if err != nil {
 		return
 	}
@@ -9062,6 +9352,8 @@ func UnmarshalRuntimeIntent(m map[string]json.RawMessage, result interface{}) (e
 // - RuntimeResponseGenericRuntimeResponseTypeOption
 // - RuntimeResponseGenericRuntimeResponseTypeConnectToAgent
 // - RuntimeResponseGenericRuntimeResponseTypeSuggestion
+// - RuntimeResponseGenericRuntimeResponseTypeChannelTransfer
+// - RuntimeResponseGenericRuntimeResponseTypeUserDefined
 type RuntimeResponseGeneric struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
 	// application or channel.
@@ -9069,6 +9361,10 @@ type RuntimeResponseGeneric struct {
 
 	// The text of the response.
 	Text *string `json:"text,omitempty"`
+
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
 
 	// How long to pause, in milliseconds.
 	Time *int64 `json:"time,omitempty"`
@@ -9109,20 +9405,19 @@ type RuntimeResponseGeneric struct {
 	// **topic** property of the dialog node response.
 	Topic *string `json:"topic,omitempty"`
 
-	// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated using the
-	// value of the dialog node's **title** property.
+	// The unique ID of the dialog node that the **topic** property is taken from. The **topic** property is populated
+	// using the value of the dialog node's **title** property.
 	DialogNode *string `json:"dialog_node,omitempty"`
 
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
 	Suggestions []DialogSuggestion `json:"suggestions,omitempty"`
-}
 
-// Constants associated with the RuntimeResponseGeneric.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericResponseTypeTextConst = "text"
-)
+	// The message to display to the user when initiating a channel transfer.
+	MessageToUser *string `json:"message_to_user,omitempty"`
+
+	// An object containing any properties for the user-defined response type.
+	UserDefined map[string]interface{} `json:"user_defined,omitempty"`
+}
 
 // Constants associated with the RuntimeResponseGeneric.Preference property.
 // The preferred type of control to display.
@@ -9152,7 +9447,9 @@ func UnmarshalRuntimeResponseGeneric(m map[string]json.RawMessage, result interf
 		err = fmt.Errorf("required discriminator property 'response_type' not found in JSON object")
 		return
 	}
-	if discValue == "connect_to_agent" {
+	if discValue == "channel_transfer" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeChannelTransfer)
+	} else if discValue == "connect_to_agent" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeConnectToAgent)
 	} else if discValue == "image" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeImage)
@@ -9164,6 +9461,8 @@ func UnmarshalRuntimeResponseGeneric(m map[string]json.RawMessage, result interf
 		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypePause)
 	} else if discValue == "text" {
 		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeText)
+	} else if discValue == "user_defined" {
+		err = core.UnmarshalModel(m, "", result, UnmarshalRuntimeResponseGenericRuntimeResponseTypeUserDefined)
 	} else {
 		err = fmt.Errorf("unrecognized value for discriminator property 'response_type': %s", discValue)
 	}
@@ -9239,18 +9538,18 @@ func UnmarshalSynonymCollection(m map[string]json.RawMessage, result interface{}
 // UpdateCounterexampleOptions : The UpdateCounterexample options.
 type UpdateCounterexampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `json:"text" validate:"required,ne="`
+	Text *string `validate:"required,ne="`
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewText *string `json:"new_text,omitempty"`
+	NewText *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9297,75 +9596,83 @@ func (options *UpdateCounterexampleOptions) SetHeaders(param map[string]string) 
 // UpdateDialogNodeOptions : The UpdateDialogNode options.
 type UpdateDialogNodeOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
-	// The dialog node ID (for example, `get_order`).
-	DialogNode *string `json:"dialog_node" validate:"required,ne="`
+	// The dialog node ID (for example, `node_1_1479323581900`).
+	DialogNode *string `validate:"required,ne="`
 
-	// The dialog node ID. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	NewDialogNode *string `json:"new_dialog_node,omitempty"`
+	// The unique ID of the dialog node. This is an internal identifier used to refer to the dialog node from other dialog
+	// nodes and in the diagnostic information included with message responses.
+	//
+	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	NewDialogNode *string
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
-	NewDescription *string `json:"new_description,omitempty"`
+	NewDescription *string
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
 	// characters.
-	NewConditions *string `json:"new_conditions,omitempty"`
+	NewConditions *string
 
-	// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
-	NewParent *string `json:"new_parent,omitempty"`
+	// The unique ID of the parent dialog node. This property is omitted if the dialog node has no parent.
+	NewParent *string
 
-	// The ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous sibling.
-	NewPreviousSibling *string `json:"new_previous_sibling,omitempty"`
+	// The unique ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous
+	// sibling.
+	NewPreviousSibling *string
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
-	NewOutput *DialogNodeOutput `json:"new_output,omitempty"`
+	NewOutput *DialogNodeOutput
 
 	// The context for the dialog node.
-	NewContext *DialogNodeContext `json:"new_context,omitempty"`
+	NewContext *DialogNodeContext
 
 	// The metadata for the dialog node.
-	NewMetadata map[string]interface{} `json:"new_metadata,omitempty"`
+	NewMetadata map[string]interface{}
 
 	// The next step to execute following this dialog node.
-	NewNextStep *DialogNodeNextStep `json:"new_next_step,omitempty"`
+	NewNextStep *DialogNodeNextStep
 
-	// The alias used to identify the dialog node. This string must conform to the following restrictions:
-	// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	NewTitle *string `json:"new_title,omitempty"`
+	// A human-readable name for the dialog node. If the node is included in disambiguation, this title is used to populate
+	// the **label** property of the corresponding suggestion in the `suggestion` response type (unless it is overridden by
+	// the **user_label** property). The title is also used to populate the **topic** property in the `connect_to_agent`
+	// response type.
+	//
+	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+	NewTitle *string
 
 	// How the dialog node is processed.
-	NewType *string `json:"new_type,omitempty"`
+	NewType *string
 
 	// How an `event_handler` node is processed.
-	NewEventName *string `json:"new_event_name,omitempty"`
+	NewEventName *string
 
 	// The location in the dialog context where output is stored.
-	NewVariable *string `json:"new_variable,omitempty"`
+	NewVariable *string
 
 	// An array of objects describing any actions to be invoked by the dialog node.
-	NewActions []DialogNodeAction `json:"new_actions,omitempty"`
+	NewActions []DialogNodeAction
 
 	// Whether this top-level dialog node can be digressed into.
-	NewDigressIn *string `json:"new_digress_in,omitempty"`
+	NewDigressIn *string
 
 	// Whether this dialog node can be returned to after a digression.
-	NewDigressOut *string `json:"new_digress_out,omitempty"`
+	NewDigressOut *string
 
 	// Whether the user can digress to top-level nodes while filling out slots.
-	NewDigressOutSlots *string `json:"new_digress_out_slots,omitempty"`
+	NewDigressOutSlots *string
 
-	// A label that can be displayed externally to describe the purpose of the node to users.
-	NewUserLabel *string `json:"new_user_label,omitempty"`
+	// A label that can be displayed externally to describe the purpose of the node to users. If set, this label is used to
+	// identify the node in disambiguation responses (overriding the value of the **title** property).
+	NewUserLabel *string
 
 	// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when **type**=`standard` or
 	// `frame`.
-	NewDisambiguationOptOut *bool `json:"new_disambiguation_opt_out,omitempty"`
+	NewDisambiguationOptOut *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9569,27 +9876,27 @@ func (options *UpdateDialogNodeOptions) SetHeaders(param map[string]string) *Upd
 // UpdateEntityOptions : The UpdateEntity options.
 type UpdateEntityOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	NewEntity *string `json:"new_entity,omitempty"`
+	NewEntity *string
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters.
-	NewDescription *string `json:"new_description,omitempty"`
+	NewDescription *string
 
 	// Any metadata related to the entity.
-	NewMetadata map[string]interface{} `json:"new_metadata,omitempty"`
+	NewMetadata map[string]interface{}
 
 	// Whether to use fuzzy matching for the entity.
-	NewFuzzyMatch *bool `json:"new_fuzzy_match,omitempty"`
+	NewFuzzyMatch *bool
 
 	// An array of objects describing the entity values.
-	NewValues []CreateValue `json:"new_values,omitempty"`
+	NewValues []CreateValue
 
 	// Whether the new data is to be appended to the existing data in the entity. If **append**=`false`, elements included
 	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
@@ -9598,10 +9905,10 @@ type UpdateEntityOptions struct {
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
-	Append *bool `json:"append,omitempty"`
+	Append *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9678,24 +9985,24 @@ func (options *UpdateEntityOptions) SetHeaders(param map[string]string) *UpdateE
 // UpdateExampleOptions : The UpdateExample options.
 type UpdateExampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `json:"intent" validate:"required,ne="`
+	Intent *string `validate:"required,ne="`
 
 	// The text of the user input example.
-	Text *string `json:"text" validate:"required,ne="`
+	Text *string `validate:"required,ne="`
 
 	// The text of the user input example. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewText *string `json:"new_text,omitempty"`
+	NewText *string
 
 	// An array of contextual entity mentions.
-	NewMentions []Mention `json:"new_mentions,omitempty"`
+	NewMentions []Mention
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9755,21 +10062,21 @@ func (options *UpdateExampleOptions) SetHeaders(param map[string]string) *Update
 // UpdateIntentOptions : The UpdateIntent options.
 type UpdateIntentOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `json:"intent" validate:"required,ne="`
+	Intent *string `validate:"required,ne="`
 
 	// The name of the intent. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	NewIntent *string `json:"new_intent,omitempty"`
+	NewIntent *string
 
 	// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
-	NewDescription *string `json:"new_description,omitempty"`
+	NewDescription *string
 
 	// An array of user input examples for the intent.
-	NewExamples []Example `json:"new_examples,omitempty"`
+	NewExamples []Example
 
 	// Whether the new data is to be appended to the existing data in the object. If **append**=`false`, elements included
 	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
@@ -9778,10 +10085,10 @@ type UpdateIntentOptions struct {
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
-	Append *bool `json:"append,omitempty"`
+	Append *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9846,24 +10153,24 @@ func (options *UpdateIntentOptions) SetHeaders(param map[string]string) *UpdateI
 // UpdateSynonymOptions : The UpdateSynonym options.
 type UpdateSynonymOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `json:"value" validate:"required,ne="`
+	Value *string `validate:"required,ne="`
 
 	// The text of the synonym.
-	Synonym *string `json:"synonym" validate:"required,ne="`
+	Synonym *string `validate:"required,ne="`
 
 	// The text of the synonym. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewSynonym *string `json:"new_synonym,omitempty"`
+	NewSynonym *string
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9924,35 +10231,35 @@ func (options *UpdateSynonymOptions) SetHeaders(param map[string]string) *Update
 // UpdateValueOptions : The UpdateValue options.
 type UpdateValueOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `json:"entity" validate:"required,ne="`
+	Entity *string `validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `json:"value" validate:"required,ne="`
+	Value *string `validate:"required,ne="`
 
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewValue *string `json:"new_value,omitempty"`
+	NewValue *string
 
 	// Any metadata related to the entity value.
-	NewMetadata map[string]interface{} `json:"new_metadata,omitempty"`
+	NewMetadata map[string]interface{}
 
 	// Specifies the type of entity value.
-	NewType *string `json:"new_type,omitempty"`
+	NewType *string
 
 	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewSynonyms []string `json:"new_synonyms,omitempty"`
+	NewSynonyms []string
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
-	NewPatterns []string `json:"new_patterns,omitempty"`
+	NewPatterns []string
 
 	// Whether the new data is to be appended to the existing data in the entity value. If **append**=`false`, elements
 	// included in the new data completely replace the corresponding existing elements, including all subelements. For
@@ -9961,10 +10268,10 @@ type UpdateValueOptions struct {
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
-	Append *bool `json:"append,omitempty"`
+	Append *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10055,40 +10362,40 @@ func (options *UpdateValueOptions) SetHeaders(param map[string]string) *UpdateVa
 // UpdateWorkspaceOptions : The UpdateWorkspace options.
 type UpdateWorkspaceOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `json:"workspace_id" validate:"required,ne="`
+	WorkspaceID *string `validate:"required,ne="`
 
 	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// The language of the workspace.
-	Language *string `json:"language,omitempty"`
+	Language *string
 
 	// An array of objects describing the dialog nodes in the workspace.
-	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
+	DialogNodes []DialogNode
 
 	// An array of objects defining input examples that have been marked as irrelevant input.
-	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
+	Counterexamples []Counterexample
 
 	// Any metadata related to the workspace.
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	Metadata map[string]interface{}
 
 	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
 	// general service improvements. `true` indicates that workspace training data is not to be used.
-	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
+	LearningOptOut *bool
 
 	// Global settings for the workspace.
-	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
+	SystemSettings *WorkspaceSystemSettings
 
-	Webhooks []Webhook `json:"webhooks,omitempty"`
+	Webhooks []Webhook
 
 	// An array of objects defining the intents for the workspace.
-	Intents []CreateIntent `json:"intents,omitempty"`
+	Intents []CreateIntent
 
 	// An array of objects describing the entities for the workspace.
-	Entities []CreateEntity `json:"entities,omitempty"`
+	Entities []CreateEntity
 
 	// Whether the new data is to be appended to the existing data in the object. If **append**=`false`, elements included
 	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
@@ -10097,10 +10404,10 @@ type UpdateWorkspaceOptions struct {
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
-	Append *bool `json:"append,omitempty"`
+	Append *bool
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool `json:"include_audit,omitempty"`
+	IncludeAudit *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10709,7 +11016,62 @@ func UnmarshalWorkspaceSystemSettingsTooling(m map[string]json.RawMessage, resul
 	return
 }
 
-// DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent : An object that describes a response with response type `connect_to_agent`.
+// DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer : DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer struct
+// This model "extends" DialogNodeOutputGeneric
+type DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer struct {
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
+	ResponseType *string `json:"response_type" validate:"required"`
+
+	// The message to display to the user when initiating a channel transfer.
+	MessageToUser *string `json:"message_to_user" validate:"required"`
+
+	// Information used by an integration to transfer the conversation to a different channel.
+	TransferInfo *ChannelTransferInfo `json:"transfer_info" validate:"required"`
+
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
+
+// NewDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer (Generic Model Constructor)
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer(responseType string, messageToUser string, transferInfo *ChannelTransferInfo) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer, err error) {
+	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer{
+		ResponseType:  core.StringPtr(responseType),
+		MessageToUser: core.StringPtr(messageToUser),
+		TransferInfo:  transferInfo,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
+func (*DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer) isaDialogNodeOutputGeneric() bool {
+	return true
+}
+
+// UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer unmarshals an instance of DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer from the specified map of raw messages.
+func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer)
+	err = core.UnmarshalPrimitive(m, "response_type", &obj.ResponseType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "message_to_user", &obj.MessageToUser)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "transfer_info", &obj.TransferInfo, UnmarshalChannelTransferInfo)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent : DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent struct
 // This model "extends" DialogNodeOutputGeneric
 type DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -10729,14 +11091,10 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent struct {
 
 	// Routing or other contextual information to be used by target service desk systems.
 	TransferInfo *DialogNodeOutputConnectToAgentTransferInfo `json:"transfer_info,omitempty"`
-}
 
-// Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgentResponseTypeConnectToAgentConst = "connect_to_agent"
-)
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(responseType string) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent, err error) {
@@ -10774,11 +11132,15 @@ func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// DialogNodeOutputGenericDialogNodeOutputResponseTypeImage : An object that describes a response with response type `image`.
+// DialogNodeOutputGenericDialogNodeOutputResponseTypeImage : DialogNodeOutputGenericDialogNodeOutputResponseTypeImage struct
 // This model "extends" DialogNodeOutputGeneric
 type DialogNodeOutputGenericDialogNodeOutputResponseTypeImage struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -10793,14 +11155,10 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeImage struct {
 
 	// An optional description to show with the response.
 	Description *string `json:"description,omitempty"`
-}
 
-// Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeImage.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeImageResponseTypeImageConst = "image"
-)
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeImage (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage(responseType string, source string) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeImage, err error) {
@@ -10835,11 +11193,15 @@ func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeImage(m map[str
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// DialogNodeOutputGenericDialogNodeOutputResponseTypeOption : An object that describes a response with response type `option`.
+// DialogNodeOutputGenericDialogNodeOutputResponseTypeOption : DialogNodeOutputGenericDialogNodeOutputResponseTypeOption struct
 // This model "extends" DialogNodeOutputGeneric
 type DialogNodeOutputGenericDialogNodeOutputResponseTypeOption struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -10857,14 +11219,10 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeOption struct {
 
 	// An array of objects describing the options from which the user can choose. You can include up to 20 options.
 	Options []DialogNodeOutputOptionsElement `json:"options" validate:"required"`
-}
 
-// Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeOption.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeOptionResponseTypeOptionConst = "option"
-)
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeOption.Preference property.
 // The preferred type of control to display, if supported by the channel.
@@ -10911,11 +11269,15 @@ func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeOption(m map[st
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// DialogNodeOutputGenericDialogNodeOutputResponseTypePause : An object that describes a response with response type `pause`.
+// DialogNodeOutputGenericDialogNodeOutputResponseTypePause : DialogNodeOutputGenericDialogNodeOutputResponseTypePause struct
 // This model "extends" DialogNodeOutputGeneric
 type DialogNodeOutputGenericDialogNodeOutputResponseTypePause struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -10927,14 +11289,10 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypePause struct {
 
 	// Whether to send a "user is typing" event during the pause. Ignored if the channel does not support this event.
 	Typing *bool `json:"typing,omitempty"`
-}
 
-// Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypePause.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	DialogNodeOutputGenericDialogNodeOutputResponseTypePauseResponseTypePauseConst = "pause"
-)
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypePause (Generic Model Constructor)
 func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause(responseType string, time int64) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypePause, err error) {
@@ -10965,11 +11323,15 @@ func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypePause(m map[str
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill : An object that describes a response with response type `search_skill`.
+// DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill : DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill struct
 // This model "extends" DialogNodeOutputGeneric
 type DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -10993,16 +11355,10 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill struct {
 
 	// The version of the Discovery service API to use for the query.
 	DiscoveryVersion *string `json:"discovery_version,omitempty"`
-}
 
-// Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-//
-// **Note:** The **search_skill** response type is used only by the v2 runtime API.
-const (
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkillResponseTypeSearchSkillConst = "search_skill"
-)
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill.QueryType property.
 // The type of the search query.
@@ -11049,11 +11405,15 @@ func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill(m m
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// DialogNodeOutputGenericDialogNodeOutputResponseTypeText : An object that describes a response with response type `text`.
+// DialogNodeOutputGenericDialogNodeOutputResponseTypeText : DialogNodeOutputGenericDialogNodeOutputResponseTypeText struct
 // This model "extends" DialogNodeOutputGeneric
 type DialogNodeOutputGenericDialogNodeOutputResponseTypeText struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -11068,14 +11428,10 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeText struct {
 
 	// The delimiter to use as a separator between responses when `selection_policy`=`multiline`.
 	Delimiter *string `json:"delimiter,omitempty"`
-}
 
-// Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeText.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	DialogNodeOutputGenericDialogNodeOutputResponseTypeTextResponseTypeTextConst = "text"
-)
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // Constants associated with the DialogNodeOutputGenericDialogNodeOutputResponseTypeText.SelectionPolicy property.
 // How a response is selected from the list, if more than one response is specified.
@@ -11118,11 +11474,119 @@ func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeText(m map[stri
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeConnectToAgent : An object that describes a response with response type `connect_to_agent`.
+// DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined : DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined struct
+// This model "extends" DialogNodeOutputGeneric
+type DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined struct {
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
+	ResponseType *string `json:"response_type" validate:"required"`
+
+	// An object containing any properties for the user-defined response type. The total size of this object cannot exceed
+	// 5000 bytes.
+	UserDefined map[string]interface{} `json:"user_defined" validate:"required"`
+
+	// An array of objects specifying channels for which the response is intended.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
+
+// NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined (Generic Model Constructor)
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined(responseType string, userDefined map[string]interface{}) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined, err error) {
+	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined{
+		ResponseType: core.StringPtr(responseType),
+		UserDefined:  userDefined,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
+func (*DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined) isaDialogNodeOutputGeneric() bool {
+	return true
+}
+
+// UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined unmarshals an instance of DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined from the specified map of raw messages.
+func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined)
+	err = core.UnmarshalPrimitive(m, "response_type", &obj.ResponseType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_defined", &obj.UserDefined)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// RuntimeResponseGenericRuntimeResponseTypeChannelTransfer : RuntimeResponseGenericRuntimeResponseTypeChannelTransfer struct
+// This model "extends" RuntimeResponseGeneric
+type RuntimeResponseGenericRuntimeResponseTypeChannelTransfer struct {
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
+	ResponseType *string `json:"response_type" validate:"required"`
+
+	// The message to display to the user when initiating a channel transfer.
+	MessageToUser *string `json:"message_to_user" validate:"required"`
+
+	// Information used by an integration to transfer the conversation to a different channel.
+	TransferInfo *ChannelTransferInfo `json:"transfer_info" validate:"required"`
+
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended only for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
+
+// NewRuntimeResponseGenericRuntimeResponseTypeChannelTransfer : Instantiate RuntimeResponseGenericRuntimeResponseTypeChannelTransfer (Generic Model Constructor)
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeChannelTransfer(responseType string, messageToUser string, transferInfo *ChannelTransferInfo) (model *RuntimeResponseGenericRuntimeResponseTypeChannelTransfer, err error) {
+	model = &RuntimeResponseGenericRuntimeResponseTypeChannelTransfer{
+		ResponseType:  core.StringPtr(responseType),
+		MessageToUser: core.StringPtr(messageToUser),
+		TransferInfo:  transferInfo,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
+func (*RuntimeResponseGenericRuntimeResponseTypeChannelTransfer) isaRuntimeResponseGeneric() bool {
+	return true
+}
+
+// UnmarshalRuntimeResponseGenericRuntimeResponseTypeChannelTransfer unmarshals an instance of RuntimeResponseGenericRuntimeResponseTypeChannelTransfer from the specified map of raw messages.
+func UnmarshalRuntimeResponseGenericRuntimeResponseTypeChannelTransfer(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(RuntimeResponseGenericRuntimeResponseTypeChannelTransfer)
+	err = core.UnmarshalPrimitive(m, "response_type", &obj.ResponseType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "message_to_user", &obj.MessageToUser)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "transfer_info", &obj.TransferInfo, UnmarshalChannelTransferInfo)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// RuntimeResponseGenericRuntimeResponseTypeConnectToAgent : RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -11147,17 +11611,14 @@ type RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct {
 	// **topic** property of the dialog node response.
 	Topic *string `json:"topic,omitempty"`
 
-	// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated using the
-	// value of the dialog node's **title** property.
+	// The unique ID of the dialog node that the **topic** property is taken from. The **topic** property is populated
+	// using the value of the dialog node's **title** property.
 	DialogNode *string `json:"dialog_node,omitempty"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeConnectToAgent.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeConnectToAgentResponseTypeConnectToAgentConst = "connect_to_agent"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent : Instantiate RuntimeResponseGenericRuntimeResponseTypeConnectToAgent (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(responseType string) (model *RuntimeResponseGenericRuntimeResponseTypeConnectToAgent, err error) {
@@ -11203,11 +11664,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(m map[stri
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeImage : An object that describes a response with response type `image`.
+// RuntimeResponseGenericRuntimeResponseTypeImage : RuntimeResponseGenericRuntimeResponseTypeImage struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeImage struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -11222,14 +11687,11 @@ type RuntimeResponseGenericRuntimeResponseTypeImage struct {
 
 	// The description to show with the the response.
 	Description *string `json:"description,omitempty"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeImage.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeImageResponseTypeImageConst = "image"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // NewRuntimeResponseGenericRuntimeResponseTypeImage : Instantiate RuntimeResponseGenericRuntimeResponseTypeImage (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeImage(responseType string, source string) (model *RuntimeResponseGenericRuntimeResponseTypeImage, err error) {
@@ -11264,11 +11726,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeImage(m map[string]json.R
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeOption : An object that describes a response with response type `option`.
+// RuntimeResponseGenericRuntimeResponseTypeOption : RuntimeResponseGenericRuntimeResponseTypeOption struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeOption struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -11286,14 +11752,11 @@ type RuntimeResponseGenericRuntimeResponseTypeOption struct {
 
 	// An array of objects describing the options from which the user can choose.
 	Options []DialogNodeOutputOptionsElement `json:"options" validate:"required"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeOption.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeOptionResponseTypeOptionConst = "option"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // Constants associated with the RuntimeResponseGenericRuntimeResponseTypeOption.Preference property.
 // The preferred type of control to display.
@@ -11340,11 +11803,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeOption(m map[string]json.
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypePause : An object that describes a response with response type `pause`.
+// RuntimeResponseGenericRuntimeResponseTypePause : RuntimeResponseGenericRuntimeResponseTypePause struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypePause struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -11356,14 +11823,11 @@ type RuntimeResponseGenericRuntimeResponseTypePause struct {
 
 	// Whether to send a "user is typing" event during the pause.
 	Typing *bool `json:"typing,omitempty"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypePause.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypePauseResponseTypePauseConst = "pause"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // NewRuntimeResponseGenericRuntimeResponseTypePause : Instantiate RuntimeResponseGenericRuntimeResponseTypePause (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypePause(responseType string, time int64) (model *RuntimeResponseGenericRuntimeResponseTypePause, err error) {
@@ -11394,11 +11858,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypePause(m map[string]json.R
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeSuggestion : An object that describes a response with response type `suggestion`.
+// RuntimeResponseGenericRuntimeResponseTypeSuggestion : RuntimeResponseGenericRuntimeResponseTypeSuggestion struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeSuggestion struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -11410,14 +11878,11 @@ type RuntimeResponseGenericRuntimeResponseTypeSuggestion struct {
 
 	// An array of objects describing the possible matching dialog nodes from which the user can choose.
 	Suggestions []DialogSuggestion `json:"suggestions" validate:"required"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeSuggestion.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeSuggestionResponseTypeSuggestionConst = "suggestion"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // NewRuntimeResponseGenericRuntimeResponseTypeSuggestion : Instantiate RuntimeResponseGenericRuntimeResponseTypeSuggestion (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeSuggestion(responseType string, title string, suggestions []DialogSuggestion) (model *RuntimeResponseGenericRuntimeResponseTypeSuggestion, err error) {
@@ -11449,11 +11914,15 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeSuggestion(m map[string]j
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
 
-// RuntimeResponseGenericRuntimeResponseTypeText : An object that describes a response with response type `text`.
+// RuntimeResponseGenericRuntimeResponseTypeText : RuntimeResponseGenericRuntimeResponseTypeText struct
 // This model "extends" RuntimeResponseGeneric
 type RuntimeResponseGenericRuntimeResponseTypeText struct {
 	// The type of response returned by the dialog node. The specified response type must be supported by the client
@@ -11462,14 +11931,11 @@ type RuntimeResponseGenericRuntimeResponseTypeText struct {
 
 	// The text of the response.
 	Text *string `json:"text" validate:"required"`
-}
 
-// Constants associated with the RuntimeResponseGenericRuntimeResponseTypeText.ResponseType property.
-// The type of response returned by the dialog node. The specified response type must be supported by the client
-// application or channel.
-const (
-	RuntimeResponseGenericRuntimeResponseTypeTextResponseTypeTextConst = "text"
-)
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
 
 // NewRuntimeResponseGenericRuntimeResponseTypeText : Instantiate RuntimeResponseGenericRuntimeResponseTypeText (Generic Model Constructor)
 func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeText(responseType string, text string) (model *RuntimeResponseGenericRuntimeResponseTypeText, err error) {
@@ -11493,6 +11959,58 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeText(m map[string]json.Ra
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "text", &obj.Text)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// RuntimeResponseGenericRuntimeResponseTypeUserDefined : RuntimeResponseGenericRuntimeResponseTypeUserDefined struct
+// This model "extends" RuntimeResponseGeneric
+type RuntimeResponseGenericRuntimeResponseTypeUserDefined struct {
+	// The type of response returned by the dialog node. The specified response type must be supported by the client
+	// application or channel.
+	ResponseType *string `json:"response_type" validate:"required"`
+
+	// An object containing any properties for the user-defined response type.
+	UserDefined map[string]interface{} `json:"user_defined" validate:"required"`
+
+	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
+	// is intended for a built-in integration and should not be handled by an API client.
+	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+}
+
+// NewRuntimeResponseGenericRuntimeResponseTypeUserDefined : Instantiate RuntimeResponseGenericRuntimeResponseTypeUserDefined (Generic Model Constructor)
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeUserDefined(responseType string, userDefined map[string]interface{}) (model *RuntimeResponseGenericRuntimeResponseTypeUserDefined, err error) {
+	model = &RuntimeResponseGenericRuntimeResponseTypeUserDefined{
+		ResponseType: core.StringPtr(responseType),
+		UserDefined:  userDefined,
+	}
+	err = core.ValidateStruct(model, "required parameters")
+	return
+}
+
+func (*RuntimeResponseGenericRuntimeResponseTypeUserDefined) isaRuntimeResponseGeneric() bool {
+	return true
+}
+
+// UnmarshalRuntimeResponseGenericRuntimeResponseTypeUserDefined unmarshals an instance of RuntimeResponseGenericRuntimeResponseTypeUserDefined from the specified map of raw messages.
+func UnmarshalRuntimeResponseGenericRuntimeResponseTypeUserDefined(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(RuntimeResponseGenericRuntimeResponseTypeUserDefined)
+	err = core.UnmarshalPrimitive(m, "response_type", &obj.ResponseType)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "user_defined", &obj.UserDefined)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
 	if err != nil {
 		return
 	}
