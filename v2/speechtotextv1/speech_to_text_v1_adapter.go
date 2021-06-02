@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 
 	"net/http"
 	"net/url"

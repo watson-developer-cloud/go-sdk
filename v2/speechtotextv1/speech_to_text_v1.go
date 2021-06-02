@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.22.0-937b9a1c-20201211-223043
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package speechtotextv1 : Operations and models for the SpeechToTextV1 service
@@ -31,15 +31,20 @@ import (
 	"strings"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // SpeechToTextV1 : The IBM Watson&trade; Speech to Text service provides APIs that use IBM's speech-recognition
 // capabilities to produce transcripts of spoken audio. The service can transcribe speech from various languages and
 // audio formats. In addition to basic transcription, the service can produce detailed information about many different
-// aspects of the audio. For most languages, the service supports two sampling rates, broadband and narrowband. It
-// returns all JSON response content in the UTF-8 character set.
+// aspects of the audio. It returns all JSON response content in the UTF-8 character set.
+//
+// The service supports two types of models: previous-generation models that include the terms `Broadband` and
+// `Narrowband` in their names, and beta next-generation models that include the terms `Multimedia` and `Telephony` in
+// their names. Broadband and multimedia models have minimum sampling rates of 16 kHz. Narrowband and telephony models
+// have minimum sampling rates of 8 kHz. The beta next-generation models currently support fewer languages and features,
+// but they offer high throughput and greater transcription accuracy.
 //
 // For speech recognition, the service supports synchronous and asynchronous HTTP Representational State Transfer (REST)
 // interfaces. It also supports a WebSocket interface that provides a full-duplex, low-latency communication channel:
@@ -51,8 +56,8 @@ import (
 // formal language specification that lets you restrict the phrases that the service can recognize.
 //
 // Language model customization and acoustic model customization are generally available for production use with all
-// language models that are generally available. Grammars are beta functionality for all language models that support
-// language model customization.
+// previous-generation models that are generally available. Grammars are beta functionality for all previous-generation
+// models that support language model customization. Next-generation models do not support customization at this time.
 //
 // Version: 1.0.0
 // See: https://cloud.ibm.com/docs/speech-to-text
@@ -176,7 +181,7 @@ func (speechToText *SpeechToTextV1) DisableSSLVerification() {
 // and its minimum sampling rate in Hertz, among other things. The ordering of the list of models can change from call
 // to call; do not rely on an alphabetized or static list of models.
 //
-// **See also:** [Languages and models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
+// **See also:** [Listing models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-list).
 func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOptions) (result *SpeechModels, response *core.DetailedResponse, err error) {
 	return speechToText.ListModelsWithContext(context.Background(), listModelsOptions)
 }
@@ -216,11 +221,13 @@ func (speechToText *SpeechToTextV1) ListModelsWithContext(ctx context.Context, l
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechModels)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechModels)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -229,7 +236,7 @@ func (speechToText *SpeechToTextV1) ListModelsWithContext(ctx context.Context, l
 // Gets information for a single specified language model that is available for use with the service. The information
 // includes the name of the model and its minimum sampling rate in Hertz, among other things.
 //
-// **See also:** [Languages and models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
+// **See also:** [Listing models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-list).
 func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (result *SpeechModel, response *core.DetailedResponse, err error) {
 	return speechToText.GetModelWithContext(context.Background(), getModelOptions)
 }
@@ -277,11 +284,13 @@ func (speechToText *SpeechToTextV1) GetModelWithContext(ctx context.Context, get
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechModel)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -341,8 +350,36 @@ func (speechToText *SpeechToTextV1) GetModelWithContext(ctx context.Context, get
 // minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio
 // is lower than the minimum required rate, the request fails.
 //
-//  **See also:** [Audio
-// formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats#audio-formats).
+//  **See also:** [Supported audio
+// formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats).
+//
+// ### Next-generation models
+//
+//  **Note:** The next-generation language models are beta functionality. They support a limited number of languages and
+// features at this time. The supported languages, models, and features will increase with future releases.
+//
+// The service supports next-generation `Multimedia` (16 kHz) and `Telephony` (8 kHz) models for many languages.
+// Next-generation models have higher throughput than the service's previous generation of `Broadband` and `Narrowband`
+// models. When you use next-generation models, the service can return transcriptions more quickly and also provide
+// noticeably better transcription accuracy.
+//
+// You specify a next-generation model by using the `model` query parameter, as you do a previous-generation model.
+// Next-generation models support the same request headers as previous-generation models, but they support only the
+// following additional query parameters:
+// * `background_audio_suppression`
+// * `inactivity_timeout`
+// * `profanity_filter`
+// * `redaction`
+// * `smart_formatting`
+// * `speaker_labels`
+// * `speech_detector_sensitivity`
+// * `timestamps`
+//
+// Many next-generation models also support the beta `low_latency` parameter, which is not available with
+// previous-generation models.
+//
+// **See also:** [Next-generation languages and
+// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng).
 //
 // ### Multipart speech recognition
 //
@@ -464,6 +501,9 @@ func (speechToText *SpeechToTextV1) RecognizeWithContext(ctx context.Context, re
 	if recognizeOptions.BackgroundAudioSuppression != nil {
 		builder.AddQuery("background_audio_suppression", fmt.Sprint(*recognizeOptions.BackgroundAudioSuppression))
 	}
+	if recognizeOptions.LowLatency != nil {
+		builder.AddQuery("low_latency", fmt.Sprint(*recognizeOptions.LowLatency))
+	}
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(recognizeOptions.ContentType), nil, nil, recognizeOptions.Audio)
 	if err != nil {
@@ -480,11 +520,13 @@ func (speechToText *SpeechToTextV1) RecognizeWithContext(ctx context.Context, re
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechRecognitionResults)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalSpeechRecognitionResults)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -565,11 +607,13 @@ func (speechToText *SpeechToTextV1) RegisterCallbackWithContext(ctx context.Cont
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRegisterStatus)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRegisterStatus)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -701,8 +745,36 @@ func (speechToText *SpeechToTextV1) UnregisterCallbackWithContext(ctx context.Co
 // minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio
 // is lower than the minimum required rate, the request fails.
 //
-//  **See also:** [Audio
-// formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats#audio-formats).
+//  **See also:** [Supported audio
+// formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats).
+//
+// ### Next-generation models
+//
+//  **Note:** The next-generation language models are beta functionality. They support a limited number of languages and
+// features at this time. The supported languages, models, and features will increase with future releases.
+//
+// The service supports next-generation `Multimedia` (16 kHz) and `Telephony` (8 kHz) models for many languages.
+// Next-generation models have higher throughput than the service's previous generation of `Broadband` and `Narrowband`
+// models. When you use next-generation models, the service can return transcriptions more quickly and also provide
+// noticeably better transcription accuracy.
+//
+// You specify a next-generation model by using the `model` query parameter, as you do a previous-generation model.
+// Next-generation models support the same request headers as previous-generation models, but they support only the
+// following additional query parameters:
+// * `background_audio_suppression`
+// * `inactivity_timeout`
+// * `profanity_filter`
+// * `redaction`
+// * `smart_formatting`
+// * `speaker_labels`
+// * `speech_detector_sensitivity`
+// * `timestamps`
+//
+// Many next-generation models also support the beta `low_latency` parameter, which is not available with
+// previous-generation models.
+//
+// **See also:** [Next-generation languages and
+// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng).
 func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions) (result *RecognitionJob, response *core.DetailedResponse, err error) {
 	return speechToText.CreateJobWithContext(context.Background(), createJobOptions)
 }
@@ -826,6 +898,9 @@ func (speechToText *SpeechToTextV1) CreateJobWithContext(ctx context.Context, cr
 	if createJobOptions.BackgroundAudioSuppression != nil {
 		builder.AddQuery("background_audio_suppression", fmt.Sprint(*createJobOptions.BackgroundAudioSuppression))
 	}
+	if createJobOptions.LowLatency != nil {
+		builder.AddQuery("low_latency", fmt.Sprint(*createJobOptions.LowLatency))
+	}
 
 	_, err = builder.SetBodyContent(core.StringNilMapper(createJobOptions.ContentType), nil, nil, createJobOptions.Audio)
 	if err != nil {
@@ -842,11 +917,13 @@ func (speechToText *SpeechToTextV1) CreateJobWithContext(ctx context.Context, cr
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJob)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJob)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -899,11 +976,13 @@ func (speechToText *SpeechToTextV1) CheckJobsWithContext(ctx context.Context, ch
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJobs)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJobs)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -967,11 +1046,13 @@ func (speechToText *SpeechToTextV1) CheckJobWithContext(ctx context.Context, che
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJob)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalRecognitionJob)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1101,11 +1182,13 @@ func (speechToText *SpeechToTextV1) CreateLanguageModelWithContext(ctx context.C
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModel)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1161,11 +1244,13 @@ func (speechToText *SpeechToTextV1) ListLanguageModelsWithContext(ctx context.Co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModels)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModels)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1223,11 +1308,13 @@ func (speechToText *SpeechToTextV1) GetLanguageModelWithContext(ctx context.Cont
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModel)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguageModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1370,11 +1457,13 @@ func (speechToText *SpeechToTextV1) TrainLanguageModelWithContext(ctx context.Co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1448,7 +1537,7 @@ func (speechToText *SpeechToTextV1) ResetLanguageModelWithContext(ctx context.Co
 // for the model until the upgrade completes.
 //
 // **See also:** [Upgrading a custom language
-// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customUpgrade#upgradeLanguage).
+// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-custom-upgrade#custom-upgrade-language).
 func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOptions *UpgradeLanguageModelOptions) (response *core.DetailedResponse, err error) {
 	return speechToText.UpgradeLanguageModelWithContext(context.Background(), upgradeLanguageModelOptions)
 }
@@ -1550,11 +1639,13 @@ func (speechToText *SpeechToTextV1) ListCorporaWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCorpora)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCorpora)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1708,11 +1799,13 @@ func (speechToText *SpeechToTextV1) GetCorpusWithContext(ctx context.Context, ge
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCorpus)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCorpus)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1837,11 +1930,13 @@ func (speechToText *SpeechToTextV1) ListWordsWithContext(ctx context.Context, li
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWords)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWords)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2103,11 +2198,13 @@ func (speechToText *SpeechToTextV1) GetWordWithContext(ctx context.Context, getW
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWord)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWord)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2223,11 +2320,13 @@ func (speechToText *SpeechToTextV1) ListGrammarsWithContext(ctx context.Context,
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGrammars)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGrammars)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2380,11 +2479,13 @@ func (speechToText *SpeechToTextV1) GetGrammarWithContext(ctx context.Context, g
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGrammar)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGrammar)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2516,11 +2617,13 @@ func (speechToText *SpeechToTextV1) CreateAcousticModelWithContext(ctx context.C
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModel)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2576,11 +2679,13 @@ func (speechToText *SpeechToTextV1) ListAcousticModelsWithContext(ctx context.Co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModels)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModels)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2638,11 +2743,13 @@ func (speechToText *SpeechToTextV1) GetAcousticModelWithContext(ctx context.Cont
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModel)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAcousticModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2796,11 +2903,13 @@ func (speechToText *SpeechToTextV1) TrainAcousticModelWithContext(ctx context.Co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2883,7 +2992,7 @@ func (speechToText *SpeechToTextV1) ResetAcousticModelWithContext(ctx context.Co
 // was not trained with a custom language model.
 //
 // **See also:** [Upgrading a custom acoustic
-// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customUpgrade#upgradeAcoustic).
+// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-custom-upgrade#custom-upgrade-acoustic).
 func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOptions *UpgradeAcousticModelOptions) (response *core.DetailedResponse, err error) {
 	return speechToText.UpgradeAcousticModelWithContext(context.Background(), upgradeAcousticModelOptions)
 }
@@ -2994,11 +3103,13 @@ func (speechToText *SpeechToTextV1) ListAudioWithContext(ctx context.Context, li
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAudioResources)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAudioResources)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3062,8 +3173,8 @@ func (speechToText *SpeechToTextV1) ListAudioWithContext(ctx context.Context, li
 // minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio
 // is lower than the minimum required rate, the service labels the audio file as `invalid`.
 //
-//  **See also:** [Audio
-// formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats#audio-formats).
+//  **See also:** [Supported audio
+// formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats).
 //
 // ### Content types for archive-type resources
 //
@@ -3219,11 +3330,13 @@ func (speechToText *SpeechToTextV1) GetAudioWithContext(ctx context.Context, get
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAudioListing)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAudioListing)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3498,7 +3611,7 @@ func UnmarshalAcousticModels(m map[string]json.RawMessage, result interface{}) (
 type AddAudioOptions struct {
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the new audio resource for the custom acoustic model. Use a localized name that matches the language of
 	// the custom model and reflects the contents of the resource.
@@ -3508,19 +3621,19 @@ type AddAudioOptions struct {
 	// prevent the use of these characters. But because they must be URL-encoded wherever used, their use is strongly
 	// discouraged.)
 	// * Do not use the name of an audio resource that has already been added to the custom model.
-	AudioName *string `json:"audio_name" validate:"required,ne="`
+	AudioName *string `validate:"required,ne="`
 
 	// The audio resource that is to be added to the custom acoustic model, an individual audio file or an archive file.
 	//
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
-	AudioResource io.ReadCloser `json:"audio_resource" validate:"required"`
+	AudioResource io.ReadCloser `validate:"required"`
 
 	// For an audio-type resource, the format (MIME type) of the audio. For more information, see **Content types for
 	// audio-type resources** in the method description.
 	//
 	// For an archive-type resource, the media type of the archive file. For more information, see **Content types for
 	// archive-type resources** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
+	ContentType *string
 
 	// **For an archive-type resource,** specify the format of the audio files that are contained in the archive file if
 	// they are of type `audio/alaw`, `audio/basic`, `audio/l16`, or `audio/mulaw`. Include the `rate`, `channels`, and
@@ -3534,12 +3647,12 @@ type AddAudioOptions struct {
 	// information, see **Content types for audio-type resources** in the method description.
 	//
 	// **For an audio-type resource,** omit the header.
-	ContainedContentType *string `json:"Contained-Content-Type,omitempty"`
+	ContainedContentType *string
 
 	// If `true`, the specified audio resource overwrites an existing audio resource with the same name. If `false`, the
 	// request fails if an audio resource with the same name already exists. The parameter has no effect if an audio
 	// resource with the same name does not already exist.
-	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
+	AllowOverwrite *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3631,7 +3744,7 @@ func (options *AddAudioOptions) SetHeaders(param map[string]string) *AddAudioOpt
 type AddCorpusOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the new corpus for the custom language model. Use a localized name that matches the language of the
 	// custom model and reflects the contents of the corpus.
@@ -3644,7 +3757,7 @@ type AddCorpusOptions struct {
 	// * Do not use the name `user`, which is reserved by the service to denote custom words that are added or modified by
 	// the user.
 	// * Do not use the name `base_lm` or `default_lm`. Both names are reserved for future use by the service.
-	CorpusName *string `json:"corpus_name" validate:"required,ne="`
+	CorpusName *string `validate:"required,ne="`
 
 	// A plain text file that contains the training data for the corpus. Encode the file in UTF-8 if it contains non-ASCII
 	// characters; the service assumes UTF-8 encoding if it encounters non-ASCII characters.
@@ -3654,12 +3767,12 @@ type AddCorpusOptions struct {
 	// encoding](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#charEncoding).
 	//
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
-	CorpusFile io.ReadCloser `json:"corpus_file" validate:"required"`
+	CorpusFile io.ReadCloser `validate:"required"`
 
 	// If `true`, the specified corpus overwrites an existing corpus with the same name. If `false`, the request fails if a
 	// corpus with the same name already exists. The parameter has no effect if a corpus with the same name does not
 	// already exist.
-	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
+	AllowOverwrite *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3708,7 +3821,7 @@ func (options *AddCorpusOptions) SetHeaders(param map[string]string) *AddCorpusO
 type AddGrammarOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the new grammar for the custom language model. Use a localized name that matches the language of the
 	// custom model and reflects the contents of the grammar.
@@ -3721,25 +3834,25 @@ type AddGrammarOptions struct {
 	// * Do not use the name `user`, which is reserved by the service to denote custom words that are added or modified by
 	// the user.
 	// * Do not use the name `base_lm` or `default_lm`. Both names are reserved for future use by the service.
-	GrammarName *string `json:"grammar_name" validate:"required,ne="`
+	GrammarName *string `validate:"required,ne="`
 
 	// A plain text file that contains the grammar in the format specified by the `Content-Type` header. Encode the file in
 	// UTF-8 (ASCII is a subset of UTF-8). Using any other encoding can lead to issues when compiling the grammar or to
 	// unexpected results in decoding. The service ignores an encoding that is specified in the header of the grammar.
 	//
 	// With the `curl` command, use the `--data-binary` option to upload the file for the request.
-	GrammarFile io.ReadCloser `json:"grammar_file" validate:"required"`
+	GrammarFile io.ReadCloser `validate:"required"`
 
 	// The format (MIME type) of the grammar file:
 	// * `application/srgs` for Augmented Backus-Naur Form (ABNF), which uses a plain-text representation that is similar
 	// to traditional BNF grammars.
 	// * `application/srgs+xml` for XML Form, which uses XML elements to represent the grammar.
-	ContentType *string `json:"Content-Type" validate:"required"`
+	ContentType *string `validate:"required"`
 
 	// If `true`, the specified grammar overwrites an existing grammar with the same name. If `false`, the request fails if
 	// a grammar with the same name already exists. The parameter has no effect if a grammar with the same name does not
 	// already exist.
-	AllowOverwrite *bool `json:"allow_overwrite,omitempty"`
+	AllowOverwrite *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3795,20 +3908,20 @@ func (options *AddGrammarOptions) SetHeaders(param map[string]string) *AddGramma
 type AddWordOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The custom word that is to be added to or updated in the custom language model. Do not include spaces in the word.
 	// Use a `-` (dash) or `_` (underscore) to connect the tokens of compound words. URL-encode the word if it includes
 	// non-ASCII characters. For more information, see [Character
 	// encoding](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#charEncoding).
-	WordName *string `json:"word_name" validate:"required,ne="`
+	WordName *string `validate:"required,ne="`
 
 	// For the **Add custom words** method, you must specify the custom word that is to be added to or updated in the
 	// custom model. Do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of
 	// compound words.
 	//
 	// Omit this parameter for the **Add a custom word** method.
-	Word *string `json:"word,omitempty"`
+	Word *string
 
 	// An array of sounds-like pronunciations for the custom word. Specify how words that are difficult to pronounce,
 	// foreign words, acronyms, and so on can be pronounced by users.
@@ -3820,12 +3933,12 @@ type AddWordOptions struct {
 	//
 	// A word can have at most five sounds-like pronunciations. A pronunciation can include at most 40 characters not
 	// including spaces.
-	SoundsLike []string `json:"sounds_like,omitempty"`
+	SoundsLike []string
 
 	// An alternative spelling for the custom word when it appears in a transcript. Use the parameter when you want the
 	// word to have a spelling that is different from its usual representation or from its spelling in corpora training
 	// data.
-	DisplayAs *string `json:"display_as,omitempty"`
+	DisplayAs *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3879,11 +3992,11 @@ func (options *AddWordOptions) SetHeaders(param map[string]string) *AddWordOptio
 type AddWordsOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// An array of `CustomWord` objects that provides information about each custom word that is to be added to or updated
 	// in the custom language model.
-	Words []CustomWord `json:"words" validate:"required"`
+	Words []CustomWord `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4303,7 +4416,7 @@ func UnmarshalAudioResources(m map[string]json.RawMessage, result interface{}) (
 type CheckJobOptions struct {
 	// The identifier of the asynchronous job that is to be used for the request. You must make the request with
 	// credentials for the instance of the service that owns the job.
-	ID *string `json:"id" validate:"required,ne="`
+	ID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4435,7 +4548,7 @@ type CreateAcousticModelOptions struct {
 	// A user-defined name for the new custom acoustic model. Use a name that is unique among all custom acoustic models
 	// that you own. Use a localized name that matches the language of the custom model. Use a name that describes the
 	// acoustic environment of the custom model, such as `Mobile custom model` or `Noisy car custom model`.
-	Name *string `json:"name" validate:"required"`
+	Name *string `validate:"required"`
 
 	// The name of the base language model that is to be customized by the new custom acoustic model. The new custom model
 	// can be used only with the base model that it customizes. (**Note:** The model `ar-AR_BroadbandModel` is deprecated;
@@ -4443,11 +4556,11 @@ type CreateAcousticModelOptions struct {
 	//
 	// To determine whether a base model supports acoustic model customization, refer to [Language support for
 	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
-	BaseModelName *string `json:"base_model_name" validate:"required"`
+	BaseModelName *string `validate:"required"`
 
 	// A description of the new custom acoustic model. Use a localized description that matches the language of the custom
 	// model.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4537,16 +4650,17 @@ func (options *CreateAcousticModelOptions) SetHeaders(param map[string]string) *
 // CreateJobOptions : The CreateJob options.
 type CreateJobOptions struct {
 	// The audio to transcribe.
-	Audio io.ReadCloser `json:"audio" validate:"required"`
+	Audio io.ReadCloser `validate:"required"`
 
 	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
 	// (content types)** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
+	ContentType *string
 
 	// The identifier of the model that is to be used for the recognition request. (**Note:** The model
 	// `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Languages and
-	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
-	Model *string `json:"model,omitempty"`
+	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models) and [Next-generation languages and
+	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng).
+	Model *string
 
 	// A URL to which callback notifications are to be sent. The URL must already be successfully allowlisted by using the
 	// **Register a callback** method. You can include the same callback URL with any number of job creation requests. Omit
@@ -4554,7 +4668,7 @@ type CreateJobOptions struct {
 	//
 	// Use the `user_token` parameter to specify a unique user-specified string with each job to differentiate the callback
 	// notifications for the jobs.
-	CallbackURL *string `json:"callback_url,omitempty"`
+	CallbackURL *string
 
 	// If the job includes a callback URL, a comma-separated list of notification events to which to subscribe. Valid
 	// events are
@@ -4571,40 +4685,40 @@ type CreateJobOptions struct {
 	//
 	// If the job includes a callback URL, omit the parameter to subscribe to the default events: `recognitions.started`,
 	// `recognitions.completed`, and `recognitions.failed`. If the job does not include a callback URL, omit the parameter.
-	Events *string `json:"events,omitempty"`
+	Events *string
 
 	// If the job includes a callback URL, a user-specified string that the service is to include with each callback
 	// notification for the job; the token allows the user to maintain an internal mapping between jobs and notification
 	// events. If the job does not include a callback URL, omit the parameter.
-	UserToken *string `json:"user_token,omitempty"`
+	UserToken *string
 
 	// The number of minutes for which the results are to be available after the job has finished. If not delivered via a
 	// callback, the results must be retrieved within this time. Omit the parameter to use a time to live of one week. The
 	// parameter is valid with or without a callback URL.
-	ResultsTTL *int64 `json:"results_ttl,omitempty"`
+	ResultsTTL *int64
 
 	// The customization ID (GUID) of a custom language model that is to be used with the recognition request. The base
 	// model of the specified custom language model must match the model specified with the `model` parameter. You must
 	// make the request with credentials for the instance of the service that owns the custom model. By default, no custom
-	// language model is used. See [Custom
-	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#custom-input).
+	// language model is used. See [Using a custom language model for speech
+	// recognition](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageUse).
 	//
 	// **Note:** Use this parameter instead of the deprecated `customization_id` parameter.
-	LanguageCustomizationID *string `json:"language_customization_id,omitempty"`
+	LanguageCustomizationID *string
 
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
 	// make the request with credentials for the instance of the service that owns the custom model. By default, no custom
-	// acoustic model is used. See [Custom
-	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#custom-input).
-	AcousticCustomizationID *string `json:"acoustic_customization_id,omitempty"`
+	// acoustic model is used. See [Using a custom acoustic model for speech
+	// recognition](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-acousticUse).
+	AcousticCustomizationID *string
 
 	// The version of the specified base model that is to be used with the recognition request. Multiple versions of a base
 	// model can exist when a model is updated for internal improvements. The parameter is intended primarily for use with
 	// custom models that have been upgraded for a new base model. The default value depends on whether the parameter is
-	// used with or without a custom model. See [Base model
-	// version](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#version).
-	BaseModelVersion *string `json:"base_model_version,omitempty"`
+	// used with or without a custom model. See [Making speech recognition requests with upgraded custom
+	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-custom-upgrade-use#custom-upgrade-use-recognition).
+	BaseModelVersion *string
 
 	// If you specify the customization ID (GUID) of a custom language model with the recognition request, the
 	// customization weight tells the service how much weight to give to words from the custom language model compared to
@@ -4618,14 +4732,14 @@ type CreateJobOptions struct {
 	// OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
 	//
-	// See [Custom models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#custom-input).
-	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
+	// See [Using customization weight](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageUse#weight).
+	CustomizationWeight *float64
 
 	// The time in seconds after which, if only silence (no speech) is detected in streaming audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
 	// simply walks away. Use `-1` for infinity. See [Inactivity
 	// timeout](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#timeouts-inactivity).
-	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
+	InactivityTimeout *int64
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
@@ -4636,41 +4750,41 @@ type CreateJobOptions struct {
 	// characters, though the maximum effective length for double-byte languages might be shorter. Keywords are
 	// case-insensitive.
 	//
-	// See [Keyword spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#keyword_spotting).
-	Keywords []string `json:"keywords,omitempty"`
+	// See [Keyword spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#keyword-spotting).
+	Keywords []string
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
 	// confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. If you specify a
 	// threshold, you must also specify one or more keywords. The service performs no keyword spotting if you omit either
 	// parameter. See [Keyword
-	// spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#keyword_spotting).
-	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
+	// spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#keyword-spotting).
+	KeywordsThreshold *float32
 
 	// The maximum number of alternative transcripts that the service is to return. By default, the service returns a
 	// single transcript. If you specify a value of `0`, the service uses the default value, `1`. See [Maximum
-	// alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#max_alternatives).
-	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
+	// alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#max-alternatives).
+	MaxAlternatives *int64
 
 	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known
 	// as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the
 	// threshold. Specify a probability between 0.0 and 1.0. By default, the service computes no alternative words. See
-	// [Word alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#word_alternatives).
-	WordAlternativesThreshold *float32 `json:"word_alternatives_threshold,omitempty"`
+	// [Word alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#word-alternatives).
+	WordAlternativesThreshold *float32
 
 	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, the
 	// service returns no word confidence scores. See [Word
-	// confidence](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#word_confidence).
-	WordConfidence *bool `json:"word_confidence,omitempty"`
+	// confidence](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#word-confidence).
+	WordConfidence *bool
 
 	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned. See [Word
-	// timestamps](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#word_timestamps).
-	Timestamps *bool `json:"timestamps,omitempty"`
+	// timestamps](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#word-timestamps).
+	Timestamps *bool
 
 	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words
 	// with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English
-	// transcription only. See [Profanity
-	// filtering](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#profanity_filter).
-	ProfanityFilter *bool `json:"profanity_filter,omitempty"`
+	// and Japanese transcription only. See [Profanity
+	// filtering](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#profanity-filtering).
+	ProfanityFilter *bool
 
 	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and
 	// internet addresses into more readable, conventional representations in the final transcript of a recognition
@@ -4679,29 +4793,31 @@ type CreateJobOptions struct {
 	//
 	// **Note:** Applies to US English, Japanese, and Spanish transcription only.
 	//
-	// See [Smart formatting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#smart_formatting).
-	SmartFormatting *bool `json:"smart_formatting,omitempty"`
+	// See [Smart formatting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#smart-formatting).
+	SmartFormatting *bool
 
 	// If `true`, the response includes labels that identify which words were spoken by which participants in a
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
 	// the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
+	// * For previous-generation models, can be used for US English, Australian English, German, Japanese, Korean, and
+	// Spanish (both broadband and narrowband models) and UK English (narrowband model) transcription only.
+	// * For next-generation models, can be used for English (Australian, UK, and US), German, and Spanish transcription
+	// only.
 	//
-	// **Note:** Applies to US English, Australian English, German, Japanese, Korean, and Spanish (both broadband and
-	// narrowband models) and UK English (narrowband model) transcription only.
-	//
-	// See [Speaker labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#speaker_labels).
-	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
+	// Restrictions and limitations apply to the use of speaker labels for both types of models. See [Speaker
+	// labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-speaker-labels).
+	SpeakerLabels *bool
 
 	// **Deprecated.** Use the `language_customization_id` parameter to specify the customization ID (GUID) of a custom
 	// language model that is to be used with the recognition request. Do not specify both parameters with a request.
-	CustomizationID *string `json:"customization_id,omitempty"`
+	CustomizationID *string
 
 	// The name of a grammar that is to be used with the recognition request. If you specify a grammar, you must also use
 	// the `language_customization_id` parameter to specify the name of the custom language model for which the grammar is
 	// defined. The service recognizes only strings that are recognized by the specified grammar; it does not recognize
-	// other custom words from the model's words resource. See
-	// [Grammars](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#grammars-input).
-	GrammarName *string `json:"grammar_name,omitempty"`
+	// other custom words from the model's words resource. See [Using a grammar for speech
+	// recognition](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-grammarUse).
+	GrammarName *string
 
 	// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that
 	// has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact
@@ -4714,16 +4830,17 @@ type CreateJobOptions struct {
 	//
 	// **Note:** Applies to US English, Japanese, and Korean transcription only.
 	//
-	// See [Numeric redaction](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#redaction).
-	Redaction *bool `json:"redaction,omitempty"`
+	// See [Numeric
+	// redaction](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#numeric-redaction).
+	Redaction *bool
 
 	// If `true`, requests processing metrics about the service's transcription of the input audio. The service returns
 	// processing metrics at the interval specified by the `processing_metrics_interval` parameter. It also returns
 	// processing metrics for transcription events, for example, for final and interim results. By default, the service
 	// returns no processing metrics.
 	//
-	// See [Processing metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#processing_metrics).
-	ProcessingMetrics *bool `json:"processing_metrics,omitempty"`
+	// See [Processing metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#processing-metrics).
+	ProcessingMetrics *bool
 
 	// Specifies the interval in real wall-clock seconds at which the service is to return processing metrics. The
 	// parameter is ignored unless the `processing_metrics` parameter is set to `true`.
@@ -4735,14 +4852,14 @@ type CreateJobOptions struct {
 	// instead of at periodic intervals, set the value to a large number. If the value is larger than the duration of the
 	// audio, the service returns processing metrics only for transcription events.
 	//
-	// See [Processing metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#processing_metrics).
-	ProcessingMetricsInterval *float32 `json:"processing_metrics_interval,omitempty"`
+	// See [Processing metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#processing-metrics).
+	ProcessingMetricsInterval *float32
 
 	// If `true`, requests detailed information about the signal characteristics of the input audio. The service returns
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
 	//
-	// See [Audio metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#audio_metrics).
-	AudioMetrics *bool `json:"audio_metrics,omitempty"`
+	// See [Audio metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#audio-metrics).
+	AudioMetrics *bool
 
 	// If `true`, specifies the duration of the pause interval at which the service splits a transcript into multiple final
 	// results. If the service detects pauses or extended silence before it reaches the end of the audio stream, its
@@ -4757,8 +4874,8 @@ type CreateJobOptions struct {
 	// The default pause interval for most languages is 0.8 seconds; the default for Chinese is 0.6 seconds.
 	//
 	// See [End of phrase silence
-	// time](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#silence_time).
-	EndOfPhraseSilenceTime *float64 `json:"end_of_phrase_silence_time,omitempty"`
+	// time](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-parsing#silence-time).
+	EndOfPhraseSilenceTime *float64
 
 	// If `true`, directs the service to split the transcript into multiple final results based on semantic features of the
 	// input, for example, at the conclusion of meaningful phrases such as sentences. The service bases its understanding
@@ -4767,8 +4884,8 @@ type CreateJobOptions struct {
 	// solely on the pause interval.
 	//
 	// See [Split transcript at phrase
-	// end](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#split_transcript).
-	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
+	// end](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-parsing#split-transcript).
+	SplitTranscriptAtPhraseEnd *bool
 
 	// The sensitivity of speech activity detection that the service is to perform. Use the parameter to suppress word
 	// insertions from music, coughing, and other non-speech events. The service biases the audio it passes for speech
@@ -4779,9 +4896,9 @@ type CreateJobOptions struct {
 	// * 0.5 (the default) provides a reasonable compromise for the level of sensitivity.
 	// * 1.0 suppresses no audio (speech detection sensitivity is disabled).
 	//
-	// The values increase on a monotonic curve. See [Speech Activity
-	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
-	SpeechDetectorSensitivity *float32 `json:"speech_detector_sensitivity,omitempty"`
+	// The values increase on a monotonic curve. See [Speech detector
+	// sensitivity](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-detection#detection-parameters-sensitivity).
+	SpeechDetectorSensitivity *float32
 
 	// The level to which the service is to suppress background audio based on its volume to prevent it from being
 	// transcribed as speech. Use the parameter to suppress side conversations or background noise.
@@ -4791,9 +4908,24 @@ type CreateJobOptions struct {
 	// * 0.5 provides a reasonable level of audio suppression for general usage.
 	// * 1.0 suppresses all audio (no audio is transcribed).
 	//
-	// The values increase on a monotonic curve. See [Speech Activity
-	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
-	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
+	// The values increase on a monotonic curve. See [Background audio
+	// suppression](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-detection#detection-parameters-suppression).
+	BackgroundAudioSuppression *float32
+
+	// If `true` for next-generation `Multimedia` and `Telephony` models that support low latency, directs the service to
+	// produce results even more quickly than it usually does. Next-generation models produce transcription results faster
+	// than previous-generation models. The `low_latency` parameter causes the models to produce results even more quickly,
+	// though the results might be less accurate when the parameter is used.
+	//
+	// **Note:** The parameter is beta functionality. It is not available for previous-generation `Broadband` and
+	// `Narrowband` models. It is available only for some next-generation models.
+	//
+	// * For a list of next-generation models that support low latency, see [Supported language
+	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng#models-ng-supported) for
+	// next-generation models.
+	// * For more information about the `low_latency` parameter, see [Low
+	// latency](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-interim#low-latency).
+	LowLatency *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4802,19 +4934,26 @@ type CreateJobOptions struct {
 // Constants associated with the CreateJobOptions.Model property.
 // The identifier of the model that is to be used for the recognition request. (**Note:** The model
 // `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Languages and
-// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
+// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models) and [Next-generation languages and
+// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng).
 const (
 	CreateJobOptionsModelArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
 	CreateJobOptionsModelArMsBroadbandmodelConst           = "ar-MS_BroadbandModel"
+	CreateJobOptionsModelArMsTelephonyConst                = "ar-MS_Telephony"
 	CreateJobOptionsModelDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
 	CreateJobOptionsModelDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
+	CreateJobOptionsModelDeDeTelephonyConst                = "de-DE_Telephony"
 	CreateJobOptionsModelEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
 	CreateJobOptionsModelEnAuNarrowbandmodelConst          = "en-AU_NarrowbandModel"
+	CreateJobOptionsModelEnAuTelephonyConst                = "en-AU_Telephony"
 	CreateJobOptionsModelEnGbBroadbandmodelConst           = "en-GB_BroadbandModel"
 	CreateJobOptionsModelEnGbNarrowbandmodelConst          = "en-GB_NarrowbandModel"
+	CreateJobOptionsModelEnGbTelephonyConst                = "en-GB_Telephony"
 	CreateJobOptionsModelEnUsBroadbandmodelConst           = "en-US_BroadbandModel"
+	CreateJobOptionsModelEnUsMultimediaConst               = "en-US_Multimedia"
 	CreateJobOptionsModelEnUsNarrowbandmodelConst          = "en-US_NarrowbandModel"
 	CreateJobOptionsModelEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
+	CreateJobOptionsModelEnUsTelephonyConst                = "en-US_Telephony"
 	CreateJobOptionsModelEsArBroadbandmodelConst           = "es-AR_BroadbandModel"
 	CreateJobOptionsModelEsArNarrowbandmodelConst          = "es-AR_NarrowbandModel"
 	CreateJobOptionsModelEsClBroadbandmodelConst           = "es-CL_BroadbandModel"
@@ -4823,16 +4962,20 @@ const (
 	CreateJobOptionsModelEsCoNarrowbandmodelConst          = "es-CO_NarrowbandModel"
 	CreateJobOptionsModelEsEsBroadbandmodelConst           = "es-ES_BroadbandModel"
 	CreateJobOptionsModelEsEsNarrowbandmodelConst          = "es-ES_NarrowbandModel"
+	CreateJobOptionsModelEsEsTelephonyConst                = "es-ES_Telephony"
 	CreateJobOptionsModelEsMxBroadbandmodelConst           = "es-MX_BroadbandModel"
 	CreateJobOptionsModelEsMxNarrowbandmodelConst          = "es-MX_NarrowbandModel"
 	CreateJobOptionsModelEsPeBroadbandmodelConst           = "es-PE_BroadbandModel"
 	CreateJobOptionsModelEsPeNarrowbandmodelConst          = "es-PE_NarrowbandModel"
 	CreateJobOptionsModelFrCaBroadbandmodelConst           = "fr-CA_BroadbandModel"
 	CreateJobOptionsModelFrCaNarrowbandmodelConst          = "fr-CA_NarrowbandModel"
+	CreateJobOptionsModelFrCaTelephonyConst                = "fr-CA_Telephony"
 	CreateJobOptionsModelFrFrBroadbandmodelConst           = "fr-FR_BroadbandModel"
 	CreateJobOptionsModelFrFrNarrowbandmodelConst          = "fr-FR_NarrowbandModel"
+	CreateJobOptionsModelFrFrTelephonyConst                = "fr-FR_Telephony"
 	CreateJobOptionsModelItItBroadbandmodelConst           = "it-IT_BroadbandModel"
 	CreateJobOptionsModelItItNarrowbandmodelConst          = "it-IT_NarrowbandModel"
+	CreateJobOptionsModelItItTelephonyConst                = "it-IT_Telephony"
 	CreateJobOptionsModelJaJpBroadbandmodelConst           = "ja-JP_BroadbandModel"
 	CreateJobOptionsModelJaJpNarrowbandmodelConst          = "ja-JP_NarrowbandModel"
 	CreateJobOptionsModelKoKrBroadbandmodelConst           = "ko-KR_BroadbandModel"
@@ -4841,6 +4984,7 @@ const (
 	CreateJobOptionsModelNlNlNarrowbandmodelConst          = "nl-NL_NarrowbandModel"
 	CreateJobOptionsModelPtBrBroadbandmodelConst           = "pt-BR_BroadbandModel"
 	CreateJobOptionsModelPtBrNarrowbandmodelConst          = "pt-BR_NarrowbandModel"
+	CreateJobOptionsModelPtBrTelephonyConst                = "pt-BR_Telephony"
 	CreateJobOptionsModelZhCnBroadbandmodelConst           = "zh-CN_BroadbandModel"
 	CreateJobOptionsModelZhCnNarrowbandmodelConst          = "zh-CN_NarrowbandModel"
 )
@@ -5061,6 +5205,12 @@ func (options *CreateJobOptions) SetBackgroundAudioSuppression(backgroundAudioSu
 	return options
 }
 
+// SetLowLatency : Allow user to set LowLatency
+func (options *CreateJobOptions) SetLowLatency(lowLatency bool) *CreateJobOptions {
+	options.LowLatency = core.BoolPtr(lowLatency)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateJobOptions) SetHeaders(param map[string]string) *CreateJobOptions {
 	options.Headers = param
@@ -5072,7 +5222,7 @@ type CreateLanguageModelOptions struct {
 	// A user-defined name for the new custom language model. Use a name that is unique among all custom language models
 	// that you own. Use a localized name that matches the language of the custom model. Use a name that describes the
 	// domain of the custom model, such as `Medical custom model` or `Legal custom model`.
-	Name *string `json:"name" validate:"required"`
+	Name *string `validate:"required"`
 
 	// The name of the base language model that is to be customized by the new custom language model. The new custom model
 	// can be used only with the base model that it customizes.
@@ -5080,7 +5230,7 @@ type CreateLanguageModelOptions struct {
 	// To determine whether a base model supports language model customization, use the **Get a model** method and check
 	// that the attribute `custom_language_model` is set to `true`. You can also refer to [Language support for
 	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
-	BaseModelName *string `json:"base_model_name" validate:"required"`
+	BaseModelName *string `validate:"required"`
 
 	// The dialect of the specified language that is to be used with the custom language model. For most languages, the
 	// dialect matches the language of the base model by default. For example, `en-US` is used for either of the US English
@@ -5098,11 +5248,11 @@ type CreateLanguageModelOptions struct {
 	// If you specify the `dialect` parameter for non-Spanish language models, its value must match the language of the
 	// base model. If you specify the `dialect` for Spanish language models, its value must match one of the defined
 	// mappings as indicated (`es-ES`, `es-LA`, or `es-MX`). All dialect values are case-insensitive.
-	Dialect *string `json:"dialect,omitempty"`
+	Dialect *string
 
 	// A description of the new custom language model. Use a localized description that matches the language of the custom
 	// model.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5241,7 +5391,7 @@ func UnmarshalCustomWord(m map[string]json.RawMessage, result interface{}) (err 
 type DeleteAcousticModelOptions struct {
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5270,10 +5420,10 @@ func (options *DeleteAcousticModelOptions) SetHeaders(param map[string]string) *
 type DeleteAudioOptions struct {
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the audio resource for the custom acoustic model.
-	AudioName *string `json:"audio_name" validate:"required,ne="`
+	AudioName *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5309,10 +5459,10 @@ func (options *DeleteAudioOptions) SetHeaders(param map[string]string) *DeleteAu
 type DeleteCorpusOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the corpus for the custom language model.
-	CorpusName *string `json:"corpus_name" validate:"required,ne="`
+	CorpusName *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5348,10 +5498,10 @@ func (options *DeleteCorpusOptions) SetHeaders(param map[string]string) *DeleteC
 type DeleteGrammarOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the grammar for the custom language model.
-	GrammarName *string `json:"grammar_name" validate:"required,ne="`
+	GrammarName *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5387,7 +5537,7 @@ func (options *DeleteGrammarOptions) SetHeaders(param map[string]string) *Delete
 type DeleteJobOptions struct {
 	// The identifier of the asynchronous job that is to be used for the request. You must make the request with
 	// credentials for the instance of the service that owns the job.
-	ID *string `json:"id" validate:"required,ne="`
+	ID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5416,7 +5566,7 @@ func (options *DeleteJobOptions) SetHeaders(param map[string]string) *DeleteJobO
 type DeleteLanguageModelOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5444,7 +5594,7 @@ func (options *DeleteLanguageModelOptions) SetHeaders(param map[string]string) *
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `json:"customer_id" validate:"required"`
+	CustomerID *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5473,12 +5623,12 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 type DeleteWordOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The custom word that is to be deleted from the custom language model. URL-encode the word if it includes non-ASCII
 	// characters. For more information, see [Character
 	// encoding](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#charEncoding).
-	WordName *string `json:"word_name" validate:"required,ne="`
+	WordName *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5514,7 +5664,7 @@ func (options *DeleteWordOptions) SetHeaders(param map[string]string) *DeleteWor
 type GetAcousticModelOptions struct {
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5543,10 +5693,10 @@ func (options *GetAcousticModelOptions) SetHeaders(param map[string]string) *Get
 type GetAudioOptions struct {
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the audio resource for the custom acoustic model.
-	AudioName *string `json:"audio_name" validate:"required,ne="`
+	AudioName *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5582,10 +5732,10 @@ func (options *GetAudioOptions) SetHeaders(param map[string]string) *GetAudioOpt
 type GetCorpusOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the corpus for the custom language model.
-	CorpusName *string `json:"corpus_name" validate:"required,ne="`
+	CorpusName *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5621,10 +5771,10 @@ func (options *GetCorpusOptions) SetHeaders(param map[string]string) *GetCorpusO
 type GetGrammarOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The name of the grammar for the custom language model.
-	GrammarName *string `json:"grammar_name" validate:"required,ne="`
+	GrammarName *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5660,7 +5810,7 @@ func (options *GetGrammarOptions) SetHeaders(param map[string]string) *GetGramma
 type GetLanguageModelOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5689,7 +5839,7 @@ func (options *GetLanguageModelOptions) SetHeaders(param map[string]string) *Get
 type GetModelOptions struct {
 	// The identifier of the model in the form of its name from the output of the **Get a model** method. (**Note:** The
 	// model `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.).
-	ModelID *string `json:"model_id" validate:"required,ne="`
+	ModelID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5701,15 +5851,21 @@ type GetModelOptions struct {
 const (
 	GetModelOptionsModelIDArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
 	GetModelOptionsModelIDArMsBroadbandmodelConst           = "ar-MS_BroadbandModel"
+	GetModelOptionsModelIDArMsTelephonyConst                = "ar-MS_Telephony"
 	GetModelOptionsModelIDDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
 	GetModelOptionsModelIDDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
+	GetModelOptionsModelIDDeDeTelephonyConst                = "de-DE_Telephony"
 	GetModelOptionsModelIDEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
 	GetModelOptionsModelIDEnAuNarrowbandmodelConst          = "en-AU_NarrowbandModel"
+	GetModelOptionsModelIDEnAuTelephonyConst                = "en-AU_Telephony"
 	GetModelOptionsModelIDEnGbBroadbandmodelConst           = "en-GB_BroadbandModel"
 	GetModelOptionsModelIDEnGbNarrowbandmodelConst          = "en-GB_NarrowbandModel"
+	GetModelOptionsModelIDEnGbTelephonyConst                = "en-GB_Telephony"
 	GetModelOptionsModelIDEnUsBroadbandmodelConst           = "en-US_BroadbandModel"
+	GetModelOptionsModelIDEnUsMultimediaConst               = "en-US_Multimedia"
 	GetModelOptionsModelIDEnUsNarrowbandmodelConst          = "en-US_NarrowbandModel"
 	GetModelOptionsModelIDEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
+	GetModelOptionsModelIDEnUsTelephonyConst                = "en-US_Telephony"
 	GetModelOptionsModelIDEsArBroadbandmodelConst           = "es-AR_BroadbandModel"
 	GetModelOptionsModelIDEsArNarrowbandmodelConst          = "es-AR_NarrowbandModel"
 	GetModelOptionsModelIDEsClBroadbandmodelConst           = "es-CL_BroadbandModel"
@@ -5718,16 +5874,20 @@ const (
 	GetModelOptionsModelIDEsCoNarrowbandmodelConst          = "es-CO_NarrowbandModel"
 	GetModelOptionsModelIDEsEsBroadbandmodelConst           = "es-ES_BroadbandModel"
 	GetModelOptionsModelIDEsEsNarrowbandmodelConst          = "es-ES_NarrowbandModel"
+	GetModelOptionsModelIDEsEsTelephonyConst                = "es-ES_Telephony"
 	GetModelOptionsModelIDEsMxBroadbandmodelConst           = "es-MX_BroadbandModel"
 	GetModelOptionsModelIDEsMxNarrowbandmodelConst          = "es-MX_NarrowbandModel"
 	GetModelOptionsModelIDEsPeBroadbandmodelConst           = "es-PE_BroadbandModel"
 	GetModelOptionsModelIDEsPeNarrowbandmodelConst          = "es-PE_NarrowbandModel"
 	GetModelOptionsModelIDFrCaBroadbandmodelConst           = "fr-CA_BroadbandModel"
 	GetModelOptionsModelIDFrCaNarrowbandmodelConst          = "fr-CA_NarrowbandModel"
+	GetModelOptionsModelIDFrCaTelephonyConst                = "fr-CA_Telephony"
 	GetModelOptionsModelIDFrFrBroadbandmodelConst           = "fr-FR_BroadbandModel"
 	GetModelOptionsModelIDFrFrNarrowbandmodelConst          = "fr-FR_NarrowbandModel"
+	GetModelOptionsModelIDFrFrTelephonyConst                = "fr-FR_Telephony"
 	GetModelOptionsModelIDItItBroadbandmodelConst           = "it-IT_BroadbandModel"
 	GetModelOptionsModelIDItItNarrowbandmodelConst          = "it-IT_NarrowbandModel"
+	GetModelOptionsModelIDItItTelephonyConst                = "it-IT_Telephony"
 	GetModelOptionsModelIDJaJpBroadbandmodelConst           = "ja-JP_BroadbandModel"
 	GetModelOptionsModelIDJaJpNarrowbandmodelConst          = "ja-JP_NarrowbandModel"
 	GetModelOptionsModelIDKoKrBroadbandmodelConst           = "ko-KR_BroadbandModel"
@@ -5736,6 +5896,7 @@ const (
 	GetModelOptionsModelIDNlNlNarrowbandmodelConst          = "nl-NL_NarrowbandModel"
 	GetModelOptionsModelIDPtBrBroadbandmodelConst           = "pt-BR_BroadbandModel"
 	GetModelOptionsModelIDPtBrNarrowbandmodelConst          = "pt-BR_NarrowbandModel"
+	GetModelOptionsModelIDPtBrTelephonyConst                = "pt-BR_Telephony"
 	GetModelOptionsModelIDZhCnBroadbandmodelConst           = "zh-CN_BroadbandModel"
 	GetModelOptionsModelIDZhCnNarrowbandmodelConst          = "zh-CN_NarrowbandModel"
 )
@@ -5763,12 +5924,12 @@ func (options *GetModelOptions) SetHeaders(param map[string]string) *GetModelOpt
 type GetWordOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The custom word that is to be read from the custom language model. URL-encode the word if it includes non-ASCII
 	// characters. For more information, see [Character
 	// encoding](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-corporaWords#charEncoding).
-	WordName *string `json:"word_name" validate:"required,ne="`
+	WordName *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6095,7 +6256,7 @@ type ListAcousticModelsOptions struct {
 	//
 	// To determine the languages for which customization is available, see [Language support for
 	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
-	Language *string `json:"language,omitempty"`
+	Language *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6152,7 +6313,7 @@ func (options *ListAcousticModelsOptions) SetHeaders(param map[string]string) *L
 type ListAudioOptions struct {
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6181,7 +6342,7 @@ func (options *ListAudioOptions) SetHeaders(param map[string]string) *ListAudioO
 type ListCorporaOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6210,7 +6371,7 @@ func (options *ListCorporaOptions) SetHeaders(param map[string]string) *ListCorp
 type ListGrammarsOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6243,7 +6404,7 @@ type ListLanguageModelsOptions struct {
 	//
 	// To determine the languages for which customization is available, see [Language support for
 	// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
-	Language *string `json:"language,omitempty"`
+	Language *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6318,21 +6479,21 @@ func (options *ListModelsOptions) SetHeaders(param map[string]string) *ListModel
 type ListWordsOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The type of words to be listed from the custom language model's words resource:
 	// * `all` (the default) shows all words.
 	// * `user` shows only custom words that were added or modified by the user directly.
 	// * `corpora` shows only OOV that were extracted from corpora.
 	// * `grammars` shows only OOV words that are recognized by grammars.
-	WordType *string `json:"word_type,omitempty"`
+	WordType *string
 
 	// Indicates the order in which the words are to be listed, `alphabetical` or by `count`. You can prepend an optional
 	// `+` or `-` to an argument to indicate whether the results are to be sorted in ascending or descending order. By
 	// default, words are sorted in ascending alphabetical order. For alphabetical ordering, the lexicographical precedence
 	// is numeric values, uppercase letters, and lowercase letters. For count ordering, values with the same count are
 	// ordered alphabetically. With the `curl` command, URL-encode the `+` symbol as `%2B`.
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6605,39 +6766,40 @@ func UnmarshalRecognitionJobs(m map[string]json.RawMessage, result interface{}) 
 // RecognizeOptions : The Recognize options.
 type RecognizeOptions struct {
 	// The audio to transcribe.
-	Audio io.ReadCloser `json:"audio" validate:"required"`
+	Audio io.ReadCloser `validate:"required"`
 
 	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
 	// (content types)** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
+	ContentType *string
 
 	// The identifier of the model that is to be used for the recognition request. (**Note:** The model
 	// `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Languages and
-	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
-	Model *string `json:"model,omitempty"`
+	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models) and [Next-generation languages and
+	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng).
+	Model *string
 
 	// The customization ID (GUID) of a custom language model that is to be used with the recognition request. The base
 	// model of the specified custom language model must match the model specified with the `model` parameter. You must
 	// make the request with credentials for the instance of the service that owns the custom model. By default, no custom
-	// language model is used. See [Custom
-	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#custom-input).
+	// language model is used. See [Using a custom language model for speech
+	// recognition](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageUse).
 	//
 	// **Note:** Use this parameter instead of the deprecated `customization_id` parameter.
-	LanguageCustomizationID *string `json:"language_customization_id,omitempty"`
+	LanguageCustomizationID *string
 
 	// The customization ID (GUID) of a custom acoustic model that is to be used with the recognition request. The base
 	// model of the specified custom acoustic model must match the model specified with the `model` parameter. You must
 	// make the request with credentials for the instance of the service that owns the custom model. By default, no custom
-	// acoustic model is used. See [Custom
-	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#custom-input).
-	AcousticCustomizationID *string `json:"acoustic_customization_id,omitempty"`
+	// acoustic model is used. See [Using a custom acoustic model for speech
+	// recognition](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-acousticUse).
+	AcousticCustomizationID *string
 
 	// The version of the specified base model that is to be used with the recognition request. Multiple versions of a base
 	// model can exist when a model is updated for internal improvements. The parameter is intended primarily for use with
 	// custom models that have been upgraded for a new base model. The default value depends on whether the parameter is
-	// used with or without a custom model. See [Base model
-	// version](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#version).
-	BaseModelVersion *string `json:"base_model_version,omitempty"`
+	// used with or without a custom model. See [Making speech recognition requests with upgraded custom
+	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-custom-upgrade-use#custom-upgrade-use-recognition).
+	BaseModelVersion *string
 
 	// If you specify the customization ID (GUID) of a custom language model with the recognition request, the
 	// customization weight tells the service how much weight to give to words from the custom language model compared to
@@ -6651,14 +6813,14 @@ type RecognizeOptions struct {
 	// OOV words from the custom model. Use caution when setting the weight: a higher value can improve the accuracy of
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
 	//
-	// See [Custom models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#custom-input).
-	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
+	// See [Using customization weight](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageUse#weight).
+	CustomizationWeight *float64
 
 	// The time in seconds after which, if only silence (no speech) is detected in streaming audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
 	// simply walks away. Use `-1` for infinity. See [Inactivity
 	// timeout](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#timeouts-inactivity).
-	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
+	InactivityTimeout *int64
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
@@ -6669,41 +6831,41 @@ type RecognizeOptions struct {
 	// characters, though the maximum effective length for double-byte languages might be shorter. Keywords are
 	// case-insensitive.
 	//
-	// See [Keyword spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#keyword_spotting).
-	Keywords []string `json:"keywords,omitempty"`
+	// See [Keyword spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#keyword-spotting).
+	Keywords []string
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
 	// confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. If you specify a
 	// threshold, you must also specify one or more keywords. The service performs no keyword spotting if you omit either
 	// parameter. See [Keyword
-	// spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#keyword_spotting).
-	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
+	// spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#keyword-spotting).
+	KeywordsThreshold *float32
 
 	// The maximum number of alternative transcripts that the service is to return. By default, the service returns a
 	// single transcript. If you specify a value of `0`, the service uses the default value, `1`. See [Maximum
-	// alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#max_alternatives).
-	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
+	// alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#max-alternatives).
+	MaxAlternatives *int64
 
 	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known
 	// as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the
 	// threshold. Specify a probability between 0.0 and 1.0. By default, the service computes no alternative words. See
-	// [Word alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#word_alternatives).
-	WordAlternativesThreshold *float32 `json:"word_alternatives_threshold,omitempty"`
+	// [Word alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#word-alternatives).
+	WordAlternativesThreshold *float32
 
 	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, the
 	// service returns no word confidence scores. See [Word
-	// confidence](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#word_confidence).
-	WordConfidence *bool `json:"word_confidence,omitempty"`
+	// confidence](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#word-confidence).
+	WordConfidence *bool
 
 	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned. See [Word
-	// timestamps](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#word_timestamps).
-	Timestamps *bool `json:"timestamps,omitempty"`
+	// timestamps](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#word-timestamps).
+	Timestamps *bool
 
 	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words
 	// with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English
-	// transcription only. See [Profanity
-	// filtering](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#profanity_filter).
-	ProfanityFilter *bool `json:"profanity_filter,omitempty"`
+	// and Japanese transcription only. See [Profanity
+	// filtering](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#profanity-filtering).
+	ProfanityFilter *bool
 
 	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and
 	// internet addresses into more readable, conventional representations in the final transcript of a recognition
@@ -6712,29 +6874,31 @@ type RecognizeOptions struct {
 	//
 	// **Note:** Applies to US English, Japanese, and Spanish transcription only.
 	//
-	// See [Smart formatting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#smart_formatting).
-	SmartFormatting *bool `json:"smart_formatting,omitempty"`
+	// See [Smart formatting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#smart-formatting).
+	SmartFormatting *bool
 
 	// If `true`, the response includes labels that identify which words were spoken by which participants in a
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
 	// the `timestamps` parameter to be `true`, regardless of whether you specify `false` for the parameter.
+	// * For previous-generation models, can be used for US English, Australian English, German, Japanese, Korean, and
+	// Spanish (both broadband and narrowband models) and UK English (narrowband model) transcription only.
+	// * For next-generation models, can be used for English (Australian, UK, and US), German, and Spanish transcription
+	// only.
 	//
-	// **Note:** Applies to US English, Australian English, German, Japanese, Korean, and Spanish (both broadband and
-	// narrowband models) and UK English (narrowband model) transcription only.
-	//
-	// See [Speaker labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#speaker_labels).
-	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
+	// Restrictions and limitations apply to the use of speaker labels for both types of models. See [Speaker
+	// labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-speaker-labels).
+	SpeakerLabels *bool
 
 	// **Deprecated.** Use the `language_customization_id` parameter to specify the customization ID (GUID) of a custom
 	// language model that is to be used with the recognition request. Do not specify both parameters with a request.
-	CustomizationID *string `json:"customization_id,omitempty"`
+	CustomizationID *string
 
 	// The name of a grammar that is to be used with the recognition request. If you specify a grammar, you must also use
 	// the `language_customization_id` parameter to specify the name of the custom language model for which the grammar is
 	// defined. The service recognizes only strings that are recognized by the specified grammar; it does not recognize
-	// other custom words from the model's words resource. See
-	// [Grammars](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#grammars-input).
-	GrammarName *string `json:"grammar_name,omitempty"`
+	// other custom words from the model's words resource. See [Using a grammar for speech
+	// recognition](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-grammarUse).
+	GrammarName *string
 
 	// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that
 	// has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact
@@ -6747,14 +6911,15 @@ type RecognizeOptions struct {
 	//
 	// **Note:** Applies to US English, Japanese, and Korean transcription only.
 	//
-	// See [Numeric redaction](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#redaction).
-	Redaction *bool `json:"redaction,omitempty"`
+	// See [Numeric
+	// redaction](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#numeric-redaction).
+	Redaction *bool
 
 	// If `true`, requests detailed information about the signal characteristics of the input audio. The service returns
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
 	//
-	// See [Audio metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#audio_metrics).
-	AudioMetrics *bool `json:"audio_metrics,omitempty"`
+	// See [Audio metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#audio-metrics).
+	AudioMetrics *bool
 
 	// If `true`, specifies the duration of the pause interval at which the service splits a transcript into multiple final
 	// results. If the service detects pauses or extended silence before it reaches the end of the audio stream, its
@@ -6769,8 +6934,8 @@ type RecognizeOptions struct {
 	// The default pause interval for most languages is 0.8 seconds; the default for Chinese is 0.6 seconds.
 	//
 	// See [End of phrase silence
-	// time](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#silence_time).
-	EndOfPhraseSilenceTime *float64 `json:"end_of_phrase_silence_time,omitempty"`
+	// time](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-parsing#silence-time).
+	EndOfPhraseSilenceTime *float64
 
 	// If `true`, directs the service to split the transcript into multiple final results based on semantic features of the
 	// input, for example, at the conclusion of meaningful phrases such as sentences. The service bases its understanding
@@ -6779,8 +6944,8 @@ type RecognizeOptions struct {
 	// solely on the pause interval.
 	//
 	// See [Split transcript at phrase
-	// end](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#split_transcript).
-	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
+	// end](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-parsing#split-transcript).
+	SplitTranscriptAtPhraseEnd *bool
 
 	// The sensitivity of speech activity detection that the service is to perform. Use the parameter to suppress word
 	// insertions from music, coughing, and other non-speech events. The service biases the audio it passes for speech
@@ -6791,9 +6956,9 @@ type RecognizeOptions struct {
 	// * 0.5 (the default) provides a reasonable compromise for the level of sensitivity.
 	// * 1.0 suppresses no audio (speech detection sensitivity is disabled).
 	//
-	// The values increase on a monotonic curve. See [Speech Activity
-	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
-	SpeechDetectorSensitivity *float32 `json:"speech_detector_sensitivity,omitempty"`
+	// The values increase on a monotonic curve. See [Speech detector
+	// sensitivity](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-detection#detection-parameters-sensitivity).
+	SpeechDetectorSensitivity *float32
 
 	// The level to which the service is to suppress background audio based on its volume to prevent it from being
 	// transcribed as speech. Use the parameter to suppress side conversations or background noise.
@@ -6803,9 +6968,24 @@ type RecognizeOptions struct {
 	// * 0.5 provides a reasonable level of audio suppression for general usage.
 	// * 1.0 suppresses all audio (no audio is transcribed).
 	//
-	// The values increase on a monotonic curve. See [Speech Activity
-	// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
-	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
+	// The values increase on a monotonic curve. See [Background audio
+	// suppression](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-detection#detection-parameters-suppression).
+	BackgroundAudioSuppression *float32
+
+	// If `true` for next-generation `Multimedia` and `Telephony` models that support low latency, directs the service to
+	// produce results even more quickly than it usually does. Next-generation models produce transcription results faster
+	// than previous-generation models. The `low_latency` parameter causes the models to produce results even more quickly,
+	// though the results might be less accurate when the parameter is used.
+	//
+	// **Note:** The parameter is beta functionality. It is not available for previous-generation `Broadband` and
+	// `Narrowband` models. It is available only for some next-generation models.
+	//
+	// * For a list of next-generation models that support low latency, see [Supported language
+	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng#models-ng-supported) for
+	// next-generation models.
+	// * For more information about the `low_latency` parameter, see [Low
+	// latency](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-interim#low-latency).
+	LowLatency *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6814,19 +6994,26 @@ type RecognizeOptions struct {
 // Constants associated with the RecognizeOptions.Model property.
 // The identifier of the model that is to be used for the recognition request. (**Note:** The model
 // `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Languages and
-// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
+// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models) and [Next-generation languages and
+// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng).
 const (
 	RecognizeOptionsModelArArBroadbandmodelConst           = "ar-AR_BroadbandModel"
 	RecognizeOptionsModelArMsBroadbandmodelConst           = "ar-MS_BroadbandModel"
+	RecognizeOptionsModelArMsTelephonyConst                = "ar-MS_Telephony"
 	RecognizeOptionsModelDeDeBroadbandmodelConst           = "de-DE_BroadbandModel"
 	RecognizeOptionsModelDeDeNarrowbandmodelConst          = "de-DE_NarrowbandModel"
+	RecognizeOptionsModelDeDeTelephonyConst                = "de-DE_Telephony"
 	RecognizeOptionsModelEnAuBroadbandmodelConst           = "en-AU_BroadbandModel"
 	RecognizeOptionsModelEnAuNarrowbandmodelConst          = "en-AU_NarrowbandModel"
+	RecognizeOptionsModelEnAuTelephonyConst                = "en-AU_Telephony"
 	RecognizeOptionsModelEnGbBroadbandmodelConst           = "en-GB_BroadbandModel"
 	RecognizeOptionsModelEnGbNarrowbandmodelConst          = "en-GB_NarrowbandModel"
+	RecognizeOptionsModelEnGbTelephonyConst                = "en-GB_Telephony"
 	RecognizeOptionsModelEnUsBroadbandmodelConst           = "en-US_BroadbandModel"
+	RecognizeOptionsModelEnUsMultimediaConst               = "en-US_Multimedia"
 	RecognizeOptionsModelEnUsNarrowbandmodelConst          = "en-US_NarrowbandModel"
 	RecognizeOptionsModelEnUsShortformNarrowbandmodelConst = "en-US_ShortForm_NarrowbandModel"
+	RecognizeOptionsModelEnUsTelephonyConst                = "en-US_Telephony"
 	RecognizeOptionsModelEsArBroadbandmodelConst           = "es-AR_BroadbandModel"
 	RecognizeOptionsModelEsArNarrowbandmodelConst          = "es-AR_NarrowbandModel"
 	RecognizeOptionsModelEsClBroadbandmodelConst           = "es-CL_BroadbandModel"
@@ -6835,16 +7022,20 @@ const (
 	RecognizeOptionsModelEsCoNarrowbandmodelConst          = "es-CO_NarrowbandModel"
 	RecognizeOptionsModelEsEsBroadbandmodelConst           = "es-ES_BroadbandModel"
 	RecognizeOptionsModelEsEsNarrowbandmodelConst          = "es-ES_NarrowbandModel"
+	RecognizeOptionsModelEsEsTelephonyConst                = "es-ES_Telephony"
 	RecognizeOptionsModelEsMxBroadbandmodelConst           = "es-MX_BroadbandModel"
 	RecognizeOptionsModelEsMxNarrowbandmodelConst          = "es-MX_NarrowbandModel"
 	RecognizeOptionsModelEsPeBroadbandmodelConst           = "es-PE_BroadbandModel"
 	RecognizeOptionsModelEsPeNarrowbandmodelConst          = "es-PE_NarrowbandModel"
 	RecognizeOptionsModelFrCaBroadbandmodelConst           = "fr-CA_BroadbandModel"
 	RecognizeOptionsModelFrCaNarrowbandmodelConst          = "fr-CA_NarrowbandModel"
+	RecognizeOptionsModelFrCaTelephonyConst                = "fr-CA_Telephony"
 	RecognizeOptionsModelFrFrBroadbandmodelConst           = "fr-FR_BroadbandModel"
 	RecognizeOptionsModelFrFrNarrowbandmodelConst          = "fr-FR_NarrowbandModel"
+	RecognizeOptionsModelFrFrTelephonyConst                = "fr-FR_Telephony"
 	RecognizeOptionsModelItItBroadbandmodelConst           = "it-IT_BroadbandModel"
 	RecognizeOptionsModelItItNarrowbandmodelConst          = "it-IT_NarrowbandModel"
+	RecognizeOptionsModelItItTelephonyConst                = "it-IT_Telephony"
 	RecognizeOptionsModelJaJpBroadbandmodelConst           = "ja-JP_BroadbandModel"
 	RecognizeOptionsModelJaJpNarrowbandmodelConst          = "ja-JP_NarrowbandModel"
 	RecognizeOptionsModelKoKrBroadbandmodelConst           = "ko-KR_BroadbandModel"
@@ -6853,6 +7044,7 @@ const (
 	RecognizeOptionsModelNlNlNarrowbandmodelConst          = "nl-NL_NarrowbandModel"
 	RecognizeOptionsModelPtBrBroadbandmodelConst           = "pt-BR_BroadbandModel"
 	RecognizeOptionsModelPtBrNarrowbandmodelConst          = "pt-BR_NarrowbandModel"
+	RecognizeOptionsModelPtBrTelephonyConst                = "pt-BR_Telephony"
 	RecognizeOptionsModelZhCnBroadbandmodelConst           = "zh-CN_BroadbandModel"
 	RecognizeOptionsModelZhCnNarrowbandmodelConst          = "zh-CN_NarrowbandModel"
 )
@@ -7014,6 +7206,12 @@ func (options *RecognizeOptions) SetBackgroundAudioSuppression(backgroundAudioSu
 	return options
 }
 
+// SetLowLatency : Allow user to set LowLatency
+func (options *RecognizeOptions) SetLowLatency(lowLatency bool) *RecognizeOptions {
+	options.LowLatency = core.BoolPtr(lowLatency)
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *RecognizeOptions) SetHeaders(param map[string]string) *RecognizeOptions {
 	options.Headers = param
@@ -7025,13 +7223,13 @@ type RegisterCallbackOptions struct {
 	// An HTTP or HTTPS URL to which callback notifications are to be sent. To be allowlisted, the URL must successfully
 	// echo the challenge string during URL verification. During verification, the client can also check the signature that
 	// the service sends in the `X-Callback-Signature` header to verify the origin of the request.
-	CallbackURL *string `json:"callback_url" validate:"required"`
+	CallbackURL *string `validate:"required"`
 
 	// A user-specified string that the service uses to generate the HMAC-SHA1 signature that it sends via the
 	// `X-Callback-Signature` header. The service includes the header during URL verification and with every notification
 	// sent to the callback URL. It calculates the signature over the payload of the notification. If you omit the
 	// parameter, the service does not send the header.
-	UserSecret *string `json:"user_secret,omitempty"`
+	UserSecret *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7101,7 +7299,7 @@ func UnmarshalRegisterStatus(m map[string]json.RawMessage, result interface{}) (
 type ResetAcousticModelOptions struct {
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7130,7 +7328,7 @@ func (options *ResetAcousticModelOptions) SetHeaders(param map[string]string) *R
 type ResetLanguageModelOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7279,8 +7477,9 @@ type SpeechRecognitionAlternative struct {
 	// A transcription of the audio.
 	Transcript *string `json:"transcript" validate:"required"`
 
-	// A score that indicates the service's confidence in the transcript in the range of 0.0 to 1.0. A confidence score is
-	// returned only for the best alternative and only with results marked as final.
+	// A score that indicates the service's confidence in the transcript in the range of 0.0 to 1.0. For speech recognition
+	// with previous-generation models, a confidence score is returned only for the best alternative and only with results
+	// marked as final. For speech recognition with next-generation models, a confidence score is never returned.
 	Confidence *float64 `json:"confidence,omitempty"`
 
 	// Time alignments for each word from the transcript as a list of lists. Each inner list consists of three elements:
@@ -7291,7 +7490,7 @@ type SpeechRecognitionAlternative struct {
 	// A confidence score for each word of the transcript as a list of lists. Each inner list consists of two elements: the
 	// word and its confidence score in the range of 0.0 to 1.0, for example: `[["hello",0.95],["world",0.866]]`.
 	// Confidence scores are returned only for the best alternative and only with results marked as final.
-	WordConfidence []interface{} `json:"word_confidence,omitempty"`
+	WordConfidence []string `json:"word_confidence,omitempty"`
 }
 
 // UnmarshalSpeechRecognitionAlternative unmarshals an instance of SpeechRecognitionAlternative from the specified map of raw messages.
@@ -7471,6 +7670,10 @@ type SupportedFeatures struct {
 	// Australian English, German, Japanese, Korean, and Spanish (both broadband and narrowband models) and UK English
 	// (narrowband model only). Speaker labels are not supported for any other models.
 	SpeakerLabels *bool `json:"speaker_labels" validate:"required"`
+
+	// Indicates whether the `low_latency` parameter can be used with a next-generation language model. The field is
+	// returned only for next-generation models. Previous-generation models do not support the `low_latency` parameter.
+	LowLatency *bool `json:"low_latency,omitempty"`
 }
 
 // UnmarshalSupportedFeatures unmarshals an instance of SupportedFeatures from the specified map of raw messages.
@@ -7481,6 +7684,10 @@ func UnmarshalSupportedFeatures(m map[string]json.RawMessage, result interface{}
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "speaker_labels", &obj.SpeakerLabels)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "low_latency", &obj.LowLatency)
 	if err != nil {
 		return
 	}
@@ -7499,7 +7706,7 @@ type TrainAcousticModelOptions struct {
 	// that contains words that are relevant to the contents of the audio resources. The custom language model must be
 	// based on the same version of the same base model as the custom acoustic model, and the custom language model must be
 	// fully trained and available. The credentials specified with the request must own both custom models.
-	CustomLanguageModelID *string `json:"custom_language_model_id,omitempty"`
+	CustomLanguageModelID *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7534,14 +7741,14 @@ func (options *TrainAcousticModelOptions) SetHeaders(param map[string]string) *T
 type TrainLanguageModelOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// The type of words from the custom language model's words resource on which to train the model:
 	// * `all` (the default) trains the model on all new words, regardless of whether they were extracted from corpora or
 	// grammars or were added or modified by the user.
 	// * `user` trains the model only on new words that were added or modified by the user directly. The model is not
 	// trained on new words extracted from corpora or grammars.
-	WordTypeToAdd *string `json:"word_type_to_add,omitempty"`
+	WordTypeToAdd *string
 
 	// Specifies a customization weight for the custom language model. The customization weight tells the service how much
 	// weight to give to words from the custom language model compared to those from the base model for speech recognition.
@@ -7553,7 +7760,9 @@ type TrainLanguageModelOptions struct {
 	//
 	// The value that you assign is used for all recognition requests that use the model. You can override it for any
 	// recognition request by specifying a customization weight for that request.
-	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
+	//
+	// See [Using customization weight](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageUse#weight).
+	CustomizationWeight *float64
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7658,7 +7867,7 @@ func UnmarshalTrainingWarning(m map[string]json.RawMessage, result interface{}) 
 // UnregisterCallbackOptions : The UnregisterCallback options.
 type UnregisterCallbackOptions struct {
 	// The callback URL that is to be unregistered.
-	CallbackURL *string `json:"callback_url" validate:"required"`
+	CallbackURL *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7687,20 +7896,20 @@ func (options *UnregisterCallbackOptions) SetHeaders(param map[string]string) *U
 type UpgradeAcousticModelOptions struct {
 	// The customization ID (GUID) of the custom acoustic model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// If the custom acoustic model was trained with a custom language model, the customization ID (GUID) of that custom
 	// language model. The custom language model must be upgraded before the custom acoustic model can be upgraded. The
 	// custom language model must be fully trained and available. The credentials specified with the request must own both
 	// custom models.
-	CustomLanguageModelID *string `json:"custom_language_model_id,omitempty"`
+	CustomLanguageModelID *string
 
 	// If `true`, forces the upgrade of a custom acoustic model for which no input data has been modified since it was last
 	// trained. Use this parameter only to force the upgrade of a custom acoustic model that is trained with a custom
 	// language model, and only if you receive a 400 response code and the message `No input data modified since last
 	// training`. See [Upgrading a custom acoustic
-	// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customUpgrade#upgradeAcoustic).
-	Force *bool `json:"force,omitempty"`
+	// model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-custom-upgrade#custom-upgrade-acoustic).
+	Force *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7741,7 +7950,7 @@ func (options *UpgradeAcousticModelOptions) SetHeaders(param map[string]string) 
 type UpgradeLanguageModelOptions struct {
 	// The customization ID (GUID) of the custom language model that is to be used for the request. You must make the
 	// request with credentials for the instance of the service that owns the custom model.
-	CustomizationID *string `json:"customization_id" validate:"required,ne="`
+	CustomizationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
