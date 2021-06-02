@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package naturallanguageclassifierv1 : Operations and models for the NaturalLanguageClassifierV1 service
@@ -30,7 +30,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
@@ -216,11 +216,13 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyWithContex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassification)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassification)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -287,11 +289,13 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ClassifyCollection
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassificationCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassificationCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -346,11 +350,13 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) CreateClassifierWi
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -396,11 +402,13 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) ListClassifiersWit
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifierList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifierList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -454,11 +462,13 @@ func (naturalLanguageClassifier *NaturalLanguageClassifierV1) GetClassifierWithC
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -701,10 +711,10 @@ func UnmarshalClassifierList(m map[string]json.RawMessage, result interface{}) (
 // ClassifyCollectionOptions : The ClassifyCollection options.
 type ClassifyCollectionOptions struct {
 	// Classifier ID to use.
-	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
+	ClassifierID *string `validate:"required,ne="`
 
 	// The submitted phrases.
-	Collection []ClassifyInput `json:"collection" validate:"required"`
+	Collection []ClassifyInput `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -765,10 +775,10 @@ func UnmarshalClassifyInput(m map[string]json.RawMessage, result interface{}) (e
 // ClassifyOptions : The Classify options.
 type ClassifyOptions struct {
 	// Classifier ID to use.
-	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
+	ClassifierID *string `validate:"required,ne="`
 
 	// The submitted phrase. The maximum length is 2048 characters.
-	Text *string `json:"text" validate:"required"`
+	Text *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -838,12 +848,12 @@ type CreateClassifierOptions struct {
 	//
 	// Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`), Japanese
 	// (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).
-	TrainingMetadata io.ReadCloser `json:"training_metadata" validate:"required"`
+	TrainingMetadata io.ReadCloser `validate:"required"`
 
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
 	// preparation](https://cloud.ibm.com/docs/natural-language-classifier?topic=natural-language-classifier-using-your-data).
-	TrainingData io.ReadCloser `json:"training_data" validate:"required"`
+	TrainingData io.ReadCloser `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -878,7 +888,7 @@ func (options *CreateClassifierOptions) SetHeaders(param map[string]string) *Cre
 // DeleteClassifierOptions : The DeleteClassifier options.
 type DeleteClassifierOptions struct {
 	// Classifier ID to delete.
-	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
+	ClassifierID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -906,7 +916,7 @@ func (options *DeleteClassifierOptions) SetHeaders(param map[string]string) *Del
 // GetClassifierOptions : The GetClassifier options.
 type GetClassifierOptions struct {
 	// Classifier ID to query.
-	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
+	ClassifierID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string

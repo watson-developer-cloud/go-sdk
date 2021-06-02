@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package discoveryv1 : Operations and models for the DiscoveryV1 service
@@ -31,7 +31,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
@@ -238,11 +238,13 @@ func (discovery *DiscoveryV1) CreateEnvironmentWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -293,11 +295,13 @@ func (discovery *DiscoveryV1) ListEnvironmentsWithContext(ctx context.Context, l
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListEnvironmentsResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListEnvironmentsResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -352,11 +356,13 @@ func (discovery *DiscoveryV1) GetEnvironmentWithContext(ctx context.Context, get
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -429,11 +435,13 @@ func (discovery *DiscoveryV1) UpdateEnvironmentWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalEnvironment)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -488,11 +496,13 @@ func (discovery *DiscoveryV1) DeleteEnvironmentWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteEnvironmentResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteEnvironmentResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -549,11 +559,13 @@ func (discovery *DiscoveryV1) ListFieldsWithContext(ctx context.Context, listFie
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionFieldsResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionFieldsResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -642,11 +654,13 @@ func (discovery *DiscoveryV1) CreateConfigurationWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -705,11 +719,13 @@ func (discovery *DiscoveryV1) ListConfigurationsWithContext(ctx context.Context,
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListConfigurationsResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListConfigurationsResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -765,11 +781,13 @@ func (discovery *DiscoveryV1) GetConfigurationWithContext(ctx context.Context, g
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -857,11 +875,13 @@ func (discovery *DiscoveryV1) UpdateConfigurationWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalConfiguration)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -921,11 +941,13 @@ func (discovery *DiscoveryV1) DeleteConfigurationWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteConfigurationResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteConfigurationResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -999,11 +1021,13 @@ func (discovery *DiscoveryV1) CreateCollectionWithContext(ctx context.Context, c
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1062,11 +1086,13 @@ func (discovery *DiscoveryV1) ListCollectionsWithContext(ctx context.Context, li
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionsResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionsResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1122,11 +1148,13 @@ func (discovery *DiscoveryV1) GetCollectionWithContext(ctx context.Context, getC
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1198,11 +1226,13 @@ func (discovery *DiscoveryV1) UpdateCollectionWithContext(ctx context.Context, u
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1258,11 +1288,13 @@ func (discovery *DiscoveryV1) DeleteCollectionWithContext(ctx context.Context, d
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteCollectionResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteCollectionResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1319,11 +1351,13 @@ func (discovery *DiscoveryV1) ListCollectionFieldsWithContext(ctx context.Contex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionFieldsResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListCollectionFieldsResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1381,11 +1415,13 @@ func (discovery *DiscoveryV1) ListExpansionsWithContext(ctx context.Context, lis
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExpansions)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExpansions)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1453,11 +1489,13 @@ func (discovery *DiscoveryV1) CreateExpansionsWithContext(ctx context.Context, c
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExpansions)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalExpansions)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1566,11 +1604,13 @@ func (discovery *DiscoveryV1) GetTokenizationDictionaryStatusWithContext(ctx con
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1637,11 +1677,13 @@ func (discovery *DiscoveryV1) CreateTokenizationDictionaryWithContext(ctx contex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1749,11 +1791,13 @@ func (discovery *DiscoveryV1) GetStopwordListStatusWithContext(ctx context.Conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1813,11 +1857,13 @@ func (discovery *DiscoveryV1) CreateStopwordListWithContext(ctx context.Context,
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTokenDictStatusResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1959,11 +2005,13 @@ func (discovery *DiscoveryV1) AddDocumentWithContext(ctx context.Context, addDoc
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentAccepted)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentAccepted)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2023,11 +2071,13 @@ func (discovery *DiscoveryV1) GetDocumentStatusWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2101,11 +2151,13 @@ func (discovery *DiscoveryV1) UpdateDocumentWithContext(ctx context.Context, upd
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentAccepted)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentAccepted)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2164,11 +2216,13 @@ func (discovery *DiscoveryV1) DeleteDocumentWithContext(ctx context.Context, del
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteDocumentResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteDocumentResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2296,11 +2350,13 @@ func (discovery *DiscoveryV1) QueryWithContext(ctx context.Context, queryOptions
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2411,11 +2467,13 @@ func (discovery *DiscoveryV1) QueryNoticesWithContext(ctx context.Context, query
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryNoticesResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryNoticesResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2542,11 +2600,13 @@ func (discovery *DiscoveryV1) FederatedQueryWithContext(ctx context.Context, fed
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2645,11 +2705,13 @@ func (discovery *DiscoveryV1) FederatedQueryNoticesWithContext(ctx context.Conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryNoticesResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalQueryNoticesResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2714,11 +2776,13 @@ func (discovery *DiscoveryV1) GetAutocompletionWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCompletions)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCompletions)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2775,11 +2839,13 @@ func (discovery *DiscoveryV1) ListTrainingDataWithContext(ctx context.Context, l
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingDataSet)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingDataSet)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2852,11 +2918,13 @@ func (discovery *DiscoveryV1) AddTrainingDataWithContext(ctx context.Context, ad
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingQuery)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingQuery)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -2965,11 +3033,13 @@ func (discovery *DiscoveryV1) GetTrainingDataWithContext(ctx context.Context, ge
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingQuery)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingQuery)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3079,11 +3149,13 @@ func (discovery *DiscoveryV1) ListTrainingExamplesWithContext(ctx context.Contex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExampleList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExampleList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3157,11 +3229,13 @@ func (discovery *DiscoveryV1) CreateTrainingExampleWithContext(ctx context.Conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3286,11 +3360,13 @@ func (discovery *DiscoveryV1) UpdateTrainingExampleWithContext(ctx context.Conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3349,11 +3425,13 @@ func (discovery *DiscoveryV1) GetTrainingExampleWithContext(ctx context.Context,
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingExample)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3471,11 +3549,13 @@ func (discovery *DiscoveryV1) CreateEventWithContext(ctx context.Context, create
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCreateEventResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCreateEventResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3539,11 +3619,13 @@ func (discovery *DiscoveryV1) QueryLogWithContext(ctx context.Context, queryLogO
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogQueryResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLogQueryResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3600,11 +3682,13 @@ func (discovery *DiscoveryV1) GetMetricsQueryWithContext(ctx context.Context, ge
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3663,11 +3747,13 @@ func (discovery *DiscoveryV1) GetMetricsQueryEventWithContext(ctx context.Contex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3725,11 +3811,13 @@ func (discovery *DiscoveryV1) GetMetricsQueryNoResultsWithContext(ctx context.Co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3788,11 +3876,13 @@ func (discovery *DiscoveryV1) GetMetricsEventRateWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3845,11 +3935,13 @@ func (discovery *DiscoveryV1) GetMetricsQueryTokenEventWithContext(ctx context.C
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricTokenResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalMetricTokenResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3907,11 +3999,13 @@ func (discovery *DiscoveryV1) ListCredentialsWithContext(ctx context.Context, li
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentialsList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentialsList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -3986,11 +4080,13 @@ func (discovery *DiscoveryV1) CreateCredentialsWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -4050,11 +4146,13 @@ func (discovery *DiscoveryV1) GetCredentialsWithContext(ctx context.Context, get
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -4129,11 +4227,13 @@ func (discovery *DiscoveryV1) UpdateCredentialsWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCredentials)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -4190,11 +4290,13 @@ func (discovery *DiscoveryV1) DeleteCredentialsWithContext(ctx context.Context, 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteCredentials)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteCredentials)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -4250,11 +4352,13 @@ func (discovery *DiscoveryV1) ListGatewaysWithContext(ctx context.Context, listG
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGatewayList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGatewayList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -4320,11 +4424,13 @@ func (discovery *DiscoveryV1) CreateGatewayWithContext(ctx context.Context, crea
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGateway)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGateway)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -4381,11 +4487,13 @@ func (discovery *DiscoveryV1) GetGatewayWithContext(ctx context.Context, getGate
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGateway)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGateway)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -4442,11 +4550,13 @@ func (discovery *DiscoveryV1) DeleteGatewayWithContext(ctx context.Context, dele
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGatewayDelete)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGatewayDelete)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -4454,27 +4564,27 @@ func (discovery *DiscoveryV1) DeleteGatewayWithContext(ctx context.Context, dele
 // AddDocumentOptions : The AddDocument options.
 type AddDocumentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
 	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
 	// supported size are rejected.
-	File io.ReadCloser `json:"file,omitempty"`
+	File io.ReadCloser
 
 	// The filename for file.
-	Filename *string `json:"filename,omitempty"`
+	Filename *string
 
 	// The content type of file.
-	FileContentType *string `json:"file_content_type,omitempty"`
+	FileContentType *string
 
 	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
-	Metadata *string `json:"metadata,omitempty"`
+	Metadata *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4533,19 +4643,19 @@ func (options *AddDocumentOptions) SetHeaders(param map[string]string) *AddDocum
 // AddTrainingDataOptions : The AddTrainingData options.
 type AddTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The natural text query for the new training query.
-	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
+	NaturalLanguageQuery *string
 
 	// The filter used on the collection before the **natural_language_query** is applied.
-	Filter *string `json:"filter,omitempty"`
+	Filter *string
 
 	// Array of training examples.
-	Examples []TrainingExample `json:"examples,omitempty"`
+	Examples []TrainingExample
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4955,19 +5065,19 @@ func UnmarshalConversions(m map[string]json.RawMessage, result interface{}) (err
 // CreateCollectionOptions : The CreateCollection options.
 type CreateCollectionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The name of the collection to be created.
-	Name *string `json:"name" validate:"required"`
+	Name *string `validate:"required"`
 
 	// A description of the collection.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// The ID of the configuration in which the collection is to be created.
-	ConfigurationID *string `json:"configuration_id,omitempty"`
+	ConfigurationID *string
 
 	// The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
-	Language *string `json:"language,omitempty"`
+	Language *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5036,26 +5146,26 @@ func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *Cre
 // CreateConfigurationOptions : The CreateConfiguration options.
 type CreateConfigurationOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The name of the configuration.
-	Name *string `json:"name" validate:"required"`
+	Name *string `validate:"required"`
 
 	// The description of the configuration, if available.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// Document conversion settings.
-	Conversions *Conversions `json:"conversions,omitempty"`
+	Conversions *Conversions
 
 	// An array of document enrichment settings for the configuration.
-	Enrichments []Enrichment `json:"enrichments,omitempty"`
+	Enrichments []Enrichment
 
 	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are
 	// executed in the order that they appear in the array.
-	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
+	Normalizations []NormalizationOperation
 
 	// Object containing source parameters for the configuration.
-	Source *Source `json:"source,omitempty"`
+	Source *Source
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5120,7 +5230,7 @@ func (options *CreateConfigurationOptions) SetHeaders(param map[string]string) *
 // CreateCredentialsOptions : The CreateCredentials options.
 type CreateCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The source that this credentials object connects to.
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
@@ -5128,17 +5238,17 @@ type CreateCredentialsOptions struct {
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 	// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
-	SourceType *string `json:"source_type,omitempty"`
+	SourceType *string
 
 	// Object containing details of the stored credentials.
 	//
 	// Obtain credentials for your source from the administrator of the source.
-	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
+	CredentialDetails *CredentialDetails
 
 	// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
 	// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided
 	// has expired) and must be corrected before they can be used with a collection.
-	Status *string `json:"status,omitempty"`
+	Status *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5208,14 +5318,14 @@ func (options *CreateCredentialsOptions) SetHeaders(param map[string]string) *Cr
 // CreateEnvironmentOptions : The CreateEnvironment options.
 type CreateEnvironmentOptions struct {
 	// Name that identifies the environment.
-	Name *string `json:"name" validate:"required"`
+	Name *string `validate:"required"`
 
 	// Description of the environment.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the
 	// default is `S`.
-	Size *string `json:"size,omitempty"`
+	Size *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5271,10 +5381,10 @@ func (options *CreateEnvironmentOptions) SetHeaders(param map[string]string) *Cr
 // CreateEventOptions : The CreateEvent options.
 type CreateEventOptions struct {
 	// The event type to be created.
-	Type *string `json:"type" validate:"required"`
+	Type *string `validate:"required"`
 
 	// Query event data object.
-	Data *EventData `json:"data" validate:"required"`
+	Data *EventData `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5345,10 +5455,10 @@ func UnmarshalCreateEventResponse(m map[string]json.RawMessage, result interface
 // CreateExpansionsOptions : The CreateExpansions options.
 type CreateExpansionsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// An array of query expansion definitions.
 	//
@@ -5363,7 +5473,7 @@ type CreateExpansionsOptions struct {
 	//  To create a uni-directional expansion, specify both an array of **input_terms** and an array of **expanded_terms**.
 	// When items in the **input_terms** array are present in a query, they are expanded using the items listed in the
 	// **expanded_terms** array.
-	Expansions []Expansion `json:"expansions" validate:"required"`
+	Expansions []Expansion `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5405,10 +5515,10 @@ func (options *CreateExpansionsOptions) SetHeaders(param map[string]string) *Cre
 // CreateGatewayOptions : The CreateGateway options.
 type CreateGatewayOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// User-defined name.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5442,16 +5552,16 @@ func (options *CreateGatewayOptions) SetHeaders(param map[string]string) *Create
 // CreateStopwordListOptions : The CreateStopwordList options.
 type CreateStopwordListOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The content of the stopword list to ingest.
-	StopwordFile io.ReadCloser `json:"stopword_file" validate:"required"`
+	StopwordFile io.ReadCloser `validate:"required"`
 
 	// The filename for stopwordFile.
-	StopwordFilename *string `json:"stopword_filename" validate:"required"`
+	StopwordFilename *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5500,14 +5610,14 @@ func (options *CreateStopwordListOptions) SetHeaders(param map[string]string) *C
 // CreateTokenizationDictionaryOptions : The CreateTokenizationDictionary options.
 type CreateTokenizationDictionaryOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// An array of tokenization rules. Each rule contains, the original `text` string, component `tokens`, any alternate
 	// character set `readings`, and which `part_of_speech` the text is from.
-	TokenizationRules []TokenDictRule `json:"tokenization_rules,omitempty"`
+	TokenizationRules []TokenDictRule
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5548,22 +5658,22 @@ func (options *CreateTokenizationDictionaryOptions) SetHeaders(param map[string]
 // CreateTrainingExampleOptions : The CreateTrainingExample options.
 type CreateTrainingExampleOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required,ne="`
+	QueryID *string `validate:"required,ne="`
 
 	// The document ID associated with this training example.
-	DocumentID *string `json:"document_id,omitempty"`
+	DocumentID *string
 
 	// The cross reference associated with this training example.
-	CrossReference *string `json:"cross_reference,omitempty"`
+	CrossReference *string
 
 	// The relevance of the training example.
-	Relevance *int64 `json:"relevance,omitempty"`
+	Relevance *int64
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5920,10 +6030,10 @@ func UnmarshalCredentialsList(m map[string]json.RawMessage, result interface{}) 
 // DeleteAllTrainingDataOptions : The DeleteAllTrainingData options.
 type DeleteAllTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5958,10 +6068,10 @@ func (options *DeleteAllTrainingDataOptions) SetHeaders(param map[string]string)
 // DeleteCollectionOptions : The DeleteCollection options.
 type DeleteCollectionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6026,10 +6136,10 @@ func UnmarshalDeleteCollectionResponse(m map[string]json.RawMessage, result inte
 // DeleteConfigurationOptions : The DeleteConfiguration options.
 type DeleteConfigurationOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `json:"configuration_id" validate:"required,ne="`
+	ConfigurationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6131,10 +6241,10 @@ func UnmarshalDeleteCredentials(m map[string]json.RawMessage, result interface{}
 // DeleteCredentialsOptions : The DeleteCredentials options.
 type DeleteCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `json:"credential_id" validate:"required,ne="`
+	CredentialID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6169,13 +6279,13 @@ func (options *DeleteCredentialsOptions) SetHeaders(param map[string]string) *De
 // DeleteDocumentOptions : The DeleteDocument options.
 type DeleteDocumentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `json:"document_id" validate:"required,ne="`
+	DocumentID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6247,7 +6357,7 @@ func UnmarshalDeleteDocumentResponse(m map[string]json.RawMessage, result interf
 // DeleteEnvironmentOptions : The DeleteEnvironment options.
 type DeleteEnvironmentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6305,10 +6415,10 @@ func UnmarshalDeleteEnvironmentResponse(m map[string]json.RawMessage, result int
 // DeleteExpansionsOptions : The DeleteExpansions options.
 type DeleteExpansionsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6343,10 +6453,10 @@ func (options *DeleteExpansionsOptions) SetHeaders(param map[string]string) *Del
 // DeleteGatewayOptions : The DeleteGateway options.
 type DeleteGatewayOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The requested gateway ID.
-	GatewayID *string `json:"gateway_id" validate:"required,ne="`
+	GatewayID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6381,10 +6491,10 @@ func (options *DeleteGatewayOptions) SetHeaders(param map[string]string) *Delete
 // DeleteStopwordListOptions : The DeleteStopwordList options.
 type DeleteStopwordListOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6419,10 +6529,10 @@ func (options *DeleteStopwordListOptions) SetHeaders(param map[string]string) *D
 // DeleteTokenizationDictionaryOptions : The DeleteTokenizationDictionary options.
 type DeleteTokenizationDictionaryOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6457,13 +6567,13 @@ func (options *DeleteTokenizationDictionaryOptions) SetHeaders(param map[string]
 // DeleteTrainingDataOptions : The DeleteTrainingData options.
 type DeleteTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required,ne="`
+	QueryID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6505,16 +6615,16 @@ func (options *DeleteTrainingDataOptions) SetHeaders(param map[string]string) *D
 // DeleteTrainingExampleOptions : The DeleteTrainingExample options.
 type DeleteTrainingExampleOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required,ne="`
+	QueryID *string `validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `json:"example_id" validate:"required,ne="`
+	ExampleID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6563,7 +6673,7 @@ func (options *DeleteTrainingExampleOptions) SetHeaders(param map[string]string)
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `json:"customer_id" validate:"required"`
+	CustomerID *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7199,67 +7309,67 @@ func UnmarshalExpansions(m map[string]json.RawMessage, result interface{}) (err 
 // FederatedQueryNoticesOptions : The FederatedQueryNotices options.
 type FederatedQueryNoticesOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string `json:"collection_ids" validate:"required"`
+	CollectionIds []string `validate:"required"`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string `json:"filter,omitempty"`
+	Filter *string
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first.
-	Query *string `json:"query,omitempty"`
+	Query *string
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
+	NaturalLanguageQuery *string
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string `json:"aggregation,omitempty"`
+	Aggregation *string
 
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64 `json:"count,omitempty"`
+	Count *int64
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	Return []string `json:"return,omitempty"`
+	Return []string
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
 	// together in any one query is **10000**.
-	Offset *int64 `json:"offset,omitempty"`
+	Offset *int64
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
-	Sort []string `json:"sort,omitempty"`
+	Sort []string
 
 	// When true, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool `json:"highlight,omitempty"`
+	Highlight *bool
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
 	// comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta
 	// functionality.
-	DeduplicateField *string `json:"deduplicate.field,omitempty"`
+	DeduplicateField *string
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
-	Similar *bool `json:"similar,omitempty"`
+	Similar *bool
 
 	// A comma-separated list of document IDs to find similar documents.
 	//
 	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
 	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
 	// reduce the scope.
-	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
+	SimilarDocumentIds []string
 
 	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
 	// specified, the entire document is used for comparison.
-	SimilarFields []string `json:"similar.fields,omitempty"`
+	SimilarFields []string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7372,93 +7482,93 @@ func (options *FederatedQueryNoticesOptions) SetHeaders(param map[string]string)
 // FederatedQueryOptions : The FederatedQuery options.
 type FederatedQueryOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds *string `json:"collection_ids" validate:"required"`
+	CollectionIds *string `validate:"required"`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string `json:"filter,omitempty"`
+	Filter *string
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first. Use a query search when you want to find the most relevant search results.
-	Query *string `json:"query,omitempty"`
+	Query *string
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
+	NaturalLanguageQuery *string
 
 	// A passages query that returns the most relevant passages from the results.
-	Passages *bool `json:"passages,omitempty"`
+	Passages *bool
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string `json:"aggregation,omitempty"`
+	Aggregation *string
 
 	// Number of results to return.
-	Count *int64 `json:"count,omitempty"`
+	Count *int64
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	Return *string `json:"return,omitempty"`
+	Return *string
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results.
-	Offset *int64 `json:"offset,omitempty"`
+	Offset *int64
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified. This parameter cannot be used in the same query as the **bias** parameter.
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// When true, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool `json:"highlight,omitempty"`
+	Highlight *bool
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
 	// fields are included.
-	PassagesFields *string `json:"passages.fields,omitempty"`
+	PassagesFields *string
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
 	// default is `10`. The maximum is `100`.
-	PassagesCount *int64 `json:"passages.count,omitempty"`
+	PassagesCount *int64
 
 	// The approximate number of characters that any one passage will have.
-	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
+	PassagesCharacters *int64
 
 	// When `true`, and used with a Watson Discovery News collection, duplicate results (based on the contents of the
 	// **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not
 	// considered. This parameter is currently Beta functionality.
-	Deduplicate *bool `json:"deduplicate,omitempty"`
+	Deduplicate *bool
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
 	// comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta
 	// functionality.
-	DeduplicateField *string `json:"deduplicate.field,omitempty"`
+	DeduplicateField *string
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
-	Similar *bool `json:"similar,omitempty"`
+	Similar *bool
 
 	// A comma-separated list of document IDs to find similar documents.
 	//
 	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
 	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
 	// reduce the scope.
-	SimilarDocumentIds *string `json:"similar.document_ids,omitempty"`
+	SimilarDocumentIds *string
 
 	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
 	// specified, the entire document is used for comparison.
-	SimilarFields *string `json:"similar.fields,omitempty"`
+	SimilarFields *string
 
 	// Field which the returned results will be biased against. The specified field must be either a **date** or **number**
 	// format. When a **date** type field is specified returned results are biased towards field values closer to the
 	// current date. When a **number** type field is specified, returned results are biased towards higher field values.
 	// This parameter cannot be used in the same query as the **sort** parameter.
-	Bias *string `json:"bias,omitempty"`
+	Bias *string
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
-	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
+	XWatsonLoggingOptOut *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7802,20 +7912,20 @@ func UnmarshalGatewayList(m map[string]json.RawMessage, result interface{}) (err
 // GetAutocompletionOptions : The GetAutocompletion options.
 type GetAutocompletionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete to `Hot`, `Housing`, or `How
 	// do I upgrade`. Possible completions are.
-	Prefix *string `json:"prefix" validate:"required"`
+	Prefix *string `validate:"required"`
 
 	// The field in the result documents that autocompletion suggestions are identified from.
-	Field *string `json:"field,omitempty"`
+	Field *string
 
 	// The number of autocompletion suggestions to return.
-	Count *int64 `json:"count,omitempty"`
+	Count *int64
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7869,10 +7979,10 @@ func (options *GetAutocompletionOptions) SetHeaders(param map[string]string) *Ge
 // GetCollectionOptions : The GetCollection options.
 type GetCollectionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7907,10 +8017,10 @@ func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCol
 // GetConfigurationOptions : The GetConfiguration options.
 type GetConfigurationOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `json:"configuration_id" validate:"required,ne="`
+	ConfigurationID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7945,10 +8055,10 @@ func (options *GetConfigurationOptions) SetHeaders(param map[string]string) *Get
 // GetCredentialsOptions : The GetCredentials options.
 type GetCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `json:"credential_id" validate:"required,ne="`
+	CredentialID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7983,13 +8093,13 @@ func (options *GetCredentialsOptions) SetHeaders(param map[string]string) *GetCr
 // GetDocumentStatusOptions : The GetDocumentStatus options.
 type GetDocumentStatusOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `json:"document_id" validate:"required,ne="`
+	DocumentID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8031,7 +8141,7 @@ func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *Ge
 // GetEnvironmentOptions : The GetEnvironment options.
 type GetEnvironmentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8059,10 +8169,10 @@ func (options *GetEnvironmentOptions) SetHeaders(param map[string]string) *GetEn
 // GetGatewayOptions : The GetGateway options.
 type GetGatewayOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The requested gateway ID.
-	GatewayID *string `json:"gateway_id" validate:"required,ne="`
+	GatewayID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8097,13 +8207,13 @@ func (options *GetGatewayOptions) SetHeaders(param map[string]string) *GetGatewa
 // GetMetricsEventRateOptions : The GetMetricsEventRate options.
 type GetMetricsEventRateOptions struct {
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
+	StartTime *strfmt.DateTime
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
+	EndTime *strfmt.DateTime
 
 	// The type of result to consider when calculating the metric.
-	ResultType *string `json:"result_type,omitempty"`
+	ResultType *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8147,13 +8257,13 @@ func (options *GetMetricsEventRateOptions) SetHeaders(param map[string]string) *
 // GetMetricsQueryEventOptions : The GetMetricsQueryEvent options.
 type GetMetricsQueryEventOptions struct {
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
+	StartTime *strfmt.DateTime
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
+	EndTime *strfmt.DateTime
 
 	// The type of result to consider when calculating the metric.
-	ResultType *string `json:"result_type,omitempty"`
+	ResultType *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8197,13 +8307,13 @@ func (options *GetMetricsQueryEventOptions) SetHeaders(param map[string]string) 
 // GetMetricsQueryNoResultsOptions : The GetMetricsQueryNoResults options.
 type GetMetricsQueryNoResultsOptions struct {
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
+	StartTime *strfmt.DateTime
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
+	EndTime *strfmt.DateTime
 
 	// The type of result to consider when calculating the metric.
-	ResultType *string `json:"result_type,omitempty"`
+	ResultType *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8247,13 +8357,13 @@ func (options *GetMetricsQueryNoResultsOptions) SetHeaders(param map[string]stri
 // GetMetricsQueryOptions : The GetMetricsQuery options.
 type GetMetricsQueryOptions struct {
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime *strfmt.DateTime `json:"start_time,omitempty"`
+	StartTime *strfmt.DateTime
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime *strfmt.DateTime `json:"end_time,omitempty"`
+	EndTime *strfmt.DateTime
 
 	// The type of result to consider when calculating the metric.
-	ResultType *string `json:"result_type,omitempty"`
+	ResultType *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8298,7 +8408,7 @@ func (options *GetMetricsQueryOptions) SetHeaders(param map[string]string) *GetM
 type GetMetricsQueryTokenEventOptions struct {
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64 `json:"count,omitempty"`
+	Count *int64
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8324,10 +8434,10 @@ func (options *GetMetricsQueryTokenEventOptions) SetHeaders(param map[string]str
 // GetStopwordListStatusOptions : The GetStopwordListStatus options.
 type GetStopwordListStatusOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8362,10 +8472,10 @@ func (options *GetStopwordListStatusOptions) SetHeaders(param map[string]string)
 // GetTokenizationDictionaryStatusOptions : The GetTokenizationDictionaryStatus options.
 type GetTokenizationDictionaryStatusOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8400,13 +8510,13 @@ func (options *GetTokenizationDictionaryStatusOptions) SetHeaders(param map[stri
 // GetTrainingDataOptions : The GetTrainingData options.
 type GetTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required,ne="`
+	QueryID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8448,16 +8558,16 @@ func (options *GetTrainingDataOptions) SetHeaders(param map[string]string) *GetT
 // GetTrainingExampleOptions : The GetTrainingExample options.
 type GetTrainingExampleOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required,ne="`
+	QueryID *string `validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `json:"example_id" validate:"required,ne="`
+	ExampleID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8589,10 +8699,10 @@ func UnmarshalIndexCapacity(m map[string]json.RawMessage, result interface{}) (e
 // ListCollectionFieldsOptions : The ListCollectionFields options.
 type ListCollectionFieldsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8655,10 +8765,10 @@ func UnmarshalListCollectionFieldsResponse(m map[string]json.RawMessage, result 
 // ListCollectionsOptions : The ListCollections options.
 type ListCollectionsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// Find collections with the given name.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8709,10 +8819,10 @@ func UnmarshalListCollectionsResponse(m map[string]json.RawMessage, result inter
 // ListConfigurationsOptions : The ListConfigurations options.
 type ListConfigurationsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// Find configurations with the given name.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8763,7 +8873,7 @@ func UnmarshalListConfigurationsResponse(m map[string]json.RawMessage, result in
 // ListCredentialsOptions : The ListCredentials options.
 type ListCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8791,7 +8901,7 @@ func (options *ListCredentialsOptions) SetHeaders(param map[string]string) *List
 // ListEnvironmentsOptions : The ListEnvironments options.
 type ListEnvironmentsOptions struct {
 	// Show only the environment with the given name.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8834,10 +8944,10 @@ func UnmarshalListEnvironmentsResponse(m map[string]json.RawMessage, result inte
 // ListExpansionsOptions : The ListExpansions options.
 type ListExpansionsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8872,10 +8982,10 @@ func (options *ListExpansionsOptions) SetHeaders(param map[string]string) *ListE
 // ListFieldsOptions : The ListFields options.
 type ListFieldsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string `json:"collection_ids" validate:"required"`
+	CollectionIds []string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8910,7 +9020,7 @@ func (options *ListFieldsOptions) SetHeaders(param map[string]string) *ListField
 // ListGatewaysOptions : The ListGateways options.
 type ListGatewaysOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8938,10 +9048,10 @@ func (options *ListGatewaysOptions) SetHeaders(param map[string]string) *ListGat
 // ListTrainingDataOptions : The ListTrainingData options.
 type ListTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8976,13 +9086,13 @@ func (options *ListTrainingDataOptions) SetHeaders(param map[string]string) *Lis
 // ListTrainingExamplesOptions : The ListTrainingExamples options.
 type ListTrainingExamplesOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required,ne="`
+	QueryID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9970,25 +10080,25 @@ func UnmarshalQueryAggregation(m map[string]json.RawMessage, result interface{})
 type QueryLogOptions struct {
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string `json:"filter,omitempty"`
+	Filter *string
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first.
-	Query *string `json:"query,omitempty"`
+	Query *string
 
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64 `json:"count,omitempty"`
+	Count *int64
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
 	// together in any one query is **10000**.
-	Offset *int64 `json:"offset,omitempty"`
+	Offset *int64
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
-	Sort []string `json:"sort,omitempty"`
+	Sort []string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10038,80 +10148,80 @@ func (options *QueryLogOptions) SetHeaders(param map[string]string) *QueryLogOpt
 // QueryNoticesOptions : The QueryNotices options.
 type QueryNoticesOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string `json:"filter,omitempty"`
+	Filter *string
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first.
-	Query *string `json:"query,omitempty"`
+	Query *string
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
+	NaturalLanguageQuery *string
 
 	// A passages query that returns the most relevant passages from the results.
-	Passages *bool `json:"passages,omitempty"`
+	Passages *bool
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string `json:"aggregation,omitempty"`
+	Aggregation *string
 
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64 `json:"count,omitempty"`
+	Count *int64
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	Return []string `json:"return,omitempty"`
+	Return []string
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
 	// together in any one query is **10000**.
-	Offset *int64 `json:"offset,omitempty"`
+	Offset *int64
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
-	Sort []string `json:"sort,omitempty"`
+	Sort []string
 
 	// When true, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool `json:"highlight,omitempty"`
+	Highlight *bool
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
 	// fields are included.
-	PassagesFields []string `json:"passages.fields,omitempty"`
+	PassagesFields []string
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found.
-	PassagesCount *int64 `json:"passages.count,omitempty"`
+	PassagesCount *int64
 
 	// The approximate number of characters that any one passage will have.
-	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
+	PassagesCharacters *int64
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
 	// comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta
 	// functionality.
-	DeduplicateField *string `json:"deduplicate.field,omitempty"`
+	DeduplicateField *string
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
-	Similar *bool `json:"similar,omitempty"`
+	Similar *bool
 
 	// A comma-separated list of document IDs to find similar documents.
 	//
 	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
 	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
 	// reduce the scope.
-	SimilarDocumentIds []string `json:"similar.document_ids,omitempty"`
+	SimilarDocumentIds []string
 
 	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
 	// specified, the entire document is used for comparison.
-	SimilarFields []string `json:"similar.fields,omitempty"`
+	SimilarFields []string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10454,99 +10564,99 @@ func UnmarshalQueryNoticesResult(m map[string]json.RawMessage, result interface{
 // QueryOptions : The Query options.
 type QueryOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string `json:"filter,omitempty"`
+	Filter *string
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first. Use a query search when you want to find the most relevant search results.
-	Query *string `json:"query,omitempty"`
+	Query *string
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
+	NaturalLanguageQuery *string
 
 	// A passages query that returns the most relevant passages from the results.
-	Passages *bool `json:"passages,omitempty"`
+	Passages *bool
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string `json:"aggregation,omitempty"`
+	Aggregation *string
 
 	// Number of results to return.
-	Count *int64 `json:"count,omitempty"`
+	Count *int64
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	Return *string `json:"return,omitempty"`
+	Return *string
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results.
-	Offset *int64 `json:"offset,omitempty"`
+	Offset *int64
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified. This parameter cannot be used in the same query as the **bias** parameter.
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// When true, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool `json:"highlight,omitempty"`
+	Highlight *bool
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
 	// fields are included.
-	PassagesFields *string `json:"passages.fields,omitempty"`
+	PassagesFields *string
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
 	// default is `10`. The maximum is `100`.
-	PassagesCount *int64 `json:"passages.count,omitempty"`
+	PassagesCount *int64
 
 	// The approximate number of characters that any one passage will have.
-	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
+	PassagesCharacters *int64
 
 	// When `true`, and used with a Watson Discovery News collection, duplicate results (based on the contents of the
 	// **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not
 	// considered. This parameter is currently Beta functionality.
-	Deduplicate *bool `json:"deduplicate,omitempty"`
+	Deduplicate *bool
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
 	// comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta
 	// functionality.
-	DeduplicateField *string `json:"deduplicate.field,omitempty"`
+	DeduplicateField *string
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
-	Similar *bool `json:"similar,omitempty"`
+	Similar *bool
 
 	// A comma-separated list of document IDs to find similar documents.
 	//
 	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
 	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
 	// reduce the scope.
-	SimilarDocumentIds *string `json:"similar.document_ids,omitempty"`
+	SimilarDocumentIds *string
 
 	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
 	// specified, the entire document is used for comparison.
-	SimilarFields *string `json:"similar.fields,omitempty"`
+	SimilarFields *string
 
 	// Field which the returned results will be biased against. The specified field must be either a **date** or **number**
 	// format. When a **date** type field is specified returned results are biased towards field values closer to the
 	// current date. When a **number** type field is specified, returned results are biased towards higher field values.
 	// This parameter cannot be used in the same query as the **sort** parameter.
-	Bias *string `json:"bias,omitempty"`
+	Bias *string
 
 	// When `true` and the **natural_language_query** parameter is used, the **natural_languge_query** parameter is spell
-	// checked. The most likely correction is retunred in the **suggested_query** field of the response (if one exists).
+	// checked. The most likely correction is returned in the **suggested_query** field of the response (if one exists).
 	//
 	// **Important:** this parameter is only valid when using the Cloud Pak version of Discovery.
-	SpellingSuggestions *bool `json:"spelling_suggestions,omitempty"`
+	SpellingSuggestions *bool
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
-	XWatsonLoggingOptOut *bool `json:"X-Watson-Logging-Opt-Out,omitempty"`
+	XWatsonLoggingOptOut *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -11903,19 +12013,19 @@ func UnmarshalTrainingStatus(m map[string]json.RawMessage, result interface{}) (
 // UpdateCollectionOptions : The UpdateCollection options.
 type UpdateCollectionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The name of the collection.
-	Name *string `json:"name" validate:"required"`
+	Name *string `validate:"required"`
 
 	// A description of the collection.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// The ID of the configuration in which the collection is to be updated.
-	ConfigurationID *string `json:"configuration_id,omitempty"`
+	ConfigurationID *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -11969,29 +12079,29 @@ func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *Upd
 // UpdateConfigurationOptions : The UpdateConfiguration options.
 type UpdateConfigurationOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `json:"configuration_id" validate:"required,ne="`
+	ConfigurationID *string `validate:"required,ne="`
 
 	// The name of the configuration.
-	Name *string `json:"name" validate:"required"`
+	Name *string `validate:"required"`
 
 	// The description of the configuration, if available.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// Document conversion settings.
-	Conversions *Conversions `json:"conversions,omitempty"`
+	Conversions *Conversions
 
 	// An array of document enrichment settings for the configuration.
-	Enrichments []Enrichment `json:"enrichments,omitempty"`
+	Enrichments []Enrichment
 
 	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are
 	// executed in the order that they appear in the array.
-	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
+	Normalizations []NormalizationOperation
 
 	// Object containing source parameters for the configuration.
-	Source *Source `json:"source,omitempty"`
+	Source *Source
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12063,10 +12173,10 @@ func (options *UpdateConfigurationOptions) SetHeaders(param map[string]string) *
 // UpdateCredentialsOptions : The UpdateCredentials options.
 type UpdateCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `json:"credential_id" validate:"required,ne="`
+	CredentialID *string `validate:"required,ne="`
 
 	// The source that this credentials object connects to.
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
@@ -12074,17 +12184,17 @@ type UpdateCredentialsOptions struct {
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 	// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
-	SourceType *string `json:"source_type,omitempty"`
+	SourceType *string
 
 	// Object containing details of the stored credentials.
 	//
 	// Obtain credentials for your source from the administrator of the source.
-	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
+	CredentialDetails *CredentialDetails
 
 	// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
 	// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided
 	// has expired) and must be corrected before they can be used with a collection.
-	Status *string `json:"status,omitempty"`
+	Status *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12161,30 +12271,30 @@ func (options *UpdateCredentialsOptions) SetHeaders(param map[string]string) *Up
 // UpdateDocumentOptions : The UpdateDocument options.
 type UpdateDocumentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `json:"document_id" validate:"required,ne="`
+	DocumentID *string `validate:"required,ne="`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
 	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
 	// supported size are rejected.
-	File io.ReadCloser `json:"file,omitempty"`
+	File io.ReadCloser
 
 	// The filename for file.
-	Filename *string `json:"filename,omitempty"`
+	Filename *string
 
 	// The content type of file.
-	FileContentType *string `json:"file_content_type,omitempty"`
+	FileContentType *string
 
 	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
-	Metadata *string `json:"metadata,omitempty"`
+	Metadata *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12250,17 +12360,17 @@ func (options *UpdateDocumentOptions) SetHeaders(param map[string]string) *Updat
 // UpdateEnvironmentOptions : The UpdateEnvironment options.
 type UpdateEnvironmentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// Name that identifies the environment.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// Description of the environment.
-	Description *string `json:"description,omitempty"`
+	Description *string
 
 	// Size that the environment should be increased to. Environment size cannot be modified when using a Lite plan.
 	// Environment size can only increased and not decreased.
-	Size *string `json:"size,omitempty"`
+	Size *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12320,22 +12430,22 @@ func (options *UpdateEnvironmentOptions) SetHeaders(param map[string]string) *Up
 // UpdateTrainingExampleOptions : The UpdateTrainingExample options.
 type UpdateTrainingExampleOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `json:"environment_id" validate:"required,ne="`
+	EnvironmentID *string `validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `json:"query_id" validate:"required,ne="`
+	QueryID *string `validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `json:"example_id" validate:"required,ne="`
+	ExampleID *string `validate:"required,ne="`
 
 	// The example to add.
-	CrossReference *string `json:"cross_reference,omitempty"`
+	CrossReference *string
 
 	// The relevance value for this example.
-	Relevance *int64 `json:"relevance,omitempty"`
+	Relevance *int64
 
 	// Allows users to set headers on API requests
 	Headers map[string]string

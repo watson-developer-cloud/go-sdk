@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package languagetranslatorv3 : Operations and models for the LanguageTranslatorV3 service
@@ -30,7 +30,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
@@ -218,11 +218,13 @@ func (languageTranslator *LanguageTranslatorV3) ListLanguagesWithContext(ctx con
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguages)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalLanguages)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -299,11 +301,13 @@ func (languageTranslator *LanguageTranslatorV3) TranslateWithContext(ctx context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationResult)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationResult)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -352,11 +356,13 @@ func (languageTranslator *LanguageTranslatorV3) ListIdentifiableLanguagesWithCon
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIdentifiableLanguages)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIdentifiableLanguages)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -414,11 +420,13 @@ func (languageTranslator *LanguageTranslatorV3) IdentifyWithContext(ctx context.
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIdentifiedLanguages)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalIdentifiedLanguages)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -475,11 +483,13 @@ func (languageTranslator *LanguageTranslatorV3) ListModelsWithContext(ctx contex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModels)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModels)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -605,11 +615,13 @@ func (languageTranslator *LanguageTranslatorV3) CreateModelWithContext(ctx conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModel)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -665,11 +677,13 @@ func (languageTranslator *LanguageTranslatorV3) DeleteModelWithContext(ctx conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteModelResult)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDeleteModelResult)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -726,11 +740,13 @@ func (languageTranslator *LanguageTranslatorV3) GetModelWithContext(ctx context.
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModel)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTranslationModel)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -778,11 +794,13 @@ func (languageTranslator *LanguageTranslatorV3) ListDocumentsWithContext(ctx con
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -852,11 +870,13 @@ func (languageTranslator *LanguageTranslatorV3) TranslateDocumentWithContext(ctx
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -912,11 +932,13 @@ func (languageTranslator *LanguageTranslatorV3) GetDocumentStatusWithContext(ctx
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalDocumentStatus)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1030,7 +1052,7 @@ type CreateModelOptions struct {
 	// The ID of the translation model to use as the base for customization. To see available models and IDs, use the `List
 	// models` method. Most models that are provided with the service are customizable. In addition, all models that you
 	// create with parallel corpora customization can be further customized with a forced glossary.
-	BaseModelID *string `json:"base_model_id" validate:"required"`
+	BaseModelID *string `validate:"required"`
 
 	// A file with forced glossary terms for the source and target languages. The customizations in the file completely
 	// overwrite the domain translation data, including high frequency or high confidence phrase translations.
@@ -1040,7 +1062,7 @@ type CreateModelOptions struct {
 	// the method description.
 	//
 	// *With `curl`, use `--form forced_glossary=@{filename}`.*.
-	ForcedGlossary io.ReadCloser `json:"forced_glossary,omitempty"`
+	ForcedGlossary io.ReadCloser
 
 	// A file with parallel sentences for the source and target languages. You can upload multiple parallel corpus files in
 	// one request by repeating the parameter. All uploaded parallel corpus files combined must contain at least 5000
@@ -1051,11 +1073,11 @@ type CreateModelOptions struct {
 	// cumulative maximum size of 250 MB. For more information, see **Supported file formats** in the method description.
 	//
 	// *With `curl`, use `--form parallel_corpus=@{filename}`.*.
-	ParallelCorpus io.ReadCloser `json:"parallel_corpus,omitempty"`
+	ParallelCorpus io.ReadCloser
 
 	// An optional model name that you can use to identify the model. Valid characters are letters, numbers, dashes,
 	// underscores, spaces, and apostrophes. The maximum length of the name is 32 characters.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1101,7 +1123,7 @@ func (options *CreateModelOptions) SetHeaders(param map[string]string) *CreateMo
 // DeleteDocumentOptions : The DeleteDocument options.
 type DeleteDocumentOptions struct {
 	// Document ID of the document to delete.
-	DocumentID *string `json:"document_id" validate:"required,ne="`
+	DocumentID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1129,7 +1151,7 @@ func (options *DeleteDocumentOptions) SetHeaders(param map[string]string) *Delet
 // DeleteModelOptions : The DeleteModel options.
 type DeleteModelOptions struct {
 	// Model ID of the model to delete.
-	ModelID *string `json:"model_id" validate:"required,ne="`
+	ModelID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1295,7 +1317,7 @@ func UnmarshalDocumentStatus(m map[string]json.RawMessage, result interface{}) (
 // GetDocumentStatusOptions : The GetDocumentStatus options.
 type GetDocumentStatusOptions struct {
 	// The document ID of the document.
-	DocumentID *string `json:"document_id" validate:"required,ne="`
+	DocumentID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1323,7 +1345,7 @@ func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *Ge
 // GetModelOptions : The GetModel options.
 type GetModelOptions struct {
 	// Model ID of the model to get.
-	ModelID *string `json:"model_id" validate:"required,ne="`
+	ModelID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1351,7 +1373,7 @@ func (options *GetModelOptions) SetHeaders(param map[string]string) *GetModelOpt
 // GetTranslatedDocumentOptions : The GetTranslatedDocument options.
 type GetTranslatedDocumentOptions struct {
 	// The document ID of the document that was submitted for translation.
-	DocumentID *string `json:"document_id" validate:"required,ne="`
+	DocumentID *string `validate:"required,ne="`
 
 	// The type of the response: application/powerpoint, application/mspowerpoint, application/x-rtf, application/json,
 	// application/xml, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
@@ -1361,7 +1383,7 @@ type GetTranslatedDocumentOptions struct {
 	// application/vnd.oasis.opendocument.text, application/pdf, application/rtf, text/html, text/json, text/plain,
 	// text/richtext, text/rtf, or text/xml. A character encoding can be specified by including a `charset` parameter. For
 	// example, 'text/html;charset=utf-8'.
-	Accept *string `json:"Accept,omitempty"`
+	Accept *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1477,7 +1499,7 @@ func UnmarshalIdentifiedLanguages(m map[string]json.RawMessage, result interface
 // IdentifyOptions : The Identify options.
 type IdentifyOptions struct {
 	// Input text in UTF-8 format.
-	Text *string `json:"text" validate:"required"`
+	Text *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1653,15 +1675,15 @@ func (options *ListLanguagesOptions) SetHeaders(param map[string]string) *ListLa
 // ListModelsOptions : The ListModels options.
 type ListModelsOptions struct {
 	// Specify a language code to filter results by source language.
-	Source *string `json:"source,omitempty"`
+	Source *string
 
 	// Specify a language code to filter results by target language.
-	Target *string `json:"target,omitempty"`
+	Target *string
 
 	// If the `default` parameter isn't specified, the service returns all models (default and non-default) for each
 	// language pair. To return only default models, set this parameter to `true`. To return only non-default models, set
 	// this parameter to `false`. There is exactly one default model, the IBM-provided base model, per language pair.
-	Default *bool `json:"default,omitempty"`
+	Default *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1702,29 +1724,29 @@ type TranslateDocumentOptions struct {
 	// instances on the Standard, Advanced, and Premium plans, and 2 MB for service instances on the Lite plan. For more
 	// information, see [Supported file formats
 	// (Beta)](https://cloud.ibm.com/docs/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats).
-	File io.ReadCloser `json:"file" validate:"required"`
+	File io.ReadCloser `validate:"required"`
 
 	// The filename for file.
-	Filename *string `json:"filename" validate:"required"`
+	Filename *string `validate:"required"`
 
 	// The content type of file.
-	FileContentType *string `json:"file_content_type,omitempty"`
+	FileContentType *string
 
 	// The model to use for translation. For example, `en-de` selects the IBM-provided base model for English-to-German
 	// translation. A model ID overrides the `source` and `target` parameters and is required if you use a custom model. If
 	// no model ID is specified, you must specify at least a target language.
-	ModelID *string `json:"model_id,omitempty"`
+	ModelID *string
 
 	// Language code that specifies the language of the source document. If omitted, the service derives the source
 	// language from the input text. The input must contain sufficient text for the service to identify the language
 	// reliably.
-	Source *string `json:"source,omitempty"`
+	Source *string
 
 	// Language code that specifies the target language for translation. Required if model ID is not specified.
-	Target *string `json:"target,omitempty"`
+	Target *string
 
 	// To use a previously submitted document as the source for a new translation, enter the `document_id` of the document.
-	DocumentID *string `json:"document_id,omitempty"`
+	DocumentID *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1790,19 +1812,19 @@ func (options *TranslateDocumentOptions) SetHeaders(param map[string]string) *Tr
 type TranslateOptions struct {
 	// Input text in UTF-8 encoding. Submit a maximum of 50 KB (51,200 bytes) of text with a single request. Multiple
 	// elements result in multiple translations in the response.
-	Text []string `json:"text" validate:"required"`
+	Text []string `validate:"required"`
 
 	// The model to use for translation. For example, `en-de` selects the IBM-provided base model for English-to-German
 	// translation. A model ID overrides the `source` and `target` parameters and is required if you use a custom model. If
 	// no model ID is specified, you must specify at least a target language.
-	ModelID *string `json:"model_id,omitempty"`
+	ModelID *string
 
 	// Language code that specifies the language of the input text. If omitted, the service derives the source language
 	// from the input text. The input must contain sufficient text for the service to identify the language reliably.
-	Source *string `json:"source,omitempty"`
+	Source *string
 
 	// Language code that specifies the target language for translation. Required if model ID is not specified.
-	Target *string `json:"target,omitempty"`
+	Target *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string

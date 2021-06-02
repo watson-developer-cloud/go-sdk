@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package visualrecognitionv4 : Operations and models for the VisualRecognitionV4 service
@@ -30,7 +30,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
@@ -248,11 +248,13 @@ func (visualRecognition *VisualRecognitionV4) AnalyzeWithContext(ctx context.Con
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAnalyzeResponse)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalAnalyzeResponse)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -323,11 +325,13 @@ func (visualRecognition *VisualRecognitionV4) CreateCollectionWithContext(ctx co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -375,11 +379,13 @@ func (visualRecognition *VisualRecognitionV4) ListCollectionsWithContext(ctx con
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollectionsList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollectionsList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -435,11 +441,13 @@ func (visualRecognition *VisualRecognitionV4) GetCollectionWithContext(ctx conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -512,11 +520,13 @@ func (visualRecognition *VisualRecognitionV4) UpdateCollectionWithContext(ctx co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -702,11 +712,13 @@ func (visualRecognition *VisualRecognitionV4) AddImagesWithContext(ctx context.C
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalImageDetailsList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalImageDetailsList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -762,11 +774,13 @@ func (visualRecognition *VisualRecognitionV4) ListImagesWithContext(ctx context.
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalImageSummaryList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalImageSummaryList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -823,11 +837,13 @@ func (visualRecognition *VisualRecognitionV4) GetImageDetailsWithContext(ctx con
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalImageDetails)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalImageDetails)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -990,11 +1006,13 @@ func (visualRecognition *VisualRecognitionV4) ListObjectMetadataWithContext(ctx 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalObjectMetadataList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalObjectMetadataList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1061,11 +1079,13 @@ func (visualRecognition *VisualRecognitionV4) UpdateObjectMetadataWithContext(ct
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalUpdateObjectMetadata)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalUpdateObjectMetadata)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1122,11 +1142,13 @@ func (visualRecognition *VisualRecognitionV4) GetObjectMetadataWithContext(ctx c
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalObjectMetadata)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalObjectMetadata)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1237,11 +1259,13 @@ func (visualRecognition *VisualRecognitionV4) TrainWithContext(ctx context.Conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCollection)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1315,11 +1339,13 @@ func (visualRecognition *VisualRecognitionV4) AddImageTrainingDataWithContext(ct
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingDataObjects)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingDataObjects)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1374,11 +1400,13 @@ func (visualRecognition *VisualRecognitionV4) GetTrainingUsageWithContext(ctx co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingEvents)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTrainingEvents)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -1439,13 +1467,13 @@ func (visualRecognition *VisualRecognitionV4) DeleteUserDataWithContext(ctx cont
 // AddImageTrainingDataOptions : The AddImageTrainingData options.
 type AddImageTrainingDataOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The identifier of the image.
-	ImageID *string `json:"image_id" validate:"required,ne="`
+	ImageID *string `validate:"required,ne="`
 
 	// Training data for specific objects.
-	Objects []TrainingDataObject `json:"objects,omitempty"`
+	Objects []TrainingDataObject
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1486,7 +1514,7 @@ func (options *AddImageTrainingDataOptions) SetHeaders(param map[string]string) 
 // AddImagesOptions : The AddImages options.
 type AddImagesOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// An array of image files (.jpg or .png) or .zip files with images.
 	// - Include a maximum of 20 images in a request.
@@ -1494,7 +1522,7 @@ type AddImagesOptions struct {
 	// - Limit each image file to 10 MB.
 	//
 	// You can also include an image with the **image_url** parameter.
-	ImagesFile []FileWithMetadata `json:"images_file,omitempty"`
+	ImagesFile []FileWithMetadata
 
 	// The array of URLs of image files (.jpg or .png).
 	// - Include a maximum of 20 images in a request.
@@ -1503,13 +1531,13 @@ type AddImagesOptions struct {
 	// 300 pixels. Maximum is 5400 pixels for either height or width.
 	//
 	// You can also include images with the **images_file** parameter.
-	ImageURL []string `json:"image_url,omitempty"`
+	ImageURL []string
 
 	// Training data for a single image. Include training data only if you add one image with the request.
 	//
 	// The `object` property can contain alphanumeric, underscore, hyphen, space, and dot characters. It cannot begin with
 	// the reserved prefix `sys-` and must be no longer than 32 characters.
-	TrainingData *string `json:"training_data,omitempty"`
+	TrainingData *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1555,10 +1583,10 @@ func (options *AddImagesOptions) SetHeaders(param map[string]string) *AddImagesO
 // AnalyzeOptions : The Analyze options.
 type AnalyzeOptions struct {
 	// The IDs of the collections to analyze.
-	CollectionIds []string `json:"collection_ids" validate:"required"`
+	CollectionIds []string `validate:"required"`
 
 	// The features to analyze.
-	Features []string `json:"features" validate:"required"`
+	Features []string `validate:"required"`
 
 	// An array of image files (.jpg or .png) or .zip files with images.
 	// - Include a maximum of 20 images in a request.
@@ -1566,7 +1594,7 @@ type AnalyzeOptions struct {
 	// - Limit each image file to 10 MB.
 	//
 	// You can also include an image with the **image_url** parameter.
-	ImagesFile []FileWithMetadata `json:"images_file,omitempty"`
+	ImagesFile []FileWithMetadata
 
 	// An array of URLs of image files (.jpg or .png).
 	// - Include a maximum of 20 images in a request.
@@ -1575,10 +1603,10 @@ type AnalyzeOptions struct {
 	// 300 pixels. Maximum is 5400 pixels for either height or width.
 	//
 	// You can also include images with the **images_file** parameter.
-	ImageURL []string `json:"image_url,omitempty"`
+	ImageURL []string
 
 	// The minimum score a feature must have to be returned.
-	Threshold *float32 `json:"threshold,omitempty"`
+	Threshold *float32
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1785,10 +1813,13 @@ func UnmarshalCollectionsList(m map[string]json.RawMessage, result interface{}) 
 type CreateCollectionOptions struct {
 	// The name of the collection. The name can contain alphanumeric, underscore, hyphen, and dot characters. It cannot
 	// begin with the reserved prefix `sys-`.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// The description of the collection.
-	Description *string `json:"description,omitempty"`
+	Description *string
+
+	// Training status information for the collection.
+	TrainingStatus *TrainingStatus
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1811,6 +1842,12 @@ func (options *CreateCollectionOptions) SetDescription(description string) *Crea
 	return options
 }
 
+// SetTrainingStatus : Allow user to set TrainingStatus
+func (options *CreateCollectionOptions) SetTrainingStatus(trainingStatus *TrainingStatus) *CreateCollectionOptions {
+	options.TrainingStatus = trainingStatus
+	return options
+}
+
 // SetHeaders : Allow user to set Headers
 func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *CreateCollectionOptions {
 	options.Headers = param
@@ -1820,7 +1857,7 @@ func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *Cre
 // DeleteCollectionOptions : The DeleteCollection options.
 type DeleteCollectionOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1848,10 +1885,10 @@ func (options *DeleteCollectionOptions) SetHeaders(param map[string]string) *Del
 // DeleteImageOptions : The DeleteImage options.
 type DeleteImageOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The identifier of the image.
-	ImageID *string `json:"image_id" validate:"required,ne="`
+	ImageID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1886,10 +1923,10 @@ func (options *DeleteImageOptions) SetHeaders(param map[string]string) *DeleteIm
 // DeleteObjectOptions : The DeleteObject options.
 type DeleteObjectOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The name of the object.
-	Object *string `json:"object" validate:"required,ne="`
+	Object *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1924,7 +1961,7 @@ func (options *DeleteObjectOptions) SetHeaders(param map[string]string) *DeleteO
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `json:"customer_id" validate:"required"`
+	CustomerID *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2069,27 +2106,24 @@ func (*VisualRecognitionV4) NewFileWithMetadata(data io.ReadCloser) (model *File
 
 // UnmarshalFileWithMetadata unmarshals an instance of FileWithMetadata from the specified map of raw messages.
 func UnmarshalFileWithMetadata(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(FileWithMetadata)
-	err = core.UnmarshalPrimitive(m, "data", &obj.Data)
+	obj := new(core.FileWithMetadata)
+	err = core.UnmarshalFileWithMetadata(m, &obj)
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "filename", &obj.Filename)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "content_type", &obj.ContentType)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+
+	// do a simple conversion from the core type to the service type
+	// they have identical fields
+	convertedModel := FileWithMetadata(*obj)
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(&convertedModel))
+
 	return
 }
 
 // GetCollectionOptions : The GetCollection options.
 type GetCollectionOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2117,10 +2151,10 @@ func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCol
 // GetImageDetailsOptions : The GetImageDetails options.
 type GetImageDetailsOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The identifier of the image.
-	ImageID *string `json:"image_id" validate:"required,ne="`
+	ImageID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2155,14 +2189,14 @@ func (options *GetImageDetailsOptions) SetHeaders(param map[string]string) *GetI
 // GetJpegImageOptions : The GetJpegImage options.
 type GetJpegImageOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The identifier of the image.
-	ImageID *string `json:"image_id" validate:"required,ne="`
+	ImageID *string `validate:"required,ne="`
 
 	// The image size. Specify `thumbnail` to return a version that maintains the original aspect ratio but is no larger
 	// than 200 pixels in the larger dimension. For example, an original 800 x 1000 image is resized to 160 x 200 pixels.
-	Size *string `json:"size,omitempty"`
+	Size *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2211,13 +2245,13 @@ func (options *GetJpegImageOptions) SetHeaders(param map[string]string) *GetJpeg
 // GetModelFileOptions : The GetModelFile options.
 type GetModelFileOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The feature for the model.
-	Feature *string `json:"feature" validate:"required"`
+	Feature *string `validate:"required"`
 
 	// The format of the returned model.
-	ModelFormat *string `json:"model_format" validate:"required"`
+	ModelFormat *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2271,10 +2305,10 @@ func (options *GetModelFileOptions) SetHeaders(param map[string]string) *GetMode
 // GetObjectMetadataOptions : The GetObjectMetadata options.
 type GetObjectMetadataOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The name of the object.
-	Object *string `json:"object" validate:"required,ne="`
+	Object *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2310,12 +2344,12 @@ func (options *GetObjectMetadataOptions) SetHeaders(param map[string]string) *Ge
 type GetTrainingUsageOptions struct {
 	// The earliest day to include training events. Specify dates in YYYY-MM-DD format. If empty or not specified, the
 	// earliest training event is included.
-	StartTime *strfmt.Date `json:"start_time,omitempty"`
+	StartTime *strfmt.Date
 
 	// The most recent day to include training events. Specify dates in YYYY-MM-DD format. All events for the day are
 	// included. If empty or not specified, the current day is used. Specify the same value as `start_time` to request
 	// events for a single day.
-	EndTime *strfmt.Date `json:"end_time,omitempty"`
+	EndTime *strfmt.Date
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2610,7 +2644,7 @@ func (options *ListCollectionsOptions) SetHeaders(param map[string]string) *List
 // ListImagesOptions : The ListImages options.
 type ListImagesOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2638,7 +2672,7 @@ func (options *ListImagesOptions) SetHeaders(param map[string]string) *ListImage
 // ListObjectMetadataOptions : The ListObjectMetadata options.
 type ListObjectMetadataOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2901,7 +2935,7 @@ func UnmarshalObjectTrainingStatus(m map[string]json.RawMessage, result interfac
 // TrainOptions : The Train options.
 type TrainOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3101,14 +3135,17 @@ func UnmarshalTrainingStatus(m map[string]json.RawMessage, result interface{}) (
 // UpdateCollectionOptions : The UpdateCollection options.
 type UpdateCollectionOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The name of the collection. The name can contain alphanumeric, underscore, hyphen, and dot characters. It cannot
 	// begin with the reserved prefix `sys-`.
-	Name *string `json:"name,omitempty"`
+	Name *string
 
 	// The description of the collection.
-	Description *string `json:"description,omitempty"`
+	Description *string
+
+	// Training status information for the collection.
+	TrainingStatus *TrainingStatus
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3136,6 +3173,12 @@ func (options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOp
 // SetDescription : Allow user to set Description
 func (options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
 	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetTrainingStatus : Allow user to set TrainingStatus
+func (options *UpdateCollectionOptions) SetTrainingStatus(trainingStatus *TrainingStatus) *UpdateCollectionOptions {
+	options.TrainingStatus = trainingStatus
 	return options
 }
 
@@ -3182,14 +3225,14 @@ func UnmarshalUpdateObjectMetadata(m map[string]json.RawMessage, result interfac
 // UpdateObjectMetadataOptions : The UpdateObjectMetadata options.
 type UpdateObjectMetadataOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `json:"collection_id" validate:"required,ne="`
+	CollectionID *string `validate:"required,ne="`
 
 	// The name of the object.
-	Object *string `json:"object" validate:"required,ne="`
+	Object *string `validate:"required,ne="`
 
 	// The updated name of the object. The name can contain alphanumeric, underscore, hyphen, space, and dot characters. It
 	// cannot begin with the reserved prefix `sys-`.
-	NewObject *string `json:"new_object" validate:"required"`
+	NewObject *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string

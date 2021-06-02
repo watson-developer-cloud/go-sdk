@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package comparecomplyv1 : Operations and models for the CompareComplyV1 service
@@ -30,14 +30,15 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
 // CompareComplyV1 : IBM Watson&trade; Compare and Comply is discontinued. Existing instances are supported until 30
-// November 2021, but as of 1 December 2020, you can't create instances. Any instance that is provisioned on 30 November
-// 2021 will be deleted.
+// November 2021, but as of 1 December 2020, you can't create instances. Any instance that exists on 30 November 2021
+// will be deleted. Consider migrating to Watson Discovery Premium on IBM Cloud for your Compare and Comply use cases.
+// To start the migration process, visit [https://ibm.biz/contact-wdc-premium](https://ibm.biz/contact-wdc-premium).
 // {: deprecated}
 //
 // Compare and Comply analyzes governing documents to provide details about critical aspects of the documents.
@@ -229,11 +230,13 @@ func (compareComply *CompareComplyV1) ConvertToHTMLWithContext(ctx context.Conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalHTMLReturn)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalHTMLReturn)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -291,11 +294,13 @@ func (compareComply *CompareComplyV1) ClassifyElementsWithContext(ctx context.Co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifyReturn)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifyReturn)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -353,11 +358,13 @@ func (compareComply *CompareComplyV1) ExtractTablesWithContext(ctx context.Conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTableReturn)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTableReturn)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -423,11 +430,13 @@ func (compareComply *CompareComplyV1) CompareDocumentsWithContext(ctx context.Co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCompareReturn)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalCompareReturn)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -497,11 +506,13 @@ func (compareComply *CompareComplyV1) AddFeedbackWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalFeedbackReturn)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalFeedbackReturn)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -591,11 +602,13 @@ func (compareComply *CompareComplyV1) ListFeedbackWithContext(ctx context.Contex
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalFeedbackList)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalFeedbackList)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -654,11 +667,13 @@ func (compareComply *CompareComplyV1) GetFeedbackWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGetFeedback)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalGetFeedback)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -717,11 +732,13 @@ func (compareComply *CompareComplyV1) DeleteFeedbackWithContext(ctx context.Cont
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalFeedbackDeleted)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalFeedbackDeleted)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -791,11 +808,13 @@ func (compareComply *CompareComplyV1) CreateBatchWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBatchStatus)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBatchStatus)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -843,11 +862,13 @@ func (compareComply *CompareComplyV1) ListBatchesWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBatches)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBatches)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -903,11 +924,13 @@ func (compareComply *CompareComplyV1) GetBatchWithContext(ctx context.Context, g
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBatchStatus)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBatchStatus)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -968,11 +991,13 @@ func (compareComply *CompareComplyV1) UpdateBatchWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBatchStatus)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalBatchStatus)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -980,13 +1005,13 @@ func (compareComply *CompareComplyV1) UpdateBatchWithContext(ctx context.Context
 // AddFeedbackOptions : The AddFeedback options.
 type AddFeedbackOptions struct {
 	// Feedback data for submission.
-	FeedbackData *FeedbackDataInput `json:"feedback_data" validate:"required"`
+	FeedbackData *FeedbackDataInput `validate:"required"`
 
 	// An optional string identifying the user.
-	UserID *string `json:"user_id,omitempty"`
+	UserID *string
 
 	// An optional comment on or description of the feedback.
-	Comment *string `json:"comment,omitempty"`
+	Comment *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1472,15 +1497,15 @@ func UnmarshalCategoryComparison(m map[string]json.RawMessage, result interface{
 // ClassifyElementsOptions : The ClassifyElements options.
 type ClassifyElementsOptions struct {
 	// The document to classify.
-	File io.ReadCloser `json:"file" validate:"required"`
+	File io.ReadCloser `validate:"required"`
 
 	// The content type of file.
-	FileContentType *string `json:"file_content_type,omitempty"`
+	FileContentType *string
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string `json:"model,omitempty"`
+	Model *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1706,27 +1731,27 @@ func UnmarshalColumnHeaders(m map[string]json.RawMessage, result interface{}) (e
 // CompareDocumentsOptions : The CompareDocuments options.
 type CompareDocumentsOptions struct {
 	// The first document to compare.
-	File1 io.ReadCloser `json:"file_1" validate:"required"`
+	File1 io.ReadCloser `validate:"required"`
 
 	// The second document to compare.
-	File2 io.ReadCloser `json:"file_2" validate:"required"`
+	File2 io.ReadCloser `validate:"required"`
 
 	// The content type of file1.
-	File1ContentType *string `json:"file_1_content_type,omitempty"`
+	File1ContentType *string
 
 	// The content type of file2.
-	File2ContentType *string `json:"file_2_content_type,omitempty"`
+	File2ContentType *string
 
 	// A text label for the first document.
-	File1Label *string `json:"file_1_label,omitempty"`
+	File1Label *string
 
 	// A text label for the second document.
-	File2Label *string `json:"file_2_label,omitempty"`
+	File2Label *string
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string `json:"model,omitempty"`
+	Model *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2124,15 +2149,15 @@ func UnmarshalContractTypes(m map[string]json.RawMessage, result interface{}) (e
 // ConvertToHTMLOptions : The ConvertToHTML options.
 type ConvertToHTMLOptions struct {
 	// The document to convert.
-	File io.ReadCloser `json:"file" validate:"required"`
+	File io.ReadCloser `validate:"required"`
 
 	// The content type of file.
-	FileContentType *string `json:"file_content_type,omitempty"`
+	FileContentType *string
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string `json:"model,omitempty"`
+	Model *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2181,34 +2206,34 @@ func (options *ConvertToHTMLOptions) SetHeaders(param map[string]string) *Conver
 // CreateBatchOptions : The CreateBatch options.
 type CreateBatchOptions struct {
 	// The Compare and Comply method to run across the submitted input documents.
-	Function *string `json:"function" validate:"required"`
+	Function *string `validate:"required"`
 
 	// A JSON file containing the input Cloud Object Storage credentials. At a minimum, the credentials must enable `READ`
 	// permissions on the bucket defined by the `input_bucket_name` parameter.
-	InputCredentialsFile io.ReadCloser `json:"input_credentials_file" validate:"required"`
+	InputCredentialsFile io.ReadCloser `validate:"required"`
 
 	// The geographical location of the Cloud Object Storage input bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
-	InputBucketLocation *string `json:"input_bucket_location" validate:"required"`
+	InputBucketLocation *string `validate:"required"`
 
 	// The name of the Cloud Object Storage input bucket.
-	InputBucketName *string `json:"input_bucket_name" validate:"required"`
+	InputBucketName *string `validate:"required"`
 
 	// A JSON file that lists the Cloud Object Storage output credentials. At a minimum, the credentials must enable `READ`
 	// and `WRITE` permissions on the bucket defined by the `output_bucket_name` parameter.
-	OutputCredentialsFile io.ReadCloser `json:"output_credentials_file" validate:"required"`
+	OutputCredentialsFile io.ReadCloser `validate:"required"`
 
 	// The geographical location of the Cloud Object Storage output bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
-	OutputBucketLocation *string `json:"output_bucket_location" validate:"required"`
+	OutputBucketLocation *string `validate:"required"`
 
 	// The name of the Cloud Object Storage output bucket.
-	OutputBucketName *string `json:"output_bucket_name" validate:"required"`
+	OutputBucketName *string `validate:"required"`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string `json:"model,omitempty"`
+	Model *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2301,12 +2326,12 @@ func (options *CreateBatchOptions) SetHeaders(param map[string]string) *CreateBa
 // DeleteFeedbackOptions : The DeleteFeedback options.
 type DeleteFeedbackOptions struct {
 	// A string that specifies the feedback entry to be deleted from the document.
-	FeedbackID *string `json:"feedback_id" validate:"required,ne="`
+	FeedbackID *string `validate:"required,ne="`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string `json:"model,omitempty"`
+	Model *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2668,15 +2693,15 @@ func UnmarshalElementPair(m map[string]json.RawMessage, result interface{}) (err
 // ExtractTablesOptions : The ExtractTables options.
 type ExtractTablesOptions struct {
 	// The document on which to run table extraction.
-	File io.ReadCloser `json:"file" validate:"required"`
+	File io.ReadCloser `validate:"required"`
 
 	// The content type of file.
-	FileContentType *string `json:"file_content_type,omitempty"`
+	FileContentType *string
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string `json:"model,omitempty"`
+	Model *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2965,7 +2990,7 @@ func UnmarshalFeedbackReturn(m map[string]json.RawMessage, result interface{}) (
 // GetBatchOptions : The GetBatch options.
 type GetBatchOptions struct {
 	// The ID of the batch-processing job whose information you want to retrieve.
-	BatchID *string `json:"batch_id" validate:"required,ne="`
+	BatchID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3031,12 +3056,12 @@ func UnmarshalGetFeedback(m map[string]json.RawMessage, result interface{}) (err
 // GetFeedbackOptions : The GetFeedback options.
 type GetFeedbackOptions struct {
 	// A string that specifies the feedback entry to be included in the output.
-	FeedbackID *string `json:"feedback_id" validate:"required,ne="`
+	FeedbackID *string `validate:"required,ne="`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string `json:"model,omitempty"`
+	Model *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3302,58 +3327,58 @@ func (options *ListBatchesOptions) SetHeaders(param map[string]string) *ListBatc
 type ListFeedbackOptions struct {
 	// An optional string that filters the output to include only feedback with the specified feedback type. The only
 	// permitted value is `element_classification`.
-	FeedbackType *string `json:"feedback_type,omitempty"`
+	FeedbackType *string
 
 	// An optional string that filters the output to include only feedback from the document with the specified
 	// `document_title`.
-	DocumentTitle *string `json:"document_title,omitempty"`
+	DocumentTitle *string
 
 	// An optional string that filters the output to include only feedback with the specified `model_id`. The only
 	// permitted value is `contracts`.
-	ModelID *string `json:"model_id,omitempty"`
+	ModelID *string
 
 	// An optional string that filters the output to include only feedback with the specified `model_version`.
-	ModelVersion *string `json:"model_version,omitempty"`
+	ModelVersion *string
 
 	// An optional string in the form of a comma-separated list of categories. If it is specified, the service filters the
 	// output to include only feedback that has at least one category from the list removed.
-	CategoryRemoved *string `json:"category_removed,omitempty"`
+	CategoryRemoved *string
 
 	// An optional string in the form of a comma-separated list of categories. If this is specified, the service filters
 	// the output to include only feedback that has at least one category from the list added.
-	CategoryAdded *string `json:"category_added,omitempty"`
+	CategoryAdded *string
 
 	// An optional string in the form of a comma-separated list of categories. If this is specified, the service filters
 	// the output to include only feedback that has at least one category from the list unchanged.
-	CategoryNotChanged *string `json:"category_not_changed,omitempty"`
+	CategoryNotChanged *string
 
 	// An optional string of comma-separated `nature`:`party` pairs. If this is specified, the service filters the output
 	// to include only feedback that has at least one `nature`:`party` pair from the list removed.
-	TypeRemoved *string `json:"type_removed,omitempty"`
+	TypeRemoved *string
 
 	// An optional string of comma-separated `nature`:`party` pairs. If this is specified, the service filters the output
 	// to include only feedback that has at least one `nature`:`party` pair from the list removed.
-	TypeAdded *string `json:"type_added,omitempty"`
+	TypeAdded *string
 
 	// An optional string of comma-separated `nature`:`party` pairs. If this is specified, the service filters the output
 	// to include only feedback that has at least one `nature`:`party` pair from the list unchanged.
-	TypeNotChanged *string `json:"type_not_changed,omitempty"`
+	TypeNotChanged *string
 
 	// An optional integer specifying the number of documents that you want the service to return.
-	PageLimit *int64 `json:"page_limit,omitempty"`
+	PageLimit *int64
 
 	// An optional string that returns the set of documents after the previous set. Use this parameter with the
 	// `page_limit` parameter.
-	Cursor *string `json:"cursor,omitempty"`
+	Cursor *string
 
 	// An optional comma-separated list of fields in the document to sort on. You can optionally specify the sort direction
 	// by prefixing the value of the field with `-` for descending order or `+` for ascending order (the default).
 	// Currently permitted sorting fields are `created`, `user_id`, and `document_title`.
-	Sort *string `json:"sort,omitempty"`
+	Sort *string
 
 	// An optional boolean value. If specified as `true`, the `pagination` object in the output includes a value called
 	// `total` that gives the total count of feedback created.
-	IncludeTotal *bool `json:"include_total,omitempty"`
+	IncludeTotal *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4296,15 +4321,15 @@ func UnmarshalUnalignedElement(m map[string]json.RawMessage, result interface{})
 // UpdateBatchOptions : The UpdateBatch options.
 type UpdateBatchOptions struct {
 	// The ID of the batch-processing job you want to update.
-	BatchID *string `json:"batch_id" validate:"required,ne="`
+	BatchID *string `validate:"required,ne="`
 
 	// The action you want to perform on the specified batch-processing job.
-	Action *string `json:"action" validate:"required"`
+	Action *string `validate:"required"`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string `json:"model,omitempty"`
+	Model *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
